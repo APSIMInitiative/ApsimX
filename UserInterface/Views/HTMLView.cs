@@ -90,7 +90,7 @@ namespace UserInterface.Views
         /// <returns></returns>
         private bool PopulateView(string contents, bool editingEnabled)
         {
-            if (contents.Contains("@{\rtf"))
+            if (contents.Contains(@"{\rtf"))
                 richTextBox1.Rtf = contents;
             else
             {
