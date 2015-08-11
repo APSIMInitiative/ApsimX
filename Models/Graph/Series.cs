@@ -121,7 +121,10 @@ namespace Models.Graph
 
                     // Graph is sitting in a simulation so graph just that simulation.
                     if (parentSimulation != null)
-                        simulations.Add(parentSimulation);
+                    {
+                        string filter = string.Format("Name='{0}'", parentSimulation.Name);
+                        ourDefinitions.Add(CreateDefinition(Name, filter, Colour));
+                    }
     
                     // See if graph is inside an experiment. If so then graph all simulations in experiment.
                     else if (parentExperiment != null)
