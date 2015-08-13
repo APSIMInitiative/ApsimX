@@ -84,7 +84,8 @@
             jobManager.AddJob(simulations);
             jobManager.AllJobsCompleted += OnComplete;
             jobManager.Start(waitUntilFinished: false);
-            timer.Start();
+            if (numSimulationsToRun > 1)
+                timer.Start();
         }
 
         /// <summary>
