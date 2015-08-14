@@ -33,6 +33,17 @@ namespace SWIMFrame
         static SoilProps sp;
         static FluxEnd pe = new FluxEnd();
 
+        /// <summary>
+        /// Public accessor to set a SoilProps object.
+        /// Only required for unit testing.
+        /// </summary>
+        /// <param name="soilProps"></param>
+        public static void SetupSsflux(SoilProps setsp, int setnu)
+        {
+            sp = setsp;
+            nu = setnu;
+        }
+
         public static void FluxTable(double dz, SoilProps props)
         {
             // Generates a flux table for use by other programs.
@@ -359,7 +370,7 @@ namespace SWIMFrame
                     break;
             }
             if (it > maxit)
-                Console.WriteLine("ssflux: too many its", ia, ib);
+                Console.WriteLine("ssflux: too many iterations", ia, ib);
             nit = nit + it;
             return q;
         }
@@ -448,9 +459,9 @@ namespace SWIMFrame
                 i++;
                 if (i > n)
                     break;
-                if (di[i - 1] > 2 && di[i] > 1)
+                if (di[i - 2] > 2 && di[i - 1] > 1)
                     i = i + 2; // don't want points to be any further apart
-                else if (di[i - 1] > 1)
+                else if (di[i - 2] > 1)
                     i = i + 1;
 
                 j++;

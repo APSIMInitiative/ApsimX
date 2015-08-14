@@ -292,6 +292,8 @@ namespace UnitTests
         [Test]
         public void TestIndices()
         {
+            // Note that not all of isel is tested. Looking at the results from FORTRAN, it appears that only values up to nsel are used.
+            // After this, the rest are orders of magnitude higher (or 0) and in c# are all 0 so it looks like it just hasn't been zeroed.
             int[] n = new int[] { 21, 6, 21, 6 };
             int[] iend = new int[] { 15, 7, 15, 7 };
             double[][] c = new double[][] { new double[] {-2.1743061E-03,-3.3295582E-03,-2.4683008E-03,3.9846750E-03,1.4786369E-02,2.2035189E-02,2.2055247E-02,1.8000836E-02,1.3329798E-02,9.4508242E-03,6.5765435E-03,4.5415981E-03,3.1275355E-03,2.1532300E-03,1.4834525E-03,1.0252491E-03,7.0969318E-04,4.9843037E-04,3.5260584E-04,2.7270127E-04,2.4892539E-04},
@@ -308,7 +310,7 @@ namespace UnitTests
                 int[] temp = new int[isel[i].Length]; //using a temp var here since isel is passed by ref.
                 Array.Copy(isel[i], temp, isel[i].Length);
                 KeyValuePair<int, int[]> res = Fluxes.TestIndices(n[i], c[i], iend[i], 1.2);
-                for (int j = 0; j < c[i].Length; j++)
+                for (int j = 0; j < nsel[i]; j++)
                 {
                     Assert.AreEqual(nsel[i], res.Key);
                     Assert.AreEqual(isel[i][j], res.Value[j]);
@@ -319,7 +321,16 @@ namespace UnitTests
         [Test]
         public void TestSsflux()
         {
+            Fluxes.SetupSsflux(Soil.gensptbl(1.0, new SoilParam(10, 103, 0.4, 2.0, -2.0, -10.0, 1.0 / 3.0, 1.0), true), 23);
+            int[] ia = new int[] { 1 };
+            int[] ib = new int[] { 2 };
+            double[] qin = new double[] { -1.14159583972650572E-006 };
+            double[] ssflux = new double[] { -1.13963081216825338E-006 };
 
+            for (int i = 0; i < ia.Length; i++)
+            {
+                double res = (double)Extensions.TestMethod("Fluxes", "ssflux", new object[] {ia[i], ib[i], 5.0, qin[i], 0.001 });
+            }
         }
     }
 }
