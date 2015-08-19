@@ -97,7 +97,7 @@ namespace Models.PMF.Organs
         [Units("/d")]
         IFunction SenescenceRate = null;
         /// <summary>The temperature effect</summary>
-        [Link]
+        [Link(IsOptional = true)]
         [Units("0-1")]
         IFunction TemperatureEffect = null;
         /// <summary>The root front velocity</summary>
@@ -105,11 +105,11 @@ namespace Models.PMF.Organs
         [Units("mm/d")]
         IFunction RootFrontVelocity = null;
         /// <summary>The partition fraction</summary>
-        [Link]
+        [Link(IsOptional = true)]
         [Units("0-1")]
         IFunction PartitionFraction = null;
         /// <summary>The maximum n conc</summary>
-        [Link]
+        [Link(IsOptional = true)]
         [Units("g/g")]
         IFunction MaximumNConc = null;
         /// <summary>The maximum daily n uptake</summary>
@@ -117,7 +117,7 @@ namespace Models.PMF.Organs
         [Units("kg N/ha")]
         IFunction MaxDailyNUptake = null;
         /// <summary>The minimum n conc</summary>
-        [Link]
+        [Link(IsOptional = true)]
         [Units("g/g")]
         IFunction MinimumNConc = null;
         /// <summary>The kl modifier</summary>
@@ -740,8 +740,8 @@ namespace Models.PMF.Organs
                 foreach (Biomass Layer in LayerLive)
                 {
                     i += 1;
-                    StructuralNDemand[i] = Layer.PotentialDMAllocation * MinimumNConc.Value *  _NitrogenDemandSwitch;
-                    double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Layer.Wt + Layer.PotentialDMAllocation) - Layer.N);
+                    StructuralNDemand[i] = Layer.PotentialDMAllocation * MinNconc *  _NitrogenDemandSwitch;
+                    double NDeficit = Math.Max(0.0, MaxNconc * (Layer.Wt + Layer.PotentialDMAllocation) - Layer.N);
                     NonStructuralNDemand[i] = Math.Max(0, NDeficit - StructuralNDemand[i]) * _NitrogenDemandSwitch;
                 }
                 TotalNonStructuralNDemand = MathUtilities.Sum(NonStructuralNDemand);
@@ -888,21 +888,27 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
-        /// <value>The maximum nconc.</value>
+        /// <value>The maximum nconc.  Has a default of 0.01</value>
         public override double MaxNconc
         {
             get
             {
-                return MaximumNConc.Value;
+                if (MaximumNConc != null)
+                    return MaximumNConc.Value;
+                else
+                    return 0.01; 
             }
         }
         /// <summary>Gets or sets the minimum nconc.</summary>
-        /// <value>The minimum nconc.</value>
+        /// <value>The minimum nconc. Has a default of 0.01</value>
         public override double MinNconc
         {
             get
             {
-                return MinimumNConc.Value;
+                if (MinimumNConc != null)
+                    return MinimumNConc.Value;
+                else
+                    return 0.01;
             }
         }
 
