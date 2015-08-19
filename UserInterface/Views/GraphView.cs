@@ -30,7 +30,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Overall font size for the graph.
         /// </summary>
-        private const double FontSize = 14;
+        public double FontSize = 14;
 
         /// <summary>
         /// Overall font to use.
