@@ -198,6 +198,10 @@ namespace UserInterface.Presenters
             {
                 this.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
             }
+            finally
+            {
+                this.ShowRightHandPanel();
+            }
 
             return false;
         }
