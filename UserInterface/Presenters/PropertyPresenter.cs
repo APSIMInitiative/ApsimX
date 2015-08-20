@@ -95,6 +95,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            this.grid.EndEdit();
             this.grid.CellsChanged -= this.OnCellValueChanged;
             this.grid.ButtonClick -= OnFileBrowseClick;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
