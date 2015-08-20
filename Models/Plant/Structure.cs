@@ -182,6 +182,7 @@ namespace Models.PMF
     /// and population.
     /// </remarks>
     [Serializable]
+    [ValidParent(typeof(Plant))]
     public class Structure : Model
     {
         private double _MainStemFinalNodeNo;

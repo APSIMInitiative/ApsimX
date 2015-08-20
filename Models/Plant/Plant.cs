@@ -52,6 +52,7 @@ namespace Models.PMF
     /// to execute sowing events.
     /// <remarks>
     /// </remarks>
+    [ValidParent(typeof(Zone))]
     [Serializable]
     public class Plant : ModelCollectionFromResource, ICrop
     {

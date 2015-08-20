@@ -13,6 +13,7 @@ namespace Models.Core
     /// <summary>
     /// A simulation model
     /// </summary>
+    [ValidParent(typeof(Simulations))]
     [Serializable]
     public class Simulation : Zone, JobManager.IRunnable
     {

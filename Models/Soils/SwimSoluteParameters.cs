@@ -10,6 +10,7 @@ namespace Models.Soils
     /// A model for capturing swim solute parameters
     /// </summary>
     [Serializable]
+    [ValidParent(typeof(Swim3))]
     public class SwimSoluteParameters : Model
     {
         /// <summary>Gets or sets the dis.</summary>

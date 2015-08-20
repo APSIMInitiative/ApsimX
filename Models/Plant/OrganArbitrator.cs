@@ -40,6 +40,7 @@ namespace Models.PMF
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(typeof(Plant))]
     public class OrganArbitrator : Model, IUptake
     {
         #region Class Members

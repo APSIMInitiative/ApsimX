@@ -10,6 +10,7 @@ namespace Models.Soils
     /// SWIM water table
     /// </summary>
     [Serializable]
+    [ValidParent(typeof(Swim3))]
     public class SwimWaterTable : Model
     {
         /// <summary>Gets or sets the water table depth.</summary>

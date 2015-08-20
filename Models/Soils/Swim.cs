@@ -102,6 +102,7 @@ namespace Models.Soils
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]   // Until we have a better view for SWIM...
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(typeof(Soil))]
     public class Swim3 : Model
     {
         #region Links

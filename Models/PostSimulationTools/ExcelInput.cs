@@ -19,6 +19,7 @@ namespace Models.PostSimulationTools
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(typeof(DataStore))]
     public class ExcelInput : Model, IPostSimulationTool
     {
         private string _filename;
