@@ -4,11 +4,11 @@
   <Replacements>
     <Name>Replacements</Name>
     <Plant>
-      <Name>MCSP</Name>
+      <Name>SCUM</Name>
       <Memo>
         <Name>TitlePage</Name>
         <MemoText><![CDATA[
-# SPAP: the Simple Plant Assessment Model
+# SCUM: the Simple Crop Uptake Model
 
 _Hamish Brown and Rob Zyskowski, Plant and Food Research, New Zealand_
 
@@ -313,7 +313,7 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
         <MultiplyFunction>
           <Name>PotentialBiomass</Name>
           <DeltaFunction>
-            <Name>PotentialBiomass</Name>
+            <Name>UnStressedBiomass</Name>
             <SigmoidFunction2>
               <Name>Integral</Name>
               <VariableReference>
@@ -395,10 +395,6 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
                   <Name>Stover</Name>
                   <MultiplyFunction>
                     <Name>StoverAtMaturity</Name>
-                    <VariableReference>
-                      <Name>BiomassAtMaturity</Name>
-                      <VariableName>[Stover].TotalBiomassAtMaturity.Value</VariableName>
-                    </VariableReference>
                     <SubtractFunction>
                       <Name>AboveGroundProportion</Name>
                       <Constant>
@@ -421,12 +417,16 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
                         <VariableName>[Product].HarvestIndex.Value</VariableName>
                       </VariableReference>
                     </SubtractFunction>
+                    <VariableReference>
+                      <Name>BiomassAtMaturity</Name>
+                      <VariableName>[TotalBiomassAtMaturity].Value</VariableName>
+                    </VariableReference>
                   </MultiplyFunction>
                   <MultiplyFunction>
                     <Name>StoverAtStartReproductive</Name>
                     <VariableReference>
                       <Name>BiomassAtStartReproductive</Name>
-                      <VariableName>[Stover].TotalBiomassAtStartReproductive.Value</VariableName>
+                      <VariableName>[TotalBiomassAtStartReproductive].Value</VariableName>
                     </VariableReference>
                     <SubtractFunction>
                       <Name>AboveGroundProportion</Name>
@@ -445,11 +445,11 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
                   <Name>TotalBiomass</Name>
                   <VariableReference>
                     <Name>BiomassAtStartSenescence</Name>
-                    <VariableName>[Stover].TotalBiomassAtStartSenescence.Value</VariableName>
+                    <VariableName>[TotalBiomassAtStartSenescence].Value</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>BiomassAtStartReproductive</Name>
-                    <VariableName>[Stover].TotalBiomassAtStartReproductive.Value</VariableName>
+                    <VariableName>[TotalBiomassAtStartReproductive].Value</VariableName>
                   </VariableReference>
                 </SubtractFunction>
               </DivideFunction>
@@ -645,99 +645,6 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
             <VariableName>[Product].HarvestIndex.Value</VariableName>
           </VariableReference>
         </DivideFunction>
-        <SigmoidFunction2>
-          <Name>TotalBiomassAtStartReproductive</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[
-This variable is the solution of the potential biomass accumulation function at the onset of growth of the product organ and is used in the calculation of partitioning coefficients
-]]></MemoText>
-          </Memo>
-          <VariableReference>
-            <Name>XValue</Name>
-            <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>Ymax</Name>
-            <VariableName>[Stover].Ymax.Value</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>Xo</Name>
-            <VariableName>[Stover].XoBiomass.Value</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>b</Name>
-            <VariableName>[Stover].bBiomass.Value</VariableName>
-          </VariableReference>
-        </SigmoidFunction2>
-        <SigmoidFunction2>
-          <Name>TotalBiomassAtStartSenescence</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[
-This variable is the solution of the potential biomass accumulation function at the onset of canopy senescence when the stover organ stops growing and is used in the calculation of partitioning coefficients
-]]></MemoText>
-          </Memo>
-          <AddFunction>
-            <Name>XValue</Name>
-            <VariableReference>
-              <Name>CanopyExpandingTT</Name>
-              <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>YieldIncreasingTT</Name>
-              <VariableName>[Phenology].YieldIncreasing.Target.Value</VariableName>
-            </VariableReference>
-          </AddFunction>
-          <VariableReference>
-            <Name>Ymax</Name>
-            <VariableName>[Stover].Ymax.Value</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>Xo</Name>
-            <VariableName>[Stover].XoBiomass.Value</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>b</Name>
-            <VariableName>[Stover].bBiomass.Value</VariableName>
-          </VariableReference>
-        </SigmoidFunction2>
-        <SigmoidFunction2>
-          <Name>TotalBiomassAtMaturity</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[
-This will be close to Ymax in many but because the potential yield function is sigmoidal the crop doesnt quite reach the Ymax asymtote by maturity so this give a more precices biomass at maturity for calculating partitioning coefficients 
-]]></MemoText>
-          </Memo>
-          <AddFunction>
-            <Name>XValue</Name>
-            <VariableReference>
-              <Name>CanopyExpandingTT</Name>
-              <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>YieldIncreasingTT</Name>
-              <VariableName>[Phenology].YieldIncreasing.Target.Value</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>SenescingTT</Name>
-              <VariableName>[Phenology].Senescing.Target.Value</VariableName>
-            </VariableReference>
-          </AddFunction>
-          <VariableReference>
-            <Name>Ymax</Name>
-            <VariableName>[Stover].Ymax.Value</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>Xo</Name>
-            <VariableName>[Stover].XoBiomass.Value</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>b</Name>
-            <VariableName>[Stover].bBiomass.Value</VariableName>
-          </VariableReference>
-        </SigmoidFunction2>
         <BiomassYesterday>0</BiomassYesterday>
         <LAI>0</LAI>
         <Height>0</Height>
@@ -1205,6 +1112,99 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
 Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 2010. A nitrogen balance model for environmental accountability in cropping systems. New Zealand Journal of Crop and Horticultural Science,38: 189-207.
 ]]></MemoText>
       </Memo>
+      <SigmoidFunction2>
+        <Name>TotalBiomassAtStartReproductive</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[
+This variable is the solution of the potential biomass accumulation function at the onset of growth of the product organ and is used in the calculation of partitioning coefficients
+]]></MemoText>
+        </Memo>
+        <VariableReference>
+          <Name>XValue</Name>
+          <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>Ymax</Name>
+          <VariableName>[Stover].Ymax.Value</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>Xo</Name>
+          <VariableName>[Stover].XoBiomass.Value</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>b</Name>
+          <VariableName>[Stover].bBiomass.Value</VariableName>
+        </VariableReference>
+      </SigmoidFunction2>
+      <SigmoidFunction2>
+        <Name>TotalBiomassAtStartSenescence</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[
+This variable is the solution of the potential biomass accumulation function at the onset of canopy senescence when the stover organ stops growing and is used in the calculation of partitioning coefficients
+]]></MemoText>
+        </Memo>
+        <AddFunction>
+          <Name>XValue</Name>
+          <VariableReference>
+            <Name>CanopyExpandingTT</Name>
+            <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>YieldIncreasingTT</Name>
+            <VariableName>[Phenology].YieldIncreasing.Target.Value</VariableName>
+          </VariableReference>
+        </AddFunction>
+        <VariableReference>
+          <Name>Ymax</Name>
+          <VariableName>[Stover].Ymax.Value</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>Xo</Name>
+          <VariableName>[Stover].XoBiomass.Value</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>b</Name>
+          <VariableName>[Stover].bBiomass.Value</VariableName>
+        </VariableReference>
+      </SigmoidFunction2>
+      <SigmoidFunction2>
+        <Name>TotalBiomassAtMaturity</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[
+This will be close to Ymax in many but because the potential yield function is sigmoidal the crop doesnt quite reach the Ymax asymtote by maturity so this give a more precices biomass at maturity for calculating partitioning coefficients 
+]]></MemoText>
+        </Memo>
+        <AddFunction>
+          <Name>XValue</Name>
+          <VariableReference>
+            <Name>CanopyExpandingTT</Name>
+            <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>YieldIncreasingTT</Name>
+            <VariableName>[Phenology].YieldIncreasing.Target.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>SenescingTT</Name>
+            <VariableName>[Phenology].Senescing.Target.Value</VariableName>
+          </VariableReference>
+        </AddFunction>
+        <VariableReference>
+          <Name>Ymax</Name>
+          <VariableName>[Stover].Ymax.Value</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>Xo</Name>
+          <VariableName>[Stover].XoBiomass.Value</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>b</Name>
+          <VariableName>[Stover].bBiomass.Value</VariableName>
+        </VariableReference>
+      </SigmoidFunction2>
       <CropType>SLURP</CropType>
     </Plant>
   </Replacements>
@@ -1237,7 +1237,7 @@ Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 201
     </Test>
   </Tests>
   <Simulation>
-    <Name>MCSPTestBase</Name>
+    <Name>SCUMTestBase</Name>
     <Weather>
       <Name>Weather</Name>
       <FileName>%root%\Tests\WeatherFiles\lincoln.met</FileName>
@@ -1287,7 +1287,7 @@ Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 201
         <Water>
           <Name>Water</Name>
           <SoilCrop>
-            <Name>MCSPSoil</Name>
+            <Name>SCUMSoil</Name>
             <LL>
               <double>0.13</double>
               <double>0.13</double>
@@ -1637,7 +1637,7 @@ Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 201
         <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
       <Plant>
-        <Name>MCSP</Name>
+        <Name>SCUM</Name>
         <CropType>MCSP</CropType>
       </Plant>
       <Irrigation>
@@ -1716,7 +1716,7 @@ namespace Models
 		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
-		[Link] Plant MCSP;
+		[Link] Plant SCUM;
         [Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
@@ -1794,7 +1794,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
             AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			AccumPlantN -= (double)zone.Get("MCSP.Root.NUptake");
+			AccumPlantN -= (double)zone.Get("SCUM.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -1803,8 +1803,8 @@ namespace Models
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 
 			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[MCSP].Stover.Transpiration");
-            AccumEP -= (double)zone.Get("MCSP.Root.WaterUptake");
+			//AccumEP -= (double)zone.Get("[SCUM].Stover.Transpiration");
+            AccumEP -= (double)zone.Get("SCUM.Root.WaterUptake");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -1864,7 +1864,7 @@ namespace Models
 	   [Link] Irrigation Irrigation;
 	   [Link] Clock Clock;
 	   [Link] Soil Soil;
-	   [Link] Plant MCSP;
+	   [Link] Plant SCUM;
 	   
 	   //User inputs from properties tab
 	   [Description("Irrigation on (yes or no)")]
@@ -1964,7 +1964,7 @@ namespace Models
 		  
 	      //Is there a crop in the ground that needs irrigation?
 	      CropIsActive = false;
-	      if ((MCSP.Phenology.Stage >= 3.0) && (MCSP.Phenology.Stage < 6.0))
+	      if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
 	            CropIsActive = true;
 	      
 	      //Is the irrigator available?
@@ -1976,7 +1976,7 @@ namespace Models
 	      //Is the soil dry enough to require irrigation?
 	      SoilIsDry = false;
 	      double CurrentRootDepth = 0;
-	      double RootDepth = MCSP.Root.Depth;
+	      double RootDepth = SCUM.Root.Depth;
 	      CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
 	      
 	      double RelativeRootDepth = Math.Min(1.0, CurrentRootDepth / Top_Depth);
@@ -2042,7 +2042,7 @@ namespace Models
 	   [Link] Fertiliser Fertiliser;
 	   [Link] Clock Clock;
 	   [Link] Soils.Soil Soil;
-	   [Link] Plant MCSP;
+	   [Link] Plant SCUM;
 	   
 	   //User inputs from properties tab
 	   [Description("Fertiliser on (yes or no)")]
@@ -2118,7 +2118,7 @@ namespace Models
 		  
 	      //Is there a crop in the ground that needs irrigation?
 	      CropIsActive = false;
-	      if ((MCSP.Phenology.Stage >= 3.0) && (MCSP.Phenology.Stage < 6.0))
+	      if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
 	            CropIsActive = true;
 	      
 	      //Is the irrigator available?
@@ -2130,7 +2130,7 @@ namespace Models
 	      //Is the soil N low enough to require fertiliser?
 	      SoilNIsLow = false;
 	      double CurrentRootDepth = 0;
-	      double RootDepth = MCSP.Root.Depth;
+	      double RootDepth = SCUM.Root.Depth;
 	      CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
 	      
 	      Accumulated_depth = 0;
@@ -2199,45 +2199,45 @@ namespace Models
           <string>[Soil].SoilWater.pond</string>
           <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].NO3N</string>
-          <string>[MCSP].Stover.Live.Wt</string>
-          <string>[MCSP].Root.Live.Wt</string>
-          <string>[MCSP].Product.Live.Wt</string>
-          <string>[MCSP].Stover.Live.N</string>
-          <string>[MCSP].Root.Live.N</string>
-          <string>[MCSP].Product.Live.N</string>
-          <string>[MCSP].Stover.Live.NConc</string>
-          <string>[MCSP].Root.Live.NConc</string>
-          <string>[MCSP].Product.Live.NConc</string>
-          <string>[MCSP].Root.WaterSupply</string>
-          <string>[MCSP].Root.WaterUptake</string>
-          <string>[MCSP].Stover.Transpiration</string>
-          <string>[MCSP].Stover.WaterDemand</string>
-          <string>[MCSP].Root.Depth</string>
-          <string>[MCSP].Stover.CoverTotal</string>
-          <string>[MCSP].Stover.CoverDead</string>
-          <string>[MCSP].Stover.LAI</string>
-          <string>[MCSP].Stover.Height</string>
-          <string>[MCSP].Stover.PotentialBiomass.Value</string>
-          <string>[MCSP].Product.LiveFWt</string>
-          <string>[MCSP].Arbitrator.NDemand</string>
-          <string>[MCSP].Arbitrator.NSupply</string>
-          <string>[MCSP].Stover.Fw</string>
-          <string>[MCSP].Stover.Fn</string>
-          <string>[MCSP].Summariser.Total.Wt</string>
-          <string>[MCSP].ExpectedYield.Value</string>
-          <string>[MCSP].DryYield.Value</string>
-          <string>[MCSP].TotalBiomassAtStartReproductive.Value</string>
-          <string>[MCSP].TotalBiomassAtStartSenescence.Value</string>
-          <string>[MCSP].Ymax.Value</string>
-          <string>[MCSP].Summariser.Total.N</string>
-          <string>[MCSP].Arbitrator.DMSupply</string>
-          <string>[MCSP].Arbitrator.DMDemand</string>
-          <string>[MCSP].Phenology.AccumulatedThermalTime.Value</string>
-          <string>[MCSP].Arbitrator.DMSinkLimitation</string>
-          <string>[MCSP].Arbitrator.DMNutrientLimitation</string>
-          <string>[MCSP].Phenology.ThermalTime.Value</string>
-          <string>[MCSP].Phenology.CurrentPhaseName</string>
-          <string>[MCSP].Phenology.Stage</string>
+          <string>[SCUM].Stover.Live.Wt</string>
+          <string>[SCUM].Root.Live.Wt</string>
+          <string>[SCUM].Product.Live.Wt</string>
+          <string>[SCUM].Stover.Live.N</string>
+          <string>[SCUM].Root.Live.N</string>
+          <string>[SCUM].Product.Live.N</string>
+          <string>[SCUM].Stover.Live.NConc</string>
+          <string>[SCUM].Root.Live.NConc</string>
+          <string>[SCUM].Product.Live.NConc</string>
+          <string>[SCUM].Root.WaterSupply</string>
+          <string>[SCUM].Root.WaterUptake</string>
+          <string>[SCUM].Stover.Transpiration</string>
+          <string>[SCUM].Stover.WaterDemand</string>
+          <string>[SCUM].Root.Depth</string>
+          <string>[SCUM].Stover.CoverTotal</string>
+          <string>[SCUM].Stover.CoverDead</string>
+          <string>[SCUM].Stover.LAI</string>
+          <string>[SCUM].Stover.Height</string>
+          <string>[SCUM].Stover.PotentialBiomass.Value</string>
+          <string>[SCUM].Product.LiveFWt</string>
+          <string>[SCUM].Arbitrator.NDemand</string>
+          <string>[SCUM].Arbitrator.NSupply</string>
+          <string>[SCUM].Stover.Fw</string>
+          <string>[SCUM].Stover.Fn</string>
+          <string>[SCUM].Summariser.Total.Wt</string>
+          <string>[SCUM].ExpectedYield.Value</string>
+          <string>[SCUM].DryYield.Value</string>
+          <string>[SCUM].TotalBiomassAtStartReproductive.Value</string>
+          <string>[SCUM].TotalBiomassAtStartSenescence.Value</string>
+          <string>[SCUM].Ymax.Value</string>
+          <string>[SCUM].Summariser.Total.N</string>
+          <string>[SCUM].Arbitrator.DMSupply</string>
+          <string>[SCUM].Arbitrator.DMDemand</string>
+          <string>[SCUM].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[SCUM].Arbitrator.DMSinkLimitation</string>
+          <string>[SCUM].Arbitrator.DMNutrientLimitation</string>
+          <string>[SCUM].Phenology.ThermalTime.Value</string>
+          <string>[SCUM].Phenology.CurrentPhaseName</string>
+          <string>[SCUM].Phenology.Stage</string>
           <string>[AutomaticIrrigation].Script.Top_Refull</string>
           <string>[AutomaticIrrigation].Script.Top_Trigger</string>
           <string>[AutomaticIrrigation].Script.Top_SW</string>
@@ -2249,7 +2249,7 @@ namespace Models
           <string>[AutomaticIrrigation].Script.SeasonIsOpen</string>
           <string>[AutomaticIrrigation].Script.EndDate</string>
           <string>[AutomaticIrrigation].Script.TodayYear</string>
-          <string>[MCSP].Arbitrator.FN</string>
+          <string>[SCUM].Arbitrator.FN</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -2398,7 +2398,7 @@ namespace Models
       </Axis>
       <LegendPosition>BottomLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>WaterBalanceComponents</Name>
@@ -2554,7 +2554,7 @@ namespace Models
       </Axis>
       <LegendPosition>BottomLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Plant Biomass components</Name>
@@ -2567,8 +2567,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.Stover.Live.Wt</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Stover.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2582,8 +2582,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.Root.Live.Wt</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Root.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2597,8 +2597,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.Product.Live.Wt</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Product.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2612,8 +2612,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.Summariser.Total.Wt</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2627,8 +2627,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Dash</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.DryYield.Value</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.DryYield.Value</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2642,8 +2642,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Dot</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.TotalBiomassAtStartReproductive.Value</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.TotalBiomassAtStartReproductive.Value</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2657,8 +2657,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>DashDot</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.TotalBiomassAtStartSenescence.Value</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.TotalBiomassAtStartSenescence.Value</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2672,8 +2672,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Dash</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.Ymax.Value</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Ymax.Value</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2687,8 +2687,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.Phenology.Stage</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Phenology.Stage</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2702,8 +2702,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.Arbitrator.DMSupply</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Arbitrator.DMSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2732,7 +2732,7 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Plant Nitrogen components</Name>
@@ -2746,7 +2746,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Stover.Live.N</YFieldName>
+        <YFieldName>SCUM.Stover.Live.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2761,7 +2761,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Root.Live.N</YFieldName>
+        <YFieldName>SCUM.Root.Live.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2776,7 +2776,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Product.Live.N</YFieldName>
+        <YFieldName>SCUM.Product.Live.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2791,7 +2791,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Summariser.Total.N</YFieldName>
+        <YFieldName>SCUM.Summariser.Total.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2813,7 +2813,7 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Water supply and demand</Name>
@@ -2827,7 +2827,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Root.WaterSupply</YFieldName>
+        <YFieldName>SCUM.Root.WaterSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2842,7 +2842,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Root.WaterUptake</YFieldName>
+        <YFieldName>SCUM.Root.WaterUptake</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2857,7 +2857,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Stover.WaterDemand</YFieldName>
+        <YFieldName>SCUM.Stover.WaterDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2872,7 +2872,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Stover.Transpiration</YFieldName>
+        <YFieldName>SCUM.Stover.Transpiration</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2902,7 +2902,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Root.Depth</YFieldName>
+        <YFieldName>SCUM.Root.Depth</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2917,7 +2917,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Stover.Height</YFieldName>
+        <YFieldName>SCUM.Stover.Height</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2960,8 +2960,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.Root.Depth</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Root.Depth</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2975,8 +2975,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.Stover.CoverTotal</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Stover.CoverTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2990,8 +2990,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.Stover.LAI</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Stover.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -3034,7 +3034,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Arbitrator.NDemand</YFieldName>
+        <YFieldName>SCUM.Arbitrator.NDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -3049,7 +3049,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Arbitrator.NSupply</YFieldName>
+        <YFieldName>SCUM.Arbitrator.NSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -3085,7 +3085,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Arbitrator.DMSupply</YFieldName>
+        <YFieldName>SCUM.Arbitrator.DMSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -3100,7 +3100,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Arbitrator.DMDemand</YFieldName>
+        <YFieldName>SCUM.Arbitrator.DMDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -3115,7 +3115,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Arbitrator.DMSinkLimitation</YFieldName>
+        <YFieldName>SCUM.Arbitrator.DMSinkLimitation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -3130,7 +3130,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Arbitrator.DMNutrientLimitation</YFieldName>
+        <YFieldName>SCUM.Arbitrator.DMNutrientLimitation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -3277,7 +3277,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Stover.Fw</YFieldName>
+        <YFieldName>SCUM.Stover.Fw</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -3292,7 +3292,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Arbitrator.FN</YFieldName>
+        <YFieldName>SCUM.Arbitrator.FN</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -3307,7 +3307,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>MCSP.Phenology.Stage</YFieldName>
+        <YFieldName>SCUM.Phenology.Stage</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -3335,63 +3335,63 @@ namespace Models
     <Slope>0</Slope>
   </Simulation>
   <Experiment>
-    <Name>7CropTestRun</Name>
+    <Name>TestCrop</Name>
     <Factors>
       <Name>Factors</Name>
       <Factor>
         <Name>SpringWheat</Name>
         <Specifications>
-          <string>[MCSPSowingRule].Script.CultivarName = Wheat_Spring</string>
-          <string>[MCSPSowingRule].Script.SowingDate = 1998-09-15</string>
+          <string>[SCUMSowingRule].Script.CultivarName = Wheat_Spring</string>
+          <string>[SCUMSowingRule].Script.SowingDate = 1998-09-15</string>
         </Specifications>
       </Factor>
       <Factor>
         <Name>AutumnWheat</Name>
         <Specifications>
-          <string>[MCSPSowingRule].Script.CultivarName = Wheat_Autumn</string>
-          <string>[MCSPSowingRule].Script.SowingDate = 1998-05-15</string>
+          <string>[SCUMSowingRule].Script.CultivarName = Wheat_Autumn</string>
+          <string>[SCUMSowingRule].Script.SowingDate = 1998-05-15</string>
         </Specifications>
       </Factor>
       <Factor>
         <Name>Potatoes</Name>
         <Specifications>
-          <string>[MCSPSowingRule].Script.CultivarName = Potatoes_Long</string>
-          <string>[MCSPSowingRule].Script.SowingDate = 1998-10-15</string>
+          <string>[SCUMSowingRule].Script.CultivarName = Potatoes_Long</string>
+          <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
         </Specifications>
       </Factor>
       <Factor>
         <Name>Peas</Name>
         <Specifications>
-          <string>[MCSPSowingRule].Script.CultivarName = Green_Peas</string>
-          <string>[MCSPSowingRule].Script.SowingDate = 1998-10-15</string>
+          <string>[SCUMSowingRule].Script.CultivarName = Green_Peas</string>
+          <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
         </Specifications>
       </Factor>
       <Factor>
         <Name>Maize</Name>
         <Specifications>
-          <string>[MCSPSowingRule].Script.CultivarName = Maize_Short</string>
-          <string>[MCSPSowingRule].Script.SowingDate = 1998-11-15</string>
+          <string>[SCUMSowingRule].Script.CultivarName = Maize_Short</string>
+          <string>[SCUMSowingRule].Script.SowingDate = 1998-11-15</string>
         </Specifications>
       </Factor>
       <Factor>
         <Name>Spinich</Name>
         <Specifications>
-          <string>[MCSPSowingRule].Script.CultivarName = Spinich</string>
-          <string>[MCSPSowingRule].Script.SowingDate = 1998-05-15</string>
+          <string>[SCUMSowingRule].Script.CultivarName = Spinich</string>
+          <string>[SCUMSowingRule].Script.SowingDate = 1998-05-15</string>
         </Specifications>
       </Factor>
       <Factor>
         <Name>Kale</Name>
         <Specifications>
-          <string>[MCSPSowingRule].Script.CultivarName = Kale</string>
-          <string>[MCSPSowingRule].Script.SowingDate = 1998-10-15</string>
+          <string>[SCUMSowingRule].Script.CultivarName = Kale</string>
+          <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
         </Specifications>
       </Factor>
       <Factor>
         <Name>Rape</Name>
         <Specifications>
-          <string>[MCSPSowingRule].Script.CultivarName = Rape</string>
-          <string>[MCSPSowingRule].Script.SowingDate = 1998-10-15</string>
+          <string>[SCUMSowingRule].Script.CultivarName = Rape</string>
+          <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
         </Specifications>
       </Factor>
     </Factors>
@@ -3446,7 +3446,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>MCSPSoil</Name>
+              <Name>SCUMSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -3760,7 +3760,7 @@ namespace Models
           <Name>Fertiliser</Name>
         </Fertiliser>
         <Manager>
-          <Name>MCSPSowingRule</Name>
+          <Name>SCUMSowingRule</Name>
           <Script>
             <CultivarName>Barley_Spring</CultivarName>
             <InitialRootDepth>10</InitialRootDepth>
@@ -3776,7 +3776,7 @@ namespace Models
            [System.Xml.Serialization.XmlInclude(typeof(Model))]
             public class Script : Model
             {      
-               [Link] Plant MCSP;
+               [Link] Plant SCUM;
                [Link] Clock Clock;
 
                [Description("Cultivar")]
@@ -3791,7 +3791,7 @@ namespace Models
                private void OnDoManagement(object sender, EventArgs e)
                {
 				if (Clock.Today.Date == SowingDate)
-                    MCSP.Sow(cultivar:CultivarName, population:1, depth:InitialRootDepth, rowSpacing:150);
+                    SCUM.Sow(cultivar:CultivarName, population:1, depth:InitialRootDepth, rowSpacing:150);
                 //PMFCrop.Sow(... Contains the following arguements:
                 //Population  double  Optional  Seeds sowing/m2.  Default is zero
                 //Cultivar    string  Required  "NameOfCultivar"
@@ -3829,7 +3829,7 @@ namespace Models
 		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
-		[Link] Plant MCSP;
+		[Link] Plant SCUM;
         [Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
@@ -3907,7 +3907,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
             AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			AccumPlantN -= (double)zone.Get("MCSP.Root.NUptake");
+			AccumPlantN -= (double)zone.Get("SCUM.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -3916,8 +3916,8 @@ namespace Models
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 
 			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[MCSP].Stover.Transpiration");
-            AccumEP -= (double)zone.Get("MCSP.Root.WaterUptake");
+			//AccumEP -= (double)zone.Get("[SCUM].Stover.Transpiration");
+            AccumEP -= (double)zone.Get("SCUM.Root.WaterUptake");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -4027,45 +4027,45 @@ namespace Models
             <string>[Soil].SoilWater.pond</string>
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
-            <string>[MCSP].Stover.Live.Wt</string>
-            <string>[MCSP].Root.Live.Wt</string>
-            <string>[MCSP].Product.Live.Wt</string>
-            <string>[MCSP].Stover.Live.N</string>
-            <string>[MCSP].Root.Live.N</string>
-            <string>[MCSP].Product.Live.N</string>
-            <string>[MCSP].Stover.Live.NConc</string>
-            <string>[MCSP].Root.Live.NConc</string>
-            <string>[MCSP].Product.Live.NConc</string>
-            <string>[MCSP].Root.WaterSupply</string>
-            <string>[MCSP].Root.WaterUptake</string>
-            <string>[MCSP].Stover.Transpiration</string>
-            <string>[MCSP].Stover.WaterDemand</string>
-            <string>[MCSP].Root.Depth</string>
-            <string>[MCSP].Stover.CoverTotal</string>
-            <string>[MCSP].Stover.CoverDead</string>
-            <string>[MCSP].Stover.LAI</string>
-            <string>[MCSP].Stover.Height</string>
-            <string>[MCSP].Stover.PotentialBiomass.Value</string>
-            <string>[MCSP].Product.LiveFWt</string>
-            <string>[MCSP].Arbitrator.NDemand</string>
-            <string>[MCSP].Arbitrator.NSupply</string>
-            <string>[MCSP].Stover.Fw</string>
-            <string>[MCSP].Stover.Fn</string>
-            <string>[MCSP].Summariser.Total.Wt</string>
-            <string>[MCSP].ExpectedYield.Value</string>
-            <string>[MCSP].DryYield.Value</string>
-            <string>[MCSP].TotalBiomassAtStartReproductive.Value</string>
-            <string>[MCSP].TotalBiomassAtStartSenescence.Value</string>
-            <string>[MCSP].Ymax.Value</string>
-            <string>[MCSP].Summariser.Total.N</string>
-            <string>[MCSP].Arbitrator.DMSupply</string>
-            <string>[MCSP].Arbitrator.DMDemand</string>
-            <string>[MCSP].Phenology.AccumulatedThermalTime.Value</string>
-            <string>[MCSP].Arbitrator.DMSinkLimitation</string>
-            <string>[MCSP].Arbitrator.DMNutrientLimitation</string>
-            <string>[MCSP].Phenology.ThermalTime.Value</string>
-            <string>[MCSP].Phenology.CurrentPhaseName</string>
-            <string>[MCSP].Phenology.Stage</string>
+            <string>[SCUM].Stover.Live.Wt</string>
+            <string>[SCUM].Root.Live.Wt</string>
+            <string>[SCUM].Product.Live.Wt</string>
+            <string>[SCUM].Stover.Live.N</string>
+            <string>[SCUM].Root.Live.N</string>
+            <string>[SCUM].Product.Live.N</string>
+            <string>[SCUM].Stover.Live.NConc</string>
+            <string>[SCUM].Root.Live.NConc</string>
+            <string>[SCUM].Product.Live.NConc</string>
+            <string>[SCUM].Root.WaterSupply</string>
+            <string>[SCUM].Root.WaterUptake</string>
+            <string>[SCUM].Stover.Transpiration</string>
+            <string>[SCUM].Stover.WaterDemand</string>
+            <string>[SCUM].Root.Depth</string>
+            <string>[SCUM].Stover.CoverTotal</string>
+            <string>[SCUM].Stover.CoverDead</string>
+            <string>[SCUM].Stover.LAI</string>
+            <string>[SCUM].Stover.Height</string>
+            <string>[SCUM].Stover.PotentialBiomass.Value</string>
+            <string>[SCUM].Product.LiveFWt</string>
+            <string>[SCUM].Arbitrator.NDemand</string>
+            <string>[SCUM].Arbitrator.NSupply</string>
+            <string>[SCUM].Stover.Fw</string>
+            <string>[SCUM].Stover.Fn</string>
+            <string>[SCUM].Summariser.Total.Wt</string>
+            <string>[SCUM].ExpectedYield.Value</string>
+            <string>[SCUM].DryYield.Value</string>
+            <string>[SCUM].TotalBiomassAtStartReproductive.Value</string>
+            <string>[SCUM].TotalBiomassAtStartSenescence.Value</string>
+            <string>[SCUM].Ymax.Value</string>
+            <string>[SCUM].Summariser.Total.N</string>
+            <string>[SCUM].Arbitrator.DMSupply</string>
+            <string>[SCUM].Arbitrator.DMDemand</string>
+            <string>[SCUM].Phenology.AccumulatedThermalTime.Value</string>
+            <string>[SCUM].Arbitrator.DMSinkLimitation</string>
+            <string>[SCUM].Arbitrator.DMNutrientLimitation</string>
+            <string>[SCUM].Phenology.ThermalTime.Value</string>
+            <string>[SCUM].Phenology.CurrentPhaseName</string>
+            <string>[SCUM].Phenology.Stage</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -4083,7 +4083,7 @@ namespace Models
             <Line>Solid</Line>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>MCSP.Stover.Live.NConc</YFieldName>
+            <YFieldName>SCUM.Stover.Live.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -4127,7 +4127,7 @@ namespace Models
             <Line>Solid</Line>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>MCSP.Stover.Fw</YFieldName>
+            <YFieldName>SCUM.Stover.Fw</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -4142,7 +4142,7 @@ namespace Models
             <Line>Solid</Line>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>MCSP.Stover.Fn</YFieldName>
+            <YFieldName>SCUM.Stover.Fn</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -4175,8 +4175,8 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Plant>
-          <Name>MCSP</Name>
-          <CropType>MCSP</CropType>
+          <Name>SCUM</Name>
+          <CropType>SCUM</CropType>
         </Plant>
         <Manager>
           <Name>AutomaticIrrigation</Name>
@@ -4211,7 +4211,7 @@ namespace Models
 	   [Link] Irrigation Irrigation;
 	   [Link] Clock Clock;
 	   [Link] Soil Soil;
-	   [Link] Plant MCSP;
+	   [Link] Plant SCUM;
 	   
 	   //User inputs from properties tab
 	   [Description("Irrigation on (yes or no)")]
@@ -4311,7 +4311,7 @@ namespace Models
 		  
 	      //Is there a crop in the ground that needs irrigation?
 	      CropIsActive = false;
-	      if ((MCSP.Phenology.Stage >= 3.0) && (MCSP.Phenology.Stage < 6.0))
+	      if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
 	            CropIsActive = true;
 	      
 	      //Is the irrigator available?
@@ -4323,7 +4323,7 @@ namespace Models
 	      //Is the soil dry enough to require irrigation?
 	      SoilIsDry = false;
 	      double CurrentRootDepth = 0;
-	      double RootDepth = MCSP.Root.Depth;
+	      double RootDepth = SCUM.Root.Depth;
 	      CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
 	      
 	      double RelativeRootDepth = Math.Min(1.0, CurrentRootDepth / Top_Depth);
@@ -4389,7 +4389,7 @@ namespace Models
 	   [Link] Fertiliser Fertiliser;
 	   [Link] Clock Clock;
 	   [Link] Soils.Soil Soil;
-	   [Link] Plant MCSP;
+	   [Link] Plant SCUM;
 	   
 	   //User inputs from properties tab
 	   [Description("Fertiliser on (yes or no)")]
@@ -4465,7 +4465,7 @@ namespace Models
 		  
 	      //Is there a crop in the ground that needs irrigation?
 	      CropIsActive = false;
-	      if ((MCSP.Phenology.Stage >= 3.0) && (MCSP.Phenology.Stage < 6.0))
+	      if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
 	            CropIsActive = true;
 	      
 	      //Is the irrigator available?
@@ -4477,7 +4477,7 @@ namespace Models
 	      //Is the soil N low enough to require fertiliser?
 	      SoilNIsLow = false;
 	      double CurrentRootDepth = 0;
-	      double RootDepth = MCSP.Root.Depth;
+	      double RootDepth = SCUM.Root.Depth;
 	      CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
 	      
 	      Accumulated_depth = 0;
@@ -4817,8 +4817,8 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-          <YFieldName>MCSP.Stover.Live.Wt</YFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <YFieldName>SCUM.Stover.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4832,8 +4832,8 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-          <YFieldName>MCSP.Root.Live.Wt</YFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <YFieldName>SCUM.Root.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4847,8 +4847,8 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-          <YFieldName>MCSP.Product.Live.Wt</YFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <YFieldName>SCUM.Product.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4862,8 +4862,8 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-          <YFieldName>MCSP.Summariser.Total.Wt</YFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4877,8 +4877,8 @@ namespace Models
           <Marker>None</Marker>
           <Line>Dash</Line>
           <TableName>Report</TableName>
-          <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-          <YFieldName>MCSP.DryYield.Value</YFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <YFieldName>SCUM.DryYield.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4892,8 +4892,8 @@ namespace Models
           <Marker>None</Marker>
           <Line>Dot</Line>
           <TableName>Report</TableName>
-          <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-          <YFieldName>MCSP.TotalBiomassAtStartReproductive.Value</YFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <YFieldName>SCUM.TotalBiomassAtStartReproductive.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4907,8 +4907,8 @@ namespace Models
           <Marker>None</Marker>
           <Line>DashDot</Line>
           <TableName>Report</TableName>
-          <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-          <YFieldName>MCSP.TotalBiomassAtStartSenescence.Value</YFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <YFieldName>SCUM.TotalBiomassAtStartSenescence.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4922,8 +4922,8 @@ namespace Models
           <Marker>None</Marker>
           <Line>Dash</Line>
           <TableName>Report</TableName>
-          <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-          <YFieldName>MCSP.Ymax.Value</YFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <YFieldName>SCUM.Ymax.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4937,8 +4937,8 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-          <YFieldName>MCSP.Phenology.Stage</YFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <YFieldName>SCUM.Phenology.Stage</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4952,8 +4952,8 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-          <YFieldName>MCSP.Arbitrator.DMSupply</YFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <YFieldName>SCUM.Arbitrator.DMSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>true</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4996,7 +4996,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Stover.Live.N</YFieldName>
+          <YFieldName>SCUM.Stover.Live.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5011,7 +5011,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Root.Live.N</YFieldName>
+          <YFieldName>SCUM.Root.Live.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5026,7 +5026,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Product.Live.N</YFieldName>
+          <YFieldName>SCUM.Product.Live.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5041,7 +5041,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Summariser.Total.N</YFieldName>
+          <YFieldName>SCUM.Summariser.Total.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5077,7 +5077,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Root.WaterSupply</YFieldName>
+          <YFieldName>SCUM.Root.WaterSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5092,7 +5092,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Root.WaterUptake</YFieldName>
+          <YFieldName>SCUM.Root.WaterUptake</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5107,7 +5107,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Stover.WaterDemand</YFieldName>
+          <YFieldName>SCUM.Stover.WaterDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5122,7 +5122,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Stover.Transpiration</YFieldName>
+          <YFieldName>SCUM.Stover.Transpiration</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5152,7 +5152,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Root.Depth</YFieldName>
+          <YFieldName>SCUM.Root.Depth</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5167,7 +5167,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Stover.Height</YFieldName>
+          <YFieldName>SCUM.Stover.Height</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5210,8 +5210,8 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-          <YFieldName>MCSP.Root.Depth</YFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <YFieldName>SCUM.Root.Depth</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5225,8 +5225,8 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-          <YFieldName>MCSP.Stover.CoverTotal</YFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <YFieldName>SCUM.Stover.CoverTotal</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5240,8 +5240,8 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-          <YFieldName>MCSP.Stover.LAI</YFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <YFieldName>SCUM.Stover.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5284,7 +5284,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Arbitrator.NDemand</YFieldName>
+          <YFieldName>SCUM.Arbitrator.NDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5299,7 +5299,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Arbitrator.NSupply</YFieldName>
+          <YFieldName>SCUM.Arbitrator.NSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5343,7 +5343,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Arbitrator.DMSupply</YFieldName>
+          <YFieldName>SCUM.Arbitrator.DMSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>true</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5358,7 +5358,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Arbitrator.DMDemand</YFieldName>
+          <YFieldName>SCUM.Arbitrator.DMDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5373,7 +5373,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Arbitrator.DMSinkLimitation</YFieldName>
+          <YFieldName>SCUM.Arbitrator.DMSinkLimitation</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5388,7 +5388,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Arbitrator.DMNutrientLimitation</YFieldName>
+          <YFieldName>SCUM.Arbitrator.DMNutrientLimitation</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5432,7 +5432,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Stover.Fw</YFieldName>
+          <YFieldName>SCUM.Stover.Fw</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5447,7 +5447,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Stover.Fn</YFieldName>
+          <YFieldName>SCUM.Stover.Fn</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5462,7 +5462,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MCSP.Phenology.Stage</YFieldName>
+          <YFieldName>SCUM.Phenology.Stage</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5508,8 +5508,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.Stover.CoverTotal</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Stover.CoverTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -5531,7 +5531,7 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Biomass</Name>
@@ -5544,8 +5544,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.Summariser.Total.Wt</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -5567,7 +5567,7 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>CropN</Name>
@@ -5580,8 +5580,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.Summariser.Total.N</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Summariser.Total.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -5603,7 +5603,7 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Yeild</Name>
@@ -5616,8 +5616,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.Product.Live.Wt</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Product.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -5639,7 +5639,7 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>FreshYield</Name>
@@ -5652,8 +5652,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>MCSP.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>MCSP.Product.LiveFWt</YFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Product.LiveFWt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -5675,7 +5675,7 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Experiment>
   <ExplorerWidth>479</ExplorerWidth>
