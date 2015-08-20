@@ -47,6 +47,13 @@ namespace BuildService
         void RegisterUpgrade(string firstName, string lastName, string organisation, string address1, string address2,
                      string city, string state, string postcode, string country, string email, string product);
 
+        /// <summary>
+        /// Gets the URL of the latest version.
+        /// </summary>
+        /// <returns>The URL of the latest version of APSIM Next Generation.</returns>
+        [OperationContract]
+        string GetURLOfLatestVersion();
+
     }
 
     /// <summary>

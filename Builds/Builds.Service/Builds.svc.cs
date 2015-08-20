@@ -69,7 +69,6 @@ namespace BuildService
             DateTime issueResolvedDate = GetIssueResolvedDate(issueNumber);
 
             string sql = "SELECT * FROM ApsimXBuilds " +
-                             //"WHERE Date >= Convert(datetime, '" + string.Format("{0:yyyy-MM-dd}", issueResolvedDate) + "')" +
                              "WHERE Date >= " + string.Format("'{0:yyyy-MM-ddThh:mm:ss tt}'", issueResolvedDate) +
                              " ORDER BY Date DESC";
 
@@ -89,13 +88,35 @@ namespace BuildService
                 upgrade.issueNumber = buildIssueNumber;
                 upgrade.IssueTitle = (string)reader["IssueTitle"];
                 upgrade.IssueURL = @"https://github.com/APSIMInitiative/ApsimX/issues/" + buildIssueNumber;
-                upgrade.ReleaseURL = @"http://bob.apsim.info/ApsimXFiles/" + buildIssueNumber + "/Apsim" + version + " Setup.exe";
+                upgrade.ReleaseURL = @"http://bob.apsim.info/ApsimXFiles/" + buildIssueNumber + "/ApsimSetup.exe";
 
                 upgrades.Add(upgrade);
             }
             reader.Close();
 
             return upgrades;
+        }
+
+        /// <summary>
+        /// Gets the URL of the latest version.
+        /// </summary>
+        /// <returns>The URL of the latest version of APSIM Next Generation.</returns>
+        public string GetURLOfLatestVersion()
+        {
+            string url = null;
+            string sql = "SELECT TOP 1 * FROM ApsimXBuilds " +
+                             " ORDER BY Date DESC";
+
+            SqlCommand command = new SqlCommand(sql, connection);
+            SqlDataReader reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                int buildIssueNumber = (int)reader["IssueNumber"];
+                url = @"http://bob.apsim.info/ApsimXFiles/" + buildIssueNumber + "/ApsimSetup.exe";
+            }
+            reader.Close();
+
+            return url;
         }
 
         /// <summary>
