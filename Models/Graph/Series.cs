@@ -16,6 +16,7 @@ namespace Models.Graph
     using Models.Factorial;
 
     /// <summary>The class represents a single series on a graph</summary>
+    [ValidParent(typeof(Graph))]
     [ViewName("UserInterface.Views.SeriesView")]
     [PresenterName("UserInterface.Presenters.SeriesPresenter")]
     [Serializable]

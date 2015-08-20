@@ -10,6 +10,7 @@ namespace Models.Agroforestry
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentModels = new Type[] { typeof(Simulation), typeof(Zone) })]
     public class LocalMicroClimate : Model, IWeather
     {
 

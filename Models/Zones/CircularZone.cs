@@ -12,6 +12,7 @@ namespace Models.Zones
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentModels = new Type[] { typeof(Zone), typeof(Simulation) })]
     public class CircularZone : Zone
     {
         /// <summary>Radius of the zone.</summary>

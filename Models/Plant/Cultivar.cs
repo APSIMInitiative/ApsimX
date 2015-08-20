@@ -10,6 +10,7 @@ namespace Models.PMF
     using System.Xml.Serialization;
     using Models.Core;
     using APSIM.Shared.Utilities;
+    using OldPlant;
 
     /// <summary>
     /// Cultivar class for holding cultivar overrides.
@@ -24,6 +25,7 @@ namespace Models.PMF
     [Serializable]
     [ViewName("UserInterface.Views.CultivarView")]
     [PresenterName("UserInterface.Presenters.CultivarPresenter")]
+    [ValidParent(ParentModels=new Type[] { typeof(Plant15), typeof(Plant) })]
     public class Cultivar : Model
     {
         /// <summary>

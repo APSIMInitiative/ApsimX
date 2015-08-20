@@ -19,6 +19,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.DataStoreView")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
+    [ValidParent(typeof(Simulations))]
     public class DataStore : Model
     {
         /// <summary>A SQLite connection shared between all instances of this DataStore.</summary>
