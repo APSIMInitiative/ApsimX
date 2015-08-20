@@ -4,7 +4,9 @@
     using Models.Core;
     using Presenters;
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Media;
     using System.Windows.Forms;
 
@@ -58,34 +60,58 @@
         {
             IsRunning = true;
 
-            stopwatch.Start();
-
-            if (modelClicked is Simulations)
+            if (!DuplicatesFound())
             {
-                simulations.SimulationToRun = null;  // signal that we want to run all simulations.
-                numSimulationsToRun = Simulations.FindAllSimulationsToRun(simulations).Length;
+                stopwatch.Start();
+
+                if (modelClicked is Simulations)
+                {
+                    simulations.SimulationToRun = null;  // signal that we want to run all simulations.
+                    numSimulationsToRun = Simulations.FindAllSimulationsToRun(simulations).Length;
+                }
+                else
+                {
+                    simulations.SimulationToRun = modelClicked;
+                    numSimulationsToRun = Simulations.FindAllSimulationsToRun(modelClicked).Length;
+                }
+
+                if (explorerPresenter != null)
+                    explorerPresenter.ShowMessage(modelClicked.Name + " running (" + numSimulationsToRun + ")", Models.DataStore.ErrorLevel.Information);
+
+
+                if (numSimulationsToRun > 1)
+                {
+                    timer = new Timer();
+                    timer.Interval = 1000;
+                    timer.Tick += OnTimerTick;
+                }
+                jobManager.AddJob(simulations);
+                jobManager.AllJobsCompleted += OnComplete;
+                jobManager.Start(waitUntilFinished: false);
+                if (numSimulationsToRun > 1)
+                    timer.Start();
             }
-            else
+        }
+
+        /// <summary>
+        /// Return true if duplications were found.
+        /// </summary>
+        /// <returns></returns>
+        private bool DuplicatesFound()
+        {
+            List<IModel> allSims = Apsim.ChildrenRecursively(simulations, typeof(Simulation));
+            List<string> allSimNames = allSims.Select(s => s.Name).ToList();
+            var duplicates = allSimNames
+                .GroupBy(i => i)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key);
+            if (duplicates.ToList().Count > 0)
             {
-                simulations.SimulationToRun = modelClicked;
-                numSimulationsToRun = Simulations.FindAllSimulationsToRun(modelClicked).Length;
+                string errorMessage = "Duplicate simulation names found " + StringUtilities.BuildString(duplicates.ToArray(), ", ");
+                explorerPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
+                return true;
             }
-
-            if (explorerPresenter != null)
-                explorerPresenter.ShowMessage(modelClicked.Name + " running (" + numSimulationsToRun + ")", Models.DataStore.ErrorLevel.Information);
-
-
-            if (numSimulationsToRun > 1)
-            {
-                timer = new Timer();
-                timer.Interval = 1000;
-                timer.Tick += OnTimerTick;
-            }
-            jobManager.AddJob(simulations);
-            jobManager.AllJobsCompleted += OnComplete;
-            jobManager.Start(waitUntilFinished: false);
-            if (numSimulationsToRun > 1)
-                timer.Start();
+            return false;
         }
 
         /// <summary>
