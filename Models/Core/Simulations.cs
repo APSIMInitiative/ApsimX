@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using Models.Factorial;
 using APSIM.Shared.Utilities;
+using System.Linq;
 
 namespace Models.Core
 {
@@ -335,6 +336,18 @@ namespace Models.Core
 
             NumToRun = simulationsToRun.Length;
             NumCompleted = 0;
+
+            // See if any simulations are named the same as other ones.
+            List<IModel> allSimNames = Apsim.ChildrenRecursively(this);
+            foreach (Simulation simulation in simulationsToRun)
+            {
+                foreach (IModel otherSim in allSimNames)
+                {
+                    if (simulation != otherSim && simulation.Name == otherSim.Name)
+                        throw new Exception("You are trying to run a simulation that has the same name as another simulation. Name: " + simulation.Name);
+                }
+            }
+
 
             if (NumToRun == 1)
             {
