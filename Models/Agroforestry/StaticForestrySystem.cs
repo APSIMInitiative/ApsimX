@@ -19,6 +19,7 @@ namespace Models.Agroforestry
     [Serializable]
     [ViewName("UserInterface.Views.StaticForestrySystemView")]
     [PresenterName("UserInterface.Presenters.StaticForestrySystemPresenter")]
+    [ValidParent(ParentModels = new Type[] { typeof(Simulation), typeof(Zone) })]
     public class StaticForestrySystem : Zone,IUptake
     {
         [Link]

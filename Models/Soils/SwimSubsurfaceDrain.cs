@@ -10,6 +10,7 @@ namespace Models.Soils
     /// SWIM sub surface drain model
     /// </summary>
     [Serializable]
+    [ValidParent(typeof(Swim3))]
     public class SwimSubsurfaceDrain : Model
     {
         /// <summary>Gets or sets the drain depth.</summary>

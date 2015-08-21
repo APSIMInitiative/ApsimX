@@ -12,6 +12,7 @@ namespace Models.Zones
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentModels = new Type[] { typeof(Zone), typeof(Simulation) })]
     public class RectangularZone : Zone
     {
         /// <summary>Length of the zone.</summary>

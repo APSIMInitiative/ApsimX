@@ -198,6 +198,10 @@ namespace UserInterface.Presenters
             {
                 this.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
             }
+            finally
+            {
+                this.ShowRightHandPanel();
+            }
 
             return false;
         }
@@ -588,8 +592,11 @@ namespace UserInterface.Presenters
             Model destinationModel = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
             if (destinationModel != null)
             {
+                if (destinationModel.GetType() == typeof(Folder))
+                    e.Allow = true;
+
                 DragObject dragObject = e.DragObject as DragObject;
-                ValidParentAttribute validParent = ReflectionUtilities.GetAttribute(dragObject.ModelType, typeof(ValidParentAttribute), false) as ValidParentAttribute;
+                ValidParentAttribute validParent = ReflectionUtilities.GetAttribute(dragObject.ModelType, typeof(ValidParentAttribute), true) as ValidParentAttribute;
                 if (validParent == null || validParent.ParentModels.Length == 0)
                 {
                     e.Allow = true;

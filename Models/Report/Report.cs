@@ -17,6 +17,7 @@ namespace Models.Report
     [Serializable]
     [ViewName("UserInterface.Views.ReportView")]
     [PresenterName("UserInterface.Presenters.ReportPresenter")]
+    [ValidParent(typeof(Zone))]
     public class Report : Model
     {
         /// <summary>

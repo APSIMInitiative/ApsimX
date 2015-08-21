@@ -11,6 +11,7 @@ namespace Models.PMF.OldPlant
     /// Plant spatial model
     /// </summary>
     [Serializable]
+    [ValidParent(typeof(Plant15))]
     public class PlantSpatial1 : Model
     {
         /// <summary>The plant</summary>
