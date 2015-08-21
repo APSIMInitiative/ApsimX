@@ -371,7 +371,7 @@ namespace UserInterface.Views
                 this.plot1.Model.LegendPosition = oxyLegendPosition;
             }
 
-            this.plot1.Model.LegendSymbolLength = 30;
+            //this.plot1.Model.LegendSymbolLength = 60;
         }
 
         /// <summary>
