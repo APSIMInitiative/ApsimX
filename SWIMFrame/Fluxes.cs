@@ -58,7 +58,7 @@ namespace SWIMFrame
             he = sp.he; Ks = sp.ks;
 
             // Get K values for Simpson's integration rule in subroutine odef.
-            for (i = 0; i < nu - 2; i++)
+            for (i = 0; i < nu - 1; i++)
             {
                 x = 0.5 * (sp.phic[i + 1] - sp.phic[i]);
                 hpK[i] = sp.Kc[i] + x * (sp.Kco[0, i] + x * (sp.Kco[1, i] + x * sp.Kco[2, i]));
@@ -66,41 +66,49 @@ namespace SWIMFrame
 
             // Get fluxes aq(1,:) for values aphi[i] at bottom (wet), aphi(1) at top (dry).
             // These are used to select suitable phi values for flux table.
+            // Note that due to the complexity of array indexing in the FORATRAN,
+            // we're keeping aq 1 indexed.
             nit = 0;
-            aq[0, 0] = sp.Kc[0]; // q=K here because dphi/dz=0
+            aq[0, 1] = sp.Kc[0]; // q=K here because dphi/dz=0
             dh = 2.0; // for getting phi in saturated region
             q1 = (sp.phic[0] - sp.phic[1]) / dz; // q1 is initial estimate
-            aq[0, 1] = ssflux(1, 2, dz, q1, 0.1 * rerr); // get accurate flux
-            for (j = 2; j < nu + 20; j++) // 20*dh should be far enough for small curvature in (phi,q)
+            aq[0, 2] = ssflux(1, 2, dz, q1, 0.1 * rerr); // get accurate flux
+            for (j = 3; j <= nu + 20; j++) // 20*dh should be far enough for small curvature in (phi,q)
             {
                 if (j > nu) // part satn - set h, K and phi
                 {
-                    sp.hc[j] = sp.hc[j - 1] + dh * (j - nu);
-                    sp.Kc[j] = Ks;
-                    sp.phic[j] = sp.phic[j - 1] + Ks * dh * (j - nu);
+                    sp.hc[j - 1] = sp.hc[j - 2] + dh * (j - nu);
+                    sp.Kc[j - 1] = Ks;
+                    sp.phic[j - 1] = sp.phic[j - 2] + Ks * dh * (j - nu);
                 }
 
                 // get approx q from linear extrapolation
-                q1 = aq[0, j - 1] + (sp.phic[j] - sp.phic[j - 1]) * (aq[0, j - 1] - aq[0, j - 2]) / (sp.phic[j - 1] - sp.phic[j - 2]);
-                aq[0, j] = ssflux(1, j, dz, q1, 0.1 * rerr); // get accurate q
+                q1 = aq[0, j - 1] + (sp.phic[j-1] - sp.phic[j - 2]) * (aq[0, j - 1] - aq[0, j - 2]) / (sp.phic[j - 2] - sp.phic[j - 3]);
+//                if (j > 2)
+                    aq[0, j] = ssflux(1, j, dz, q1, 0.1 * rerr); // get accurate q
                 nt = j;
                 ns = nt - nu;
                 if (j > nu)
-                    if (-(sp.phic[j] - sp.phic[j - 1]) / (aq[0, j] - aq[0, j - 1]) < (1 + rerr) * dz)
+                    if (-(sp.phic[j-1] - sp.phic[j - 2]) / (aq[0, j] - aq[0, j - 1]) < (1 + rerr) * dz)
                         break;
             }
+
+            //move everything in aq(0) down an index. Will need to fix above code as this will cause a slowdown
+            //only need to move up to nt values.
+            for (int i = 1; i <= nt; i++)
+                aq[0, i - 1] = aq[0, i];
 
             // Get phi values phif for flux table using curvature of q vs phi.
             // rerr and cfac determine spacings of phif.
             Matrix<double> aqM = Matrix<double>.Build.DenseOfArray(aq);
-            i = nonlin(nu, sp.phic.Slice(1, nu), aqM.Column(0).ToArray().Slice(1, nu), rerr);
-            re = curv(nu, sp.phic.Slice(1, nu), aqM.Column(0).ToArray().Slice(1, nu));// for unsat phi
+            i = nonlin(nu, sp.phic.Slice(1, nu), aqM.Row(0).ToArray().Slice(1, nu), rerr);
+            re = curv(nu, sp.phic.Slice(1, nu), aqM.Row(0).ToArray().Slice(1, nu));// for unsat phi
             indices(nu - 2, re.Slice(1,nu-2).Reverse().ToArray(), 1 + nu - i, cfac, out nphif, out iphif);
             int[] iphifReverse = iphif.Take(nphif).Reverse().ToArray();
             for (int idx = 0; idx < nphif; idx++)
                 iphif[idx] = 1 + nu - iphifReverse[idx]; // locations of phif in aphi
             aqM = Matrix<double>.Build.DenseOfArray(aq); //as above
-            re = curv(1 + ns, sp.phic.Slice(nu, nt), aqM.Column(1).ToArray().Slice(nu, nt)); // for sat phi
+            re = curv(1 + ns, sp.phic.Slice(nu, nt), aqM.Row(0).ToArray().Slice(nu, nt)); // for sat phi
             indices(ns - 1, re, ns, cfac, out nfs, out ifs);
 
             for (int idx = nphif; idx < nphif + nfs - 2; idx++)
@@ -124,7 +132,7 @@ namespace SWIMFrame
                 }
             // Then for upper end wetter
             for (i = 1; i < nphif - 1; i++)
-                for (j = i - 1; j > 1; j--)
+                for (j = i - 2; j > 1; j--)
                 {
                     q1 = qf[i, j + 1];
                     if (j + 1 == i)
@@ -219,6 +227,17 @@ namespace SWIMFrame
             ft.ftable = qi5; // (1:i,1:i) as above
         }
 
+        /// <summary>
+        /// Test harness for setting private variable 'q'
+        /// </summary>
+        /// <param name="q">The q value</param>
+        /// <param name="aphi">The sp.phic values</param>
+        public static void SetupOdef(double setQ, double[] aphi)
+        {
+            q = setQ;
+            sp.phic = aphi;
+        }
+
         private static double[] odef(int n1, int n2, double[] aK, double[] hpK)
         {
             double[] u = new double[2];
@@ -266,9 +285,9 @@ namespace SWIMFrame
             i = ia; j = ib; n = nu;
             if (i == j) // free drainage
             {
-                return sp.Kc[i];
+                return sp.Kc[i-1];
             }
-            ha = sp.hc[i]; hb = sp.hc[j]; Ka = sp.Kc[i]; Kb = sp.Kc[j];
+            ha = sp.hc[i-1]; hb = sp.hc[j-1]; Ka = sp.Kc[i]; Kb = sp.Kc[j-1];
             if (i >= n && j >= n) // saturated flow
                 return Ka * ((ha - hb) / dz + 1.0);
 
@@ -372,6 +391,8 @@ namespace SWIMFrame
             if (it > maxit)
                 Console.WriteLine("ssflux: too many iterations", ia, ib);
             nit = nit + it;
+            // Possible diversion here. Numbers are out by about 0.2%. Appears to be a multiplicative issue from other functions due
+            // to floating point differences between FORTRAN and C#.
             return q;
         }
 
@@ -440,7 +461,7 @@ namespace SWIMFrame
         {
             int i, j;
             int[] di = new int[n];
-            isel = new int[n + 3] ;
+            isel = new int[100] ;
             double[] ac = new double[n];
 
             for (int idx = 0; idx < c.Length; idx++)
