@@ -564,6 +564,10 @@ The number of kernals per cob is likely to vary with individual maize cultivars.
             <Value>1</Value>
           </Constant>
         </MultiplyFunction>
+        <ExpressionFunction>
+          <Name>YieldBuPerAcre</Name>
+          <Expression>[Grain].Live.Wt * 10 * 56 * 0.4536 * 2.471</Expression>
+        </ExpressionFunction>
         <RipeStage />
       </ReproductiveOrgan>
       <Root>
@@ -2259,6 +2263,7 @@ namespace Models
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
               <string>[Maize].Grain.Live.Wt</string>
+              <string>[Maize].Grain.YieldBuPerAcre</string>
               <string>[Maize].Stem.Live.Wt</string>
               <string>[Maize].Summariser.EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
