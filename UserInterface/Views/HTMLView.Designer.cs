@@ -33,9 +33,9 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.richTextBox1 = new Views.FullRichtextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -52,6 +52,7 @@
             // menuItem1
             // 
             this.menuItem1.Name = "menuItem1";
+            this.menuItem1.ShortcutKeyDisplayString = "F12";
             this.menuItem1.Size = new System.Drawing.Size(181, 26);
             this.menuItem1.Text = "Edit";
             this.menuItem1.Click += new System.EventHandler(this.OnEditClick);
@@ -59,9 +60,17 @@
             // menuItem2
             // 
             this.menuItem2.Name = "menuItem2";
+            this.menuItem2.ShortcutKeyDisplayString = "F12";
             this.menuItem2.Size = new System.Drawing.Size(181, 26);
             this.menuItem2.Text = "Preview";
             this.menuItem2.Click += new System.EventHandler(this.OnPreviewClick);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.OnHelpClick);
             // 
             // richTextBox1
             // 
@@ -76,6 +85,7 @@
             this.richTextBox1.TabIndex = 1;
             this.richTextBox1.Text = "";
             this.richTextBox1.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.OnLinkClicked);
+            this.richTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
             // 
             // textBox1
             // 
@@ -86,13 +96,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(686, 270);
             this.textBox1.TabIndex = 2;
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
-            this.helpToolStripMenuItem.Text = "Help";
-            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
             // 
             // HTMLView
             // 
