@@ -16,14 +16,12 @@ This model has been built to simulate a range of different crops in simulations 
       </Memo>
       <Phenology>
         <Name>Phenology</Name>
-        <Memo>
-          <Name>Description</Name>
-          <MemoText><![CDATA[
-Simple phenology with key stages for the onset of growth of the product organ and the onset of senesence when the canopy cover beging decreasing
-]]></MemoText>
-        </Memo>
         <AirTemperatureFunction>
           <Name>ThermalTime</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[Progression through each of the phenological stages is driven by thermal time.  As temperature increases from zero to 30 degrees development acellerates and then slows down again above 30 degress]]></MemoText>
+          </Memo>
           <XYPairs>
             <Name>XYPairs</Name>
             <X>
@@ -38,6 +36,10 @@ Simple phenology with key stages for the onset of growth of the product organ an
             </Y>
           </XYPairs>
         </AirTemperatureFunction>
+        <Memo>
+          <Name>Description1</Name>
+          <MemoText><![CDATA[As ThermalTime accumulates the crop progresses through the following phases:]]></MemoText>
+        </Memo>
         <GerminatingPhase>
           <Name>Germinating</Name>
           <Start>Sowing</Start>
@@ -49,12 +51,6 @@ Simple phenology with key stages for the onset of growth of the product organ an
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[
-This will be close to Ymax in many but because the potential yield function is sigmoidal the crop doesnt quite reach the Ymax asymtote by maturity so this give a more precices biomass at maturity for calculating partitioning coefficients 
-]]></MemoText>
-          </Memo>
           <Start>Germination</Start>
           <End>Emergence</End>
           <ShootLag>0</ShootLag>
@@ -392,7 +388,7 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
               <DivideFunction>
                 <Name>DMPartitionCoefficient</Name>
                 <SubtractFunction>
-                  <Name>Stover</Name>
+                  <Name>StoverBiomass</Name>
                   <MultiplyFunction>
                     <Name>StoverAtMaturity</Name>
                     <SubtractFunction>
@@ -419,14 +415,14 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
                     </SubtractFunction>
                     <VariableReference>
                       <Name>BiomassAtMaturity</Name>
-                      <VariableName>[TotalBiomassAtMaturity].Value</VariableName>
+                      <VariableName>[Stover].TotalBiomassAtMaturity.Value</VariableName>
                     </VariableReference>
                   </MultiplyFunction>
                   <MultiplyFunction>
                     <Name>StoverAtStartReproductive</Name>
                     <VariableReference>
                       <Name>BiomassAtStartReproductive</Name>
-                      <VariableName>[TotalBiomassAtStartReproductive].Value</VariableName>
+                      <VariableName>[Stover].TotalBiomassAtStartReproductive.Value</VariableName>
                     </VariableReference>
                     <SubtractFunction>
                       <Name>AboveGroundProportion</Name>
@@ -445,11 +441,11 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
                   <Name>TotalBiomass</Name>
                   <VariableReference>
                     <Name>BiomassAtStartSenescence</Name>
-                    <VariableName>[TotalBiomassAtStartSenescence].Value</VariableName>
+                    <VariableName>[Stover].TotalBiomassAtStartSenescence.Value</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>BiomassAtStartReproductive</Name>
-                    <VariableName>[TotalBiomassAtStartReproductive].Value</VariableName>
+                    <VariableName>[Stover].TotalBiomassAtStartReproductive.Value</VariableName>
                   </VariableReference>
                 </SubtractFunction>
               </DivideFunction>
@@ -645,6 +641,99 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
             <VariableName>[Product].HarvestIndex.Value</VariableName>
           </VariableReference>
         </DivideFunction>
+        <SigmoidFunction2>
+          <Name>TotalBiomassAtStartReproductive</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+This variable is the solution of the potential biomass accumulation function at the onset of growth of the product organ and is used in the calculation of partitioning coefficients
+]]></MemoText>
+          </Memo>
+          <VariableReference>
+            <Name>XValue</Name>
+            <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>Ymax</Name>
+            <VariableName>[Stover].Ymax.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>Xo</Name>
+            <VariableName>[Stover].XoBiomass.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>b</Name>
+            <VariableName>[Stover].bBiomass.Value</VariableName>
+          </VariableReference>
+        </SigmoidFunction2>
+        <SigmoidFunction2>
+          <Name>TotalBiomassAtStartSenescence</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+This variable is the solution of the potential biomass accumulation function at the onset of canopy senescence when the stover organ stops growing and is used in the calculation of partitioning coefficients
+]]></MemoText>
+          </Memo>
+          <AddFunction>
+            <Name>XValue</Name>
+            <VariableReference>
+              <Name>CanopyExpandingTT</Name>
+              <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>YieldIncreasingTT</Name>
+              <VariableName>[Phenology].YieldIncreasing.Target.Value</VariableName>
+            </VariableReference>
+          </AddFunction>
+          <VariableReference>
+            <Name>Ymax</Name>
+            <VariableName>[Stover].Ymax.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>Xo</Name>
+            <VariableName>[Stover].XoBiomass.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>b</Name>
+            <VariableName>[Stover].bBiomass.Value</VariableName>
+          </VariableReference>
+        </SigmoidFunction2>
+        <SigmoidFunction2>
+          <Name>TotalBiomassAtMaturity</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+This will be close to Ymax in many but because the potential yield function is sigmoidal the crop doesnt quite reach the Ymax asymtote by maturity so this give a more precices biomass at maturity for calculating partitioning coefficients 
+]]></MemoText>
+          </Memo>
+          <AddFunction>
+            <Name>XValue</Name>
+            <VariableReference>
+              <Name>CanopyExpandingTT</Name>
+              <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>YieldIncreasingTT</Name>
+              <VariableName>[Phenology].YieldIncreasing.Target.Value</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>SenescingTT</Name>
+              <VariableName>[Phenology].Senescing.Target.Value</VariableName>
+            </VariableReference>
+          </AddFunction>
+          <VariableReference>
+            <Name>Ymax</Name>
+            <VariableName>[Stover].Ymax.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>Xo</Name>
+            <VariableName>[Stover].XoBiomass.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>b</Name>
+            <VariableName>[Stover].bBiomass.Value</VariableName>
+          </VariableReference>
+        </SigmoidFunction2>
         <BiomassYesterday>0</BiomassYesterday>
         <LAI>0</LAI>
         <Height>0</Height>
@@ -1112,99 +1201,6 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
 Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 2010. A nitrogen balance model for environmental accountability in cropping systems. New Zealand Journal of Crop and Horticultural Science,38: 189-207.
 ]]></MemoText>
       </Memo>
-      <SigmoidFunction2>
-        <Name>TotalBiomassAtStartReproductive</Name>
-        <Memo>
-          <Name>Description</Name>
-          <MemoText><![CDATA[
-This variable is the solution of the potential biomass accumulation function at the onset of growth of the product organ and is used in the calculation of partitioning coefficients
-]]></MemoText>
-        </Memo>
-        <VariableReference>
-          <Name>XValue</Name>
-          <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>Ymax</Name>
-          <VariableName>[Stover].Ymax.Value</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>Xo</Name>
-          <VariableName>[Stover].XoBiomass.Value</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>b</Name>
-          <VariableName>[Stover].bBiomass.Value</VariableName>
-        </VariableReference>
-      </SigmoidFunction2>
-      <SigmoidFunction2>
-        <Name>TotalBiomassAtStartSenescence</Name>
-        <Memo>
-          <Name>Description</Name>
-          <MemoText><![CDATA[
-This variable is the solution of the potential biomass accumulation function at the onset of canopy senescence when the stover organ stops growing and is used in the calculation of partitioning coefficients
-]]></MemoText>
-        </Memo>
-        <AddFunction>
-          <Name>XValue</Name>
-          <VariableReference>
-            <Name>CanopyExpandingTT</Name>
-            <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>YieldIncreasingTT</Name>
-            <VariableName>[Phenology].YieldIncreasing.Target.Value</VariableName>
-          </VariableReference>
-        </AddFunction>
-        <VariableReference>
-          <Name>Ymax</Name>
-          <VariableName>[Stover].Ymax.Value</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>Xo</Name>
-          <VariableName>[Stover].XoBiomass.Value</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>b</Name>
-          <VariableName>[Stover].bBiomass.Value</VariableName>
-        </VariableReference>
-      </SigmoidFunction2>
-      <SigmoidFunction2>
-        <Name>TotalBiomassAtMaturity</Name>
-        <Memo>
-          <Name>Description</Name>
-          <MemoText><![CDATA[
-This will be close to Ymax in many but because the potential yield function is sigmoidal the crop doesnt quite reach the Ymax asymtote by maturity so this give a more precices biomass at maturity for calculating partitioning coefficients 
-]]></MemoText>
-        </Memo>
-        <AddFunction>
-          <Name>XValue</Name>
-          <VariableReference>
-            <Name>CanopyExpandingTT</Name>
-            <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>YieldIncreasingTT</Name>
-            <VariableName>[Phenology].YieldIncreasing.Target.Value</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>SenescingTT</Name>
-            <VariableName>[Phenology].Senescing.Target.Value</VariableName>
-          </VariableReference>
-        </AddFunction>
-        <VariableReference>
-          <Name>Ymax</Name>
-          <VariableName>[Stover].Ymax.Value</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>Xo</Name>
-          <VariableName>[Stover].XoBiomass.Value</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>b</Name>
-          <VariableName>[Stover].bBiomass.Value</VariableName>
-        </VariableReference>
-      </SigmoidFunction2>
       <CropType>SLURP</CropType>
     </Plant>
   </Replacements>
