@@ -471,6 +471,9 @@ namespace Models
                     fieldNameString += "[" + fieldName + "]";
                 }
 
+                if (fieldNameString == "[*]")
+                    fieldNameString = "*";
+
                 sql = "SELECT S.Name as SimulationName, " + fieldNameString + " FROM " + tableName + " T" + ", Simulations S ";
                 sql += "WHERE ID = SimulationID";
                 if (filter != null)
