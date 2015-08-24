@@ -29,9 +29,9 @@ namespace Models.Aqua
         #region Links
 
 
-        /// <summary>The clock</summary>
-        [Link]
-        private Clock Clock = null;
+        ///// <summary>The clock</summary>
+        //[Link]
+        //private Clock Clock = null;
 
 
         /// <summary>The weather</summary>
