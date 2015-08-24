@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Prawns</Name>
     <Weather>
       <Name>Weather</Name>
-      <FileName>%root%\Tests\Aqua\Prawns\Ingham.met</FileName>
+      <FileName>Ingham.met</FileName>
     </Weather>
     <Clock>
       <Name>clock</Name>
@@ -160,33 +160,33 @@ namespace Models
 		[Link] PondWater PondWater;
 		
 		
-	    [Description("Add Water on this date (dd-mmm)")]
-		public string added_date {get; set;}
+		[Description("Add Water on this date (dd-mmm)")]
+		public string added_date { get; set; }
 		
 		[Description("Volume of Water Added (m^3)")]
-		public double volume {get; set;}
+		public double volume { get; set; }
 		
 		[Description("Temperature of Water Added (oC)")]
-		public double temperature {get; set;}
+		public double temperature { get; set; }
 		
 		[Description("Salinity of Water Added (kg/m^3)")]
-		public double salinity {get; set;}
+		public double salinity { get; set; }
 		
 		[Description("PH of Water Added")]
-		public double ph {get; set;}
+		public double ph { get; set; }
 		
 		[Description("Nitrogen of Water Added (kg/m^3)")]
-		public double n {get; set;}
+		public double n { get; set; }
 	
-	    [Description("Phosphorus of Water Added (kg/m^3)")]
-		public double p {get; set;}
+		[Description("Phosphorus of Water Added (kg/m^3)")]
+		public double p { get; set; }
 		
 		[Description("Total Suspended Solids of Water Added (kg/m^3)")]
-		public double tss {get; set;}
+		public double tss { get; set; }
 
 
         
-       [EventSubscribe("StartOfSimulation")]
+		[EventSubscribe("StartOfSimulation")]
 		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
 		}
@@ -197,10 +197,10 @@ namespace Models
 		private void OnStartOfDay(object sender, EventArgs e)
 		{
 
-        if (DateUtilities.DatesEqual(added_date, Clock.Today))
+			if (DateUtilities.DatesEqual(added_date, Clock.Today))
 			{
-			WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);
-			PondWater.Fill(Volume: volume, WaterProperties: addedProps);
+				WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);
+				PondWater.Fill(Volume: volume, WaterProperties: addedProps);
 			}
 
 		}
@@ -302,25 +302,25 @@ namespace Models
 		[Link] FoodInPond FoodInPond;
 		
 		
-	    [Description("Add feed on this date (dd-mmm)")]
-		public string added_date {get; set;}
+		[Description("Add feed on this date (dd-mmm)")]
+		public string added_date { get; set; }
 
-	    [Description("Name of the feed")]
-		public string FeedName {get; set;}
+		[Description("Name of the feed")]
+		public string FeedName { get; set; }
 		
 		[Description("Amount of feed added (as Dry Matter) (kg)")]
-		public double DryMatter {get; set;}
+		public double DryMatter { get; set; }
 		
 		[Description("Amount of Nitrogen in the feed added (kg)")]
-		public double Nitrogen {get; set;}
+		public double Nitrogen { get; set; }
 		
 		[Description("Amount of Digestible Energy in the feed added (MJ)")]
-		public double DigestibleEnergy {get; set;}
+		public double DigestibleEnergy { get; set; }
 		
 
 
         
-       [EventSubscribe("StartOfSimulation")]
+		[EventSubscribe("StartOfSimulation")]
 		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
 		}
@@ -331,10 +331,10 @@ namespace Models
 		private void OnStartOfDay(object sender, EventArgs e)
 		{
 
-        if (DateUtilities.DatesEqual(added_date, Clock.Today))
+			if (DateUtilities.DatesEqual(added_date, Clock.Today))
 			{
-			Feed newFeed = new Feed(FeedName, DryMatter, Nitrogen, DigestibleEnergy);
-			FoodInPond.Food.AddFeed(newFeed);
+				Feed newFeed = new Feed(FeedName, DryMatter, Nitrogen, DigestibleEnergy);
+				FoodInPond.Food.AddFeed(newFeed);
 			}
 
 		}
@@ -368,21 +368,21 @@ namespace Models
 		[Link] Prawns Prawns;
 		
 		
-	    [Description("Add feed on this date (dd-mmm)")]
-		public string added_date {get; set;}
+		[Description("Add feed on this date (dd-mmm)")]
+		public string added_date { get; set; }
 
 		[Description("Number of prawns to add to the pond")]
-		public int NumberOfPrawns {get; set;}
+		public int NumberOfPrawns { get; set; }
 		
 		[Description("Starting live weight of a prawn (g/prawn)")]
-		public double LiveWeight {get; set;}
+		public double LiveWeight { get; set; }
 		
 		[Description("Starting mass of Nitrogen in a prawn (g N/prawn)")]
-		public double NitrogenMass {get; set;}
+		public double NitrogenMass { get; set; }
 		
 
         
-       [EventSubscribe("StartOfSimulation")]
+		[EventSubscribe("StartOfSimulation")]
 		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
 		}
@@ -393,9 +393,9 @@ namespace Models
 		private void OnStartOfDay(object sender, EventArgs e)
 		{
 
-        if (DateUtilities.DatesEqual(added_date, Clock.Today))
+			if (DateUtilities.DatesEqual(added_date, Clock.Today))
 			{
-			Prawns.AddPrawnsToPond(NumberOfPrawns, LiveWeight, NitrogenMass);
+				Prawns.AddPrawnsToPond(NumberOfPrawns, LiveWeight, NitrogenMass);
 			}
 
 		}
@@ -428,6 +428,51 @@ namespace Models
       </Report>
       <Graph>
         <Name>Graph</Name>
+        <Series>
+          <Name>Series 0</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FoodDM</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FoodN</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series3</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16711936</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FoodDE</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
         <Caption />
         <Axis>
           <Type>Bottom</Type>
@@ -452,72 +497,42 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <Series>
-          <Title>Series 0</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FoodDM</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Series2</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FoodN</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Series3</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-16711936</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FoodDE</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
         <LegendPosition>BottomRight</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Graph1</Name>
+        <Series>
+          <Name>Series 0</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Prawns</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Deaths</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
         <Caption />
         <Axis>
           <Type>Bottom</Type>
@@ -542,139 +557,84 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <Series>
-          <Title>Series 0</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Prawns</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Series2</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Deaths</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
         <LegendPosition>BottomRight</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Graph2</Name>
-        <Caption />
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>kg</Title>
-          <Inverted>false</Inverted>
-          <Minimum>0</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
         <Series>
-          <Title>Series 0</Title>
+          <Name>Series 0</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
           <Marker>None</Marker>
           <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Weight</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weight</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Title>Series2</Title>
+          <Name>Series2</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
           <Marker>None</Marker>
           <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Consumed</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Consumed</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Title>Series3</Title>
+          <Name>Series3</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
           <ColourArgb>-16711936</ColourArgb>
           <Marker>None</Marker>
           <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Deaths</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Deaths</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
         </Series>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>kg</Title>
+          <Inverted>false</Inverted>
+          <Minimum>0</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
         <LegendPosition>BottomRight</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Area>1</Area>
       <Slope>0</Slope>
