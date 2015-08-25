@@ -51,6 +51,10 @@ This model has been built to simulate a range of different crops in simulations 
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[Currently the duration of the Emergence phase is set to zero.  However this phase is included if parameterisations of other crops in the future wish to give this phase a duration.]]></MemoText>
+          </Memo>
           <Start>Germination</Start>
           <End>Emergence</End>
           <ShootLag>0</ShootLag>
@@ -67,6 +71,7 @@ During this phase the plant only partitions biomass to Root and Stover (leaf and
           <Constant>
             <Name>Target</Name>
             <Value>1000</Value>
+            <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -86,6 +91,7 @@ During this phase the plant is partitioning biomass to Root Stover and Product o
           <Constant>
             <Name>Target</Name>
             <Value>600</Value>
+            <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -105,6 +111,7 @@ During this phase the plant is partitioning biomass to Root and Product organs a
           <Constant>
             <Name>Target</Name>
             <Value>600</Value>
+            <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -118,6 +125,7 @@ During this phase the plant is partitioning biomass to Root and Product organs a
           <Constant>
             <Name>Target</Name>
             <Value>600</Value>
+            <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -147,6 +155,10 @@ During this phase the plant does bugger all but wait to be ready for harvest
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[Accumulates ThermalTime daily throughout the duration of the crop]]></MemoText>
+          </Memo>
           <StartStageName>Emergence</StartStageName>
           <EndStageName>Maturity</EndStageName>
         </AccumulateFunction>
@@ -353,7 +365,7 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
           <Memo>
             <Name>Description</Name>
             <MemoText><![CDATA[
-PotentialBiomass function provides the DM fixation supply to the arbitrator which is then partitioned between the organs based on their DM Demands (From DMDemandFunctions).  In this case it takes the daily delta of a sigmoidal function to estimate daily potential biomass production as a function of accumulated thermal time and reduces this for water stress effects
+This function provides the DM fixation supply to the arbitrator which is then partitioned between the organs based on their DM Demands (From DMDemandFunctions).  In this case it takes the daily delta of a sigmoidal function to estimate daily potential biomass production as a function of accumulated thermal time and reduces this for water stress effects
 ]]></MemoText>
           </Memo>
         </MultiplyFunction>
@@ -643,12 +655,6 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
         </DivideFunction>
         <SigmoidFunction2>
           <Name>TotalBiomassAtStartReproductive</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[
-This variable is the solution of the potential biomass accumulation function at the onset of growth of the product organ and is used in the calculation of partitioning coefficients
-]]></MemoText>
-          </Memo>
           <VariableReference>
             <Name>XValue</Name>
             <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
@@ -668,12 +674,6 @@ This variable is the solution of the potential biomass accumulation function at 
         </SigmoidFunction2>
         <SigmoidFunction2>
           <Name>TotalBiomassAtStartSenescence</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[
-This variable is the solution of the potential biomass accumulation function at the onset of canopy senescence when the stover organ stops growing and is used in the calculation of partitioning coefficients
-]]></MemoText>
-          </Memo>
           <AddFunction>
             <Name>XValue</Name>
             <VariableReference>
@@ -700,12 +700,6 @@ This variable is the solution of the potential biomass accumulation function at 
         </SigmoidFunction2>
         <SigmoidFunction2>
           <Name>TotalBiomassAtMaturity</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[
-This will be close to Ymax in many but because the potential yield function is sigmoidal the crop doesnt quite reach the Ymax asymtote by maturity so this give a more precices biomass at maturity for calculating partitioning coefficients 
-]]></MemoText>
-          </Memo>
           <AddFunction>
             <Name>XValue</Name>
             <VariableReference>
@@ -1650,42 +1644,43 @@ Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 201
           <SowingDate>1998-10-14</SowingDate>
         </Script>
         <Code><![CDATA[
-        using System;
-        using Models.Core;
-        using Models.PMF;
-        namespace Models
-        {
-           [Serializable] 
-           [System.Xml.Serialization.XmlInclude(typeof(Model))]
-            public class Script : Model
-            {      
-               [Link] Plant MCSP;
-               [Link] Clock Clock;
+using System;
+using Models.Core;
+using Models.PMF;
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant MCSP;
+		[Link] Clock Clock;
 
-               [Description("Cultivar")]
-               public string CultivarName { get; set; }
-               [Description("Initial Root Depth")]
-               public double InitialRootDepth { get; set; }
-			   [Description("Sowing Date")]
-               public DateTime SowingDate { get; set; }
+		[Description("Cultivar")]
+		public string CultivarName { get; set; }
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
 
                
-               [EventSubscribe("DoManagement")]
-               private void OnDoManagement(object sender, EventArgs e)
-               {
-				if (Clock.Today.Date == SowingDate)
-                    MCSP.Sow(cultivar:CultivarName, population:1, depth:InitialRootDepth, rowSpacing:150);
-                //PMFCrop.Sow(... Contains the following arguements:
-                //Population  double  Optional  Seeds sowing/m2.  Default is zero
-                //Cultivar    string  Required  "NameOfCultivar"
-                //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
-                //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0
-                //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
-                //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
-                //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
-			   }
-            }
-        }
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+				MCSP.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+                
+			//PMFCrop.Sow(... Contains the following arguements:
+			//Population  double  Optional  Seeds sowing/m2.  Default is zero
+			//Cultivar    string  Required  "NameOfCultivar"
+			//Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
+			//MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0
+			//BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
+			//RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
+			//CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
+		}
+	}
+}
 				]]></Code>
       </Manager>
       <Manager>
@@ -1705,15 +1700,15 @@ namespace Models
 {
 	[Serializable] 
 	public class Script : Model
-	{      
+	{
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;   
+		[Link] Weather Met;
 		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;  
+		[Link] Irrigation Irrig;
 		[Link] Plant SCUM;
-        [Link] Zone zone;
+		[Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
@@ -1757,20 +1752,20 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
 			InitialDay = true;
-		}	   
+		}
 		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
@@ -1778,7 +1773,7 @@ namespace Models
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
 			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            int layers = Soil.Thickness.Length;
+			int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
 				InitialSurfaceOMN = SOM.N;
@@ -1788,8 +1783,8 @@ namespace Models
 			}
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("SCUM.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -1811,7 +1806,7 @@ namespace Models
 		{
 			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
 			AccumFert += Fert.NitrogenApplied;
 			AccumIrrigation += Irrig.IrrigationApplied;
 			
@@ -1851,156 +1846,156 @@ using APSIM.Shared.Utilities;
         
 namespace Models
 {
-   [Serializable] 
-   [System.Xml.Serialization.XmlInclude(typeof(Model))]
-    public class Script : Model
-    {      
-	   //Communication to other modules
-	   [Link] ISummary summary = null;
-	   [Link] Irrigation Irrigation;
-	   [Link] Clock Clock;
-	   [Link] Soil Soil;
-	   [Link] Plant SCUM;
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		//Communication to other modules
+		[Link] ISummary summary = null;
+		[Link] Irrigation Irrigation;
+		[Link] Clock Clock;
+		[Link] Soil Soil;
+		[Link] Plant SCUM;
 	   
-	   //User inputs from properties tab
-	   [Description("Irrigation on (yes or no)")]
-	   public string Irrigation_Yes_No { get; set; }
-	   [Description("SeasonStart (dd-MMM)")]
-	   public string Season_Start { get; set; }
-	   [Description("SeasonEnd (dd-MMM)")]
-	   public string Season_End { get; set; }
-	   [Description("Season Allocation (mm)")]
-	   public double Season_Allocation { get; set; }
-	   [Description("% PAWC to refill soil to (0-1)")]
-	   public double Refull_Frac { get; set; }
-	   [Description("% PAWC to trigger irrigation (0-1)")]
-	   public double Trigger_Frac { get; set; }
-	   [Description("Minimum days for irrigation to return")]
-	   public double Return_days { get; set; }
-	   [Description("Maximum irrigation application (mm)")]
-	   public double Maximum_Irrigation_Amount { get; set; }
-	   [Description("Depth to calculate PAWC (mm)")]
-	   public double Top_Depth { get; set; }
+		//User inputs from properties tab
+		[Description("Irrigation on (yes or no)")]
+		public string Irrigation_Yes_No { get; set; }
+		[Description("SeasonStart (dd-MMM)")]
+		public string Season_Start { get; set; }
+		[Description("SeasonEnd (dd-MMM)")]
+		public string Season_End { get; set; }
+		[Description("Season Allocation (mm)")]
+		public double Season_Allocation { get; set; }
+		[Description("% PAWC to refill soil to (0-1)")]
+		public double Refull_Frac { get; set; }
+		[Description("% PAWC to trigger irrigation (0-1)")]
+		public double Trigger_Frac { get; set; }
+		[Description("Minimum days for irrigation to return")]
+		public double Return_days { get; set; }
+		[Description("Maximum irrigation application (mm)")]
+		public double Maximum_Irrigation_Amount { get; set; }
+		[Description("Depth to calculate PAWC (mm)")]
+		public double Top_Depth { get; set; }
 	   
-	   //Class members
-	   [XmlIgnore] private bool IrrigationIsAvailable { get; set; }
-	   [XmlIgnore] public bool SeasonIsOpen { get; set; }
-	   [XmlIgnore] private bool CropIsActive { get; set; }
-	   [XmlIgnore] private bool IrrigatorIsAvailable { get; set; }
-	   [XmlIgnore] private bool SoilIsDry { get; set; }
-	   [XmlIgnore] public double Top_DUL { get; set; }
-	   [XmlIgnore] public double Top_Refull { get; set; }
-	   [XmlIgnore] public double Top_Trigger { get; set; }
-	   [XmlIgnore] public double Top_LL { get; set; }
-	   [XmlIgnore] public double Top_SW { get; set; }
-	   [XmlIgnore] public double Accumulated_depth { get; set; }   
-	   [XmlIgnore] public double Days_since_irrigation { get; set; }
-	   [XmlIgnore] public double Amount_to_apply { get; set; }
-	   [XmlIgnore] public double Season_Application { get; set; }
+		//Class members
+		[XmlIgnore] private bool IrrigationIsAvailable { get; set; }
+		[XmlIgnore] public bool SeasonIsOpen { get; set; }
+		[XmlIgnore] private bool CropIsActive { get; set; }
+		[XmlIgnore] private bool IrrigatorIsAvailable { get; set; }
+		[XmlIgnore] private bool SoilIsDry { get; set; }
+		[XmlIgnore] public double Top_DUL { get; set; }
+		[XmlIgnore] public double Top_Refull { get; set; }
+		[XmlIgnore] public double Top_Trigger { get; set; }
+		[XmlIgnore] public double Top_LL { get; set; }
+		[XmlIgnore] public double Top_SW { get; set; }
+		[XmlIgnore] public double Accumulated_depth { get; set; }
+		[XmlIgnore] public double Days_since_irrigation { get; set; }
+		[XmlIgnore] public double Amount_to_apply { get; set; }
+		[XmlIgnore] public double Season_Application { get; set; }
 		
-	   //Variables for date logic testing
-	   [XmlIgnore] public string StartString {get; set;}
-	   [XmlIgnore] public string EndString {get; set;}
-	   [XmlIgnore] public DateTime StartDate {get; set;}
-	   [XmlIgnore] public DateTime EndDate {get; set;}
-	   [XmlIgnore] public int TodayYear {get; set;}
-	   [XmlIgnore] public int TodayMonth {get; set;}
-	   [XmlIgnore] public int StartMonth {get; set;}
-	   [XmlIgnore] public int EndMonth {get; set;}
-	   [XmlIgnore] public int TodayDay {get; set;}
-	   [XmlIgnore] public int StartDay {get; set;}
-	   [XmlIgnore] public int EndDay {get; set;}
+		//Variables for date logic testing
+		[XmlIgnore] public string StartString { get; set; }
+		[XmlIgnore] public string EndString { get; set; }
+		[XmlIgnore] public DateTime StartDate { get; set; }
+		[XmlIgnore] public DateTime EndDate { get; set; }
+		[XmlIgnore] public int TodayYear { get; set; }
+		[XmlIgnore] public int TodayMonth { get; set; }
+		[XmlIgnore] public int StartMonth { get; set; }
+		[XmlIgnore] public int EndMonth { get; set; }
+		[XmlIgnore] public int TodayDay { get; set; }
+		[XmlIgnore] public int StartDay { get; set; }
+		[XmlIgnore] public int EndDay { get; set; }
 	   
 	
-	   //Calculate static soil variables
-	   [EventSubscribe("StartOfSimulation")]
-	   private void OnStartOfSimulation(object sender, EventArgs e)
-	   {   
-	      //Calculated soil water variables
-	      Accumulated_depth = 0;
-	      for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
-	      {
-	         Top_LL += Soil.SoilWater.LL15mm[layer];
-	         Top_DUL += Soil.SoilWater.DULmm[layer];
-	         Accumulated_depth += Soil.SoilWater.Thickness[layer];
-	      }
-	      Top_Refull = Top_LL + (Top_DUL - Top_LL) * Refull_Frac;
-	   }
+		//Calculate static soil variables
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{   
+			//Calculated soil water variables
+			Accumulated_depth = 0;
+			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+			{
+				Top_LL += Soil.SoilWater.LL15mm[layer];
+				Top_DUL += Soil.SoilWater.DULmm[layer];
+				Accumulated_depth += Soil.SoilWater.Thickness[layer];
+			}
+			Top_Refull = Top_LL + (Top_DUL - Top_LL) * Refull_Frac;
+		}
 	   
 	  
-	   //Determine daily requirement for irrigation
+		//Determine daily requirement for irrigation
 		[EventSubscribe("StartOfDay")]
-	   	private void OnStartOfDay(object sender, EventArgs e)
-	   	{ 
-	      //Can we irrigate?
-	      IrrigationIsAvailable = false; 
-	      if (Irrigation_Yes_No == "yes")
-	         IrrigationIsAvailable = true; 
+		private void OnStartOfDay(object sender, EventArgs e)
+		{ 
+			//Can we irrigate?
+			IrrigationIsAvailable = false; 
+			if (Irrigation_Yes_No == "yes")
+				IrrigationIsAvailable = true; 
 	
-	      //Are we Allowed to Irrigate?
-	      TodayYear = Clock.Today.Year;
-	      StartString = Season_Start + "-" + TodayYear.ToString();
-	      EndString = Season_End + "-" + TodayYear.ToString();
-	      StartDate = DateTime.Parse(StartString);
-	      EndDate = DateTime.Parse(EndString);
-		  TodayMonth = Clock.Today.Month;
-		  TodayDay = Clock.Today.Day;
-		  StartDay = StartDate.Day;
-		  StartMonth = StartDate.Month;
-		  EndDay = EndDate.Day;
-		  EndMonth = EndDate.Month;
+			//Are we Allowed to Irrigate?
+			TodayYear = Clock.Today.Year;
+			StartString = Season_Start + "-" + TodayYear.ToString();
+			EndString = Season_End + "-" + TodayYear.ToString();
+			StartDate = DateTime.Parse(StartString);
+			EndDate = DateTime.Parse(EndString);
+			TodayMonth = Clock.Today.Month;
+			TodayDay = Clock.Today.Day;
+			StartDay = StartDate.Day;
+			StartMonth = StartDate.Month;
+			EndDay = EndDate.Day;
+			EndMonth = EndDate.Month;
 		  
-		  SeasonIsOpen = false;
-		  //if we are in the spring and after the start date then yes
-		  if((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
-		  SeasonIsOpen = true;
-		  //if we are in the autumn and before the end date then yes
-		  if((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
-		  SeasonIsOpen = true;
+			SeasonIsOpen = false;
+			//if we are in the spring and after the start date then yes
+			if ((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
+				SeasonIsOpen = true;
+			//if we are in the autumn and before the end date then yes
+			if ((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
+				SeasonIsOpen = true;
 		  
-	      //Is there a crop in the ground that needs irrigation?
-	      CropIsActive = false;
-	      if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
-	            CropIsActive = true;
+			//Is there a crop in the ground that needs irrigation?
+			CropIsActive = false;
+			if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
+				CropIsActive = true;
 	      
-	      //Is the irrigator available?
-	      IrrigatorIsAvailable = false;
-	      Days_since_irrigation += 1;
-	      if (Days_since_irrigation >= Return_days)
-	         IrrigatorIsAvailable = true;
+			//Is the irrigator available?
+			IrrigatorIsAvailable = false;
+			Days_since_irrigation += 1;
+			if (Days_since_irrigation >= Return_days)
+				IrrigatorIsAvailable = true;
 	      
-	      //Is the soil dry enough to require irrigation?
-	      SoilIsDry = false;
-	      double CurrentRootDepth = 0;
-	      double RootDepth = SCUM.Root.Depth;
-	      CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
+			//Is the soil dry enough to require irrigation?
+			SoilIsDry = false;
+			double CurrentRootDepth = 0;
+			double RootDepth = SCUM.Root.Depth;
+			CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
 	      
-	      double RelativeRootDepth = Math.Min(1.0, CurrentRootDepth / Top_Depth);
-	      Top_Trigger = Math.Min(Top_Refull, Top_DUL - (Top_DUL - Top_LL) * RelativeRootDepth * (1-Trigger_Frac)); 
+			double RelativeRootDepth = Math.Min(1.0, CurrentRootDepth / Top_Depth);
+			Top_Trigger = Math.Min(Top_Refull, Top_DUL - (Top_DUL - Top_LL) * RelativeRootDepth * (1 - Trigger_Frac)); 
 	      
-	      Accumulated_depth = 0;
-	      Top_SW = 0;
-	      for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
-	      {
-	         Top_SW += Soil.SoilWater.SWmm[layer];
-	         Accumulated_depth += Soil.SoilWater.Thickness[layer];
-	      }
-	      if (Top_SW <= Top_Trigger)
-	         SoilIsDry = true;
+			Accumulated_depth = 0;
+			Top_SW = 0;
+			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+			{
+				Top_SW += Soil.SoilWater.SWmm[layer];
+				Accumulated_depth += Soil.SoilWater.Thickness[layer];
+			}
+			if (Top_SW <= Top_Trigger)
+				SoilIsDry = true;
 	            
-	      //Lets bloody well irrigate then!!!!
-	      if((IrrigationIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (IrrigatorIsAvailable) && (SoilIsDry)) //The conditions are rife for irrigation
-	      {
-	         Amount_to_apply = Math.Min(Top_Refull - Top_SW, Maximum_Irrigation_Amount);
-	         Amount_to_apply = Math.Min(Amount_to_apply, Season_Allocation - Season_Application); 
-	         Amount_to_apply = Math.Max(Amount_to_apply, 0.0);
-	         Irrigation.Apply(Amount_to_apply);
-	         Days_since_irrigation = 0;
-	         Season_Application += Amount_to_apply;
-	         summary.WriteMessage(this, "Automatic Irrigation");
+			//Lets bloody well irrigate then!!!!
+			if ((IrrigationIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (IrrigatorIsAvailable) && (SoilIsDry)) //The conditions are rife for irrigation
+			{
+				Amount_to_apply = Math.Min(Top_Refull - Top_SW, Maximum_Irrigation_Amount);
+				Amount_to_apply = Math.Min(Amount_to_apply, Season_Allocation - Season_Application); 
+				Amount_to_apply = Math.Max(Amount_to_apply, 0.0);
+				Irrigation.Apply(Amount_to_apply);
+				Days_since_irrigation = 0;
+				Season_Application += Amount_to_apply;
+				summary.WriteMessage(this, "Automatic Irrigation");
             
-	      }
-	   }
+			}
+		}
 	}
 }
              
