@@ -349,7 +349,18 @@ namespace UserInterface.Views
             message += "\n";
             StatusWindow.Text = message;
             this.toolTip1.SetToolTip(this.StatusWindow, message);
+            progressBar.Visible = false;
             Application.DoEvents();
+        }
+
+        /// <summary>
+        /// Show progress bar with the specified percent.
+        /// </summary>
+        /// <param name="percent"></param>
+        public void ShowProgress(int percent)
+        {
+            progressBar.Visible = true;
+            progressBar.Value = percent;
         }
 
         /// <summary>
@@ -378,6 +389,15 @@ namespace UserInterface.Views
         {
             MainForm mainForm = Application.OpenForms[0] as MainForm;
             mainForm.ToggleSecondExplorerViewVisible();
+        }
+
+        /// <summary>
+        /// Close down APSIMX user interface.
+        /// </summary>
+        public void Close()
+        {
+            MainForm mainForm = Application.OpenForms[0] as MainForm;
+            mainForm.Close();
         }
 
         /// <summary>Gets or sets the width of the tree view.</summary>

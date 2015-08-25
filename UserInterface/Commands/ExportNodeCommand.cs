@@ -16,6 +16,8 @@ using MigraDoc.DocumentObjectModel;
 using System.Xml;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.DocumentObjectModel.Shapes;
+using UserInterface.Classes;
+using MigraDoc.DocumentObjectModel.Fields;
 
 namespace UserInterface.Commands
 {
@@ -61,7 +63,7 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory CommandHistory)
         {
-            string bibFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"..\APSIM.bib");
+            string bibFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "APSIM.bib");
             bibTeX = new BibTeX(bibFile);
             citations = new List<BibTeX.Citation>();
 
@@ -88,7 +90,7 @@ namespace UserInterface.Commands
                 if (tag is AutoDocumentation.Heading)
                 {
                     AutoDocumentation.Heading heading = tag as AutoDocumentation.Heading;
-                    if (heading.headingLevel > 0)
+                    if (heading.headingLevel > 0 && heading.text != "TitlePage")
                     {
                         // Update levels based on heading number.
                         levels[heading.headingLevel - 1]++;
@@ -137,201 +139,11 @@ namespace UserInterface.Commands
                         string childFolderPath = Path.Combine(workingDirectory, child.Name);
                         AddValidationTags(tags, child, headingLevel + 1, workingDirectory);
                     }
-                    else if (child is Memo || child is Graph)
+                    else if (child.Name != "TitlePage" && (child is Memo || child is Graph))
                         child.Document(tags, headingLevel, 0);
                 }
             }
         }
-
-        #region HTML
-
-        /// <summary>
-        /// Export to HTML.
-        /// </summary>
-        public void DoExportHTML(string modelNameToExport)
-        {
-            // Create a temporary working directory.
-            string workingDirectory = Path.Combine(Path.GetDirectoryName(ExplorerPresenter.ApsimXFile.FileName), "Doc");
-            if (Directory.Exists(workingDirectory))
-                Directory.Delete(workingDirectory, true);
-            Directory.CreateDirectory(workingDirectory);
-
-            // Make sure the specified folderPath exists because we're going to 
-            // write to it.
-            Directory.CreateDirectory(workingDirectory);
-
-            //Load CSS resource
-            Assembly assembly = Assembly.GetExecutingAssembly();
-
-            // Write the css file.
-            using (FileStream file = new FileStream(Path.Combine(workingDirectory, "AutoDocumentation.css"), FileMode.Create, FileAccess.Write))
-            {
-                assembly.GetManifestResourceStream("UserInterface.Resources.AutoDocumentation.css").CopyTo(file);
-            }
-
-            //write image files
-            using (FileStream file = new FileStream(Path.Combine(workingDirectory, "apsim_logo.png"), FileMode.Create, FileAccess.Write))
-            {
-                assembly.GetManifestResourceStream("UserInterface.Resources.apsim_logo.png").CopyTo(file);
-            }
-
-            using (FileStream file = new FileStream(Path.Combine(workingDirectory, "hd_bg.png"), FileMode.Create, FileAccess.Write))
-            {
-                assembly.GetManifestResourceStream("UserInterface.Resources.hd_bg.png").CopyTo(file);
-            }
-
-            // Write file.
-            FileNameWritten = Path.Combine(workingDirectory, modelNameToExport + ".html");
-            StreamWriter index = new StreamWriter(FileNameWritten);
-            index.WriteLine("<!DOCTYPE html><html lang=\"en-AU\">");
-            index.WriteLine("<head>");
-            index.WriteLine("   <link rel=\"stylesheet\" type=\"text/css\" href=\"AutoDocumentation.css\">");
-            index.WriteLine("   <title>" + modelNameToExport + " documentation</title>");
-            index.WriteLine("</head>");
-            index.WriteLine("<body>");
-            index.WriteLine("<img src=\"apsim_logo.png\"/><div id=\"right\"><img src=\"hd_bg.png\" /></div>");
-
-            List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
-
-            // See if there is a title page.
-            IModel titlePage = Apsim.Find(ExplorerPresenter.ApsimXFile, "TitlePage");
-            if (titlePage != null)
-            {
-                titlePage.Document(tags, 1, 0);
-                WriteHTML(index, tags, workingDirectory);
-                tags.Clear();
-            }
-
-            // Document model description.
-            tags.Add(new AutoDocumentation.Heading("Model description", 1));
-            ExplorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 2);
-
-            // Document model validation.
-            tags.Add(new AutoDocumentation.Heading("Validation", 1));
-            AddValidationTags(tags, ExplorerPresenter.ApsimXFile, 1, workingDirectory);
-
-            NumberHeadings(tags);
-            CreateTableOfContents(index, tags);
-
-            WriteHTML(index, tags, workingDirectory);
-
-            index.WriteLine("</body>");
-            index.WriteLine("</html>");
-            index.Close();
-
-            ExplorerPresenter.ShowMessage("Finished creating documentation", DataStore.ErrorLevel.Information);
-        }
-
-        /// <summary>Creates a table of contents.</summary>
-        /// <param name="writer">The writer to write to.</param>
-        /// <param name="tags">The autodoc tags.</param>
-        private void CreateTableOfContents(TextWriter writer, List<AutoDocumentation.ITag> tags)
-        {
-            writer.WriteLine("<dl>");
-
-            foreach (AutoDocumentation.ITag tag in tags)
-            {
-                if (tag is AutoDocumentation.Heading)
-                {
-                    AutoDocumentation.Heading heading = tag as AutoDocumentation.Heading;
-                    if (heading.headingLevel > 0 && (heading.headingLevel < 3 || heading.text.StartsWith("2")))
-                        writer.WriteLine("<dt{0}><a href=\"#{1}\">{1}</a><br/></dt>", indents[heading.headingLevel], heading.text);
-                }
-            }
-            writer.WriteLine("</dl>");
-        }
-
-        /// <summary>Writes HTML for specified auto-doc commands.</summary>
-        /// <param name="writer">The writer to write to.</param>
-        /// <param name="tags">The autodoc tags.</param>
-        /// <param name="workingDirectory">The working directory.</param>
-        private void WriteHTML(TextWriter writer, List<AutoDocumentation.ITag> tags, string workingDirectory)
-        {
-
-            foreach (AutoDocumentation.ITag tag in tags)
-            {
-                if (tag is AutoDocumentation.Heading)
-                {
-                    AutoDocumentation.Heading heading = tag as AutoDocumentation.Heading;
-                    if (heading.headingLevel > 0 && heading.headingLevel < 4)
-                    {
-                        writer.WriteLine("<a name=\"{0}\"></a>", heading.text);
-                        writer.WriteLine("<h{0}>{1}</h{0}>", heading.headingLevel, heading.text);
-                    }
-                }
-                else if (tag is AutoDocumentation.Paragraph)
-                {
-                    AutoDocumentation.Paragraph paragraph = tag as AutoDocumentation.Paragraph;
-                    writer.WriteLine("<p" + indents[paragraph.indent] + ">" + paragraph.text + "</p>");
-                }
-                else if (tag is AutoDocumentation.GraphAndTable)
-                {
-                    CreateGraph(writer, tag as AutoDocumentation.GraphAndTable, workingDirectory);
-                }
-                else if (tag is Graph)
-                {
-                    GraphPresenter graphPresenter = new GraphPresenter();
-                    GraphView graphView = new GraphView();
-                    graphView.BackColor = System.Drawing.Color.White;
-                    //graphView.Show();
-                    graphPresenter.Attach(tag, graphView, ExplorerPresenter);
-                    writer.WriteLine(graphPresenter.ConvertToHtml(workingDirectory));
-                    graphPresenter.Detach();
-                }
-            }
-        }
-
-        /// <summary>Creates the graph.</summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="graphAndTable">The graph and table to convert to html.</param>
-        /// <param name="workingDirectory">The working directory.</param>
-        private void CreateGraph(TextWriter writer, AutoDocumentation.GraphAndTable graphAndTable, string workingDirectory)
-        {
-            // Ensure graphs directory exists.
-            string graphDirectory = Path.Combine(workingDirectory, "Graphs");
-            Directory.CreateDirectory(graphDirectory);
-
-            // Determine the name of the .png file to write.
-            string PNGFileName = Path.Combine(graphDirectory,
-                                              graphAndTable.xyPairs.Parent.Parent.Name + graphAndTable.xyPairs.Parent.Name + ".png");
-
-            // Start the outside table.
-            writer.WriteLine("<table" + indents[graphAndTable.indent] + ">");
-
-            // output chart as a column to the outer table.
-            writer.WriteLine("<tr><td><img src=\"" + PNGFileName + "\"></td>");
-
-            // output xy table as a table.
-            writer.WriteLine("<td><table width=\"300\">");
-            writer.WriteLine("<td>" + graphAndTable.xName + "</td><td>" + graphAndTable.yName + "</td>");
-            for (int i = 0; i < graphAndTable.xyPairs.X.Length; i++)
-                writer.WriteLine("<tr><td>" + graphAndTable.xyPairs.X[i] + "</td><td>" + graphAndTable.xyPairs.Y[i] + "</td></tr>");
-            writer.WriteLine("</table></td>");
-            writer.WriteLine("</tr></table>");
-
-            // Setup graph.
-            GraphView graph = new GraphView();
-            graph.Clear();
-
-            // Create a line series.
-            graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y,
-                                     Models.Graph.Axis.AxisType.Bottom, Models.Graph.Axis.AxisType.Left,
-                                     System.Drawing.Color.Blue, Models.Graph.Series.LineType.Solid, Models.Graph.Series.MarkerType.None, true);
-
-            // Format the axes.
-            graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN);
-            graph.FormatAxis(Models.Graph.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN);
-            graph.BackColor = System.Drawing.Color.White;
-            graph.Refresh();
-            graph.FormatTitle(graphAndTable.title);
-
-            // Export graph to bitmap file.
-            Bitmap image = new Bitmap(480, 480);
-            graph.Export(image);
-            image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
-        }
-        
-        #endregion
 
         #region PDF
 
@@ -366,15 +178,10 @@ namespace UserInterface.Commands
 
             List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
 
-            // See if there is a title page.
+            // See if there is a title page. If so do it first.
             IModel titlePage = Apsim.Find(ExplorerPresenter.ApsimXFile, "TitlePage");
             if (titlePage != null)
-            {
                 titlePage.Document(tags, 1, 0);
-                ScanForCitations(tags);
-                WritePDF(section, tags, workingDirectory);
-                tags.Clear();
-            }
 
             // Document model description.
             tags.Add(new AutoDocumentation.Heading("Model description", 1));
@@ -394,13 +201,13 @@ namespace UserInterface.Commands
             NumberHeadings(tags);
 
             // Populate the PDF section.
-            WritePDF(section, tags, workingDirectory);
+            TagsToMigraDoc(section, tags, workingDirectory);
 
             // Write the PDF file.
+            FileNameWritten = Path.Combine(Path.GetDirectoryName(ExplorerPresenter.ApsimXFile.FileName), modelNameToExport + ".pdf");
             PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(false, PdfSharp.Pdf.PdfFontEmbedding.Always);
             pdfRenderer.Document = document;
             pdfRenderer.RenderDocument();
-            FileNameWritten = Path.Combine(Path.GetDirectoryName(ExplorerPresenter.ApsimXFile.FileName), modelNameToExport + ".pdf");
             pdfRenderer.PdfDocument.Save(FileNameWritten);
 
             // Remove temporary working directory.
@@ -411,36 +218,12 @@ namespace UserInterface.Commands
         /// <param name="document">The document to create the styles in.</param>
         public void CreatePDFSyles(Document document)
         {
-            Style normalStyle = document.Styles["Normal"];
-            normalStyle.Font.Size = 10;
-            normalStyle.ParagraphFormat.SpaceAfter = Unit.FromCentimeter(0.5);
-
-            //normalStyle.ParagraphFormat.SpaceAfter = Unit.FromCentimeter(1);
-
-            // Create a new style called Table based on style Normal
-            Style style = document.Styles.AddStyle("H1", "Normal");
-            style.ParagraphFormat.SpaceBefore = Unit.FromCentimeter(0.5);
-            style.ParagraphFormat.SpaceBefore = Unit.FromCentimeter(0.25);
-            style.Font.Size = 18;
-
-            style = document.Styles.AddStyle("H2", "Normal");
-            style.ParagraphFormat.SpaceBefore = Unit.FromCentimeter(0.5);
-            style.ParagraphFormat.SpaceBefore = Unit.FromCentimeter(0.25);
-            style.Font.Size = 16;
-
-            style = document.Styles.AddStyle("H3", "Normal");
-            style.ParagraphFormat.SpaceBefore = Unit.FromCentimeter(0.5);
-            style.ParagraphFormat.SpaceBefore = Unit.FromCentimeter(0.25);
-            style.Font.Size = 14;
-
-            style = document.Styles.AddStyle("H4", "Normal");
-            style.ParagraphFormat.SpaceBefore = Unit.FromCentimeter(0.5);
-            style.ParagraphFormat.SpaceBefore = Unit.FromCentimeter(0.25);
-            style.Font.Size = 12;
-
-            style = document.Styles.AddStyle("GraphAndTable", "Normal");
+            Style style = document.Styles.AddStyle("GraphAndTable", "Normal");
             style.Font.Size = 8;
             style.ParagraphFormat.SpaceAfter = Unit.FromCentimeter(0);
+
+            Style xyStyle = document.Styles.AddStyle("GraphAndTable", "Normal");
+            xyStyle.Font = new MigraDoc.DocumentObjectModel.Font("Courier New");
         }
 
         /// <summary>Creates the graph.</summary>
@@ -449,6 +232,19 @@ namespace UserInterface.Commands
         /// <param name="workingDirectory">The working directory.</param>
         private void CreateGraphPDF(Section section, AutoDocumentation.GraphAndTable graphAndTable, string workingDirectory)
         {
+            // Create a 2 column, 1 row table. Image in first cell, X/Y data in second cell.
+            Table table = section.AddTable();
+            table.Style = "GraphAndTable";
+            table.Rows.LeftIndent = graphAndTable.indent + "cm";
+
+            Column column1 = table.AddColumn();
+            column1.Width = "8cm";
+            //column1.Format.Alignment = ParagraphAlignment.Right;
+            Column column2 = table.AddColumn();
+            column2.Width = "8cm";
+            //column2.Format.Alignment = ParagraphAlignment.Right;
+            Row row = table.AddRow();
+
             // Ensure graphs directory exists.
             string graphDirectory = Path.Combine(workingDirectory, "Graphs");
             Directory.CreateDirectory(graphDirectory);
@@ -464,56 +260,62 @@ namespace UserInterface.Commands
             // Create a line series.
             graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y,
                                      Models.Graph.Axis.AxisType.Bottom, Models.Graph.Axis.AxisType.Left,
-                                     System.Drawing.Color.Blue, Models.Graph.Series.LineType.Solid, Models.Graph.Series.MarkerType.None, true);
+                                     System.Drawing.Color.Blue, Models.Graph.LineType.Solid, Models.Graph.MarkerType.None, true);
 
             // Format the axes.
             graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN);
             graph.FormatAxis(Models.Graph.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN);
             graph.BackColor = System.Drawing.Color.White;
+            graph.FontSize = 10;
             graph.Refresh();
-            graph.FormatTitle(graphAndTable.title);
 
             // Export graph to bitmap file.
-            Bitmap image = new Bitmap(440, 440);
-            graph.Export(image);
+            Bitmap image = new Bitmap(400, 250);
+            graph.Export(image, false);
             image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
-            MigraDoc.DocumentObjectModel.Shapes.Image image1 = section.AddImage(PNGFileName);
-            image1.Height = "8cm";
-            image1.Width = "8cm";
-            image1.LockAspectRatio = true;
-            image1.Left = graphAndTable.indent + "cm";
+            MigraDoc.DocumentObjectModel.Shapes.Image image1 = row.Cells[0].AddImage(PNGFileName);
 
-            // Add a table.
-            Table table = section.AddTable();
-            table.Style = "GraphAndTable";
-            table.Rows.LeftIndent = graphAndTable.indent + "cm";
-            Column column1 = table.AddColumn();
-            column1.Format.Alignment = ParagraphAlignment.Right;
-            Column column2 = table.AddColumn();
-            column2.Format.Alignment = ParagraphAlignment.Right;
-            Row row = table.AddRow();
-            row.HeadingFormat = true;
-            row.Cells[0].AddParagraph("X");
-            row.Cells[1].AddParagraph("Y");
+            // Add x/y data.
+            Paragraph xyParagraph = row.Cells[1].AddParagraph();
+            xyParagraph.Style = "xyStyle";
+            AddFixedWidthText(xyParagraph, "X", 10);
+            AddFixedWidthText(xyParagraph, "Y", 10);
+            xyParagraph.AddLineBreak();
             for (int i = 0; i < graphAndTable.xyPairs.X.Length; i++)
             {
-                row = table.AddRow();
-                row.Cells[0].AddParagraph(graphAndTable.xyPairs.X[i].ToString());
-                row.Cells[1].AddParagraph(graphAndTable.xyPairs.Y[i].ToString());
+
+                AddFixedWidthText(xyParagraph, graphAndTable.xyPairs.X[i].ToString(), 10);
+                AddFixedWidthText(xyParagraph, graphAndTable.xyPairs.Y[i].ToString(), 10);
+                xyParagraph.AddLineBreak();
             }
 
             // Add an empty paragraph for spacing.
-            section.AddParagraph();
+            Paragraph spacing = section.AddParagraph();
+        }
 
+        /// <summary>
+        /// Adds fixed-width text to a MigraDoc paragraph
+        /// </summary>
+        /// <param name="paragraph">The paragaraph to add text to</param>
+        /// <param name="text">The text</param>
+        private static void AddFixedWidthText(Paragraph paragraph, string text, int width)
+        {
+            //For some reason, a parapraph converts all sequences of white
+            //space to a single space.  Thus we need to split the text and add
+            //the spaces using the AddSpace function.
+
+            int numSpaces = width - text.Length;
+
+            paragraph.AddSpace(numSpaces);
+            paragraph.AddText(text);
         }
 
         /// <summary>Writes PDF for specified auto-doc commands.</summary>
         /// <param name="section">The writer to write to.</param>
         /// <param name="tags">The autodoc tags.</param>
         /// <param name="workingDirectory">The working directory.</param>
-        private void WritePDF(Section section, List<AutoDocumentation.ITag> tags, string workingDirectory)
+        private void TagsToMigraDoc(Section section, List<AutoDocumentation.ITag> tags, string workingDirectory)
         {
-
             foreach (AutoDocumentation.ITag tag in tags)
             {
                 if (tag is AutoDocumentation.Heading)
@@ -521,7 +323,7 @@ namespace UserInterface.Commands
                     AutoDocumentation.Heading heading = tag as AutoDocumentation.Heading;
                     if (heading.headingLevel > 0 && heading.headingLevel < 4)
                     {
-                        Paragraph para = section.AddParagraph(heading.text, "H" + heading.headingLevel);
+                        Paragraph para = section.AddParagraph(heading.text, "Heading" + heading.headingLevel);
                         if (heading.headingLevel == 1)
                             para.Format.OutlineLevel = OutlineLevel.Level1;
                         else if (heading.headingLevel == 2)
@@ -548,6 +350,9 @@ namespace UserInterface.Commands
                     graphPresenter.Attach(tag, graphView, ExplorerPresenter);
                     string PNGFileName = graphPresenter.ExportToPDF(workingDirectory);
                     section.AddImage(PNGFileName);
+                    string caption = (tag as Graph).Caption;
+                    if (caption != null)
+                        section.AddParagraph(caption);
                     graphPresenter.Detach();
                 }
             }
@@ -558,47 +363,21 @@ namespace UserInterface.Commands
         /// <param name="paragraph">The paragraph.</param>
         private void AddFormattedParagraphToSection(Section section, AutoDocumentation.Paragraph paragraph)
         {
-            Paragraph para = section.AddParagraph();
+            MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
+            markDown.ExtraMode = true;
+            string html = markDown.Transform(paragraph.text);
+
+            string imageDirectory = Path.GetDirectoryName(ExplorerPresenter.ApsimXFile.FileName);
+            HtmlToMigraDoc.Convert(html, section, imageDirectory);
+
+            Paragraph para = section.LastParagraph;
             para.Format.LeftIndent = Unit.FromCentimeter(paragraph.indent);
             if (paragraph.bookmarkName != null)
                 para.AddBookmark(paragraph.bookmarkName);
-
             if (paragraph.handingIndent)
             {
                 para.Format.LeftIndent = "1cm";
                 para.Format.FirstLineIndent = "-1cm";
-            }
-
-            string text = paragraph.text;
-
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml("<p>" + text.Replace(@"\&", "and") + "</p>");
-
-            foreach (XmlNode element in doc.DocumentElement.ChildNodes)
-            {
-                if (element.Name == "i")
-                    para.AddFormattedText(element.InnerText, TextFormat.Italic);
-                else if (element.Name == "b")
-                    para.AddFormattedText(element.InnerText, TextFormat.Bold);
-                else if (element.Name == "u")
-                    para.AddFormattedText(element.InnerText, TextFormat.Underline);
-                else if (element.Name == "a")
-                {
-                    string href = XmlUtilities.Attribute(element, "href");
-                    Hyperlink link;
-                    if (href.StartsWith("#"))
-                    {
-                        link = para.AddHyperlink(href.Substring(1), HyperlinkType.Bookmark);
-                    }
-                    else
-                        link = para.AddHyperlink(href, HyperlinkType.Web);
-
-                    link.Font.Color = new MigraDoc.DocumentObjectModel.Color(33, 151, 210);
-                    string linkText = element.InnerText;
-                    link.AddText(linkText);
-                }
-                else
-                    para.AddText(element.InnerText);
             }
         }
 
@@ -612,6 +391,10 @@ namespace UserInterface.Commands
                 {
                     AutoDocumentation.Paragraph paragraph = tag as AutoDocumentation.Paragraph;
                     string text = paragraph.text;
+
+                    // citations are of the form [Brown et al. 2014][brown_plant_2014]
+                    // where the second bracketed value is the bibliography reference name. i.e.
+                    // the bit we're interested in.
                     int posBracket = text.IndexOf('[');
                     while (posBracket != -1)
                     {
@@ -620,28 +403,40 @@ namespace UserInterface.Commands
                         {
                             // found a possible citation.
                             string citationName = text.Substring(posBracket + 1, posEndBracket - posBracket - 1);
+                            string[] inTextCitations = citationName.Split("; ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            string replacementText = string.Empty;
 
-                            // see if we have already encountered the citation.
-                            BibTeX.Citation citation = citations.Find(c => c.Name == citationName);
-
-                            // If we haven't encountered it, look it up in the .bib file.
-                            if (citation == null)
-                                citation = bibTeX.Lookup(citationName);
-
-                            if (citation != null)
+                            foreach (string inTextCitation in inTextCitations)
                             {
-                                // Add it to our list of citations.
-                                citations.Add(citation);
+                                // see if we have already encountered the citation.
+                                BibTeX.Citation citation = citations.Find(c => c.Name == inTextCitation);
 
-                                // Replace the in-text citation with (author et al., year)
-                                string htmlRef = string.Format("(<a href=\"#{0}\">{1}</a>)", citation.Name, citation.InTextCite);
+                                // If we haven't encountered it, look it up in the .bib file.
+                                if (citation == null)
+                                    citation = bibTeX.Lookup(inTextCitation);
+
+                                if (citation != null)
+                                {
+                                    // Add it to our list of citations.
+                                    citations.Add(citation);
+
+                                    // Replace the in-text citation with (author et al., year)
+                                    if (replacementText != string.Empty)
+                                        replacementText += "; ";
+                                    replacementText += string.Format("<a href=\"#{0}\">{1}</a>", citation.Name, citation.InTextCite);
+                                }
+                            }
+
+                            if (replacementText != string.Empty)
+                            {
+                                replacementText = "(" + replacementText + ")";
                                 text = text.Remove(posBracket, posEndBracket - posBracket + 1);
-                                text = text.Insert(posBracket, htmlRef);
+                                text = text.Insert(posBracket, replacementText);
                             }
                         }
 
                         // Find the next bracketed potential citation.
-                        posBracket = text.IndexOf('[', posBracket + 1);
+                        posBracket = text.IndexOf('[', posEndBracket + 1);
                     }
 
                     paragraph.text = text;
@@ -656,9 +451,11 @@ namespace UserInterface.Commands
             // Create the heading.
             tags.Add(new AutoDocumentation.Heading("References", 1));
 
+            citations.Sort(new BibTeX.CitationComparer());
             foreach (BibTeX.Citation citation in citations)
             {
-                string url = citation.URL;
+                string url = citation.URL.Replace("=", "EQUALS");
+                url = url.Replace("&", "AND");
                 string text;
                 if (url != string.Empty)
                     text = string.Format("<a href=\"{0}\">{1}</a>", url, citation.BibliographyText);

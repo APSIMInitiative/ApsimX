@@ -11,7 +11,7 @@ using Models.PMF.Functions.StructureFunctions;
 namespace Models.PMF
 {
     /// <summary>
-    /// A structure model for plant. 
+    /// The structure model calculates structural development of the plant.  This includes the number of primordia, leaves, stems and nodes, as well as overall plant height.
     /// </summary>
     /// \pre A \ref Models.PMF.Plant "Plant" model has to exist to access 
     /// sowing data, e.g. population, bud number.
@@ -182,6 +182,7 @@ namespace Models.PMF
     /// and population.
     /// </remarks>
     [Serializable]
+    [ValidParent(typeof(Plant))]
     public class Structure : Model
     {
         private double _MainStemFinalNodeNo;
@@ -425,7 +426,10 @@ namespace Models.PMF
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             //Set PlantTotalNodeNo    
-            PlantTotalNodeNo = Leaf.PlantAppearedLeafNo / Plant.Population;
+            if (Plant.IsAlive)
+            {
+                PlantTotalNodeNo = Leaf.PlantAppearedLeafNo / Plant.Population;
+            }
         }
         #endregion
 

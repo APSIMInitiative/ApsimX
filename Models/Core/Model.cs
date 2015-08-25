@@ -47,6 +47,8 @@ namespace Models.Core
         [XmlElement(typeof(Models.Agroforestry.LocalMicroClimate))]
         [XmlElement(typeof(Models.Agroforestry.StaticForestrySystem))]
         [XmlElement(typeof(Models.Graph.Graph))]
+        [XmlElement(typeof(Models.Graph.Series))]
+        [XmlElement(typeof(Models.Graph.Regression))]
         [XmlElement(typeof(Models.PMF.Plant))]
         [XmlElement(typeof(Models.PMF.Slurp.Slurp))]
         [XmlElement(typeof(Models.PMF.OilPalm.OilPalm))]

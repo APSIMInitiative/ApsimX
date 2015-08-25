@@ -78,7 +78,7 @@ namespace UserInterface.Presenters
         private void SetHtmlInView()
         {
             StringWriter writer = new StringWriter();
-            Summary.WriteReport(dataStore, this.view.SimulationName, writer, Utility.Configuration.Settings.SummaryPngFileName, html:true);
+            Summary.WriteReport(dataStore, this.view.SimulationName, writer, Utility.Configuration.Settings.SummaryPngFileName, outtype:Summary.OutputType.rtf);
             this.view.SetSummaryContent(writer.ToString());
             writer.Close();
         }

@@ -105,5 +105,10 @@ namespace UserInterface.Interfaces
         /// Resizes controls on the GridView.
         /// </summary>
         void ResizeControls();
+
+        /// <summary>
+        /// End the user editing the cell.
+        /// </summary>
+        void EndEdit();
     }
 }

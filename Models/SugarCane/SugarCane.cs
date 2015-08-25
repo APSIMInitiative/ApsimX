@@ -25,6 +25,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(typeof(Zone))]
     public class SugarCane : Model, ICrop, ICanopy, IUptake
     {
 

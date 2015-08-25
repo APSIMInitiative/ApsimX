@@ -52,6 +52,7 @@ namespace Models.PMF
     /// to execute sowing events.
     /// <remarks>
     /// </remarks>
+    [ValidParent(typeof(Zone))]
     [Serializable]
     public class Plant : ModelCollectionFromResource, ICrop
     {
@@ -295,7 +296,7 @@ namespace Models.PMF
             // now write all cultivars in a list.
             tags.Add(new AutoDocumentation.Heading("Cultivars", headingLevel));
             foreach (IModel child in Apsim.Children(this, typeof(Cultivar)))
-                tags.Add(new AutoDocumentation.Paragraph(child.Name, indent));
+                child.Document(tags, headingLevel, indent);
         }
     }
 }

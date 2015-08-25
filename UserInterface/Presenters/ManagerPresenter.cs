@@ -148,14 +148,19 @@ namespace UserInterface.Presenters
         private void BuildScript()
         {
             this.explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
+
             try
             {
+                // format the code first.
+                string code = this.managerView.Editor.Text;
+                code = new CSharpFormatter(FormattingOptionsFactory.CreateAllman()).Format(code);
+
                 // set the code property manually first so that compile error can be trapped via
                 // an exception.
-                this.manager.Code = this.managerView.Editor.Text;
+                this.manager.Code = code;
 
                 // If it gets this far then compiles ok.
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.manager, "Code", this.managerView.Editor.Text));
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.manager, "Code", code));
             }
             catch (Models.Core.ApsimXException err)
             {

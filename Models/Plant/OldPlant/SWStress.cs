@@ -12,6 +12,7 @@ namespace Models.PMF.OldPlant
     /// plant soil water stress model
     /// </summary>
     [Serializable]
+    [ValidParent(typeof(Plant15))]
     public class SWStress : Model
     {
         /// <summary>The _ photo</summary>

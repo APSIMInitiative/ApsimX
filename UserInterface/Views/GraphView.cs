@@ -30,7 +30,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Overall font size for the graph.
         /// </summary>
-        private const double FontSize = 14;
+        public double FontSize = 14;
 
         /// <summary>
         /// Overall font to use.
@@ -59,6 +59,7 @@ namespace UserInterface.Views
             this.bottomPanel.Visible = false;
             smallestDate = DateTime.MaxValue;
             largestDate = DateTime.MinValue;
+            this.LeftRightPadding = 40;
         }
 
         /// <summary>
@@ -122,21 +123,16 @@ namespace UserInterface.Views
         /// </summary>
         public override void Refresh()
         {
-            this.plot1.Model.DefaultFont = Font;
             this.plot1.Model.DefaultFontSize = FontSize;
-
             this.plot1.Model.PlotAreaBorderThickness = new OxyThickness(0);
             this.plot1.Model.LegendBorder = OxyColors.Transparent;
             this.plot1.Model.LegendBackground = OxyColors.White;
-            this.plot1.Model.InvalidatePlot(true);
 
             if (this.LeftRightPadding != 0)
-                this.Padding = new Padding(this.LeftRightPadding, 0, this.LeftRightPadding, 0);
+                this.plot1.Model.Padding = new OxyThickness(0, 0, this.LeftRightPadding, 0);
 
             foreach (OxyPlot.Axes.Axis axis in this.plot1.Model.Axes)
-            {
                 this.FormatAxisTickLabels(axis);
-            }
 
             this.plot1.Model.InvalidatePlot(true);
         }
@@ -160,8 +156,8 @@ namespace UserInterface.Views
              Models.Graph.Axis.AxisType xAxisType,
              Models.Graph.Axis.AxisType yAxisType,
              Color colour,
-             Models.Graph.Series.LineType lineType,
-             Models.Graph.Series.MarkerType markerType,
+             Models.Graph.LineType lineType,
+             Models.Graph.MarkerType markerType,
              bool showOnLegend)
         {
             if (x != null && y != null)
@@ -192,8 +188,8 @@ namespace UserInterface.Views
                 }
                 
                 // Marker type.
-                MarkerType type;
-                if (Enum.TryParse<MarkerType>(oxyMarkerName, out type))
+                OxyPlot.MarkerType type;
+                if (Enum.TryParse<OxyPlot.MarkerType>(oxyMarkerName, out type))
                 {
                     series.MarkerType = type;
                 }
@@ -375,7 +371,7 @@ namespace UserInterface.Views
                 this.plot1.Model.LegendPosition = oxyLegendPosition;
             }
 
-            this.plot1.Model.LegendSymbolLength = 30;
+            //this.plot1.Model.LegendSymbolLength = 60;
         }
 
         /// <summary>
@@ -391,13 +387,19 @@ namespace UserInterface.Views
         /// Format the footer.
         /// </summary>
         /// <param name="text">The text for the footer</param>
-        public void FormatCaption(string text)
+        /// <param name="italics">Italics?</param>
+        public void FormatCaption(string text, bool italics)
         {
             captionLabel.MaximumSize = new Size(panel1.Width, 300);
             if (text != null && text != string.Empty)
             {
                 captionLabel.Text = text;
-                captionLabel.Font = new Font(Font, (float) (FontSize * 0.8));
+                FontStyle fontStyle = FontStyle.Regular;
+                if (italics)
+                    fontStyle = FontStyle.Italic;
+
+                captionLabel.Font = new Font(Font, (float)(FontSize * 0.8), fontStyle);
+                
             }
             else
             {
@@ -428,32 +430,50 @@ namespace UserInterface.Views
         /// Export the graph to the specified 'bitmap'
         /// </summary>
         /// <param name="bitmap">Bitmap to write to</param>
-        public void Export(Bitmap bitmap)
+        /// <param name="legendOutside">Put legend outside of graph?</param>
+        public void Export(Bitmap bitmap, bool legendOutside)
         {
             this.plot1.Dock = DockStyle.None;
             this.plot1.Width = bitmap.Width;
             this.plot1.Height = bitmap.Height;
 
-            LegendPosition savedLegendPosition = this.plot1.Model.LegendPosition;
-            this.plot1.Model.LegendPlacement = LegendPlacement.Outside;
+            LegendPosition savedLegendPosition = LegendPosition.RightTop;
+            if (legendOutside)
+            {
+                savedLegendPosition = this.plot1.Model.LegendPosition;
+                this.plot1.Model.LegendPlacement = LegendPlacement.Outside;
+                this.plot1.Model.LegendPosition = LegendPosition.RightTop;
+            }
 
-            this.plot1.Model.LegendPosition = LegendPosition.RightTop;
             this.plot1.DrawToBitmap(bitmap, new Rectangle(0, 0, bitmap.Width, bitmap.Height));
 
-            this.plot1.Model.LegendPlacement = LegendPlacement.Inside;
-            this.plot1.Model.LegendPosition = savedLegendPosition;
+            if (legendOutside)
+            {
+                this.plot1.Model.LegendPlacement = LegendPlacement.Inside;
+                this.plot1.Model.LegendPosition = savedLegendPosition;
+            }
+
             this.plot1.Dock = DockStyle.Fill;
         }
 
         /// <summary>
         /// Add an action (on context menu) on the memo.
         /// </summary>
-        /// <param name="buttonText">Text for button</param>
-        /// <param name="onClick">Event handler for button click</param>
-        public void AddContextAction(string buttonText, System.EventHandler onClick)
+        /// <param name="menuText">Menu item text</param>
+        /// <param name="ticked">Menu ticked?</param>
+        /// <param name="onClick">Event handler for menu item click</param>
+        public void AddContextAction(string menuText, bool ticked, System.EventHandler onClick)
         {
-            this.contextMenuStrip1.Items.Add(buttonText);
-            this.contextMenuStrip1.Items[0].Click += onClick;
+            ToolStripMenuItem item = null;
+            foreach (ToolStripMenuItem i in contextMenuStrip1.Items)
+                if (i.Text == menuText)
+                    item = i;
+            if (item == null)
+            {
+                item = contextMenuStrip1.Items.Add(menuText) as ToolStripMenuItem;
+                item.Click += onClick;
+            }
+            item.Checked = ticked;
         }
 
         /// <summary>
@@ -798,6 +818,21 @@ namespace UserInterface.Views
             if (axis != null)
             {
                 return axis.ActualMinimum;
+            }
+            else
+                return double.NaN;
+        }
+
+        /// <summary>
+        /// Gets the interval (major step) of the specified axis.
+        /// </summary>
+        public double AxisMajorStep(Models.Graph.Axis.AxisType axisType)
+        {
+            OxyPlot.Axes.Axis axis = GetAxis(axisType);
+
+            if (axis != null)
+            {
+                return axis.IntervalLength;
             }
             else
                 return double.NaN;

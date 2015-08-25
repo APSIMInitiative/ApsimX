@@ -46,6 +46,7 @@ namespace Models
     /// The fertiliser model
     /// </summary>
     [Serializable]
+    [ValidParent(typeof(Zone))]
     public class Fertiliser : Model
     {
         // Links

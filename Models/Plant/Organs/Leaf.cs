@@ -603,6 +603,23 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Returns the area of the largest leaf.</summary>
+        /// <value>The area of the largest leaf</value>
+        [Units("mm2")]
+        public double AreaLargestLeaf
+        {
+            get
+            {
+                double LLA = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    LLA = Math.Max(LLA, L.MaxArea);
+                }
+
+                return LLA;
+            }
+        }
+
         /// <summary>Gets the maximum leaf area.</summary>
         /// <value>The maximum leaf area.</value>
         [Units("mm2")]
@@ -986,18 +1003,20 @@ namespace Models.PMF.Organs
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
            // WaterAllocation = 0;
-            
-            foreach (LeafCohort L in Leaves)
-                L.DoActualGrowth(ThermalTime.Value, CohortParameters);
-
-            Structure.UpdateHeight();
-
-            //Work out what proportion of the canopy has died today.  This variable is addressed by other classes that need to perform senescence proces at the same rate as leaf senescnce
-            FractionDied = 0;
-            if (DeadCohortNo > 0 && GreenCohortNo > 0)
+            if (Plant.IsAlive)
             {
-                double DeltaDeadLeaves = DeadCohortNo - DeadNodesYesterday; //Fixme.  DeadNodesYesterday is never given a value as far as I can see.
-                FractionDied = DeltaDeadLeaves / GreenCohortNo;
+                foreach (LeafCohort L in Leaves)
+                    L.DoActualGrowth(ThermalTime.Value, CohortParameters);
+
+                Structure.UpdateHeight();
+
+                //Work out what proportion of the canopy has died today.  This variable is addressed by other classes that need to perform senescence proces at the same rate as leaf senescnce
+                FractionDied = 0;
+                if (DeadCohortNo > 0 && GreenCohortNo > 0)
+                {
+                    double DeltaDeadLeaves = DeadCohortNo - DeadNodesYesterday; //Fixme.  DeadNodesYesterday is never given a value as far as I can see.
+                    FractionDied = DeltaDeadLeaves / GreenCohortNo;
+                }
             }
         }
         /// <summary>Zeroes the leaves.</summary>

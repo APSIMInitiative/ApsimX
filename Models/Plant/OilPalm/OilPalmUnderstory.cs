@@ -14,6 +14,7 @@ namespace Models.PMF.OilPalm
     /// <summary>
     /// A model of oil palm understory
     /// </summary>
+    [ValidParent(typeof(Zone))]
     public class OilPalmUnderstory: Model
     {
 

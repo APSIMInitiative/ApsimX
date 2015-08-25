@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -8,10 +8,7 @@
       <Memo>
         <Name>Introduction</Name>
         <MemoText><![CDATA[
-<html><body>
-The APSIM Chickpea model has been developed from the original APSIM Chickpea model described by Robertson et al(2002) using the Plant Modelling Framework of Brown et al (2014).<br/>
-
-</body></html>]]></MemoText>
+The APSIM Chickpea model has been developed from the original APSIM Chickpea model described by Robertson et al(2002) using the Plant Modelling Framework of Brown et al (2014).]]></MemoText>
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
@@ -25,10 +22,7 @@ The APSIM Chickpea model has been developed from the original APSIM Chickpea mod
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[
-<html><body>
-The cardinal temperatures for calculating thermal time have been taken from Singh and Virmani (1996) as used by Robertson et al (2002).<br/>
-
-</body></html>]]></MemoText>
+The cardinal temperatures for calculating thermal time have been taken from Singh and Virmani (1996) as used by Robertson et al (2002).]]></MemoText>
           </Memo>
           <XYPairs>
             <Name>XYPairs</Name>
@@ -51,7 +45,7 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <Interval>NaN</Interval>
               </Axis>
               <Series>
-                <Title>ThermalTime</Title>
+                <Name>ThermalTime</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -67,6 +61,8 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <ShowRegressionLine>false</ShowRegressionLine>
                 <ShowInLegend>true</ShowInLegend>
                 <Cumulative>false</Cumulative>
+                <XFieldName>[XYPairs].X</XFieldName>
+                <YFieldName>[XYPairs].Y</YFieldName>
               </Series>
               <LegendPosition>BottomRight</LegendPosition>
               <ShowRegressionLine>false</ShowRegressionLine>
@@ -92,7 +88,7 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <Interval>NaN</Interval>
               </Axis>
               <Series>
-                <Title>ThermalTime</Title>
+                <Name>ThermalTime</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -108,6 +104,8 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <ShowRegressionLine>false</ShowRegressionLine>
                 <ShowInLegend>true</ShowInLegend>
                 <Cumulative>false</Cumulative>
+                <XFieldName>[XYPairs].X</XFieldName>
+                <YFieldName>[XYPairs].Y</YFieldName>
               </Series>
               <LegendPosition>BottomRight</LegendPosition>
               <ShowRegressionLine>false</ShowRegressionLine>
@@ -133,7 +131,7 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <Interval>NaN</Interval>
               </Axis>
               <Series>
-                <Title>ThermalTime</Title>
+                <Name>ThermalTime</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -149,6 +147,8 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <ShowRegressionLine>false</ShowRegressionLine>
                 <ShowInLegend>true</ShowInLegend>
                 <Cumulative>false</Cumulative>
+                <XFieldName>[XYPairs].X</XFieldName>
+                <YFieldName>[XYPairs].Y</YFieldName>
               </Series>
               <LegendPosition>BottomRight</LegendPosition>
               <ShowRegressionLine>false</ShowRegressionLine>
@@ -174,7 +174,7 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <Interval>NaN</Interval>
               </Axis>
               <Series>
-                <Title>ThermalTime</Title>
+                <Name>ThermalTime</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -190,6 +190,8 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <ShowRegressionLine>false</ShowRegressionLine>
                 <ShowInLegend>true</ShowInLegend>
                 <Cumulative>false</Cumulative>
+                <XFieldName>[XYPairs].X</XFieldName>
+                <YFieldName>[XYPairs].Y</YFieldName>
               </Series>
               <LegendPosition>BottomRight</LegendPosition>
               <ShowRegressionLine>false</ShowRegressionLine>
@@ -215,7 +217,7 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <Interval>NaN</Interval>
               </Axis>
               <Series>
-                <Title>ThermalTime</Title>
+                <Name>ThermalTime</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -231,6 +233,8 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <ShowRegressionLine>false</ShowRegressionLine>
                 <ShowInLegend>true</ShowInLegend>
                 <Cumulative>false</Cumulative>
+                <XFieldName>[XYPairs].X</XFieldName>
+                <YFieldName>[XYPairs].Y</YFieldName>
               </Series>
               <LegendPosition>BottomRight</LegendPosition>
               <ShowRegressionLine>false</ShowRegressionLine>
@@ -256,7 +260,7 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <Interval>NaN</Interval>
               </Axis>
               <Series>
-                <Title>ThermalTime</Title>
+                <Name>ThermalTime</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -272,6 +276,8 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <ShowRegressionLine>false</ShowRegressionLine>
                 <ShowInLegend>true</ShowInLegend>
                 <Cumulative>false</Cumulative>
+                <XFieldName>[XYPairs].X</XFieldName>
+                <YFieldName>[XYPairs].Y</YFieldName>
               </Series>
               <LegendPosition>BottomRight</LegendPosition>
               <ShowRegressionLine>false</ShowRegressionLine>
@@ -315,10 +321,7 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[
-<html><body>
-Robertson et al (2002) described early post-emergent chickpea development in terms of juvenile and inductive phases.  In this model we describe a vegetative growth phase, which is photoperiod dependant.<br/>
-
-</body></html>]]></MemoText>
+Robertson et al (2002) described early post-emergent chickpea development in terms of juvenile and inductive phases. In this model we describe a vegetative growth phase, which is photoperiod dependant.]]></MemoText>
           </Memo>
           <LinearInterpolationFunction>
             <Name>CompletionNodeNumber</Name>
@@ -343,7 +346,7 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>CompletionNodeNumber</Title>
+                  <Name>CompletionNodeNumber</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -359,6 +362,8 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -384,7 +389,7 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>CompletionNodeNumber</Title>
+                  <Name>CompletionNodeNumber</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -400,6 +405,8 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -425,7 +432,7 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>CompletionNodeNumber</Title>
+                  <Name>CompletionNodeNumber</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -441,6 +448,8 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -466,7 +475,7 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>CompletionNodeNumber</Title>
+                  <Name>CompletionNodeNumber</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -482,6 +491,8 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -507,7 +518,7 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>CompletionNodeNumber</Title>
+                  <Name>CompletionNodeNumber</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -523,6 +534,8 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -548,7 +561,7 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>CompletionNodeNumber</Title>
+                  <Name>CompletionNodeNumber</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -564,6 +577,8 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -589,7 +604,7 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>CompletionNodeNumber</Title>
+                  <Name>CompletionNodeNumber</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -605,6 +620,8 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -630,7 +647,7 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>CompletionNodeNumber</Title>
+                  <Name>CompletionNodeNumber</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -646,6 +663,8 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -671,7 +690,7 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>CompletionNodeNumber</Title>
+                  <Name>CompletionNodeNumber</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -687,6 +706,8 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -712,7 +733,7 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>CompletionNodeNumber</Title>
+                  <Name>CompletionNodeNumber</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -728,6 +749,8 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -753,7 +776,7 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>CompletionNodeNumber</Title>
+                  <Name>CompletionNodeNumber</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -769,6 +792,8 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -794,7 +819,7 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>CompletionNodeNumber</Title>
+                  <Name>CompletionNodeNumber</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -810,6 +835,8 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -861,7 +888,7 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                     <Interval>NaN</Interval>
                   </Axis>
                   <Series>
-                    <Title>FloweringNodes</Title>
+                    <Name>FloweringNodes</Name>
                     <Type>Scatter</Type>
                     <XAxis>Bottom</XAxis>
                     <YAxis>Left</YAxis>
@@ -877,6 +904,8 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                     <ShowRegressionLine>false</ShowRegressionLine>
                     <ShowInLegend>true</ShowInLegend>
                     <Cumulative>false</Cumulative>
+                    <XFieldName>[XYPairs].X</XFieldName>
+                    <YFieldName>[XYPairs].Y</YFieldName>
                   </Series>
                   <LegendPosition>BottomRight</LegendPosition>
                   <ShowRegressionLine>false</ShowRegressionLine>
@@ -902,7 +931,7 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                     <Interval>NaN</Interval>
                   </Axis>
                   <Series>
-                    <Title>FloweringNodes</Title>
+                    <Name>FloweringNodes</Name>
                     <Type>Scatter</Type>
                     <XAxis>Bottom</XAxis>
                     <YAxis>Left</YAxis>
@@ -918,6 +947,8 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                     <ShowRegressionLine>false</ShowRegressionLine>
                     <ShowInLegend>true</ShowInLegend>
                     <Cumulative>false</Cumulative>
+                    <XFieldName>[XYPairs].X</XFieldName>
+                    <YFieldName>[XYPairs].Y</YFieldName>
                   </Series>
                   <LegendPosition>BottomRight</LegendPosition>
                   <ShowRegressionLine>false</ShowRegressionLine>
@@ -955,10 +986,7 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[
-<html><body>
-The duration of the grain filling phase has been taken from the model of Robertson et al (2002).<br/>
-
-</body></html>]]></MemoText>
+The duration of the grain filling phase has been taken from the model of Robertson et al (2002).]]></MemoText>
           </Memo>
           <Constant>
             <Name>Target</Name>
@@ -976,10 +1004,7 @@ The duration of the grain filling phase has been taken from the model of Roberts
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[
-<html><body>
-The duration of the Maturing phase has been taken from the model of Robertson et al (2002).<br/>
-
-</body></html>]]></MemoText>
+The duration of the Maturing phase has been taken from the model of Robertson et al (2002).]]></MemoText>
           </Memo>
           <Constant>
             <Name>Target</Name>
@@ -1052,10 +1077,7 @@ The duration of the Maturing phase has been taken from the model of Robertson et
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
-A function is used to provide flowering date as days after sowing(DAS).
-<br/>
-</body></html>]]></MemoText>
+A function is used to provide flowering date as days after sowing(DAS).]]></MemoText>
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
@@ -1073,10 +1095,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
-A function is used to provide maturity date as days after sowing(DAS).
-<br/>
-</body></html>]]></MemoText>
+A function is used to provide maturity date as days after sowing(DAS).]]></MemoText>
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
@@ -1141,7 +1160,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                 <Interval>NaN</Interval>
               </Axis>
               <Series>
-                <Title>Height</Title>
+                <Name>Height</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -1157,6 +1176,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                 <ShowRegressionLine>false</ShowRegressionLine>
                 <ShowInLegend>true</ShowInLegend>
                 <Cumulative>false</Cumulative>
+                <XFieldName>[XYPairs].X</XFieldName>
+                <YFieldName>[XYPairs].Y</YFieldName>
               </Series>
               <LegendPosition>BottomRight</LegendPosition>
               <ShowRegressionLine>false</ShowRegressionLine>
@@ -1182,7 +1203,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                 <Interval>NaN</Interval>
               </Axis>
               <Series>
-                <Title>Height</Title>
+                <Name>Height</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -1198,6 +1219,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                 <ShowRegressionLine>false</ShowRegressionLine>
                 <ShowInLegend>true</ShowInLegend>
                 <Cumulative>false</Cumulative>
+                <XFieldName>[XYPairs].X</XFieldName>
+                <YFieldName>[XYPairs].Y</YFieldName>
               </Series>
               <LegendPosition>BottomRight</LegendPosition>
               <ShowRegressionLine>false</ShowRegressionLine>
@@ -1223,7 +1246,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                 <Interval>NaN</Interval>
               </Axis>
               <Series>
-                <Title>Height</Title>
+                <Name>Height</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -1239,6 +1262,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                 <ShowRegressionLine>false</ShowRegressionLine>
                 <ShowInLegend>true</ShowInLegend>
                 <Cumulative>false</Cumulative>
+                <XFieldName>[XYPairs].X</XFieldName>
+                <YFieldName>[XYPairs].Y</YFieldName>
               </Series>
               <LegendPosition>BottomRight</LegendPosition>
               <ShowRegressionLine>false</ShowRegressionLine>
@@ -1264,7 +1289,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                 <Interval>NaN</Interval>
               </Axis>
               <Series>
-                <Title>Height</Title>
+                <Name>Height</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -1280,6 +1305,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                 <ShowRegressionLine>false</ShowRegressionLine>
                 <ShowInLegend>true</ShowInLegend>
                 <Cumulative>false</Cumulative>
+                <XFieldName>[XYPairs].X</XFieldName>
+                <YFieldName>[XYPairs].Y</YFieldName>
               </Series>
               <LegendPosition>BottomRight</LegendPosition>
               <ShowRegressionLine>false</ShowRegressionLine>
@@ -1302,9 +1329,7 @@ A function is used to provide maturity date as days after sowing(DAS).
           <Memo>
             <Name>Memo1</Name>
             <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <LinearInterpolationFunction>
             <Name>Potential_Branching_Rate</Name>
@@ -1329,7 +1354,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>Potential_Branching_Rate</Title>
+                  <Name>Potential_Branching_Rate</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1345,6 +1370,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -1370,7 +1397,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>Potential_Branching_Rate</Title>
+                  <Name>Potential_Branching_Rate</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1386,6 +1413,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -1411,7 +1440,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>Potential_Branching_Rate</Title>
+                  <Name>Potential_Branching_Rate</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1427,6 +1456,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -1452,7 +1483,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>Potential_Branching_Rate</Title>
+                  <Name>Potential_Branching_Rate</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1468,6 +1499,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -1493,7 +1526,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>Potential_Branching_Rate</Title>
+                  <Name>Potential_Branching_Rate</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1509,6 +1542,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -1534,7 +1569,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>Potential_Branching_Rate</Title>
+                  <Name>Potential_Branching_Rate</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1550,6 +1585,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -1575,7 +1612,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>Potential_Branching_Rate</Title>
+                  <Name>Potential_Branching_Rate</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1591,6 +1628,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -1616,7 +1655,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>Potential_Branching_Rate</Title>
+                  <Name>Potential_Branching_Rate</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1632,6 +1671,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -1678,7 +1719,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>Cover_response</Title>
+                  <Name>Cover_response</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1694,6 +1735,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -1719,7 +1762,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>Cover_response</Title>
+                  <Name>Cover_response</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1735,6 +1778,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -1760,7 +1805,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>Cover_response</Title>
+                  <Name>Cover_response</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1776,6 +1821,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -1801,7 +1848,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>Cover_response</Title>
+                  <Name>Cover_response</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1817,6 +1864,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -1859,7 +1908,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>CHO_response</Title>
+                  <Name>CHO_response</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1875,6 +1924,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -1900,7 +1951,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>CHO_response</Title>
+                  <Name>CHO_response</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1916,6 +1967,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -1941,7 +1994,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>CHO_response</Title>
+                  <Name>CHO_response</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1957,6 +2010,8 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -2004,9 +2059,8 @@ A function is used to provide maturity date as days after sowing(DAS).
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[
-<html><body>
 Robertson et al (2002) used a constant phyllochron of 46 degree days.
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
         </PhaseLookup>
         <InitialiseStage>Emergence</InitialiseStage>
@@ -2161,7 +2215,7 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
                 <Interval>NaN</Interval>
               </Axis>
               <Series>
-                <Title>KLModifier</Title>
+                <Name>KLModifier</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -2177,6 +2231,8 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
                 <ShowRegressionLine>false</ShowRegressionLine>
                 <ShowInLegend>true</ShowInLegend>
                 <Cumulative>false</Cumulative>
+                <XFieldName>[XYPairs].X</XFieldName>
+                <YFieldName>[XYPairs].Y</YFieldName>
               </Series>
               <LegendPosition>BottomRight</LegendPosition>
               <ShowRegressionLine>false</ShowRegressionLine>
@@ -2217,7 +2273,7 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
                 <Interval>NaN</Interval>
               </Axis>
               <Series>
-                <Title>TemperatureEffect</Title>
+                <Name>TemperatureEffect</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -2233,6 +2289,8 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
                 <ShowRegressionLine>false</ShowRegressionLine>
                 <ShowInLegend>true</ShowInLegend>
                 <Cumulative>false</Cumulative>
+                <XFieldName>[XYPairs].X</XFieldName>
+                <YFieldName>[XYPairs].Y</YFieldName>
               </Series>
               <LegendPosition>BottomRight</LegendPosition>
               <ShowRegressionLine>false</ShowRegressionLine>
@@ -2260,9 +2318,7 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <Value>0.005</Value>
         </Constant>
@@ -2505,9 +2561,7 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <Value>0</Value>
         </Constant>
@@ -2724,7 +2778,7 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>GrowthDuration</Title>
+                  <Name>GrowthDuration</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -2740,6 +2794,8 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -2765,7 +2821,7 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>GrowthDuration</Title>
+                  <Name>GrowthDuration</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -2781,6 +2837,8 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -2805,10 +2863,7 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
             <Memo>
               <Name>Memo</Name>
               <MemoText><![CDATA[
-<html><body>
-Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leaves and 600 mm2 thereafter.<br/>
-
-</body></html>]]></MemoText>
+Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leaves and 600 mm2 thereafter.]]></MemoText>
             </Memo>
             <XYPairs>
               <Name>XYPairs</Name>
@@ -2831,7 +2886,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>MaxArea</Title>
+                  <Name>MaxArea</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -2847,6 +2902,8 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -2872,7 +2929,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>MaxArea</Title>
+                  <Name>MaxArea</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -2888,6 +2945,8 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -2913,7 +2972,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>MaxArea</Title>
+                  <Name>MaxArea</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -2929,6 +2988,8 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -2954,7 +3015,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>MaxArea</Title>
+                  <Name>MaxArea</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -2970,6 +3031,8 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -2995,7 +3058,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>MaxArea</Title>
+                  <Name>MaxArea</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -3011,6 +3074,8 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -3036,7 +3101,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>MaxArea</Title>
+                  <Name>MaxArea</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -3052,6 +3117,8 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -3060,15 +3127,15 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
               </Graph>
               <X>
                 <double>1</double>
-                <double>9.5</double>
-                <double>9.6</double>
-                <double>40</double>
+                <double>12</double>
+                <double>16</double>
+                <double>19</double>
               </X>
               <Y>
                 <double>300</double>
                 <double>300</double>
-                <double>600</double>
-                <double>600</double>
+                <double>450</double>
+                <double>850</double>
               </Y>
             </XYPairs>
             <XProperty>[Structure].MainStemNodeNo</XProperty>
@@ -3078,9 +3145,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
             <Memo>
               <Name>Memo</Name>
               <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
             </Memo>
             <XYPairs>
               <Name>XYPairs</Name>
@@ -3103,7 +3168,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>LagDuration</Title>
+                  <Name>LagDuration</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -3119,6 +3184,8 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -3144,7 +3211,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>LagDuration</Title>
+                  <Name>LagDuration</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -3160,6 +3227,8 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -3185,7 +3254,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>LagDuration</Title>
+                  <Name>LagDuration</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -3201,6 +3270,8 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -3226,7 +3297,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>LagDuration</Title>
+                  <Name>LagDuration</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -3242,6 +3313,8 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -3267,7 +3340,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>LagDuration</Title>
+                  <Name>LagDuration</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -3283,6 +3356,8 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -3333,7 +3408,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>SenescenceDuration</Title>
+                  <Name>SenescenceDuration</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -3349,6 +3424,8 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -3383,9 +3460,8 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
             <Memo>
               <Name>Memo</Name>
               <MemoText><![CDATA[
-<html><body>
 Maximum specific leaf area has been taken from Robertson et al (2002).
-</body></html>]]></MemoText>
+]]></MemoText>
             </Memo>
             <XYPairs>
               <Name>XYPairs</Name>
@@ -3408,7 +3484,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>SpecificLeafAreaMax</Title>
+                  <Name>SpecificLeafAreaMax</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -3424,6 +3500,8 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -3449,7 +3527,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>SpecificLeafAreaMax</Title>
+                  <Name>SpecificLeafAreaMax</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -3465,6 +3543,8 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -3490,7 +3570,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>SpecificLeafAreaMax</Title>
+                  <Name>SpecificLeafAreaMax</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -3506,6 +3586,8 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -3532,9 +3614,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
             <Memo>
               <Name>Memo</Name>
               <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
             </Memo>
             <Value>0.7</Value>
           </Constant>
@@ -3543,9 +3623,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
             <Memo>
               <Name>Memo</Name>
               <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
             </Memo>
             <XYPairs>
               <Name>XYPairs</Name>
@@ -3568,7 +3646,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>SpecificLeafAreaMin</Title>
+                  <Name>SpecificLeafAreaMin</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -3584,6 +3662,8 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -3632,7 +3712,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>ExpansionStress</Title>
+                  <Name>ExpansionStress</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -3648,6 +3728,8 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -3736,7 +3818,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>ShadeInducedSenescenceRate</Title>
+                  <Name>ShadeInducedSenescenceRate</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -3752,6 +3834,8 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -3809,7 +3893,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                 <Interval>NaN</Interval>
               </Axis>
               <Series>
-                <Title>ExtinctionCoeff</Title>
+                <Name>ExtinctionCoeff</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -3825,6 +3909,8 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                 <ShowRegressionLine>false</ShowRegressionLine>
                 <ShowInLegend>true</ShowInLegend>
                 <Cumulative>false</Cumulative>
+                <XFieldName>[XYPairs].X</XFieldName>
+                <YFieldName>[XYPairs].Y</YFieldName>
               </Series>
               <LegendPosition>BottomRight</LegendPosition>
               <ShowRegressionLine>false</ShowRegressionLine>
@@ -3850,7 +3936,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                 <Interval>NaN</Interval>
               </Axis>
               <Series>
-                <Title>ExtinctionCoeff</Title>
+                <Name>ExtinctionCoeff</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -3866,6 +3952,8 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                 <ShowRegressionLine>false</ShowRegressionLine>
                 <ShowInLegend>true</ShowInLegend>
                 <Cumulative>false</Cumulative>
+                <XFieldName>[XYPairs].X</XFieldName>
+                <YFieldName>[XYPairs].Y</YFieldName>
               </Series>
               <LegendPosition>BottomRight</LegendPosition>
               <ShowRegressionLine>false</ShowRegressionLine>
@@ -3891,7 +3979,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                 <Interval>NaN</Interval>
               </Axis>
               <Series>
-                <Title>ExtinctionCoeff</Title>
+                <Name>ExtinctionCoeff</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -3907,6 +3995,8 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                 <ShowRegressionLine>false</ShowRegressionLine>
                 <ShowInLegend>true</ShowInLegend>
                 <Cumulative>false</Cumulative>
+                <XFieldName>[XYPairs].X</XFieldName>
+                <YFieldName>[XYPairs].Y</YFieldName>
               </Series>
               <LegendPosition>BottomRight</LegendPosition>
               <ShowRegressionLine>false</ShowRegressionLine>
@@ -3953,7 +4043,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>FT</Title>
+                  <Name>FT</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -3969,6 +4059,8 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -4013,7 +4105,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>FVPD</Title>
+                  <Name>FVPD</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -4029,6 +4121,8 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -4071,7 +4165,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>FN</Title>
+                  <Name>FN</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -4087,6 +4181,8 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -4129,7 +4225,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>FW</Title>
+                  <Name>FW</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -4145,6 +4241,8 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -4171,10 +4269,8 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[
-<html><body>
-Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature conditions for field pea.  Halving this to make it total radiation gives 0.8 g/MJ and adding 20% to account for root and  nodule production and N fixiation costs gives 1.0 g/MJ<br/>
-
-</body></html>]]></MemoText>
+Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature conditions for field pea.  Halving this to make it total radiation gives 0.8 g/MJ and adding 20% to account for root and  nodule production and N fixiation costs gives 1.0 g/MJ
+]]></MemoText>
           </Memo>
         </RUEModel>
         <LinearInterpolationFunction>
@@ -4227,9 +4323,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <Value>0</Value>
         </Constant>
@@ -4261,9 +4355,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <Value>0.03</Value>
         </Constant>
@@ -4272,9 +4364,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <Value>0.01</Value>
         </Constant>
@@ -4371,17 +4461,13 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
       <Memo>
         <Name>References</Name>
         <MemoText><![CDATA[
-<html><body>
-References<br/>
-<br/>
-Brown, H.E., Huth, N.I., Holzworth, D.P., Teixeira, E.I., Zyskowski, R.F., Hargreaves, J.N., Moot, D.J., 2014. Plant modelling framework: software for building and running crop models on the APSIM platform. Environmental Modelling & Software 62 385-398.<br/>
-<br/>
-Robertson, M.J., Carberry, P.S., Huth, N.I., Turpin, J.E., Probert, M.E., Poulton, P.L., Bell, M., Wright, G.C., Yeates, S.J., Brinsmead, R.B., 2002. Simulation of growth and development of diverse legume species in APSIM. Australian Journal of Agricultural Research 53 429-446.<br/>
-<br/>
-Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinum L.). Field Crops Research , 46, 41-59.<br/>
-<br/>
+References  
 
-</body></html>]]></MemoText>
+Brown, H.E., Huth, N.I., Holzworth, D.P., Teixeira, E.I., Zyskowski, R.F., Hargreaves, J.N., Moot, D.J., 2014\. Plant modelling framework: software for building and running crop models on the APSIM platform. Environmental Modelling & Software 62 385-398.  
+
+Robertson, M.J., Carberry, P.S., Huth, N.I., Turpin, J.E., Probert, M.E., Poulton, P.L., Bell, M., Wright, G.C., Yeates, S.J., Brinsmead, R.B., 2002\. Simulation of growth and development of diverse legume species in APSIM. Australian Journal of Agricultural Research 53 429-446.  
+
+Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinum L.). Field Crops Research , 46, 41-59.]]></MemoText>
       </Memo>
       <CropType>Chickpea</CropType>
     </Plant>
@@ -4415,10 +4501,8 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
     <Memo>
       <Name>memo</Name>
       <MemoText><![CDATA[
-<html><body>
-A selection of data from Kenya has been included from the work of Keating et al (1992).  These include the trial originally labelled JMW2 by the original authors and was labelled Experiment 6 in Keating et al (1992).  This trial includes maize (cultivar Katumani Composite B) sown at 5 populations (1.1, 2.2, 4.4, 6.6 and 8.8 plants/m2) under low (0 kg N/ha applied) and high (120 kgN/ha) fertiliser conditions during the Long Rains of 1988.  This same experimental design was conducted at two locations, Katumani (1o 35' S, 37o 14' E) and Kiboko (2o 13' S, 37o 43' E). The trial was rainfed at Katumani but fully irrigated at Kiboko.  Yields ranged from 2000 to 5400 kg/ha at Katumani and 1000 to 6000 kg/ha at Kiboko.  There were strong population x nitrogen interactions at both sites.  A second trial refered to as BMW1 or Experiment 1 in Keating et al(1992).  A range of populations (2.0-6.5 plants/m2) and irrigation treatments (6-176 mm) where planted under high (80 kgN/ha) and low (0kgN/ha) fertiliser conditions at Katumani. Individual replicates are modelled separately due to variability in soil (depth to rock), establishment and irrigation application.  Grain yields varied from 1600 to 8000 kg/ha.<br/>
-
-</body></html>]]></MemoText>
+A selection of data from Kenya has been included from the work of Keating et al (1992).  These include the trial originally labelled JMW2 by the original authors and was labelled Experiment 6 in Keating et al (1992).  This trial includes maize (cultivar Katumani Composite B) sown at 5 populations (1.1, 2.2, 4.4, 6.6 and 8.8 plants/m2) under low (0 kg N/ha applied) and high (120 kgN/ha) fertiliser conditions during the Long Rains of 1988.  This same experimental design was conducted at two locations, Katumani (1o 35' S, 37o 14' E) and Kiboko (2o 13' S, 37o 43' E). The trial was rainfed at Katumani but fully irrigated at Kiboko.  Yields ranged from 2000 to 5400 kg/ha at Katumani and 1000 to 6000 kg/ha at Kiboko.  There were strong population x nitrogen interactions at both sites.  A second trial refered to as BMW1 or Experiment 1 in Keating et al(1992).  A range of populations (2.0-6.5 plants/m2) and irrigation treatments (6-176 mm) where planted under high (80 kgN/ha) and low (0kgN/ha) fertiliser conditions at Katumani. Individual replicates are modelled separately due to variability in soil (depth to rock), establishment and irrigation application.  Grain yields varied from 1600 to 8000 kg/ha.
+]]></MemoText>
     </Memo>
     <Experiment>
       <Name>Lawes1990</Name>
@@ -4482,9 +4566,7 @@ A selection of data from Kenya has been included from the work of Keating et al 
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
         </Memo>
         <Weather>
           <Name>Weather</Name>
@@ -5038,7 +5120,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Series1</Title>
+          <Name>Series1</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5056,6 +5138,10 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.GrainWt</XFieldName>
+          <YFieldName>Predicted.GrainWt</YFieldName>
+          <Regression />
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>true</ShowRegressionLine>
@@ -5115,7 +5201,7 @@ namespace Models
           <Operations>
             <Name>2</Name>
             <Operation>
-              <Date>1991-08-08T00:00:00</Date>
+              <Date>1991-07-30T00:00:00</Date>
               <Action> [Chickpea].Sow(population:28, cultivar:"Amethyst", depth:50, rowSpacing:350);</Action>
             </Operation>
             <Operation>
@@ -5165,9 +5251,7 @@ namespace Models
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
         </Memo>
         <Weather>
           <Name>Weather</Name>
@@ -5283,6 +5367,7 @@ namespace Models
               <string>[Chickpea].Leaf.LAI</string>
               <string>[Chickpea].Structure.MainStemNodeNo</string>
               <string>[Chickpea].Structure.PlantTotalNodeNo</string>
+              <string>[Chickpea].Leaf.DeadCohortNo</string>
               <string>[Chickpea].Structure.TotalStemPopn</string>
               <string>[Chickpea].Summariser.AboveGround.Wt</string>
               <string>[Chickpea].Leaf.Live.Wt</string>
@@ -5692,6 +5777,219 @@ namespace Models
         <Slope>0</Slope>
       </Simulation>
       <Graph>
+        <Name>MSLeafNo</Name>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Name>Nodes</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Chickpea.Structure.MainStemNodeNo</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Chickpea.Structure.MainStemNodeNo</YFieldName>
+          <Regression />
+        </Series>
+        <Series>
+          <Name>Series2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>Circle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>ObservedTimeseriesData</TableName>
+            <FieldName>Date</FieldName>
+          </X>
+          <Y>
+            <TableName>ObservedTimeseriesData</TableName>
+            <FieldName>MSLeaves</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <TableName>ObservedTimeseriesData</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>MSLeaves</YFieldName>
+          <Regression />
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>true</ShowRegressionLine>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>MSDeafLeafNo</Name>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Name>Nodes</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Chickpea.Leaf.DeadCohortNo</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Chickpea.Leaf.DeadCohortNo</YFieldName>
+          <Regression />
+        </Series>
+        <Series>
+          <Name>Series2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>Circle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>ObservedTimeseriesData</TableName>
+            <FieldName>Date</FieldName>
+          </X>
+          <Y>
+            <TableName>ObservedTimeseriesData</TableName>
+            <FieldName>MSDeadLeaves</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <TableName>ObservedTimeseriesData</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>MSDeadLeaves</YFieldName>
+          <Regression />
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>true</ShowRegressionLine>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>TotalLeaves</Name>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Name>Nodes</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Chickpea.Structure.PlantTotalNodeNo</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Chickpea.Structure.PlantTotalNodeNo</YFieldName>
+          <Regression />
+        </Series>
+        <Series>
+          <Name>Series2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>Circle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>ObservedTimeseriesData</TableName>
+            <FieldName>Date</FieldName>
+          </X>
+          <Y>
+            <TableName>ObservedTimeseriesData</TableName>
+            <FieldName>TotalLeaves</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <TableName>ObservedTimeseriesData</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>TotalLeaves</YFieldName>
+          <Regression />
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>true</ShowRegressionLine>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
         <Name>LAI</Name>
         <Axis>
           <Type>Bottom</Type>
@@ -5710,7 +6008,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Observed</Title>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5728,9 +6026,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>ObservedTimeseriesData</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>LAI</YFieldName>
+          <Regression />
         </Series>
         <Series>
-          <Title>Predicted</Title>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5748,69 +6050,10 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>true</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>Structure</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Nodes</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Chickpea.Structure.MainStemNodeNo</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>TotalNodes</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Chickpea.Structure.PlantTotalNodeNo</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Chickpea.Leaf.LAI</YFieldName>
+          <Regression />
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>true</ShowRegressionLine>
@@ -5836,7 +6079,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Observed</Title>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5854,9 +6097,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>ObservedTimeseriesData</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Biomass</YFieldName>
+          <Regression />
         </Series>
         <Series>
-          <Title>Predicted</Title>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5874,6 +6121,10 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Chickpea.Summariser.AboveGround.Wt</YFieldName>
+          <Regression />
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>true</ShowRegressionLine>
@@ -5899,7 +6150,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Observed</Title>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5917,9 +6168,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>ObservedTimeseriesData</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>LeafWt</YFieldName>
+          <Regression />
         </Series>
         <Series>
-          <Title>Predicted</Title>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5937,6 +6192,10 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Chickpea.Leaf.Live.Wt</YFieldName>
+          <Regression />
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>true</ShowRegressionLine>
@@ -5962,7 +6221,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Observed</Title>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5980,9 +6239,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>ObservedTimeseriesData</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>StemWt</YFieldName>
+          <Regression />
         </Series>
         <Series>
-          <Title>Predicted</Title>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6000,6 +6263,10 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Chickpea.Stem.Live.Wt</YFieldName>
+          <Regression />
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>true</ShowRegressionLine>
@@ -6139,9 +6406,7 @@ namespace Models
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
         </Memo>
         <Weather>
           <Name>Weather</Name>
@@ -6761,9 +7026,7 @@ namespace Models
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
         </Memo>
         <Weather>
           <Name>Weather</Name>
@@ -7299,7 +7562,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Series1</Title>
+          <Name>Series1</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7317,6 +7580,10 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.GrainWt</XFieldName>
+          <YFieldName>Predicted.GrainWt</YFieldName>
+          <Regression />
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>true</ShowRegressionLine>
@@ -7343,7 +7610,7 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Series1</Title>
+        <Name>Series1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7361,6 +7628,10 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.GrainWt</XFieldName>
+        <YFieldName>Predicted.GrainWt</YFieldName>
+        <Regression />
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
       <ShowRegressionLine>true</ShowRegressionLine>
@@ -7469,10 +7740,7 @@ namespace Models
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-<html><body>
-<br/>
-
-</body></html>]]></MemoText>
+]]></MemoText>
         </Memo>
         <Weather>
           <Name>Weather</Name>
@@ -8008,7 +8276,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Series1</Title>
+          <Name>Series1</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -8026,6 +8294,10 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.GrainWt</XFieldName>
+          <YFieldName>Predicted.GrainWt</YFieldName>
+          <Regression />
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>true</ShowRegressionLine>
@@ -8105,10 +8377,7 @@ namespace Models
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-<html><body>
-<br/>
-
-</body></html>]]></MemoText>
+]]></MemoText>
         </Memo>
         <Weather>
           <Name>Weather</Name>
@@ -8644,7 +8913,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Series1</Title>
+          <Name>Series1</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -8662,6 +8931,10 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>GrainWt</YFieldName>
+          <Regression />
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>true</ShowRegressionLine>
@@ -8707,9 +8980,7 @@ namespace Models
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
         </Memo>
         <Weather>
           <Name>Weather</Name>
@@ -9245,7 +9516,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Series1</Title>
+          <Name>Series1</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -9263,6 +9534,10 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>GrainWt</YFieldName>
+          <Regression />
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>true</ShowRegressionLine>
@@ -9276,10 +9551,8 @@ namespace Models
     <Memo>
       <Name>memo</Name>
       <MemoText><![CDATA[
-<html><body>
-The data presented for the trials done in Emerald and Biloela were obtained from R Brinsmead (unpublished), as reported by Robertson et al. (2002). The two trials were sowed in four dates. The Emerald experiment was sowed at March 5th, April 13th, June 18th and September 13th. The experiment in Biloela was sowed on March 12th, April 26th, June 18th and Septemebr 13th. <br/>
-
-</body></html>]]></MemoText>
+The data presented for the trials done in Emerald and Biloela were obtained from R Brinsmead (unpublished), as reported by Robertson et al. (2002). The two trials were sowed in four dates. The Emerald experiment was sowed at March 5th, April 13th, June 18th and September 13th. The experiment in Biloela was sowed on March 12th, April 26th, June 18th and Septemebr 13th.
+]]></MemoText>
     </Memo>
     <Experiment>
       <Name>Emerald</Name>
@@ -9373,9 +9646,7 @@ The data presented for the trials done in Emerald and Biloela were obtained from
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
         </Memo>
         <Weather>
           <Name>Weather</Name>
@@ -9855,10 +10126,7 @@ namespace Models
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-<html><body>
-<br/>
-
-</body></html>]]></MemoText>
+]]></MemoText>
         </Memo>
         <Weather>
           <Name>Weather</Name>
@@ -10297,7 +10565,7 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Series1</Title>
+        <Name>Series1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10315,6 +10583,10 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.GrainWt</XFieldName>
+        <YFieldName>Predicted.GrainWt</YFieldName>
+        <Regression />
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
       <ShowRegressionLine>true</ShowRegressionLine>
@@ -10327,9 +10599,8 @@ namespace Models
     <Memo>
       <Name>memo</Name>
       <MemoText><![CDATA[
-<html><body>
 Several minimal datasets are available with only flowering dates for a ranges of planting dates.  These are assembled here for testing of the phenology model for a range of latitudes, temperatures and sowing dates. Local soil data may not be available, but it is assumed that this is necessary when comparing only preditions of time to flowering.
-</body></html>]]></MemoText>
+]]></MemoText>
     </Memo>
     <Experiment>
       <Name>Beverley1989</Name>
@@ -10964,7 +11235,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Series1</Title>
+          <Name>Series1</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -10982,6 +11253,10 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.GrainWt</XFieldName>
+          <YFieldName>Predicted.GrainWt</YFieldName>
+          <Regression />
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>true</ShowRegressionLine>
@@ -11622,7 +11897,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Series1</Title>
+          <Name>Series1</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -11640,6 +11915,10 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.GrainWt</XFieldName>
+          <YFieldName>Predicted.GrainWt</YFieldName>
+          <Regression />
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>true</ShowRegressionLine>
@@ -12273,7 +12552,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Series1</Title>
+          <Name>Series1</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -12291,6 +12570,10 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.GrainWt</XFieldName>
+          <YFieldName>Predicted.GrainWt</YFieldName>
+          <Regression />
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>true</ShowRegressionLine>
@@ -12924,7 +13207,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Series1</Title>
+          <Name>Series1</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -12942,6 +13225,10 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.GrainWt</XFieldName>
+          <YFieldName>Predicted.GrainWt</YFieldName>
+          <Regression />
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>true</ShowRegressionLine>
@@ -12968,7 +13255,7 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Series1</Title>
+        <Name>Series1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -12986,6 +13273,10 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.FloweringDAS</XFieldName>
+        <YFieldName>Predicted.FloweringDAS</YFieldName>
+        <Regression />
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
       <ShowRegressionLine>true</ShowRegressionLine>
@@ -12996,11 +13287,9 @@ namespace Models
   <Memo>
     <Name>Combined Results</Name>
     <MemoText><![CDATA[
-<html><body>
-<h3>Combined Results</h3>
-Simulation results for the combined datasets from the various growing regions are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (e.g. soil, climate) and management (e.g. population, irrigation, sowing date).<br/>
+### Combined Results
 
-</body></html>]]></MemoText>
+Simulation results for the combined datasets from the various growing regions are shown in the following graphs. The model is able to adequately capture the influence of growing conditions (e.g. soil, climate) and management (e.g. population, irrigation, sowing date).]]></MemoText>
   </Memo>
   <Graph>
     <Name>GrainWt</Name>
@@ -13021,7 +13310,7 @@ Simulation results for the combined datasets from the various growing regions ar
       <Interval>NaN</Interval>
     </Axis>
     <Series>
-      <Title>Series1</Title>
+      <Name>Series1</Name>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
@@ -13039,6 +13328,10 @@ Simulation results for the combined datasets from the various growing regions ar
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
       <Cumulative>false</Cumulative>
+      <TableName>PredictedObserved</TableName>
+      <XFieldName>Observed.GrainWt</XFieldName>
+      <YFieldName>Predicted.GrainWt</YFieldName>
+      <Regression />
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
@@ -13064,7 +13357,7 @@ Simulation results for the combined datasets from the various growing regions ar
       <Interval>NaN</Interval>
     </Axis>
     <Series>
-      <Title>Series1</Title>
+      <Name>Series1</Name>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
@@ -13082,6 +13375,10 @@ Simulation results for the combined datasets from the various growing regions ar
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
       <Cumulative>false</Cumulative>
+      <TableName>PredictedObserved</TableName>
+      <XFieldName>Observed.FloweringDAS</XFieldName>
+      <YFieldName>Predicted.FloweringDAS</YFieldName>
+      <Regression />
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>

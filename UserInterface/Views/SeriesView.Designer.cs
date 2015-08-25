@@ -2,148 +2,390 @@
 {
     partial class SeriesView
     {
-        /// <summary>
+        /// <summary> 
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.ListView listView1;
-        private SeriesEditorView seriesEditorView1;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem clearAllSeriesToolStripMenuItem;
 
-        /// <summary>
+        /// <summary> 
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (this.components != null))
+            if (disposing && (components != null))
             {
-                this.components.Dispose();
+                components.Dispose();
             }
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+        #region Component Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
+        /// <summary> 
+        /// Required method for Designer support - do not modify 
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clearAllSeriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.seriesEditorView1 = new SeriesEditorView();
-            this.contextMenuStrip1.SuspendLayout();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.comboBox4 = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.button1 = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
+            this.xComboBox = new System.Windows.Forms.ComboBox();
+            this.yComboBox = new System.Windows.Forms.ComboBox();
+            this.x2ComboBox = new System.Windows.Forms.ComboBox();
+            this.y2ComboBox = new System.Windows.Forms.ComboBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cumulativeCheckBox = new System.Windows.Forms.CheckBox();
+            this.graphView1 = new Views.GraphView();
+            this.cumulativeCheckBoxX = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
-            // listView1
+            // label2
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1});
-            this.listView1.ContextMenuStrip = this.contextMenuStrip1;
-            this.listView1.FullRowSelect = true;
-            this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.listView1.HideSelection = false;
-            this.listView1.LabelEdit = true;
-            this.listView1.LabelWrap = false;
-            this.listView1.Location = new System.Drawing.Point(16, 14);
-            this.listView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.listView1.MultiSelect = false;
-            this.listView1.Name = "listView1";
-            this.listView1.ShowGroups = false;
-            this.listView1.Size = new System.Drawing.Size(213, 259);
-            this.listView1.TabIndex = 69;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.OnSeriesRenameAfterLabelEdit);
-            this.listView1.SelectedIndexChanged += new System.EventHandler(this.OnListView1SelectedIndexChanged);
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(88, 52);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(21, 17);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "X:";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // columnHeader1
+            // label3
             // 
-            this.columnHeader1.Width = 154;
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(88, 84);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(21, 17);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Y:";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // contextMenuStrip1
+            // label4
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addToolStripMenuItem,
-            this.deleteToolStripMenuItem,
-            this.clearAllSeriesToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(174, 76);
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(80, 116);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(29, 17);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "X2:";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // addToolStripMenuItem
+            // label5
             // 
-            this.addToolStripMenuItem.Name = "addToolStripMenuItem";
-            this.addToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Insert;
-            this.addToolStripMenuItem.Size = new System.Drawing.Size(173, 24);
-            this.addToolStripMenuItem.Text = "Add";
-            this.addToolStripMenuItem.Click += new System.EventHandler(this.OnAddToolStripMenuItemClick);
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(80, 148);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(29, 17);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "Y2:";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // deleteToolStripMenuItem
+            // label6
             // 
-            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(173, 24);
-            this.deleteToolStripMenuItem.Text = "Delete";
-            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.OnDeleteToolStripMenuItemClick);
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(65, 186);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(44, 17);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "Type:";
             // 
-            // clearAllSeriesToolStripMenuItem
+            // comboBox2
             // 
-            this.clearAllSeriesToolStripMenuItem.Name = "clearAllSeriesToolStripMenuItem";
-            this.clearAllSeriesToolStripMenuItem.Size = new System.Drawing.Size(173, 24);
-            this.clearAllSeriesToolStripMenuItem.Text = "Clear all series";
-            this.clearAllSeriesToolStripMenuItem.Click += new System.EventHandler(this.OnClearAllSeriesToolStripMenuItemClick);
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Items.AddRange(new object[] {
+            "Scatter",
+            "Bar",
+            "Area"});
+            this.comboBox2.Location = new System.Drawing.Point(119, 182);
+            this.comboBox2.Margin = new System.Windows.Forms.Padding(4);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(113, 24);
+            this.comboBox2.TabIndex = 12;
+            this.comboBox2.Text = "Scatter";
+            this.comboBox2.TextChanged += new System.EventHandler(this.OnComboBox2Changed);
             // 
-            // seriesEditorView1
+            // comboBox3
             // 
-            this.seriesEditorView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.comboBox3.FormattingEnabled = true;
+            this.comboBox3.Items.AddRange(new object[] {
+            "Solid",
+            "Dash",
+            "Dot",
+            "DashDot",
+            "None"});
+            this.comboBox3.Location = new System.Drawing.Point(120, 208);
+            this.comboBox3.Margin = new System.Windows.Forms.Padding(4);
+            this.comboBox3.Name = "comboBox3";
+            this.comboBox3.Size = new System.Drawing.Size(112, 24);
+            this.comboBox3.TabIndex = 14;
+            this.comboBox3.Text = "Solid";
+            this.comboBox3.TextChanged += new System.EventHandler(this.OnComboBox3Changed);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(40, 211);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(70, 17);
+            this.label7.TabIndex = 13;
+            this.label7.Text = "Line type:";
+            // 
+            // comboBox4
+            // 
+            this.comboBox4.FormattingEnabled = true;
+            this.comboBox4.Items.AddRange(new object[] {
+            "None",
+            "FilledCircle",
+            "FilledDiamond",
+            "FilledSquare",
+            "FilledTriangle",
+            "Circle",
+            "Diamond",
+            "Square",
+            "Triangle",
+            "Cross",
+            "Plus",
+            "Star"});
+            this.comboBox4.Location = new System.Drawing.Point(120, 235);
+            this.comboBox4.Margin = new System.Windows.Forms.Padding(4);
+            this.comboBox4.Name = "comboBox4";
+            this.comboBox4.Size = new System.Drawing.Size(112, 24);
+            this.comboBox4.TabIndex = 16;
+            this.comboBox4.Text = "None";
+            this.comboBox4.TextChanged += new System.EventHandler(this.OnComboBox4Changed);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(25, 238);
+            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(87, 17);
+            this.label8.TabIndex = 15;
+            this.label8.Text = "Marker type:";
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.button1.Location = new System.Drawing.Point(265, 203);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(36, 28);
+            this.button1.TabIndex = 17;
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.OnButton1Click);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(391, 52);
+            this.checkBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(70, 21);
+            this.checkBox1.TabIndex = 18;
+            this.checkBox1.Text = "on top";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.OnCheckBox1Changed);
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(391, 85);
+            this.checkBox2.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(78, 21);
+            this.checkBox2.TabIndex = 19;
+            this.checkBox2.Text = "on right";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.OnCheckBox2Changed);
+            // 
+            // checkBox5
+            // 
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.Location = new System.Drawing.Point(335, 217);
+            this.checkBox5.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.Size = new System.Drawing.Size(126, 21);
+            this.checkBox5.TabIndex = 26;
+            this.checkBox5.Text = "Show in legend";
+            this.checkBox5.UseVisualStyleBackColor = true;
+            this.checkBox5.CheckedChanged += new System.EventHandler(this.OnCheckBox5Changed);
+            // 
+            // xComboBox
+            // 
+            this.xComboBox.FormattingEnabled = true;
+            this.xComboBox.Location = new System.Drawing.Point(119, 48);
+            this.xComboBox.Margin = new System.Windows.Forms.Padding(4);
+            this.xComboBox.Name = "xComboBox";
+            this.xComboBox.Size = new System.Drawing.Size(263, 24);
+            this.xComboBox.TabIndex = 29;
+            this.xComboBox.TextChanged += new System.EventHandler(this.xComboBox_TextChanged);
+            // 
+            // yComboBox
+            // 
+            this.yComboBox.FormattingEnabled = true;
+            this.yComboBox.Location = new System.Drawing.Point(119, 80);
+            this.yComboBox.Margin = new System.Windows.Forms.Padding(4);
+            this.yComboBox.Name = "yComboBox";
+            this.yComboBox.Size = new System.Drawing.Size(263, 24);
+            this.yComboBox.TabIndex = 30;
+            this.yComboBox.TextChanged += new System.EventHandler(this.yComboBox_TextChanged);
+            // 
+            // x2ComboBox
+            // 
+            this.x2ComboBox.FormattingEnabled = true;
+            this.x2ComboBox.Location = new System.Drawing.Point(119, 112);
+            this.x2ComboBox.Margin = new System.Windows.Forms.Padding(4);
+            this.x2ComboBox.Name = "x2ComboBox";
+            this.x2ComboBox.Size = new System.Drawing.Size(263, 24);
+            this.x2ComboBox.TabIndex = 31;
+            this.x2ComboBox.TextChanged += new System.EventHandler(this.x2ComboBox_TextChanged);
+            // 
+            // y2ComboBox
+            // 
+            this.y2ComboBox.FormattingEnabled = true;
+            this.y2ComboBox.Location = new System.Drawing.Point(119, 144);
+            this.y2ComboBox.Margin = new System.Windows.Forms.Padding(4);
+            this.y2ComboBox.Name = "y2ComboBox";
+            this.y2ComboBox.Size = new System.Drawing.Size(263, 24);
+            this.y2ComboBox.TabIndex = 32;
+            this.y2ComboBox.TextChanged += new System.EventHandler(this.y2ComboBox_TextChanged);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(119, 14);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(263, 24);
+            this.comboBox1.TabIndex = 33;
+            this.comboBox1.TextChanged += new System.EventHandler(this.OnComboBox1Changed);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(20, 17);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(89, 17);
+            this.label1.TabIndex = 34;
+            this.label1.Text = "Data source:";
+            // 
+            // cumulativeCheckBox
+            // 
+            this.cumulativeCheckBox.AutoSize = true;
+            this.cumulativeCheckBox.Location = new System.Drawing.Point(477, 85);
+            this.cumulativeCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.cumulativeCheckBox.Name = "cumulativeCheckBox";
+            this.cumulativeCheckBox.Size = new System.Drawing.Size(105, 21);
+            this.cumulativeCheckBox.TabIndex = 36;
+            this.cumulativeCheckBox.Text = "cumulative?";
+            this.cumulativeCheckBox.UseVisualStyleBackColor = true;
+            this.cumulativeCheckBox.CheckedChanged += new System.EventHandler(this.OnCheckedChanged);
+            // 
+            // graphView1
+            // 
+            this.graphView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.seriesEditorView1.Colour = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.seriesEditorView1.DataSource = "";
-            this.seriesEditorView1.Location = new System.Drawing.Point(238, 14);
-            this.seriesEditorView1.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
-            this.seriesEditorView1.Name = "seriesEditorView1";
-            this.seriesEditorView1.Regression = false;
-            this.seriesEditorView1.SeriesLineType = "Solid";
-            this.seriesEditorView1.SeriesMarkerType = "None";
-            this.seriesEditorView1.SeriesType = "Scatter";
-            this.seriesEditorView1.ShowInLegend = false;
-            this.seriesEditorView1.Size = new System.Drawing.Size(685, 272);
-            this.seriesEditorView1.TabIndex = 70;
-            this.seriesEditorView1.Visible = false;
-            this.seriesEditorView1.X = "";
-            this.seriesEditorView1.X2 = "";
-            this.seriesEditorView1.XOnTop = false;
-            this.seriesEditorView1.Y = "";
-            this.seriesEditorView1.Y2 = "";
-            this.seriesEditorView1.YOnRight = false;
+            this.graphView1.LeftRightPadding = 0;
+            this.graphView1.Location = new System.Drawing.Point(0, 282);
+            this.graphView1.Name = "graphView1";
+            this.graphView1.Size = new System.Drawing.Size(605, 316);
+            this.graphView1.TabIndex = 38;
+            // 
+            // cumulativeCheckBoxX
+            // 
+            this.cumulativeCheckBoxX.AutoSize = true;
+            this.cumulativeCheckBoxX.Location = new System.Drawing.Point(477, 56);
+            this.cumulativeCheckBoxX.Margin = new System.Windows.Forms.Padding(4);
+            this.cumulativeCheckBoxX.Name = "cumulativeCheckBoxX";
+            this.cumulativeCheckBoxX.Size = new System.Drawing.Size(105, 21);
+            this.cumulativeCheckBoxX.TabIndex = 39;
+            this.cumulativeCheckBoxX.Text = "cumulative?";
+            this.cumulativeCheckBoxX.UseVisualStyleBackColor = true;
+            this.cumulativeCheckBoxX.CheckedChanged += new System.EventHandler(this.OnCumulativeXCheckedChanged);
             // 
             // SeriesView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.seriesEditorView1);
-            this.Controls.Add(this.listView1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Controls.Add(this.cumulativeCheckBoxX);
+            this.Controls.Add(this.graphView1);
+            this.Controls.Add(this.cumulativeCheckBox);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.y2ComboBox);
+            this.Controls.Add(this.x2ComboBox);
+            this.Controls.Add(this.yComboBox);
+            this.Controls.Add(this.xComboBox);
+            this.Controls.Add(this.checkBox5);
+            this.Controls.Add(this.checkBox2);
+            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.comboBox4);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.comboBox3);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.comboBox2);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SeriesView";
-            this.Size = new System.Drawing.Size(947, 288);
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.Size = new System.Drawing.Size(608, 601);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
+
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ComboBox comboBox4;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox checkBox5;
+        private System.Windows.Forms.ComboBox xComboBox;
+        private System.Windows.Forms.ComboBox yComboBox;
+        private System.Windows.Forms.ComboBox x2ComboBox;
+        private System.Windows.Forms.ComboBox y2ComboBox;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox cumulativeCheckBox;
+        private GraphView graphView1;
+        private System.Windows.Forms.CheckBox cumulativeCheckBoxX;
     }
 }

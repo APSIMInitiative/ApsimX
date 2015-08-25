@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/BuildService" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/BuildService" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="ArrayOfUpgrade">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Upgrade" nillable="true" type="tns:Upgrade" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfUpgrade" nillable="true" type="tns:ArrayOfUpgrade" />
+  <xs:complexType name="Upgrade">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="IssueTitle" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IssueURL" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ReleaseDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="ReleaseURL" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="issueNumber" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Upgrade" nillable="true" type="tns:Upgrade" />
+</xs:schema>

@@ -812,9 +812,7 @@
   <Memo>
     <Name>Memo</Name>
     <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
   </Memo>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

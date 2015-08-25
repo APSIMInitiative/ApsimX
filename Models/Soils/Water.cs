@@ -14,6 +14,7 @@ namespace Models.Soils
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ValidParent(typeof(Soil))]
     public class Water : Model
     {
         /// <summary>Gets the soil.</summary>
