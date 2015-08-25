@@ -400,6 +400,7 @@ namespace Models.PMF.Organs
         {
             base.Clear();
             Height = 0;
+            LAI = 0;
         }
         #endregion
 

@@ -833,10 +833,6 @@ This is important in MCSP as it is set for each species to represent their diffe
                 <Name>YieldIncreasingTT</Name>
                 <VariableName>[Phenology].YieldIncreasing.Target.Value</VariableName>
               </VariableReference>
-              <VariableReference>
-                <Name>SenescingTT</Name>
-                <VariableName>[Phenology].Senescing.Target.Value</VariableName>
-              </VariableReference>
             </AddFunction>
             <DivideFunction>
               <Name>IfTrue</Name>
@@ -1031,7 +1027,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.84,0.97</Command>
         <Command>[Product].ProductDMProportion.Value = 0.22</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 652</Command>
-        <Command>[Phenology].YieldIncreasing.Target.Value= 1598</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value= 1200</Command>
         <Command>[Phenology].Senescing.Target.Value = 600</Command>
         <Command>[Phenology].Mature.Target.Value = 300</Command>
         <Command>[Stover].NConc.Value = 0.02</Command>
@@ -1192,7 +1188,7 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
       <Cultivar>
         <Name>Dried_Peas</Name>
         <Alias>Barley_Spring</Alias>
-        <Command>[Root].MaximumRootDepth.Value = 800</Command>
+        <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.4, 0.2, 0.0</Command>
         <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
@@ -1203,13 +1199,13 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[Product].ExpectedYield.Value = 630</Command>
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,1200</Command>
-        <Command>[Product].HarvestIndex.XYPairs.Y = 0.45,0.45</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.21</Command>
-        <Command>[Phenology].CanopyExpanding.Target.Value = 707</Command>
-        <Command>[Phenology].YieldIncreasing.Target.Value= 400</Command>
-        <Command>[Phenology].Senescing.Target.Value = 200</Command>
-        <Command>[Phenology].Mature.Target.Value = 100</Command>
-        <Command>[Stover].NConc.Value = 0.03</Command>
+        <Command>[Product].HarvestIndex.XYPairs.Y = 0.5,0.5</Command>
+        <Command>[Product].ProductDMProportion.Value = 0.86</Command>
+        <Command>[Phenology].CanopyExpanding.Target.Value = 677</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value= 673</Command>
+        <Command>[Phenology].Senescing.Target.Value = 300</Command>
+        <Command>[Phenology].Mature.Target.Value = 300</Command>
+        <Command>[Stover].NConc.Value = 0.02</Command>
         <Command>[Product].MinimumNConc.Value = 0.03</Command>
         <Command>[Product].MaximumNConc.Value = 0.035</Command>
         <Command>[Root].MinimumNConc.Value = 0.015</Command>
@@ -1225,15 +1221,15 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
         <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.b.Value = 60</Command>
         <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
-        <Command>[Stover].XoBiomass.Value = 1500</Command>
-        <Command>[Stover].bBiomass.Value = 330</Command>
-        <Command>[Product].ExpectedYield.Value = 5800</Command>
+        <Command>[Stover].XoBiomass.Value = 1200</Command>
+        <Command>[Stover].bBiomass.Value = 210</Command>
+        <Command>[Product].ExpectedYield.Value = 5300</Command>
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,11000</Command>
-        <Command>[Product].HarvestIndex.XYPairs.Y = 0.84,0.97</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.22</Command>
+        <Command>[Product].HarvestIndex.XYPairs.Y = 0.84,0.95</Command>
+        <Command>[Product].ProductDMProportion.Value = 0.23</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 652</Command>
-        <Command>[Phenology].YieldIncreasing.Target.Value= 1598</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value = 897</Command>
         <Command>[Phenology].Senescing.Target.Value = 600</Command>
         <Command>[Phenology].Mature.Target.Value = 300</Command>
         <Command>[Stover].NConc.Value = 0.02</Command>
@@ -5722,6 +5718,248 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Experiment>
+  <Experiment>
+    <Name>ABlockRotation</Name>
+    <Factors>
+      <Name>Factors</Name>
+      <Factor>
+        <Name>SpringWheat</Name>
+        <Specifications>
+          <string>[SCUMSowingRule].Script.CultivarName = Wheat_Spring</string>
+          <string>[SCUMSowingRule].Script.SowingDate = 1998-09-15</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>AutumnWheat</Name>
+        <Specifications>
+          <string>[SCUMSowingRule].Script.CultivarName = Wheat_Autumn</string>
+          <string>[SCUMSowingRule].Script.SowingDate = 1998-05-15</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Potatoes</Name>
+        <Specifications>
+          <string>[SCUMSowingRule].Script.CultivarName = Potatoes_Long</string>
+          <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Peas</Name>
+        <Specifications>
+          <string>[SCUMSowingRule].Script.CultivarName = Green_Peas</string>
+          <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Maize</Name>
+        <Specifications>
+          <string>[SCUMSowingRule].Script.CultivarName = Maize_Short</string>
+          <string>[SCUMSowingRule].Script.SowingDate = 1998-11-15</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Spinich</Name>
+        <Specifications>
+          <string>[SCUMSowingRule].Script.CultivarName = Spinich</string>
+          <string>[SCUMSowingRule].Script.SowingDate = 1998-05-15</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Kale</Name>
+        <Specifications>
+          <string>[SCUMSowingRule].Script.CultivarName = Kale</string>
+          <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Rape</Name>
+        <Specifications>
+          <string>[SCUMSowingRule].Script.CultivarName = Rape</string>
+          <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
+        </Specifications>
+      </Factor>
+    </Factors>
+    <Graph>
+      <Name>Cover</Name>
+      <Series>
+        <Name>Cover</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Stover.CoverTotal</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Cover </Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Biomass</Name>
+      <Series>
+        <Name>Cover</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Crop biomass (kg/ha)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>CropN</Name>
+      <Series>
+        <Name>Cover</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Summariser.Total.N</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Crop Nitrogen (g/m2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Yeild</Name>
+      <Series>
+        <Name>Cover</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Product.Live.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>dry Yield (g/m2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>FreshYield</Name>
+      <Series>
+        <Name>Cover</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Product.LiveFWt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>fresh Yield (g/m2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+  </Experiment>
   <Simulation>
     <Name>ABlockBase</Name>
     <Weather>
@@ -6974,7 +7212,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Stover.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -6989,7 +7227,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Root.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7004,7 +7242,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Product.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7019,7 +7257,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7034,7 +7272,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Dash</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.DryYield.Value</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7049,7 +7287,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Dot</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.TotalBiomassAtStartReproductive.Value</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7064,7 +7302,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>DashDot</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.TotalBiomassAtStartSenescence.Value</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7079,14 +7317,14 @@ namespace Models
         <Marker>None</Marker>
         <Line>Dash</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Ymax.Value</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Series9</Name>
+        <Name>Stage</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
@@ -7094,25 +7332,10 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Phenology.Stage</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Series10</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>SCUM.Arbitrator.DMSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
+        <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Axis>
@@ -7285,21 +7508,6 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Potential</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65281</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Soil.SoilWater.Eo</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
         <Name>Root Depth</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
@@ -7363,11 +7571,11 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
+        <ColourArgb>-32768</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Root.Depth</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7382,7 +7590,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Stover.CoverTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7397,7 +7605,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Stover.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7432,7 +7640,7 @@ namespace Models
     <Graph>
       <Name>N supply and demand</Name>
       <Series>
-        <Name>Series 0</Name>
+        <Name>NDemand</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7447,7 +7655,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Series2</Name>
+        <Name>NSupply</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7466,7 +7674,7 @@ namespace Models
         <Title>Nitrogen (g/m2)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
+        <Maximum>1</Maximum>
         <Interval>NaN</Interval>
       </Axis>
       <Axis>
@@ -7675,7 +7883,7 @@ namespace Models
     <Graph>
       <Name>Stress Factors</Name>
       <Series>
-        <Name>Series 0</Name>
+        <Name>FW</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7690,7 +7898,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Series2</Name>
+        <Name>FN</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7705,10 +7913,10 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Series3</Name>
+        <Name>Stage</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
+        <YAxis>Right</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
@@ -7729,6 +7937,13 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
