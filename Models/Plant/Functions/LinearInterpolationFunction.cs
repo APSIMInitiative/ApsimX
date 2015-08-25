@@ -118,7 +118,7 @@ namespace Models.PMF.Functions
                 if (xProperty != null && xProperty.Units != string.Empty)
                     xName += " (" + xProperty.Units + ")";
 
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " is calculated as a function of " + xName + "</i>", indent));
+                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + xName + "</i>", indent));
             
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
