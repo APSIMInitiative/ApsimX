@@ -189,6 +189,7 @@ namespace Models.PMF.Organs
         {
             base.Clear();
             Uptake = null;
+            NitUptake = null;
             DeltaNH4 = null;
             DeltaNO3 = null;
             _SenescenceRate = 0;
@@ -319,7 +320,7 @@ namespace Models.PMF.Organs
                 _SenescenceRate = 0;
                 if (SenescenceRate != null) //Default of zero means no senescence
                     _SenescenceRate = SenescenceRate.Value;
-
+           
                 /*  if (Live.Wt == 0)
                   {
                       //determine how many layers to put initial DM into.
