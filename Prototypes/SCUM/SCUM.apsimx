@@ -5969,7 +5969,7 @@ namespace Models
     <Clock>
       <Name>Clock</Name>
       <StartDate>2004-10-12T00:00:00</StartDate>
-      <EndDate>2007-03-31T00:00:00</EndDate>
+      <EndDate>2007-04-30T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
@@ -6057,21 +6057,30 @@ namespace Models
           <Crop1>Potatoes_Short</Crop1>
           <SowingDate1>2004-10-15</SowingDate1>
           <HarvestDate1>2005-03-14</HarvestDate1>
+          <Yield1>5500</Yield1>
           <Crop2>Dried_Peas</Crop2>
           <SowingDate2>2005-09-28</SowingDate2>
           <HarvestDate2>2006-02-24</HarvestDate2>
+          <Yield2>1780</Yield2>
           <Crop3>Potatoes_Short</Crop3>
           <SowingDate3>2006-10-11</SowingDate3>
           <HarvestDate3>2007-03-12</HarvestDate3>
+          <Yield3>2280</Yield3>
           <Crop4>
           </Crop4>
           <SowingDate4>0001-01-01</SowingDate4>
           <HarvestDate4>0001-01-01</HarvestDate4>
+          <Yield4>0</Yield4>
         </Script>
-        <Code><![CDATA[
-using System;
+        <Code><![CDATA[using System;
 using Models.Core;
+using System.Collections.Generic;
+using System.Text;
 using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable] 
@@ -6080,6 +6089,7 @@ namespace Models
 	{
 		[Link] Plant SCUM;
 		[Link] Clock Clock;
+		[Link] Zone zone;
 
 		[Description("Initial Root Depth")]
 		public double InitialRootDepth { get; set; }
@@ -6090,6 +6100,8 @@ namespace Models
 		public DateTime SowingDate1 { get; set; }
 		[Description("First Harvest Date")]
 		public DateTime HarvestDate1 { get; set; }
+		[Description("First Crop Yield (g/m2 fresh wt)")]
+		public int Yield1 { get; set; }
 		
 		[Description("Second Crop")]
 		public string Crop2 { get; set; }
@@ -6097,6 +6109,8 @@ namespace Models
 		public DateTime SowingDate2 { get; set; }
 		[Description("Second Harvest Date")]
 		public DateTime HarvestDate2 { get; set; }
+		[Description("Second Crop Yield (g/m2 fresh wt)")]
+		public int Yield2 { get; set; }
 
 		[Description("Third Crop")]
 		public string Crop3 { get; set; }
@@ -6104,6 +6118,8 @@ namespace Models
 		public DateTime SowingDate3 { get; set; }
 		[Description("Third Harvest Date")]
 		public DateTime HarvestDate3 { get; set; }
+		[Description("Third Crop Yield (g/m2 fresh wt)")]
+		public int Yield3 { get; set; }
 		
 		[Description("Forth Crop")]
 		public string Crop4 { get; set; }
@@ -6111,33 +6127,51 @@ namespace Models
 		public DateTime SowingDate4 { get; set; }
 		[Description("Forth Harvest Date")]
 		public DateTime HarvestDate4 { get; set; }
-		[EventSubscribe("DoManagement")]
+		[Description("Forth Crop Yield (g/m2 fresh wt)")]
+		public int Yield4 { get; set; }
 		
+		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
 			if (Clock.Today.Date == SowingDate1)
+			{
 				SCUM.Sow(cultivar: Crop1, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				object ResetValue = Yield1;
+				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
+			}
 			else if (Clock.Today.Date == HarvestDate1)
 			{
 				SCUM.Harvest();
 				SCUM.EndCrop();
 			}
 			else if (Clock.Today.Date == SowingDate2)
+			{
 				SCUM.Sow(cultivar: Crop2, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				object ResetValue = Yield2;
+				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
+			}
 			else if (Clock.Today.Date == HarvestDate2)
 			{
 				SCUM.Harvest();
 				SCUM.EndCrop();
 			}
 			else if (Clock.Today.Date == SowingDate3)
+			{
 				SCUM.Sow(cultivar: Crop3, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				object ResetValue = Yield3;
+				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
+			}
 			else if (Clock.Today.Date == HarvestDate3)
 			{
 				SCUM.Harvest();
 				SCUM.EndCrop();
 			}
 			else if (Clock.Today.Date == SowingDate4)
+			{
 				SCUM.Sow(cultivar: Crop4, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				object ResetValue = Yield4;
+				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
+			}
 			else if (Clock.Today.Date == HarvestDate4)
 			{
 				SCUM.Harvest();
@@ -6290,6 +6324,29 @@ namespace Models
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
 			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+		}
+		
+		[EventSubscribe("PlantEnding")]
+		private void OnPlantEnding(object sender, EventArgs e)
+		{
+			AccumFert = 0;
+			AccumIrrigation = 0;
+			
+			
+			AccumEO = 0;
+			AccumES = 0;
+			AccumDrainage = 0;
+			AccumRunoff = 0;
+			
+			AccumLeach = 0;
+			AccumMineralisation = 0;
+			AccumDenit = 0;
+			AccumPlantN = 0;
+			
+			AccumRainfall = 0;
+			AccumEP = 0;
+			AccumOutflowLat = 0;
+			
 		}
 	}
 }
