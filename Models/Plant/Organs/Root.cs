@@ -60,10 +60,6 @@ namespace Models.PMF.Organs
     public class Root : BaseOrgan, BelowGround
     {
         #region Links
-        /// <summary>The plant</summary>
-        [Link]
-        Plant Plant = null;
-
         /// <summary>The arbitrator</summary>
         [Link]
         OrganArbitrator Arbitrator = null;

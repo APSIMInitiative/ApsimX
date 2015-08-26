@@ -21,9 +21,6 @@ namespace Models.PMF.Organs
         ISummary Summary = null;
 
         #region Parameter Input Classes
-        /// <summary>The plant</summary>
-        [Link]
-        protected Plant Plant = null;
         /// <summary>The phenology</summary>
         [Link]
         protected Phenology Phenology = null;

@@ -13,10 +13,6 @@ namespace Models.PMF.Organs
     [Serializable]
     public class HIReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
     {
-        /// <summary>The plant</summary>
-        [Link]
-        Plant Plant = null;
-
         /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;

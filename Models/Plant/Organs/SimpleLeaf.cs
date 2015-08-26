@@ -87,9 +87,6 @@ namespace Models.PMF.Organs
 
 
         #region Class Links
-        /// <summary>The plant</summary>
-        [Link]
-        Plant Plant = null;
 
         /// <summary>The summary</summary>
         [Link]
@@ -268,6 +265,7 @@ namespace Models.PMF.Organs
         /// <value>The dm allocation.</value>
         public override BiomassAllocationType DMAllocation
         {
+
             set
             {
                 Live.StructuralWt += value.Structural;

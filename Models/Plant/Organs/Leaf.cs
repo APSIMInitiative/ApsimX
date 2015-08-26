@@ -144,10 +144,6 @@ namespace Models.PMF.Organs
 
 
         #region Links
-        /// <summary>The plant</summary>
-        [Link]
-        public Plant Plant = null;
-        /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
         /// <summary>The arbitrator</summary>

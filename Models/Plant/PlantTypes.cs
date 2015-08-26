@@ -160,11 +160,4 @@
         /// <summary>The crop_type</summary>
         public String crop_type = "";
     }
-
-    ///<summary>Container to hold organ sized list</summary>
-    public class OrganList
-    {
-        // <summary>The items held by the list</summary>
-        //public Double[] Item;
-    }
 }

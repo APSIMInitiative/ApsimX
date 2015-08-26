@@ -41,10 +41,6 @@ namespace Models.PMF.Organs
     public class GenericOrgan : BaseOrgan, IArbitration
     {
         #region Class Dependency Links and Structures
-        /// <summary>The plant</summary>
-        [Link]
-        protected Plant Plant = null;
-
         [Link]
         ISurfaceOrganicMatter SurfaceOrganicMatter = null;
         #endregion
@@ -353,6 +349,8 @@ namespace Models.PMF.Organs
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// 
+
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {

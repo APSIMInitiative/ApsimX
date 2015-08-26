@@ -13,10 +13,6 @@ namespace Models.PMF.Organs
     [Serializable]
     public class RootSWIM : BaseOrgan, BelowGround
     {
-        /// <summary>The plant</summary>
-        [Link]
-        Plant Plant = null;
-
         /// <summary>The uptake</summary>
         private double[] Uptake = null;
         /// <summary>The RLV</summary>

@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
     /// </summary>
     [Serializable]
     [ValidParent(typeof(Plant))]
-    public class BaseOrgan : Model, IOrgan, IArbitration, IDefoliation
+    public class BaseOrgan : Model, IOrgan, IArbitration, IBiomassRemoval
     {
         #region Links to other models or compontnets
         /// <summary>The live</summary>
@@ -32,6 +32,17 @@ namespace Models.PMF.Organs
         /// <summary>The met data</summary>
         [Link]
         public IWeather MetData = null;
+
+        /// <summary>The plant</summary>
+        [Link]
+        protected Plant Plant = null;
+
+        [Link]
+        ISurfaceOrganicMatter SurfaceOrganicMatter = null;
+
+        /// <summary>The summary</summary>
+        [Link]
+        ISummary Summary = null;
 
         /// <summary>Gets or sets the dm supply.</summary>
         /// <value>The dm supply.</value>
@@ -170,10 +181,29 @@ namespace Models.PMF.Organs
         /// <summary>The Fraction of biomass that is removed by defoliation</summary>
         virtual public double FractionToResidue { get; set; }
 
-        /// <summary>
-        /// Do harvest logic for this organ
-        /// </summary>
-        virtual public void DoHarvest() { }
+        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
+        [XmlIgnore]
+        virtual public OrganBiomassRemovalType RemoveBiomass
+        {
+            set
+            {
+                double RemainFrac = 1 - (value.FractionToResidue + value.FractionRemoved);
+                if (RemainFrac < 1)
+                {
+                    Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name + " removing " + FractionRemoved * 100 + "% and returning " + FractionToResidue * 100 + "% to the surface organic matter");
+                    SurfaceOrganicMatter.Add(TotalDM * 10 * FractionToResidue, TotalN * 10 * FractionToResidue, 0, Plant.CropType, Name);
+                    Live.StructuralWt *= RemainFrac;
+                    Live.NonStructuralWt *= RemainFrac;
+                    Live.StructuralN *= RemainFrac;
+                    Live.NonStructuralN *= RemainFrac;
+                }
+            }
+        }
+
+    /// <summary>
+    /// Do harvest logic for this organ
+    /// </summary>
+    virtual public void DoHarvest() { }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
