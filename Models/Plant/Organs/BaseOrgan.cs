@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
     /// </summary>
     [Serializable]
     [ValidParent(typeof(Plant))]
-    public class BaseOrgan : Model, IOrgan, IArbitration, IBiomassRemoval
+    public class BaseOrgan : Model, IOrgan, IArbitration
     {
         #region Links to other models or compontnets
         /// <summary>The live</summary>
