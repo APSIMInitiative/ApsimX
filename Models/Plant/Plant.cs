@@ -86,9 +86,17 @@ namespace Models.PMF
         [XmlIgnore]
         public SowPlant2Type SowingData { get; set; }
 
+        // <summary>The harvesting data</summary>
+        //[XmlIgnore]
+        //public OrganList HarvestingData { get; set; }
+
         /// <summary>Gets the organs.</summary>
         [XmlIgnore]
         public IOrgan[] Organs { get; private set; }
+
+       
+        //[XmlIgnore]
+        //public IDefoliation[] PlantParts { get; set; }
 
         /// <summary>Gets a list of cultivar names</summary>
         public string[] CultivarNames
@@ -190,10 +198,24 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+
             List<IOrgan> organs = new List<IOrgan>();
             foreach (IOrgan organ in Apsim.Children(this, typeof(IOrgan)))
+            {
                 organs.Add(organ);
+                //HarvestingData.Item = 0;
+            }
+
             Organs = organs.ToArray();
+
+            //PotentialNO3NUptake = new double[soilstate.Zones[0].NO3N.Length];
+            //Set defalt removal fractions for harvesting
+
+            /*List<IDefoliation> parts = new List<IDefoliation>();
+            foreach (IOrgan organ in organs)
+                parts.Add(organ as IDefoliation);
+
+            PlantParts = parts.ToArray();*/
 
             Clear();
         }
@@ -229,18 +251,22 @@ namespace Models.PMF
             if (PlantSowing != null)
                 PlantSowing.Invoke(this, SowingData);
 
+            
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }
         
         /// <summary>Harvest the crop.</summary>
-        public void Harvest()
+        public void Harvest(double[] RemoveFractions = null, double[] ResidueFractions = null)
         {
+
+            SetDefoliationInterfaceProperties(RemoveFractions, ResidueFractions);
+
             // Invoke a harvesting event.
             if (Harvesting != null)
                 Harvesting.Invoke(this, new EventArgs());
 
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " was harvested today."));
-
+            
             foreach (IOrgan O in Organs)
                 O.DoHarvest();
         }
@@ -259,8 +285,10 @@ namespace Models.PMF
         }
 
         /// <summary>Cut the crop.</summary>
-        public void Cut()
+        public void Cut(double[] RemoveFractions = null, double[] ResidueFractions = null)
         {
+            SetDefoliationInterfaceProperties(RemoveFractions, ResidueFractions);
+
             // Invoke a cutting event.
             if (Cutting != null)
                 Cutting.Invoke(this, new EventArgs());
@@ -274,7 +302,28 @@ namespace Models.PMF
             SowingData = null;
             Population = 0;
         }
+
+        private void SetDefoliationInterfaceProperties(double[] RemoveFractions = null, double[] ResidueFractions = null)
+        {
+            //Set defoliation interface parameters to determine proportions of organs removed with harvest
+            int i = 0;
+            if (RemoveFractions != null)
+                foreach (IDefoliation d in Organs)
+                {
+                    d.FractionRemoved = RemoveFractions[i];
+                    i += 1;
+                }
+
+            i = 0;
+            if (ResidueFractions != null)
+                foreach (IDefoliation d in Organs)
+                {
+                    d.FractionToResidue = ResidueFractions[i];
+                    i += 1;
+                }
+        }
         #endregion
+
 
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

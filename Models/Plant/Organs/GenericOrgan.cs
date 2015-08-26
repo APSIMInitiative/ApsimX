@@ -49,6 +49,10 @@ namespace Models.PMF.Organs
         ISurfaceOrganicMatter SurfaceOrganicMatter = null;
         #endregion
 
+        /// <summary>The summary</summary>
+        [Link]
+        ISummary Summary = null;
+
         #region Class Structures
         /// <summary>The start live</summary>
         private Biomass StartLive = new Biomass();
@@ -361,6 +365,8 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
+            FractionRemoved = 0;
+            FractionToResidue = 0;
             if (data.Plant == Plant)
                 Clear();
         }
@@ -460,6 +466,41 @@ namespace Models.PMF.Organs
                 if (TotalDM > 0)
                     SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
                 Clear();
+            }
+        }
+
+        /// <summary>Called when crop is being harvested.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Harvesting")]
+        protected void OnHarvesting(object sender, EventArgs e)
+        {
+            if (sender == Plant)
+            {
+                double RemainFrac = 1 - (FractionToResidue + FractionRemoved);
+                if (RemainFrac > 0)
+                {
+                    Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name + " removing " + FractionRemoved * 100 + "% and returning " + FractionToResidue * 100 + "% to the surface organic matter");
+                    SurfaceOrganicMatter.Add(TotalDM * 10 * FractionToResidue, TotalN * 10 * FractionToResidue, 0, Plant.CropType, Name);
+                    Live.StructuralWt *= RemainFrac;
+                    Live.NonStructuralWt *= RemainFrac;
+                    Live.StructuralN *= RemainFrac;
+                    Live.NonStructuralN *= RemainFrac;
+                }
+            }
+        }
+
+        /// <summary>Called when crop is being cut.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Cutting")]
+        private void OnCutting(object sender, EventArgs e)
+        {
+            if (sender == Plant)
+            {
+                Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
+                Live.Clear();
+                Dead.Clear();
             }
         }
         #endregion

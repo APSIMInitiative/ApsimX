@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
     /// </summary>
     [Serializable]
     [ValidParent(typeof(Plant))]
-    public class BaseOrgan : Model, IOrgan, IArbitration
+    public class BaseOrgan : Model, IOrgan, IArbitration, IDefoliation
     {
         #region Links to other models or compontnets
         /// <summary>The live</summary>
@@ -163,6 +163,12 @@ namespace Models.PMF.Organs
             Live.Clear();
             Dead.Clear();
         }
+
+        /// <summary>The Fraction of biomass that is removed by defoliation</summary>
+        virtual public double FractionRemoved { get; set; }
+
+        /// <summary>The Fraction of biomass that is removed by defoliation</summary>
+        virtual public double FractionToResidue { get; set; }
 
         /// <summary>
         /// Do harvest logic for this organ
