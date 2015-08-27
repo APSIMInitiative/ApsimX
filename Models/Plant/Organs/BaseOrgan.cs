@@ -37,12 +37,13 @@ namespace Models.PMF.Organs
         [Link]
         protected Plant Plant = null;
 
+        /// <summary>The surface organic matter model</summary>
         [Link]
-        ISurfaceOrganicMatter SurfaceOrganicMatter = null;
+        protected ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
         /// <summary>The summary</summary>
         [Link]
-        ISummary Summary = null;
+        protected ISummary Summary = null;
 
         /// <summary>Gets or sets the dm supply.</summary>
         /// <value>The dm supply.</value>
@@ -188,22 +189,76 @@ namespace Models.PMF.Organs
             set
             {
                 double RemainFrac = 1 - (value.FractionToResidue + value.FractionRemoved);
+                if (RemainFrac < 0)
+                    throw new Exception("The sum of FractionToResidue and FractionRemoved sent with your " + "!!!!PLACE HOLDER FOR EVENT SENDER!!!!" + " is greater than 1.  Had this execption not triggered you would be removing more biomass from " + Name + " than there is to remove");
                 if (RemainFrac < 1)
                 {
                     Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name + " removing " + FractionRemoved * 100 + "% and returning " + FractionToResidue * 100 + "% to the surface organic matter");
                     SurfaceOrganicMatter.Add(TotalDM * 10 * FractionToResidue, TotalN * 10 * FractionToResidue, 0, Plant.CropType, Name);
+                    if(Live.StructuralWt > 0)
                     Live.StructuralWt *= RemainFrac;
+                    if(Live.NonStructuralWt > 0)
                     Live.NonStructuralWt *= RemainFrac;
+                    if(Live.StructuralN > 0)
                     Live.StructuralN *= RemainFrac;
+                    if(Live.NonStructuralN > 0)
                     Live.NonStructuralN *= RemainFrac;
                 }
             }
         }
 
-    /// <summary>
-    /// Do harvest logic for this organ
-    /// </summary>
-    virtual public void DoHarvest() { }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on harvest.
+        /// </summary>
+        virtual public OrganBiomassRemovalType HarvestDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0,
+                    FractionToResidue = 0
+                };
+            }
+            set { }
+        }
+
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        virtual public OrganBiomassRemovalType CutDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0.8,
+                    FractionToResidue = 0
+                };
+            }
+            set { }
+        }
+
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        public OrganBiomassRemovalType GrazeDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0.6,
+                    FractionToResidue = 0.1
+                };
+            }
+            set { }
+        }
+
+        /// <summary>
+        /// Do harvest logic for this organ
+        /// </summary>
+        virtual public void DoHarvest() { }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>

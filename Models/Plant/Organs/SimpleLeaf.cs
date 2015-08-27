@@ -85,19 +85,6 @@ namespace Models.PMF.Organs
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
         #endregion
 
-
-        #region Class Links
-
-        /// <summary>The summary</summary>
-        [Link]
-        ISummary Summary = null;
-
-        /// <summary>The surface OM model</summary>
-        [Link]
-        ISurfaceOrganicMatter SurfaceOrganicMatter = null;
-        #endregion
-
-
         #region Parameters
         /// <summary>The FRGR function</summary>
         [Link]
@@ -368,38 +355,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Component Process Functions
-
-
-        /// <summary>Called when crop is being cut.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Cutting")]
-        private void OnCutting(object sender, EventArgs e)
-        {
-            if (sender == Plant)
-            {
-                Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
-                Live.Clear();
-                Dead.Clear();
-            }
-        }
-
-        /// <summary>Called when crop is being harvested.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Harvesting")]
-        private void OnHarvesting(object sender, EventArgs e)
-        {
-            if (sender == Plant)
-            {
-                Summary.WriteMessage(this, "Harvesting " + Name +" from " + Plant.Name + ".  Removing " + FractionRemoved * 100 + "% of DM and N");
-                Live.StructuralWt *= (1 - FractionRemoved);
-                Live.NonStructuralWt *= (1 - FractionRemoved);
-                Live.StructuralN *= (1 - FractionRemoved);
-                Live.NonStructuralN *= (1 - FractionRemoved);
-                SurfaceOrganicMatter.Add(TotalDM * 10 * FractionRemoved, TotalN * 10 * FractionRemoved, 0, Plant.CropType, Name);
-            }
-        }
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>

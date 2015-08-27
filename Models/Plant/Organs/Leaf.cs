@@ -144,8 +144,6 @@ namespace Models.PMF.Organs
 
 
         #region Links
-        [Link]
-        ISummary Summary = null;
         /// <summary>The arbitrator</summary>
         [Link]
         public OrganArbitrator Arbitrator = null;
@@ -155,8 +153,6 @@ namespace Models.PMF.Organs
         /// <summary>The phenology</summary>
         [Link]
         public Phenology Phenology = null;
-        [Link]
-        ISurfaceOrganicMatter SurfaceOrganicMatter = null;
         #endregion
 
         #region Structures

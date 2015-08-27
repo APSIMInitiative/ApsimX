@@ -68,7 +68,7 @@ namespace Models.PMF.Organs
         [Link]
         Soils.Soil Soil = null;
         #endregion
-        
+
         #region Parameters
         /// <summary>Gets or sets the initial dm.</summary>
         /// <value>The initial dm.</value>
@@ -544,6 +544,59 @@ namespace Models.PMF.Organs
             }
         }
 
+        #region Biomass removal infrastructure
+        /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
+        [XmlIgnore]
+        public override OrganBiomassRemovalType RemoveBiomass
+        {
+            set
+            {
+                double RemainFrac = 1 - (value.FractionToResidue + value.FractionRemoved);
+                if (RemainFrac < 0)
+                    throw new Exception("The sum of FractionToResidue and FractionRemoved sent with your " + "Place holder for event sender" + " is greater than 1.  Had this execption not triggered you would be removing more biomass from " + Name + " than there is to remove");
+                if (RemainFrac < 1)
+                {
+                    FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.Thickness.Length];
+
+                    for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+                    {
+
+                        double DM = (LayerLive[layer].Wt + LayerDead[layer].Wt) * 10.0;
+                        double N = (LayerLive[layer].N + LayerDead[layer].N) * 10.0;
+
+                        FOMType fom = new FOMType();
+                        fom.amount = (float)DM;
+                        fom.N = (float)N;
+                        fom.C = (float)(0.40 * DM);
+                        fom.P = 0;
+                        fom.AshAlk = 0;
+
+                        FOMLayerLayerType Layer = new FOMLayerLayerType();
+                        Layer.FOM = fom;
+                        Layer.CNR = 0;
+                        Layer.LabileP = 0;
+
+                        FOMLayers[layer] = Layer;
+
+                        if (LayerLive[layer].StructuralWt > 0)
+                            LayerLive[layer].StructuralWt *= RemainFrac;
+                        if (LayerLive[layer].NonStructuralWt > 0)
+                            LayerLive[layer].NonStructuralWt *= RemainFrac;
+                        if (LayerLive[layer].StructuralN > 0)
+                            LayerLive[layer].StructuralN *= RemainFrac;
+                        if (LayerLive[layer].NonStructuralN > 0)
+                            LayerLive[layer].NonStructuralN *= RemainFrac;
+
+                    }
+                    Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name + " removing " + FractionRemoved * 100 + "% and returning " + FractionToResidue * 100 + "% to the soil organic matter");
+                    FOMLayerType FomLayer = new FOMLayerType();
+                    FomLayer.Type = Plant.CropType;
+                    FomLayer.Layer = FOMLayers;
+                    IncorpFOM.Invoke(FomLayer);
+                }
+            }
+        }
+        #endregion
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>

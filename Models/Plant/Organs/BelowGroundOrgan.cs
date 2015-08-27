@@ -12,10 +12,6 @@ namespace Models.PMF.Organs
     [Serializable]
     public class BelowGroundOrgan : GenericOrgan, BelowGround, Reproductive
     {
-        /// <summary>The summary</summary>
-        [Link]
-        ISummary Summary = null;
-
         /// <summary>
         /// Execute Harvesting logic for below ground organ
         /// </summary>

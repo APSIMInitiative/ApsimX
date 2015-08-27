@@ -19,6 +19,19 @@ namespace Models.PMF.Interfaces
         /// Biomass removal logic for this organ.
         /// </summary>
         OrganBiomassRemovalType RemoveBiomass { set; }
+
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Harvest.
+        /// </summary>
+        OrganBiomassRemovalType HarvestDefault { get; set; }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        OrganBiomassRemovalType CutDefault { get; set; }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Grazing
+        /// </summary>
+        OrganBiomassRemovalType GrazeDefault { get; set; }
     }
 
     /// <summary>An above ground interface</summary>
