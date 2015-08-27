@@ -1674,20 +1674,6 @@ namespace Models.PMF.Organs
                 initialLeaves.Add(initialLeaf);
             InitialLeaves = initialLeaves.ToArray();
         }
-
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, EventArgs e)
-        {
-            if (sender == Plant)
-            {
-                if (TotalDM > 0)
-                    SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
-                Clear();
-            }
-        }
         #endregion
 
 

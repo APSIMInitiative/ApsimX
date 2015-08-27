@@ -176,6 +176,7 @@ namespace Models.PMF.Organs
             Dead.Clear();
         }
 
+        #region Biomass removal
         /// <summary>The Fraction of biomass that is removed by defoliation</summary>
         virtual public double FractionRemoved { get; set; }
 
@@ -253,6 +254,16 @@ namespace Models.PMF.Organs
                 };
             }
             set { }
+        }
+        #endregion
+
+        /// <summary>Called when crop is ending</summary>
+        ///[EventSubscribe("PlantEnding")]
+        virtual public void DoPlantEnding()
+        {
+                if (TotalDM > 0)
+                    SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
+                Clear();
         }
 
         /// <summary>

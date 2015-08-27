@@ -16,6 +16,11 @@ namespace Models.PMF.Interfaces
         void DoHarvest();
 
         /// <summary>
+        /// Do Plant ending logic for this organ.
+        /// </summary>
+        void DoPlantEnding();
+
+        /// <summary>
         /// Biomass removal logic for this organ.
         /// </summary>
         OrganBiomassRemovalType RemoveBiomass { set; }

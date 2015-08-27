@@ -133,16 +133,6 @@ namespace Models.PMF.Organs
             Clear();
         }
 
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, EventArgs e)
-        {
-            if (sender == Plant)
-                Clear();
-        }
-
         #region Biomass removal 
         /// <summary>
         /// The default proportions biomass to removeed from each organ on harvest.

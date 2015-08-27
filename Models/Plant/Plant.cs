@@ -275,6 +275,9 @@ namespace Models.PMF
         {
             Summary.WriteMessage(this, "Crop ending");
 
+            foreach (IOrgan O in Organs)
+                O.DoPlantEnding();
+
             // Invoke a plant ending event.
             if (PlantEnding != null)
                 PlantEnding.Invoke(this, new EventArgs());
@@ -326,9 +329,7 @@ namespace Models.PMF
             }
         }
         #endregion
-
-
-
+        
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>

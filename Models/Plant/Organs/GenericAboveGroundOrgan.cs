@@ -12,7 +12,6 @@ namespace Models.PMF.Organs
     [Serializable]
     public class GenericAboveGroundOrgan : GenericOrgan, AboveGround
     {
-        #region Event handlers
         /// <summary>Called when [prune].</summary>
         /// <param name="Prune">The prune.</param>
         [EventSubscribe("Prune")]
@@ -24,6 +23,7 @@ namespace Models.PMF.Organs
             Dead.Clear();
         }
 
+        #region Biomass Removal
         /// <summary>
         /// The default proportions biomass to removeed from each organ on harvest.
         /// </summary>

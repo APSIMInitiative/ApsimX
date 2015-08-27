@@ -445,20 +445,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        protected void OnPlantEnding(object sender, EventArgs e)
-        {
-            if (sender == Plant)
-            {
-                if (TotalDM > 0)
-                    SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
-                Clear();
-            }
-        }
-
         #endregion
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>

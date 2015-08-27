@@ -333,16 +333,6 @@ namespace Models.PMF.Organs
             Clear();
         }
 
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, EventArgs e)
-        {
-            if (sender == Plant)
-                Clear();
-        }
-
         /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -368,10 +358,6 @@ namespace Models.PMF.Organs
 
                 if (StructuralFraction != null)
                     _StructuralFraction = StructuralFraction.Value;
-
-                //Set defaults for defoliation fractions
-                FractionRemoved = 0;
-                FractionToResidue = 0;
             }
         }
 
@@ -438,6 +424,40 @@ namespace Models.PMF.Organs
             }
         }
 
+        #endregion
+
+        #region Biomass Removal
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on harvest.
+        /// </summary>
+        public override OrganBiomassRemovalType HarvestDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0,
+                    FractionToResidue = 0
+                };
+            }
+            set { }
+        }
+
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        public override OrganBiomassRemovalType CutDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0.8,
+                    FractionToResidue = 0
+                };
+            }
+            set { }
+        }
         #endregion
 
     }
