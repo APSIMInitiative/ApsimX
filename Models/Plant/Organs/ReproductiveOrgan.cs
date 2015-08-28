@@ -16,14 +16,7 @@ namespace Models.PMF.Organs
     [Serializable]
     public class ReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
     {
-        /// <summary>The summary</summary>
-        [Link]
-        ISummary Summary = null;
-
         #region Parameter Input Classes
-        /// <summary>The plant</summary>
-        [Link]
-        protected Plant Plant = null;
         /// <summary>The phenology</summary>
         [Link]
         protected Phenology Phenology = null;
@@ -197,16 +190,6 @@ namespace Models.PMF.Organs
             Clear();
         }
 
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, EventArgs e)
-        {
-            if (sender == Plant)
-                Clear();
-        }
-
         /// <summary>Called when crop is being cut.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -300,6 +283,39 @@ namespace Models.PMF.Organs
             {
                 return MinimumNConc.Value;
             }
+        }
+        #endregion
+        #region Biomass removal 
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on harvest.
+        /// </summary>
+        public override OrganBiomassRemovalType HarvestDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 1,
+                    FractionToResidue = 0
+                };
+            }
+            set { }
+        }
+
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        public override OrganBiomassRemovalType CutDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 1,
+                    FractionToResidue = 0
+                };
+            }
+            set { }
         }
         #endregion
     }
