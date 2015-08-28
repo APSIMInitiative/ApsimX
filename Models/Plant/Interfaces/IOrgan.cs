@@ -11,6 +11,11 @@ namespace Models.PMF.Interfaces
     public interface IOrgan
     {
         /// <summary>
+        /// The Name of the organ.
+        /// </summary>
+        string Name { get; set; }
+        
+        /// <summary>
         /// Do Harvest logic for this organ.
         /// </summary>
         void DoHarvest();

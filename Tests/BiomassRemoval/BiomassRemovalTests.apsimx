@@ -1768,15 +1768,13 @@ namespace Models
 		[Description("EndCrop Date3")]
 		public DateTime EndCropDate3 { get; set; }
 		
-		[XmlIgnore] private OrganBiomassRemovalType[] ManagerRemovalData { get; set; }
+		[XmlIgnore] private RemovalFractions Remove { get; set; }
 		
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			//Create a data structure to hold biomass removal data for each organ
-			ManagerRemovalData = new OrganBiomassRemovalType[MCSP.Organs.Length];
-			for (int i = 0; i < MCSP.Organs.Length; i++)
-				ManagerRemovalData[i] = new OrganBiomassRemovalType();
+			Remove = new RemovalFractions();
+			Remove.SetUp(MCSP.Organs);
 		}
 		
 		[EventSubscribe("DoManagement")]
@@ -1800,11 +1798,11 @@ namespace Models
 			else if (Clock.Today.Date == HarvestDate2)
 			{
 				//Harvest with manager specified removal fractions
-				ManagerRemovalData[0].FractionRemoved = 0.3;
-				ManagerRemovalData[1].FractionRemoved = 0.1;
-				ManagerRemovalData[0].FractionToResidue = 0.3;
-				ManagerRemovalData[1].FractionToResidue = 0.7;
-				MCSP.Harvest(ManagerRemovalData);
+				Remove.SetFractionRemoved("Product", 0.3);
+				Remove.SetFractionRemoved("Stover", 0.1);
+				Remove.SetFractionToResidue("Product", 0.3);
+				Remove.SetFractionToResidue("Stover", 0.7);
+				MCSP.Harvest(Remove);
 			}
 			else if (Clock.Today.Date == EndCropDate2)
 				MCSP.EndCrop();
@@ -1814,11 +1812,11 @@ namespace Models
 				MCSP.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 			else if (Clock.Today.Date == HarvestDate3)
 			{
-				ManagerRemovalData[0].FractionRemoved = 0.5;
-				ManagerRemovalData[1].FractionRemoved = 0.6;
-				ManagerRemovalData[0].FractionToResidue = 0.3;
-				ManagerRemovalData[1].FractionToResidue = 0.3;
-				MCSP.Harvest(ManagerRemovalData);
+				Remove.SetFractionRemoved("Product", 0.5);
+				Remove.SetFractionRemoved("Stover", 0.3);
+				Remove.SetFractionToResidue("Product", 0.3);
+				Remove.SetFractionToResidue("Stover", 0.7);
+				MCSP.Harvest(Remove);
 			}
 			else if (Clock.Today.Date == EndCropDate3)
 				MCSP.EndCrop();
@@ -3579,15 +3577,13 @@ namespace Models
 		[Description("EndCrop Date3")]
 		public DateTime EndCropDate3 { get; set; }
 		
-		[XmlIgnore] private OrganBiomassRemovalType[] ManagerRemovalData { get; set; }
+		[XmlIgnore] private RemovalFractions Remove { get; set; }
 		
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			//Create a data structure to hold biomass removal data for each organ
-			ManagerRemovalData = new OrganBiomassRemovalType[MCSP.Organs.Length];
-			for (int i = 0; i < MCSP.Organs.Length; i++)
-				ManagerRemovalData[i] = new OrganBiomassRemovalType();
+			Remove = new RemovalFractions();
+			Remove.SetUp(MCSP.Organs);
 		}
 		
 		[EventSubscribe("DoManagement")]
@@ -3610,12 +3606,12 @@ namespace Models
 				MCSP.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 			else if (Clock.Today.Date == CutDate2)
 			{
-				//Cut with manager specified removal fractions
-				ManagerRemovalData[0].FractionRemoved = 0.3;
-				ManagerRemovalData[1].FractionRemoved = 0.1;
-				ManagerRemovalData[0].FractionToResidue = 0.3;
-				ManagerRemovalData[1].FractionToResidue = 0.7;
-				MCSP.Cut(ManagerRemovalData);
+				//Harvest with manager specified removal fractions
+				Remove.SetFractionRemoved("Product", 0.3);
+				Remove.SetFractionRemoved("Stover", 0.1);
+				Remove.SetFractionToResidue("Product", 0.3);
+				Remove.SetFractionToResidue("Stover", 0.7);
+				MCSP.Cut(Remove);
 			}
 			else if (Clock.Today.Date == EndCropDate2)
 				MCSP.EndCrop();
@@ -3625,11 +3621,11 @@ namespace Models
 				MCSP.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 			else if (Clock.Today.Date == CutDate3)
 			{
-				ManagerRemovalData[0].FractionRemoved = 0.5;
-				ManagerRemovalData[1].FractionRemoved = 0.6;
-				ManagerRemovalData[0].FractionToResidue = 0.3;
-				ManagerRemovalData[1].FractionToResidue = 0.2;
-				MCSP.Cut(ManagerRemovalData);
+				Remove.SetFractionRemoved("Product", 0.5);
+				Remove.SetFractionRemoved("Stover", 0.3);
+				Remove.SetFractionToResidue("Product", 0.3);
+				Remove.SetFractionToResidue("Stover", 0.7);
+				MCSP.Cut(Remove);
 			}
 			else if (Clock.Today.Date == EndCropDate3)
 				MCSP.EndCrop();

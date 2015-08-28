@@ -91,7 +91,7 @@ namespace Models.PMF
         public IOrgan[] Organs { get; private set; }
 
         ///<summary></summary>
-        public OrganBiomassRemovalType[] BiomassRemovalData { get; set; }
+        public RemovalFractions BiomassRemovalData { get; set; }
        
         /// <summary>Gets a list of cultivar names</summary>
         public string[] CultivarNames
@@ -193,19 +193,18 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-
             List<IOrgan> organs = new List<IOrgan>();
-            List<OrganBiomassRemovalType> RemovalData = new List<OrganBiomassRemovalType>();
+            
             foreach (IOrgan organ in Apsim.Children(this, typeof(IOrgan)))
             {
                 organs.Add(organ);
-                OrganBiomassRemovalType blank = new OrganBiomassRemovalType();
-                RemovalData.Add(blank);
             }
 
             Organs = organs.ToArray();
-            BiomassRemovalData = RemovalData.ToArray();
 
+            BiomassRemovalData = new RemovalFractions();
+            BiomassRemovalData.SetUp(Organs);
+            
             Clear();
         }
 
@@ -245,19 +244,21 @@ namespace Models.PMF
         }
         
         /// <summary>Harvest the crop.</summary>
-        public void Harvest(OrganBiomassRemovalType[] ManagerRemovalData = null)
+        public void Harvest(RemovalFractions ManagerRemovalData = null)
         {
             int i = 0;
+            //Set up the default BiomassRemovalData values
             foreach (IOrgan organ in Organs)
             {
-                if (ManagerRemovalData == null)
-                { //If removal data is not sent from the manager use the organs default values
-                    BiomassRemovalData[i].FractionRemoved = organ.HarvestDefault.FractionRemoved;
-                    BiomassRemovalData[i].FractionToResidue = organ.HarvestDefault.FractionToResidue;
-                }
-                else BiomassRemovalData[i] = ManagerRemovalData[i];
+               BiomassRemovalData.OrganList[i].FractionRemoved = organ.HarvestDefault.FractionRemoved;
+               BiomassRemovalData.OrganList[i].FractionToResidue = organ.HarvestDefault.FractionToResidue;
                 i += 1;
             }
+
+            //OverWriter default values in BiomassRemovalData with any manager specified values
+            ApplyManagerSpecifiedOverwrites(ManagerRemovalData);
+            
+            //Remove biomas from organs
             RemoveBiomassFromOrgans(BiomassRemovalData);
 
             // Invoke a harvesting event.
@@ -287,19 +288,21 @@ namespace Models.PMF
         }
 
         /// <summary>Cut the crop.</summary>
-        public void Cut(OrganBiomassRemovalType[] ManagerRemovalData = null)
+        public void Cut(RemovalFractions ManagerRemovalData = null)
         {
             int i = 0;
+            //Set up the default values
             foreach (IOrgan organ in Organs)
             {
-                if (ManagerRemovalData == null)
-                { //If removal data is not sent from the manager use the organs default values
-                    BiomassRemovalData[i].FractionRemoved = organ.CutDefault.FractionRemoved;
-                    BiomassRemovalData[i].FractionToResidue = organ.CutDefault.FractionToResidue;
-                }
-                else BiomassRemovalData[i] = ManagerRemovalData[i];
+                BiomassRemovalData.OrganList[i].FractionRemoved = organ.CutDefault.FractionRemoved;
+                BiomassRemovalData.OrganList[i].FractionToResidue = organ.CutDefault.FractionToResidue;
                 i += 1;
             }
+
+            //OverWriter default values in BiomassRemovalData with any manager specified values
+            ApplyManagerSpecifiedOverwrites(ManagerRemovalData);
+
+            //Remove biomas from organs
             RemoveBiomassFromOrgans(BiomassRemovalData);
 
             // Invoke a cutting event.
@@ -316,17 +319,32 @@ namespace Models.PMF
             Population = 0;
         }
 
-        private void RemoveBiomassFromOrgans(OrganBiomassRemovalType[] BiomassRemovalData)
+        private void RemoveBiomassFromOrgans(RemovalFractions BiomassRemovalData)
         {
             if (BiomassRemovalData != null)  //Defalt is to remove nothing so unless some data is sent from manager do nothing
             {
                 int i = 0;
                 foreach (IOrgan organ in Organs)
                 {
-                    organ.RemoveBiomass = BiomassRemovalData[i];
+                    organ.RemoveBiomass = BiomassRemovalData.OrganList[i];
                     i += 1;
                 }
             }
+        }
+
+        private void ApplyManagerSpecifiedOverwrites(RemovalFractions ManagerRemovalData)
+        {
+            //OverWriter default values in BiomassRemovalData with any manager specified values
+            if (ManagerRemovalData != null)
+                foreach (OrganBiomassRemovalType m in ManagerRemovalData.OrganList) //Set through each organ in manager sent RemovalData list
+                    foreach (OrganBiomassRemovalType p in BiomassRemovalData.OrganList) //Step throgh each organ in plant constructed RemovalData list
+                        if (String.Equals(m.NameOfOrgan, p.NameOfOrgan, StringComparison.OrdinalIgnoreCase)) //find a match on orgn names
+                        {//Over write data if there is data there
+                            if (m.FractionRemoved >= 0)
+                                p.FractionRemoved = m.FractionRemoved;
+                            if (m.FractionToResidue >= 0)
+                                p.FractionToResidue = m.FractionToResidue;
+                        }
         }
         #endregion
         
