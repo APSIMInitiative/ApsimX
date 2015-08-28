@@ -13,17 +13,17 @@
     using Models;
     using Views;
 
-    public class StaticForestrySystemPresenter : IPresenter, IExportable
+    public class TreeProxyPresenter : IPresenter, IExportable
     {
-        private StaticForestrySystem ForestryModel;
-        private StaticForestrySystemView ForestryViewer;
+        private TreeProxy ForestryModel;
+        private TreeProxyView ForestryViewer;
 
         public double[] SoilMidpoints;
 
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            ForestryModel = model as StaticForestrySystem;
-            ForestryViewer = view as StaticForestrySystemView;
+            ForestryModel = model as TreeProxy;
+            ForestryViewer = view as TreeProxyView;
 
             AttachData();
             ForestryViewer.OnCellEndEdit += OnCellEndEdit;
@@ -68,18 +68,20 @@
 
         public void AttachData()
         {
+            if (!(ForestryModel.Parent is ForestrySystem))
+                throw new ApsimXException(ForestryModel, "Error: TreeProxy must be a child of ForestrySystem.");
             ForestryViewer.NDemand = ForestryModel.NDemand;
             ForestryViewer.RootRadius = ForestryModel.RootRadius;
 
             Soil Soil;
-            List<IModel> Zones = Apsim.ChildrenRecursively(ForestryModel, typeof(Zone));
+            List<IModel> Zones = Apsim.ChildrenRecursively(ForestryModel.Parent, typeof(Zone));
             if (Zones.Count == 0)
                 return;
 
             //setup tree heights
             ForestryViewer.SetupHeights(ForestryModel.dates, ForestryModel.heights);
 
-            //get the distance of each Zone from Tree.
+      /*      //get the distance of each Zone from Tree.
             double zoneWidth = 0;
             double[] ZoneWidths = new double[Zones.Count];
 
@@ -91,7 +93,7 @@
                     zoneWidth = (Zones[i] as CircularZone).Width;
 
                     ZoneWidths[i] = ZoneWidths[i - 1] + zoneWidth;
-            }
+            }*/
 
             //get the first soil. For now we're assuming all soils have the same structure.
             Soil = Apsim.Find(Zones[0], typeof(Soil)) as Soil;
@@ -101,12 +103,16 @@
             List<string> colNames = new List<string>();
 
             colNames.Add("Parameter");
-            foreach (Zone z in Zones)
-            {
-                if (z is Simulation)
-                    continue;
-                colNames.Add(z.Name);
-            }
+            colNames.Add("0");
+            colNames.Add("0.5h");
+            colNames.Add("1h");
+            colNames.Add("1.5h");
+            colNames.Add("2h");
+            colNames.Add("2.5h");
+            colNames.Add("3h");
+            colNames.Add("4h");
+            colNames.Add("5h");
+            colNames.Add("6h");
 
             if (ForestryModel.Table.Count == 0)
             {
@@ -117,6 +123,7 @@
                 List<string> rowNames = new List<string>();
 
                 rowNames.Add("Shade (%)");
+                rowNames.Add("Nitrogen Demand (kg/ha)");
                 rowNames.Add("Root Length Density (cm/cm3)");
                 rowNames.Add("Depth (cm)");
 
@@ -130,10 +137,11 @@
                 {
                     ForestryModel.Table.Add(Enumerable.Range(1, rowNames.Count).Select(x => "0").ToList());
                 }
+
                 for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth and RLD rows to empty strings
                 {
-                    ForestryModel.Table[i][1] = string.Empty;
                     ForestryModel.Table[i][2] = string.Empty;
+                    ForestryModel.Table[i][3] = string.Empty;
                 }
             }
             else
@@ -145,8 +153,8 @@
                 ForestryModel.Table[0].AddRange(except);
                 for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth and RLD rows to empty strings
                 {
-                    ForestryModel.Table[i][1] = string.Empty;
                     ForestryModel.Table[i][2] = string.Empty;
+                    ForestryModel.Table[i][3] = string.Empty;
                 }
 
                 // remove Zones from table that don't exist in simulation
@@ -166,7 +174,7 @@
                     ForestryModel.Table.RemoveAt(i + 1);
                 }
             }
-            ForestryViewer.SetupGrid(ForestryModel.Table, ZoneWidths);
+            ForestryViewer.SetupGrid(ForestryModel.Table);
         }
     }
 }

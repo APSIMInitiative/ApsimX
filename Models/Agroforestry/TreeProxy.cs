@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using MathNet.Numerics.Interpolation;
+using MathNet.Numerics.LinearAlgebra.Double;
 using Models.Core;
 using System.Xml.Serialization;
 using Models.Interfaces;
@@ -14,17 +14,19 @@ using Models.Zones;
 namespace Models.Agroforestry
 {
     /// <summary>
-    /// A simple agroforestry model
+    /// A simple tree model
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.StaticForestrySystemView")]
-    [PresenterName("UserInterface.Presenters.StaticForestrySystemPresenter")]
+    [ViewName("UserInterface.Views.TreeProxyView")]
+    [PresenterName("UserInterface.Presenters.TreeProxyPresenter")]
     [ValidParent(ParentModels = new Type[] { typeof(Simulation), typeof(Zone) })]
-    public class StaticForestrySystem : Zone,IUptake
+    public class TreeProxy : Model, IUptake
     {
         [Link]
         IWeather weather = null;
-        
+        [Link]
+        Clock clock = null;
+
         /// <summary>Gets or sets the table data.</summary>
         /// <value>The table.</value>
         public List<List<string>> Table { get; set; }
@@ -43,7 +45,7 @@ namespace Models.Agroforestry
         /// A list containing forestry information for each zone.
         /// </summary>
         [XmlIgnore]
-        public List<ZoneInfo> ZoneInfoList;
+        public List<IModel> ZoneList;
 
         /// <summary>
         /// Date list for tree heights over lime
@@ -57,6 +59,10 @@ namespace Models.Agroforestry
         [Summary]
         public double[] heights { get; set; }
 
+        private Dictionary<double, double> shade = new Dictionary<double, double>();
+        private Dictionary<double, double> nDemand = new Dictionary<double, double>();
+        private Dictionary<double, double[]> rld = new Dictionary<double, double[]>();
+
         /// <summary>
         /// Return the distance from the tree for a given zone. The tree is assumed to be in the first Zone.
         /// </summary>
@@ -65,56 +71,126 @@ namespace Models.Agroforestry
         public double GetDistanceFromTrees(Zone z)
         {
             double D = 0;
-            foreach (ZoneInfo zi in ZoneInfoList)
+            foreach (Zone zone in ZoneList)
             {
-                if (zi.zone is RectangularZone)
-                    D += (zi.zone as RectangularZone).Width;
-                else if (zi.zone is CircularZone)
-                    D += (zi.zone as CircularZone).Width;
+                if (zone is RectangularZone)
+                    D += (zone as RectangularZone).Width;
+                else if (zone is CircularZone)
+                    D += (zone as CircularZone).Width;
                 else
                     throw new ApsimXException(this, "Cannot calculate distance for trees for zone of given type.");
-                if (zi.zone == z)
+
+                if (zone == z)
                     return D;
             }
         
             throw new ApsimXException(this, "Could not find zone called " + z.Name);
         }
+
+        /// <summary>
+        /// Return the width of the given zone.
+        /// </summary>
+        /// <param name="z">The width.</param>
+        /// <returns></returns>
+        private double GetZoneWidth(Zone z)
+        {
+            double D = 0;
+            if (z is RectangularZone)
+                D = (z as RectangularZone).Width;
+            else if (z is CircularZone)
+                D = (z as CircularZone).Width;
+            else
+                throw new ApsimXException(this, "Cannot calculate distance for trees for zone of given type.");
+            return D;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="z"></param>
+        /// <returns></returns>
+        private double ZoneDistanceInTreeHeights(Zone z)
+        {
+            double treeHeight = GetHeightToday();
+            double distFromTree = GetDistanceFromTrees(z);
+
+            return (distFromTree + GetZoneWidth(z) / 2) / treeHeight;
+        }
+
         /// <summary>
         /// Return the %Shade for a given zone
         /// </summary>
-        /// <param name="z">Zone</param>
-        /// <returns>%Shade</returns>
+        /// <param name="z"></param>
         public double GetShade(Zone z)
         {
-            foreach (ZoneInfo zi in ZoneInfoList)
-                if (zi.zone == z)
-                    return zi.Shade;
-            throw new ApsimXException(this, "Could not find a shade value for zone called " + z.Name);
+            double distInTH = ZoneDistanceInTreeHeights(z);
+            bool didInterp = false;
+            return MathUtilities.LinearInterpReal(distInTH, shade.Keys.ToArray(), shade.Values.ToArray(), out didInterp);
+        }
 
-            
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="z"></param>
+        /// <returns></returns>
+        public double[] GetRLD(Zone z)
+        {
+            double distInTH = ZoneDistanceInTreeHeights(z);
+            bool didInterp = false;
+            DenseMatrix rldM = DenseMatrix.OfColumnArrays(rld.Values);
+            double[] rldInterp = new double[rldM.RowCount];
+
+            for (int i=0;i< rldM.RowCount;i++)
+            {
+                rldInterp[i] = MathUtilities.LinearInterpReal(distInTH, rld.Keys.ToArray(), rldM.Row(i).ToArray(), out didInterp);
+            }
+                       
+            return rldInterp;
+        }
+
+        /// <summary>
+        /// Setup the tree properties so they can be mapped to a zone.
+        /// </summary>
+        private void SetupTreeProperties()
+        {
+            double[] THCutoffs = new double[] { 0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6 };
+
+            for (int i = 2; i < Table.Count; i++)
+            {
+                shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0]));
+                nDemand.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][1]));
+                List<double> getRLDs = new List<double>();
+                for (int j = 4; j < Table[0].Count; j++)
+                    getRLDs.Add(Convert.ToDouble(Table[i][j]));
+                rld.Add(THCutoffs[i - 2], getRLDs.ToArray());
+            }
+        }
+
+        private double GetHeightToday()
+        {
+            double[] OADates = new double[dates.Count()];
+            bool didInterp;
+
+            for (int i = 0; i < dates.Count(); i++)
+                OADates[i] = dates[i].ToOADate();
+            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, heights, out didInterp) / 1000;
         }
         /// <summary>
         /// Return the %Wind Reduction for a given zone
         /// </summary>
         /// <param name="z">Zone</param>
-        /// <param name="Today">The current date</param>
         /// <returns>%Wind Reduction</returns>
-        public double GetWindReduction(Zone z, DateTime Today)
+        public double GetWindReduction(Zone z)
         {
-            foreach (ZoneInfo zi in ZoneInfoList)
-                if (zi.zone == z)
+            foreach (Zone zone in ZoneList)
+                if (zone == z)
                 {
                     double UrelMin = Math.Max(0.0, 1.14 * 0.5 - 0.16); // 0.5 is porosity, will be dynamic in the future
                     double Urel;
                     double H;
-                    bool didInterp;
-                    double[] OADates = new double[dates.Count()];
                     double heightToday;
 
-                    for (int i = 0; i < dates.Count(); i++)
-                        OADates[i] = dates[i].ToOADate();
-
-                    heightToday = MathUtilities.LinearInterpReal(Today.ToOADate(), OADates, heights, out didInterp);
+                    heightToday = GetHeightToday();
 
                     if (heightToday < 1000)
                         Urel = 1;
@@ -132,23 +208,6 @@ namespace Models.Agroforestry
                 }
             throw new ApsimXException(this, "Could not find zone called " + z.Name);
         }
-        /// <summary>
-        /// Return the area of the zone.
-        /// </summary>
-        [XmlIgnore]
-        public override double Area
-        {
-            get
-            {
-                double A = 0;
-                foreach(Zone Z in Apsim.Children(this,typeof(Zone)))
-                    A+=Z.Area;
-                return A;
-            }
-            set
-            {
-            }
-        }
 
         /// <summary>
         /// Calculate the total intercepted radiation by the tree canopy (MJ)
@@ -158,8 +217,8 @@ namespace Models.Agroforestry
             get
             {
                 double IR = 0;
-                foreach (ZoneInfo ZI in ZoneInfoList)
-                    IR += ZI.zone.Area * weather.Radn;
+                foreach (Zone zone in ZoneList)
+                    IR += zone.Area * weather.Radn;
                 return IR;
             }
         }
@@ -170,17 +229,8 @@ namespace Models.Agroforestry
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            ZoneInfoList = new List<ZoneInfo>();
-            for (int i = 2; i < Table.Count; i++)
-            {
-                ZoneInfo newZone = new ZoneInfo();
-                newZone.zone = Apsim.Child(this, Table[0][i - 1]) as Zone;
-                newZone.Shade = Convert.ToDouble(Table[i][0]);
-                newZone.RLD = new double[Table[1].Count - 3];
-                for (int j = 3; j < Table[1].Count; j++)
-                    newZone.RLD[j - 3] = Convert.ToDouble(Table[i][j]);
-                ZoneInfoList.Add(newZone);
-            }
+            ZoneList = Apsim.Children(this.Parent, typeof(Zone));
+            SetupTreeProperties();
         }
 
         /// <summary>
@@ -193,19 +243,19 @@ namespace Models.Agroforestry
             double SWDemand = 0;  // Tree water demand (L)
             double PotSWSupply = 0; // Total water supply (L)
 
-            foreach (ZoneInfo ZI in ZoneInfoList)
+            foreach (Zone ZI in ZoneList)
             {
-                Soils.SoilWater S = Apsim.Find(ZI.zone, typeof(Soils.SoilWater)) as Soils.SoilWater;
-                SWDemand += S.Eo * (1 / (1 - ZI.Shade / 100) - 1) * ZI.zone.Area * 10000;
+                Soils.SoilWater S = Apsim.Find(ZI, typeof(Soils.SoilWater)) as Soils.SoilWater;
+                SWDemand += S.Eo * (1 / (1 - GetShade(ZI) / 100) - 1) * ZI.Area * 10000;
             }
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
             
             foreach (ZoneWaterAndN Z in soilstate.Zones)
             {
-                foreach (ZoneInfo ZI in ZoneInfoList)
+                foreach (Zone ZI in ZoneList)
                 {
-                    if (Z.Name == ZI.zone.Name)
+                    if (Z.Name == ZI.Name)
                     {
                         ZoneWaterAndN Uptake = new ZoneWaterAndN();
                         //Find the soil for this zone
@@ -224,8 +274,8 @@ namespace Models.Agroforestry
                         for (int i = 0; i <= SW.Length - 1; i++)
                         {
                             double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15,ThisSoil.Thickness);
-                            Uptake.Water[i] = (SW[i] - LL15mm[i]) * ZI.RLD[i];
-                            PotSWSupply += Uptake.Water[i] * ZI.zone.Area * 10000;
+                            Uptake.Water[i] = (SW[i] - LL15mm[i]) * GetRLD(ZI)[i];
+                            PotSWSupply += Uptake.Water[i] * ZI.Area * 10000;
                         }
                         Uptakes.Add(Uptake);
                     }
@@ -260,27 +310,27 @@ namespace Models.Agroforestry
 
             foreach (ZoneWaterAndN Z in soilstate.Zones)
             {
-                foreach (ZoneInfo ZI in ZoneInfoList)
+                foreach (Zone zone in ZoneList)
                 {
-                    if (Z.Name == ZI.zone.Name)
+                    if (Z.Name == zone.Name)
                     {
                         ZoneWaterAndN Uptake = new ZoneWaterAndN();
                         //Find the soil for this zone
                         Zone ThisZone = new Zone();
                         Soils.Soil ThisSoil = new Soils.Soil();
 
-                        foreach (Zone SearchZ in Apsim.ChildrenRecursively(Parent, typeof(Zone)))
+                        foreach (Zone SearchZ in ZoneList)
                             if (SearchZ.Name == Z.Name)
+                            {
                                 ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+                                break;
+                            }
 
                         Uptake.Name = Z.Name;
                         double[] SW = Z.Water;
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
-                        //for (int i = 0; i <= SW.Length-1; i++)
-                        //    Uptake.NO3N[i] = Z.NO3N[i] * ZI.RLD[i];
-
                         Uptakes.Add(Uptake);
                     }
                 }

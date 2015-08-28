@@ -97,8 +97,9 @@
     <Compile Include="AgPasture.cs" />
     <Compile Include="AgPasture\AgPasture1.Sward.cs" />
     <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
+    <Compile Include="Agroforestry\ForestrySystem.cs" />
     <Compile Include="Agroforestry\LocalMicroClimate.cs" />
-    <Compile Include="Agroforestry\StaticForestrySystem.cs" />
+    <Compile Include="Agroforestry\TreeProxy.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
     <Compile Include="Arbitrator\ArbitratorGod.cs" />
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
