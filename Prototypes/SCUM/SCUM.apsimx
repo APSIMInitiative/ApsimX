@@ -303,6 +303,24 @@ This variable is the product yield of the crop in g/m2 dry weight
             <VariableName>[Product].ProductDMProportion.Value</VariableName>
           </VariableReference>
         </MultiplyFunction>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
+        <HarvestDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </HarvestDefault>
+        <CutDefault>
+          <FractionRemoved>0.8</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </CutDefault>
+        <GrazeDefault>
+          <FractionRemoved>0.6</FractionRemoved>
+          <FractionToResidue>0.1</FractionToResidue>
+        </GrazeDefault>
+        <PruneDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0.5</FractionToResidue>
+        </PruneDefault>
       </GenericAboveGroundOrgan>
       <SimpleLeaf>
         <Name>Stover</Name>
@@ -728,6 +746,24 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
             <VariableName>[Stover].bBiomass.Value</VariableName>
           </VariableReference>
         </SigmoidFunction2>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
+        <HarvestDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </HarvestDefault>
+        <CutDefault>
+          <FractionRemoved>0.8</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </CutDefault>
+        <GrazeDefault>
+          <FractionRemoved>0.6</FractionRemoved>
+          <FractionToResidue>0.1</FractionToResidue>
+        </GrazeDefault>
+        <PruneDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0.5</FractionToResidue>
+        </PruneDefault>
         <BiomassYesterday>0</BiomassYesterday>
         <LAI>0</LAI>
         <Height>0</Height>
@@ -874,6 +910,24 @@ This is the proportion of total biomass that is paritioned into the roots and is
           </Memo>
           <Value>0.1</Value>
         </Constant>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
+        <HarvestDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </HarvestDefault>
+        <CutDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </CutDefault>
+        <GrazeDefault>
+          <FractionRemoved>0.6</FractionRemoved>
+          <FractionToResidue>0.1</FractionToResidue>
+        </GrazeDefault>
+        <PruneDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0.5</FractionToResidue>
+        </PruneDefault>
         <InitialDM>0.2</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <KNO3_yProperty>
@@ -916,6 +970,24 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
           <Name>MinimumNConc</Name>
           <Value>0</Value>
         </Constant>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
+        <HarvestDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </HarvestDefault>
+        <CutDefault>
+          <FractionRemoved>0.8</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </CutDefault>
+        <GrazeDefault>
+          <FractionRemoved>0.6</FractionRemoved>
+          <FractionToResidue>0.1</FractionToResidue>
+        </GrazeDefault>
+        <PruneDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0.5</FractionToResidue>
+        </PruneDefault>
         <NFixationOption>None</NFixationOption>
       </Nodule>
       <Summariser>
@@ -6061,7 +6133,7 @@ namespace Models
           <Crop2>Dried_Peas</Crop2>
           <SowingDate2>2005-09-28</SowingDate2>
           <HarvestDate2>2006-02-24</HarvestDate2>
-          <Yield2>1780</Yield2>
+          <Yield2>800</Yield2>
           <Crop3>Potatoes_Short</Crop3>
           <SowingDate3>2006-10-11</SowingDate3>
           <HarvestDate3>2007-03-12</HarvestDate3>
@@ -6130,6 +6202,14 @@ namespace Models
 		[Description("Forth Crop Yield (g/m2 fresh wt)")]
 		public int Yield4 { get; set; }
 		
+		[XmlIgnore] private RemovalFractions Remove { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Remove = new RemovalFractions(SCUM.Organs);
+		}
+		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
@@ -6141,7 +6221,9 @@ namespace Models
 			}
 			else if (Clock.Today.Date == HarvestDate1)
 			{
-				SCUM.Harvest();
+				Remove.SetFractionRemoved("Product", 1.0);
+				Remove.SetFractionRemoved("Stover", 0.05);
+				SCUM.Harvest(Remove);
 				SCUM.EndCrop();
 			}
 			else if (Clock.Today.Date == SowingDate2)
@@ -6152,7 +6234,9 @@ namespace Models
 			}
 			else if (Clock.Today.Date == HarvestDate2)
 			{
-				SCUM.Harvest();
+				Remove.SetFractionRemoved("Product", 1.0);
+				Remove.SetFractionRemoved("Stover", 0.05);
+				SCUM.Harvest(Remove);
 				SCUM.EndCrop();
 			}
 			else if (Clock.Today.Date == SowingDate3)
@@ -6163,7 +6247,9 @@ namespace Models
 			}
 			else if (Clock.Today.Date == HarvestDate3)
 			{
-				SCUM.Harvest();
+				Remove.SetFractionRemoved("Product", 1.0);
+				Remove.SetFractionRemoved("Stover", 0.05);
+				SCUM.Harvest(Remove);
 				SCUM.EndCrop();
 			}
 			else if (Clock.Today.Date == SowingDate4)
@@ -6174,7 +6260,9 @@ namespace Models
 			}
 			else if (Clock.Today.Date == HarvestDate4)
 			{
-				SCUM.Harvest();
+				Remove.SetFractionRemoved("Product", 1.0);
+				Remove.SetFractionRemoved("Stover", 0.05);
+				SCUM.Harvest(Remove);
 				SCUM.EndCrop();
 			}
 			//PMFCrop.Sow(... Contains the following arguements:
@@ -6220,6 +6308,7 @@ namespace Models
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
 		[XmlIgnore] public double AccumPlantN { get; set; }
+		[XmlIgnore] public double AccumNFixation { get; set; }
 		[XmlIgnore] public double AccumMineralisation { get; set; }
 		[XmlIgnore] public double AccumDenit { get; set; }
 		[XmlIgnore] public double AccumFert { get; set; }
@@ -6293,6 +6382,7 @@ namespace Models
 			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
 			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("SCUM.Root.NUptake");
+			
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -6311,6 +6401,7 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
+			AccumNFixation -= (double)zone.Get("SCUM.Nodule.NFixed") * 10;
 			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
 			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
@@ -6331,7 +6422,7 @@ namespace Models
 		{
 			AccumFert = 0;
 			AccumIrrigation = 0;
-			
+			AccumNFixation = 0;
 			
 			AccumEO = 0;
 			AccumES = 0;
@@ -6357,6 +6448,7 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[ExtraVariables].Script.AccumPlantN</string>
+          <string>[ExtraVariables].Script.AccumNFixation</string>
           <string>[ExtraVariables].Script.AccumMineralisation</string>
           <string>[ExtraVariables].Script.AccumDenit</string>
           <string>[ExtraVariables].Script.AccumFert</string>
@@ -6444,6 +6536,7 @@ namespace Models
           <string>[AutomaticIrrigation].Script.EndDate</string>
           <string>[AutomaticIrrigation].Script.TodayYear</string>
           <string>[SCUM].Arbitrator.FN</string>
+          <string>[SCUM].Nodule.NFixed</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -6973,6 +7066,21 @@ namespace Models
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.AccumPlantN</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumNFixation</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711681</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumNFixation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>

@@ -937,7 +937,7 @@ namespace Models.PMF.Organs
         
         /// <summary>Gets or sets the water uptake.</summary>
         /// <value>The water uptake.</value>
-        [Units("mm")]
+        [Units("kg/ha")]
         public override double NUptake
         {
             get {return NitUptake == null ? 0.0 : -MathUtilities.Sum(NitUptake);}

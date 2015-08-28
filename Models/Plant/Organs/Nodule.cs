@@ -76,6 +76,7 @@ namespace Models.PMF.Organs
         }
         /// <summary>Sets the n allocation.</summary>
         /// <value>The n allocation.</value>
+        [XmlIgnore]
         public override BiomassAllocationType NAllocation
         {
             set
