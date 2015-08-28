@@ -4,6 +4,6 @@ When you initiate a pull request Github will triger a build on Jenkins (http://a
 	"working on #XXX"
 or 
 
-	"resolved #XXX"
+	"resolves #XXX"
     
 where XXX is an active git hub issue.  Thus, you must also have loged a relavent git hub issue to relate your pull request to.
