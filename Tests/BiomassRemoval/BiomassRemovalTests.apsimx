@@ -317,6 +317,10 @@ This variable is the product yield of the crop in g/m2 dry weight
           <FractionRemoved>0.6</FractionRemoved>
           <FractionToResidue>0.1</FractionToResidue>
         </GrazeDefault>
+        <PruneDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0.5</FractionToResidue>
+        </PruneDefault>
       </GenericAboveGroundOrgan>
       <SimpleLeaf>
         <Name>Stover</Name>
@@ -756,6 +760,10 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
           <FractionRemoved>0.6</FractionRemoved>
           <FractionToResidue>0.1</FractionToResidue>
         </GrazeDefault>
+        <PruneDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0.5</FractionToResidue>
+        </PruneDefault>
         <BiomassYesterday>0</BiomassYesterday>
         <LAI>0</LAI>
         <Height>0</Height>
@@ -920,6 +928,10 @@ This is the proportion of total biomass that is paritioned into the roots and is
           <FractionRemoved>0.6</FractionRemoved>
           <FractionToResidue>0.1</FractionToResidue>
         </GrazeDefault>
+        <PruneDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0.5</FractionToResidue>
+        </PruneDefault>
         <InitialDM>0.2</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <KNO3_yProperty>
@@ -976,6 +988,10 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
           <FractionRemoved>0.6</FractionRemoved>
           <FractionToResidue>0.1</FractionToResidue>
         </GrazeDefault>
+        <PruneDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0.5</FractionToResidue>
+        </PruneDefault>
         <NFixationOption>None</NFixationOption>
       </Nodule>
       <Summariser>
@@ -1773,8 +1789,7 @@ namespace Models
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			Remove = new RemovalFractions();
-			Remove.SetUp(MCSP.Organs);
+			Remove = new RemovalFractions(MCSP.Organs);
 		}
 		
 		[EventSubscribe("DoManagement")]
@@ -3582,8 +3597,7 @@ namespace Models
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			Remove = new RemovalFractions();
-			Remove.SetUp(MCSP.Organs);
+			Remove = new RemovalFractions(MCSP.Organs);
 		}
 		
 		[EventSubscribe("DoManagement")]

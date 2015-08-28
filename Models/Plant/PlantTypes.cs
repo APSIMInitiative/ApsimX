@@ -162,7 +162,7 @@
         public String crop_type = "";
     }
 
-    ///<summary>Data passed to each organ when a biomass remove event occurs</summary>
+    ///<summary>Data passed to each organ when a biomass remove event occurs.  The proportion of biomass removed from each organ is the sum of the FractionRemoved and the FractionToRedidues</summary>
     [Serializable]
     public class OrganBiomassRemovalType
     {
@@ -171,15 +171,15 @@
         /// </summary>
         public string NameOfOrgan { get; set; }
         /// <summary>
-        /// The amount of biomass to removeed from each organ on harvest, cut or graze.
+        /// The amount of biomass taken from each organ and removeed from the zone on harvest, cut, graze or prune.
         /// </summary>
         public double FractionRemoved { get; set; }
         /// <summary>
-        /// The amount of biomass to removed from each organ and passed to residue pools on defoliation events
+        /// The amount of biomass to removed from each organ and passed to residue pool on on harvest, cut, graze or prune
         /// </summary>
         public double FractionToResidue { get; set; }
         /// <summary>
-        /// The amount of biomass to removed from each organ and passed to residue pools on defoliation events
+        /// Removal method specifies for cohorted organs (leaf) if biomass removal events take biomass from the top, bottom or side of cohorts.
         /// </summary>
         public string RemovalMethod { get; set; }
     }
@@ -192,11 +192,11 @@
         /// The list of BiomassRemovalTypes for each organ
         ///</summary>
         public OrganBiomassRemovalType[] OrganList {get; set;}
-
-        /// <summary>
-        /// Method to set the number of arrays and give them an organ name
+        
+        ///<summary>
+        ///Method to construct list
         ///</summary>
-        public void SetUp(IOrgan[] Organs)
+        public RemovalFractions(IOrgan[] Organs)
         {
             OrganList = new OrganBiomassRemovalType[Organs.Length];
             int k = 0;
@@ -207,14 +207,11 @@
                 k += 1;
             }
         }
-        
-        // <summary>
-        // Method to construct list
-        //</summary>
-        //public RemovalFractions(IOrgan[] Organs)
-        //{
-         //   SetUp(Organs);
-        //}
+
+        ///<summary>
+        ///Default constructor
+        ///</summary>
+        public RemovalFractions() { }
 
         /// <summary>
         /// Method to set the FractionRemoved for specified Organ
@@ -229,7 +226,7 @@
                     Matchfound = true;
                 }
             if (Matchfound == false)
-            throw new Exception("The plant model could not find an organ with a name that matches " + organName+ ". Check your spelling?");
+            throw new Exception("The plant model could not find an organ with a name that matches " + organName+ " when matching FractionRemoved. Check your spelling?");
         }
         
         /// <summary>
@@ -237,9 +234,15 @@
         ///</summary>
         public void SetFractionToResidue(string organName, double Fraction)
         {
+            bool Matchfound = false;
             foreach (OrganBiomassRemovalType r in OrganList)
                 if (String.Equals(r.NameOfOrgan, organName, StringComparison.OrdinalIgnoreCase))
-                    r.FractionToResidue = Fraction;
+                {
+                    r.FractionRemoved = Fraction;
+                    Matchfound = true;
+                }
+            if (Matchfound == false)
+            throw new Exception("The plant model could not find an organ with a name that matches " + organName + " when matching FractionToResidue. Check your spelling?");
         }
     }
 }

@@ -21,6 +21,21 @@ namespace Models.PMF.Interfaces
         void DoHarvest();
 
         /// <summary>
+        /// Do Harvest logic for this organ.
+        /// </summary>
+        void DoCut();
+
+        /// <summary>
+        /// Do Harvest logic for this organ.
+        /// </summary>
+        void DoGraze();
+
+        /// <summary>
+        /// Do Harvest logic for this organ.
+        /// </summary>
+        void DoPrune();
+
+        /// <summary>
         /// Do Plant ending logic for this organ.
         /// </summary>
         void DoPlantEnding();
@@ -42,6 +57,10 @@ namespace Models.PMF.Interfaces
         /// The default proportions biomass to removeed from each organ on Grazing
         /// </summary>
         OrganBiomassRemovalType GrazeDefault { get; set; }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Pruning
+        /// </summary>
+        OrganBiomassRemovalType PruneDefault { get; set; }
     }
 
     /// <summary>An above ground interface</summary>

@@ -181,12 +181,15 @@ namespace Models.PMF
         public event EventHandler Harvesting;
         /// <summary>Occurs when a plant is about to be cut.</summary>
         public event EventHandler Cutting;
+        /// <summary>Occurs when a plant is about to be grazed.</summary>
+        public event EventHandler Grazing;
+        /// <summary>Occurs when a plant is about to be pruned.</summary>
+        public event EventHandler Pruning;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
         public event EventHandler PlantEnding;
         #endregion
 
         #region External Communications.  Method calls and EventHandlers
-
         /// <summary>Things the plant model does when the simulation starts</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -202,8 +205,7 @@ namespace Models.PMF
 
             Organs = organs.ToArray();
 
-            BiomassRemovalData = new RemovalFractions();
-            BiomassRemovalData.SetUp(Organs);
+            BiomassRemovalData = new RemovalFractions(Organs);
             
             Clear();
         }
@@ -252,7 +254,7 @@ namespace Models.PMF
             {
                BiomassRemovalData.OrganList[i].FractionRemoved = organ.HarvestDefault.FractionRemoved;
                BiomassRemovalData.OrganList[i].FractionToResidue = organ.HarvestDefault.FractionToResidue;
-                i += 1;
+               i += 1;
             }
 
             //OverWriter default values in BiomassRemovalData with any manager specified values
@@ -269,24 +271,11 @@ namespace Models.PMF
             
             foreach (IOrgan O in Organs)
                 O.DoHarvest();
+
+            // Invoke a cutting event.
+            if (Harvesting != null)
+                Harvesting.Invoke(this, new EventArgs());
         }
-        
-        /// <summary>End the crop.</summary>
-        public void EndCrop()
-        {
-            Summary.WriteMessage(this, "Crop ending");
-
-            foreach (IOrgan O in Organs)
-                O.DoPlantEnding();
-
-            // Invoke a plant ending event.
-            if (PlantEnding != null)
-                PlantEnding.Invoke(this, new EventArgs());
-
-            Clear();
-            cultivarDefinition.Unapply();
-        }
-
         /// <summary>Cut the crop.</summary>
         public void Cut(RemovalFractions ManagerRemovalData = null)
         {
@@ -305,9 +294,75 @@ namespace Models.PMF
             //Remove biomas from organs
             RemoveBiomassFromOrgans(BiomassRemovalData);
 
+            foreach (IOrgan O in Organs)
+                O.DoCut();
+
             // Invoke a cutting event.
             if (Cutting != null)
                 Cutting.Invoke(this, new EventArgs());
+        }
+        /// <summary>Harvest the crop.</summary>
+        public void Graze(RemovalFractions ManagerRemovalData = null)
+        {
+            int i = 0;
+            //Set up the default BiomassRemovalData values
+            foreach (IOrgan organ in Organs)
+            {
+                BiomassRemovalData.OrganList[i].FractionRemoved = organ.GrazeDefault.FractionRemoved;
+                BiomassRemovalData.OrganList[i].FractionToResidue = organ.GrazeDefault.FractionToResidue;
+                i += 1;
+            }
+
+            //OverWriter default values in BiomassRemovalData with any manager specified values
+            ApplyManagerSpecifiedOverwrites(ManagerRemovalData);
+
+            //Remove biomas from organs
+            RemoveBiomassFromOrgans(BiomassRemovalData);
+
+            foreach (IOrgan O in Organs)
+                O.DoGraze();
+
+            // Invoke a cutting event.
+            if (Grazing != null)
+                Grazing.Invoke(this, new EventArgs());
+        }
+        /// <summary>Cut the crop.</summary>
+        public void Prune(RemovalFractions ManagerRemovalData = null)
+        {
+            int i = 0;
+            //Set up the default values
+            foreach (IOrgan organ in Organs)
+            {
+                BiomassRemovalData.OrganList[i].FractionRemoved = organ.PruneDefault.FractionRemoved;
+                BiomassRemovalData.OrganList[i].FractionToResidue = organ.PruneDefault.FractionToResidue;
+                i += 1;
+            }
+
+            //OverWriter default values in BiomassRemovalData with any manager specified values
+            ApplyManagerSpecifiedOverwrites(ManagerRemovalData);
+
+            //Remove biomas from organs
+            RemoveBiomassFromOrgans(BiomassRemovalData);
+
+            // Invoke a pruning event.
+            if (Pruning != null)
+                Pruning.Invoke(this, new EventArgs());
+        }
+        /// <summary>End the crop.</summary>
+
+        public void EndCrop()
+        {
+            Summary.WriteMessage(this, "Crop ending");
+
+            foreach (IOrgan O in Organs)
+                O.DoPlantEnding();
+
+            // Invoke a plant ending event.
+            if (PlantEnding != null)
+                PlantEnding.Invoke(this, new EventArgs());
+
+            Clear();
+            cultivarDefinition.Unapply();
         }
         #endregion
 

@@ -255,6 +255,21 @@ namespace Models.PMF.Organs
             }
             set { }
         }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        public OrganBiomassRemovalType PruneDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0,
+                    FractionToResidue = 0.5
+                };
+            }
+            set { }
+        }
         #endregion
 
         /// <summary>Called when crop is ending</summary>
@@ -270,6 +285,21 @@ namespace Models.PMF.Organs
         /// Do harvest logic for this organ
         /// </summary>
         virtual public void DoHarvest() { }
+
+        /// <summary>
+        /// Do Cutting logic for this organ
+        /// </summary>
+        virtual public void DoCut() { }
+
+        /// <summary>
+        /// Do Graze logic for this organ
+        /// </summary>
+        virtual public void DoGraze() { }
+
+        /// <summary>
+        /// Do prune logic for this organ
+        /// </summary>
+        virtual public void DoPrune() { }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
