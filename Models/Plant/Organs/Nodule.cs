@@ -137,6 +137,17 @@ namespace Models.PMF.Organs
             NFixed = 0;
             RespiredWt = 0;
         }
-
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // Describe the function
+            if(NFixationOption != "FullCost")
+                tags.Add(new AutoDocumentation.Paragraph(Name + " is a simple parameterisation which provides all the N the crop demands with not DM cost if NFixationOption for the cultivar is set to Majic and fixies no nitrogen of NFixationOption is set to None", indent));
+            else
+                tags.Add(new AutoDocumentation.Paragraph(Name + " NEEDS Auto docummentation function completed", indent));
+        }
     }
 }
