@@ -82,7 +82,7 @@ namespace Models.Core
         public static IModel Parent(IModel model, Type typeFilter)
         {
             IModel obj = model;
-            while (obj.Parent != null && obj.GetType() != typeFilter)
+            while (obj.Parent != null && !typeFilter.IsAssignableFrom(obj.GetType()))
             {
                 obj = obj.Parent as IModel;
             }

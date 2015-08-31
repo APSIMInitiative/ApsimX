@@ -59,6 +59,10 @@
     <Reference Include="DocumentFormat.OpenXml">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net40\HtmlAgilityPack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ICSharpCode.NRefactory">
       <HintPath>..\packages\ICSharpCode.NRefactory.5.4.0\lib\Net40\ICSharpCode.NRefactory.dll</HintPath>
     </Reference>
@@ -71,6 +75,10 @@
     <Reference Include="ICSharpCode.TextEditor, Version=3.2.1.6466, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\ICSharpCode.TextEditor.3.2.1.6466\lib\Net20\ICSharpCode.TextEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="MarkdownDeep, Version=1.5.4615.26275, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MarkdownDeep.NET.1.5\lib\.NetFramework 3.5\MarkdownDeep.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="MigraDoc.DocumentObjectModel-gdi">
       <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.3638-beta\lib\net20\MigraDoc.DocumentObjectModel-gdi.dll</HintPath>
@@ -104,6 +112,8 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -117,9 +127,7 @@
     <Compile Include="Attributes\MainMenuAttribute.cs" />
     <Compile Include="Classes\GridCell.cs" />
     <Compile Include="Classes\GridColumn.cs" />
-    <Compile Include="Classes\HtmlEditor.cs" />
-    <Compile Include="Classes\HTMLToRTF.cs" />
-    <Compile Include="Classes\RTFToHTML.cs" />
+    <Compile Include="Classes\HtmlToMigraDoc.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\BibTeX.cs" />
     <Compile Include="Commands\ChangeProperty.cs" />
@@ -138,6 +146,12 @@
     <Compile Include="EventArguments\HoverPointArgs.cs" />
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
+    <Compile Include="Forms\UpgradeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UpgradeForm.Designer.cs">
+      <DependentUpon>UpgradeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Interfaces\ISupplementView.cs" />
     <Compile Include="Presenters\FolderPresenter.cs" />
     <Compile Include="Presenters\StaticForestrySystemPresenter.cs" />
@@ -147,6 +161,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\BuildService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Utility\ColumnXYSeries.cs" />
@@ -176,7 +195,6 @@
     <Compile Include="Presenters\CultivarPresenter.cs" />
     <Compile Include="Presenters\IExportable.cs" />
     <Compile Include="Presenters\InitialWaterPresenter.cs" />
-    <Compile Include="Presenters\PredictedObservedPresenter.cs" />
     <Compile Include="Presenters\TitlePresenter.cs" />
     <Compile Include="Presenters\LegendPresenter.cs" />
     <Compile Include="Presenters\FactorPresenter.cs" />
@@ -248,12 +266,6 @@
       <DependentUpon>HTMLView.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ISummaryView.cs" />
-    <Compile Include="Views\PredictedObservedView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\PredictedObservedView.Designer.cs">
-      <DependentUpon>PredictedObservedView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\SeriesView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -381,6 +393,9 @@
     <Compile Include="Views\TabbedMetDataView.Designer.cs">
       <DependentUpon>TabbedMetDataView.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Forms\UpgradeForm.resx">
+      <DependentUpon>UpgradeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Utility\FindAndReplaceForm.resx">
       <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -408,9 +423,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HTMLView.resx">
       <DependentUpon>HTMLView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\PredictedObservedView.resx">
-      <DependentUpon>PredictedObservedView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\SeriesView.resx">
       <DependentUpon>SeriesView.cs</DependentUpon>
@@ -475,6 +487,7 @@
     <EmbeddedResource Include="Views\TabbedMetDataView.resx">
       <DependentUpon>TabbedMetDataView.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -486,6 +499,19 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Service References\BuildService\Builds.wsdl" />
+    <None Include="Service References\BuildService\Builds.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\BuildService\Builds1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\BuildService\Builds2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\BuildService\UserInterface.BuildService.Upgrade.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Toolboxes\ManagementToolbox.apsimx" />
@@ -647,6 +673,13 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\BuildService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\BuildService\configuration.svcinfo" />
+    <None Include="Service References\BuildService\configuration91.svcinfo" />
+    <None Include="Service References\BuildService\Builds.disco" />
     <EmbeddedResource Include="Resources\TreeViewImages\Regression.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CircularZone.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\RectangularZone.png" />
@@ -746,6 +779,7 @@
     <EmbeddedResource Include="Resources\MenuImages\Help.png" />
     <EmbeddedResource Include="Resources\PresenterPictures\CircularZone.png" />
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Upgrade.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
   <ItemGroup>
@@ -769,6 +803,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\BuildService\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

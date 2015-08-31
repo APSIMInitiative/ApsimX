@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using Models.Factorial;
 using APSIM.Shared.Utilities;
+using System.Linq;
 
 namespace Models.Core
 {

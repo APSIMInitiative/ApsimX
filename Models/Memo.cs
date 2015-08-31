@@ -44,34 +44,7 @@ namespace Models
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (!Name.Equals("TitlePage", StringComparison.CurrentCultureIgnoreCase) || headingLevel == 1)
-            {
-                string html = MemoText.Replace("<div>", "");
-                html = html.Replace("</div>", "");
-                html = html.Replace("&", "&amp;");
-                if (!html.Contains("<html>"))
-                {
-                    // plain text.
-                    html = "<html><body><p>" + html + "</p></body></html>";
-                }
-
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(html);
-
-                XmlNode body = XmlUtilities.Find(doc.DocumentElement, "body");
-                if (body != null)
-                {
-                    foreach (XmlNode child in body.ChildNodes)
-                    {
-                        if (child.Name.ToLower().StartsWith("h", StringComparison.CurrentCultureIgnoreCase))
-                            tags.Add(new AutoDocumentation.Heading(child.InnerText, headingLevel));
-                        else if (child.InnerXml != string.Empty)
-                            tags.Add(new AutoDocumentation.Paragraph(child.InnerXml, indent));
-                        else if (child.InnerText != string.Empty)
-                            tags.Add(new AutoDocumentation.Paragraph(child.InnerText, indent));
-                    }
-
-                }
-            }
+                tags.Add(new AutoDocumentation.Paragraph(MemoText, indent));
         }
 
 

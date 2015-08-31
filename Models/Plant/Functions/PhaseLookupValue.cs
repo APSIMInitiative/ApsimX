@@ -84,12 +84,19 @@ namespace Models.PMF.Functions
             foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                 memo.Document(tags, -1, indent);
 
-            tags.Add(new AutoDocumentation.Paragraph("The value of " + Parent.Name + " from " + Start + " to " + End + " is calculated as follows:", indent));
-            
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                child.Document(tags, -1, indent + 1);
+            if (Parent.GetType() == typeof(PhaseLookup))
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The value of " + Parent.Name + " from " + Start + " to " + End + " is calculated as follows:", indent));
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                    child.Document(tags, -1, indent + 1);
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph(this.Value + " between " +Start + " and " + End + " and a value of zero outside of this period", indent));
+            }
         }
+
 
     }
 

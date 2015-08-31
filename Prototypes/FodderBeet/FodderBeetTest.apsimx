@@ -16,9 +16,7 @@
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
         </Memo>
         <NArbitrationOption>RelativeAllocation</NArbitrationOption>
         <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
@@ -2392,13 +2390,10 @@
       <Memo>
         <Name>Memo</Name>
         <MemoText><![CDATA[
-<html><body>
-2 cultivars (Bri and Riv)<br/>
-4 sowing dates<br/>
-<br/>
-Moved sowing dates of Rivage a day after just to visuslise differences in graphs<br/>
+2 cultivars (Bri and Riv)
+4 sowing dates
 
-</body></html>]]></MemoText>
+Moved sowing dates of Rivage a day after just to visuslise differences in graphs]]></MemoText>
       </Memo>
     </Factors>
     <Simulation>

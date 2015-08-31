@@ -55,6 +55,7 @@ namespace Models.Soils.Arbitrator
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentModels=new Type[] { typeof(Zone), typeof(Simulation) })]
     public class SoilArbitrator : Model
     {
         /// <summary>Called by clock to do water arbitration</summary>

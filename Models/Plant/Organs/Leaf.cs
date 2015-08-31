@@ -144,12 +144,6 @@ namespace Models.PMF.Organs
 
 
         #region Links
-        /// <summary>The plant</summary>
-        [Link]
-        public Plant Plant = null;
-        /// <summary>The summary</summary>
-        [Link]
-        ISummary Summary = null;
         /// <summary>The arbitrator</summary>
         [Link]
         public OrganArbitrator Arbitrator = null;
@@ -159,8 +153,6 @@ namespace Models.PMF.Organs
         /// <summary>The phenology</summary>
         [Link]
         public Phenology Phenology = null;
-        [Link]
-        ISurfaceOrganicMatter SurfaceOrganicMatter = null;
         #endregion
 
         #region Structures
@@ -600,6 +592,23 @@ namespace Models.PMF.Organs
                     i++;
                 }
                 return values;
+            }
+        }
+
+        /// <summary>Returns the area of the largest leaf.</summary>
+        /// <value>The area of the largest leaf</value>
+        [Units("mm2")]
+        public double AreaLargestLeaf
+        {
+            get
+            {
+                double LLA = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    LLA = Math.Max(LLA, L.MaxArea);
+                }
+
+                return LLA;
             }
         }
 
@@ -1664,20 +1673,6 @@ namespace Models.PMF.Organs
             foreach (LeafCohort initialLeaf in Apsim.Children(this, typeof(LeafCohort)))
                 initialLeaves.Add(initialLeaf);
             InitialLeaves = initialLeaves.ToArray();
-        }
-
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, EventArgs e)
-        {
-            if (sender == Plant)
-            {
-                if (TotalDM > 0)
-                    SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
-                Clear();
-            }
         }
         #endregion
 

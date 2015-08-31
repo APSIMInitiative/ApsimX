@@ -8,16 +8,12 @@
       <Memo>
         <Name>Memo1</Name>
         <MemoText><![CDATA[
-<html><body>
-<h2>References<br/>
-<b><h3>Ayaz S, McKenzie BA, McNeil DL, Hill GD.2004</b>. Light interception and utilization of four grain legumes sown at different plant populations and depths. <i>Journal of Agricultural Science,<b></i>142</b>: 297-308.<br/>
-<b>Ayaz S, McKenzie BA, Hill GD, McNeil DL.2004</b>. Variability in yield of four grain legume species in a subhumid temperate environment. II. Yield components. <i>Journal of Agricultural Science,<b></i>142</b>: 21-28.<br/>
-<b>Ayaz S, McKenzie BA, Hill GD, McNeil DL.2004</b>. Nitrogen distribution in four grain legumes. <i>Journal of Agricultural Science,<b></i>142</b>: 309-317.<br/>
-<b>Wilson DR, Robertson MJ.1996.</b>Pea phenology responses to temperature and photoperiod.  <i>Australian Agronomy Society</i>.<br/>
-<br/>
-</h3>
+## References  
 
-</body></html>]]></MemoText>
+### **Ayaz S, McKenzie BA, McNeil DL, Hill GD.2004**. Light interception and utilization of four grain legumes sown at different plant populations and depths. _Journal of Agricultural Science,_**142**: 297-308.  
+ **Ayaz S, McKenzie BA, Hill GD, McNeil DL.2004**. Variability in yield of four grain legume species in a subhumid temperate environment. II. Yield components. _Journal of Agricultural Science,_**142**: 21-28.  
+ **Ayaz S, McKenzie BA, Hill GD, McNeil DL.2004**. Nitrogen distribution in four grain legumes. _Journal of Agricultural Science,_**142**: 309-317.  
+ **Wilson DR, Robertson MJ.1996.**Pea phenology responses to temperature and photoperiod. _Australian Agronomy Society_.]]></MemoText>
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
@@ -1289,10 +1285,8 @@
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[
-<html><body>
-Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature conditions for field pea.  Halving this to make it total radiation gives 0.8 g/MJ and adding 20% to account for root and  nodule production and N fixiation costs gives 1.0 g/MJ<br/>
-
-</body></html>]]></MemoText>
+Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature conditions for field pea.  Halving this to make it total radiation gives 0.8 g/MJ and adding 20% to account for root and  nodule production and N fixiation costs gives 1.0 g/MJ
+]]></MemoText>
           </Memo>
         </RUEModel>
         <LinearInterpolationFunction>
@@ -1536,16 +1530,12 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
       <Memo>
         <Name>Memo</Name>
         <MemoText><![CDATA[
-<html><body>
-<h2>References<br/>
-<b><h3>Ayaz S, McKenzie BA, McNeil DL, Hill GD.</b> <b>2004</b>. Light interception and utilization of four grain legumes sown at different plant populations and depths. <i>Journal of Agricultural Science,</i> <b>142</b>: 297-308.<br/>
-<b>Ayaz S, McKenzie BA, Hill GD, McNeil DL.</b> <b>2004</b>. Variability in yield of four grain legume species in a subhumid temperate environment. II. Yield components. <i>Journal of Agricultural Science,</i> <b>142</b>: 21-28.<br/>
-<b>Ayaz S, McKenzie BA, Hill GD, McNeil DL.</b> <b>2004</b>. Nitrogen distribution in four grain legumes. <i>Journal of Agricultural Science,</i> <b>142</b>: 309-317.<br/>
-<b>Wilson DR, Robertson MJ.</b> <b>1996.</b> Pea phenology responses to temperature and photoperiod.  <i>Australian Agronomy Society</i>.<br/>
-<br/>
-</h3>
+## References  
 
-</body></html>]]></MemoText>
+### **Ayaz S, McKenzie BA, McNeil DL, Hill GD.** **2004**. Light interception and utilization of four grain legumes sown at different plant populations and depths. _Journal of Agricultural Science,_ **142**: 297-308.  
+ **Ayaz S, McKenzie BA, Hill GD, McNeil DL.** **2004**. Variability in yield of four grain legume species in a subhumid temperate environment. II. Yield components. _Journal of Agricultural Science,_ **142**: 21-28.  
+ **Ayaz S, McKenzie BA, Hill GD, McNeil DL.** **2004**. Nitrogen distribution in four grain legumes. _Journal of Agricultural Science,_ **142**: 309-317.  
+ **Wilson DR, Robertson MJ.** **1996.** Pea phenology responses to temperature and photoperiod. _Australian Agronomy Society_.]]></MemoText>
       </Memo>
       <CropType>FieldPea</CropType>
     </Plant>

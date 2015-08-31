@@ -4,11 +4,9 @@
   <Memo>
     <Name>Introduction</Name>
     <MemoText><![CDATA[
-<html><body>
-<p>
 The APSIM Maize model has been tested on a range of datasets from around the world to provide tests across a range of environmental conditions.  Tests include ranges in plant population, nitrogen management and irrigation levels, as well as including historical datasets from africa using cultivars developed during the 1960's, through to modern varieties grown in the American mid-West.
-</p>
-</body></html>]]></MemoText>
+
+]]></MemoText>
   </Memo>
   <Replacements>
     <Name>Replacements</Name>
@@ -17,17 +15,11 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
       <Memo>
         <Name>TitlePage</Name>
         <MemoText><![CDATA[
-<html><body>
-<h1>The APSIM Maize Model</h1>
-<p>
-<i>Brown, H.E., Teixeira, E.I., Huth, N.I. and Holzworth, D.P.</i>
-</p>
-<p>
-</p>
-<p>
-The APSIM maize model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014].This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
-</p>
-</body></html>]]></MemoText>
+# The APSIM Maize Model
+
+_Brown, H.E., Teixeira, E.I., Huth, N.I. and Holzworth, D.P._
+
+The APSIM maize model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.]]></MemoText>
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
@@ -96,11 +88,8 @@ The APSIM maize model has been developed using the Plant Modelling Framework (PM
             <Memo>
               <Name>memo</Name>
               <MemoText><![CDATA[
-<html><body>
-<p>
 The photoperiod is likely to vary with individual maize cultivars.  Therefore, the response shown here is indicative only.  See the descriptions of individual cultivars for more detail on photoperiod responses used by the maize model.
-</p>
-</body></html>]]></MemoText>
+]]></MemoText>
             </Memo>
             <XYPairs>
               <Name>XYPairs</Name>
@@ -212,10 +201,8 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
-A function is used to provide flowering date as days after sowing(DAS).<br/>
-
-</body></html>]]></MemoText>
+A function is used to provide flowering date as days after sowing(DAS).
+]]></MemoText>
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
@@ -233,10 +220,7 @@ A function is used to provide flowering date as days after sowing(DAS).<br/>
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
-A function is used to provide maturity date as days after sowing(DAS).
-<br/>
-</body></html>]]></MemoText>
+A function is used to provide maturity date as days after sowing(DAS).]]></MemoText>
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
@@ -256,11 +240,8 @@ A function is used to provide maturity date as days after sowing(DAS).
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-<html><body>
-<p>
 Though tillering is common in some maize varieties under certain agronomic conditions, no tillering is accounted for within this model.  Therefore all branching has been parameterised out of the current maize model.
-</p>
-</body></html>]]></MemoText>
+]]></MemoText>
         </Memo>
         <VariableReference>
           <Name>ThermalTime</Name>
@@ -562,11 +543,8 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <Memo>
               <Name>memo</Name>
               <MemoText><![CDATA[
-<html><body>
-<p>
 The number of kernals per cob is likely to vary with individual maize cultivars.  Therefore, the relationship shown here is indicative only.  See the descriptions of individual cultivars for more detail on kernal number determination used by the maize model.
-</p>
-</body></html>]]></MemoText>
+]]></MemoText>
             </Memo>
             <XYPairs>
               <Name>XYPairs</Name>
@@ -586,6 +564,10 @@ The number of kernals per cob is likely to vary with individual maize cultivars.
             <Value>1</Value>
           </Constant>
         </MultiplyFunction>
+        <ExpressionFunction>
+          <Name>YieldBuPerAcre</Name>
+          <Expression>[Grain].Live.Wt * 10 * 56 * 0.4536 * 2.471</Expression>
+        </ExpressionFunction>
         <RipeStage />
       </ReproductiveOrgan>
       <Root>
@@ -607,10 +589,8 @@ The number of kernals per cob is likely to vary with individual maize cultivars.
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
 The parameter KL is is described by Meinke et al (1993) to combine elements of soil conductivity (K) with root length (L) in determining root water uptake.  Peake et al (2013) demonstrated that in maize KL varied with plant population through impacts on root length density.  Here we adjust KL linearly with plant population.
-<br/>
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <XYPairs>
             <Name>XYPairs</Name>
@@ -630,9 +610,8 @@ The parameter KL is is described by Meinke et al (1993) to combine elements of s
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
-No effect of soil water content on root growth is currently captured in the model.<br/>
-</body></html>]]></MemoText>
+No effect of soil water content on root growth is currently captured in the model.
+]]></MemoText>
           </Memo>
           <Value>1</Value>
         </Constant>
@@ -641,9 +620,8 @@ No effect of soil water content on root growth is currently captured in the mode
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
-No effect of temperature on root growth is currently captured in the model.<br/>
-</body></html>]]></MemoText>
+No effect of temperature on root growth is currently captured in the model.
+]]></MemoText>
           </Memo>
           <Value>1</Value>
         </Constant>
@@ -652,9 +630,8 @@ No effect of temperature on root growth is currently captured in the model.<br/>
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
-Maximum daily N uptake is set to an arbitrarily high value.<br/>
-</body></html>]]></MemoText>
+Maximum daily N uptake is set to an arbitrarily high value.
+]]></MemoText>
           </Memo>
           <Value>20</Value>
         </Constant>
@@ -663,9 +640,8 @@ Maximum daily N uptake is set to an arbitrarily high value.<br/>
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
-Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Maize model.<br/>
-</body></html>]]></MemoText>
+Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Maize model.
+]]></MemoText>
           </Memo>
           <Value>0.005</Value>
         </Constant>
@@ -707,11 +683,8 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
-<p>
 Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day in their analysis of historical maize yield trends in the US corn belt.
-</p>
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <PhaseLookupValue>
             <Name>PreFlowering</Name>
@@ -822,12 +795,9 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Memo>
               <Name>Memo</Name>
               <MemoText><![CDATA[
-<html><body>
 Potential leaf area is calculated from leaf number using the approach of Keating and Wafula (1992).
 Individual leaf size is described using a bell-shaped curve, the parameters of which are derived from final leaf number.
-<br/>
-
-</body></html>]]></MemoText>
+]]></MemoText>
             </Memo>
             <MultiplyFunction>
               <Name>LargestLeafPosition</Name>
@@ -1192,11 +1162,8 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[
-<html><body>
 Extinction coefficient is specified in terms of a potential extinction coefficient which is then discounted during periods of water stress to account for the impact of leaf curling.
-<br/>
-
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <LinearInterpolationFunction>
             <Name>PotentialExtinctionCoeff</Name>
@@ -1515,10 +1482,8 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
 The AboveGround composite biomass object includes all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-<br/>
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <Propertys>
             <string>[Leaf].Live</string>
@@ -1538,10 +1503,8 @@ The AboveGround composite biomass object includes all organs occurring above the
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
 The BelowGround composite biomass object includes all root biomass pools to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-<br/>
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <Propertys>
             <string>[Root].Live</string>
@@ -1553,10 +1516,8 @@ The BelowGround composite biomass object includes all root biomass pools to allo
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
 The Total composite biomass object includes all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-<br/>
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <Propertys>
             <string>[Leaf].Live</string>
@@ -1578,10 +1539,8 @@ The Total composite biomass object includes all organs (above+below ground) to a
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
 The TotalLive composite biomass object includes the Live pools of all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-<br/>
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <Propertys>
             <string>[Leaf].Live</string>
@@ -1597,10 +1556,8 @@ The TotalLive composite biomass object includes the Live pools of all organs (ab
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
 The TotalDead composite biomass object includes the Dead pools of all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-<br/>
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <Propertys>
             <string>[Leaf].Dead</string>
@@ -1616,10 +1573,8 @@ The TotalDead composite biomass object includes the Dead pools of all organs (ab
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
 The EarLive composite biomass object includes the Live pools of all organs within the Ear to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-<br/>
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <Propertys>
             <string>[Husk].Live</string>
@@ -1632,10 +1587,8 @@ The EarLive composite biomass object includes the Live pools of all organs withi
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
 The AboveGroundLive composite biomass object includes the Live pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-<br/>
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <Propertys>
             <string>[Leaf].Live</string>
@@ -1650,10 +1603,8 @@ The AboveGroundLive composite biomass object includes the Live pools of all orga
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-<html><body>
 The AboveGroundDead composite biomass object includes the Dead pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-<br/>
-</body></html>]]></MemoText>
+]]></MemoText>
           </Memo>
           <Propertys>
             <string>[Leaf].Dead</string>
@@ -1676,10 +1627,8 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-<html><body>
 The variety Katumani Composite B was formed in 1966 and released in 1968 as part of the maize breeding work undertaken at the Katumani Research Station in Kenya which started in 1956.  Katumani Composite B was an advanced generation of Katumani Synthetic V X Katumani Synthetic VI.  It has slight photoperiod sensitivity and relatively small potential cob size.
-<br/>
-</body></html>]]></MemoText>
+]]></MemoText>
         </Memo>
         <Command>[Phenology].Juvenile.Target.Value = 150</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
@@ -1758,10 +1707,8 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-<html><body>
 VShort duration variety released in New Zealand by Pioneer
-<br/>
-</body></html>]]></MemoText>
+]]></MemoText>
         </Memo>
         <Command>[Phenology].Juvenile.Target.Value = 80</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 450</Command>
@@ -1778,10 +1725,8 @@ VShort duration variety released in New Zealand by Pioneer
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-<html><body>
 VShort duration variety released in New Zealand by Pioneer
-<br/>
-</body></html>]]></MemoText>
+]]></MemoText>
         </Memo>
         <Command>[Phenology].Juvenile.Target.Value = 280</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
@@ -1925,10 +1870,8 @@ VShort duration variety released in New Zealand by Pioneer
     <Memo>
       <Name>memo</Name>
       <MemoText><![CDATA[
-<html><body>
-A selection of data from Kenya has been included from the work of Keating et al (1992).  These include the trial originally labelled JMW2 by the original authors and was labelled Experiment 6 in Keating et al (1992).  This trial includes maize (cultivar Katumani Composite B) sown at 5 populations (1.1, 2.2, 4.4, 6.6 and 8.8 plants/m2) under low (0 kg N/ha applied) and high (120 kgN/ha) fertiliser conditions during the Long Rains of 1988.  This same experimental design was conducted at two locations, Katumani (1o 35' S, 37o 14' E) and Kiboko (2o 13' S, 37o 43' E). The trial was rainfed at Katumani but fully irrigated at Kiboko.  Yields ranged from 2000 to 5400 kg/ha at Katumani and 1000 to 6000 kg/ha at Kiboko.  There were strong population x nitrogen interactions at both sites.  A second trial refered to as BMW1 or Experiment 1 in Keating et al(1992).  A range of populations (2.0-6.5 plants/m2) and irrigation treatments (6-176 mm) where planted under high (80 kgN/ha) and low (0kgN/ha) fertiliser conditions at Katumani. Individual replicates are modelled separately due to variability in soil (depth to rock), establishment and irrigation application.  Grain yields varied from 1600 to 8000 kg/ha.<br/>
-
-</body></html>]]></MemoText>
+A selection of data from Kenya has been included from the work of Keating et al (1992).  These include the trial originally labelled JMW2 by the original authors and was labelled Experiment 6 in Keating et al (1992).  This trial includes maize (cultivar Katumani Composite B) sown at 5 populations (1.1, 2.2, 4.4, 6.6 and 8.8 plants/m2) under low (0 kg N/ha applied) and high (120 kgN/ha) fertiliser conditions during the Long Rains of 1988.  This same experimental design was conducted at two locations, Katumani (1o 35' S, 37o 14' E) and Kiboko (2o 13' S, 37o 43' E). The trial was rainfed at Katumani but fully irrigated at Kiboko.  Yields ranged from 2000 to 5400 kg/ha at Katumani and 1000 to 6000 kg/ha at Kiboko.  There were strong population x nitrogen interactions at both sites.  A second trial refered to as BMW1 or Experiment 1 in Keating et al(1992).  A range of populations (2.0-6.5 plants/m2) and irrigation treatments (6-176 mm) where planted under high (80 kgN/ha) and low (0kgN/ha) fertiliser conditions at Katumani. Individual replicates are modelled separately due to variability in soil (depth to rock), establishment and irrigation application.  Grain yields varied from 1600 to 8000 kg/ha.
+]]></MemoText>
     </Memo>
     <Experiment>
       <Name>JMW2Katumani</Name>
@@ -2320,6 +2263,7 @@ namespace Models
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
               <string>[Maize].Grain.Live.Wt</string>
+              <string>[Maize].Grain.YieldBuPerAcre</string>
               <string>[Maize].Stem.Live.Wt</string>
               <string>[Maize].Summariser.EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
@@ -14465,11 +14409,8 @@ namespace Models
     <Memo>
       <Name>memo</Name>
       <MemoText><![CDATA[
-<html><body>
-<p>
 The data for two trials from near Katherine, Northern Territory, Australia, have been included from Carberry et al (1989) and Carberry and Abrecht (1991).  These include two planting dates for the summer of 1983/1984 (labelled as K841, K842).  At each planting date, cultivar Dekalb XL82 was sown at 4 populations (3, 5, 7, 9 plants/m<sup>2</sup>) under low and high irrigation conditions.  The low irrigation treatments only included preliminary applications to ensure crop establishment.
-</p>
-</body></html>]]></MemoText>
+]]></MemoText>
     </Memo>
     <Experiment>
       <Name>K841</Name>
@@ -15627,9 +15568,7 @@ namespace Models
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
         </Memo>
         <Weather>
           <Name>Weather</Name>
@@ -17632,10 +17571,8 @@ namespace Models
     <Memo>
       <Name>memo</Name>
       <MemoText><![CDATA[
-<html><body>
-Testing of APSIM Maize, Soil Water, Soil Nitrogen, Manure, and Soil Temperature Modules in the Midwestern United States was undertaken by Archontoulis <i>et al</i>(2014) using APSIM version 7.4.  A subset of these data has been chosen for testing of the maize model. Datasets involving application of compost have not been included so as to concentrate on tests of maize model performance, rather than overall soil organic matter dynamics.<br/>
-
-</body></html>]]></MemoText>
+Testing of APSIM Maize, Soil Water, Soil Nitrogen, Manure, and Soil Temperature Modules in the Midwestern United States was undertaken by Archontoulis <i>et al</i>(2014) using APSIM version 7.4.  A subset of these data has been chosen for testing of the maize model. Datasets involving application of compost have not been included so as to concentrate on tests of maize model performance, rather than overall soil organic matter dynamics.
+]]></MemoText>
     </Memo>
     <Experiment>
       <Name>Ames2011</Name>
@@ -17674,9 +17611,7 @@ Testing of APSIM Maize, Soil Water, Soil Nitrogen, Manure, and Soil Temperature 
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
         </Memo>
         <Weather>
           <Name>Weather</Name>
@@ -20388,22 +20323,18 @@ namespace Models
     <Memo>
       <Name>memo</Name>
       <MemoText><![CDATA[
-<html><body>
-Testing of APSIM Maize under New Zealand conditions to determine the perormance of the model under temperate conditions with cool springs and mild summers.  A range of trials have been conducted and are detailed below<br/>
-
-</body></html>]]></MemoText>
+Testing of APSIM Maize under New Zealand conditions to determine the perormance of the model under temperate conditions with cool springs and mild summers.  A range of trials have been conducted and are detailed below
+]]></MemoText>
     </Memo>
     <Experiment>
       <Name>Lincoln2012</Name>
       <Memo>
         <Name>memo</Name>
         <MemoText><![CDATA[
-<html><body>
-<h3>Lincoln2012 (Rain-Shelter Trail)<br/>
-</h3>
-Testing of APSIM Maize under New Zealand conditions was undertaken using the data of Teixeira et al(2014).  This dataset includes the impact of three N (0 to 250 kg/ha N) and two water regimes (dryland and fully irrigated) using a rain-shelter structure.  Observations include biomass growth and nitrogen content of individual organs, soil water contents, leaf area index, phenology and yield components. Total biomass ranged from 8000 kg/ha for dryland nil N crops to up to 28000kg/ha for fully irrigated and N fertilised crops.  Dryland crops recovered 25 percent less N from applied fertilizer than irrigated crops.<br/>
+### Lincoln2012 (Rain-Shelter Trail)
 
-</body></html>]]></MemoText>
+Testing of APSIM Maize under New Zealand conditions was undertaken using the data of Teixeira et al(2014).  This dataset includes the impact of three N (0 to 250 kg/ha N) and two water regimes (dryland and fully irrigated) using a rain-shelter structure.  Observations include biomass growth and nitrogen content of individual organs, soil water contents, leaf area index, phenology and yield components. Total biomass ranged from 8000 kg/ha for dryland nil N crops to up to 28000kg/ha for fully irrigated and N fertilised crops.  Dryland crops recovered 25 percent less N from applied fertilizer than irrigated crops.
+]]></MemoText>
       </Memo>
       <Factors>
         <Name>Factors</Name>
@@ -25259,12 +25190,9 @@ namespace Models
       <Memo>
         <Name>memo</Name>
         <MemoText><![CDATA[
-<html><body>
-<h3>Lincoln2010 (Leaf properties trial)<br/>
-</h3>
-This trial was conducted to provide data for parametersising the Leaf Area model and is described in detail by Teixeira <i>et.al.</i>(2011).  Detailed measurements were conducted on leaf apperance and expansion with some measurements of biomass accumulation.  Treatments of plus and minus Nitrogen were applied but there was sufficient N in the soil than N responses were very small.<br/>
-
-</body></html>]]></MemoText>
+### Lincoln2010 (Leaf properties trial)
+This trial was conducted to provide data for parametersising the Leaf Area model and is described in detail by Teixeira <i>et.al.</i>(2011).  Detailed measurements were conducted on leaf apperance and expansion with some measurements of biomass accumulation.  Treatments of plus and minus Nitrogen were applied but there was sufficient N in the soil than N responses were very small.
+]]></MemoText>
       </Memo>
       <Factors>
         <Name>Factors</Name>
@@ -31250,12 +31178,9 @@ namespace Models
   <Memo>
     <Name>Combined Results</Name>
     <MemoText><![CDATA[
-<html><body>
-<h3>Combined Results</h3>
-<p>
+### Combined Results
 Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date).
-</p>
-</body></html>]]></MemoText>
+]]></MemoText>
   </Memo>
   <Graph>
     <Name>GrainWt</Name>

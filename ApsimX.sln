@@ -1,5 +1,7 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserInterface", "UserInterface\UserInterface.csproj", "{27056DED-A49C-4351-90A8-DFA9C8AC906E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{A3E10705-F2BB-4182-A19C-7F63222584DF}"
@@ -19,10 +21,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SWIMFrame", "SWIMFrame\SWIM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APSIM.Shared", "..\APSIM.Shared\APSIM.Shared.csproj", "{E243AE8D-35E3-4397-B180-EF1E8A91AE8C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{97EF667D-6600-49D3-BF0C-6935E7E4294D}"
+EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = ApsimX.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -102,8 +103,21 @@ Global
 		{E243AE8D-35E3-4397-B180-EF1E8A91AE8C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E243AE8D-35E3-4397-B180-EF1E8A91AE8C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E243AE8D-35E3-4397-B180-EF1E8A91AE8C}.Release|x86.ActiveCfg = Release|Any CPU
+		{97EF667D-6600-49D3-BF0C-6935E7E4294D}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{97EF667D-6600-49D3-BF0C-6935E7E4294D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{97EF667D-6600-49D3-BF0C-6935E7E4294D}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{97EF667D-6600-49D3-BF0C-6935E7E4294D}.Debug|x86.ActiveCfg = Debug|x86
+		{97EF667D-6600-49D3-BF0C-6935E7E4294D}.Debug|x86.Build.0 = Debug|x86
+		{97EF667D-6600-49D3-BF0C-6935E7E4294D}.Release|Any CPU.ActiveCfg = Release|x86
+		{97EF667D-6600-49D3-BF0C-6935E7E4294D}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{97EF667D-6600-49D3-BF0C-6935E7E4294D}.Release|Mixed Platforms.Build.0 = Release|x86
+		{97EF667D-6600-49D3-BF0C-6935E7E4294D}.Release|x86.ActiveCfg = Release|x86
+		{97EF667D-6600-49D3-BF0C-6935E7E4294D}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = ApsimX.vsmdi
 	EndGlobalSection
 EndGlobal

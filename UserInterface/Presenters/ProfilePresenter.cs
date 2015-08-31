@@ -149,6 +149,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            this.view.ProfileGrid.EndEdit();
             this.view.ProfileGrid.CellsChanged -= this.OnProfileGridCellValueChanged;
             this.view.ProfileGrid.ColumnHeaderClicked -= this.OnColumnHeaderClicked;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;

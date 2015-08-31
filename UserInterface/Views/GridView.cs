@@ -287,6 +287,14 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// End the user editing the cell.
+        /// </summary>
+        public void EndEdit()
+        {
+            this.Grid.EndEdit();
+        }
+
+        /// <summary>
         /// Populate the grid from the DataSource.
         /// </summary>
         private void PopulateGrid()
