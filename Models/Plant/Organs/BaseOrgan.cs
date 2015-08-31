@@ -165,10 +165,8 @@ namespace Models.PMF.Organs
         #region Biomass removal
         /// <summary>The Fraction of biomass that is removed by defoliation</summary>
         virtual public double FractionRemoved { get; set; }
-
         /// <summary>The Fraction of biomass that is removed by defoliation</summary>
         virtual public double FractionToResidue { get; set; }
-
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         [XmlIgnore]
         virtual public OrganBiomassRemovalType RemoveBiomass
@@ -193,7 +191,6 @@ namespace Models.PMF.Organs
                 }
             }
         }
-
         /// <summary>
         /// The default proportions biomass to removeed from each organ on harvest.
         /// </summary>
@@ -207,9 +204,7 @@ namespace Models.PMF.Organs
                     FractionToResidue = 0
                 };
             }
-            set { }
         }
-
         /// <summary>
         /// The default proportions biomass to removeed from each organ on Cutting
         /// </summary>
@@ -219,42 +214,38 @@ namespace Models.PMF.Organs
             {
                 return new OrganBiomassRemovalType
                 {
-                    FractionRemoved = 0.8,
+                    FractionRemoved = 0,
                     FractionToResidue = 0
                 };
             }
-            set { }
-        }
-
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Cutting
-        /// </summary>
-        public OrganBiomassRemovalType GrazeDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0.6,
-                    FractionToResidue = 0.1
-                };
-            }
-            set { }
         }
         /// <summary>
-        /// The default proportions biomass to removeed from each organ on Cutting
+        /// The default proportions biomass to removeed from each organ on Grazing
         /// </summary>
-        public OrganBiomassRemovalType PruneDefault
+        virtual public OrganBiomassRemovalType GrazeDefault
         {
             get
             {
                 return new OrganBiomassRemovalType
                 {
                     FractionRemoved = 0,
-                    FractionToResidue = 0.5
+                    FractionToResidue = 0
                 };
             }
-            set { }
+        }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Pruning
+        /// </summary>
+        virtual public OrganBiomassRemovalType PruneDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0,
+                    FractionToResidue = 0
+                };
+            }
         }
         #endregion
 

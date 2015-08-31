@@ -1043,10 +1043,9 @@ namespace Models.PMF.Organs
                 return new OrganBiomassRemovalType
                 {
                     FractionRemoved = 0,
-                    FractionToResidue = 0
+                    FractionToResidue = 0.2
                 };
             }
-            set { }
         }
 
         /// <summary>
@@ -1059,10 +1058,37 @@ namespace Models.PMF.Organs
                 return new OrganBiomassRemovalType
                 {
                     FractionRemoved = 0,
-                    FractionToResidue = 0
+                    FractionToResidue = 0.3
                 };
             }
-            set { }
+        }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        public override OrganBiomassRemovalType PruneDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0,
+                    FractionToResidue = 0.1
+                };
+            }
+        }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        public override OrganBiomassRemovalType GrazeDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0,
+                    FractionToResidue = 0.15
+                };
+            }
         }
         #endregion
 
