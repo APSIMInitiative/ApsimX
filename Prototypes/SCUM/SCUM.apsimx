@@ -12,7 +12,14 @@
 
 _Hamish Brown and Rob Zyskowski, Plant and Food Research, New Zealand_
 
-This model has been built to simulate a range of different crops in simulations where water and nitrogen balance are of interest but a fully mechanistic plant model is not needed. It is a daily time step implementation of the crop model that is used on the Overseer nutrient balance model (Cichota_etal_2010).  It uses simple sigmoidal functions for estimating daily cover and biomass deltas to give realistic water and nitrogen demands. It does not simulate potential yield, this is specified as an input. Yield will be reduced below the specified potential yield if N or water supplies from the soil are insufficient to meet demand. The model has been paramaterised for simulating water and nitrogen balances of cropping rotations in New Zealand (where over 50 different crop types are grown and it is not feasible to produce full crop models for each of these). It may be adapted for other purposes and other crop types may be added but the user will need to keep in mind that it is empirical and the parameters might need changing for crops from different locations.]]></MemoText>
+This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate a range of different crops in simulations where water and nitrogen balance are of interest but a fully mechanistic plant model is not needed. It is a daily time step implementation of the crop model that is used on the Overseer nutrient balance model [Cichota_etal_2010].  It uses simple sigmoidal functions for estimating daily cover and biomass deltas to give realistic water and nitrogen demands. It does not simulate potential yield, this is specified as an input. Yield will be reduced below the specified potential yield if N or water supplies from the soil are insufficient to meet demand. The model has been paramaterised for simulating water and nitrogen balances of cropping rotations in New Zealand (where over 50 different crop types are grown and it is not feasible to produce full crop models for each of these). It may be adapted for other purposes and other crop types may be added but the user will need to keep in mind that it is empirical and the parameters might need changing for crops from different locations.
+
+SCUM has a simple phenology model which divides the crop growth into three main phases; a vegetative phase when the canopy is expanding, a reproductive phase when product is being formed and a senescing phase when the canopy is contracting.  SCUM consists of 4 organs:  
+   1. Stover which represents the unharvested parts of the plant and is represented with a simple leaf class.  
+   2. Product which represents the plant parts that are harvested and removed from the filed.  It uses a generic organ class  
+   3. Root which extracts water and nitrogen from the soil for plant growth  
+   4. Nodule which is only activated, fixing nitrogen for the legume crops.  
+An Arbitrator is also included which determines the allocation of drymatter and nitrogen biomass between each of these organs.]]></MemoText>
       </Memo>
       <Phenology>
         <Name>Phenology</Name>
@@ -20,7 +27,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Name>ThermalTime</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[Progression through each of the phenological stages is driven by thermal time.  As temperature increases from zero to 30 degrees, development acellerates and then slows down again above 30 degress]]></MemoText>
+            <MemoText><![CDATA[Progression through each of the phenological stages is driven by thermal time.  As temperature increases from zero to 30 degrees, development acelerates and then slows down again above 30 degress]]></MemoText>
           </Memo>
           <XYPairs>
             <Name>XYPairs</Name>
@@ -53,7 +60,7 @@ This model has been built to simulate a range of different crops in simulations 
           </VariableReference>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[Currently the duration of the Emergence phase is set to zero.  However this phase is included if parameterisations of other crops in the future wish to give this phase a duration.]]></MemoText>
+            <MemoText><![CDATA[Currently the duration of the Emergence phase is set to zero because the period of zero cover and biomass production following sowing is accounted for in the cover and biomass accumulation functions.  However this phase is included if parameterisations of other crops in the future wish to give this phase a duration.]]></MemoText>
           </Memo>
           <Start>Germination</Start>
           <End>Emergence</End>
@@ -85,7 +92,7 @@ During this phase the plant only partitions biomass to Root and Stover (leaf and
           <Memo>
             <Name>Description</Name>
             <MemoText><![CDATA[
-During this phase the plant is partitioning biomass to Root Stover and Product organs
+During this phase the plant is partitioning biomass to Root, Stover and Product organs.
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -134,7 +141,7 @@ During this phase the plant is partitioning biomass to Root and Product organs a
           <Memo>
             <Name>Description</Name>
             <MemoText><![CDATA[
-During this phase the plant does bugger all but wait to be ready for harvest
+During this phase the plant has completed its growth and is drying ready for harvest.
 ]]></MemoText>
           </Memo>
           <Start>EndReproductive</Start>
@@ -194,7 +201,7 @@ During this phase the plant does bugger all but wait to be ready for harvest
               <SubtractFunction>
                 <Name>ProductProportion</Name>
                 <Constant>
-                  <Name>Constant</Name>
+                  <Name>One</Name>
                   <Value>1</Value>
                 </Constant>
                 <VariableReference>
@@ -449,7 +456,7 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
                     <SubtractFunction>
                       <Name>AboveGroundProportion</Name>
                       <Constant>
-                        <Name>Constant</Name>
+                        <Name>One</Name>
                         <Value>1</Value>
                       </Constant>
                       <VariableReference>
@@ -517,7 +524,7 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
               <SubtractFunction>
                 <Name>ProportionLost</Name>
                 <Constant>
-                  <Name>Constant</Name>
+                  <Name>One</Name>
                   <Value>1</Value>
                 </Constant>
                 <DivideFunction>
@@ -603,7 +610,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <PhaseLookupValue>
           <Name>NitrogenDemandSwitch</Name>
           <Constant>
-            <Name>Function</Name>
+            <Name>One</Name>
             <Value>1</Value>
           </Constant>
           <Start>Emergence</Start>
@@ -1296,12 +1303,6 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
       </Cultivar>
-      <Memo>
-        <Name>References</Name>
-        <MemoText><![CDATA[
-Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 2010. A nitrogen balance model for environmental accountability in cropping systems. New Zealand Journal of Crop and Horticultural Science,38: 189-207.
-]]></MemoText>
-      </Memo>
       <CropType>SLURP</CropType>
     </Plant>
   </Replacements>

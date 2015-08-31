@@ -464,13 +464,13 @@ namespace Models.PMF.Organs
 
             tags.Add(new AutoDocumentation.Heading("Dry Matter Demands", headingLevel + 1));
             if (StructuralFraction != null)
-                tags.Add(new AutoDocumentation.Paragraph("Of the organs total DM demand " + StructuralFraction.Value * 100 + "% is structural demand and " + (100 - StructuralFraction.Value * 100) + "is non-structural demand", indent));
+                tags.Add(new AutoDocumentation.Paragraph("Of the organs total DM demand " + StructuralFraction.Value * 100 + "% is structural demand and " + (100 - StructuralFraction.Value * 100) + "is non-structural demand.", indent));
             else
-                tags.Add(new AutoDocumentation.Paragraph("100% of the DM demanded from this organ is structural", indent));
+                tags.Add(new AutoDocumentation.Paragraph("100% of the DM demanded from this organ is structural.", indent));
 
             if (DMDemandFunction != null)
             {
-                tags.Add(new AutoDocumentation.Paragraph("The daily DM demand from this organ is calculated using", indent));
+                tags.Add(new AutoDocumentation.Paragraph("The daily DM demand from this organ is calculated using.", indent));
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 {
                     if (child.Name == "DMDemandFunction")
@@ -481,7 +481,7 @@ namespace Models.PMF.Organs
             tags.Add(new AutoDocumentation.Heading("Nitrogen Demands", headingLevel + 1));
             if (MaximumNConc != null)
             {
-                tags.Add(new AutoDocumentation.Paragraph("The daily non-structural N demand from " + this.Name + " is the product of Total DM demand and a Maximum N concentration of " + MaximumNConc.Value * 100 + "% less the structural N demand", indent));
+                tags.Add(new AutoDocumentation.Paragraph("The daily non-structural N demand from " + this.Name + " is the product of Total DM demand and a Maximum N concentration of " + MaximumNConc.Value * 100 + "% less the structural N demand.", indent));
             }
             if (MinimumNConc != null)
             {
@@ -499,20 +499,20 @@ namespace Models.PMF.Organs
             
             tags.Add(new AutoDocumentation.Heading("Nitrogen Supplies", headingLevel + 1));
             if (NReallocationFactor != null)
-                tags.Add(new AutoDocumentation.Paragraph("As the organ senesces " +NReallocationFactor.Value * 100 + "% of senesced N is made available to the arbitrator as NReallocationSupply", indent));
+                tags.Add(new AutoDocumentation.Paragraph("As the organ senesces " +NReallocationFactor.Value * 100 + "% of senesced N is made available to the arbitrator as NReallocationSupply.", indent));
             else
-                tags.Add(new AutoDocumentation.Paragraph("N is not reallocated from " + this.Name + " ", indent));
+                tags.Add(new AutoDocumentation.Paragraph("N is not reallocated from " + this.Name + ". ", indent));
 
             if (NRetranslocationFactor != null)
-                tags.Add(new AutoDocumentation.Paragraph(NRetranslocationFactor.Value * 100 + "% of non-structural N is made available to the arbitrator as NRetranslocationSupply", indent));
+                tags.Add(new AutoDocumentation.Paragraph(NRetranslocationFactor.Value * 100 + "% of non-structural N is made available to the arbitrator as NRetranslocationSupply.", indent));
             else
-                tags.Add(new AutoDocumentation.Paragraph("Non-structural N in " + this.Name + "  is not available for re-translocation to other organs", indent));
+                tags.Add(new AutoDocumentation.Paragraph("Non-structural N in " + this.Name + "  is not available for re-translocation to other organs.", indent));
 
             tags.Add(new AutoDocumentation.Heading("Dry Matter Supplies", headingLevel + 1));
             if (DMRetranslocationFactor != null)
-                tags.Add(new AutoDocumentation.Paragraph(DMRetranslocationFactor.Value * 100 + "% of NonStructural DM is made available to the arbitrator as DMReTranslocationSupply", indent));
+                tags.Add(new AutoDocumentation.Paragraph(DMRetranslocationFactor.Value * 100 + "% of NonStructural DM is made available to the arbitrator as DMReTranslocationSupply.", indent));
             else
-                tags.Add(new AutoDocumentation.Paragraph("DM is not retranslocated out of " + this.Name + " ", indent));
+                tags.Add(new AutoDocumentation.Paragraph("DM is not retranslocated out of " + this.Name + ". ", indent));
 
             tags.Add(new AutoDocumentation.Heading("Biomass Senescece and Detachment", headingLevel + 1));
             if (SenescenceRateFunction != null)
