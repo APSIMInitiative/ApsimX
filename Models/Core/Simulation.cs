@@ -7,13 +7,14 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.IO;
 using APSIM.Shared.Utilities;
+using Models.Factorial;
 
 namespace Models.Core 
 {
     /// <summary>
     /// A simulation model
     /// </summary>
-    [ValidParent(typeof(Simulations))]
+    [ValidParent(ParentModels = new Type[] { typeof(Simulations), typeof(Experiment) })]
     [Serializable]
     public class Simulation : Zone, JobManager.IRunnable
     {
