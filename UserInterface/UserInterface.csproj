@@ -673,6 +673,8 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\LocalMicroClimate.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\TreeProxy.png" />
     <None Include="Service References\BuildService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -683,7 +685,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Regression.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CircularZone.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\RectangularZone.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\StaticForestrySystem.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ForestrySystem.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\FieldPea.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\NodeNumberPhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilArbitrator.png" />

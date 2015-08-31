@@ -380,7 +380,6 @@ namespace Models
             mint = Weather.MinT;
             rain = Weather.Rain;
             vp = Weather.VP;
-            wind = Weather.Wind;
         }
 
         /// <summary>Called when [change gs maximum].</summary>
@@ -814,8 +813,6 @@ namespace Models
         private double rain;
         /// <summary>The vp</summary>
         private double vp;
-        /// <summary>The wind</summary>
-        private double wind;
         /// <summary>The use_external_windspeed</summary>
         private bool use_external_windspeed;
 

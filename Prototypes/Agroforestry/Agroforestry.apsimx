@@ -13,7 +13,7 @@
     </Summary>
     <Weather>
       <Name>Weather</Name>
-      <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
+      <FileName>DalbyWithWind.met</FileName>
     </Weather>
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
@@ -181,20 +181,22 @@
           </ArrayOfString>
         </Table>
         <NDemand>0</NDemand>
+        <Urel>0</Urel>
+        <H>0</H>
         <RootRadius>0</RootRadius>
         <dates>
-          <dateTime>2015-07-10T00:00:00</dateTime>
-          <dateTime>2015-07-23T00:00:00</dateTime>
-          <dateTime>2015-07-20T00:00:00</dateTime>
-          <dateTime>2015-10-17T00:00:00</dateTime>
-          <dateTime>2015-10-27T00:00:00</dateTime>
+          <dateTime>1900-01-01T00:00:00</dateTime>
+          <dateTime>1900-03-01T00:00:00</dateTime>
+          <dateTime>1900-06-01T00:00:00</dateTime>
+          <dateTime>1900-09-01T00:00:00</dateTime>
+          <dateTime>1900-12-01T00:00:00</dateTime>
         </dates>
         <heights>
-          <double>5000</double>
-          <double>10000</double>
-          <double>20000</double>
-          <double>30000</double>
-          <double>50000</double>
+          <double>500</double>
+          <double>2000</double>
+          <double>4000</double>
+          <double>6000</double>
+          <double>9000</double>
         </heights>
       </TreeProxy>
       <Manager>
@@ -443,6 +445,7 @@ namespace Models
             <string>Distance</string>
             <string>Radn</string>
             <string>[LocalMicroClimate].Radn</string>
+            <string>[TreeProxy].Shade</string>
           </VariableNames>
           <EventNames>
             <string />
@@ -456,6 +459,8 @@ namespace Models
             <string>sum([Soil].SoilWater.SWmm) as TotalSWmm</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
+            <string>[TreeProxy].Urel</string>
+            <string>[TreeProxy].H</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -7427,7 +7432,7 @@ namespace Models
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>Circle</Marker>
-        <Line>None</Line>
+        <Line>Solid</Line>
         <TableName>DailyReport</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>LocalMicroClimate.Wind</YFieldName>

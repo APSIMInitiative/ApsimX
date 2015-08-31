@@ -36,6 +36,16 @@ namespace Models.Agroforestry
         [Summary]
         public double NDemand { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public double Urel { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public double H { get; set; }
+
         /// <summary>The root radius.</summary>
         /// <value>The root radius.</value>
         [Summary]
@@ -46,6 +56,13 @@ namespace Models.Agroforestry
         /// </summary>
         [XmlIgnore]
         public List<IModel> ZoneList;
+
+        /// <summary>
+        /// Return an array of shade values.
+        /// </summary>
+        [XmlIgnore]
+        [Summary]
+        public double[] Shade { get { return shade.Values.ToArray(); } }
 
         /// <summary>
         /// Date list for tree heights over lime
@@ -186,17 +203,17 @@ namespace Models.Agroforestry
                 if (zone == z)
                 {
                     double UrelMin = Math.Max(0.0, 1.14 * 0.5 - 0.16); // 0.5 is porosity, will be dynamic in the future
-                    double Urel;
-                    double H;
+                    //double Urel;
+                  //  double H;
                     double heightToday;
 
                     heightToday = GetHeightToday();
 
-                    if (heightToday < 1000)
+                    if (heightToday < 1)
                         Urel = 1;
                     else
                     {
-                        H = GetDistanceFromTrees(z) / (heightToday / 1000);
+                        H = GetDistanceFromTrees(z) / heightToday;
                         if (H < 6)
                             Urel = UrelMin + (1 - UrelMin) / 2 - H / 6 * (1 - UrelMin) / 2;
                         else if (H < 6.1)
