@@ -806,7 +806,7 @@ The root organ demands and is partitioned N and DM and its depth increases throu
           <Memo>
             <Name>Description</Name>
             <MemoText><![CDATA[
-This is important in MCSP as it is set for each species to represent their differences in rooting patterns between crop species
+This is important in SCUM as it is set for each species to represent their differences in rooting patterns between crop species
 ]]></MemoText>
           </Memo>
           <XProperty>[Root].LayerMidPointDepth</XProperty>
