@@ -33,6 +33,18 @@ namespace Models.PMF.Organs
         [Link]
         public IWeather MetData = null;
 
+        /// <summary>The plant</summary>
+        [Link]
+        protected Plant Plant = null;
+
+        /// <summary>The surface organic matter model</summary>
+        [Link]
+        protected ISurfaceOrganicMatter SurfaceOrganicMatter = null;
+
+        /// <summary>The summary</summary>
+        [Link]
+        protected ISummary Summary = null;
+
         /// <summary>Gets or sets the dm supply.</summary>
         /// <value>The dm supply.</value>
         [XmlIgnore]
@@ -164,10 +176,130 @@ namespace Models.PMF.Organs
             Dead.Clear();
         }
 
+        #region Biomass removal
+        /// <summary>The Fraction of biomass that is removed by defoliation</summary>
+        virtual public double FractionRemoved { get; set; }
+
+        /// <summary>The Fraction of biomass that is removed by defoliation</summary>
+        virtual public double FractionToResidue { get; set; }
+
+        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
+        [XmlIgnore]
+        virtual public OrganBiomassRemovalType RemoveBiomass
+        {
+            set
+            {
+                double RemainFrac = 1 - (value.FractionToResidue + value.FractionRemoved);
+                if (RemainFrac < 0)
+                    throw new Exception("The sum of FractionToResidue and FractionRemoved sent with your " + "!!!!PLACE HOLDER FOR EVENT SENDER!!!!" + " is greater than 1.  Had this execption not triggered you would be removing more biomass from " + Name + " than there is to remove");
+                if (RemainFrac < 1)
+                {
+                    Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name + " removing " + FractionRemoved * 100 + "% and returning " + FractionToResidue * 100 + "% to the surface organic matter");
+                    SurfaceOrganicMatter.Add(TotalDM * 10 * FractionToResidue, TotalN * 10 * FractionToResidue, 0, Plant.CropType, Name);
+                    if(Live.StructuralWt > 0)
+                    Live.StructuralWt *= RemainFrac;
+                    if(Live.NonStructuralWt > 0)
+                    Live.NonStructuralWt *= RemainFrac;
+                    if(Live.StructuralN > 0)
+                    Live.StructuralN *= RemainFrac;
+                    if(Live.NonStructuralN > 0)
+                    Live.NonStructuralN *= RemainFrac;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on harvest.
+        /// </summary>
+        virtual public OrganBiomassRemovalType HarvestDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0,
+                    FractionToResidue = 0
+                };
+            }
+            set { }
+        }
+
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        virtual public OrganBiomassRemovalType CutDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0.8,
+                    FractionToResidue = 0
+                };
+            }
+            set { }
+        }
+
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        public OrganBiomassRemovalType GrazeDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0.6,
+                    FractionToResidue = 0.1
+                };
+            }
+            set { }
+        }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        public OrganBiomassRemovalType PruneDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0,
+                    FractionToResidue = 0.5
+                };
+            }
+            set { }
+        }
+        #endregion
+
+        /// <summary>Called when crop is ending</summary>
+        ///[EventSubscribe("PlantEnding")]
+        virtual public void DoPlantEnding()
+        {
+                if (TotalDM > 0)
+                    SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
+                Clear();
+        }
+
         /// <summary>
         /// Do harvest logic for this organ
         /// </summary>
         virtual public void DoHarvest() { }
+
+        /// <summary>
+        /// Do Cutting logic for this organ
+        /// </summary>
+        virtual public void DoCut() { }
+
+        /// <summary>
+        /// Do Graze logic for this organ
+        /// </summary>
+        virtual public void DoGraze() { }
+
+        /// <summary>
+        /// Do prune logic for this organ
+        /// </summary>
+        virtual public void DoPrune() { }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
