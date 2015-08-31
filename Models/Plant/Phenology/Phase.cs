@@ -158,15 +158,16 @@ namespace Models.PMF.Phen
             // add a heading.
             tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
 
+            // Describe the start and end stages
+            tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
+            
             // write memos.
             foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                 memo.Document(tags, -1, indent);
 
             // get description of this class.
             AutoDocumentation.GetClassDescription(this, tags, indent);
-
-            tags.Add(new AutoDocumentation.Paragraph("The phase goes from " + Start + " to " + End + ".", indent));
-
+                        
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
                 child.Document(tags, -1, indent);

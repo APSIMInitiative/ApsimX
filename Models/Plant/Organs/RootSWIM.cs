@@ -13,10 +13,6 @@ namespace Models.PMF.Organs
     [Serializable]
     public class RootSWIM : BaseOrgan, BelowGround
     {
-        /// <summary>The plant</summary>
-        [Link]
-        Plant Plant = null;
-
         /// <summary>The uptake</summary>
         private double[] Uptake = null;
         /// <summary>The RLV</summary>
@@ -64,13 +60,9 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, EventArgs e)
+        public override void DoPlantEnding()
         {
-            if (sender == Plant)
-                Clear();
+            Clear();
         }
 
     }

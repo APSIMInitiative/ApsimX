@@ -359,7 +359,7 @@
             if (formattedText == null)
                 return GetParagraph(parentObject).AddFormattedText();
             else
-                return formattedText;
+                return formattedText.AddFormattedText();
         }
 
         /// <summary>
@@ -414,7 +414,23 @@
             h3.Font.Bold = true;
             h3.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(11);
             h3.ParagraphFormat.SpaceBefore = 0;
-            
+
+            var h4 = doc.Styles["Heading4"];
+            h4.Font.Bold = true;
+            h4.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(10);
+            h4.ParagraphFormat.SpaceBefore = 0;
+
+            var h5 = doc.Styles["Heading5"];
+            h5.Font.Bold = true;
+            h5.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(9);
+            h5.ParagraphFormat.SpaceBefore = 0;
+
+            var h6 = doc.Styles["Heading6"];
+            h6.Font.Bold = true;
+            h6.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(9);
+            h6.ParagraphFormat.SpaceBefore = 0;
+
+
             var links = doc.Styles["Hyperlink"];
             links.Font.Color = MigraDoc.DocumentObjectModel.Colors.Blue;
 

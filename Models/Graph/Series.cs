@@ -112,8 +112,7 @@ namespace Models.Graph
                 // If the graph is in a zone then just graph the zone.
                 if (parentZone != null)
                 {
-                    string filter = string.Format("Name='{0}' and ZoneName='{1}'", parentSimulation.Name, parentZone.Name);
-                    ourDefinitions.Add(CreateDefinition(Name + " " + parentZone.Name, filter, Colour, Marker, Line));
+                    GraphSimulation(parentZone, ourDefinitions);
                 }
                 else
                 {
@@ -122,11 +121,8 @@ namespace Models.Graph
 
                     // Graph is sitting in a simulation so graph just that simulation.
                     if (parentSimulation != null)
-                    {
-                        string filter = string.Format("Name='{0}'", parentSimulation.Name);
-                        ourDefinitions.Add(CreateDefinition(Name, filter, Colour, Marker, Line));
-                    }
-    
+                        GraphSimulation(parentSimulation, ourDefinitions);
+
                     // See if graph is inside an experiment. If so then graph all simulations in experiment.
                     else if (parentExperiment != null)
                         GraphExperiment(parentExperiment, ourDefinitions);
@@ -168,6 +164,33 @@ namespace Models.Graph
                 series.GetSeriesToPutOnGraph(ourDefinitions);
 
             definitions.AddRange(ourDefinitions);
+        }
+
+        /// <summary>
+        /// Graph the specified simulation, looking for zones.
+        /// </summary>
+        /// <param name="model">The model where the graph sits.</param>
+        /// <param name="ourDefinitions">The list of series definitions to add to.</param>
+        private void GraphSimulation(IModel model, List<SeriesDefinition> ourDefinitions)
+        {
+            Simulation parentSimulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+
+            List<IModel> zones = Apsim.Children(model, typeof(Zone));
+            if (zones.Count > 1)
+            {
+                int colourIndex = 0;
+                foreach (Zone zone in zones)
+                {
+                    string filter = string.Format("Name='{0}' and ZoneName='{1}'", parentSimulation.Name, zone.Name);
+                    ourDefinitions.Add(CreateDefinition(zone.Name, filter, ColourUtilities.ChooseColour(colourIndex), Marker, Line));
+                    colourIndex++;
+                }
+            }
+            else
+            {
+                string filter = string.Format("Name='{0}'", model.Name);
+                ourDefinitions.Add(CreateDefinition(Name, filter, Colour, Marker, Line));
+            }
         }
 
         /// <summary>

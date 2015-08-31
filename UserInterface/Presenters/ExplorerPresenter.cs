@@ -19,6 +19,7 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models;
     using Models.Core;
+    using Models.Factorial;
 
     /// <summary>
     /// This presenter class is responsible for populating the view
@@ -592,7 +593,7 @@ namespace UserInterface.Presenters
             Model destinationModel = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
             if (destinationModel != null)
             {
-                if (destinationModel.GetType() == typeof(Folder))
+                if (destinationModel.GetType() == typeof(Folder) || destinationModel.GetType() == typeof(Factor))
                     e.Allow = true;
 
                 DragObject dragObject = e.DragObject as DragObject;
