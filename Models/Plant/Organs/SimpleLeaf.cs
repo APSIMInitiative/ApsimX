@@ -611,8 +611,8 @@ namespace Models.PMF.Organs
                     }
                     else
                     {
-                        tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel + 2));
-                        child.Document(tags, headingLevel + 2, indent + 2);
+                        //tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel + 2));
+                        child.Document(tags, headingLevel + 2, indent + 1);
                     }
                 }
             }

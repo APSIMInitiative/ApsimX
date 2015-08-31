@@ -1340,7 +1340,7 @@ Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 201
       <MemoText><![CDATA[
 #Testing of SCUM over a short rotation
 
-This simulations sows, grows and harvests three successive crops, Potatoes, Peas and Potatoes.  Detailed graphs are produced with all components of the Nitrogen and water balancesn and showing all of the SCUM models organ biomass to demonstrate the models workings.]]></MemoText>
+This simulations sows, grows and harvests three successive crops, Potatoes, Peas and Potatoes.  Detailed graphs are produced with all components of the Nitrogen and water balancesn and showing all of the SCUM models organ biomass to demonstrate the models workings.  Irrigation and Fertiliser are applied in levels to ensure they are not limiting production]]></MemoText>
     </Memo>
     <Weather>
       <Name>Weather</Name>
@@ -2528,7 +2528,7 @@ This simulations sows, grows and harvests three successive crops, Potatoes, Peas
     <Memo>
       <Name>Notes</Name>
       <MemoText><![CDATA[
-#N Balance of the rotation
+##N Balance of the rotation
 
 Model is behaving as expected, removing the expected amounts of N from the soil, returning the expected amounts to surface and soil organic matter at end crop not fixing nitrogen for the potato crops but fixing nitrogen for the pea crops]]></MemoText>
     </Memo>
@@ -2688,6 +2688,13 @@ Model is behaving as expected, removing the expected amounts of N from the soil,
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
+    <Memo>
+      <Name>Notes1</Name>
+      <MemoText><![CDATA[
+##Water Balance of the rotation
+
+The water balance is working as expected with the crop removing smaller amounts of water soon after harvest and plant water use increasing in the midle of the crop and decreasing again at the end.  Evaporation is showing the opposite pattern with higher evaporation early in the crop and again later in the crops duration.]]></MemoText>
+    </Memo>
     <Graph>
       <Name>Plant Biomass components</Name>
       <Series>
@@ -2791,6 +2798,13 @@ Model is behaving as expected, removing the expected amounts of N from the soil,
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
+    <Memo>
+      <Name>Notes11</Name>
+      <MemoText><![CDATA[
+##Biomass accumulation
+
+Biomass accumulation is following sigmoidal patterns as is expected given the way photosynthesis is parameterised (using a sigmoidal function).  Roots are making up a consistent small amout of total biomass, product begins incraesing at Stage 4 and stover increases only slowly after this stage.]]></MemoText>
+    </Memo>
     <Graph>
       <Name>Plant Nitrogen components</Name>
       <Series>
@@ -2872,6 +2886,13 @@ Model is behaving as expected, removing the expected amounts of N from the soil,
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
+    <Memo>
+      <Name>Notes111</Name>
+      <MemoText><![CDATA[
+##Biomass Nitrogen
+
+Nitrogen accumulation is following the same sigmoidal pattern as biomass which is expected given the high fertiliser inputs in this simulation.]]></MemoText>
+    </Memo>
     <Graph>
       <Name>Water supply and demand</Name>
       <Series>

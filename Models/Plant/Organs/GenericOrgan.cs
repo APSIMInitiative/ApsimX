@@ -544,7 +544,18 @@ namespace Models.PMF.Organs
             bool NonStandardFunctions = false;
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
             {
-                if ((child.Name != "StructuralFraction") | (child.Name != "DMDemandFunction") | (child.Name != "MaximumNConc") | (child.Name != "MinimumNConc") | (child.Name != "NitrogenDemandSwitch") | (child.Name != "NReallocationFactor") | (child.Name != "NRetranslocationFactor") | (child.Name != "DMRetranslocationFactor") | (child.Name != "SenescenceRateFunction") | (child.Name != "DetachmentRateFunctionFunction") | (child is Biomass))
+                if (((child.Name != "StructuralFraction") 
+                    | (child.Name != "DMDemandFunction")
+                    | (child.Name != "MaximumNConc")
+                    | (child.Name != "MinimumNConc")
+                    | (child.Name != "NitrogenDemandSwitch") 
+                    | (child.Name != "NReallocationFactor") 
+                    | (child.Name != "NRetranslocationFactor")
+                    | (child.Name != "DMRetranslocationFactor")
+                    | (child.Name != "SenescenceRateFunction") 
+                    | (child.Name != "DetachmentRateFunctionFunction") 
+                    | (child is Biomass))
+                    && (child.GetType() != typeof(Memo)))
                 {
                     NonStandardFunctions = true;
                 }
@@ -556,13 +567,24 @@ namespace Models.PMF.Organs
                 tags.Add(new AutoDocumentation.Paragraph("In addition to the core processes and parameterisation described above, the " + this.Name + " organ has extra functions which may be referenced by core parameterisation and create additional functionality", indent));
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 {
-                    if ((child.Name == "StructuralFraction") | (child.Name == "DMDemandFunction") | (child.Name == "MaximumNConc") | (child.Name == "MinimumNConc") | (child.Name == "NitrogenDemandSwitch") | (child.Name == "NReallocationFactor") | (child.Name == "NRetranslocationFactor") | (child.Name == "DMRetranslocationFactor") | (child.Name == "SenescenceRateFunction") | (child.Name == "DetachmentRateFunctionFunction") | (child is Biomass) | (child.GetType() == typeof(Memo)))
+                    if ((child.Name == "StructuralFraction") 
+                        | (child.Name == "DMDemandFunction") 
+                        | (child.Name == "MaximumNConc") 
+                        | (child.Name == "MinimumNConc") 
+                        | (child.Name == "NitrogenDemandSwitch") 
+                        | (child.Name == "NReallocationFactor") 
+                        | (child.Name == "NRetranslocationFactor") 
+                        | (child.Name == "DMRetranslocationFactor") 
+                        | (child.Name == "SenescenceRateFunction") 
+                        | (child.Name == "DetachmentRateFunctionFunction") 
+                        | (child is Biomass) 
+                        | (child.GetType() == typeof(Memo)))
                     {//Already documented 
                     }
                     else
                     {
-                        tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel + 2));
-                        child.Document(tags, headingLevel + 2, indent + 2);
+                        //tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel + 2));
+                        child.Document(tags, headingLevel + 2, indent + 1);
                     }
                 }
             }
