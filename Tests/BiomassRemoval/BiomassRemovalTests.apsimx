@@ -8646,7 +8646,7 @@ namespace Models
     <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
   <Graph>
-    <Name>Del</Name>
+    <Name>Surface organic matter</Name>
     <Series>
       <Name>Series 0</Name>
       <Type>Scatter</Type>
@@ -8657,7 +8657,43 @@ namespace Models
       <Line>Solid</Line>
       <TableName>Report</TableName>
       <XFieldName>Clock.Today</XFieldName>
-      <YFieldName>ExtraVariables.Script.DeltaSoilOMN</YFieldName>
+      <YFieldName>SurfaceOrganicMatter.wt</YFieldName>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Axis>
+      <Type>Left</Type>
+      <Title>Leaf biomass (g/m2)</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Bottom</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>TopRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>Soil fresh organic matter</Name>
+    <Series>
+      <Name>Series 0</Name>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>sum(Soil.SoilNitrogen.FOMN)</YFieldName>
       <ShowInLegend>true</ShowInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>

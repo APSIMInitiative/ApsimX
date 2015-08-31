@@ -33,8 +33,8 @@ namespace Models.PMF.Organs
             {
                 return new OrganBiomassRemovalType
                 {
-                    FractionRemoved = 0,
-                    FractionToResidue = 0
+                    FractionRemoved = 0.5,
+                    FractionToResidue = 0.1
                 };
             }
         }
@@ -76,8 +76,8 @@ namespace Models.PMF.Organs
             {
                 return new OrganBiomassRemovalType
                 {
-                    FractionRemoved = 0,
-                    FractionToResidue = 0.8
+                    FractionRemoved = 0.6,
+                    FractionToResidue = 0.2
                 };
             }
         }
