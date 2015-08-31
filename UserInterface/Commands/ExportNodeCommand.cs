@@ -321,7 +321,7 @@ namespace UserInterface.Commands
                 if (tag is AutoDocumentation.Heading)
                 {
                     AutoDocumentation.Heading heading = tag as AutoDocumentation.Heading;
-                    if (heading.headingLevel > 0 && heading.headingLevel < 4)
+                    if (heading.headingLevel > 0 && heading.headingLevel <= 6)
                     {
                         Paragraph para = section.AddParagraph(heading.text, "Heading" + heading.headingLevel);
                         if (heading.headingLevel == 1)
@@ -332,6 +332,10 @@ namespace UserInterface.Commands
                             para.Format.OutlineLevel = OutlineLevel.Level3;
                         else if (heading.headingLevel == 4)
                             para.Format.OutlineLevel = OutlineLevel.Level4;
+                        else if (heading.headingLevel == 5)
+                            para.Format.OutlineLevel = OutlineLevel.Level5;
+                        else if (heading.headingLevel == 6)
+                            para.Format.OutlineLevel = OutlineLevel.Level6;
                     }
                 }
                 else if (tag is AutoDocumentation.Paragraph)

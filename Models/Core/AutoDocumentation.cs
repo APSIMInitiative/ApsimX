@@ -74,22 +74,24 @@ namespace Models.Core
             XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, "members/T:" + model.GetType().FullName + "/summary");
             if (summaryNode != null)
             {
+                int numSpacesStartOfLine = -1;
                 string paragraphSoFar = string.Empty;
-                StringReader reader = new StringReader(summaryNode.InnerXml);
+                string st = summaryNode.InnerXml;
+                if (st.StartsWith("\r\n"))
+                    st = st.Remove(0, 2);
+                StringReader reader = new StringReader(st);
                 string line = reader.ReadLine();
                 while (line != null)
                 {
-                    line = line.Trim(" ".ToCharArray());
-                    if (line == string.Empty)
+                    if (numSpacesStartOfLine == -1)
                     {
-                        if (paragraphSoFar != string.Empty)
-                        {
-                            tags.Add(new Paragraph(paragraphSoFar, indent));
-                            paragraphSoFar = string.Empty;
-                        }
+                        int preLineLength = line.Length;
+                        line = line.TrimStart();
+                        numSpacesStartOfLine = preLineLength - line.Length - 1;
                     }
                     else
-                        paragraphSoFar += line + " ";
+                        line = line.Remove(0, numSpacesStartOfLine);
+                    paragraphSoFar += line + "\r\n";
 
                     line = reader.ReadLine();
                 }
