@@ -481,7 +481,7 @@ namespace Models.PMF.Organs
             tags.Add(new AutoDocumentation.Heading("Nitrogen Demands", headingLevel + 1));
             if (MaximumNConc != null)
             {
-                tags.Add(new AutoDocumentation.Paragraph("The daily non-structural N demand from" + this.Name + " is the product of Total DM demand and a Maximum N concentration of " + MaximumNConc.Value * 100 + "% less the structural N demand", indent));
+                tags.Add(new AutoDocumentation.Paragraph("The daily non-structural N demand from " + this.Name + " is the product of Total DM demand and a Maximum N concentration of " + MaximumNConc.Value * 100 + "% less the structural N demand", indent));
             }
             if (MinimumNConc != null)
             {
@@ -544,7 +544,7 @@ namespace Models.PMF.Organs
             bool NonStandardFunctions = false;
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
             {
-                if ((child.Name == "StructuralFraction") | (child.Name == "DMDemandFunction") | (child.Name == "MaximumNConc") | (child.Name == "MinimumNConc") | (child.Name == "NitrogenDemandSwitch") | (child.Name == "NReallocationFactor") | (child.Name == "NRetranslocationFactor") | (child.Name == "DMRetranslocationFactor") | (child.Name == "SenescenceRateFunction") | (child.Name == "DetachmentRateFunctionFunction") | (child is Biomass) | (NonStandardFunctions = true))
+                if ((child.Name != "StructuralFraction") | (child.Name != "DMDemandFunction") | (child.Name != "MaximumNConc") | (child.Name != "MinimumNConc") | (child.Name != "NitrogenDemandSwitch") | (child.Name != "NReallocationFactor") | (child.Name != "NRetranslocationFactor") | (child.Name != "DMRetranslocationFactor") | (child.Name != "SenescenceRateFunction") | (child.Name != "DetachmentRateFunctionFunction") | (child is Biomass))
                 {
                     NonStandardFunctions = true;
                 }
@@ -553,10 +553,10 @@ namespace Models.PMF.Organs
             if (NonStandardFunctions)
             {
                 tags.Add(new AutoDocumentation.Heading("Other functionality", headingLevel + 1));
-                tags.Add(new AutoDocumentation.Paragraph("In addition to the core functionality and parameterisation described above, the " + this.Name + " organ has additional functions used to provide paramters for core functions and create additional functionality", indent));
+                tags.Add(new AutoDocumentation.Paragraph("In addition to the core processes and parameterisation described above, the " + this.Name + " organ has extra functions which may be referenced by core parameterisation and create additional functionality", indent));
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 {
-                    if ((child.Name == "StructuralFraction") | (child.Name == "DMDemandFunction") | (child.Name == "MaximumNConc") | (child.Name == "MinimumNConc") | (child.Name == "NitrogenDemandSwitch") | (child.Name == "NReallocationFactor") | (child.Name == "NRetranslocationFactor") | (child.Name == "DMRetranslocationFactor") | (child.Name == "SenescenceRateFunction") | (child.Name == "DetachmentRateFunctionFunction") | (child is Biomass))
+                    if ((child.Name == "StructuralFraction") | (child.Name == "DMDemandFunction") | (child.Name == "MaximumNConc") | (child.Name == "MinimumNConc") | (child.Name == "NitrogenDemandSwitch") | (child.Name == "NReallocationFactor") | (child.Name == "NRetranslocationFactor") | (child.Name == "DMRetranslocationFactor") | (child.Name == "SenescenceRateFunction") | (child.Name == "DetachmentRateFunctionFunction") | (child is Biomass) | (child.GetType() == typeof(Memo)))
                     {//Already documented 
                     }
                     else

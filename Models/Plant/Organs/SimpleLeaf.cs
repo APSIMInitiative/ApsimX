@@ -548,14 +548,36 @@ namespace Models.PMF.Organs
                 tags.Add(new AutoDocumentation.Paragraph("Then the cover produced by the canopy is calculated using LAI and the Beer Lamberts equation:" + this.Name
                     + " <b>Cover = 1.0 - e<sup>((-1 * ExtinctionCoefficient) * LAI);", indent));
                 tags.Add(new AutoDocumentation.Paragraph("Where ExtinctionCoefficient has a value of " + ExtinctionCoefficientFunction.Value, indent + 1));
-                tags.Add(new AutoDocumentation.Paragraph("The canopies values of Cover and LAI are passed to the MicroClimate module which uses the Penman Monteith equation to calculate potential evapotranspiration for each canopy and passes the value back to the crop", indent + 1));
             }
-
-            // write children.
+            tags.Add(new AutoDocumentation.Paragraph("The canopies values of Cover and LAI are passed to the MicroClimate module which uses the Penman Monteith equation to calculate potential evapotranspiration for each canopy and passes the value back to the crop", indent ));
+            tags.Add(new AutoDocumentation.Paragraph("The effect of growth rate on transpiration is captured using the Fractional Growth Rate (FRGR) function which is parameterised as a function of temperature for the simple leaf", indent));
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                if (child.Name == "FRGRFunction")
+                    child.Document(tags, headingLevel + 1, indent + 1);
+            }
+            // write Other functions.
             bool NonStandardFunctions = false;
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
             {
-                if ((child.Name == "StructuralFraction") | (child.Name == "DMDemandFunction") | (child.Name == "NConc") | (child.Name == "PotentialBiomass") | (child.Name == "Photosynthesis") | (child.Name == "NReallocationFactor") | (child.Name == "NRetranslocationFactor") | (child.Name == "DMRetranslocationFactor") | (child.Name == "SenescenceRateFunction") | (child.Name == "DetachmentRateFunctionFunction") | (child.Name == "LAIFunction") | (child.Name == "CoverFunction") | (child.Name == "ExtinctionCoefficientFunction") | (child is Biomass) | (child.GetType() == typeof(Memo)) | (NonStandardFunctions = true))
+                if (((child.Name != "StructuralFraction") 
+                   | (child.Name != "DMDemandFunction") 
+                   | (child.Name != "NConc") 
+                   | (child.Name != "PotentialBiomass") 
+                   | (child.Name != "Photosynthesis")
+                   | (child.Name != "NReallocationFactor") 
+                   | (child.Name != "NRetranslocationFactor")
+                   | (child.Name != "DMRetranslocationFactor") 
+                   | (child.Name != "SenescenceRateFunction") 
+                   | (child.Name != "DetachmentRateFunctionFunction") 
+                   | (child.Name != "LAIFunction") 
+                   | (child.Name != "CoverFunction") 
+                   | (child.Name != "ExtinctionCoefficientFunction")
+                   | (child.Name != "Live") 
+                   | (child.Name != "Dead")
+                   | (child.Name != "FRGRFunction") 
+                   | (child.Name != "NitrogenDemandSwitch"))
+                   && (child.GetType() != typeof(Memo)))
                 {
                     NonStandardFunctions = true;
                 }
@@ -567,7 +589,24 @@ namespace Models.PMF.Organs
                 tags.Add(new AutoDocumentation.Paragraph("In addition to the core functionality and parameterisation described above, the " + this.Name + " organ has additional functions used to provide paramters for core functions and create additional functionality", indent));
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 {
-                    if ((child.Name == "StructuralFraction") | (child.Name == "DMDemandFunction") | (child.Name == "NConc") | (child.Name == "PotentialBiomass") | (child.Name == "Photosynthesis") | (child.Name == "NReallocationFactor") | (child.Name == "NRetranslocationFactor") | (child.Name == "DMRetranslocationFactor") | (child.Name == "SenescenceRateFunction") | (child.Name == "DetachmentRateFunctionFunction") | (child.Name == "LAIFunction") | (child.Name == "CoverFunction") | (child.Name == "ExtinctionCoefficientFunction") | (child is Biomass) | (child.GetType() == typeof(Memo)) | (NonStandardFunctions = true))
+                    if ((child.Name == "StructuralFraction")
+                       | (child.Name == "DMDemandFunction")
+                       | (child.Name == "NConc")
+                       | (child.Name == "PotentialBiomass")
+                       | (child.Name == "Photosynthesis")
+                       | (child.Name == "NReallocationFactor")
+                       | (child.Name == "NRetranslocationFactor")
+                       | (child.Name == "DMRetranslocationFactor")
+                       | (child.Name == "SenescenceRateFunction")
+                       | (child.Name == "DetachmentRateFunctionFunction")
+                       | (child.Name == "LAIFunction")
+                       | (child.Name == "CoverFunction")
+                       | (child.Name == "ExtinctionCoefficientFunction")
+                       | (child.Name == "Live")
+                       | (child.Name == "Dead")
+                       | (child.Name == "FRGRFunction")
+                       | (child.Name == "NitrogenDemandSwitch")
+                       | (child.GetType() == typeof(Memo)))
                     {//Already documented 
                     }
                     else

@@ -167,6 +167,10 @@ During this phase the plant does bugger all but wait to be ready for harvest
       </OrganArbitrator>
       <GenericAboveGroundOrgan>
         <Name>Product</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[It is the biomass that is removed from the crop at harvest and may include grain, root, leaf, stem, pod or any other organ type depending on the type of crop and how it is harvested.]]></MemoText>
+        </Memo>
         <Biomass>
           <Name>Live</Name>
         </Biomass>
@@ -223,32 +227,43 @@ During this phase the plant does bugger all but wait to be ready for harvest
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <SubtractFunction>
-          <Name>WaterContent</Name>
-          <Constant>
-            <Name>One</Name>
-            <Value>1</Value>
-          </Constant>
-          <VariableReference>
-            <Name>DMcontent</Name>
-            <VariableName>[Product].ProductDMProportion.Value</VariableName>
-          </VariableReference>
-        </SubtractFunction>
-        <VariableReference>
-          <Name>DryMatterContent</Name>
-          <VariableName>[Product].ProductDMProportion.Value</VariableName>
-        </VariableReference>
         <Constant>
           <Name>ExpectedYield</Name>
           <Memo>
             <Name>Description</Name>
             <MemoText><![CDATA[
 
-This is the Product yield (g/m2 fresh weight) that MSCP will predict provided nitrogen and water supply are adequate
+This is the Product yield (g/m2 fresh weight) that SCUM will predict provided nitrogen and water supply are non-limiting
 ]]></MemoText>
           </Memo>
           <Value>800</Value>
         </Constant>
+        <Constant>
+          <Name>DryMatterContent</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+This is the dry matter content of the harvested yield and is used to convert fresh yield into *DryYield* which are subsequently used in determining *Ymax* (total biomass production), daily dry matter production, *HarvestIndex* and the *PartitioningFraction* of each organ]]></MemoText>
+          </Memo>
+          <Value>0.87</Value>
+        </Constant>
+        <MultiplyFunction>
+          <Name>DryYield</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+This variable is the product yield of the crop in g/m2 dry weight
+]]></MemoText>
+          </Memo>
+          <VariableReference>
+            <Name>FreshYld</Name>
+            <VariableName>[Product].ExpectedYield.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>DMPercent</Name>
+            <VariableName>[Product].DryMatterContent.Value</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
         <LinearInterpolationFunction>
           <Name>HarvestIndex</Name>
           <Memo>
@@ -272,33 +287,21 @@ The harvest index is related to the Expected Yield of the crop with higher yield
           </XYPairs>
           <XProperty>[Product].ExpectedYield.Value</XProperty>
         </LinearInterpolationFunction>
-        <Constant>
-          <Name>ProductDMProportion</Name>
+        <SubtractFunction>
+          <Name>WaterContent</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[
-This is the dry matter content of the harvested yield and is used to set the Partitioning Fraction in the Root
-]]></MemoText>
+            <MemoText><![CDATA[This is used to convert the total Dry Matter of this organ back to fresh mass once daily partitining is complete.]]></MemoText>
           </Memo>
-          <Value>0.87</Value>
-        </Constant>
-        <MultiplyFunction>
-          <Name>DryYield</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[
-This variable is the product yield of the crop in g/m2 dry weight
-]]></MemoText>
-          </Memo>
+          <Constant>
+            <Name>One</Name>
+            <Value>1</Value>
+          </Constant>
           <VariableReference>
-            <Name>FreshYld</Name>
-            <VariableName>[Product].ExpectedYield.Value</VariableName>
+            <Name>DMcontent</Name>
+            <VariableName>[Product].DryMatterContent.Value</VariableName>
           </VariableReference>
-          <VariableReference>
-            <Name>DMPercent</Name>
-            <VariableName>[Product].ProductDMProportion.Value</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
+        </SubtractFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
         <HarvestDefault>
@@ -1002,7 +1005,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,1150</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.14,0.6</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.87</Command>
+        <Command>[Product].DryMatterContent.Value = 0.87</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 1000</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 500</Command>
         <Command>[Phenology].Senescing.Target.Value = 300</Command>
@@ -1028,7 +1031,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,1150</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.14,0.6</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.87</Command>
+        <Command>[Product].DryMatterContent.Value = 0.87</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 1000</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 500</Command>
         <Command>[Phenology].Senescing.Target.Value = 300</Command>
@@ -1054,7 +1057,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,1733</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.08,0.6</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.87</Command>
+        <Command>[Product].DryMatterContent.Value = 0.87</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 1785</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 615</Command>
         <Command>[Phenology].Senescing.Target.Value = 600</Command>
@@ -1080,7 +1083,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,11000</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.84,0.97</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.22</Command>
+        <Command>[Product].DryMatterContent.Value = 0.22</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 652</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 1200</Command>
         <Command>[Phenology].Senescing.Target.Value = 600</Command>
@@ -1106,7 +1109,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,1200</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.45,0.45</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.21</Command>
+        <Command>[Product].DryMatterContent.Value = 0.21</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 707</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 400</Command>
         <Command>[Phenology].Senescing.Target.Value = 200</Command>
@@ -1133,7 +1136,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,1830</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.5,0.6</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.87</Command>
+        <Command>[Product].DryMatterContent.Value = 0.87</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 1486</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 614</Command>
         <Command>[Phenology].Senescing.Target.Value = 1500</Command>
@@ -1159,7 +1162,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,3300</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.7,0.7</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.05</Command>
+        <Command>[Product].DryMatterContent.Value = 0.05</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 436</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 1664</Command>
         <Command>[Phenology].Senescing.Target.Value = 900</Command>
@@ -1194,7 +1197,7 @@ Kale has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,10000</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.9,0.5</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.16</Command>
+        <Command>[Product].DryMatterContent.Value = 0.16</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 0</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 4000</Command>
         <Command>[Phenology].Senescing.Target.Value = 0</Command>
@@ -1229,7 +1232,7 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,6000</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = .95,0.5</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.13</Command>
+        <Command>[Product].DryMatterContent.Value = 0.13</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 0</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 3000</Command>
         <Command>[Phenology].Senescing.Target.Value = 0</Command>
@@ -1255,7 +1258,7 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,1200</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.5,0.5</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.86</Command>
+        <Command>[Product].DryMatterContent.Value = 0.86</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 677</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 673</Command>
         <Command>[Phenology].Senescing.Target.Value = 300</Command>
@@ -1282,7 +1285,7 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,11000</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.84,0.95</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.23</Command>
+        <Command>[Product].DryMatterContent.Value = 0.23</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 652</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value = 897</Command>
         <Command>[Phenology].Senescing.Target.Value = 600</Command>
