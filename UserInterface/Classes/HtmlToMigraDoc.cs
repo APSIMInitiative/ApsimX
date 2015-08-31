@@ -359,7 +359,7 @@
             if (formattedText == null)
                 return GetParagraph(parentObject).AddFormattedText();
             else
-                return formattedText;
+                return formattedText.AddFormattedText();
         }
 
         /// <summary>
