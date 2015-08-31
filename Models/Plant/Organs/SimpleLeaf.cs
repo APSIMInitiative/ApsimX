@@ -493,11 +493,11 @@ namespace Models.PMF.Organs
 
             // Describe biomass production
             tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));  //FIXME, this will need to be changed to photoysnthesis rather that potential Biomass
-            if (PotentialBiomass != null)
+            if (Photosynthesis != null)
                 tags.Add(new AutoDocumentation.Paragraph("DryMatter Fixation Supply (Photosynthesis) provided to the Organ Arbitrator (for partitioning between organs) is calculated each day as the product of a unstressed potential and a series of stress factors.", indent));
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 {
-                    if (child.Name == "PotentialBiomass")
+                    if (child.Name == "Photosynthesis")
                         child.Document(tags, headingLevel + 5, indent + 1);
                 }
            
@@ -578,7 +578,7 @@ namespace Models.PMF.Organs
                 if (((child.Name != "StructuralFraction") 
                    | (child.Name != "DMDemandFunction") 
                    | (child.Name != "NConc") 
-                   | (child.Name != "PotentialBiomass") 
+                   | (child.Name != "Photosynthesis") 
                    | (child.Name != "Photosynthesis")
                    | (child.Name != "NReallocationFactor") 
                    | (child.Name != "NRetranslocationFactor")
@@ -607,7 +607,7 @@ namespace Models.PMF.Organs
                     if ((child.Name == "StructuralFraction")
                        | (child.Name == "DMDemandFunction")
                        | (child.Name == "NConc")
-                       | (child.Name == "PotentialBiomass")
+                       | (child.Name == "Photosynthesis")
                        | (child.Name == "Photosynthesis")
                        | (child.Name == "NReallocationFactor")
                        | (child.Name == "NRetranslocationFactor")
