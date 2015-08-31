@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -491,7 +491,7 @@
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>MaxArea</Title>
+                  <Name>MaxArea</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -507,6 +507,8 @@
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -532,7 +534,7 @@
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>MaxArea</Title>
+                  <Name>MaxArea</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -548,6 +550,8 @@
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -573,7 +577,7 @@
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>MaxArea</Title>
+                  <Name>MaxArea</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -589,6 +593,8 @@
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -614,7 +620,7 @@
                   <Interval>NaN</Interval>
                 </Axis>
                 <Series>
-                  <Title>MaxArea</Title>
+                  <Name>MaxArea</Name>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -630,6 +636,8 @@
                   <ShowRegressionLine>false</ShowRegressionLine>
                   <ShowInLegend>true</ShowInLegend>
                   <Cumulative>false</Cumulative>
+                  <XFieldName>[XYPairs].X</XFieldName>
+                  <YFieldName>[XYPairs].Y</YFieldName>
                 </Series>
                 <LegendPosition>BottomRight</LegendPosition>
                 <ShowRegressionLine>false</ShowRegressionLine>
@@ -1601,7 +1609,7 @@
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>TT</Title>
+        <Name>TT</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1619,6 +1627,9 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Phenology.AccumulatedThermalTime.Value</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1650,7 +1661,7 @@
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Predicted</Title>
+        <Name>Predicted</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1668,9 +1679,12 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Phenology.Stage</YFieldName>
       </Series>
       <Series>
-        <Title>Observed</Title>
+        <Name>Observed</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1688,6 +1702,9 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>FRNLObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Phenology.StageCode.Value</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1719,7 +1736,7 @@
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>LAI</Title>
+        <Name>LAI</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1737,9 +1754,12 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.LAI</YFieldName>
       </Series>
       <Series>
-        <Title>ObsLAI</Title>
+        <Name>ObsLAI</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1757,6 +1777,9 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>FRNLObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FoddeBeet.LeafLAI</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1788,7 +1811,7 @@
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>EmergedLeaves</Title>
+        <Name>EmergedLeaves</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1806,9 +1829,12 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>FRNLObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.PlantAppearedLeafNo</YFieldName>
       </Series>
       <Series>
-        <Title>NodeNumber</Title>
+        <Name>NodeNumber</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1826,6 +1852,9 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Structure.MainStemNodeNo</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1850,7 +1879,7 @@
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Cover</Title>
+        <Name>Cover</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1868,9 +1897,12 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.CoverGreen</YFieldName>
       </Series>
       <Series>
-        <Title>Obs_Cover</Title>
+        <Name>Obs_Cover</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1888,6 +1920,9 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>FRNLObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.CoverGreen</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1912,7 +1947,7 @@
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>BulbWt</Title>
+        <Name>BulbWt</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1930,9 +1965,12 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Bulb.Live.Wt</YFieldName>
       </Series>
       <Series>
-        <Title>LeafWT</Title>
+        <Name>LeafWT</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1950,9 +1988,12 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.Live.Wt</YFieldName>
       </Series>
       <Series>
-        <Title>PetioleWT</Title>
+        <Name>PetioleWT</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1970,9 +2011,12 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Petiole.Live.Wt</YFieldName>
       </Series>
       <Series>
-        <Title>TotalWT</Title>
+        <Name>TotalWT</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1990,9 +2034,12 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Summariser.Total.Wt</YFieldName>
       </Series>
       <Series>
-        <Title>Obs_Bulb</Title>
+        <Name>Obs_Bulb</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2010,9 +2057,12 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>FRNLObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Bulb.LiveWt</YFieldName>
       </Series>
       <Series>
-        <Title>Obs_Leaf</Title>
+        <Name>Obs_Leaf</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2030,9 +2080,12 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>FRNLObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.LiveWt</YFieldName>
       </Series>
       <Series>
-        <Title>Obs_Petiole</Title>
+        <Name>Obs_Petiole</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2050,9 +2103,12 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>FRNLObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Petiole.LiveWt</YFieldName>
       </Series>
       <Series>
-        <Title>Obs_Total</Title>
+        <Name>Obs_Total</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2070,6 +2126,9 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>FRNLObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Total.Wt</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2094,7 +2153,7 @@
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>TT</Title>
+        <Name>TT</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2112,6 +2171,9 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>FodderBeet.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>FodderBeet.Structure.MainStemNodeNo</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2136,7 +2198,7 @@
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>MaxLeafArea</Title>
+        <Name>MaxLeafArea</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2154,6 +2216,9 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>FodderBeet.Structure.MainStemNodeNo</XFieldName>
+        <YFieldName>FodderBeet.Leaf.CohortParameters.MaxArea.Value</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2186,7 +2251,7 @@
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Series 0</Title>
+        <Name>Series 0</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2204,9 +2269,12 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.Fw</YFieldName>
       </Series>
       <Series>
-        <Title>Series2</Title>
+        <Name>Series2</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2224,6 +2292,9 @@
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.Fn</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2824,7 +2895,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>TT</Title>
+        <Name>TT</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2842,6 +2913,9 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Phenology.AccumulatedThermalTime.Value</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2873,7 +2947,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Predicted</Title>
+        <Name>Predicted</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2891,9 +2965,12 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Phenology.Stage</YFieldName>
       </Series>
       <Series>
-        <Title>Observed</Title>
+        <Name>Observed</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2911,6 +2988,9 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>FRNLObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Phenology.StageCode.Value</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2942,7 +3022,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>LAI</Title>
+        <Name>LAI</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2960,9 +3040,12 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.LAI</YFieldName>
       </Series>
       <Series>
-        <Title>ObsLAI</Title>
+        <Name>ObsLAI</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2980,6 +3063,9 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>FRNLObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FoddeBeet.LeafLAI</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -3011,7 +3097,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>EmergedLeaves</Title>
+        <Name>EmergedLeaves</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3029,9 +3115,12 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>FRNLObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.PlantAppearedLeafNo</YFieldName>
       </Series>
       <Series>
-        <Title>NodeNumber</Title>
+        <Name>NodeNumber</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3049,6 +3138,9 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Structure.MainStemNodeNo</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -3073,7 +3165,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Cover</Title>
+        <Name>Cover</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3091,9 +3183,12 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.CoverGreen</YFieldName>
       </Series>
       <Series>
-        <Title>Obs_Cover</Title>
+        <Name>Obs_Cover</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3111,6 +3206,9 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Lincoln2014_Interc</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.CoverGreen</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -3137,7 +3235,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>BulbWt</Title>
+          <Name>BulbWt</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3155,6 +3253,9 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FodderBeet.Summariser.Total.Wt</YFieldName>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -3179,7 +3280,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>BulbWt</Title>
+          <Name>BulbWt</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3197,6 +3298,9 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FodderBeet.Bulb.Live.Wt</YFieldName>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -3221,7 +3325,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>LeafWt</Title>
+          <Name>LeafWt</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3239,6 +3343,9 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FodderBeet.Leaf.Live.Wt</YFieldName>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -3263,7 +3370,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>PetioleWt</Title>
+          <Name>PetioleWt</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3281,6 +3388,9 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FodderBeet.Petiole.Live.Wt</YFieldName>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -3314,7 +3424,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Series 0</Title>
+        <Name>Series 0</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3332,9 +3442,12 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.Fw</YFieldName>
       </Series>
       <Series>
-        <Title>Series2</Title>
+        <Name>Series2</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3352,6 +3465,9 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.Fn</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
