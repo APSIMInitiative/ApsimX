@@ -100,9 +100,6 @@ namespace Models.PMF.Organs
         /// <summary>The FRGR function</summary>
         [Link]
         IFunction FRGRFunction = null;   // VPD effect on Growth Interpolation Set
-        /// <summary>The potential biomass</summary>
-        [Link(IsOptional = true)]
-        IFunction PotentialBiomass = null;
         /// <summary>The dm demand function</summary>
         [Link]
         IFunction DMDemandFunction = null;
@@ -123,7 +120,7 @@ namespace Models.PMF.Organs
         IFunction ExtinctionCoefficientFunction = null;
         /// <summary>The photosynthesis</summary>
         [Link(IsOptional = true)]
-        RUEModel Photosynthesis = null;
+        IFunction Photosynthesis = null;
         /// <summary>The height function</summary>
         [Link(IsOptional = true)]
         IFunction HeightFunction = null;
@@ -254,9 +251,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Photosynthesis != null)
-                    DeltaBiomass = Photosynthesis.Growth(RadIntTot);
-                return new BiomassSupplyType { Fixation = DeltaBiomass, Retranslocation = 0, Reallocation = 0 };
+                return new BiomassSupplyType { Fixation = Photosynthesis.Value, Retranslocation = 0, Reallocation = 0 };
             }
         }
         /// <summary>Sets the dm allocation.</summary>
@@ -412,11 +407,6 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
-                if (PotentialBiomass != null)
-                {
-                    DeltaBiomass = PotentialBiomass.Value; //Over the defalt DM supply of 1 if there is a photosynthesis function present
-                }
-
                 FRGR = FRGRFunction.Value;
                 if (CoverFunction == null & ExtinctionCoefficientFunction == null)
                 {
@@ -457,8 +447,6 @@ namespace Models.PMF.Organs
                 NDemand.NonStructural = NDeficit;*/
             }
         }
-
         #endregion
-
     }
 }

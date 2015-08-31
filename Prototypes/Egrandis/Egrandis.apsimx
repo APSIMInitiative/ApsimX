@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -757,7 +757,29 @@
                 </XYPairs>
                 <XProperty>[Photosynthesis].VPD</XProperty>
               </LinearInterpolationFunction>
+              <VariableReference>
+                <Name>RadnInt</Name>
+                <VariableName>[Leaf].RadIntTot</VariableName>
+              </VariableReference>
             </RUEModel>
+            <MinimumFunction>
+              <Name>FRGRFunction</Name>
+              <VariableReference>
+                <Name>RUE_FT</Name>
+                <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+              </VariableReference>
+              <MinimumFunction>
+                <Name>Others</Name>
+                <VariableReference>
+                  <Name>RUE_FN</Name>
+                  <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>RUE_FVPD</Name>
+                  <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+                </VariableReference>
+              </MinimumFunction>
+            </MinimumFunction>
             <_Height>0</_Height>
             <_LAI>1.3834138867169348</_LAI>
             <_LAIDead>0</_LAIDead>
@@ -1044,6 +1066,21 @@
         </Report>
         <Graph>
           <Name>Phenology</Name>
+          <Series>
+            <Name>Series 0</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744320</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Phenology.StageCode.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -1060,33 +1097,27 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>Series 0</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Phenology.StageCode.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>RootDepth</Name>
+          <Series>
+            <Name>Series 0</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744320</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Depth</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -1103,33 +1134,42 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>LAI</Name>
           <Series>
-            <Title>Series 0</Title>
+            <Name>Series 0</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744320</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Depth</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Eucalyptus.Age.Value</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAI</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>LAI</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <TableName>Input</TableName>
+            <XFieldName>Age</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAI</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>Plantation Age (y)</Title>
@@ -1146,155 +1186,124 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>Series 0</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Age.Value</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.LAI</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>FilledCircle</Marker>
-            <Line>None</Line>
-            <X>
-              <TableName>Input</TableName>
-              <FieldName>Age</FieldName>
-            </X>
-            <Y>
-              <TableName>Input</TableName>
-              <FieldName>Eucalyptus.Leaf.LAI</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopRight</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Biomass</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
           <Series>
-            <Title>Leaf</Title>
+            <Name>Leaf</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744320</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Title>Stem</Title>
+            <Name>Stem</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16711936</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Stem.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Stem.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Title>Root</Title>
+            <Name>Root</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8355840</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Title>DeadLeaf</Title>
+            <Name>DeadLeaf</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-256</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Dead.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Dead.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>N Uptake</Name>
+          <Series>
+            <Name>N Uptake</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.NSupplyUptake</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>N Demand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Arbitrator.NDemand</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -1311,133 +1320,57 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>N Uptake</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.NSupplyUptake</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>N Demand</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Arbitrator.NDemand</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>BottomRight</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>NO3</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
           <Series>
+            <Name>Series</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744448</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(1)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(1)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
+            <Name>Series</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16711936</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(2)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(2)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
+            <Name>Series</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8355840</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(3)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(3)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>Plant N</Name>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -1454,73 +1387,94 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Plant N</Name>
           <Series>
-            <Title>Leaf</Title>
+            <Name>Leaf</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744320</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Title>Stem</Title>
+            <Name>Stem</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16711936</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Stem.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Stem.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Title>Root</Title>
+            <Name>Root</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8355840</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>SLA Function</Name>
+          <Series>
+            <Name>SLA</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -1537,33 +1491,27 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>SLA</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>IndividualTreeLiveWt</Name>
+          <Series>
+            <Name>SLA</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -1580,33 +1528,42 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>AboveGroundWt</Name>
           <Series>
-            <Title>SLA</Title>
+            <Name>Predicted</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744448</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Eucalyptus.Age.Value</XFieldName>
+            <YFieldName>Eucalyptus.Summariser.AboveGround.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>AboveGroundWt</Name>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <TableName>Input</TableName>
+            <XFieldName>Age</XFieldName>
+            <YFieldName>Summariser.AboveGround.Wt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>Plantation Age (y)</Title>
@@ -1623,48 +1580,7 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>Predicted</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Age.Value</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Summariser.AboveGround.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>Observed</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>FilledCircle</Marker>
-            <Line>None</Line>
-            <X>
-              <TableName>Input</TableName>
-              <FieldName>Age</FieldName>
-            </X>
-            <Y>
-              <TableName>Input</TableName>
-              <FieldName>Summariser.AboveGround.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
@@ -2426,7 +2342,29 @@
                 </XYPairs>
                 <XProperty>[Photosynthesis].VPD</XProperty>
               </LinearInterpolationFunction>
+              <VariableReference>
+                <Name>RadnInt</Name>
+                <VariableName>[Leaf].RadIntTot</VariableName>
+              </VariableReference>
             </RUEModel>
+            <MinimumFunction>
+              <Name>FRGRFunction</Name>
+              <VariableReference>
+                <Name>RUE_FT</Name>
+                <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+              </VariableReference>
+              <MinimumFunction>
+                <Name>Others</Name>
+                <VariableReference>
+                  <Name>RUE_FN</Name>
+                  <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>RUE_FVPD</Name>
+                  <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+                </VariableReference>
+              </MinimumFunction>
+            </MinimumFunction>
             <_Height>0</_Height>
             <_LAI>1.3834138867169348</_LAI>
             <_LAIDead>0</_LAIDead>
@@ -4131,6 +4069,21 @@
         </Report>
         <Graph>
           <Name>Phenology</Name>
+          <Series>
+            <Name>Series 0</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744320</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Phenology.StageCode.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -4147,33 +4100,27 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>Series 0</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Phenology.StageCode.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>RootDepth</Name>
+          <Series>
+            <Name>Series 0</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744320</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Depth</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -4190,33 +4137,42 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>LAI</Name>
           <Series>
-            <Title>Series 0</Title>
+            <Name>Series 0</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744320</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Depth</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Eucalyptus.Age.Value</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAI</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>LAI</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <TableName>Input</TableName>
+            <XFieldName>Age</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAI</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>Plantation Age (y)</Title>
@@ -4233,155 +4189,124 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>Series 0</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Age.Value</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.LAI</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>FilledCircle</Marker>
-            <Line>None</Line>
-            <X>
-              <TableName>Input</TableName>
-              <FieldName>Age</FieldName>
-            </X>
-            <Y>
-              <TableName>Input</TableName>
-              <FieldName>Eucalyptus.Leaf.LAI</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopRight</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Biomass</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
           <Series>
-            <Title>Leaf</Title>
+            <Name>Leaf</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744320</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Title>Stem</Title>
+            <Name>Stem</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16711936</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Stem.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Stem.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Title>Root</Title>
+            <Name>Root</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8355840</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Title>DeadLeaf</Title>
+            <Name>DeadLeaf</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-256</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Dead.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Dead.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>N Uptake</Name>
+          <Series>
+            <Name>N Uptake</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.NSupplyUptake</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>N Demand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Arbitrator.NDemand</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -4398,53 +4323,57 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>N Uptake</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.NSupplyUptake</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>N Demand</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Arbitrator.NDemand</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>BottomRight</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>NO3</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(1)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(2)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8355840</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(3)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -4461,153 +4390,94 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(1)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(2)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-8355840</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(3)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Plant N</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
           <Series>
-            <Title>Leaf</Title>
-            <Type>Line</Type>
+            <Name>Leaf</Name>
+            <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744320</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Title>Stem</Title>
-            <Type>Line</Type>
+            <Name>Stem</Name>
+            <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16711936</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Stem.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Stem.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Title>Root</Title>
-            <Type>Line</Type>
+            <Name>Root</Name>
+            <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8355840</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>SLA Function</Name>
+          <Series>
+            <Name>SLA</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -4624,33 +4494,27 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>SLA</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>IndividualTreeLiveWt</Name>
+          <Series>
+            <Name>SLA</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -4667,33 +4531,42 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>AboveGroundWt</Name>
           <Series>
-            <Title>SLA</Title>
+            <Name>Predicted</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744448</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Eucalyptus.Age.Value</XFieldName>
+            <YFieldName>Eucalyptus.Summariser.AboveGround.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>AboveGroundWt</Name>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <TableName>Input</TableName>
+            <XFieldName>Age</XFieldName>
+            <YFieldName>Summariser.AboveGround.Wt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>Plantation Age (y)</Title>
@@ -4710,48 +4583,7 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>Predicted</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Age.Value</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Summariser.AboveGround.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>Observed</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>FilledCircle</Marker>
-            <Line>None</Line>
-            <X>
-              <TableName>Input</TableName>
-              <FieldName>Age</FieldName>
-            </X>
-            <Y>
-              <TableName>Input</TableName>
-              <FieldName>Summariser.AboveGround.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
@@ -5513,7 +5345,29 @@
                 </XYPairs>
                 <XProperty>[Photosynthesis].VPD</XProperty>
               </LinearInterpolationFunction>
+              <VariableReference>
+                <Name>RadnInt</Name>
+                <VariableName>[Leaf].RadIntTot</VariableName>
+              </VariableReference>
             </RUEModel>
+            <MinimumFunction>
+              <Name>FRGRFunction</Name>
+              <VariableReference>
+                <Name>RUE_FT</Name>
+                <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+              </VariableReference>
+              <MinimumFunction>
+                <Name>Others</Name>
+                <VariableReference>
+                  <Name>RUE_FN</Name>
+                  <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>RUE_FVPD</Name>
+                  <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+                </VariableReference>
+              </MinimumFunction>
+            </MinimumFunction>
             <_Height>0</_Height>
             <_LAI>1.3834138867169348</_LAI>
             <_LAIDead>0</_LAIDead>
@@ -7218,6 +7072,21 @@
         </Report>
         <Graph>
           <Name>Phenology</Name>
+          <Series>
+            <Name>Series 0</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744320</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Phenology.StageCode.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -7234,33 +7103,27 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>Series 0</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Phenology.StageCode.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>RootDepth</Name>
+          <Series>
+            <Name>Series 0</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744320</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Depth</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -7277,33 +7140,42 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>LAI</Name>
           <Series>
-            <Title>Series 0</Title>
+            <Name>Series 0</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744320</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Depth</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Eucalyptus.Age.Value</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAI</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>LAI</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <TableName>Input</TableName>
+            <XFieldName>Age</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAI</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>Plantation Age (y)</Title>
@@ -7320,467 +7192,384 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Biomass</Name>
           <Series>
-            <Title>Series 0</Title>
+            <Name>Leaf</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744320</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Age.Value</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.LAI</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
+            <Name>Stem</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Stem.Live.Wt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Root</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8355840</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Live.Wt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>DeadLeaf</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-256</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Dead.Wt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>N Uptake</Name>
+          <Series>
+            <Name>N Uptake</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.NSupplyUptake</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>N Demand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Arbitrator.NDemand</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>NO3</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(1)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(2)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8355840</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(3)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Plant N</Name>
+          <Series>
+            <Name>Leaf</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744320</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Live.N</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Stem</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Stem.Live.N</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Root</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8355840</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Live.N</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>SLA Function</Name>
+          <Series>
+            <Name>SLA</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>IndividualTreeLiveWt</Name>
+          <Series>
+            <Name>SLA</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>AboveGroundWt</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Eucalyptus.Age.Value</XFieldName>
+            <YFieldName>Eucalyptus.Summariser.AboveGround.Wt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744448</ColourArgb>
             <Marker>FilledCircle</Marker>
             <Line>None</Line>
-            <X>
-              <TableName>Input</TableName>
-              <FieldName>Age</FieldName>
-            </X>
-            <Y>
-              <TableName>Input</TableName>
-              <FieldName>Eucalyptus.Leaf.LAI</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Input</TableName>
+            <XFieldName>Age</XFieldName>
+            <YFieldName>Summariser.AboveGround.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
           </Series>
-          <LegendPosition>TopRight</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>Biomass</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Series>
-            <Title>Leaf</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>Stem</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Stem.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>Root</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-8355840</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>DeadLeaf</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-256</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Dead.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>N Uptake</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Series>
-            <Title>N Uptake</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.NSupplyUptake</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>N Demand</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Arbitrator.NDemand</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <LegendPosition>BottomRight</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>NO3</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Series>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(1)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(2)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-8355840</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(3)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>Plant N</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Series>
-            <Title>Leaf</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>Stem</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Stem.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>Root</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-8355840</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>SLA Function</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Series>
-            <Title>SLA</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>IndividualTreeLiveWt</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Series>
-            <Title>SLA</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>AboveGroundWt</Name>
           <Axis>
             <Type>Bottom</Type>
             <Title>Plantation Age (y)</Title>
@@ -7797,48 +7586,7 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>Predicted</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Age.Value</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Summariser.AboveGround.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>Observed</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>FilledCircle</Marker>
-            <Line>None</Line>
-            <X>
-              <TableName>Input</TableName>
-              <FieldName>Age</FieldName>
-            </X>
-            <Y>
-              <TableName>Input</TableName>
-              <FieldName>Summariser.AboveGround.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
