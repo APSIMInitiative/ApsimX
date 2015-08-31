@@ -21,10 +21,10 @@ namespace Models.PMF.Organs
         #region Links to other models or compontnets
         /// <summary>The live</summary>
         [Link] [DoNotDocument] public Biomass Live = null;
+        
         /// <summary>The dead</summary>
         [Link] [DoNotDocument] public Biomass Dead = null;
-        #endregion
-
+        
         /// <summary>The clock</summary>
         [Link]
         public Clock Clock = null;
@@ -44,7 +44,9 @@ namespace Models.PMF.Organs
         /// <summary>The summary</summary>
         [Link]
         protected ISummary Summary = null;
+        #endregion
 
+        #region Arbitration methods
         /// <summary>Gets or sets the dm supply.</summary>
         /// <value>The dm supply.</value>
         [XmlIgnore]
@@ -78,8 +80,17 @@ namespace Models.PMF.Organs
         /// <value>The n demand.</value>
         [XmlIgnore]
         virtual public BiomassPoolType NDemand { get { return new BiomassPoolType(); } set { } }
+        /// <summary>Gets or sets the maximum nconc.</summary>
+        /// <value>The maximum nconc.</value>
+        [XmlIgnore]
+        virtual public double MaxNconc { get { return 0; } set { } }
+        /// <summary>Gets or sets the minimum nconc.</summary>
+        /// <value>The minimum nconc.</value>
+        [XmlIgnore]
+        virtual public double MinNconc { get { return 0; } set { } }
+         #endregion
 
-
+        #region Soil Arbitrator interface
         /// <summary>Gets the NO3 supply for the given N state.</summary>
         virtual public double[] NO3NSupply(List<ZoneWaterAndN> zones) { return null; }
 
@@ -131,58 +142,31 @@ namespace Models.PMF.Organs
         /// <param name="NO3NUptake">The NO3NUptake.</param>
         /// <param name="NH4Uptake">The NH4Uptake.</param>
         virtual public void DoNitrogenUptake(double[] NO3NUptake, double[] NH4Uptake) { }
-
-        /// <summary>Does the potential nutrient.</summary>
-        virtual public void DoPotentialNutrient() { }
-        
-        /// <summary>Gets or sets the maximum nconc.</summary>
-        /// <value>The maximum nconc.</value>
-        [XmlIgnore]
-        virtual public double MaxNconc { get { return 0; } set { } }
-        
-        /// <summary>Gets or sets the minimum nconc.</summary>
-        /// <value>The minimum nconc.</value>
-        [XmlIgnore]
-        virtual public double MinNconc { get { return 0; } set { } }
-
-
-
-        // Provide some variables for output until we get a better REPORT component that
-        // can do structures e.g. NSupply.Fixation
-
-
-        /// <summary>Gets the dm supply photosynthesis.</summary>
-        /// <value>The dm supply photosynthesis.</value>
-        [Units("g/m^2")]
-        virtual public double DMSupplyPhotosynthesis { get { return DMSupply.Fixation; } }
-
-
+                        
         /// <summary>Gets the n supply uptake.</summary>
         /// <value>The n supply uptake.</value>
         [Units("g/m^2")]
         virtual public double NSupplyUptake { get { return NSupply.Uptake; } }
+        #endregion
 
-
+        #region Organ properties
         /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
         public double TotalDM { get { return Live.Wt + Dead.Wt; } }
 
         /// <summary>Gets the total (live + dead) n (g/m2)</summary>
         public double TotalN { get { return Live.N + Dead.N; } }
-
-        /// <summary>Clears this instance.</summary>
-        virtual protected void Clear()
-        {
-            Live.Clear();
-            Dead.Clear();
-        }
+        
+        /// <summary>Gets the dm supply photosynthesis.</summary>
+        /// <value>The dm supply photosynthesis.</value>
+        [Units("g/m^2")]
+        virtual public double DMSupplyPhotosynthesis { get { return DMSupply.Fixation; } }
+        #endregion
 
         #region Biomass removal
         /// <summary>The Fraction of biomass that is removed by defoliation</summary>
         virtual public double FractionRemoved { get; set; }
-
         /// <summary>The Fraction of biomass that is removed by defoliation</summary>
         virtual public double FractionToResidue { get; set; }
-
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         [XmlIgnore]
         virtual public OrganBiomassRemovalType RemoveBiomass
@@ -207,7 +191,6 @@ namespace Models.PMF.Organs
                 }
             }
         }
-
         /// <summary>
         /// The default proportions biomass to removeed from each organ on harvest.
         /// </summary>
@@ -221,9 +204,7 @@ namespace Models.PMF.Organs
                     FractionToResidue = 0
                 };
             }
-            set { }
         }
-
         /// <summary>
         /// The default proportions biomass to removeed from each organ on Cutting
         /// </summary>
@@ -233,45 +214,42 @@ namespace Models.PMF.Organs
             {
                 return new OrganBiomassRemovalType
                 {
-                    FractionRemoved = 0.8,
+                    FractionRemoved = 0,
                     FractionToResidue = 0
                 };
             }
-            set { }
-        }
-
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Cutting
-        /// </summary>
-        public OrganBiomassRemovalType GrazeDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0.6,
-                    FractionToResidue = 0.1
-                };
-            }
-            set { }
         }
         /// <summary>
-        /// The default proportions biomass to removeed from each organ on Cutting
+        /// The default proportions biomass to removeed from each organ on Grazing
         /// </summary>
-        public OrganBiomassRemovalType PruneDefault
+        virtual public OrganBiomassRemovalType GrazeDefault
         {
             get
             {
                 return new OrganBiomassRemovalType
                 {
                     FractionRemoved = 0,
-                    FractionToResidue = 0.5
+                    FractionToResidue = 0
                 };
             }
-            set { }
+        }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Pruning
+        /// </summary>
+        virtual public OrganBiomassRemovalType PruneDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0,
+                    FractionToResidue = 0
+                };
+            }
         }
         #endregion
 
+        #region Management event methods
         /// <summary>Called when crop is ending</summary>
         ///[EventSubscribe("PlantEnding")]
         virtual public void DoPlantEnding()
@@ -300,7 +278,9 @@ namespace Models.PMF.Organs
         /// Do prune logic for this organ
         /// </summary>
         virtual public void DoPrune() { }
-
+        #endregion
+        
+        #region Organ functions
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
@@ -328,5 +308,14 @@ namespace Models.PMF.Organs
                     child.Document(tags, headingLevel + 1, indent);
             }
         }
+        /// <summary>Clears this instance.</summary>
+        virtual protected void Clear()
+        {
+            Live.Clear();
+            Dead.Clear();
+        }
+        /// <summary>Does the potential nutrient.</summary>
+        virtual public void DoPotentialNutrient() { }
+        #endregion
     }
 }

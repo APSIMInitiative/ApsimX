@@ -12,7 +12,14 @@
 
 _Hamish Brown and Rob Zyskowski, Plant and Food Research, New Zealand_
 
-This model has been built to simulate a range of different crops in simulations where water and nitrogen balance are of interest but a fully mechanistic plant model is not needed. It is a daily time step implementation of the crop model that is used on the Overseer nutrient balance model (Cichota_etal_2010).  It uses simple sigmoidal functions for estimating daily cover and biomass deltas to give realistic water and nitrogen demands. It does not simulate potential yield, this is specified as an input. Yield will be reduced below the specified potential yield if N or water supplies from the soil are insufficient to meet demand. The model has been paramaterised for simulating water and nitrogen balances of cropping rotations in New Zealand (where over 50 different crop types are grown and it is not feasible to produce full crop models for each of these). It may be adapted for other purposes and other crop types may be added but the user will need to keep in mind that it is empirical and the parameters might need changing for crops from different locations.]]></MemoText>
+This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate a range of different crops in simulations where water and nitrogen balance are of interest but a fully mechanistic plant model is not needed. It is a daily time step implementation of the crop model that is used on the Overseer nutrient balance model [Cichota_etal_2010].  It uses simple sigmoidal functions for estimating daily cover and biomass deltas to give realistic water and nitrogen demands. It does not simulate potential yield, this is specified as an input. Yield will be reduced below the specified potential yield if N or water supplies from the soil are insufficient to meet demand. The model has been paramaterised for simulating water and nitrogen balances of cropping rotations in New Zealand (where over 50 different crop types are grown and it is not feasible to produce full crop models for each of these). It may be adapted for other purposes and other crop types may be added but the user will need to keep in mind that it is empirical and the parameters might need changing for crops from different locations.
+
+SCUM has a simple phenology model which divides the crop growth into three main phases; a vegetative phase when the canopy is expanding, a reproductive phase when product is being formed and a senescing phase when the canopy is contracting.  SCUM consists of 4 organs:  
+   1. Stover which represents the unharvested parts of the plant and is represented with a simple leaf class.  
+   2. Product which represents the plant parts that are harvested and removed from the filed.  It uses a generic organ class  
+   3. Root which extracts water and nitrogen from the soil for plant growth  
+   4. Nodule which is only activated, fixing nitrogen for the legume crops.  
+An Arbitrator is also included which determines the allocation of drymatter and nitrogen biomass between each of these organs.]]></MemoText>
       </Memo>
       <Phenology>
         <Name>Phenology</Name>
@@ -20,7 +27,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Name>ThermalTime</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[Progression through each of the phenological stages is driven by thermal time.  As temperature increases from zero to 30 degrees development acellerates and then slows down again above 30 degress]]></MemoText>
+            <MemoText><![CDATA[Progression through each of the phenological stages is driven by thermal time.  As temperature increases from zero to 30 degrees, development acelerates and then slows down again above 30 degress]]></MemoText>
           </Memo>
           <XYPairs>
             <Name>XYPairs</Name>
@@ -53,7 +60,7 @@ This model has been built to simulate a range of different crops in simulations 
           </VariableReference>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[Currently the duration of the Emergence phase is set to zero.  However this phase is included if parameterisations of other crops in the future wish to give this phase a duration.]]></MemoText>
+            <MemoText><![CDATA[Currently the duration of the Emergence phase is set to zero because the period of zero cover and biomass production following sowing is accounted for in the cover and biomass accumulation functions.  However this phase is included if parameterisations of other crops in the future wish to give this phase a duration.]]></MemoText>
           </Memo>
           <Start>Germination</Start>
           <End>Emergence</End>
@@ -85,7 +92,7 @@ During this phase the plant only partitions biomass to Root and Stover (leaf and
           <Memo>
             <Name>Description</Name>
             <MemoText><![CDATA[
-During this phase the plant is partitioning biomass to Root Stover and Product organs
+During this phase the plant is partitioning biomass to Root, Stover and Product organs.
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -134,7 +141,7 @@ During this phase the plant is partitioning biomass to Root and Product organs a
           <Memo>
             <Name>Description</Name>
             <MemoText><![CDATA[
-During this phase the plant does bugger all but wait to be ready for harvest
+During this phase the plant has completed its growth and is drying ready for harvest.
 ]]></MemoText>
           </Memo>
           <Start>EndReproductive</Start>
@@ -155,10 +162,6 @@ During this phase the plant does bugger all but wait to be ready for harvest
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[Accumulates ThermalTime daily throughout the duration of the crop]]></MemoText>
-          </Memo>
           <StartStageName>Emergence</StartStageName>
           <EndStageName>Maturity</EndStageName>
         </AccumulateFunction>
@@ -171,6 +174,10 @@ During this phase the plant does bugger all but wait to be ready for harvest
       </OrganArbitrator>
       <GenericAboveGroundOrgan>
         <Name>Product</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[It is the biomass that is removed from the crop at harvest and may include grain, root, leaf, stem, pod or any other organ type depending on the type of crop and how it is harvested.]]></MemoText>
+        </Memo>
         <Biomass>
           <Name>Live</Name>
         </Biomass>
@@ -194,7 +201,7 @@ During this phase the plant does bugger all but wait to be ready for harvest
               <SubtractFunction>
                 <Name>ProductProportion</Name>
                 <Constant>
-                  <Name>Constant</Name>
+                  <Name>One</Name>
                   <Value>1</Value>
                 </Constant>
                 <VariableReference>
@@ -227,32 +234,43 @@ During this phase the plant does bugger all but wait to be ready for harvest
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <SubtractFunction>
-          <Name>WaterContent</Name>
-          <Constant>
-            <Name>One</Name>
-            <Value>1</Value>
-          </Constant>
-          <VariableReference>
-            <Name>DMcontent</Name>
-            <VariableName>[Product].ProductDMProportion.Value</VariableName>
-          </VariableReference>
-        </SubtractFunction>
-        <VariableReference>
-          <Name>DryMatterContent</Name>
-          <VariableName>[Product].ProductDMProportion.Value</VariableName>
-        </VariableReference>
         <Constant>
           <Name>ExpectedYield</Name>
           <Memo>
             <Name>Description</Name>
             <MemoText><![CDATA[
 
-This is the Product yield (g/m2 fresh weight) that MSCP will predict provided nitrogen and water supply are adequate
+This is the Product yield (g/m2 fresh weight) that SCUM will predict provided nitrogen and water supply are non-limiting
 ]]></MemoText>
           </Memo>
           <Value>800</Value>
         </Constant>
+        <Constant>
+          <Name>DryMatterContent</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+This is the dry matter content of the harvested yield and is used to convert fresh yield into *DryYield* which are subsequently used in determining *Ymax* (total biomass production), daily dry matter production, *HarvestIndex* and the *PartitioningFraction* of each organ]]></MemoText>
+          </Memo>
+          <Value>0.87</Value>
+        </Constant>
+        <MultiplyFunction>
+          <Name>DryYield</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+This variable is the product yield of the crop in g/m2 dry weight
+]]></MemoText>
+          </Memo>
+          <VariableReference>
+            <Name>FreshYld</Name>
+            <VariableName>[Product].ExpectedYield.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>DMPercent</Name>
+            <VariableName>[Product].DryMatterContent.Value</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
         <LinearInterpolationFunction>
           <Name>HarvestIndex</Name>
           <Memo>
@@ -276,41 +294,46 @@ The harvest index is related to the Expected Yield of the crop with higher yield
           </XYPairs>
           <XProperty>[Product].ExpectedYield.Value</XProperty>
         </LinearInterpolationFunction>
-        <Constant>
-          <Name>ProductDMProportion</Name>
+        <SubtractFunction>
+          <Name>WaterContent</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[
-This is the dry matter content of the harvested yield and is used to set the Partitioning Fraction in the Root
-]]></MemoText>
+            <MemoText><![CDATA[This is used to convert the total Dry Matter of this organ back to fresh mass once daily partitining is complete.]]></MemoText>
           </Memo>
-          <Value>0.87</Value>
-        </Constant>
-        <MultiplyFunction>
-          <Name>DryYield</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[
-This variable is the product yield of the crop in g/m2 dry weight
-]]></MemoText>
-          </Memo>
+          <Constant>
+            <Name>One</Name>
+            <Value>1</Value>
+          </Constant>
           <VariableReference>
-            <Name>FreshYld</Name>
-            <VariableName>[Product].ExpectedYield.Value</VariableName>
+            <Name>DMcontent</Name>
+            <VariableName>[Product].DryMatterContent.Value</VariableName>
           </VariableReference>
-          <VariableReference>
-            <Name>DMPercent</Name>
-            <VariableName>[Product].ProductDMProportion.Value</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
+        </SubtractFunction>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
+        <HarvestDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </HarvestDefault>
+        <CutDefault>
+          <FractionRemoved>0.8</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </CutDefault>
+        <GrazeDefault>
+          <FractionRemoved>0.6</FractionRemoved>
+          <FractionToResidue>0.1</FractionToResidue>
+        </GrazeDefault>
+        <PruneDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0.5</FractionToResidue>
+        </PruneDefault>
       </GenericAboveGroundOrgan>
       <SimpleLeaf>
         <Name>Stover</Name>
         <Memo>
           <Name>Description</Name>
           <MemoText><![CDATA[
-Stover represents any part of the crop that is not removed at harvest (i.e not part of the product).  It uses a Simple leaf organ so is responsible to the crops potential biomass supply and transpiraiton demand
-]]></MemoText>
+Stover represents any part of the crop that is not removed at harvest (i.e not part of the product).]]></MemoText>
         </Memo>
         <Biomass>
           <Name>Live</Name>
@@ -362,12 +385,6 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
             </XYPairs>
             <XProperty>[Stover].Fw</XProperty>
           </LinearInterpolationFunction>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[
-This function provides the DM fixation supply to the arbitrator which is then partitioned between the organs based on their DM Demands (From DMDemandFunctions).  In this case it takes the daily delta of a sigmoidal function to estimate daily potential biomass production as a function of accumulated thermal time and reduces this for water stress effects
-]]></MemoText>
-          </Memo>
         </MultiplyFunction>
         <AirTemperatureFunction>
           <Name>FRGRFunction</Name>
@@ -457,7 +474,7 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
                     <SubtractFunction>
                       <Name>AboveGroundProportion</Name>
                       <Constant>
-                        <Name>Constant</Name>
+                        <Name>One</Name>
                         <Value>1</Value>
                       </Constant>
                       <VariableReference>
@@ -486,12 +503,6 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
         </PartitionFractionDemandFunction>
         <PhaseLookup>
           <Name>CoverFunction</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[
-The cover of the canopy is estimated using a simple sigmoidal increase in the expanding phases and a linear decrease in the senescing phase
-]]></MemoText>
-          </Memo>
           <PhaseLookupValue>
             <Name>Expanding</Name>
             <SigmoidFunction2>
@@ -531,7 +542,7 @@ The cover of the canopy is estimated using a simple sigmoidal increase in the ex
               <SubtractFunction>
                 <Name>ProportionLost</Name>
                 <Constant>
-                  <Name>Constant</Name>
+                  <Name>One</Name>
                   <Value>1</Value>
                 </Constant>
                 <DivideFunction>
@@ -599,7 +610,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <PhaseLookupValue>
           <Name>NitrogenDemandSwitch</Name>
           <Constant>
-            <Name>Function</Name>
+            <Name>One</Name>
             <Value>1</Value>
           </Constant>
           <Start>Emergence</Start>
@@ -728,6 +739,24 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
             <VariableName>[Stover].bBiomass.Value</VariableName>
           </VariableReference>
         </SigmoidFunction2>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
+        <HarvestDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </HarvestDefault>
+        <CutDefault>
+          <FractionRemoved>0.8</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </CutDefault>
+        <GrazeDefault>
+          <FractionRemoved>0.6</FractionRemoved>
+          <FractionToResidue>0.1</FractionToResidue>
+        </GrazeDefault>
+        <PruneDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0.5</FractionToResidue>
+        </PruneDefault>
         <BiomassYesterday>0</BiomassYesterday>
         <LAI>0</LAI>
         <Height>0</Height>
@@ -777,7 +806,7 @@ The root organ demands and is partitioned N and DM and its depth increases throu
           <Memo>
             <Name>Description</Name>
             <MemoText><![CDATA[
-This is important in MCSP as it is set for each species to represent their differences in rooting patterns between crop species
+This is important in SCUM as it is set for each species to represent their differences in rooting patterns between crop species
 ]]></MemoText>
           </Memo>
           <XProperty>[Root].LayerMidPointDepth</XProperty>
@@ -833,10 +862,6 @@ This is important in MCSP as it is set for each species to represent their diffe
                 <Name>YieldIncreasingTT</Name>
                 <VariableName>[Phenology].YieldIncreasing.Target.Value</VariableName>
               </VariableReference>
-              <VariableReference>
-                <Name>SenescingTT</Name>
-                <VariableName>[Phenology].Senescing.Target.Value</VariableName>
-              </VariableReference>
             </AddFunction>
             <DivideFunction>
               <Name>IfTrue</Name>
@@ -878,6 +903,24 @@ This is the proportion of total biomass that is paritioned into the roots and is
           </Memo>
           <Value>0.1</Value>
         </Constant>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
+        <HarvestDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </HarvestDefault>
+        <CutDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </CutDefault>
+        <GrazeDefault>
+          <FractionRemoved>0.6</FractionRemoved>
+          <FractionToResidue>0.1</FractionToResidue>
+        </GrazeDefault>
+        <PruneDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0.5</FractionToResidue>
+        </PruneDefault>
         <InitialDM>0.2</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <KNO3_yProperty>
@@ -920,6 +963,24 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
           <Name>MinimumNConc</Name>
           <Value>0</Value>
         </Constant>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
+        <HarvestDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </HarvestDefault>
+        <CutDefault>
+          <FractionRemoved>0.8</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </CutDefault>
+        <GrazeDefault>
+          <FractionRemoved>0.6</FractionRemoved>
+          <FractionToResidue>0.1</FractionToResidue>
+        </GrazeDefault>
+        <PruneDefault>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0.5</FractionToResidue>
+        </PruneDefault>
         <NFixationOption>None</NFixationOption>
       </Nodule>
       <Summariser>
@@ -951,7 +1012,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,1150</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.14,0.6</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.87</Command>
+        <Command>[Product].DryMatterContent.Value = 0.87</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 1000</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 500</Command>
         <Command>[Phenology].Senescing.Target.Value = 300</Command>
@@ -977,7 +1038,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,1150</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.14,0.6</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.87</Command>
+        <Command>[Product].DryMatterContent.Value = 0.87</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 1000</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 500</Command>
         <Command>[Phenology].Senescing.Target.Value = 300</Command>
@@ -1003,7 +1064,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,1733</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.08,0.6</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.87</Command>
+        <Command>[Product].DryMatterContent.Value = 0.87</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 1785</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 615</Command>
         <Command>[Phenology].Senescing.Target.Value = 600</Command>
@@ -1029,9 +1090,9 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,11000</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.84,0.97</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.22</Command>
+        <Command>[Product].DryMatterContent.Value = 0.22</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 652</Command>
-        <Command>[Phenology].YieldIncreasing.Target.Value= 1598</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value= 1200</Command>
         <Command>[Phenology].Senescing.Target.Value = 600</Command>
         <Command>[Phenology].Mature.Target.Value = 300</Command>
         <Command>[Stover].NConc.Value = 0.02</Command>
@@ -1055,7 +1116,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,1200</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.45,0.45</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.21</Command>
+        <Command>[Product].DryMatterContent.Value = 0.21</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 707</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 400</Command>
         <Command>[Phenology].Senescing.Target.Value = 200</Command>
@@ -1082,7 +1143,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,1830</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.5,0.6</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.87</Command>
+        <Command>[Product].DryMatterContent.Value = 0.87</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 1486</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 614</Command>
         <Command>[Phenology].Senescing.Target.Value = 1500</Command>
@@ -1108,7 +1169,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,3300</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.7,0.7</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.05</Command>
+        <Command>[Product].DryMatterContent.Value = 0.05</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 436</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 1664</Command>
         <Command>[Phenology].Senescing.Target.Value = 900</Command>
@@ -1143,7 +1204,7 @@ Kale has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,10000</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = 0.9,0.5</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.16</Command>
+        <Command>[Product].DryMatterContent.Value = 0.16</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 0</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 4000</Command>
         <Command>[Phenology].Senescing.Target.Value = 0</Command>
@@ -1178,7 +1239,7 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Product].HarvestIndex.XYPairs.X = 0,6000</Command>
         <Command>[Product].HarvestIndex.XYPairs.Y = .95,0.5</Command>
-        <Command>[Product].ProductDMProportion.Value = 0.13</Command>
+        <Command>[Product].DryMatterContent.Value = 0.13</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 0</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 3000</Command>
         <Command>[Phenology].Senescing.Target.Value = 0</Command>
@@ -1189,12 +1250,59 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[Root].MinimumNConc.Value = 0.008</Command>
         <Command>[Root].MaximumNConc.Value = 0.008</Command>
       </Cultivar>
-      <Memo>
-        <Name>References</Name>
-        <MemoText><![CDATA[
-Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 2010. A nitrogen balance model for environmental accountability in cropping systems. New Zealand Journal of Crop and Horticultural Science,38: 189-207.
-]]></MemoText>
-      </Memo>
+      <Cultivar>
+        <Name>Dried_Peas</Name>
+        <Alias>Barley_Spring</Alias>
+        <Command>[Root].MaximumRootDepth.Value = 700</Command>
+        <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.4, 0.2, 0.0</Command>
+        <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
+        <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.b.Value = 60</Command>
+        <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
+        <Command>[Stover].XoBiomass.Value = 750</Command>
+        <Command>[Stover].bBiomass.Value = 180</Command>
+        <Command>[Product].ExpectedYield.Value = 630</Command>
+        <Command>[Root].RootProportion.Value = 0.1</Command>
+        <Command>[Product].HarvestIndex.XYPairs.X = 0,1200</Command>
+        <Command>[Product].HarvestIndex.XYPairs.Y = 0.5,0.5</Command>
+        <Command>[Product].DryMatterContent.Value = 0.86</Command>
+        <Command>[Phenology].CanopyExpanding.Target.Value = 677</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value= 673</Command>
+        <Command>[Phenology].Senescing.Target.Value = 300</Command>
+        <Command>[Phenology].Mature.Target.Value = 300</Command>
+        <Command>[Stover].NConc.Value = 0.02</Command>
+        <Command>[Product].MinimumNConc.Value = 0.03</Command>
+        <Command>[Product].MaximumNConc.Value = 0.035</Command>
+        <Command>[Root].MinimumNConc.Value = 0.015</Command>
+        <Command>[Root].MaximumNConc.Value = 0.015</Command>
+        <Command>[Nodule].NFixationOption = Majic</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Potatoes_Short</Name>
+        <Alias>Barley_Spring</Alias>
+        <Command>[Root].MaximumRootDepth.Value = 500</Command>
+        <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.5, 0.1, 0.0</Command>
+        <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
+        <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.b.Value = 60</Command>
+        <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
+        <Command>[Stover].XoBiomass.Value = 1200</Command>
+        <Command>[Stover].bBiomass.Value = 210</Command>
+        <Command>[Product].ExpectedYield.Value = 5300</Command>
+        <Command>[Root].RootProportion.Value = 0.1</Command>
+        <Command>[Product].HarvestIndex.XYPairs.X = 0,11000</Command>
+        <Command>[Product].HarvestIndex.XYPairs.Y = 0.84,0.95</Command>
+        <Command>[Product].DryMatterContent.Value = 0.23</Command>
+        <Command>[Phenology].CanopyExpanding.Target.Value = 652</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value = 897</Command>
+        <Command>[Phenology].Senescing.Target.Value = 600</Command>
+        <Command>[Phenology].Mature.Target.Value = 300</Command>
+        <Command>[Stover].NConc.Value = 0.02</Command>
+        <Command>[Product].MinimumNConc.Value = 0.012</Command>
+        <Command>[Product].MaximumNConc.Value = 0.018</Command>
+        <Command>[Root].MinimumNConc.Value = 0.01</Command>
+        <Command>[Root].MaximumNConc.Value = 0.01</Command>
+      </Cultivar>
       <CropType>SLURP</CropType>
     </Plant>
   </Replacements>
@@ -1227,15 +1335,22 @@ Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 201
     </Test>
   </Tests>
   <Simulation>
-    <Name>SCUMTestBase</Name>
+    <Name>ABlockBase</Name>
+    <Memo>
+      <Name>Rotation test</Name>
+      <MemoText><![CDATA[
+#Testing of SCUM over a short rotation
+
+This simulations sows, grows and harvests three successive crops, Potatoes, Peas and Potatoes.  Detailed graphs are produced with all components of the Nitrogen and water balancesn and showing all of the SCUM models organ biomass to demonstrate the models workings.  Irrigation and Fertiliser are applied in levels to ensure they are not limiting production]]></MemoText>
+    </Memo>
     <Weather>
       <Name>Weather</Name>
       <FileName>%root%\Tests\WeatherFiles\lincoln.met</FileName>
     </Weather>
     <Clock>
       <Name>Clock</Name>
-      <StartDate>1998-10-14T00:00:00</StartDate>
-      <EndDate>1999-07-01T00:00:00</EndDate>
+      <StartDate>2004-10-12T00:00:00</StartDate>
+      <EndDate>2007-04-30T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
@@ -1245,326 +1360,6 @@ Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 201
     </SoilArbitrator>
     <Zone>
       <Name>Field</Name>
-      <Soil>
-        <Name>Soil</Name>
-        <Analysis>
-          <Name>Analysis</Name>
-          <Thickness>
-            <double>100</double>
-            <double>200</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <PH>
-            <double>6.6</double>
-            <double>6.2</double>
-            <double>5.7</double>
-            <double>5.5</double>
-            <double>5.5</double>
-            <double>5.5</double>
-          </PH>
-          <PHUnits>Water</PHUnits>
-          <BoronUnits>HotWater</BoronUnits>
-        </Analysis>
-        <InitialWater>
-          <Name>Initial water</Name>
-          <PercentMethod>EvenlyDistributed</PercentMethod>
-          <FractionFull>1</FractionFull>
-          <DepthWetSoil>NaN</DepthWetSoil>
-        </InitialWater>
-        <Water>
-          <Name>Water</Name>
-          <SoilCrop>
-            <Name>SCUMSoil</Name>
-            <LL>
-              <double>0.13</double>
-              <double>0.13</double>
-              <double>0.1</double>
-              <double>0.08</double>
-              <double>0.11</double>
-              <double>0.11</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>PotatoSoil</Name>
-            <LL>
-              <double>0.13</double>
-              <double>0.13</double>
-              <double>0.27</double>
-              <double>0.27</double>
-              <double>0.3</double>
-              <double>0.3</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.06</double>
-              <double>0.03</double>
-              <double>0.01</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>0.1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <Thickness>
-            <double>100</double>
-            <double>200</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <BD>
-            <double>1.2</double>
-            <double>1.2</double>
-            <double>1.2</double>
-            <double>1.2</double>
-            <double>1.2</double>
-            <double>1.2</double>
-          </BD>
-          <AirDry>
-            <double>0.08</double>
-            <double>0.13</double>
-            <double>0.1</double>
-            <double>0.06</double>
-            <double>0.04</double>
-            <double>0.02</double>
-          </AirDry>
-          <LL15>
-            <double>0.13</double>
-            <double>0.13</double>
-            <double>0.1</double>
-            <double>0.06</double>
-            <double>0.04</double>
-            <double>0.02</double>
-          </LL15>
-          <DUL>
-            <double>0.33</double>
-            <double>0.33</double>
-            <double>0.31</double>
-            <double>0.15</double>
-            <double>0.1</double>
-            <double>0.06</double>
-          </DUL>
-          <SAT>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.44</double>
-            <double>0.46</double>
-            <double>0.44</double>
-            <double>0.44</double>
-          </SAT>
-        </Water>
-        <SoilWater>
-          <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
-          <SummerDate>1-Nov</SummerDate>
-          <SummerU>9</SummerU>
-          <SummerCona>4.4</SummerCona>
-          <WinterDate>1-Apr</WinterDate>
-          <WinterU>9</WinterU>
-          <WinterCona>4.4</WinterCona>
-          <DiffusConst>88</DiffusConst>
-          <DiffusSlope>35.4</DiffusSlope>
-          <Salb>0.18</Salb>
-          <CN2Bare>68</CN2Bare>
-          <CNRed>20</CNRed>
-          <CNCov>0.8</CNCov>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <max_pond>0</max_pond>
-          <Thickness>
-            <double>100</double>
-            <double>200</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <SWCON>
-            <double>0.55</double>
-            <double>0.55</double>
-            <double>0.55</double>
-            <double>0.55</double>
-            <double>0.55</double>
-            <double>0.55</double>
-          </SWCON>
-          <KLAT>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </KLAT>
-        </SoilWater>
-        <SoilNitrogen>
-          <Name>SoilNitrogen</Name>
-          <fom_type>
-            <string>default</string>
-            <string>manure</string>
-            <string>mucuna</string>
-            <string>lablab</string>
-            <string>shemp</string>
-            <string>stable</string>
-          </fom_type>
-          <fract_carb>
-            <double>0.2</double>
-            <double>0.3</double>
-            <double>0.54</double>
-            <double>0.57</double>
-            <double>0.45</double>
-            <double>0</double>
-          </fract_carb>
-          <fract_cell>
-            <double>0.7</double>
-            <double>0.3</double>
-            <double>0.37</double>
-            <double>0.37</double>
-            <double>0.47</double>
-            <double>0.1</double>
-          </fract_cell>
-          <fract_lign>
-            <double>0.1</double>
-            <double>0.4</double>
-            <double>0.09</double>
-            <double>0.06</double>
-            <double>0.08</double>
-            <double>0.9</double>
-          </fract_lign>
-          <wfpsN2N2O_x>
-            <double>22</double>
-            <double>88</double>
-          </wfpsN2N2O_x>
-          <wfpsN2N2O_y>
-            <double>0.1</double>
-            <double>1</double>
-          </wfpsN2N2O_y>
-          <oc>
-            <double>1.8356606676098439</double>
-            <double>1.4633385968844384</double>
-            <double>1.1988393325681357</double>
-            <double>1.0301002994895852</double>
-            <double>0.4703383219429832</double>
-            <double>0.47013790451920212</double>
-          </oc>
-        </SoilNitrogen>
-        <SoilOrganicMatter>
-          <Name>SoilOrganicMatter</Name>
-          <RootCN>30</RootCN>
-          <RootWt>3000</RootWt>
-          <SoilCN>11.5</SoilCN>
-          <EnrACoeff>7.4</EnrACoeff>
-          <EnrBCoeff>0.2</EnrBCoeff>
-          <Thickness>
-            <double>100</double>
-            <double>200</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <Depth>
-            <string>0-10</string>
-            <string>10-30</string>
-            <string>30-60</string>
-            <string>60-90</string>
-            <string>90-120</string>
-            <string>120-150</string>
-          </Depth>
-          <OC>
-            <double>1.82</double>
-            <double>1.47</double>
-            <double>1.2</double>
-            <double>1.03</double>
-            <double>0.47</double>
-            <double>0.47</double>
-          </OC>
-          <FBiom>
-            <double>0.025</double>
-            <double>0.025</double>
-            <double>0.015</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-          </FBiom>
-          <FInert>
-            <double>0.3</double>
-            <double>0.4</double>
-            <double>0.75</double>
-            <double>0.9</double>
-            <double>0.96</double>
-            <double>0.96</double>
-          </FInert>
-          <OCUnits>Total</OCUnits>
-        </SoilOrganicMatter>
-        <Sample>
-          <Name>Initial nitrogen</Name>
-          <Thickness>
-            <double>100</double>
-            <double>200</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <NO3>
-            <double>270</double>
-            <double>30</double>
-            <double>5</double>
-            <double>5</double>
-            <double>0</double>
-            <double>0</double>
-          </NO3>
-          <NH4>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </NH4>
-          <NO3Units>kgha</NO3Units>
-          <NH4Units>ppm</NH4Units>
-          <SWUnits>Volumetric</SWUnits>
-          <OCUnits>Total</OCUnits>
-          <PHUnits>Water</PHUnits>
-        </Sample>
-        <RecordNumber>0</RecordNumber>
-        <SoilType />
-        <LocalName />
-        <Site />
-        <NearestTown />
-        <Region />
-        <NaturalVegetation />
-        <Latitude>0</Latitude>
-        <Longitude>0</Longitude>
-      </Soil>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
         <PondActive>no</PondActive>
@@ -1637,39 +1432,148 @@ Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 201
         <Name>Fertiliser</Name>
       </Fertiliser>
       <Manager>
-        <Name>MCSPSowingRule</Name>
+        <Name>ABlockRotationManagement</Name>
         <Script>
-          <CultivarName>Green_Peas</CultivarName>
           <InitialRootDepth>10</InitialRootDepth>
-          <SowingDate>1998-10-14</SowingDate>
+          <Crop1>Potatoes_Short</Crop1>
+          <SowingDate1>2004-10-15</SowingDate1>
+          <HarvestDate1>2005-03-14</HarvestDate1>
+          <Yield1>5500</Yield1>
+          <Crop2>Dried_Peas</Crop2>
+          <SowingDate2>2005-09-28</SowingDate2>
+          <HarvestDate2>2006-02-24</HarvestDate2>
+          <Yield2>800</Yield2>
+          <Crop3>Potatoes_Short</Crop3>
+          <SowingDate3>2006-10-11</SowingDate3>
+          <HarvestDate3>2007-03-12</HarvestDate3>
+          <Yield3>2280</Yield3>
+          <Crop4>
+          </Crop4>
+          <SowingDate4>0001-01-01</SowingDate4>
+          <HarvestDate4>0001-01-01</HarvestDate4>
+          <Yield4>0</Yield4>
         </Script>
-        <Code><![CDATA[
-using System;
+        <Code><![CDATA[using System;
 using Models.Core;
+using System.Collections.Generic;
+using System.Text;
 using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable] 
 	[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
-		[Link] Plant MCSP;
+		[Link] Plant SCUM;
 		[Link] Clock Clock;
+		[Link] Zone zone;
 
-		[Description("Cultivar")]
-		public string CultivarName { get; set; }
 		[Description("Initial Root Depth")]
 		public double InitialRootDepth { get; set; }
-		[Description("Sowing Date")]
-		public DateTime SowingDate { get; set; }
+		
+		[Description("First Crop")]
+		public string Crop1 { get; set; }
+		[Description("First Sowing Date")]
+		public DateTime SowingDate1 { get; set; }
+		[Description("First Harvest Date")]
+		public DateTime HarvestDate1 { get; set; }
+		[Description("First Crop Yield (g/m2 fresh wt)")]
+		public int Yield1 { get; set; }
+		
+		[Description("Second Crop")]
+		public string Crop2 { get; set; }
+		[Description("Second Sowing Date")]
+		public DateTime SowingDate2 { get; set; }
+		[Description("Second Harvest Date")]
+		public DateTime HarvestDate2 { get; set; }
+		[Description("Second Crop Yield (g/m2 fresh wt)")]
+		public int Yield2 { get; set; }
 
-               
+		[Description("Third Crop")]
+		public string Crop3 { get; set; }
+		[Description("Third Sowing Date")]
+		public DateTime SowingDate3 { get; set; }
+		[Description("Third Harvest Date")]
+		public DateTime HarvestDate3 { get; set; }
+		[Description("Third Crop Yield (g/m2 fresh wt)")]
+		public int Yield3 { get; set; }
+		
+		[Description("Forth Crop")]
+		public string Crop4 { get; set; }
+		[Description("Forth Sowing Date")]
+		public DateTime SowingDate4 { get; set; }
+		[Description("Forth Harvest Date")]
+		public DateTime HarvestDate4 { get; set; }
+		[Description("Forth Crop Yield (g/m2 fresh wt)")]
+		public int Yield4 { get; set; }
+		
+		[XmlIgnore] private RemovalFractions Remove { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Remove = new RemovalFractions(SCUM.Organs);
+		}
+		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (Clock.Today.Date == SowingDate)
-				MCSP.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
-                
+			if (Clock.Today.Date == SowingDate1)
+			{
+				SCUM.Sow(cultivar: Crop1, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				object ResetValue = Yield1;
+				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
+			}
+			else if (Clock.Today.Date == HarvestDate1)
+			{
+				Remove.SetFractionRemoved("Product", 1.0);
+				Remove.SetFractionRemoved("Stover", 0.05);
+				SCUM.Harvest(Remove);
+				SCUM.EndCrop();
+			}
+			else if (Clock.Today.Date == SowingDate2)
+			{
+				SCUM.Sow(cultivar: Crop2, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				object ResetValue = Yield2;
+				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
+			}
+			else if (Clock.Today.Date == HarvestDate2)
+			{
+				Remove.SetFractionRemoved("Product", 1.0);
+				Remove.SetFractionRemoved("Stover", 0.05);
+				SCUM.Harvest(Remove);
+				SCUM.EndCrop();
+			}
+			else if (Clock.Today.Date == SowingDate3)
+			{
+				SCUM.Sow(cultivar: Crop3, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				object ResetValue = Yield3;
+				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
+			}
+			else if (Clock.Today.Date == HarvestDate3)
+			{
+				Remove.SetFractionRemoved("Product", 1.0);
+				Remove.SetFractionRemoved("Stover", 0.05);
+				SCUM.Harvest(Remove);
+				SCUM.EndCrop();
+			}
+			else if (Clock.Today.Date == SowingDate4)
+			{
+				SCUM.Sow(cultivar: Crop4, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				object ResetValue = Yield4;
+				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
+			}
+			else if (Clock.Today.Date == HarvestDate4)
+			{
+				Remove.SetFractionRemoved("Product", 1.0);
+				Remove.SetFractionRemoved("Stover", 0.05);
+				SCUM.Harvest(Remove);
+				SCUM.EndCrop();
+			}
 			//PMFCrop.Sow(... Contains the following arguements:
 			//Population  double  Optional  Seeds sowing/m2.  Default is zero
 			//Cultivar    string  Required  "NameOfCultivar"
@@ -1713,6 +1617,7 @@ namespace Models
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
 		[XmlIgnore] public double AccumPlantN { get; set; }
+		[XmlIgnore] public double AccumNFixation { get; set; }
 		[XmlIgnore] public double AccumMineralisation { get; set; }
 		[XmlIgnore] public double AccumDenit { get; set; }
 		[XmlIgnore] public double AccumFert { get; set; }
@@ -1786,6 +1691,7 @@ namespace Models
 			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
 			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("SCUM.Root.NUptake");
+			
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -1795,8 +1701,8 @@ namespace Models
 
 			AccumRainfall += Met.Rain;
 			//AccumEP -= (double)zone.Get("[SCUM].Stover.Transpiration");
-            AccumEP -= (double)zone.Get("SCUM.Root.WaterUptake");
-			SoilWaterDeficit =  (SWC - DUL);
+			AccumEP -= (double)zone.Get("SCUM.Root.WaterUptake");
+			SoilWaterDeficit = (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
 		}
@@ -1804,6 +1710,7 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
+			AccumNFixation -= (double)zone.Get("SCUM.Nodule.NFixed") * 10;
 			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
 			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
@@ -1818,342 +1725,39 @@ namespace Models
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
 			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
 		}
+		
+		[EventSubscribe("PlantEnding")]
+		private void OnPlantEnding(object sender, EventArgs e)
+		{
+			AccumFert = 0;
+			AccumIrrigation = 0;
+			AccumNFixation = 0;
+			
+			AccumEO = 0;
+			AccumES = 0;
+			AccumDrainage = 0;
+			AccumRunoff = 0;
+			
+			AccumLeach = 0;
+			AccumMineralisation = 0;
+			AccumDenit = 0;
+			AccumPlantN = 0;
+			
+			AccumRainfall = 0;
+			AccumEP = 0;
+			AccumOutflowLat = 0;
+			
+		}
 	}
 }
 	   ]]></Code>
-      </Manager>
-      <Manager>
-        <Name>AutomaticIrrigation</Name>
-        <Script>
-          <Irrigation_Yes_No>yes</Irrigation_Yes_No>
-          <Season_Start>1-Oct</Season_Start>
-          <Season_End>30-Apr</Season_End>
-          <Season_Allocation>1000</Season_Allocation>
-          <Refull_Frac>0.9</Refull_Frac>
-          <Trigger_Frac>0.7</Trigger_Frac>
-          <Return_days>3</Return_days>
-          <Maximum_Irrigation_Amount>40</Maximum_Irrigation_Amount>
-          <Top_Depth>600</Top_Depth>
-        </Script>
-        <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.Soils;
-using System.Xml.Serialization;
-using Models.PMF;
-using APSIM.Shared.Utilities;
-
-        
-namespace Models
-{
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		//Communication to other modules
-		[Link] ISummary summary = null;
-		[Link] Irrigation Irrigation;
-		[Link] Clock Clock;
-		[Link] Soil Soil;
-		[Link] Plant SCUM;
-	   
-		//User inputs from properties tab
-		[Description("Irrigation on (yes or no)")]
-		public string Irrigation_Yes_No { get; set; }
-		[Description("SeasonStart (dd-MMM)")]
-		public string Season_Start { get; set; }
-		[Description("SeasonEnd (dd-MMM)")]
-		public string Season_End { get; set; }
-		[Description("Season Allocation (mm)")]
-		public double Season_Allocation { get; set; }
-		[Description("% PAWC to refill soil to (0-1)")]
-		public double Refull_Frac { get; set; }
-		[Description("% PAWC to trigger irrigation (0-1)")]
-		public double Trigger_Frac { get; set; }
-		[Description("Minimum days for irrigation to return")]
-		public double Return_days { get; set; }
-		[Description("Maximum irrigation application (mm)")]
-		public double Maximum_Irrigation_Amount { get; set; }
-		[Description("Depth to calculate PAWC (mm)")]
-		public double Top_Depth { get; set; }
-	   
-		//Class members
-		[XmlIgnore] private bool IrrigationIsAvailable { get; set; }
-		[XmlIgnore] public bool SeasonIsOpen { get; set; }
-		[XmlIgnore] private bool CropIsActive { get; set; }
-		[XmlIgnore] private bool IrrigatorIsAvailable { get; set; }
-		[XmlIgnore] private bool SoilIsDry { get; set; }
-		[XmlIgnore] public double Top_DUL { get; set; }
-		[XmlIgnore] public double Top_Refull { get; set; }
-		[XmlIgnore] public double Top_Trigger { get; set; }
-		[XmlIgnore] public double Top_LL { get; set; }
-		[XmlIgnore] public double Top_SW { get; set; }
-		[XmlIgnore] public double Accumulated_depth { get; set; }
-		[XmlIgnore] public double Days_since_irrigation { get; set; }
-		[XmlIgnore] public double Amount_to_apply { get; set; }
-		[XmlIgnore] public double Season_Application { get; set; }
-		
-		//Variables for date logic testing
-		[XmlIgnore] public string StartString { get; set; }
-		[XmlIgnore] public string EndString { get; set; }
-		[XmlIgnore] public DateTime StartDate { get; set; }
-		[XmlIgnore] public DateTime EndDate { get; set; }
-		[XmlIgnore] public int TodayYear { get; set; }
-		[XmlIgnore] public int TodayMonth { get; set; }
-		[XmlIgnore] public int StartMonth { get; set; }
-		[XmlIgnore] public int EndMonth { get; set; }
-		[XmlIgnore] public int TodayDay { get; set; }
-		[XmlIgnore] public int StartDay { get; set; }
-		[XmlIgnore] public int EndDay { get; set; }
-	   
-	
-		//Calculate static soil variables
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{   
-			//Calculated soil water variables
-			Accumulated_depth = 0;
-			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
-			{
-				Top_LL += Soil.SoilWater.LL15mm[layer];
-				Top_DUL += Soil.SoilWater.DULmm[layer];
-				Accumulated_depth += Soil.SoilWater.Thickness[layer];
-			}
-			Top_Refull = Top_LL + (Top_DUL - Top_LL) * Refull_Frac;
-		}
-	   
-	  
-		//Determine daily requirement for irrigation
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{ 
-			//Can we irrigate?
-			IrrigationIsAvailable = false; 
-			if (Irrigation_Yes_No == "yes")
-				IrrigationIsAvailable = true; 
-	
-			//Are we Allowed to Irrigate?
-			TodayYear = Clock.Today.Year;
-			StartString = Season_Start + "-" + TodayYear.ToString();
-			EndString = Season_End + "-" + TodayYear.ToString();
-			StartDate = DateTime.Parse(StartString);
-			EndDate = DateTime.Parse(EndString);
-			TodayMonth = Clock.Today.Month;
-			TodayDay = Clock.Today.Day;
-			StartDay = StartDate.Day;
-			StartMonth = StartDate.Month;
-			EndDay = EndDate.Day;
-			EndMonth = EndDate.Month;
-		  
-			SeasonIsOpen = false;
-			//if we are in the spring and after the start date then yes
-			if ((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
-				SeasonIsOpen = true;
-			//if we are in the autumn and before the end date then yes
-			if ((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
-				SeasonIsOpen = true;
-		  
-			//Is there a crop in the ground that needs irrigation?
-			CropIsActive = false;
-			if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
-				CropIsActive = true;
-	      
-			//Is the irrigator available?
-			IrrigatorIsAvailable = false;
-			Days_since_irrigation += 1;
-			if (Days_since_irrigation >= Return_days)
-				IrrigatorIsAvailable = true;
-	      
-			//Is the soil dry enough to require irrigation?
-			SoilIsDry = false;
-			double CurrentRootDepth = 0;
-			double RootDepth = SCUM.Root.Depth;
-			CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
-	      
-			double RelativeRootDepth = Math.Min(1.0, CurrentRootDepth / Top_Depth);
-			Top_Trigger = Math.Min(Top_Refull, Top_DUL - (Top_DUL - Top_LL) * RelativeRootDepth * (1 - Trigger_Frac)); 
-	      
-			Accumulated_depth = 0;
-			Top_SW = 0;
-			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
-			{
-				Top_SW += Soil.SoilWater.SWmm[layer];
-				Accumulated_depth += Soil.SoilWater.Thickness[layer];
-			}
-			if (Top_SW <= Top_Trigger)
-				SoilIsDry = true;
-	            
-			//Lets bloody well irrigate then!!!!
-			if ((IrrigationIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (IrrigatorIsAvailable) && (SoilIsDry)) //The conditions are rife for irrigation
-			{
-				Amount_to_apply = Math.Min(Top_Refull - Top_SW, Maximum_Irrigation_Amount);
-				Amount_to_apply = Math.Min(Amount_to_apply, Season_Allocation - Season_Application); 
-				Amount_to_apply = Math.Max(Amount_to_apply, 0.0);
-				Irrigation.Apply(Amount_to_apply);
-				Days_since_irrigation = 0;
-				Season_Application += Amount_to_apply;
-				summary.WriteMessage(this, "Automatic Irrigation");
-            
-			}
-		}
-	}
-}
-             
-             ]]></Code>
-      </Manager>
-      <Manager>
-        <Name>AutomaticFertiliser</Name>
-        <Script>
-          <Fertiliser_Yes_No>no</Fertiliser_Yes_No>
-          <Season_Start>1-Aug</Season_Start>
-          <Season_End>30-Apr</Season_End>
-          <Season_Allocation>1000</Season_Allocation>
-          <TriggerN>50</TriggerN>
-          <NApplicationAmount>25</NApplicationAmount>
-          <Return_days>3</Return_days>
-          <Top_Depth>300</Top_Depth>
-        </Script>
-        <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.Soils;
-using System.Xml.Serialization;
-using Models.PMF;
-using APSIM.Shared.Utilities;
-
-        
-namespace Models
-{
-   [Serializable] 
-   [System.Xml.Serialization.XmlInclude(typeof(Model))]
-    public class Script : Model
-    {      
-	   //Communication to other modules
-	   [Link] ISummary summary = null;
-	   [Link] Fertiliser Fertiliser;
-	   [Link] Clock Clock;
-	   [Link] Soils.Soil Soil;
-	   [Link] Plant SCUM;
-	   
-	   //User inputs from properties tab
-	   [Description("Fertiliser on (yes or no)")]
-	   public string Fertiliser_Yes_No { get; set; }
-	   [Description("SeasonStart (dd-MMM)")]
-	   public string Season_Start { get; set; }
-	   [Description("SeasonEnd (dd-MMM)")]
-	   public string Season_End { get; set; }
-	   [Description("Season Allocation (kg/ha)")]
-	   public double Season_Allocation { get; set; }
-	   [Description("Mineral N to maintain soil above (kg/ha)")]
-	   public double TriggerN { get; set; }
-	   [Description("Amount of N to apply (kg/ha)")]
-	   public double NApplicationAmount { get; set; }
-	   [Description("Minimum days for Fertiliser spreader to return")]
-	   public double Return_days { get; set; }
-	   [Description("Depth to calculate mineral N (mm)")]
-	   public double Top_Depth { get; set; }
-	   
-	   //Class members
-	   [XmlIgnore] private bool FertiliserIsAvailable { get; set; }
-	   [XmlIgnore] public bool SeasonIsOpen { get; set; }
-	   [XmlIgnore] private bool CropIsActive { get; set; }
-	   [XmlIgnore] private bool FertSpreaderIsAvailable { get; set; }
-	   [XmlIgnore] private bool SoilNIsLow { get; set; }
-	   [XmlIgnore] public double Top_SoilN { get; set; }
-	   [XmlIgnore] public double Accumulated_depth { get; set; }   
-	   [XmlIgnore] public double Days_since_fertiliser { get; set; }
-	   [XmlIgnore] public double Season_Application { get; set; }
-		
-	   //Variables for date logic testing
-	   [XmlIgnore] public string StartString {get; set;}
-	   [XmlIgnore] public string EndString {get; set;}
-	   [XmlIgnore] public DateTime StartDate {get; set;}
-	   [XmlIgnore] public DateTime EndDate {get; set;}
-	   [XmlIgnore] public int TodayYear {get; set;}
-	   [XmlIgnore] public int TodayMonth {get; set;}
-	   [XmlIgnore] public int StartMonth {get; set;}
-	   [XmlIgnore] public int EndMonth {get; set;}
-	   [XmlIgnore] public int TodayDay {get; set;}
-	   [XmlIgnore] public int StartDay {get; set;}
-	   [XmlIgnore] public int EndDay {get; set;}
-	   	   
-	   //Determine daily requirement for fertiliser
-		[EventSubscribe("StartOfDay")]
-	   	private void OnStartOfDay(object sender, EventArgs e)
-	   	{ 
-	      //Can we irrigate?
-	      FertiliserIsAvailable = false; 
-	      if (Fertiliser_Yes_No == "yes")
-	         FertiliserIsAvailable = true; 
-	
-	      //Are we Allowed to Irrigate?
-	      TodayYear = Clock.Today.Year;
-	      StartString = Season_Start + "-" + TodayYear.ToString();
-	      EndString = Season_End + "-" + TodayYear.ToString();
-	      StartDate = DateTime.Parse(StartString);
-	      EndDate = DateTime.Parse(EndString);
-		  TodayMonth = Clock.Today.Month;
-		  TodayDay = Clock.Today.Day;
-		  StartDay = StartDate.Day;
-		  StartMonth = StartDate.Month;
-		  EndDay = EndDate.Day;
-		  EndMonth = EndDate.Month;
-		  
-		  SeasonIsOpen = false;
-		  //if we are in the spring and after the start date then yes
-		  if((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
-		  SeasonIsOpen = true;
-		  //if we are in the autumn and before the end date then yes
-		  if((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
-		  SeasonIsOpen = true;
-		  
-	      //Is there a crop in the ground that needs irrigation?
-	      CropIsActive = false;
-	      if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
-	            CropIsActive = true;
-	      
-	      //Is the irrigator available?
-	      FertSpreaderIsAvailable = false;
-	      Days_since_fertiliser += 1;
-	      if (Days_since_fertiliser >= Return_days)
-	         FertSpreaderIsAvailable = true;
-	      
-	      //Is the soil N low enough to require fertiliser?
-	      SoilNIsLow = false;
-	      double CurrentRootDepth = 0;
-	      double RootDepth = SCUM.Root.Depth;
-	      CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
-	      
-	      Accumulated_depth = 0;
-	      Top_SoilN = 0;
-	      for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
-	      {
-	         Top_SoilN += Soil.NO3N[layer];
-	         Accumulated_depth += Soil.SoilWater.Thickness[layer];
-	      }
-	      if (Top_SoilN <= TriggerN)
-	         SoilNIsLow = true;
-	            
-	      //Lets bloody well irrigate then!!!!
-	      if((FertiliserIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (FertSpreaderIsAvailable) && (SoilNIsLow)) //The conditions are rife for irrigation
-	      {
-	         Fertiliser.Apply(NApplicationAmount, Fertiliser.Types.UreaN, 10);
-	         Days_since_fertiliser = 0;
-	         Season_Application += NApplicationAmount;
-	         summary.WriteMessage(this, "Automatic Fertiliser");
-            
-	      }
-	   }
-	}
-}
-             
-             ]]></Code>
       </Manager>
       <Report>
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[ExtraVariables].Script.AccumPlantN</string>
+          <string>[ExtraVariables].Script.AccumNFixation</string>
           <string>[ExtraVariables].Script.AccumMineralisation</string>
           <string>[ExtraVariables].Script.AccumDenit</string>
           <string>[ExtraVariables].Script.AccumFert</string>
@@ -2241,11 +1845,520 @@ namespace Models
           <string>[AutomaticIrrigation].Script.EndDate</string>
           <string>[AutomaticIrrigation].Script.TodayYear</string>
           <string>[SCUM].Arbitrator.FN</string>
+          <string>[SCUM].Nodule.NFixed</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
+      <Soil>
+        <Name>Soil</Name>
+        <Analysis>
+          <Name>Analysis</Name>
+          <Thickness>
+            <double>100</double>
+            <double>200</double>
+            <double>200</double>
+            <double>100</double>
+            <double>300</double>
+            <double>200</double>
+            <double>100</double>
+            <double>300</double>
+          </Thickness>
+          <PH>
+            <double>6</double>
+            <double>6</double>
+            <double>6</double>
+            <double>6</double>
+            <double>6</double>
+            <double>6</double>
+            <double>6</double>
+            <double>6</double>
+          </PH>
+          <PHUnits>Water</PHUnits>
+          <BoronUnits>HotWater</BoronUnits>
+        </Analysis>
+        <Water>
+          <Name>Water</Name>
+          <SoilCrop>
+            <Name>SCUMSoil</Name>
+            <LL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.157</double>
+              <double>0.173</double>
+              <double>0.173</double>
+              <double>0.165</double>
+              <double>0.165</double>
+              <double>0.115</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
+          <Thickness>
+            <double>100</double>
+            <double>200</double>
+            <double>300</double>
+            <double>200</double>
+            <double>100</double>
+            <double>200</double>
+            <double>100</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1</double>
+            <double>1</double>
+            <double>1.59</double>
+            <double>1.57</double>
+            <double>1.57</double>
+            <double>1.6</double>
+            <double>1.6</double>
+            <double>1.601</double>
+          </BD>
+          <AirDry>
+            <double>0.05</double>
+            <double>0.05</double>
+            <double>0.157</double>
+            <double>0.173</double>
+            <double>0.173</double>
+            <double>0.165</double>
+            <double>0.165</double>
+            <double>0.115</double>
+          </AirDry>
+          <LL15>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.157</double>
+            <double>0.173</double>
+            <double>0.173</double>
+            <double>0.165</double>
+            <double>0.165</double>
+            <double>0.115</double>
+          </LL15>
+          <DUL>
+            <double>0.27</double>
+            <double>0.27</double>
+            <double>0.29</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+          </DUL>
+          <SAT>
+            <double>0.419</double>
+            <double>0.395</double>
+            <double>0.36</double>
+            <double>0.366</double>
+            <double>0.366</double>
+            <double>0.358</double>
+            <double>0.358</double>
+            <double>0.316</double>
+          </SAT>
+        </Water>
+        <SoilWater>
+          <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
+          <SummerDate>1-oct</SummerDate>
+          <SummerU>9</SummerU>
+          <SummerCona>4.4</SummerCona>
+          <WinterDate>1-Apr</WinterDate>
+          <WinterU>2</WinterU>
+          <WinterCona>1.5</WinterCona>
+          <DiffusConst>88</DiffusConst>
+          <DiffusSlope>35</DiffusSlope>
+          <Salb>0.13</Salb>
+          <CN2Bare>73</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
+          <slope>NaN</slope>
+          <discharge_width>NaN</discharge_width>
+          <catchment_area>NaN</catchment_area>
+          <max_pond>0</max_pond>
+          <Thickness>
+            <double>100</double>
+            <double>200</double>
+            <double>300</double>
+            <double>200</double>
+            <double>100</double>
+            <double>200</double>
+            <double>100</double>
+            <double>300</double>
+          </Thickness>
+          <SWCON>
+            <double>0.9</double>
+            <double>0.6</double>
+            <double>0.4</double>
+            <double>0.4</double>
+            <double>0.4</double>
+            <double>0.9</double>
+            <double>0.9</double>
+            <double>0.9</double>
+          </SWCON>
+        </SoilWater>
+        <SoilNitrogen>
+          <Name>SoilNitrogen</Name>
+          <fom_type>
+            <string>default</string>
+            <string>manure</string>
+            <string>mucuna</string>
+            <string>lablab</string>
+            <string>shemp</string>
+            <string>stable</string>
+          </fom_type>
+          <fract_carb>
+            <double>0.2</double>
+            <double>0.3</double>
+            <double>0.54</double>
+            <double>0.57</double>
+            <double>0.45</double>
+            <double>0</double>
+          </fract_carb>
+          <fract_cell>
+            <double>0.7</double>
+            <double>0.3</double>
+            <double>0.37</double>
+            <double>0.37</double>
+            <double>0.47</double>
+            <double>0.1</double>
+          </fract_cell>
+          <fract_lign>
+            <double>0.1</double>
+            <double>0.4</double>
+            <double>0.09</double>
+            <double>0.06</double>
+            <double>0.08</double>
+            <double>0.9</double>
+          </fract_lign>
+          <wfpsN2N2O_x>
+            <double>22</double>
+            <double>88</double>
+          </wfpsN2N2O_x>
+          <wfpsN2N2O_y>
+            <double>0.1</double>
+            <double>1</double>
+          </wfpsN2N2O_y>
+        </SoilNitrogen>
+        <SoilOrganicMatter>
+          <Name>SoilOrganicMatter</Name>
+          <RootCN>31.5</RootCN>
+          <RootWt>1500</RootWt>
+          <SoilCN>11</SoilCN>
+          <EnrACoeff>7.4</EnrACoeff>
+          <EnrBCoeff>0.2</EnrBCoeff>
+          <Thickness>
+            <double>100</double>
+            <double>200</double>
+            <double>300</double>
+            <double>200</double>
+            <double>100</double>
+            <double>200</double>
+            <double>100</double>
+            <double>300</double>
+          </Thickness>
+          <Depth>
+            <string>0-10</string>
+            <string>10-30</string>
+            <string>30-60</string>
+            <string>60-80</string>
+            <string>80-90</string>
+            <string>90-110</string>
+            <string>110-120</string>
+            <string>120-150</string>
+          </Depth>
+          <OC>
+            <double>2.677</double>
+            <double>2.784</double>
+            <double>1.454</double>
+            <double>0.383</double>
+            <double>0.243</double>
+            <double>0.243</double>
+            <double>0.243</double>
+            <double>0.243</double>
+          </OC>
+          <FBiom>
+            <double>0.025</double>
+            <double>0.025</double>
+            <double>0.015</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </FBiom>
+          <FInert>
+            <double>0.45</double>
+            <double>0.6</double>
+            <double>0.75</double>
+            <double>0.9</double>
+            <double>0.96</double>
+            <double>0.96</double>
+            <double>0.96</double>
+            <double>0.96</double>
+          </FInert>
+          <OCUnits>Total</OCUnits>
+        </SoilOrganicMatter>
+        <Sample>
+          <Name>Sample</Name>
+          <Thickness>
+            <double>100</double>
+            <double>200</double>
+            <double>300</double>
+            <double>200</double>
+            <double>100</double>
+            <double>200</double>
+            <double>100</double>
+            <double>300</double>
+          </Thickness>
+          <NO3>
+            <double>35</double>
+            <double>30</double>
+            <double>29</double>
+            <double>2</double>
+            <double>2</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </NO3>
+          <NH4>
+            <double>6.18</double>
+            <double>6.18</double>
+            <double>3.21</double>
+            <double>1.3</double>
+            <double>1.3</double>
+            <double>0.9</double>
+            <double>0.1</double>
+            <double>0.1</double>
+          </NH4>
+          <SW>
+            <double>0.32</double>
+            <double>0.3</double>
+            <double>0.29</double>
+            <double>0.33</double>
+            <double>0.31</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.23</double>
+          </SW>
+          <NO3Units>kgha</NO3Units>
+          <NH4Units>kgha</NH4Units>
+          <SWUnits>Volumetric</SWUnits>
+          <OCUnits>Total</OCUnits>
+          <PHUnits>Water</PHUnits>
+        </Sample>
+        <InitialWater>
+          <Name>InitialWater</Name>
+          <PercentMethod>FilledFromTop</PercentMethod>
+          <FractionFull>0.9</FractionFull>
+          <DepthWetSoil>NaN</DepthWetSoil>
+        </InitialWater>
+        <RecordNumber>0</RecordNumber>
+        <Site>-</Site>
+        <NearestTown>-</NearestTown>
+        <Region>Plains</Region>
+        <State>Canterbury</State>
+        <Country>New Zealand</Country>
+        <Latitude>0</Latitude>
+        <Longitude>0</Longitude>
+        <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
+        <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
+      </Soil>
+      <Operations>
+        <Name>Irrigation operations</Name>
+        <Operation>
+          <Date>2004-12-08T00:00:00</Date>
+          <Action>[Irrigation].Apply(66);</Action>
+        </Operation>
+        <Operation>
+          <Date>2005-01-05T00:00:00</Date>
+          <Action>[Irrigation].Apply(59);</Action>
+        </Operation>
+        <Operation>
+          <Date>2005-01-19T00:00:00</Date>
+          <Action>[Irrigation].Apply(45);</Action>
+        </Operation>
+        <Operation>
+          <Date>2005-01-26T00:00:00</Date>
+          <Action>[Irrigation].Apply(48);</Action>
+        </Operation>
+        <Operation>
+          <Date>2005-02-02T00:00:00</Date>
+          <Action>[Irrigation].Apply(35);</Action>
+        </Operation>
+        <Operation>
+          <Date>2005-02-09T00:00:00</Date>
+          <Action>[Irrigation].Apply(38);</Action>
+        </Operation>
+        <Operation>
+          <Date>2005-02-23T00:00:00</Date>
+          <Action>[Irrigation].Apply(48);</Action>
+        </Operation>
+        <Operation>
+          <Date>2005-03-02T00:00:00</Date>
+          <Action>[Irrigation].Apply(29);</Action>
+        </Operation>
+        <Operation>
+          <Date>2005-11-09T00:00:00</Date>
+          <Action>[Irrigation].Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2005-11-30T00:00:00</Date>
+          <Action>[Irrigation].Apply(21);</Action>
+        </Operation>
+        <Operation>
+          <Date>2005-12-07T00:00:00</Date>
+          <Action>[Irrigation].Apply(38);</Action>
+        </Operation>
+        <Operation>
+          <Date>2005-12-13T00:00:00</Date>
+          <Action>[Irrigation].Apply(18);</Action>
+        </Operation>
+        <Operation>
+          <Date>2005-12-21T00:00:00</Date>
+          <Action>[Irrigation].Apply(26);</Action>
+        </Operation>
+        <Operation>
+          <Date>2005-12-29T00:00:00</Date>
+          <Action>[Irrigation].Apply(13);</Action>
+        </Operation>
+        <Operation>
+          <Date>2006-01-05T00:00:00</Date>
+          <Action>[Irrigation].Apply(39);</Action>
+        </Operation>
+        <Operation>
+          <Date>2006-01-12T00:00:00</Date>
+          <Action>[Irrigation].Apply(44);</Action>
+        </Operation>
+        <Operation>
+          <Date>2006-12-20T00:00:00</Date>
+          <Action>[Irrigation].Apply(22);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-01-24T00:00:00</Date>
+          <Action>[Irrigation].Apply(22);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-01-25T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-01-31T00:00:00</Date>
+          <Action>[Irrigation].Apply(32);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-02-07T00:00:00</Date>
+          <Action>[Irrigation].Apply(23);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-02-21T00:00:00</Date>
+          <Action>[Irrigation].Apply(32);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-02-28T00:00:00</Date>
+          <Action>[Irrigation].Apply(31);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-05-29T00:00:00</Date>
+          <Action>[Irrigation].Apply(15);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-05-30T00:00:00</Date>
+          <Action>[Irrigation].Apply(15);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-07-04T00:00:00</Date>
+          <Action>[Irrigation].Apply(20);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-07-20T00:00:00</Date>
+          <Action>[Irrigation].Apply(20);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-07-26T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-07-27T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-08-07T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-08-08T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-08-09T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-08-10T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-08-23T00:00:00</Date>
+          <Action>[Irrigation].Apply(20);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-08-24T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-08-27T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+      </Operations>
+      <Operations>
+        <Name>Nitrogen operations</Name>
+        <Operation>
+          <Date>2004-10-13T00:00:00</Date>
+          <Action>[Fertiliser].Apply(200, [Fertiliser].Types.UreaN, 50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2004-12-20T00:00:00</Date>
+          <Action>[Fertiliser].Apply(100, [Fertiliser].Types.UreaN, 50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2005-01-24T00:00:00</Date>
+          <Action>[Fertiliser].Apply(100, [Fertiliser].Types.UreaN, 50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2005-10-26T00:00:00</Date>
+          <Action>[Fertiliser].Apply(100, [Fertiliser].Types.UreaN, 50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2006-10-10T00:00:00</Date>
+          <Action>[Fertiliser].Apply(200, [Fertiliser].Types.UreaN, 50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2006-12-29T00:00:00</Date>
+          <Action>[Fertiliser].Apply(100, [Fertiliser].Types.UreaN, 50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2007-01-16T00:00:00</Date>
+          <Action>[Fertiliser].Apply(100, [Fertiliser].Types.UreaN, 50);</Action>
+        </Operation>
+      </Operations>
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
@@ -2262,6 +2375,21 @@ namespace Models
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.AccumPlantN</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumNFixation</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711681</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumNFixation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2371,9 +2499,16 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <Memo>
+        <Name>Rotation test</Name>
+        <MemoText><![CDATA[
+#Testing of SCUM over a short rotation
+
+This simulations sows, grows and harvests three successive crops, Potatoes, Peas and Potatoes.  Detailed graphs are produced with all components of the Nitrogen and water balancesn and showing all of the SCUM models organ biomass to demonstrate the models workings.]]></MemoText>
+      </Memo>
       <Axis>
         <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
+        <Title />
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -2387,10 +2522,17 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <LegendPosition>BottomLeft</LegendPosition>
+      <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
+    <Memo>
+      <Name>Notes</Name>
+      <MemoText><![CDATA[
+##N Balance of the rotation
+
+Model is behaving as expected, removing the expected amounts of N from the soil, returning the expected amounts to surface and soil organic matter at end crop not fixing nitrogen for the potato crops but fixing nitrogen for the pea crops]]></MemoText>
+    </Memo>
     <Graph>
       <Name>WaterBalanceComponents</Name>
       <Series>
@@ -2547,6 +2689,13 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
+    <Memo>
+      <Name>Notes1</Name>
+      <MemoText><![CDATA[
+##Water Balance of the rotation
+
+The water balance is working as expected with the crop removing smaller amounts of water soon after harvest and plant water use increasing in the midle of the crop and decreasing again at the end.  Evaporation is showing the opposite pattern with higher evaporation early in the crop and again later in the crops duration.]]></MemoText>
+    </Memo>
     <Graph>
       <Name>Plant Biomass components</Name>
       <Series>
@@ -2558,7 +2707,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Stover.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -2573,7 +2722,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Root.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -2588,7 +2737,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Product.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -2603,74 +2752,14 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>ParamDryYield</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32704</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>SCUM.DryYield.Value</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>ParamTotalBiomStartReproductive</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dot</Line>
-        <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>SCUM.TotalBiomassAtStartReproductive.Value</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>ParamTotalBiomStartSen</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <Marker>None</Marker>
-        <Line>DashDot</Line>
-        <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>SCUM.TotalBiomassAtStartSenescence.Value</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>ParamYmax</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>SCUM.Ymax.Value</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Series9</Name>
+        <Name>Stage</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
@@ -2678,25 +2767,10 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Phenology.Stage</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Series10</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>SCUM.Arbitrator.DMSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
+        <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Axis>
@@ -2725,6 +2799,13 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
+    <Memo>
+      <Name>Notes11</Name>
+      <MemoText><![CDATA[
+##Biomass accumulation
+
+Biomass accumulation is following sigmoidal patterns as is expected given the way photosynthesis is parameterised (using a sigmoidal function).  Roots are making up a consistent small amout of total biomass, product begins incraesing at Stage 4 and stover increases only slowly after this stage.]]></MemoText>
+    </Memo>
     <Graph>
       <Name>Plant Nitrogen components</Name>
       <Series>
@@ -2806,6 +2887,13 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
+    <Memo>
+      <Name>Notes111</Name>
+      <MemoText><![CDATA[
+##Biomass Nitrogen
+
+Nitrogen accumulation is following the same sigmoidal pattern as biomass which is expected given the high fertiliser inputs in this simulation.]]></MemoText>
+    </Memo>
     <Graph>
       <Name>Water supply and demand</Name>
       <Series>
@@ -2864,21 +2952,6 @@ namespace Models
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Stover.Transpiration</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Potential</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65281</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Soil.SoilWater.Eo</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2947,11 +3020,11 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
+        <ColourArgb>-32768</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Root.Depth</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -2966,7 +3039,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Stover.CoverTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -2981,7 +3054,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Stover.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -3016,7 +3089,7 @@ namespace Models
     <Graph>
       <Name>N supply and demand</Name>
       <Series>
-        <Name>Series 0</Name>
+        <Name>NDemand</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3031,7 +3104,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Series2</Name>
+        <Name>NSupply</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3050,7 +3123,7 @@ namespace Models
         <Title>Nitrogen (g/m2)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
+        <Maximum>1</Maximum>
         <Interval>NaN</Interval>
       </Axis>
       <Axis>
@@ -3259,7 +3332,7 @@ namespace Models
     <Graph>
       <Name>Stress Factors</Name>
       <Series>
-        <Name>Series 0</Name>
+        <Name>FW</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3274,7 +3347,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Series2</Name>
+        <Name>FN</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3289,10 +3362,10 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Series3</Name>
+        <Name>Stage</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
+        <YAxis>Right</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
@@ -3313,6 +3386,13 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -5669,5 +5749,2113 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Experiment>
-  <ExplorerWidth>479</ExplorerWidth>
+  <Simulation>
+    <Name>SCUMTestBase</Name>
+    <Weather>
+      <Name>Weather</Name>
+      <FileName>%root%\Tests\WeatherFiles\lincoln.met</FileName>
+    </Weather>
+    <Clock>
+      <Name>Clock</Name>
+      <StartDate>1998-10-14T00:00:00</StartDate>
+      <EndDate>1999-07-01T00:00:00</EndDate>
+    </Clock>
+    <Summary>
+      <Name>Summary</Name>
+    </Summary>
+    <SoilArbitrator>
+      <Name>Soil Arbitrator</Name>
+    </SoilArbitrator>
+    <Zone>
+      <Name>Field</Name>
+      <Soil>
+        <Name>Soil</Name>
+        <Analysis>
+          <Name>Analysis</Name>
+          <Thickness>
+            <double>100</double>
+            <double>200</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <PH>
+            <double>6.6</double>
+            <double>6.2</double>
+            <double>5.7</double>
+            <double>5.5</double>
+            <double>5.5</double>
+            <double>5.5</double>
+          </PH>
+          <PHUnits>Water</PHUnits>
+          <BoronUnits>HotWater</BoronUnits>
+        </Analysis>
+        <InitialWater>
+          <Name>Initial water</Name>
+          <PercentMethod>EvenlyDistributed</PercentMethod>
+          <FractionFull>1</FractionFull>
+          <DepthWetSoil>NaN</DepthWetSoil>
+        </InitialWater>
+        <Water>
+          <Name>Water</Name>
+          <SoilCrop>
+            <Name>SCUMSoil</Name>
+            <LL>
+              <double>0.13</double>
+              <double>0.13</double>
+              <double>0.1</double>
+              <double>0.08</double>
+              <double>0.11</double>
+              <double>0.11</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>PotatoSoil</Name>
+            <LL>
+              <double>0.13</double>
+              <double>0.13</double>
+              <double>0.27</double>
+              <double>0.27</double>
+              <double>0.3</double>
+              <double>0.3</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.06</double>
+              <double>0.03</double>
+              <double>0.01</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>0.1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <Thickness>
+            <double>100</double>
+            <double>200</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1.2</double>
+            <double>1.2</double>
+            <double>1.2</double>
+            <double>1.2</double>
+            <double>1.2</double>
+            <double>1.2</double>
+          </BD>
+          <AirDry>
+            <double>0.08</double>
+            <double>0.13</double>
+            <double>0.1</double>
+            <double>0.06</double>
+            <double>0.04</double>
+            <double>0.02</double>
+          </AirDry>
+          <LL15>
+            <double>0.13</double>
+            <double>0.13</double>
+            <double>0.1</double>
+            <double>0.06</double>
+            <double>0.04</double>
+            <double>0.02</double>
+          </LL15>
+          <DUL>
+            <double>0.33</double>
+            <double>0.33</double>
+            <double>0.31</double>
+            <double>0.15</double>
+            <double>0.1</double>
+            <double>0.06</double>
+          </DUL>
+          <SAT>
+            <double>0.5</double>
+            <double>0.5</double>
+            <double>0.44</double>
+            <double>0.46</double>
+            <double>0.44</double>
+            <double>0.44</double>
+          </SAT>
+        </Water>
+        <SoilWater>
+          <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
+          <SummerDate>1-Nov</SummerDate>
+          <SummerU>9</SummerU>
+          <SummerCona>4.4</SummerCona>
+          <WinterDate>1-Apr</WinterDate>
+          <WinterU>9</WinterU>
+          <WinterCona>4.4</WinterCona>
+          <DiffusConst>88</DiffusConst>
+          <DiffusSlope>35.4</DiffusSlope>
+          <Salb>0.18</Salb>
+          <CN2Bare>68</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
+          <Thickness>
+            <double>100</double>
+            <double>200</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <SWCON>
+            <double>0.55</double>
+            <double>0.55</double>
+            <double>0.55</double>
+            <double>0.55</double>
+            <double>0.55</double>
+            <double>0.55</double>
+          </SWCON>
+          <KLAT>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </KLAT>
+        </SoilWater>
+        <SoilNitrogen>
+          <Name>SoilNitrogen</Name>
+          <fom_type>
+            <string>default</string>
+            <string>manure</string>
+            <string>mucuna</string>
+            <string>lablab</string>
+            <string>shemp</string>
+            <string>stable</string>
+          </fom_type>
+          <fract_carb>
+            <double>0.2</double>
+            <double>0.3</double>
+            <double>0.54</double>
+            <double>0.57</double>
+            <double>0.45</double>
+            <double>0</double>
+          </fract_carb>
+          <fract_cell>
+            <double>0.7</double>
+            <double>0.3</double>
+            <double>0.37</double>
+            <double>0.37</double>
+            <double>0.47</double>
+            <double>0.1</double>
+          </fract_cell>
+          <fract_lign>
+            <double>0.1</double>
+            <double>0.4</double>
+            <double>0.09</double>
+            <double>0.06</double>
+            <double>0.08</double>
+            <double>0.9</double>
+          </fract_lign>
+          <wfpsN2N2O_x>
+            <double>22</double>
+            <double>88</double>
+          </wfpsN2N2O_x>
+          <wfpsN2N2O_y>
+            <double>0.1</double>
+            <double>1</double>
+          </wfpsN2N2O_y>
+          <oc>
+            <double>1.8356606676098439</double>
+            <double>1.4633385968844384</double>
+            <double>1.1988393325681357</double>
+            <double>1.0301002994895852</double>
+            <double>0.4703383219429832</double>
+            <double>0.47013790451920212</double>
+          </oc>
+        </SoilNitrogen>
+        <SoilOrganicMatter>
+          <Name>SoilOrganicMatter</Name>
+          <RootCN>30</RootCN>
+          <RootWt>3000</RootWt>
+          <SoilCN>11.5</SoilCN>
+          <EnrACoeff>7.4</EnrACoeff>
+          <EnrBCoeff>0.2</EnrBCoeff>
+          <Thickness>
+            <double>100</double>
+            <double>200</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <Depth>
+            <string>0-10</string>
+            <string>10-30</string>
+            <string>30-60</string>
+            <string>60-90</string>
+            <string>90-120</string>
+            <string>120-150</string>
+          </Depth>
+          <OC>
+            <double>1.82</double>
+            <double>1.47</double>
+            <double>1.2</double>
+            <double>1.03</double>
+            <double>0.47</double>
+            <double>0.47</double>
+          </OC>
+          <FBiom>
+            <double>0.025</double>
+            <double>0.025</double>
+            <double>0.015</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </FBiom>
+          <FInert>
+            <double>0.3</double>
+            <double>0.4</double>
+            <double>0.75</double>
+            <double>0.9</double>
+            <double>0.96</double>
+            <double>0.96</double>
+          </FInert>
+          <OCUnits>Total</OCUnits>
+        </SoilOrganicMatter>
+        <Sample>
+          <Name>Initial nitrogen</Name>
+          <Thickness>
+            <double>100</double>
+            <double>200</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <NO3>
+            <double>270</double>
+            <double>30</double>
+            <double>5</double>
+            <double>5</double>
+            <double>0</double>
+            <double>0</double>
+          </NO3>
+          <NH4>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </NH4>
+          <NO3Units>kgha</NO3Units>
+          <NH4Units>ppm</NH4Units>
+          <SWUnits>Volumetric</SWUnits>
+          <OCUnits>Total</OCUnits>
+          <PHUnits>Water</PHUnits>
+        </Sample>
+        <RecordNumber>0</RecordNumber>
+        <SoilType />
+        <LocalName />
+        <Site />
+        <NearestTown />
+        <Region />
+        <NaturalVegetation />
+        <Latitude>0</Latitude>
+        <Longitude>0</Longitude>
+      </Soil>
+      <SurfaceOrganicMatter>
+        <Name>surface organic matter</Name>
+        <PondActive>no</PondActive>
+        <ReportAdditions>no</ReportAdditions>
+        <ReportRemovals>no</ReportRemovals>
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
+        <TillageTypes>
+          <Name>TillageTypesList</Name>
+          <TillageType />
+        </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>wheat</PoolName>
+            <ResidueType>wheat</ResidueType>
+            <Mass>2000</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
+        <PoolName>wheat</PoolName>
+        <type>wheat</type>
+        <mass>2000</mass>
+        <standing_fraction>0</standing_fraction>
+        <cpr />
+        <cnr>80</cnr>
+        <CriticalResidueWeight>2000</CriticalResidueWeight>
+        <OptimumDecompTemp>20</OptimumDecompTemp>
+        <MaxCumulativeEOS>20</MaxCumulativeEOS>
+        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+        <TotalLeachRain>25</TotalLeachRain>
+        <MinRainToLeach>10</MinRainToLeach>
+        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+        <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
+        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+        <FractionFaecesAdded>0.5</FractionFaecesAdded>
+      </SurfaceOrganicMatter>
+      <MicroClimate>
+        <Name>MicroClimate</Name>
+        <air_pressure>1010</air_pressure>
+        <soil_emissivity>0.96</soil_emissivity>
+        <sun_angle>15</sun_angle>
+        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+        <night_interception_fraction>0.5</night_interception_fraction>
+        <windspeed_default>3</windspeed_default>
+        <refheight>2</refheight>
+        <albedo>0.26</albedo>
+        <emissivity>0.96</emissivity>
+        <gsmax>0.01</gsmax>
+        <r50>200</r50>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
+      </MicroClimate>
+      <Plant>
+        <Name>SCUM</Name>
+        <CropType>MCSP</CropType>
+      </Plant>
+      <Irrigation>
+        <Name>Irrigation</Name>
+      </Irrigation>
+      <Fertiliser>
+        <Name>Fertiliser</Name>
+      </Fertiliser>
+      <Manager>
+        <Name>MCSPSowingRule</Name>
+        <Script>
+          <CultivarName>Green_Peas</CultivarName>
+          <InitialRootDepth>10</InitialRootDepth>
+          <SowingDate>1998-10-14</SowingDate>
+        </Script>
+        <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant MCSP;
+		[Link] Clock Clock;
+
+		[Description("Cultivar")]
+		public string CultivarName { get; set; }
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+
+               
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+				MCSP.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+                
+			//PMFCrop.Sow(... Contains the following arguements:
+			//Population  double  Optional  Seeds sowing/m2.  Default is zero
+			//Cultivar    string  Required  "NameOfCultivar"
+			//Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
+			//MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0
+			//BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
+			//RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
+			//CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
+		}
+	}
+}
+				]]></Code>
+      </Manager>
+      <Manager>
+        <Name>ExtraVariables</Name>
+        <Script />
+        <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soils.Soil Soil;
+		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
+		[Link] Weather Met;
+		[Link] Fertiliser Fert;
+		[Link] Irrigation Irrig;
+		[Link] Plant SCUM;
+		[Link] Zone zone;
+					
+		[XmlIgnore] public bool InitialDay { get; set; }
+		
+		[XmlIgnore] public double AccumPlantN { get; set; }
+		[XmlIgnore] public double AccumMineralisation { get; set; }
+		[XmlIgnore] public double AccumDenit { get; set; }
+		[XmlIgnore] public double AccumFert { get; set; }
+		[XmlIgnore] public double AccumLeach { get; set; }
+		[XmlIgnore] public double AccumDetach { get; set; }
+		[XmlIgnore] public double DeltaSoilOMN { get; set; }
+		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
+		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
+		[XmlIgnore] public double SoilNitrogenContent { get; set; }
+		
+		[XmlIgnore] public double AccumEO { get; set; }
+		[XmlIgnore] public double AccumEP { get; set; }
+		[XmlIgnore] public double AccumES { get; set; }
+		[XmlIgnore] public double AccumDrainage { get; set; }
+		[XmlIgnore] public double AccumRunoff { get; set; }
+		[XmlIgnore] public double AccumOutflowLat { get; set; }
+		[XmlIgnore] public double AccumIrrigation { get; set; }
+		[XmlIgnore] public double AccumRainfall { get; set; }
+		[XmlIgnore] public double SoilWaterDeficit { get; set; }
+	
+		[XmlIgnore] public double  InitialSoilOMN { get; set; }
+		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
+		[XmlIgnore] public double  InitialMineralN { get; set; }
+		
+		[XmlIgnore] public double SWC { get; set; }
+		[XmlIgnore] public double DUL { get; set; }
+		[XmlIgnore] public double OutFlowLat { get; set; }
+
+		[XmlIgnore] public double FomN { get; set; }
+		[XmlIgnore] public double BiomN { get; set; }
+		[XmlIgnore] public double HumN { get; set; }
+		[XmlIgnore] public double OrganicN { get; set; }
+		[XmlIgnore] public double NO3N { get; set; }
+		[XmlIgnore] public double NH4N { get; set; }
+		[XmlIgnore] public double UreaN { get; set; }
+		[XmlIgnore] public double MineralN { get; set; }
+		[XmlIgnore] public double DltNMinRes { get; set; }
+		[XmlIgnore] public double DltNMinTot { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			InitialDay = true;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			//!!!!!! Nitrogen balance components !!!!!!
+			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			OrganicN = FomN + HumN + BiomN;
+			NO3N = MathUtilities.Sum(Soil.NO3N);
+			NH4N = MathUtilities.Sum(Soil.NH4N);
+			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			MineralN = NO3N + NH4N + UreaN; 
+			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
+			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			int layers = Soil.Thickness.Length;
+			if (InitialDay == true)
+			{
+				InitialSurfaceOMN = SOM.N;
+				InitialSoilOMN = OrganicN;
+				InitialMineralN = MineralN;
+				InitialDay = false;
+			}
+			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
+			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
+			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+			AccumPlantN -= (double)zone.Get("SCUM.Root.NUptake");
+			DeltaSoilOMN = OrganicN - InitialSoilOMN;
+			DeltaSoilMineralN = MineralN - InitialMineralN;
+			SoilNitrogenContent = MineralN;
+			
+			//!!!!!! Water balance components !!!!!!
+			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+
+			AccumRainfall += Met.Rain;
+			//AccumEP -= (double)zone.Get("[SCUM].Stover.Transpiration");
+            AccumEP -= (double)zone.Get("SCUM.Root.WaterUptake");
+			SoilWaterDeficit =  (SWC - DUL);
+			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
+			AccumOutflowLat -= OutFlowLat;
+		}
+		
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
+			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			AccumFert += Fert.NitrogenApplied;
+			AccumIrrigation += Irrig.IrrigationApplied;
+			
+			
+			AccumEO -= Soil.SoilWater.Eo;
+			AccumES -= Soil.SoilWater.Es; 
+			AccumDrainage -= Soil.SoilWater.Drainage;
+			AccumRunoff -= Soil.SoilWater.Runoff;
+			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
+			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+		}
+	}
+}
+	   ]]></Code>
+      </Manager>
+      <Manager>
+        <Name>AutomaticIrrigation</Name>
+        <Script>
+          <Irrigation_Yes_No>yes</Irrigation_Yes_No>
+          <Season_Start>1-Oct</Season_Start>
+          <Season_End>30-Apr</Season_End>
+          <Season_Allocation>1000</Season_Allocation>
+          <Refull_Frac>0.9</Refull_Frac>
+          <Trigger_Frac>0.7</Trigger_Frac>
+          <Return_days>3</Return_days>
+          <Maximum_Irrigation_Amount>40</Maximum_Irrigation_Amount>
+          <Top_Depth>600</Top_Depth>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using System.Xml.Serialization;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		//Communication to other modules
+		[Link] ISummary summary = null;
+		[Link] Irrigation Irrigation;
+		[Link] Clock Clock;
+		[Link] Soil Soil;
+		[Link] Plant SCUM;
+	   
+		//User inputs from properties tab
+		[Description("Irrigation on (yes or no)")]
+		public string Irrigation_Yes_No { get; set; }
+		[Description("SeasonStart (dd-MMM)")]
+		public string Season_Start { get; set; }
+		[Description("SeasonEnd (dd-MMM)")]
+		public string Season_End { get; set; }
+		[Description("Season Allocation (mm)")]
+		public double Season_Allocation { get; set; }
+		[Description("% PAWC to refill soil to (0-1)")]
+		public double Refull_Frac { get; set; }
+		[Description("% PAWC to trigger irrigation (0-1)")]
+		public double Trigger_Frac { get; set; }
+		[Description("Minimum days for irrigation to return")]
+		public double Return_days { get; set; }
+		[Description("Maximum irrigation application (mm)")]
+		public double Maximum_Irrigation_Amount { get; set; }
+		[Description("Depth to calculate PAWC (mm)")]
+		public double Top_Depth { get; set; }
+	   
+		//Class members
+		[XmlIgnore] private bool IrrigationIsAvailable { get; set; }
+		[XmlIgnore] public bool SeasonIsOpen { get; set; }
+		[XmlIgnore] private bool CropIsActive { get; set; }
+		[XmlIgnore] private bool IrrigatorIsAvailable { get; set; }
+		[XmlIgnore] private bool SoilIsDry { get; set; }
+		[XmlIgnore] public double Top_DUL { get; set; }
+		[XmlIgnore] public double Top_Refull { get; set; }
+		[XmlIgnore] public double Top_Trigger { get; set; }
+		[XmlIgnore] public double Top_LL { get; set; }
+		[XmlIgnore] public double Top_SW { get; set; }
+		[XmlIgnore] public double Accumulated_depth { get; set; }
+		[XmlIgnore] public double Days_since_irrigation { get; set; }
+		[XmlIgnore] public double Amount_to_apply { get; set; }
+		[XmlIgnore] public double Season_Application { get; set; }
+		
+		//Variables for date logic testing
+		[XmlIgnore] public string StartString { get; set; }
+		[XmlIgnore] public string EndString { get; set; }
+		[XmlIgnore] public DateTime StartDate { get; set; }
+		[XmlIgnore] public DateTime EndDate { get; set; }
+		[XmlIgnore] public int TodayYear { get; set; }
+		[XmlIgnore] public int TodayMonth { get; set; }
+		[XmlIgnore] public int StartMonth { get; set; }
+		[XmlIgnore] public int EndMonth { get; set; }
+		[XmlIgnore] public int TodayDay { get; set; }
+		[XmlIgnore] public int StartDay { get; set; }
+		[XmlIgnore] public int EndDay { get; set; }
+	   
+	
+		//Calculate static soil variables
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{   
+			//Calculated soil water variables
+			Accumulated_depth = 0;
+			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+			{
+				Top_LL += Soil.SoilWater.LL15mm[layer];
+				Top_DUL += Soil.SoilWater.DULmm[layer];
+				Accumulated_depth += Soil.SoilWater.Thickness[layer];
+			}
+			Top_Refull = Top_LL + (Top_DUL - Top_LL) * Refull_Frac;
+		}
+	   
+	  
+		//Determine daily requirement for irrigation
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{ 
+			//Can we irrigate?
+			IrrigationIsAvailable = false; 
+			if (Irrigation_Yes_No == "yes")
+				IrrigationIsAvailable = true; 
+	
+			//Are we Allowed to Irrigate?
+			TodayYear = Clock.Today.Year;
+			StartString = Season_Start + "-" + TodayYear.ToString();
+			EndString = Season_End + "-" + TodayYear.ToString();
+			StartDate = DateTime.Parse(StartString);
+			EndDate = DateTime.Parse(EndString);
+			TodayMonth = Clock.Today.Month;
+			TodayDay = Clock.Today.Day;
+			StartDay = StartDate.Day;
+			StartMonth = StartDate.Month;
+			EndDay = EndDate.Day;
+			EndMonth = EndDate.Month;
+		  
+			SeasonIsOpen = false;
+			//if we are in the spring and after the start date then yes
+			if ((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
+				SeasonIsOpen = true;
+			//if we are in the autumn and before the end date then yes
+			if ((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
+				SeasonIsOpen = true;
+		  
+			//Is there a crop in the ground that needs irrigation?
+			CropIsActive = false;
+			if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
+				CropIsActive = true;
+	      
+			//Is the irrigator available?
+			IrrigatorIsAvailable = false;
+			Days_since_irrigation += 1;
+			if (Days_since_irrigation >= Return_days)
+				IrrigatorIsAvailable = true;
+	      
+			//Is the soil dry enough to require irrigation?
+			SoilIsDry = false;
+			double CurrentRootDepth = 0;
+			double RootDepth = SCUM.Root.Depth;
+			CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
+	      
+			double RelativeRootDepth = Math.Min(1.0, CurrentRootDepth / Top_Depth);
+			Top_Trigger = Math.Min(Top_Refull, Top_DUL - (Top_DUL - Top_LL) * RelativeRootDepth * (1 - Trigger_Frac)); 
+	      
+			Accumulated_depth = 0;
+			Top_SW = 0;
+			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+			{
+				Top_SW += Soil.SoilWater.SWmm[layer];
+				Accumulated_depth += Soil.SoilWater.Thickness[layer];
+			}
+			if (Top_SW <= Top_Trigger)
+				SoilIsDry = true;
+	            
+			//Lets bloody well irrigate then!!!!
+			if ((IrrigationIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (IrrigatorIsAvailable) && (SoilIsDry)) //The conditions are rife for irrigation
+			{
+				Amount_to_apply = Math.Min(Top_Refull - Top_SW, Maximum_Irrigation_Amount);
+				Amount_to_apply = Math.Min(Amount_to_apply, Season_Allocation - Season_Application); 
+				Amount_to_apply = Math.Max(Amount_to_apply, 0.0);
+				Irrigation.Apply(Amount_to_apply);
+				Days_since_irrigation = 0;
+				Season_Application += Amount_to_apply;
+				summary.WriteMessage(this, "Automatic Irrigation");
+            
+			}
+		}
+	}
+}
+             
+             ]]></Code>
+      </Manager>
+      <Manager>
+        <Name>AutomaticFertiliser</Name>
+        <Script>
+          <Fertiliser_Yes_No>no</Fertiliser_Yes_No>
+          <Season_Start>1-Aug</Season_Start>
+          <Season_End>30-Apr</Season_End>
+          <Season_Allocation>1000</Season_Allocation>
+          <TriggerN>50</TriggerN>
+          <NApplicationAmount>25</NApplicationAmount>
+          <Return_days>3</Return_days>
+          <Top_Depth>300</Top_Depth>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using System.Xml.Serialization;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		//Communication to other modules
+		[Link] ISummary summary = null;
+		[Link] Fertiliser Fertiliser;
+		[Link] Clock Clock;
+		[Link] Soils.Soil Soil;
+		[Link] Plant SCUM;
+	   
+		//User inputs from properties tab
+		[Description("Fertiliser on (yes or no)")]
+		public string Fertiliser_Yes_No { get; set; }
+		[Description("SeasonStart (dd-MMM)")]
+		public string Season_Start { get; set; }
+		[Description("SeasonEnd (dd-MMM)")]
+		public string Season_End { get; set; }
+		[Description("Season Allocation (kg/ha)")]
+		public double Season_Allocation { get; set; }
+		[Description("Mineral N to maintain soil above (kg/ha)")]
+		public double TriggerN { get; set; }
+		[Description("Amount of N to apply (kg/ha)")]
+		public double NApplicationAmount { get; set; }
+		[Description("Minimum days for Fertiliser spreader to return")]
+		public double Return_days { get; set; }
+		[Description("Depth to calculate mineral N (mm)")]
+		public double Top_Depth { get; set; }
+	   
+		//Class members
+		[XmlIgnore] private bool FertiliserIsAvailable { get; set; }
+		[XmlIgnore] public bool SeasonIsOpen { get; set; }
+		[XmlIgnore] private bool CropIsActive { get; set; }
+		[XmlIgnore] private bool FertSpreaderIsAvailable { get; set; }
+		[XmlIgnore] private bool SoilNIsLow { get; set; }
+		[XmlIgnore] public double Top_SoilN { get; set; }
+		[XmlIgnore] public double Accumulated_depth { get; set; }
+		[XmlIgnore] public double Days_since_fertiliser { get; set; }
+		[XmlIgnore] public double Season_Application { get; set; }
+		
+		//Variables for date logic testing
+		[XmlIgnore] public string StartString { get; set; }
+		[XmlIgnore] public string EndString { get; set; }
+		[XmlIgnore] public DateTime StartDate { get; set; }
+		[XmlIgnore] public DateTime EndDate { get; set; }
+		[XmlIgnore] public int TodayYear { get; set; }
+		[XmlIgnore] public int TodayMonth { get; set; }
+		[XmlIgnore] public int StartMonth { get; set; }
+		[XmlIgnore] public int EndMonth { get; set; }
+		[XmlIgnore] public int TodayDay { get; set; }
+		[XmlIgnore] public int StartDay { get; set; }
+		[XmlIgnore] public int EndDay { get; set; }
+	   	   
+		//Determine daily requirement for fertiliser
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{ 
+			//Can we irrigate?
+			FertiliserIsAvailable = false; 
+			if (Fertiliser_Yes_No == "yes")
+				FertiliserIsAvailable = true; 
+	
+			//Are we Allowed to Irrigate?
+			TodayYear = Clock.Today.Year;
+			StartString = Season_Start + "-" + TodayYear.ToString();
+			EndString = Season_End + "-" + TodayYear.ToString();
+			StartDate = DateTime.Parse(StartString);
+			EndDate = DateTime.Parse(EndString);
+			TodayMonth = Clock.Today.Month;
+			TodayDay = Clock.Today.Day;
+			StartDay = StartDate.Day;
+			StartMonth = StartDate.Month;
+			EndDay = EndDate.Day;
+			EndMonth = EndDate.Month;
+		  
+			SeasonIsOpen = false;
+			//if we are in the spring and after the start date then yes
+			if ((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
+				SeasonIsOpen = true;
+			//if we are in the autumn and before the end date then yes
+			if ((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
+				SeasonIsOpen = true;
+		  
+			//Is there a crop in the ground that needs irrigation?
+			CropIsActive = false;
+			if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
+				CropIsActive = true;
+	      
+			//Is the irrigator available?
+			FertSpreaderIsAvailable = false;
+			Days_since_fertiliser += 1;
+			if (Days_since_fertiliser >= Return_days)
+				FertSpreaderIsAvailable = true;
+	      
+			//Is the soil N low enough to require fertiliser?
+			SoilNIsLow = false;
+			double CurrentRootDepth = 0;
+			double RootDepth = SCUM.Root.Depth;
+			CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
+	      
+			Accumulated_depth = 0;
+			Top_SoilN = 0;
+			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+			{
+				Top_SoilN += Soil.NO3N[layer];
+				Accumulated_depth += Soil.SoilWater.Thickness[layer];
+			}
+			if (Top_SoilN <= TriggerN)
+				SoilNIsLow = true;
+	            
+			//Lets bloody well irrigate then!!!!
+			if ((FertiliserIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (FertSpreaderIsAvailable) && (SoilNIsLow)) //The conditions are rife for irrigation
+			{
+				Fertiliser.Apply(NApplicationAmount, Fertiliser.Types.UreaN, 10);
+				Days_since_fertiliser = 0;
+				Season_Application += NApplicationAmount;
+				summary.WriteMessage(this, "Automatic Fertiliser");
+            
+			}
+		}
+	}
+}
+             
+             ]]></Code>
+      </Manager>
+      <Report>
+        <Name>Report</Name>
+        <VariableNames>
+          <string>[Clock].Today</string>
+          <string>[ExtraVariables].Script.AccumPlantN</string>
+          <string>[ExtraVariables].Script.AccumMineralisation</string>
+          <string>[ExtraVariables].Script.AccumDenit</string>
+          <string>[ExtraVariables].Script.AccumFert</string>
+          <string>[ExtraVariables].Script.AccumLeach</string>
+          <string>[ExtraVariables].Script.AccumDetach</string>
+          <string>[ExtraVariables].Script.DeltaSoilOMN</string>
+          <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
+          <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
+          <string>[ExtraVariables].Script.SWC</string>
+          <string>[ExtraVariables].Script.DUL</string>
+          <string>[ExtraVariables].Script.OutFlowLat</string>
+          <string>[ExtraVariables].Script.AccumEO</string>
+          <string>[ExtraVariables].Script.AccumEP</string>
+          <string>[ExtraVariables].Script.AccumES</string>
+          <string>[ExtraVariables].Script.AccumDrainage</string>
+          <string>[ExtraVariables].Script.AccumRunoff</string>
+          <string>[ExtraVariables].Script.AccumRainfall</string>
+          <string>[ExtraVariables].Script.AccumIrrigation</string>
+          <string>[ExtraVariables].Script.AccumOutflowLat</string>
+          <string>[ExtraVariables].Script.SoilWaterDeficit</string>
+          <string>[ExtraVariables].Script.SoilNitrogenContent</string>
+          <string>[ExtraVariables].Script.FomN</string>
+          <string>[ExtraVariables].Script.HumN</string>
+          <string>[ExtraVariables].Script.BiomN</string>
+          <string>[ExtraVariables].Script.DltNMinRes</string>
+          <string>[ExtraVariables].Script.DltNMinTot</string>
+          <string>[MicroClimate].net_radn</string>
+          <string>[MicroClimate].peta</string>
+          <string>[MicroClimate].petr</string>
+          <string>[Soil].SoilWater.Drainage</string>
+          <string>[Soil].SoilWater.Runoff</string>
+          <string>[Soil].SoilWater.Eo</string>
+          <string>[Soil].SoilWater.Es</string>
+          <string>[Soil].SoilWater.pond</string>
+          <string>[Soil].SoilWater.SWmm</string>
+          <string>[Soil].NO3N</string>
+          <string>[SCUM].Stover.Live.Wt</string>
+          <string>[SCUM].Root.Live.Wt</string>
+          <string>[SCUM].Product.Live.Wt</string>
+          <string>[SCUM].Stover.Live.N</string>
+          <string>[SCUM].Root.Live.N</string>
+          <string>[SCUM].Product.Live.N</string>
+          <string>[SCUM].Stover.Live.NConc</string>
+          <string>[SCUM].Root.Live.NConc</string>
+          <string>[SCUM].Product.Live.NConc</string>
+          <string>[SCUM].Root.WaterSupply</string>
+          <string>[SCUM].Root.WaterUptake</string>
+          <string>[SCUM].Stover.Transpiration</string>
+          <string>[SCUM].Stover.WaterDemand</string>
+          <string>[SCUM].Root.Depth</string>
+          <string>[SCUM].Stover.CoverTotal</string>
+          <string>[SCUM].Stover.CoverDead</string>
+          <string>[SCUM].Stover.LAI</string>
+          <string>[SCUM].Stover.Height</string>
+          <string>[SCUM].Stover.PotentialBiomass.Value</string>
+          <string>[SCUM].Product.LiveFWt</string>
+          <string>[SCUM].Arbitrator.NDemand</string>
+          <string>[SCUM].Arbitrator.NSupply</string>
+          <string>[SCUM].Stover.Fw</string>
+          <string>[SCUM].Stover.Fn</string>
+          <string>[SCUM].Summariser.Total.Wt</string>
+          <string>[SCUM].ExpectedYield.Value</string>
+          <string>[SCUM].DryYield.Value</string>
+          <string>[SCUM].TotalBiomassAtStartReproductive.Value</string>
+          <string>[SCUM].TotalBiomassAtStartSenescence.Value</string>
+          <string>[SCUM].Ymax.Value</string>
+          <string>[SCUM].Summariser.Total.N</string>
+          <string>[SCUM].Arbitrator.DMSupply</string>
+          <string>[SCUM].Arbitrator.DMDemand</string>
+          <string>[SCUM].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[SCUM].Arbitrator.DMSinkLimitation</string>
+          <string>[SCUM].Arbitrator.DMNutrientLimitation</string>
+          <string>[SCUM].Phenology.ThermalTime.Value</string>
+          <string>[SCUM].Phenology.CurrentPhaseName</string>
+          <string>[SCUM].Phenology.Stage</string>
+          <string>[AutomaticIrrigation].Script.Top_Refull</string>
+          <string>[AutomaticIrrigation].Script.Top_Trigger</string>
+          <string>[AutomaticIrrigation].Script.Top_SW</string>
+          <string>[AutomaticIrrigation].Script.Top_DUL</string>
+          <string>[Irrigation].IrrigationApplied</string>
+          <string>[AutomaticIrrigation].Script.Amount_to_apply</string>
+          <string>[AutomaticIrrigation].Script.StartDate</string>
+          <string>[Clock].Today</string>
+          <string>[AutomaticIrrigation].Script.SeasonIsOpen</string>
+          <string>[AutomaticIrrigation].Script.EndDate</string>
+          <string>[AutomaticIrrigation].Script.TodayYear</string>
+          <string>[SCUM].Arbitrator.FN</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].DoReport</string>
+        </EventNames>
+      </Report>
+      <Area>0</Area>
+      <Slope>0</Slope>
+    </Zone>
+    <Graph>
+      <Name>N balance components</Name>
+      <Series>
+        <Name>AccumPlantN</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumPlantN</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumMineralisation</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8388353</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumMineralisation</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumDenit</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744193</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumDenit</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumFert</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumFert</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumLeach</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumLeach</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>DeltaSoilOMN</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8372224</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.DeltaSoilOMN</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>DeltaSurfaceOMN</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.DeltaSurfaceOMN</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>DeltaSoilMineralN</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777152</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.DeltaSoilMineralN</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Memo>
+        <Name>Caption</Name>
+        <MemoText><![CDATA[
+# SCUM: the Simple Crop Uptake Model
+
+_Hamish Brown and Rob Zyskowski, Plant and Food Research, New Zealand_
+
+This model has been built to simulate a range of different crops in simulations where water and nitrogen balance are of interest but a fully mechanistic plant model is not needed. It is a daily time step implementation of the crop model that is used on the Overseer nutrient balance model (Cichota_etal_2010).  It uses simple sigmoidal functions for estimating daily cover and biomass deltas to give realistic water and nitrogen demands. It does not simulate potential yield, this is specified as an input. Yield will be reduced below the specified potential yield if N or water supplies from the soil are insufficient to meet demand. The model has been paramaterised for simulating water and nitrogen balances of cropping rotations in New Zealand (where over 50 different crop types are grown and it is not feasible to produce full crop models for each of these). It may be adapted for other purposes and other crop types may be added but the user will need to keep in mind that it is empirical and the parameters might need changing for crops from different locations.]]></MemoText>
+      </Memo>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>X axis title 2</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Accumulated N changes (kg/ha)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>WaterBalanceComponents</Name>
+      <Series>
+        <Name>AccumEO</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumEO</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumEP</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumEP</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumES</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumES</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumDrainage</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65281</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumDrainage</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumRunoff</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711681</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumRunoff</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumRainfall</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8388544</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumRainfall</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumIrrigation</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-12582784</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumIrrigation</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumLatOutFlow</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumOutflowLat</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>SoilWaterDeficit</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777056</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.SoilWaterDeficit</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Accumulated Water Changes (mm)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Plant Biomass components</Name>
+      <Series>
+        <Name>Stover</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Stover.Live.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Root</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8388608</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Root.Live.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Product</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Product.Live.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Total</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ParamDryYield</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32704</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Dash</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.DryYield.Value</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ParamTotalBiomStartReproductive</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Dot</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.TotalBiomassAtStartReproductive.Value</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ParamTotalBiomStartSen</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <Marker>None</Marker>
+        <Line>DashDot</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.TotalBiomassAtStartSenescence.Value</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ParamYmax</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Dash</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Ymax.Value</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series9</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Phenology.Stage</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series10</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Arbitrator.DMSupply</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Crop Biomass (g/m2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Plant Nitrogen components</Name>
+      <Series>
+        <Name>Stover</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Stover.Live.N</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Root</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8388608</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Root.Live.N</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Product</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32704</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Product.Live.N</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Total</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Summariser.Total.N</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Crop Nitrogen (g/m2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Water supply and demand</Name>
+      <Series>
+        <Name>Supply</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777088</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Root.WaterSupply</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Uptake</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8372224</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Root.WaterUptake</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Demand</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Stover.WaterDemand</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Transpiration</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Stover.Transpiration</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Potential</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65281</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Soil.SoilWater.Eo</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Root Depth</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Root.Depth</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Canopy Height</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-16711936</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Stover.Height</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Water (mm)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Title>Length (mm)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Crop structure</Name>
+      <Series>
+        <Name>Root Depth</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Root.Depth</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>CoverTotal</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Stover.CoverTotal</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>LAI</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711936</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <YFieldName>SCUM.Stover.LAI</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Cover </Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>N supply and demand</Name>
+      <Series>
+        <Name>Series 0</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Arbitrator.NDemand</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series2</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Arbitrator.NSupply</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Nitrogen (g/m2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>DM supply and demand</Name>
+      <Series>
+        <Name>Series 0</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Arbitrator.DMSupply</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series2</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Arbitrator.DMDemand</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series3</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32704</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Arbitrator.DMSinkLimitation</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series4</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65408</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Arbitrator.DMNutrientLimitation</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>DM (g/m2/d)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Irrigation</Name>
+      <Series>
+        <Name>Series 0</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>AutomaticIrrigation.Script.Top_Refull</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series2</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>AutomaticIrrigation.Script.Top_Trigger</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series3</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>AutomaticIrrigation.Script.Top_SW</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series4</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>AutomaticIrrigation.Script.Top_DUL</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series5</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Irrigation.IrrigationApplied</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series6</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8388353</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>AutomaticIrrigation.Script.Amount_to_apply</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Water (mm)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>0</Minimum>
+        <Maximum>300</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Stress Factors</Name>
+      <Series>
+        <Name>Series 0</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Stover.Fw</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series2</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Arbitrator.FN</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series3</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Phenology.Stage</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Water (mm)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
+  </Simulation>
+  <ExplorerWidth>315</ExplorerWidth>
 </Simulations>

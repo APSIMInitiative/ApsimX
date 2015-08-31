@@ -59,7 +59,7 @@ namespace Models.PMF.Functions
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
             tags.Add(new AutoDocumentation.Paragraph(" a sigmoid function of the form " +
-                                                      "y = Xmax * 1 / 1 + exp<sup>-(XValue - Xo) / b</sup>", indent));
+                                                      "y = Xmax * 1 / 1 + e<sup>-(XValue - Xo) / b</sup>", indent));
 
 
             // write children.
