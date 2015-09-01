@@ -132,7 +132,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets  FRGR.</summary>
         [Units("0-1")]
-        public double FRGR { get { return Photosynthesis.FRGR; } }
+        public double FRGR { get; set; }
         
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [Units("mm")]
@@ -141,7 +141,6 @@ namespace Models.PMF.Organs
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } 
         #endregion
-
 
         #region Links
         /// <summary>The arbitrator</summary>
@@ -248,7 +247,10 @@ namespace Models.PMF.Organs
         /// <summary>The leaf cohort parameters</summary>
         [Link] LeafCohortParameters CohortParameters = null;
         /// <summary>The photosynthesis</summary>
-        [Link] RUEModel Photosynthesis = null;
+        [Link] IFunction Photosynthesis = null;
+        /// <summary>The Fractional Growth Rate</summary>
+        [Link]
+        IFunction FRGRFunction = null;
         /// <summary>The thermal time</summary>
         [Link]
         IFunction ThermalTime = null;
@@ -294,7 +296,6 @@ namespace Models.PMF.Organs
         public double Albido { get; set; }
         
         #endregion
-
 
         #region States
 
@@ -959,6 +960,8 @@ namespace Models.PMF.Organs
                     }
                 }
                 _ExpandedNodeNo = ExpandedCohortNo + FractionNextleafExpanded;
+
+                FRGR = FRGRFunction.Value;
             }
         }
         /// <summary>Clears this instance.</summary>
@@ -1081,7 +1084,7 @@ namespace Models.PMF.Organs
                 }
 
 
-                return new BiomassSupplyType { Fixation = Photosynthesis.Growth(RadIntTot), Retranslocation = Retranslocation, Reallocation = Reallocation };
+                return new BiomassSupplyType { Fixation = Photosynthesis.Value, Retranslocation = Retranslocation, Reallocation = Reallocation };
             }
         }
         /// <summary>Sets the dm potential allocation.</summary>
@@ -1675,7 +1678,5 @@ namespace Models.PMF.Organs
             InitialLeaves = initialLeaves.ToArray();
         }
         #endregion
-
-
     }
 }

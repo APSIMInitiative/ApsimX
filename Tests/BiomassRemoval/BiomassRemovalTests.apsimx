@@ -321,7 +321,7 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
           <Name>Dead</Name>
         </Biomass>
         <MultiplyFunction>
-          <Name>PotentialBiomass</Name>
+          <Name>Photosynthesis</Name>
           <DeltaFunction>
             <Name>UnStressedBiomass</Name>
             <SigmoidFunction2>
@@ -371,6 +371,24 @@ This function provides the DM fixation supply to the arbitrator which is then pa
 ]]></MemoText>
           </Memo>
         </MultiplyFunction>
+        <AirTemperatureFunction>
+          <Name>FRGRFunction</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>10</double>
+              <double>25</double>
+              <double>40</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+        </AirTemperatureFunction>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <Memo>
@@ -576,24 +594,6 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           </XYPairs>
           <XProperty>[Phenology].Stage</XProperty>
         </LinearInterpolationFunction>
-        <AirTemperatureFunction>
-          <Name>FRGRFunction</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>10</double>
-              <double>25</double>
-              <double>40</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-        </AirTemperatureFunction>
         <Constant>
           <Name>NConc</Name>
           <Value>0.008</Value>
