@@ -109,17 +109,13 @@ namespace Models
     [ValidParent(ParentModels = new Type[] { typeof(Simulation), typeof(Zone) })]
     public partial class MicroClimate : Model
     {
-        /// <summary>The zone</summary>
-        [Link]
-        Zone zone = null;
-
         /// <summary>The clock</summary>
         [Link]
         Clock Clock = null;
 
         /// <summary>The weather</summary>
         [Link]
-        IWeather Weather = null;
+        IWeather LocalWeather = null;
 
         /// <summary>The _albedo</summary>
         private double _albedo = 0;
@@ -375,11 +371,11 @@ namespace Models
         {
             day = Clock.Today.DayOfYear;
             year = Clock.Today.Year;
-            radn = Weather.Radn;
-            maxt = Weather.MaxT;
-            mint = Weather.MinT;
-            rain = Weather.Rain;
-            vp = Weather.VP;
+            radn = LocalWeather.Radn;
+            maxt = LocalWeather.MaxT;
+            mint = LocalWeather.MinT;
+            rain = LocalWeather.Rain;
+            vp = LocalWeather.VP;
         }
 
         /// <summary>Called when [change gs maximum].</summary>
@@ -515,7 +511,6 @@ namespace Models
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             _albedo = albedo;
-            windspeed_checked = false;
             netLongWave = 0;
             sumRs = 0;
             averageT = 0;
@@ -813,11 +808,6 @@ namespace Models
         private double rain;
         /// <summary>The vp</summary>
         private double vp;
-        /// <summary>The use_external_windspeed</summary>
-        private bool use_external_windspeed;
-
-        /// <summary>The windspeed_checked</summary>
-        private bool windspeed_checked = false;
         /// <summary>The day</summary>
         private int day;
 
@@ -971,13 +961,13 @@ namespace Models
 
             // This is the length of time within the day during which
             //  Evaporation will take place
-            dayLength = CalcDayLength(Weather.Latitude, day, sun_angle);
+            dayLength = CalcDayLength(LocalWeather.Latitude, day, sun_angle);
 
             // This is the length of time within the day during which
             // the sun is above the horizon
-            dayLengthLight = CalcDayLength(Weather.Latitude, day, SunSetAngle);
+            dayLengthLight = CalcDayLength(LocalWeather.Latitude, day, SunSetAngle);
 
-            sunshineHours = CalcSunshineHours(radn, dayLengthLight, Weather.Latitude, day);
+            sunshineHours = CalcSunshineHours(radn, dayLengthLight, LocalWeather.Latitude, day);
 
             fractionClearSky = MathUtilities.Divide(sunshineHours, dayLengthLight, 0.0);
         }
@@ -1150,16 +1140,7 @@ namespace Models
         /// <summary>Calculate the aerodynamic conductance for system compartments</summary>
         private void CalculateGa()
         {
-            double windspeed = windspeed_default;
-            if (!windspeed_checked)
-            {
-                object val = zone.Get("windspeed");
-                use_external_windspeed = val != null;
-                if (use_external_windspeed)
-                    windspeed = (double)val;
-                windspeed_checked = true;
-            }
-
+            double windspeed = LocalWeather.Wind;
             double sumDeltaZ = 0.0;
             double sumLAI = 0.0;
             for (int i = 0; i <= numLayers - 1; i++)

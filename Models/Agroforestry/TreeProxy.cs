@@ -45,6 +45,10 @@ namespace Models.Agroforestry
         /// 
         /// </summary>
         public double H { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public double heightToday { get; set; }
 
         /// <summary>The root radius.</summary>
         /// <value>The root radius.</value>
@@ -205,7 +209,7 @@ namespace Models.Agroforestry
                     double UrelMin = Math.Max(0.0, 1.14 * 0.5 - 0.16); // 0.5 is porosity, will be dynamic in the future
                     //double Urel;
                   //  double H;
-                    double heightToday;
+                   // double heightToday;
 
                     heightToday = GetHeightToday();
 
@@ -219,7 +223,7 @@ namespace Models.Agroforestry
                         else if (H < 6.1)
                             Urel = UrelMin;
                         else
-                            Urel = UrelMin + (1 - UrelMin) / (1 + 0.000928 * Math.Exp(Math.Pow(12.9372 * (H - 6), -0.26953)));
+                            Urel = UrelMin + (1 - UrelMin) / (1 + 0.000928 * Math.Exp(12.9372 * Math.Pow((H - 6), -0.26953)));
                     }
                     return Urel;
                 }
