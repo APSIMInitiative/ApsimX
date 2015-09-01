@@ -175,7 +175,7 @@ namespace Models.Graph
         {
             Simulation parentSimulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
 
-            List<IModel> zones = Apsim.Children(model, typeof(Zones.RectangularZone));
+            List<IModel> zones = Apsim.Children(model, typeof(Zone));
             if (zones.Count > 1)
             {
                 int colourIndex = 0;
