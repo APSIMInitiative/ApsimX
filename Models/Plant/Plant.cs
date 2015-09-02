@@ -248,6 +248,7 @@ namespace Models.PMF
         /// <summary>Harvest the crop.</summary>
         public void Harvest(RemovalFractions ManagerRemovalData = null)
         {
+
             // Invoke a harvesting event.
             if (Harvesting != null)
                 Harvesting.Invoke(this, new EventArgs());
@@ -266,7 +267,6 @@ namespace Models.PMF
             
             //Remove biomas from organs
             RemoveBiomassFromOrgans(BiomassRemovalData);
-
 
 
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " was harvested today."));
