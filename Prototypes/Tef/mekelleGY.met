@@ -6,8 +6,8 @@ Latitude =13.52(DECIMALDEGREES)
  tav =  18.25 (oC)     ! annual average ambient temperature
  amp =   2.72 (oC)     ! annual amplitude in mean monthly temperature
 
-Site    year    day     radn    maxt    mint    rain
-()      ()      ()      (MJ/m^2)(oC)    (oC)    (mm)
+ Site        year      day  radn    maxt    mint    rain
+ ()          ()        ()   () (oC)    (oC)    (mm)
 Mekelle     1998       1    20.5   23.97   11.62       0
 Mekelle     1998       2    21.1   24.29   12.29       0
 Mekelle     1998       3    19.5   25.18    12.2       0
