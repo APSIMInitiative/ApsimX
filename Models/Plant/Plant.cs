@@ -272,9 +272,6 @@ namespace Models.PMF
             foreach (IOrgan O in Organs)
                 O.DoHarvest();
 
-            // Invoke a cutting event.
-            if (Harvesting != null)
-                Harvesting.Invoke(this, new EventArgs());
         }
         /// <summary>Cut the crop.</summary>
         public void Cut(RemovalFractions ManagerRemovalData = null)
