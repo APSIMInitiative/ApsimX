@@ -248,6 +248,10 @@ namespace Models.PMF
         /// <summary>Harvest the crop.</summary>
         public void Harvest(RemovalFractions ManagerRemovalData = null)
         {
+            // Invoke a harvesting event.
+            if (Harvesting != null)
+                Harvesting.Invoke(this, new EventArgs());
+
             int i = 0;
             //Set up the default BiomassRemovalData values
             foreach (IOrgan organ in Organs)
@@ -263,9 +267,7 @@ namespace Models.PMF
             //Remove biomas from organs
             RemoveBiomassFromOrgans(BiomassRemovalData);
 
-            // Invoke a harvesting event.
-            if (Harvesting != null)
-                Harvesting.Invoke(this, new EventArgs());
+
 
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " was harvested today."));
             

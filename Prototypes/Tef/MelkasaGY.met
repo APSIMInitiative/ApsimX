@@ -7,7 +7,7 @@ Latitude = 8.4(DECIMALDEGREES)
  amp =   3.27 (oC)     ! annual amplitude in mean monthly temperature
 
 Site    year    day     radn    maxt    mint    rain
-()      ()      ()      (MJ/m^2)(oC)    (oC)    (mm)
+()      ()      ()      (MJ/m^2) (oC)    (oC)    (mm)
 Melkasa     1998       1   18.00   27.73   15.47    0.00
 Melkasa     1998       2   17.10   28.88   13.15    0.00
 Melkasa     1998       3   17.60   29.77   13.15    3.44
