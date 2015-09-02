@@ -1,6 +1,6 @@
 ﻿namespace UserInterface.Views
 {
-    partial class StaticForestrySystemView
+    partial class TreeProxyView
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,33 +29,26 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.Scalars = new System.Windows.Forms.DataGridView();
+            this.dgvHeights = new System.Windows.Forms.DataGridView();
+            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TreeHeight = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Grid = new System.Windows.Forms.DataGridView();
             this.pBelowGround = new OxyPlot.WindowsForms.PlotView();
             this.pAboveGround = new OxyPlot.WindowsForms.PlotView();
-            this.dgvHeights = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TreeHeight = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.calendar = new System.Windows.Forms.MonthCalendar();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Scalars)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Grid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHeights)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Grid)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.AutoSize = true;
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel1.Controls.Add(this.calendar);
             this.panel1.Controls.Add(this.dgvHeights);
-            this.panel1.Controls.Add(this.Scalars);
             this.panel1.Controls.Add(this.Grid);
             this.panel1.Controls.Add(this.pBelowGround);
             this.panel1.Controls.Add(this.pAboveGround);
@@ -65,24 +58,33 @@
             this.panel1.Size = new System.Drawing.Size(527, 563);
             this.panel1.TabIndex = 0;
             // 
-            // Scalars
+            // dgvHeights
             // 
-            this.Scalars.AllowUserToAddRows = false;
-            this.Scalars.AllowUserToDeleteRows = false;
-            this.Scalars.AllowUserToResizeColumns = false;
-            this.Scalars.AllowUserToResizeRows = false;
-            this.Scalars.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.Scalars.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            this.Scalars.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Scalars.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Description,
-            this.Value});
-            this.Scalars.Location = new System.Drawing.Point(0, 0);
-            this.Scalars.Name = "Scalars";
-            this.Scalars.RowHeadersVisible = false;
-            this.Scalars.Size = new System.Drawing.Size(150, 103);
-            this.Scalars.TabIndex = 5;
-            this.Scalars.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.Scalars_CellEndEdit);
+            this.dgvHeights.AllowDrop = true;
+            this.dgvHeights.AllowUserToResizeColumns = false;
+            this.dgvHeights.AllowUserToResizeRows = false;
+            this.dgvHeights.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dgvHeights.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Date,
+            this.TreeHeight});
+            this.dgvHeights.Location = new System.Drawing.Point(0, 0);
+            this.dgvHeights.Name = "dgvHeights";
+            this.dgvHeights.Size = new System.Drawing.Size(154, 272);
+            this.dgvHeights.TabIndex = 7;
+            this.dgvHeights.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvHeights_RowsAdded);
+            this.dgvHeights.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgvHeights_RowsRemoved);
+            // 
+            // Date
+            // 
+            this.Date.HeaderText = "Date";
+            this.Date.Name = "Date";
+            this.Date.Width = 55;
+            // 
+            // TreeHeight
+            // 
+            this.TreeHeight.HeaderText = "Height (m)";
+            this.TreeHeight.Name = "TreeHeight";
+            this.TreeHeight.Width = 80;
             // 
             // Grid
             // 
@@ -92,16 +94,18 @@
             this.Grid.AllowUserToResizeRows = false;
             this.Grid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.Grid.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.Grid.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
             this.Grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Grid.Location = new System.Drawing.Point(291, 0);
+            this.Grid.Location = new System.Drawing.Point(160, 0);
             this.Grid.Name = "Grid";
             this.Grid.RowHeadersVisible = false;
-            this.Grid.Size = new System.Drawing.Size(236, 272);
+            this.Grid.Size = new System.Drawing.Size(367, 272);
             this.Grid.TabIndex = 4;
             this.Grid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.Grid_CellEndEdit);
             this.Grid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.Grid_EditingControlShowing);
             this.Grid.SelectionChanged += new System.EventHandler(this.Grid_SelectionChanged);
             this.Grid.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Grid_KeyDown);
+            this.Grid.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Grid_KeyUp);
             this.Grid.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.Grid_PreviewKeyDown);
             // 
             // pBelowGround
@@ -130,21 +134,6 @@
             this.pAboveGround.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
             this.pAboveGround.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
             // 
-            // dgvHeights
-            // 
-            this.dgvHeights.AllowUserToAddRows = false;
-            this.dgvHeights.AllowUserToResizeColumns = false;
-            this.dgvHeights.AllowUserToResizeRows = false;
-            this.dgvHeights.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.dgvHeights.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Date,
-            this.TreeHeight});
-            this.dgvHeights.Location = new System.Drawing.Point(226, 0);
-            this.dgvHeights.Name = "dgvHeights";
-            this.dgvHeights.Size = new System.Drawing.Size(59, 272);
-            this.dgvHeights.TabIndex = 7;
-            this.dgvHeights.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgvHeights_RowsRemoved);
-            // 
             // dataGridViewTextBoxColumn1
             // 
             this.dataGridViewTextBoxColumn1.HeaderText = "Description";
@@ -171,38 +160,6 @@
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             this.dataGridViewTextBoxColumn4.Width = 59;
             // 
-            // Description
-            // 
-            this.Description.HeaderText = "Description";
-            this.Description.Name = "Description";
-            this.Description.ReadOnly = true;
-            this.Description.Width = 85;
-            // 
-            // Value
-            // 
-            this.Value.HeaderText = "Value";
-            this.Value.Name = "Value";
-            this.Value.Width = 59;
-            // 
-            // Date
-            // 
-            this.Date.HeaderText = "Date";
-            this.Date.Name = "Date";
-            this.Date.Width = 55;
-            // 
-            // TreeHeight
-            // 
-            this.TreeHeight.HeaderText = "Height (m)";
-            this.TreeHeight.Name = "TreeHeight";
-            this.TreeHeight.Width = 80;
-            // 
-            // calendar
-            // 
-            this.calendar.Location = new System.Drawing.Point(0, 110);
-            this.calendar.Name = "calendar";
-            this.calendar.TabIndex = 8;
-            this.calendar.DateSelected += new System.Windows.Forms.DateRangeEventHandler(this.calendar_DateSelected);
-            // 
             // StaticForestrySystemView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -212,9 +169,8 @@
             this.Size = new System.Drawing.Size(527, 563);
             this.Resize += new System.EventHandler(this.ForestryView_Resize);
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Scalars)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Grid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHeights)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Grid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -226,9 +182,6 @@
         private OxyPlot.WindowsForms.PlotView pBelowGround;
         private OxyPlot.WindowsForms.PlotView pAboveGround;
         private System.Windows.Forms.DataGridView Grid;
-        private System.Windows.Forms.DataGridView Scalars;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Description;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Value;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridView dgvHeights;
@@ -236,6 +189,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.DataGridViewTextBoxColumn TreeHeight;
-        private System.Windows.Forms.MonthCalendar calendar;
     }
 }

@@ -265,6 +265,11 @@ namespace UserInterface.Views
             {
                 pictureBox1.Image = Image.FromStream(file);
                 pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                pictureBox1.Visible = true;
+                Grid.Dock = DockStyle.Left;
+                this.Controls.SetChildIndex(pictureBox1, 0);
+                this.Controls.SetChildIndex(Grid, 1);
+                this.Parent.Refresh();
             }
         }
 
