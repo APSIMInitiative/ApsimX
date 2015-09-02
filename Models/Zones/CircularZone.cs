@@ -32,8 +32,8 @@ namespace Models.Zones
         {
             get
             {
-                if (Parent is TreeProxy)
-                    return (Parent as TreeProxy).GetDistanceFromTrees(this);
+                if (Parent is ForestrySystem)
+                    return (Parent as ForestrySystem).GetDistanceFromTrees(this);
                 throw new ApsimXException(this, "Not implemented for this system");
             }
         }
