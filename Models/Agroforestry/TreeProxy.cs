@@ -174,6 +174,7 @@ namespace Models.Agroforestry
         /// </summary>
         private void SetupTreeProperties()
         {
+            //These need to match the column names in the UI
             double[] THCutoffs = new double[] { 0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6 };
 
             for (int i = 2; i < Table.Count; i++)
@@ -280,12 +281,14 @@ namespace Models.Agroforestry
                     {
                         ZoneWaterAndN Uptake = new ZoneWaterAndN();
                         //Find the soil for this zone
-                        Zone ThisZone = new Zone();
-                        Soils.Soil ThisSoil = new Soils.Soil();
+                        Soils.Soil ThisSoil = null;
 
                         foreach (Zone SearchZ in Apsim.ChildrenRecursively(Parent, typeof(Zone)))
                             if (SearchZ.Name == Z.Name)
+                            {
                                 ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+                                break;
+                            }
 
                         Uptake.Name = Z.Name;
                         double[] SW = Z.Water;
@@ -337,8 +340,7 @@ namespace Models.Agroforestry
                     {
                         ZoneWaterAndN Uptake = new ZoneWaterAndN();
                         //Find the soil for this zone
-                        Zone ThisZone = new Zone();
-                        Soils.Soil ThisSoil = new Soils.Soil();
+                        Soils.Soil ThisSoil = null;
 
                         foreach (Zone SearchZ in ZoneList)
                             if (SearchZ.Name == Z.Name)
@@ -383,7 +385,7 @@ namespace Models.Agroforestry
             {
                 foreach (Zone SearchZ in Apsim.ChildrenRecursively(Parent, typeof(Zone)))
                 {
-                    Soils.Soil ThisSoil = new Soils.Soil();
+                    Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Name)
                     {
                         ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
@@ -403,8 +405,6 @@ namespace Models.Agroforestry
             // throw new NotImplementedException();
         }
     }
-
-    
 
     /// <summary>
     /// A structure holding forestry information for a single zone.
