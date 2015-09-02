@@ -331,7 +331,7 @@ namespace UserInterface.Presenters
         /// <param name="dataStore">The data store.</param>
         private void PopulateFieldNames(DataStore dataStore)
         {
-            if (this.seriesView.DataSource != null)
+            if (this.seriesView.DataSource != null && this.seriesView.DataSource != string.Empty)
             {
                 DataTable data = dataStore.RunQuery("SELECT * FROM " + this.seriesView.DataSource + " LIMIT 1");
                 if (data != null)

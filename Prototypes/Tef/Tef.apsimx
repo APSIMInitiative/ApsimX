@@ -1599,7 +1599,29 @@ Potential leaf area is calculated from leaf number using the approach of Keating
             <Name>FCO2</Name>
             <PhotosyntheticPathway>C4</PhotosyntheticPathway>
           </RUECO2Function>
+          <VariableReference>
+            <Name>RadnInt</Name>
+            <VariableName>[Leaf].RadIntTot</VariableName>
+          </VariableReference>
         </RUEModel>
+        <MinimumFunction>
+          <Name>FRGRFunction</Name>
+          <VariableReference>
+            <Name>RUE_FT</Name>
+            <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+          </VariableReference>
+          <MinimumFunction>
+            <Name>Others</Name>
+            <VariableReference>
+              <Name>RUE_FN</Name>
+              <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>RUE_FVPD</Name>
+              <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+            </VariableReference>
+          </MinimumFunction>
+        </MinimumFunction>
         <MultiplyFunction>
           <Name>ExtinctionCoeff</Name>
           <Memo>
@@ -1666,6 +1688,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
+        <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
         <GsMax>0.03</GsMax>
@@ -3268,6 +3291,7 @@ van Delden, S.H., Vos, J., Stomph, T.-J., Brouwer, G., Struik, P.C., 2012. Photo
         <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
+        <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
         <GsMax>0.03</GsMax>
@@ -5643,7 +5667,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
         </Factor>
       </Factors>
       <Simulation>
-        <Name>CWP</Name>
+        <Name>CWP2011</Name>
         <Weather>
           <Name>Weather</Name>
           <FileName>%root%\Prototypes\Chickpea\cooper.met</FileName>
@@ -6908,7 +6932,7 @@ Field Crops Research 116 (2010) 196204
         </Factor>
       </Factors>
       <Simulation>
-        <Name>Mekelle</Name>
+        <Name>Mekelle2009</Name>
         <Weather>
           <Name>Weather</Name>
           <FileName>%root%\Prototypes\Chickpea\cooper.met</FileName>

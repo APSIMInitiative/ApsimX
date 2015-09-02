@@ -389,7 +389,7 @@ namespace Models.Graph
         /// <returns>The return data or null if not found</returns>
         private IEnumerable GetDataFromModels(string fieldName)
         {
-            if (fieldName.StartsWith("["))
+            if (fieldName != null && fieldName.StartsWith("["))
             {
                 int posCloseBracket = fieldName.IndexOf(']');
                 if (posCloseBracket == -1)

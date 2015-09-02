@@ -221,7 +221,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                DeltaBiomass = Photosynthesis.Growth(RadIntTot);
+                DeltaBiomass = Photosynthesis.Value;
                 return new BiomassSupplyType { Fixation = DeltaBiomass, Retranslocation = 0, Reallocation = 0 };
             }
         }
