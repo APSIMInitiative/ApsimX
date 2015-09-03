@@ -302,6 +302,7 @@ namespace Models.Agroforestry
                             PotSWSupply += Uptake.Water[i] * ZI.Area * 10000;
                         }
                         Uptakes.Add(Uptake);
+                        break;
                     }
                 }
             }
