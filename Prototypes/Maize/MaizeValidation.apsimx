@@ -1027,8 +1027,8 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>9</double>
               </X>
               <Y>
-                <double>60000</double>
-                <double>30000</double>
+                <double>50000</double>
+                <double>25000</double>
               </Y>
             </XYPairs>
             <XProperty>[Structure].MainStemNodeNo</XProperty>
@@ -1042,8 +1042,8 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>9</double>
               </X>
               <Y>
-                <double>6000</double>
-                <double>6000</double>
+                <double>8000</double>
+                <double>8000</double>
               </Y>
             </XYPairs>
             <XProperty>[Structure].MainStemNodeNo</XProperty>
