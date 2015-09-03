@@ -124,6 +124,9 @@ namespace Models.PMF.Phen
         /// <summary>The above ground period</summary>
         [Link(IsOptional = true)]
         private IFunction AboveGroundPeriod = null;
+        /// <summary>The summary</summary>
+        [Link]
+        ISummary Summary = null;
 
         #endregion
 
@@ -218,6 +221,7 @@ namespace Models.PMF.Phen
                 if (PhaseIndex == -1)
                     throw new Exception("Cannot jump to phenology phase: " + value + ". Phase not found.");
                 CurrentPhase = Phases[PhaseIndex];
+                Summary.WriteMessage(this, string.Format(this + " has set phase to " + CurrentPhase.Name));
             }
         }
 
@@ -448,7 +452,8 @@ namespace Models.PMF.Phen
             private set
             {
                 string OldPhaseName = CurrentPhase.Name;
-
+                //double TTRewound;
+                double OldPhaseINdex = IndexOfPhase(CurrentPhase.Name);
                 CurrentPhaseIndex = IndexOfPhase(value.Name);
                 if (CurrentPhaseIndex == -1)
                     throw new Exception("Cannot jump to phenology phase: " + value + ". Phase not found.");
@@ -456,21 +461,29 @@ namespace Models.PMF.Phen
                 CurrentlyOnFirstDayOfPhase[StagesPassedToday] = CurrentPhase.Start;
                 StagesPassedToday += 1;
 
-                // If the new phase is a rewind phase then reinitialise all phases and rewind back to the
-                // first phase.
-                if (Phases[CurrentPhaseIndex] is GotoPhase)
+                // If the new phase is a rewind or going ahead more that one phase(comming from a GoToPhase or PhaseSet Function), then reinitialise 
+                // all phases that are being wound back over.
+                if ((CurrentPhaseIndex < OldPhaseINdex)||(CurrentPhaseIndex - OldPhaseINdex > 1))
                 {
                     foreach (Phase P in Phases)
                     {
-                        P.ResetPhase();
+                        //Work out how much tt was accumulated at the stage we are resetting to and adjust accumulated TT accordingly
+                        if (IndexOfPhase(P.Name) <= OldPhaseINdex)
+                        {
+                            AccumulatedEmergedTT += P.TTinPhase;
+                            if (IndexOfPhase(P.Name) >= 2)
+                                AccumulatedTT += P.TTinPhase;
+                        }
+                        //Reset phases we are rewinding over.
+                        if (IndexOfPhase(P.Name) >= CurrentPhaseIndex)
+                            P.ResetPhase();
                     }
-                    GotoPhase GotoP = (GotoPhase)Phases[CurrentPhaseIndex];
-                    CurrentPhaseIndex = IndexOfPhase(GotoP.PhaseNameToGoto);
-                    if (CurrentPhaseIndex == -1)
-                        throw new Exception("Cannot goto phase: " + GotoP.PhaseNameToGoto + ". Phase not found.");
+                   // GotoPhase GotoP = (GotoPhase)Phases[CurrentPhaseIndex];
+                   // CurrentPhaseIndex = IndexOfPhase(GotoP.PhaseNameToGoto);
+                   // if (CurrentPhaseIndex == -1)
+                    //    throw new Exception("Cannot goto phase: " + GotoP.PhaseNameToGoto + ". Phase not found.");
                 }
                 CurrentPhase.ResetPhase();
-
                 // Send a PhaseChanged event.
                 if (PhaseChanged != null)
                 {
@@ -480,7 +493,6 @@ namespace Models.PMF.Phen
                     PhaseChangedData.NewPhaseName = CurrentPhase.Name;
                     PhaseChangedData.EventStageName = CurrentPhase.Start;
                     PhaseChanged.Invoke(PhaseChangedData);
-                    //Fixme, make this work again MyPaddock.Publish(CurrentPhase.Start);
                 }
             }
         }

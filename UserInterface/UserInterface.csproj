@@ -673,6 +673,9 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\TreeViewImages\Bitmap1.bmp" />
+    <Content Include="Resources\TreeViewImages\GoToPhase.png" />
+    <Content Include="Resources\TreeViewImages\PhaseSetFunction.png" />
     <None Include="Service References\BuildService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
