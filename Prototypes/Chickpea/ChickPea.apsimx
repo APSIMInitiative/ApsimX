@@ -1903,6 +1903,8 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
             <VariableName>[Shell].PodNumber.Value</VariableName>
           </VariableReference>
         </MultiplyFunction>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
         <RipeStage />
       </ReproductiveOrgan>
       <Root>
@@ -2112,6 +2114,8 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
           <Start>Emergence</Start>
           <End>EndGrainFill</End>
         </PhaseBasedSwitch>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
         <InitialDM>0.2</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <KNO3_yProperty>
@@ -2287,6 +2291,8 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
           <Start>Emergence</Start>
           <End>EndGrainFill</End>
         </PhaseBasedSwitch>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
       </Nodule>
       <GenericAboveGroundOrgan>
         <Name>Shell</Name>
@@ -2414,6 +2420,8 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
             <End>HarvestRipe</End>
           </PhaseLookupValue>
         </MultiplyFunction>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
       <Leaf>
         <Name>Leaf</Name>
@@ -3838,6 +3846,8 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -3928,6 +3938,8 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Name>StructuralFraction</Name>
           <Value>0.7</Value>
         </Constant>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
       <Summariser>
         <Name>Summariser</Name>
@@ -4109,7 +4121,7 @@ A selection of data from Kenya has been included from the work of Keating et al 
         </Factor>
       </Factors>
       <Simulation>
-        <Name>Lawes</Name>
+        <Name>Lawes1990</Name>
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
@@ -4788,7 +4800,7 @@ namespace Models
         </Factor>
       </Factors>
       <Simulation>
-        <Name>Lawes</Name>
+        <Name>Lawes1991</Name>
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
@@ -5866,7 +5878,7 @@ namespace Models
         </Factor>
       </Factors>
       <Simulation>
-        <Name>Lawes</Name>
+        <Name>Lawes1993</Name>
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
@@ -6486,7 +6498,7 @@ namespace Models
         </Factor>
       </Factors>
       <Simulation>
-        <Name>Lawes</Name>
+        <Name>Lawes1995</Name>
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
@@ -7188,7 +7200,7 @@ namespace Models
         </Factor>
       </Factors>
       <Simulation>
-        <Name>Hermitage</Name>
+        <Name>Hermitage1988</Name>
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
@@ -7819,7 +7831,7 @@ namespace Models
         </Factor>
       </Factors>
       <Simulation>
-        <Name>Hermitage</Name>
+        <Name>Hermitage1989</Name>
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
@@ -8416,7 +8428,7 @@ namespace Models
         </Factor>
       </Factors>
       <Simulation>
-        <Name>Hermitage</Name>
+        <Name>Hermitage1990</Name>
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
