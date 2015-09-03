@@ -155,8 +155,12 @@ namespace Models.PMF.Phen
         #region States
         /// <summary>The current phase index</summary>
         private int CurrentPhaseIndex;
-        /// <summary>The _ accumulated tt</summary>
-        private double _AccumulatedTT = 0;
+        /// <summary>The Thermal time accumulated tt</summary>
+        [XmlIgnore]
+        public double AccumulatedTT {get; set;}
+        /// <summary>The Thermal time accumulated tt following emergence</summary>
+        [XmlIgnore]
+        public double AccumulatedEmergedTT { get; set; }
         /// <summary>The currently on first day of phase.  This is an array that lists all the stages that are pased on this day</summary>
         private string[] CurrentlyOnFirstDayOfPhase = new string[] {"","","","","",""};
         /// <summary>The number of stages that have been passed today</summary>
@@ -168,6 +172,7 @@ namespace Models.PMF.Phen
         /// <summary>The sow date</summary>
         private DateTime SowDate = DateTime.MinValue;
         /// <summary>The emerged</summary>
+        [XmlIgnore]
         public bool Emerged = false;
 
         /// <summary>A one based stage number.</summary>
@@ -178,7 +183,8 @@ namespace Models.PMF.Phen
         public void Clear()
         {
             Stage = 1;
-            _AccumulatedTT = 0;
+            AccumulatedTT = 0;
+            AccumulatedEmergedTT = 0;
             JustInitialised = true;
             Emerged = false;
             SowDate = Clock.Today;
@@ -408,7 +414,10 @@ namespace Models.PMF.Phen
                     Stage = (CurrentPhaseIndex + 1) + CurrentPhase.FractionComplete;
                 }
 
-                _AccumulatedTT += CurrentPhase.TTForToday;
+                AccumulatedTT += CurrentPhase.TTForToday;
+
+                if (Emerged)
+                    AccumulatedEmergedTT += CurrentPhase.TTForToday;
                
                 if (Emerged && PostPhenology != null)
                     PostPhenology.Invoke(this, new EventArgs());

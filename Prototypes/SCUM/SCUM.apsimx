@@ -192,16 +192,6 @@ During this phase the plant has completed its growth and is drying ready for har
           <Start>Maturity</Start>
           <End>Unused</End>
         </EndPhase>
-        <AccumulateFunction>
-          <Name>AccumulatedThermalTime</Name>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <StartStageName>Emergence</StartStageName>
-          <EndStageName>Maturity</EndStageName>
-        </AccumulateFunction>
-        <Emerged>false</Emerged>
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
@@ -373,7 +363,7 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
               </VariableReference>
               <VariableReference>
                 <Name>XValue</Name>
-                <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
+                <VariableName>[Phenology].AccumulatedEmergedTT</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>Xo</Name>
@@ -533,7 +523,7 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
               </Constant>
               <VariableReference>
                 <Name>XValue</Name>
-                <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
+                <VariableName>[Phenology].AccumulatedEmergedTT</VariableName>
               </VariableReference>
               <Constant>
                 <Name>Xo</Name>
@@ -571,7 +561,7 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
                     <Name>TTSenesce</Name>
                     <VariableReference>
                       <Name>AccumulatedThermalTime</Name>
-                      <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
+                      <VariableName>[Phenology].AccumulatedEmergedTT</VariableName>
                     </VariableReference>
                     <AddFunction>
                       <Name>ThermalTimeAtStartSenescence</Name>
@@ -854,7 +844,7 @@ This is important in SCUM as it is set for each species to represent their diffe
             <Name>RootFrontVelocity</Name>
             <VariableReference>
               <Name>TestVariable</Name>
-              <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
+              <VariableName>[Phenology].AccumulatedEmergedTT</VariableName>
             </VariableReference>
             <AddFunction>
               <Name>GrowthDuration</Name>
@@ -1837,7 +1827,7 @@ namespace Models
           <string>[SCUM].Summariser.Total.N</string>
           <string>[SCUM].Arbitrator.DMSupply</string>
           <string>[SCUM].Arbitrator.DMDemand</string>
-          <string>[SCUM].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[SCUM].Phenology.AccumulatedEmergedTT</string>
           <string>[SCUM].Arbitrator.DMSinkLimitation</string>
           <string>[SCUM].Arbitrator.DMNutrientLimitation</string>
           <string>[SCUM].Phenology.ThermalTime.Value</string>
@@ -4141,7 +4131,7 @@ namespace Models
             <string>[SCUM].Summariser.Total.N</string>
             <string>[SCUM].Arbitrator.DMSupply</string>
             <string>[SCUM].Arbitrator.DMDemand</string>
-            <string>[SCUM].Phenology.AccumulatedThermalTime.Value</string>
+            <string>[SCUM].Phenology.AccumulatedEmergedTT</string>
             <string>[SCUM].Arbitrator.DMSinkLimitation</string>
             <string>[SCUM].Arbitrator.DMNutrientLimitation</string>
             <string>[SCUM].Phenology.ThermalTime.Value</string>
@@ -4898,7 +4888,7 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
           <YFieldName>SCUM.Stover.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -4913,7 +4903,7 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
           <YFieldName>SCUM.Root.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -4928,7 +4918,7 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
           <YFieldName>SCUM.Product.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -4943,7 +4933,7 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
           <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -4958,7 +4948,7 @@ namespace Models
           <Marker>None</Marker>
           <Line>Dash</Line>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
           <YFieldName>SCUM.DryYield.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -4973,7 +4963,7 @@ namespace Models
           <Marker>None</Marker>
           <Line>Dot</Line>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
           <YFieldName>SCUM.TotalBiomassAtStartReproductive.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -4988,7 +4978,7 @@ namespace Models
           <Marker>None</Marker>
           <Line>DashDot</Line>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
           <YFieldName>SCUM.TotalBiomassAtStartSenescence.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -5003,7 +4993,7 @@ namespace Models
           <Marker>None</Marker>
           <Line>Dash</Line>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
           <YFieldName>SCUM.Ymax.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -5018,7 +5008,7 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
           <YFieldName>SCUM.Phenology.Stage</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -5033,7 +5023,7 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
           <YFieldName>SCUM.Arbitrator.DMSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>true</Cumulative>
@@ -5291,7 +5281,7 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
           <YFieldName>SCUM.Root.Depth</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -5306,7 +5296,7 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
           <YFieldName>SCUM.Stover.CoverTotal</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -5321,7 +5311,7 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
           <YFieldName>SCUM.Stover.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -5589,7 +5579,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.Stover.CoverTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -5625,7 +5615,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -5661,7 +5651,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.Summariser.Total.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -5697,7 +5687,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.Product.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -5733,7 +5723,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.Product.LiveFWt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -6756,7 +6746,7 @@ namespace Models
           <string>[SCUM].Summariser.Total.N</string>
           <string>[SCUM].Arbitrator.DMSupply</string>
           <string>[SCUM].Arbitrator.DMDemand</string>
-          <string>[SCUM].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[SCUM].Phenology.AccumulatedEmergedTT</string>
           <string>[SCUM].Arbitrator.DMSinkLimitation</string>
           <string>[SCUM].Arbitrator.DMNutrientLimitation</string>
           <string>[SCUM].Phenology.ThermalTime.Value</string>
@@ -7100,7 +7090,7 @@ This model has been built to simulate a range of different crops in simulations 
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.Stover.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7115,7 +7105,7 @@ This model has been built to simulate a range of different crops in simulations 
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.Root.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7130,7 +7120,7 @@ This model has been built to simulate a range of different crops in simulations 
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.Product.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7145,7 +7135,7 @@ This model has been built to simulate a range of different crops in simulations 
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7160,7 +7150,7 @@ This model has been built to simulate a range of different crops in simulations 
         <Marker>None</Marker>
         <Line>Dash</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.DryYield.Value</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7175,7 +7165,7 @@ This model has been built to simulate a range of different crops in simulations 
         <Marker>None</Marker>
         <Line>Dot</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.TotalBiomassAtStartReproductive.Value</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7190,7 +7180,7 @@ This model has been built to simulate a range of different crops in simulations 
         <Marker>None</Marker>
         <Line>DashDot</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.TotalBiomassAtStartSenescence.Value</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7205,7 +7195,7 @@ This model has been built to simulate a range of different crops in simulations 
         <Marker>None</Marker>
         <Line>Dash</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.Ymax.Value</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7220,7 +7210,7 @@ This model has been built to simulate a range of different crops in simulations 
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.Phenology.Stage</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7235,7 +7225,7 @@ This model has been built to simulate a range of different crops in simulations 
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.Arbitrator.DMSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>true</Cumulative>
@@ -7493,7 +7483,7 @@ This model has been built to simulate a range of different crops in simulations 
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.Root.Depth</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7508,7 +7498,7 @@ This model has been built to simulate a range of different crops in simulations 
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.Stover.CoverTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -7523,7 +7513,7 @@ This model has been built to simulate a range of different crops in simulations 
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
         <YFieldName>SCUM.Stover.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
