@@ -37,18 +37,32 @@ namespace Models.Agroforestry
         public double NDemand { get; set; }
 
         /// <summary>
-        /// 
+        /// The reduction in wind as a fraction.
         /// </summary>
+        [Units("0-1")]
+        [XmlIgnore]
         public double Urel { get; set; }
+
+        /// <summary>
+        /// Distance from zone in tree heights
+        /// </summary>
+        [XmlIgnore]
+        [Units("TreeHeights")]
+        public double H { get; set; }
+
+        /// <summary>
+        /// Height of the tree.
+        /// </summary>
+        [XmlIgnore]
+        [Units("m")]
+        public double heightToday { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public double H { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public double heightToday { get; set; }
+        [XmlIgnore]
+        [Units("mm")]
+        public double[] WaterUptake { get; set; }
 
         /// <summary>The root radius.</summary>
         /// <value>The root radius.</value>
@@ -95,7 +109,7 @@ namespace Models.Agroforestry
             foreach (Zone zone in ZoneList)
             {
                 if (zone is RectangularZone)
-                    D += (zone as RectangularZone).Width;
+                    D += (zone as RectangularZone).Width / 2 - (ZoneList[0] as RectangularZone).Width / 2; //we want the middle of the Zone as measured from the tree which is in the middle of the first Zone
                 else if (zone is CircularZone)
                     D += (zone as CircularZone).Width;
                 else
@@ -135,7 +149,7 @@ namespace Models.Agroforestry
             double treeHeight = GetHeightToday();
             double distFromTree = GetDistanceFromTrees(z);
 
-            return (distFromTree + GetZoneWidth(z) / 2) / treeHeight;
+            return distFromTree / treeHeight;
         }
 
         /// <summary>
@@ -264,12 +278,16 @@ namespace Models.Agroforestry
         {
             double SWDemand = 0;  // Tree water demand (L)
             double PotSWSupply = 0; // Total water supply (L)
+            Zone treeZone = ZoneList[0] as Zone;
+            double Etz = (Apsim.Find(treeZone, typeof(Soils.SoilWater)) as Soils.SoilWater).Eo; //Eo of Tree Zone
 
             foreach (Zone ZI in ZoneList)
             {
                 Soils.SoilWater S = Apsim.Find(ZI, typeof(Soils.SoilWater)) as Soils.SoilWater;
-                SWDemand += S.Eo * (1 / (1 - GetShade(ZI) / 100) - 1) * ZI.Area * 10000;
+                // SWDemand += S.Eo * (1 / (1 - GetShade(ZI) / 100) - 1) * ZI.Area * 10000;
+                SWDemand += GetShade(ZI) / 100 * ZI.Area * 10000;
             }
+            SWDemand *= Etz;
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
             
@@ -317,9 +335,14 @@ namespace Models.Agroforestry
             else
                 F = 1;
 
-
+            List<double> uptakeList = new List<double>();
             foreach (ZoneWaterAndN Z in Uptakes)
+            {
                 Z.Water = MathUtilities.Multiply_Value(Z.Water, F);
+                uptakeList.Add(Z.TotalWater);
+            }
+
+            WaterUptake = uptakeList.ToArray();
             return Uptakes;
 
 

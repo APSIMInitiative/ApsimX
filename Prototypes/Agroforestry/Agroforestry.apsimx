@@ -50,7 +50,7 @@
             <string>150-180</string>
           </ArrayOfString>
           <ArrayOfString>
-            <string>60</string>
+            <string>100</string>
             <string>0</string>
             <string />
             <string />
@@ -63,7 +63,7 @@
             <string>0</string>
           </ArrayOfString>
           <ArrayOfString>
-            <string>50</string>
+            <string>0</string>
             <string>0</string>
             <string />
             <string />
@@ -76,7 +76,7 @@
             <string>0</string>
           </ArrayOfString>
           <ArrayOfString>
-            <string>40</string>
+            <string>0</string>
             <string>0</string>
             <string />
             <string />
@@ -89,7 +89,7 @@
             <string>0</string>
           </ArrayOfString>
           <ArrayOfString>
-            <string>30</string>
+            <string>0</string>
             <string>0</string>
             <string />
             <string />
@@ -102,7 +102,7 @@
             <string>0</string>
           </ArrayOfString>
           <ArrayOfString>
-            <string>20</string>
+            <string>0</string>
             <string>0</string>
             <string />
             <string />
@@ -181,9 +181,6 @@
           </ArrayOfString>
         </Table>
         <NDemand>0</NDemand>
-        <Urel>0</Urel>
-        <H>0</H>
-        <heightToday>0</heightToday>
         <RootRadius>0</RootRadius>
         <dates>
           <dateTime>1900-01-01T00:00:00</dateTime>
@@ -459,6 +456,7 @@ namespace Models
             <string>sum([Soil].SoilWater.SWmm) as TotalSWmm</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
+            <string>[TreeProxy].WaterUptake</string>
             <string>[TreeProxy].Urel</string>
             <string>[TreeProxy].H</string>
             <string>[TreeProxy].heightToday</string>
@@ -3211,6 +3209,200 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <Graph>
+        <Name>TreeWaterUptake</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TreeProxy.WaterUptake(1)</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series11</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8323328</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TreeProxy.WaterUptake(2)</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series12</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TreeProxy.WaterUptake(3)</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series13</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TreeProxy.WaterUptake(4)</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series14</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-256</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TreeProxy.WaterUptake(5)</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>TreeWaterUptakeCum</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TreeProxy.WaterUptake(1)</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>true</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series11</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8323328</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TreeProxy.WaterUptake(2)</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>true</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series12</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TreeProxy.WaterUptake(3)</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>true</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series13</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TreeProxy.WaterUptake(4)</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>true</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series14</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-256</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TreeProxy.WaterUptake(5)</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>true</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
       <Area>0.25</Area>
       <Slope>0</Slope>
     </ForestrySystem>
@@ -3397,9 +3589,6 @@ namespace Models
           </ArrayOfString>
         </Table>
         <NDemand>0</NDemand>
-        <Urel>0</Urel>
-        <H>0</H>
-        <heightToday>0</heightToday>
         <RootRadius>0</RootRadius>
         <dates>
           <dateTime>1900-01-01T00:00:00</dateTime>
@@ -11010,9 +11199,6 @@ namespace Models
           </ArrayOfString>
         </Table>
         <NDemand>0</NDemand>
-        <Urel>0</Urel>
-        <H>0</H>
-        <heightToday>0</heightToday>
         <RootRadius>0</RootRadius>
         <dates>
           <dateTime>1900-01-01T00:00:00</dateTime>
@@ -13971,9 +14157,6 @@ namespace Models
             </ArrayOfString>
           </Table>
           <NDemand>0</NDemand>
-          <Urel>0</Urel>
-          <H>0</H>
-          <heightToday>0</heightToday>
           <RootRadius>0</RootRadius>
           <dates>
             <dateTime>1900-01-01T00:00:00</dateTime>
