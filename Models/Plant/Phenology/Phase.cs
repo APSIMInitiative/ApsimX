@@ -53,6 +53,9 @@ namespace Models.PMF.Phen
         /// <summary>The end</summary>
         [Models.Core.Description("End")]
         public string End { get; set; }
+        /// <summary>The phase that this one is equivelent to</summary>
+        [Models.Core.Description("Phase that this is equivelent to in phenology order")]
+        public string PhaseParallel { get; set; }
 
         /// <summary>The phenology</summary>
         [Link]
@@ -83,12 +86,10 @@ namespace Models.PMF.Phen
                 return ThermalTime.Value;
             }
         }
-        /// <summary>The _ t tin phase</summary>
-        protected double _TTinPhase = 0;
-
+        
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
-        public double TTinPhase { get { return _TTinPhase; } }
+        public double TTinPhase { get; set; }
 
         /// <summary>
         /// This function increments thermal time accumulated in each phase
@@ -106,7 +107,7 @@ namespace Models.PMF.Phen
             {
                 _TTForToday *= Stress.Value;
             }
-            _TTinPhase += _TTForToday;
+            TTinPhase += _TTForToday;
 
             return PropOfDayUnused;
         }
@@ -117,15 +118,15 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         virtual public double AddTT(double PropOfDayToUse)
         {
-            _TTinPhase += ThermalTime.Value * PropOfDayToUse;
+            TTinPhase += ThermalTime.Value * PropOfDayToUse;
             return 0;
         }
         /// <summary>Adds the specified DLT_TT.</summary>
         /// <param name="dlt_tt">The DLT_TT.</param>
-        virtual public void Add(double dlt_tt) { _TTinPhase += dlt_tt; }
+        virtual public void Add(double dlt_tt) { TTinPhase += dlt_tt; }
         /// <summary>Gets the fraction complete.</summary>
         /// <value>The fraction complete.</value>
-        abstract public double FractionComplete { get; }
+        abstract public double FractionComplete { get; set; }
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -137,7 +138,7 @@ namespace Models.PMF.Phen
         public virtual void ResetPhase()
         {
             _TTForToday = 0;
-            _TTinPhase = 0;
+            TTinPhase = 0;
             PropOfDayUnused = 0;
         }
 

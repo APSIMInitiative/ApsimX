@@ -87,6 +87,8 @@ private void OnDoManagement(object sender, EventArgs e)
           <Name>Germinating</Name>
           <Start>Sowing</Start>
           <End>Germination</End>
+          <TTinPhase>0</TTinPhase>
+          <FractionComplete>0.999</FractionComplete>
         </GerminatingPhase>
         <EmergingPhase>
           <Name>Emerging</Name>
@@ -100,6 +102,8 @@ private void OnDoManagement(object sender, EventArgs e)
           </Memo>
           <Start>Germination</Start>
           <End>Emergence</End>
+          <TTinPhase>0</TTinPhase>
+          <FractionComplete>1</FractionComplete>
           <ShootLag>0</ShootLag>
           <ShootRate>0</ShootRate>
         </EmergingPhase>
@@ -122,6 +126,8 @@ During this phase the plant only partitions biomass to Root and Stover (leaf and
           </VariableReference>
           <Start>Emergence</Start>
           <End>StartReproductive</End>
+          <TTinPhase>0</TTinPhase>
+          <FractionComplete>1</FractionComplete>
         </GenericPhase>
         <GenericPhase>
           <Name>YieldIncreasing</Name>
@@ -142,6 +148,8 @@ During this phase the plant is partitioning biomass to Root, Stover and Product 
           </VariableReference>
           <Start>StartReproductive</Start>
           <End>StartSenescence</End>
+          <TTinPhase>0</TTinPhase>
+          <FractionComplete>1</FractionComplete>
         </GenericPhase>
         <GenericPhase>
           <Name>Senescing</Name>
@@ -162,6 +170,8 @@ During this phase the plant is partitioning biomass to Root and Product organs a
           </VariableReference>
           <Start>StartSenescence</Start>
           <End>EndReproductive</End>
+          <TTinPhase>0</TTinPhase>
+          <FractionComplete>1</FractionComplete>
         </GenericPhase>
         <GenericPhase>
           <Name>Mature</Name>
@@ -182,6 +192,8 @@ During this phase the plant has completed its growth and is drying ready for har
           </Memo>
           <Start>EndReproductive</Start>
           <End>Maturity</End>
+          <TTinPhase>0</TTinPhase>
+          <FractionComplete>1</FractionComplete>
         </GenericPhase>
         <EndPhase>
           <Name>ReadyForHarvest</Name>
@@ -191,6 +203,8 @@ During this phase the plant has completed its growth and is drying ready for har
           </VariableReference>
           <Start>Maturity</Start>
           <End>Unused</End>
+          <TTinPhase>0</TTinPhase>
+          <FractionComplete>0</FractionComplete>
         </EndPhase>
         <GenericPhase>
           <Name>RegrowthCanopyExpanding</Name>
@@ -211,11 +225,16 @@ During this phase the plant only partitions biomass to Root and Stover (leaf and
           </VariableReference>
           <Start>StartRegrowth</Start>
           <End>EndRegrowth</End>
+          <PhaseParallel>CanopyExpanding</PhaseParallel>
+          <TTinPhase>0</TTinPhase>
+          <FractionComplete>1</FractionComplete>
         </GenericPhase>
         <GotoPhase>
           <Name>GoToReproductive</Name>
           <Start>EndRegrowth</Start>
           <End>YieldIncreasing</End>
+          <TTinPhase>0</TTinPhase>
+          <FractionComplete>0</FractionComplete>
           <PhaseNameToGoto>YieldIncreasing</PhaseNameToGoto>
         </GotoPhase>
         <PhaseSetFunction>
@@ -11403,7 +11422,7 @@ namespace Models
     <Clock>
       <Name>Clock</Name>
       <StartDate>2010-10-01T00:00:00</StartDate>
-      <EndDate>2013-07-31T00:00:00</EndDate>
+      <EndDate>2011-07-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
@@ -11864,8 +11883,14 @@ namespace Models
 				MCSP.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 			else if (Clock.Today.Date == CutDate)
 			{
-				//Cut without sending defoliation data to test defaults
-				MCSP.Cut();
+				Remove.SetPhenologyStage(3.5);
+				Remove.SetFractionRemoved("Stover", 0.5);
+				Remove.SetFractionToResidue("Stover", 0.2);
+				Remove.SetFractionRemoved("Product", 0.8);
+				Remove.SetFractionToResidue("Product", 0.1);
+				Remove.SetFractionRemoved("Root", 0.0);
+				Remove.SetFractionToResidue("Root", 0.2);
+				MCSP.Cut(Remove);
 			}
 			else if (Clock.Today.Date == EndCropDate)
 				MCSP.EndCrop();
@@ -12146,6 +12171,7 @@ namespace Models
           <string>[SurfaceOrganicMatter].wt</string>
           <string>sum([Soil].SoilNitrogen.FOMN)</string>
           <string>[SCUM].Phenology.AccumulatedEmergedTT</string>
+          <string>[SCUM].Stover.CoverGreen</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -12819,7 +12845,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Root.Depth</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -12834,8 +12860,8 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
-        <YFieldName>SCUM.Stover.CoverTotal</YFieldName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Stover.CoverGreen</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -12849,7 +12875,7 @@ namespace Models
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Stover.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
@@ -13191,7 +13217,7 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>Irrigation1</Name>
+      <Name>Phenology</Name>
       <Series>
         <Name>Series 0</Name>
         <Type>Scatter</Type>
@@ -13207,6 +13233,21 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <Series>
+        <Name>Series 01</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Phenology.Stage</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Left</Type>
         <Title>Water (mm)</Title>
@@ -13217,6 +13258,13 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>

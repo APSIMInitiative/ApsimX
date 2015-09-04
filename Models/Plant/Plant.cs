@@ -288,6 +288,7 @@ namespace Models.PMF
                 i += 1;
             }
 
+            Phenology.ReSetToStage(ManagerRemovalData.PhenologyStageSet);
             //OverWriter default values in BiomassRemovalData with any manager specified values
             ApplyManagerSpecifiedOverwrites(ManagerRemovalData);
 

@@ -41,9 +41,9 @@ namespace Models.PMF.Phen
         [EventSubscribe("Cutting")]
         private void OnCutting(object sender, EventArgs e)
         {
-            if (sender == Plant)
-                if (Event == "Cut")
-                    Phenology.CurrentPhaseName = PhaseNameToSetTo;
+            //if (sender == Plant)
+             //   if (Event == "Cut")
+                    //Phenology.CurrentPhaseName = PhaseNameToSetTo;
         }
         /// <summary>Called when crop is being cut.</summary>
         /// <param name="sender">The sender.</param>
