@@ -27,7 +27,7 @@ namespace UserInterface.Views
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
     /// </summary>
-    public partial class StaticForestrySystemView : UserControl, Interfaces.IGraphView
+    public partial class TreeProxyView : UserControl, Interfaces.IGraphView
     {
         /// <summary>
         /// A list to hold all plots to make enumeration easier.
@@ -61,7 +61,7 @@ namespace UserInterface.Views
         private DateTime largestDate = DateTime.MinValue;
 
         /// <summary>Current grid cell.</summary>
-        private int[] currentCell = new int[2] {-1, -1};
+        private int[] currentCell = new int[2] { -1, -1 };
 
         /// <summary>
         /// Depth midpoints of the soil layers
@@ -79,9 +79,9 @@ namespace UserInterface.Views
         public double RootRadius;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StaticForestrySystemView" /> class.
+        /// Initializes a new instance of the <see cref="TreeProxyView" /> class.
         /// </summary>
-        public StaticForestrySystemView()
+        public TreeProxyView()
         {
             this.InitializeComponent();
             this.pAboveGround.Model = new PlotModel();
@@ -542,7 +542,7 @@ namespace UserInterface.Views
             Models.Graph.Axis.AxisType xAxisType,
             Models.Graph.Axis.AxisType yAxisType)
         {
-                return null;
+            return null;
         }
 
         /// <summary>
@@ -602,13 +602,8 @@ namespace UserInterface.Views
             return names.ToArray();
         }
 
-        public void SetupGrid(List<List<string>> data, double[] zoneWidths)
+        public void SetupGrid(List<List<string>> data)
         {
-            // setup scalar variables
-            Scalars.Rows.Clear();
-            Scalars.Rows.Add("Nitrogen demand (kg/ha)", NDemand);
-            Scalars.Rows.Add("Root radius (cm)", RootRadius);
-
             table = new DataTable();
             // data[0] holds the column names
             foreach (string s in data[0])
@@ -627,17 +622,18 @@ namespace UserInterface.Views
             }
             Grid.DataSource = table;
             Grid.Columns[0].ReadOnly = true; //name column
-            Grid.Rows[1].ReadOnly = true; //RLD title row
-            Grid.Rows[1].DefaultCellStyle.BackColor = Color.LightGray;
-            Grid.Rows[2].ReadOnly = true; //Depth title row
+            Grid.Rows[2].ReadOnly = true; //RLD title row
             Grid.Rows[2].DefaultCellStyle.BackColor = Color.LightGray;
+            Grid.Rows[3].ReadOnly = true; //Depth title row
+            Grid.Rows[3].DefaultCellStyle.BackColor = Color.LightGray;
             ResizeControls();
 
-            SetupGraphs(zoneWidths);
+            SetupGraphs();
         }
 
         public void SetupHeights(DateTime[] dates, double[] heights)
         {
+            dgvHeights.Rows.Clear();
             for (int i = 0; i < dates.Count(); i++)
             {
                 dgvHeights.Rows.Add(dates[i].ToShortDateString(), heights[i] / 1000);
@@ -646,25 +642,6 @@ namespace UserInterface.Views
 
         private void ResizeControls()
         {
-            //resize Scalars
-            int width = 0;
-            int height = 0;
-            foreach (DataGridViewColumn col in Scalars.Columns)
-                width += col.Width;
-            foreach (DataGridViewRow row in Scalars.Rows)
-                height += row.Height;
-            Scalars.Width = width + 3;
-            if (height + 25 > Scalars.Parent.Height / 3)
-            {
-                Scalars.Height = Scalars.Parent.Height / 3;
-                Scalars.Width += 20; //extra width for scrollbar
-            }
-            else
-                Scalars.Height = height + 25;
-
-            //relocate date picker
-            calendar.Location = new Point(0, Scalars.Location.Y + Scalars.Height + 10);
-
             //resize tree heights grid
             int hWidth = 0;
             int hHeight = 0;
@@ -680,11 +657,11 @@ namespace UserInterface.Views
             }
             else
                 dgvHeights.Height = hHeight + dgvHeights.ColumnHeadersHeight + 3; //ternary is to catch case where Rows.Count == 0
-            dgvHeights.Location = new Point(calendar.Width + 3, 0);
+            dgvHeights.Location = new Point(0, 0);
 
             //resize Grid
-            width = 0;
-            height = 0;
+            int width = 0;
+            int height = 0;
 
             foreach (DataGridViewColumn col in Grid.Columns)
                 width += col.Width;
@@ -718,8 +695,9 @@ namespace UserInterface.Views
             pBelowGround.Location = new Point(pAboveGround.Width, height);
         }
 
-        private void SetupGraphs(double[] x)
+        private void SetupGraphs()
         {
+            double[] x = { 0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6 };
             try
             {
                 pAboveGround.Model.Axes.Clear();
@@ -730,7 +708,7 @@ namespace UserInterface.Views
                 pAboveGround.Model.PlotAreaBorderColor = OxyColors.White;
                 pAboveGround.Model.LegendBorder = OxyColors.Transparent;
                 LinearAxis agxAxis = new LinearAxis();
-                agxAxis.Title = "Zone";
+                agxAxis.Title = "Multiple of Tree Height";
                 agxAxis.AxislineStyle = LineStyle.Solid;
                 agxAxis.AxisDistance = 2;
                 agxAxis.Position = AxisPosition.Top;
@@ -807,7 +785,7 @@ namespace UserInterface.Views
                     }
 
                     List<DataPoint> points = new List<DataPoint>();
-                    
+
                     for (int j = 0; j < data.Length; j++)
                     {
                         points.Add(new DataPoint(data[j], SoilMidpoints[j]));
@@ -837,19 +815,21 @@ namespace UserInterface.Views
         public DateTime[] SaveDates()
         {
             List<DateTime> dates = new List<DateTime>();
-            foreach(DataGridViewRow row in dgvHeights.Rows)
+            foreach (DataGridViewRow row in dgvHeights.Rows)
             {
-                dates.Add(DateTime.Parse(row.Cells[0].Value.ToString()));
+                if (row.Cells[0].Value != null)
+                    dates.Add(DateTime.Parse(row.Cells[0].Value.ToString()));
             }
             return dates.ToArray();
         }
 
         public double[] SaveHeights()
         {
-            List<double> heights= new List<double>();
+            List<double> heights = new List<double>();
             foreach (DataGridViewRow row in dgvHeights.Rows)
             {
-                heights.Add(Convert.ToDouble(row.Cells[1].Value.ToString()) * 1000);
+                if (row.Cells[1].Value != null)
+                    heights.Add(Convert.ToDouble(row.Cells[1].Value.ToString()) * 1000);
             }
             return heights.ToArray();
         }
@@ -864,16 +844,6 @@ namespace UserInterface.Views
             if (!Grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Selected)
                 return;
             Invoke(OnCellEndEdit);
-        }
-
-        private void Scalars_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            double val;
-            if (double.TryParse(Scalars.Rows[e.RowIndex].Cells[e.ColumnIndex].Value as string, out val))
-            {
-                NDemand = Convert.ToDouble(Scalars.Rows[0].Cells[1].Value);
-                RootRadius = Convert.ToDouble(Scalars.Rows[1].Cells[1].Value);
-            }
         }
 
         private void Grid_KeyDown(object sender, KeyEventArgs e)
@@ -908,7 +878,7 @@ namespace UserInterface.Views
                 }
 
                 if (col < Grid.ColumnCount)
-                    currentCell = new int[2] {col, row};
+                    currentCell = new int[2] { col, row };
             }
         }
 
@@ -917,7 +887,7 @@ namespace UserInterface.Views
             if (currentCell[0] != -1)
             {
                 Grid.CurrentCell = Grid[currentCell[0], currentCell[1]];
-                currentCell = new int[2] {-1,-1};
+                currentCell = new int[2] { -1, -1 };
             }
         }
 
@@ -926,10 +896,42 @@ namespace UserInterface.Views
             ResizeControls();
         }
 
-        private void calendar_DateSelected(object sender, DateRangeEventArgs e)
+        private void dgvHeights_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
-            dgvHeights.Rows.Add(calendar.SelectionStart.ToShortDateString(), 0);
             ResizeControls();
+        }
+
+        private void Grid_KeyUp(object sender, KeyEventArgs e)
+        {
+            //TODO: Get this working with data copied from other cells in the grid.
+            //source: https://social.msdn.microsoft.com/Forums/windows/en-US/e9cee429-5f36-4073-85b4-d16c1708ee1e/how-to-paste-ctrlv-shiftins-the-data-from-clipboard-to-datagridview-datagridview1-c?forum=winforms
+            if ((e.Shift && e.KeyCode == Keys.Insert) || (e.Control && e.KeyCode == Keys.V))
+            {
+                char[] rowSplitter = { '\r', '\n' };
+                char[] columnSplitter = { '\t' };
+                //get the text from clipboard
+                IDataObject dataInClipboard = Clipboard.GetDataObject();
+                string stringInClipboard = (string)dataInClipboard.GetData(DataFormats.Text);
+                //split it into lines
+                string[] rowsInClipboard = stringInClipboard.Split(rowSplitter, StringSplitOptions.RemoveEmptyEntries);
+                //get the row and column of selected cell in Grid
+                int r = Grid.SelectedCells[0].RowIndex;
+                int c = Grid.SelectedCells[0].ColumnIndex;
+                //add rows into Grid to fit clipboard lines
+                if (Grid.Rows.Count < (r + rowsInClipboard.Length))
+                    Grid.Rows.Add(r + rowsInClipboard.Length - Grid.Rows.Count);
+                // loop through the lines, split them into cells and place the values in the corresponding cell.
+                for (int iRow = 0; iRow < rowsInClipboard.Length; iRow++)
+                {
+                    //split row into cell values
+                    string[] valuesInRow = rowsInClipboard[iRow].Split(columnSplitter);
+                    //cycle through cell values
+                    for (int iCol = 0; iCol < valuesInRow.Length; iCol++)
+                        //assign cell value, only if it within columns of the Grid
+                        if (Grid.ColumnCount - 1 >= c + iCol)
+                            Grid.Rows[r + iRow].Cells[c + iCol].Value = valuesInRow[iCol];
+                }
+            }
         }
     }
 }

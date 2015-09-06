@@ -19,6 +19,7 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models;
     using Models.Core;
+    using Models.Factorial;
 
     /// <summary>
     /// This presenter class is responsible for populating the view
@@ -198,6 +199,10 @@ namespace UserInterface.Presenters
             {
                 this.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
             }
+            finally
+            {
+                this.ShowRightHandPanel();
+            }
 
             return false;
         }
@@ -247,6 +252,15 @@ namespace UserInterface.Presenters
         public void ShowMessage(string message, Models.DataStore.ErrorLevel errorLevel)
         {
             this.view.ShowMessage(message, errorLevel);
+        }
+
+        /// <summary>
+        /// Show progress bar with the specified percent.
+        /// </summary>
+        /// <param name="percent">Percent 0-100</param>
+        public void ShowProgress(int percent)
+        {
+            view.ShowProgress(percent);
         }
 
         /// <summary>
@@ -579,8 +593,11 @@ namespace UserInterface.Presenters
             Model destinationModel = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
             if (destinationModel != null)
             {
+                if (destinationModel.GetType() == typeof(Folder) || destinationModel.GetType() == typeof(Factor))
+                    e.Allow = true;
+
                 DragObject dragObject = e.DragObject as DragObject;
-                ValidParentAttribute validParent = ReflectionUtilities.GetAttribute(dragObject.ModelType, typeof(ValidParentAttribute), false) as ValidParentAttribute;
+                ValidParentAttribute validParent = ReflectionUtilities.GetAttribute(dragObject.ModelType, typeof(ValidParentAttribute), true) as ValidParentAttribute;
                 if (validParent == null || validParent.ParentModels.Length == 0)
                 {
                     e.Allow = true;

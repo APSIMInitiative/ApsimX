@@ -7,7 +7,7 @@ using Models.Core;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This model assumes that germination will be complete if the extractable soil water is greater than zero on any day after sowing.
+    /// This model assumes that germination will be complete on any day after sowing if the extractable soil water is greater than zero.
     /// </summary>
     /// \pre A \ref Models.Soils.Soil "Soil" function has to exist to 
     /// provide the \ref Models.Soils.SoilWater.esw "extractable soil water (ESW)" 
@@ -49,6 +49,11 @@ namespace Models.PMF.Phen
             get
             {
                 return 0.999;
+            }
+            set
+            {
+                if (Phenology != null)
+                throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
             }
         }
 

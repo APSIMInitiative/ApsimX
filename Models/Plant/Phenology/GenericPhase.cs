@@ -42,9 +42,9 @@ namespace Models.PMF.Phen
             double Target = CalcTarget();
 
 
-            if (_TTinPhase > Target)
+            if (TTinPhase > Target)
             {
-                double LeftOverValue = _TTinPhase - Target;
+                double LeftOverValue = TTinPhase - Target;
                 if (_TTForToday > 0.0)
                 {
                     double PropOfValueUnused = LeftOverValue / ThermalTime.Value;
@@ -52,7 +52,7 @@ namespace Models.PMF.Phen
                 }
                 else
                     PropOfDayUnused = 1.0;
-                _TTinPhase = Target;
+                TTinPhase = Target;
             }
 
             return PropOfDayUnused;
@@ -61,19 +61,24 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Return the target to caller. Can be overridden by derived classes.
         /// </summary>
-        protected virtual double CalcTarget()
+        public virtual double CalcTarget()
         {
-            if (Target == null)
-                throw new Exception("Cannot find target for phase: " + Name);
-            return Target.Value;
+            double retVAL = 0;
+            if (Phenology != null)
+            {
+                if (Target == null)
+                    throw new Exception("Cannot find target for phase: " + Name);
+                retVAL = Target.Value;
+            }
+            return retVAL;
         }
         /// <summary>Return proportion of TT unused</summary>
         /// <param name="PropOfDayToUse">The property of day to use.</param>
         /// <returns></returns>
         public override double AddTT(double PropOfDayToUse)
         {
-            _TTinPhase += ThermalTime.Value * PropOfDayToUse;
-            double AmountUnusedTT = _TTinPhase - CalcTarget();
+            TTinPhase += ThermalTime.Value * PropOfDayToUse;
+            double AmountUnusedTT = TTinPhase - CalcTarget();
             if (AmountUnusedTT > 0)
                 return AmountUnusedTT / ThermalTime.Value;
             return 0;
@@ -88,7 +93,16 @@ namespace Models.PMF.Phen
                 if (CalcTarget() == 0)
                     return 1;
                 else
-                    return _TTinPhase / CalcTarget();
+                    return TTinPhase / CalcTarget();
+            }
+            set
+            {
+                if (Phenology != null)
+                {
+                    TTinPhase = CalcTarget() * value;
+                    Phenology.AccumulatedEmergedTT += TTinPhase;
+                    Phenology.AccumulatedTT += TTinPhase;
+                }
             }
         }
 

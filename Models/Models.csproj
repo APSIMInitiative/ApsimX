@@ -97,8 +97,9 @@
     <Compile Include="AgPasture.cs" />
     <Compile Include="AgPasture\AgPasture1.Sward.cs" />
     <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
+    <Compile Include="Agroforestry\ForestrySystem.cs" />
     <Compile Include="Agroforestry\LocalMicroClimate.cs" />
-    <Compile Include="Agroforestry\StaticForestrySystem.cs" />
+    <Compile Include="Agroforestry\TreeProxy.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
     <Compile Include="Arbitrator\ArbitratorGod.cs" />
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="Plant\Interfaces\IFunctionArray.cs" />
     <Compile Include="Interfaces\IUptake.cs" />
     <Compile Include="Plant\Phenology\NodeNumberPhase.cs" />
+    <Compile Include="Plant\Phenology\PhaseSetFunction.cs" />
     <Compile Include="Plant\PlantTypes.cs" />
     <Compile Include="PostSimulationTools\Probability.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
@@ -295,7 +297,6 @@
     <Compile Include="Plant\Phenology\LeafDeathPhase.cs" />
     <Compile Include="Plant\Phenology\MolecularPhenology.cs" />
     <Compile Include="Plant\Phenology\Phase.cs" />
-    <Compile Include="Plant\Phenology\PhaseJumpFunction.cs" />
     <Compile Include="Plant\Phenology\Phenology.cs" />
     <Compile Include="Plant\Phenology\Vernalisation.cs" />
     <Compile Include="Plant\Phenology\VernalisationCW.cs" />

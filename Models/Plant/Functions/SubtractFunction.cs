@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Models.Core;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Functions
 {
@@ -48,28 +49,85 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
+            DocumentMathFunction(this, '-', tags, headingLevel, indent);
+        }
+
+        /// <summary>
+        /// Document the mathematical function.
+        /// </summary>
+        /// <param name="function">The IModel function.</param>
+        /// <param name="op">The operator</param>
+        /// <param name="tags">The tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public static void DocumentMathFunction(IModel function, char op,
+                                                List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        { 
             // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            tags.Add(new AutoDocumentation.Heading(function.Name, headingLevel));
 
             // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+            foreach (IModel memo in Apsim.Children(function, typeof(Memo)))
                 memo.Document(tags, -1, indent);
 
             // create a string to display 'child1 - child2 - child3...'
             string msg = string.Empty;
-            foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+            List<IModel> childrenToDocument = new List<IModel>();
+            foreach (IModel child in Apsim.Children(function, typeof(IFunction)))
             {
                 if (msg != string.Empty)
-                    msg += " - ";
-                msg += child.Name;
+                    msg += " " + op + " ";
+
+                if (!AddChildToMsg(child, ref msg))
+                    childrenToDocument.Add(child);
             }
 
-            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + msg + "</i>", indent));
-            tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
+            tags.Add(new AutoDocumentation.Paragraph("<i>" + function.Name + " = " + msg + "</i>", indent));
 
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                child.Document(tags, -1, indent + 1);
+            if (childrenToDocument.Count > 0)
+            {
+                tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
+
+                // write children.
+                foreach (IModel child in childrenToDocument)
+                    child.Document(tags, -1, indent + 1);
+            }
         }
+
+        /// <summary>
+        /// Return the name of the child or it's value if the name of the child is equal to 
+        /// the written value of the child. i.e. if the value is 1 and the name is 'one' then
+        /// return the value, instead of the name.
+        /// </summary>
+        /// <param name="child">The child model.</param>
+        /// <param name="msg">The message to add to.</param>
+        /// <returns>True if child's value was added to msg.</returns>
+        private static bool AddChildToMsg(IModel child, ref string msg)
+        {
+            if (child is Constant)
+            {
+                double doubleValue = (child as Constant).Value;
+                if (Math.IEEERemainder(doubleValue, doubleValue) == 0)
+                {
+                    int intValue = Convert.ToInt32(doubleValue);
+                    string writtenInteger = Integer.ToWritten(intValue);
+                    writtenInteger = writtenInteger.Replace(" ", "");  // don't want spaces.
+                    if (writtenInteger.Equals(child.Name, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        msg += intValue.ToString();
+                        return true;
+                    }
+                }
+            }
+            else if (child is VariableReference)
+            {
+                msg += (child as VariableReference).VariableName;
+                return true;
+            }
+
+            msg += child.Name;
+            return false;
+        }
+
     }
 }

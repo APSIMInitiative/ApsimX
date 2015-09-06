@@ -16,6 +16,7 @@ namespace Models.Graph
     using Models.Factorial;
 
     /// <summary>The class represents a single series on a graph</summary>
+    [ValidParent(typeof(Graph))]
     [ViewName("UserInterface.Views.SeriesView")]
     [PresenterName("UserInterface.Presenters.SeriesPresenter")]
     [Serializable]
@@ -101,7 +102,7 @@ namespace Models.Graph
 
             // If this series doesn't have a table name then it must be getting its data from other models.
             if (TableName == null)
-                ourDefinitions.Add(CreateDefinition(Name, null, Colour));
+                ourDefinitions.Add(CreateDefinition(Name, null, Colour, Marker, Line));
             else
             {
                 Simulation parentSimulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
@@ -111,8 +112,7 @@ namespace Models.Graph
                 // If the graph is in a zone then just graph the zone.
                 if (parentZone != null)
                 {
-                    string filter = string.Format("Name='{0}' and ZoneName='{1}'", parentSimulation.Name, parentZone.Name);
-                    ourDefinitions.Add(CreateDefinition(Name + " " + parentZone.Name, filter, Colour));
+                    GraphSimulation(parentZone, ourDefinitions);
                 }
                 else
                 {
@@ -121,18 +121,11 @@ namespace Models.Graph
 
                     // Graph is sitting in a simulation so graph just that simulation.
                     if (parentSimulation != null)
-                        simulations.Add(parentSimulation);
-    
+                        GraphSimulation(parentSimulation, ourDefinitions);
+
                     // See if graph is inside an experiment. If so then graph all simulations in experiment.
                     else if (parentExperiment != null)
-                    {
-                        int colourIndex1 = 0;
-                        foreach (string simulationName in parentExperiment.Names())
-                        {
-                            string filter = "SimulationName = '" + simulationName + "'";
-                            CreateDefinitions(parentExperiment.BaseSimulation, simulationName, filter, ref colourIndex1, ourDefinitions);
-                        }
-                    }
+                        GraphExperiment(parentExperiment, ourDefinitions);
 
                     // Must be in a folder at the top level or at the top level of the .apsimx file. 
                     else
@@ -154,14 +147,14 @@ namespace Models.Graph
                     foreach (Experiment experiment in experiments)
                     {
                         string filter = "SimulationName IN " + "(" + StringUtilities.Build(experiment.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
-                        CreateDefinitions(experiment.BaseSimulation, experiment.Name, filter, ref colourIndex, ourDefinitions);
+                        CreateDefinitions(experiment.BaseSimulation, experiment.Name, filter, ref colourIndex, Marker, Line, ourDefinitions);
                     }
 
                     // Now create series definitions for each simulation found.
                     foreach (Simulation simulation in simulations)
                     {
                         string filter = "SimulationName = '" + simulation.Name + "'";
-                        CreateDefinitions(simulation, simulation.Name, filter, ref colourIndex, ourDefinitions);
+                        CreateDefinitions(simulation, simulation.Name, filter, ref colourIndex, Marker, Line, ourDefinitions);
                     }
                 }
             }
@@ -173,13 +166,118 @@ namespace Models.Graph
             definitions.AddRange(ourDefinitions);
         }
 
+        /// <summary>
+        /// Graph the specified simulation, looking for zones.
+        /// </summary>
+        /// <param name="model">The model where the graph sits.</param>
+        /// <param name="ourDefinitions">The list of series definitions to add to.</param>
+        private void GraphSimulation(IModel model, List<SeriesDefinition> ourDefinitions)
+        {
+            Simulation parentSimulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+
+            List<IModel> zones = Apsim.Children(model, typeof(Zone));
+            if (zones.Count > 1)
+            {
+                int colourIndex = 0;
+                foreach (Zone zone in zones)
+                {
+                    string filter = string.Format("Name='{0}' and ZoneName='{1}'", parentSimulation.Name, zone.Name);
+                    ourDefinitions.Add(CreateDefinition(zone.Name, filter, ColourUtilities.ChooseColour(colourIndex), Marker, Line));
+                    colourIndex++;
+                }
+            }
+            else
+            {
+                string filter = string.Format("Name='{0}'", model.Name);
+                ourDefinitions.Add(CreateDefinition(Name, filter, Colour, Marker, Line));
+            }
+        }
+
+        /// <summary>
+        /// Graph the specified experiment.
+        /// </summary>
+        /// <param name="parentExperiment"></param>
+        /// <param name="ourDefinitions"></param>
+        private void GraphExperiment(Experiment parentExperiment, List<SeriesDefinition> ourDefinitions)
+        {
+            Factors factorsModel = Apsim.Child(parentExperiment as IModel, typeof(Factors)) as Factors;
+            if (factorsModel != null)
+            {
+                List<Factor> factors = factorsModel.factors;
+                if (factors.Count == 2)
+                {
+                    int colourIndex = 0;
+                    foreach (FactorValue treatmentValue1 in factors[0].CreateValues())
+                    {
+                        MarkerType marker = Marker;
+                        LineType line = Line;
+
+                        foreach (FactorValue treatmentValue2 in factors[1].CreateValues())
+                        {
+                            string simulationName = parentExperiment.Name + treatmentValue1.Name + treatmentValue2.Name;
+                            string filter = "SimulationName = '" + simulationName + "'";
+
+                            CreateDefinitions(parentExperiment.BaseSimulation, simulationName, filter, ref colourIndex,
+                                              marker, line, ourDefinitions);
+                            colourIndex--; // put colourIndex back to original value.
+
+                            if (Marker == MarkerType.None)
+                                line = IncrementEnum(line);
+                            else
+                                marker = IncrementEnum(marker);
+                        }
+
+                        colourIndex++;
+                    }
+                }
+                else
+                {
+                    int colourIndex1 = 0;
+                    foreach (string simulationName in parentExperiment.Names())
+                    {
+                        string filter = "SimulationName = '" + simulationName + "'";
+                        CreateDefinitions(parentExperiment.BaseSimulation, simulationName, filter, ref colourIndex1, Marker, Line, ourDefinitions);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Increment an enumeration. Will wrap back to first one when it goes past the end of 
+        /// possible enumerations.
+        /// </summary>
+        /// <typeparam name="T">The enum type</typeparam>
+        /// <param name="e">The enum itself.</param>
+        /// <returns>The next enum.</returns>
+        private static T IncrementEnum<T>(T e)
+        {
+            Array enumTypes = Enum.GetValues(typeof(T));
+            for (int i = 0; i < enumTypes.Length; i++)
+            {
+                T thisEnum = (T)enumTypes.GetValue(i);
+                if (thisEnum.Equals(e))
+                {
+                    // If pointing to the last element then wrap around to first.
+                    if (i == enumTypes.Length - 1)
+                        return (T)enumTypes.GetValue(0);
+                    else
+                        return (T)enumTypes.GetValue(i + 1);
+                }
+            }
+            throw new Exception("Bad enumeration found");
+        }
+
         /// <summary>Creates series definitions for the specified simulation.</summary>
         /// <param name="simulation">The simulation.</param>
         /// <param name="baseTitle">The base title.</param>
         /// <param name="baseFilter">The base filter.</param>
         /// <param name="colourIndex">The index into the colour palette.</param>
         /// <param name="definitions">The definitions to add to.</param>
-        private void CreateDefinitions(Simulation simulation, string baseTitle, string baseFilter, ref int colourIndex, List<SeriesDefinition> definitions)
+        /// <param name="marker">The marker type.</param>
+        /// <param name="line">The line type.</param>
+        private void CreateDefinitions(Simulation simulation, string baseTitle, string baseFilter, ref int colourIndex, 
+                                       MarkerType marker, LineType line, 
+                                       List<SeriesDefinition> definitions)
         {
             List<IModel> zones = Apsim.Children(simulation, typeof(Zone));
             if (zones.Count > 1)
@@ -188,14 +286,16 @@ namespace Models.Graph
                 {
                     string zoneFilter = baseFilter + " AND ZoneName = '" + zone.Name + "'";
                     definitions.Add(CreateDefinition(baseTitle + " " + zone.Name, zoneFilter,
-                                                     ColourUtilities.ChooseColour(colourIndex)));
+                                                     ColourUtilities.ChooseColour(colourIndex),
+                                                     marker, line));
                     colourIndex++;
                 }
             }
             else
             {
                 definitions.Add(CreateDefinition(baseTitle, baseFilter,
-                                                 ColourUtilities.ChooseColour(colourIndex)));
+                                                 ColourUtilities.ChooseColour(colourIndex),
+                                                 marker, line));
                 colourIndex++;
             }
         }
@@ -204,15 +304,17 @@ namespace Models.Graph
         /// <param name="title">The title.</param>
         /// <param name="filter">The filter. Can be null.</param>
         /// <param name="colour">The colour.</param>
+        /// <param name="line">The line type.</param>
+        /// <param name="marker">The marker type.</param>
         /// <returns>The newly created definition.</returns>
-        private SeriesDefinition CreateDefinition(string title, string filter, Color colour)
+        private SeriesDefinition CreateDefinition(string title, string filter, Color colour, MarkerType marker, LineType line)
         {
             SeriesDefinition definition = new SeriesDefinition();
             GetData(filter, definition);
             definition.colour = colour;
             definition.title = title;
-            definition.line = Line;
-            definition.marker = Marker;
+            definition.line = line;
+            definition.marker = marker;
             definition.showInLegend = ShowInLegend;
             definition.type = Type;
             definition.xAxis = XAxis;
@@ -287,7 +389,7 @@ namespace Models.Graph
         /// <returns>The return data or null if not found</returns>
         private IEnumerable GetDataFromModels(string fieldName)
         {
-            if (fieldName.StartsWith("["))
+            if (fieldName != null && fieldName.StartsWith("["))
             {
                 int posCloseBracket = fieldName.IndexOf(']');
                 if (posCloseBracket == -1)

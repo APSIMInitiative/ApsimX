@@ -48,6 +48,25 @@ namespace Models.PMF.Functions
                 }
             }
         }
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            Name = this.Name;
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
+            tags.Add(new AutoDocumentation.Paragraph(" a sigmoid function of the form " +
+                                                      "y = Xmax * 1 / 1 + e<sup>-(XValue - Xo) / b</sup>", indent));
+
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                    child.Document(tags, 0, indent+1);
+            }
+        }
     }
 }

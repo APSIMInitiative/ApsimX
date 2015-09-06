@@ -221,6 +221,9 @@ namespace UserInterface.Commands
             Style style = document.Styles.AddStyle("GraphAndTable", "Normal");
             style.Font.Size = 8;
             style.ParagraphFormat.SpaceAfter = Unit.FromCentimeter(0);
+
+            Style xyStyle = document.Styles.AddStyle("GraphAndTable", "Normal");
+            xyStyle.Font = new MigraDoc.DocumentObjectModel.Font("Courier New");
         }
 
         /// <summary>Creates the graph.</summary>
@@ -229,6 +232,19 @@ namespace UserInterface.Commands
         /// <param name="workingDirectory">The working directory.</param>
         private void CreateGraphPDF(Section section, AutoDocumentation.GraphAndTable graphAndTable, string workingDirectory)
         {
+            // Create a 2 column, 1 row table. Image in first cell, X/Y data in second cell.
+            Table table = section.AddTable();
+            table.Style = "GraphAndTable";
+            table.Rows.LeftIndent = graphAndTable.indent + "cm";
+
+            Column column1 = table.AddColumn();
+            column1.Width = "8cm";
+            //column1.Format.Alignment = ParagraphAlignment.Right;
+            Column column2 = table.AddColumn();
+            column2.Width = "8cm";
+            //column2.Format.Alignment = ParagraphAlignment.Right;
+            Row row = table.AddRow();
+
             // Ensure graphs directory exists.
             string graphDirectory = Path.Combine(workingDirectory, "Graphs");
             Directory.CreateDirectory(graphDirectory);
@@ -250,41 +266,48 @@ namespace UserInterface.Commands
             graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN);
             graph.FormatAxis(Models.Graph.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN);
             graph.BackColor = System.Drawing.Color.White;
+            graph.FontSize = 10;
             graph.Refresh();
-            graph.FormatTitle(graphAndTable.title);
 
             // Export graph to bitmap file.
-            Bitmap image = new Bitmap(440, 440);
+            Bitmap image = new Bitmap(400, 250);
             graph.Export(image, false);
             image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
-            MigraDoc.DocumentObjectModel.Shapes.Image image1 = section.AddImage(PNGFileName);
-            image1.Height = "8cm";
-            image1.Width = "8cm";
-            image1.LockAspectRatio = true;
-            image1.Left = graphAndTable.indent + "cm";
+            MigraDoc.DocumentObjectModel.Shapes.Image image1 = row.Cells[0].AddImage(PNGFileName);
 
-            // Add a table.
-            Table table = section.AddTable();
-            table.Style = "GraphAndTable";
-            table.Rows.LeftIndent = graphAndTable.indent + "cm";
-            Column column1 = table.AddColumn();
-            column1.Format.Alignment = ParagraphAlignment.Right;
-            Column column2 = table.AddColumn();
-            column2.Format.Alignment = ParagraphAlignment.Right;
-            Row row = table.AddRow();
-            row.HeadingFormat = true;
-            row.Cells[0].AddParagraph("X");
-            row.Cells[1].AddParagraph("Y");
+            // Add x/y data.
+            Paragraph xyParagraph = row.Cells[1].AddParagraph();
+            xyParagraph.Style = "xyStyle";
+            AddFixedWidthText(xyParagraph, "X", 10);
+            AddFixedWidthText(xyParagraph, "Y", 10);
+            xyParagraph.AddLineBreak();
             for (int i = 0; i < graphAndTable.xyPairs.X.Length; i++)
             {
-                row = table.AddRow();
-                row.Cells[0].AddParagraph(graphAndTable.xyPairs.X[i].ToString());
-                row.Cells[1].AddParagraph(graphAndTable.xyPairs.Y[i].ToString());
+
+                AddFixedWidthText(xyParagraph, graphAndTable.xyPairs.X[i].ToString(), 10);
+                AddFixedWidthText(xyParagraph, graphAndTable.xyPairs.Y[i].ToString(), 10);
+                xyParagraph.AddLineBreak();
             }
 
             // Add an empty paragraph for spacing.
-            section.AddParagraph();
+            Paragraph spacing = section.AddParagraph();
+        }
 
+        /// <summary>
+        /// Adds fixed-width text to a MigraDoc paragraph
+        /// </summary>
+        /// <param name="paragraph">The paragaraph to add text to</param>
+        /// <param name="text">The text</param>
+        private static void AddFixedWidthText(Paragraph paragraph, string text, int width)
+        {
+            //For some reason, a parapraph converts all sequences of white
+            //space to a single space.  Thus we need to split the text and add
+            //the spaces using the AddSpace function.
+
+            int numSpaces = width - text.Length;
+
+            paragraph.AddSpace(numSpaces);
+            paragraph.AddText(text);
         }
 
         /// <summary>Writes PDF for specified auto-doc commands.</summary>
@@ -298,7 +321,7 @@ namespace UserInterface.Commands
                 if (tag is AutoDocumentation.Heading)
                 {
                     AutoDocumentation.Heading heading = tag as AutoDocumentation.Heading;
-                    if (heading.headingLevel > 0 && heading.headingLevel < 4)
+                    if (heading.headingLevel > 0 && heading.headingLevel <= 6)
                     {
                         Paragraph para = section.AddParagraph(heading.text, "Heading" + heading.headingLevel);
                         if (heading.headingLevel == 1)
@@ -309,6 +332,10 @@ namespace UserInterface.Commands
                             para.Format.OutlineLevel = OutlineLevel.Level3;
                         else if (heading.headingLevel == 4)
                             para.Format.OutlineLevel = OutlineLevel.Level4;
+                        else if (heading.headingLevel == 5)
+                            para.Format.OutlineLevel = OutlineLevel.Level5;
+                        else if (heading.headingLevel == 6)
+                            para.Format.OutlineLevel = OutlineLevel.Level6;
                     }
                 }
                 else if (tag is AutoDocumentation.Paragraph)

@@ -15,6 +15,7 @@ namespace Models.Core
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
+    [ValidParent(typeof(Simulation))]
     public class Zone : Model
     {
         /// <summary>Area of the zone.</summary>

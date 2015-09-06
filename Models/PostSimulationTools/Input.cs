@@ -23,6 +23,7 @@ namespace Models.PostSimulationTools
     [Serializable]
     [ViewName("UserInterface.Views.InputView")]
     [PresenterName("UserInterface.Presenters.InputPresenter")]
+    [ValidParent(typeof(DataStore))]
     public class Input : Model, IPostSimulationTool
     {
         /// <summary>

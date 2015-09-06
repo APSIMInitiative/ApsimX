@@ -901,6 +901,8 @@ A function is used to provide maturity date as days after sowing(DAS).
             <Value>1</Value>
           </Constant>
         </MultiplyFunction>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
         <RipeStage />
       </ReproductiveOrgan>
       <Root>
@@ -1045,6 +1047,8 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Start>Germination</Start>
           <End>Maturity</End>
         </PhaseBasedSwitch>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
         <InitialDM>0.2</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <KNO3_yProperty>
@@ -1599,7 +1603,29 @@ Potential leaf area is calculated from leaf number using the approach of Keating
             <Name>FCO2</Name>
             <PhotosyntheticPathway>C4</PhotosyntheticPathway>
           </RUECO2Function>
+          <VariableReference>
+            <Name>RadnInt</Name>
+            <VariableName>[Leaf].RadIntTot</VariableName>
+          </VariableReference>
         </RUEModel>
+        <MinimumFunction>
+          <Name>FRGRFunction</Name>
+          <VariableReference>
+            <Name>RUE_FT</Name>
+            <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+          </VariableReference>
+          <MinimumFunction>
+            <Name>Others</Name>
+            <VariableReference>
+              <Name>RUE_FN</Name>
+              <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>RUE_FVPD</Name>
+              <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+            </VariableReference>
+          </MinimumFunction>
+        </MinimumFunction>
         <MultiplyFunction>
           <Name>ExtinctionCoeff</Name>
           <Memo>
@@ -1660,12 +1686,15 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>ThermalTime</Name>
           <VariableName>[Phenology].ThermalTime.Value</VariableName>
         </VariableReference>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
         <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
+        <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
         <GsMax>0.03</GsMax>
@@ -1674,46 +1703,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <Albido>0.26</Albido>
         <FractionDied>0</FractionDied>
       </Leaf>
-      <GenericAboveGroundOrgan>
-        <Name>Husk</Name>
-        <PopulationBasedDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Constant>
-            <Name>ExpansionStress</Name>
-            <Value>1</Value>
-          </Constant>
-        </PopulationBasedDemandFunction>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
-        <Constant>
-          <Name>NReallocationFactor</Name>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>NRetranslocationFactor</Name>
-          <Value>0.1</Value>
-        </Constant>
-        <Constant>
-          <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
-        </Constant>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>0.2</Value>
-        </Constant>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
-        </Constant>
-      </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Rachis</Name>
         <MultiplyFunction>
@@ -1748,6 +1737,22 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Name>ExpansionStress</Name>
             <Value>1</Value>
           </Constant>
+          <Constant>
+            <Name>StartStage</Name>
+            <Value>5.5</Value>
+          </Constant>
+          <Constant>
+            <Name>GrowthDuration</Name>
+            <Value>300</Value>
+          </Constant>
+          <Constant>
+            <Name>MaximumOrganWt</Name>
+            <Value>25</Value>
+          </Constant>
+          <VariableReference>
+            <Name>OrganPopulation</Name>
+            <VariableName>[Rachis].CobNumber.Value</VariableName>
+          </VariableReference>
         </PopulationBasedDemandFunction>
         <Biomass>
           <Name>Live</Name>
@@ -1788,8 +1793,68 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
               <double>1</double>
             </Y>
           </XYPairs>
-          <XProperty>[Tef].WaterSupplyDemandRatio</XProperty>
+          <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
         </LinearInterpolationFunction>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
+      </GenericAboveGroundOrgan>
+      <GenericAboveGroundOrgan>
+        <Name>Husk</Name>
+        <PopulationBasedDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <Constant>
+            <Name>ExpansionStress</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>StartStage</Name>
+            <Value>5.2</Value>
+          </Constant>
+          <Constant>
+            <Name>GrowthDuration</Name>
+            <Value>120</Value>
+          </Constant>
+          <Constant>
+            <Name>MaximumOrganWt</Name>
+            <Value>25</Value>
+          </Constant>
+          <VariableReference>
+            <Name>OrganPopulation</Name>
+            <VariableName>[Rachis].CobNumber.Value</VariableName>
+          </VariableReference>
+        </PopulationBasedDemandFunction>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Value>0.1</Value>
+        </Constant>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Value>0.01</Value>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>0.2</Value>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.01</Value>
+        </Constant>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -1887,6 +1952,8 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </VariableReference>
           </MultiplyFunction>
         </MinimumFunction>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
       <Summariser>
         <Name>Summariser</Name>
@@ -2045,12 +2112,12 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
 
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 150</Command>
+        <Command>[Phenology].Juvenile.Target.Value = 50</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 115</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 50</Command>
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 120</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 530</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 100</Command>
+        <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 14</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 405</Command>
       </Cultivar>
@@ -2700,6 +2767,8 @@ van Delden, S.H., Vos, J., Stomph, T.-J., Brouwer, G., Struik, P.C., 2012. Photo
             <Value>1</Value>
           </Constant>
         </MultiplyFunction>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
         <RipeStage>Ripe</RipeStage>
       </ReproductiveOrgan>
       <Root>
@@ -2801,6 +2870,8 @@ van Delden, S.H., Vos, J., Stomph, T.-J., Brouwer, G., Struik, P.C., 2012. Photo
           <Start>Germination</Start>
           <End>Maturity</End>
         </PhaseBasedSwitch>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
         <InitialDM>0.2</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <KNO3_yProperty>
@@ -3262,12 +3333,15 @@ van Delden, S.H., Vos, J., Stomph, T.-J., Brouwer, G., Struik, P.C., 2012. Photo
           <Name>ThermalTime</Name>
           <VariableName>[Phenology].ThermalTime.Value</VariableName>
         </VariableReference>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
         <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
+        <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
         <GsMax>0.03</GsMax>
@@ -3315,6 +3389,8 @@ van Delden, S.H., Vos, J., Stomph, T.-J., Brouwer, G., Struik, P.C., 2012. Photo
           <Name>MinimumNConc</Name>
           <Value>0.01</Value>
         </Constant>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -3412,6 +3488,8 @@ van Delden, S.H., Vos, J., Stomph, T.-J., Brouwer, G., Struik, P.C., 2012. Photo
           <Name>DMRetranslocationFactor</Name>
           <Value>0.5</Value>
         </Constant>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
       <Summariser>
         <Name>Summariser</Name>
@@ -4792,14 +4870,14 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
           <Operations>
             <Name>Low</Name>
             <Operation>
-              <Date>1990-05-20T00:00:00</Date>
+              <Date>2010-11-15T00:00:00</Date>
               <Action> [Tef].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>High</Name>
             <Operation>
-              <Date>1990-05-20T00:00:00</Date>
+              <Date>2010-11-15T00:00:00</Date>
               <Action> [Tef].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
@@ -4930,12 +5008,12 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
         <Name>CWP</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Prototypes\Chickpea\cooper.met</FileName>
+          <FileName>MelkasaGY.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
-          <StartDate>1990-01-01T00:00:00</StartDate>
-          <EndDate>1990-12-31T00:00:00</EndDate>
+          <StartDate>2010-11-01T00:00:00</StartDate>
+          <EndDate>2011-03-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
@@ -5037,6 +5115,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
+              <string>Tef.Leaf.LAI</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -5499,6 +5578,43 @@ namespace Models
         <Area>0</Area>
         <Slope>0</Slope>
       </Simulation>
+      <Graph>
+        <Name>LAI</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Tef.Leaf.LAI</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
     </Experiment>
     <Experiment>
       <Name>CWP2011</Name>
@@ -5511,19 +5627,6 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>Pop</Name>
-          <Operations>
-            <Name>High</Name>
-            <Operation>
-              <Date>1990-05-20T00:00:00</Date>
-              <Action> [Tef].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
-            </Operation>
-          </Operations>
-          <Specifications>
-            <string>[Sowing]</string>
-          </Specifications>
-        </Factor>
-        <Factor>
           <Name>Treatment</Name>
           <Operations>
             <Name>1</Name>
@@ -5643,15 +5746,15 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
         </Factor>
       </Factors>
       <Simulation>
-        <Name>CWP</Name>
+        <Name>CWP2011</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Prototypes\Chickpea\cooper.met</FileName>
+          <FileName>MelkasaGY.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
-          <StartDate>1990-01-01T00:00:00</StartDate>
-          <EndDate>1990-12-31T00:00:00</EndDate>
+          <StartDate>2011-12-01T00:00:00</StartDate>
+          <EndDate>2012-04-30T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
@@ -5723,6 +5826,10 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
           </SurfaceOrganicMatter>
           <Operations>
             <Name>Sowing</Name>
+            <Operation>
+              <Date>2011-12-01T00:00:00</Date>
+              <Action> [Tef].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
+            </Operation>
           </Operations>
           <Operations>
             <Name>NRate</Name>
@@ -5753,6 +5860,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
+              <string>Tef.Leaf.LAI</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -6215,6 +6323,43 @@ namespace Models
         <Area>0</Area>
         <Slope>0</Slope>
       </Simulation>
+      <Graph>
+        <Name>LAI</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Tef.Leaf.LAI</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
     </Experiment>
     <Experiment>
       <Name>Mekelle2008</Name>
@@ -6241,37 +6386,97 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
           <Name>Irrigation</Name>
           <Operations>
             <Name>0</Name>
-            <Operation>
-              <Date>1990-07-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:100, depth:0,efficiency:1, willRunoff:false);</Action>
-            </Operation>
           </Operations>
           <Operations>
             <Name>2</Name>
             <Operation>
-              <Date>1990-07-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:100, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2008-09-17T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2008-09-19T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>4</Name>
             <Operation>
-              <Date>1990-07-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:100, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2008-09-17T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2008-09-19T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2008-09-21T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:12, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2008-09-24T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:15, depth:0,efficiency:1, willRunoff:false);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>6</Name>
             <Operation>
-              <Date>1990-07-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:100, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2008-09-17T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2008-09-19T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2008-09-21T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:12, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2008-09-24T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:15, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2008-09-29T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:12, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2008-10-03T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:12, depth:0,efficiency:1, willRunoff:false);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>8</Name>
             <Operation>
-              <Date>1990-07-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:100, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2008-09-17T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2008-09-19T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2008-09-21T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:12, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2008-09-24T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:15, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2008-09-29T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:12, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2008-10-03T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:12, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2008-10-07T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:12, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2008-10-09T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:12, depth:0,efficiency:1, willRunoff:false);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -6283,12 +6488,12 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
         <Name>Mekelle</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Prototypes\Chickpea\cooper.met</FileName>
+          <FileName>mekelleGY.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
-          <StartDate>1990-01-01T00:00:00</StartDate>
-          <EndDate>1990-12-31T00:00:00</EndDate>
+          <StartDate>2008-08-01T00:00:00</StartDate>
+          <EndDate>2008-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
@@ -6361,7 +6566,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
           <Operations>
             <Name>Sowing</Name>
             <Operation>
-              <Date>1990-05-20T00:00:00</Date>
+              <Date>2008-08-02T00:00:00</Date>
               <Action> [Tef].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
@@ -6390,10 +6595,26 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Soil].SoilWater.Runoff</string>
               <string>[Soil].SoilWater.pond</string>
               <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
-              <string>[Soil].NO3N</string>
+              <string>sum([Soil].NO3N) as ProfileNO3</string>
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
+              <string>[Tef].Leaf.LAI</string>
+              <string>[Tef].Summariser.Total.Wt as AboveGroundBiomass</string>
+              <string>[Tef].Grain.Live.Wt as GrainWt</string>
+              <string>[Tef].Grain.Size as GrainSize</string>
+              <string>[Tef].Leaf.Transpiration</string>
+              <string>[Tef].Root.Depth</string>
+              <string>[Tef].Leaf.Fw</string>
+              <string>[Tef].Leaf.Fn</string>
+              <string>[Tef].Leaf.Photosynthesis.Value</string>
+              <string>[Tef].Stem.Live.Wt</string>
+              <string>[Tef].Husk.Live.Wt</string>
+              <string>[Tef].Rachis.Live.Wt</string>
+              <string>[Tef].Leaf.Total.Wt</string>
+              <string>[Tef].Rachis.DMDemandFunction.Value</string>
+              <string>[Tef].Leaf.Live.Wt</string>
+              <string>[Tef].Leaf.Dead.Wt</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -6817,24 +7038,24 @@ namespace Models
 {
 	[Serializable] 
 	public class Script : Model
-	{      
-		[Link] Plant Tef;          
-		[Link] Zone zone;			
+	{
+		[Link] Plant Tef;
+		[Link] Zone zone;
 					
         
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-		}	   
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+		}
 		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-        if (Tef.Phenology.CurrentPhaseName=="ReadyForHarvesting")
-           {
-           Tef.Harvest();
-           Tef.EndCrop();
-           }
+			if (Tef.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			{
+				Tef.Harvest();
+				Tef.EndCrop();
+			}
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]
@@ -6856,6 +7077,251 @@ namespace Models
         <Area>0</Area>
         <Slope>0</Slope>
       </Simulation>
+      <Graph>
+        <Name>LAI</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Tef.Leaf.LAI</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Biomass</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AboveGroundBiomass</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Tef.Rachis.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series3</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Tef.Stem.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series4</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>GrainWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series5</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Tef.Leaf.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SoilWater</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ProfileWater</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SoilNO3</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ProfileNO3</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Grain</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>GrainWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
     </Experiment>
     <Experiment>
       <Name>Mekelle2009</Name>
@@ -6883,23 +7349,63 @@ Field Crops Research 116 (2010) 196204
           <Name>Irrigation</Name>
           <Operations>
             <Name>0</Name>
-            <Operation>
-              <Date>1990-07-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:100, depth:0,efficiency:1, willRunoff:false);</Action>
-            </Operation>
           </Operations>
           <Operations>
             <Name>4</Name>
             <Operation>
-              <Date>1990-07-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:100, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2009-09-17T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2009-09-19T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2009-09-20T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2009-09-24T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>9</Name>
             <Operation>
-              <Date>1990-07-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:100, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2009-09-17T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2009-09-19T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2009-09-20T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2009-09-24T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2009-09-27T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2009-10-01T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2009-10-03T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2009-10-05T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2009-10-07T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:10, depth:0,efficiency:1, willRunoff:false);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -6908,15 +7414,15 @@ Field Crops Research 116 (2010) 196204
         </Factor>
       </Factors>
       <Simulation>
-        <Name>Mekelle</Name>
+        <Name>Mekelle2009</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Prototypes\Chickpea\cooper.met</FileName>
+          <FileName>mekelleGY.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
-          <StartDate>1990-01-01T00:00:00</StartDate>
-          <EndDate>1990-12-31T00:00:00</EndDate>
+          <StartDate>2009-07-31T00:00:00</StartDate>
+          <EndDate>2009-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
@@ -6989,7 +7495,7 @@ Field Crops Research 116 (2010) 196204
           <Operations>
             <Name>Sowing</Name>
             <Operation>
-              <Date>1990-05-20T00:00:00</Date>
+              <Date>2009-07-31T00:00:00</Date>
               <Action> [Tef].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
@@ -7445,24 +7951,24 @@ namespace Models
 {
 	[Serializable] 
 	public class Script : Model
-	{      
-		[Link] Plant Tef;          
-		[Link] Zone zone;			
+	{
+		[Link] Plant Tef;
+		[Link] Zone zone;
 					
         
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-		}	   
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+		}
 		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-        if (Tef.Phenology.CurrentPhaseName=="ReadyForHarvesting")
-           {
-           Tef.Harvest();
-           Tef.EndCrop();
-           }
+			if (Tef.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			{
+				Tef.Harvest();
+				Tef.EndCrop();
+			}
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]

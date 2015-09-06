@@ -12,6 +12,7 @@ namespace Models.Zones
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentModels = new Type[] { typeof(Zone), typeof(Simulation) })]
     public class CircularZone : Zone
     {
         /// <summary>Radius of the zone.</summary>
@@ -31,8 +32,8 @@ namespace Models.Zones
         {
             get
             {
-                if (Parent is StaticForestrySystem)
-                    return (Parent as StaticForestrySystem).GetDistanceFromTrees(this);
+                if (Parent is ForestrySystem)
+                    return (Parent as ForestrySystem).GetDistanceFromTrees(this);
                 throw new ApsimXException(this, "Not implemented for this system");
             }
         }

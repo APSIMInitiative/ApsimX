@@ -90,7 +90,7 @@ namespace UserInterface.Views
         /// <returns></returns>
         private bool PopulateView(string contents, bool editingEnabled)
         {
-            if (contents.Contains("@{\rtf"))
+            if (contents.Contains(@"{\rtf"))
                 richTextBox1.Rtf = contents;
             else
             {
@@ -143,6 +143,17 @@ namespace UserInterface.Views
 
             menuItem1.Visible = !turnOn;
             menuItem2.Visible = turnOn;
+            if (textBox1.Visible)
+                textBox1.Focus();
+        }
+
+        /// <summary>
+        /// Toggle edit / preview mode.
+        /// </summary>
+        private void ToggleEditMode()
+        {
+            bool editorIsOn = !richTextBox1.Visible;
+            TurnEditorOn(!editorIsOn);   // toggle preview / edit mode.
         }
 
         #region Event Handlers
@@ -178,11 +189,23 @@ namespace UserInterface.Views
             PopulateView(textBox1.Text, true);
         }
 
+        /// <summary>
+        /// User has pressed a key. Look for toggle character.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F12)
+                ToggleEditMode();
+        }
+
         #endregion
 
-        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OnHelpClick(object sender, EventArgs e)
         {
             Process.Start("https://www.apsim.info/Documentation/APSIM(nextgeneration)/Memo.aspx");
         }
+
     }
 }

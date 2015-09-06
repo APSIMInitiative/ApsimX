@@ -67,5 +67,29 @@ namespace Models.PMF.Functions
         {
             YesterdaysValue = 0;
         }
+
+        /// <summary>Called when [EndCrop].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PhaseRewind")]
+        private void OnPhaseRewind(object sender, EventArgs e)
+        {
+            YesterdaysValue = Integral.Value;
+        }
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            //Write what the function is returning
+            tags.Add(new AutoDocumentation.Paragraph("*" + this.Name + "* is the daily differential of", indent));
+
+            // write a description of the child it is returning the differential of.
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                    child.Document(tags, headingLevel + 1, indent+1);
+            }
+        }
     }
 }
