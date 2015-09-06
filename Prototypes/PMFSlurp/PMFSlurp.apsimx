@@ -16,10 +16,6 @@ Hamish Browni, Plant and Food Research, New Zealand
 
 Slurp is the sound a plant makes when it extracts water from the soil.  Slurp is a static plant model with a minimal amount of functionality needed for water and nitrogen balance modelling.  It has a root organ the will extract water and nitrogen from the soil and a leaf organ that intercepts radiation and demands Nitrogen and water.  While the properties of this model are static, they can be changed from manager scripts enabling coare changes in the crop to be modeled]]></MemoText>
       </Memo>
-      <Cultivar>
-        <Name>StaticCrop</Name>
-        <Alias>StaticCrop</Alias>
-      </Cultivar>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
         <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
@@ -167,6 +163,10 @@ This is a function of rooting depth so can be changed through time to represent 
         <LAIDead>0</LAIDead>
         <WaterAllocation>0</WaterAllocation>
       </SimpleLeaf>
+      <Cultivar>
+        <Name>StaticCrop</Name>
+        <Alias>StaticCrop</Alias>
+      </Cultivar>
       <CropType>Slurp</CropType>
     </Plant>
   </Replacements>
