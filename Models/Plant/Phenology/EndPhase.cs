@@ -31,7 +31,15 @@ namespace Models.PMF.Phen
 
         /// <summary>Return a fraction of phase complete.</summary>
         /// <value>The fraction complete.</value>
-        public override double FractionComplete { get { return 0.0; } }
+        public override double FractionComplete
+        {
+            get { return 0.0; }
+            set
+            {
+                if (Phenology != null)
+                throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
+            }
+        }
 
         /// <summary>Resets the phase.</summary>
         public override void ResetPhase()

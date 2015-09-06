@@ -260,7 +260,7 @@ namespace Models.PMF
                BiomassRemovalData.OrganList[i].FractionToResidue = organ.HarvestDefault.FractionToResidue;
                i += 1;
             }
-
+            
             //OverWriter default values in BiomassRemovalData with any manager specified values
             ApplyManagerSpecifiedOverwrites(ManagerRemovalData);
             
@@ -287,6 +287,10 @@ namespace Models.PMF
                 i += 1;
             }
 
+            //Do adjustments to phenology
+            if ((ManagerRemovalData != null) && (ManagerRemovalData.PhenologyStageSet != 0))
+                Phenology.ReSetToStage(ManagerRemovalData.PhenologyStageSet);
+            
             //OverWriter default values in BiomassRemovalData with any manager specified values
             ApplyManagerSpecifiedOverwrites(ManagerRemovalData);
 
@@ -312,6 +316,10 @@ namespace Models.PMF
                 i += 1;
             }
 
+            //Do adjustments to phenology
+            if ((ManagerRemovalData != null) && (ManagerRemovalData.PhenologyStageSet != 0))
+                Phenology.ReSetToStage(ManagerRemovalData.PhenologyStageSet);
+
             //OverWriter default values in BiomassRemovalData with any manager specified values
             ApplyManagerSpecifiedOverwrites(ManagerRemovalData);
 
@@ -336,6 +344,10 @@ namespace Models.PMF
                 BiomassRemovalData.OrganList[i].FractionToResidue = organ.PruneDefault.FractionToResidue;
                 i += 1;
             }
+
+            //Do adjustments to phenology
+            if ((ManagerRemovalData != null) && (ManagerRemovalData.PhenologyStageSet != 0))
+                Phenology.ReSetToStage(ManagerRemovalData.PhenologyStageSet);
 
             //OverWriter default values in BiomassRemovalData with any manager specified values
             ApplyManagerSpecifiedOverwrites(ManagerRemovalData);
