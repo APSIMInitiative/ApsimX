@@ -44,6 +44,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Name>Germinating</Name>
           <Start>Sowing</Start>
           <End>Germination</End>
+          <TTinPhase>0</TTinPhase>
+          <FractionComplete>0.999</FractionComplete>
         </GerminatingPhase>
         <EmergingPhase>
           <Name>Emerging</Name>
@@ -57,6 +59,8 @@ This model has been built to simulate a range of different crops in simulations 
           </Memo>
           <Start>Germination</Start>
           <End>Emergence</End>
+          <TTinPhase>0</TTinPhase>
+          <FractionComplete>1</FractionComplete>
           <ShootLag>0</ShootLag>
           <ShootRate>0</ShootRate>
         </EmergingPhase>
@@ -79,6 +83,8 @@ During this phase the plant only partitions biomass to Root and Stover (leaf and
           </VariableReference>
           <Start>Emergence</Start>
           <End>StartReproductive</End>
+          <TTinPhase>0</TTinPhase>
+          <FractionComplete>1</FractionComplete>
         </GenericPhase>
         <GenericPhase>
           <Name>YieldIncreasing</Name>
@@ -99,6 +105,8 @@ During this phase the plant is partitioning biomass to Root Stover and Product o
           </VariableReference>
           <Start>StartReproductive</Start>
           <End>StartSenescence</End>
+          <TTinPhase>0</TTinPhase>
+          <FractionComplete>1</FractionComplete>
         </GenericPhase>
         <GenericPhase>
           <Name>Senescing</Name>
@@ -119,6 +127,8 @@ During this phase the plant is partitioning biomass to Root and Product organs a
           </VariableReference>
           <Start>StartSenescence</Start>
           <End>EndReproductive</End>
+          <TTinPhase>0</TTinPhase>
+          <FractionComplete>1</FractionComplete>
         </GenericPhase>
         <GenericPhase>
           <Name>Mature</Name>
@@ -139,6 +149,8 @@ During this phase the plant does bugger all but wait to be ready for harvest
           </Memo>
           <Start>EndReproductive</Start>
           <End>Maturity</End>
+          <TTinPhase>0</TTinPhase>
+          <FractionComplete>1</FractionComplete>
         </GenericPhase>
         <EndPhase>
           <Name>ReadyForHarvest</Name>
@@ -148,6 +160,8 @@ During this phase the plant does bugger all but wait to be ready for harvest
           </VariableReference>
           <Start>Maturity</Start>
           <End>Unused</End>
+          <TTinPhase>0</TTinPhase>
+          <FractionComplete>0</FractionComplete>
         </EndPhase>
         <AccumulateFunction>
           <Name>AccumulatedThermalTime</Name>
@@ -162,7 +176,6 @@ During this phase the plant does bugger all but wait to be ready for harvest
           <StartStageName>Emergence</StartStageName>
           <EndStageName>Maturity</EndStageName>
         </AccumulateFunction>
-        <Emerged>false</Emerged>
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>

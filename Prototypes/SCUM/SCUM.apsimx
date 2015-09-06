@@ -206,44 +206,6 @@ During this phase the plant has completed its growth and is drying ready for har
           <TTinPhase>0</TTinPhase>
           <FractionComplete>0</FractionComplete>
         </EndPhase>
-        <GenericPhase>
-          <Name>RegrowthCanopyExpanding</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[
-During this phase the plant only partitions biomass to Root and Stover (leaf and stem) Organs
-]]></MemoText>
-          </Memo>
-          <Constant>
-            <Name>Target</Name>
-            <Value>1000</Value>
-            <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
-          </Constant>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Start>StartRegrowth</Start>
-          <End>EndRegrowth</End>
-          <PhaseParallel>CanopyExpanding</PhaseParallel>
-          <TTinPhase>0</TTinPhase>
-          <FractionComplete>1</FractionComplete>
-        </GenericPhase>
-        <GotoPhase>
-          <Name>GoToReproductive</Name>
-          <Start>EndRegrowth</Start>
-          <End>YieldIncreasing</End>
-          <TTinPhase>0</TTinPhase>
-          <FractionComplete>0</FractionComplete>
-          <PhaseNameToGoto>YieldIncreasing</PhaseNameToGoto>
-        </GotoPhase>
-        <PhaseSetFunction>
-          <Name>UponCutting</Name>
-          <StartAllowingPhaseSet>Emergence</StartAllowingPhaseSet>
-          <StopAllowingPhaseSet>EndReproductive</StopAllowingPhaseSet>
-          <PhaseNameToSetTo>RegrowthCanopyExpanding</PhaseNameToSetTo>
-          <Event>Cut</Event>
-        </PhaseSetFunction>
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
