@@ -1,6 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
   <Name>Simulations</Name>
+  <Replacements>
+    <Name>Replacements</Name>
+    <Plant>
+      <Name>Slurp</Name>
+      <Memo>
+        <Name>Introduction</Name>
+        <MemoText><![CDATA[
+# Slurp
+
+## Author:
+
+Hamish Browni, Plant and Food Research, New Zealand
+
+Slurp is the sound a plant makes when it extracts water from the soil.  Slurp is a static plant model with a minimal amount of functionality needed for water and nitrogen balance modelling.  It has a root organ the will extract water and nitrogen from the soil and a leaf organ that intercepts radiation and demands Nitrogen and water.  While the properties of this model are static, they can be changed from manager scripts enabling coare changes in the crop to be modeled]]></MemoText>
+      </Memo>
+      <Cultivar>
+        <Name>StaticCrop</Name>
+        <Alias>StaticCrop</Alias>
+      </Cultivar>
+      <OrganArbitrator>
+        <Name>Arbitrator</Name>
+        <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
+        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+      </OrganArbitrator>
+      <Root>
+        <Name>Root</Name>
+        <Memo>
+          <Name>description</Name>
+          <MemoText><![CDATA[
+The root only has a few parameters set which may be set from manager scripts to alter the potential water and nutrient uptake from the crop]]></MemoText>
+        </Memo>
+        <CompositeBiomass>
+          <Name>Live</Name>
+          <Propertys>
+            <string>[Root].LayerLive</string>
+          </Propertys>
+        </CompositeBiomass>
+        <CompositeBiomass>
+          <Name>Dead</Name>
+          <Propertys>
+            <string>[Root].LayerDead</string>
+          </Propertys>
+        </CompositeBiomass>
+        <Constant>
+          <Name>NitrogenDemandSwitch</Name>
+          <Memo>
+            <Name>description</Name>
+            <MemoText><![CDATA[
+This is a multiplier of nitrogen demand so can be set to 0 to turn potential N uptake off and to 1 to turn uptake on.  Values in between are possible also]]></MemoText>
+          </Memo>
+          <Value>1</Value>
+        </Constant>
+        <Constant>
+          <Name>RootFrontVelocity</Name>
+          <Memo>
+            <Name>description</Name>
+            <MemoText><![CDATA[
+The speed that roots proceed down through the profile.  Default is 0 and root depth is determined by the depth that the crop is sown at i.e at sowing roots are initialised down to sowing depth]]></MemoText>
+          </Memo>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>MaxDailyNUptake</Name>
+          <Memo>
+            <Name>description</Name>
+            <MemoText><![CDATA[Set a limit to the amount of N that a crop can take up each day.  Value is g/m2]]></MemoText>
+          </Memo>
+          <Value>6</Value>
+        </Constant>
+        <LinearInterpolationFunction>
+          <Name>KLModifier</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>200</double>
+              <double>1500</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+This is a function of rooting depth so can be changed through time to represent root dynamic and differences between root systems of different crops
+]]></MemoText>
+          </Memo>
+          <XProperty>[Root].LayerMidPointDepth</XProperty>
+        </LinearInterpolationFunction>
+        <InitialDM>50</InitialDM>
+        <SpecificRootLength>40000</SpecificRootLength>
+        <KNO3_yProperty>
+          <double>0.02</double>
+          <double>0.02</double>
+        </KNO3_yProperty>
+        <KNO3_xRootLength>
+          <double>0</double>
+          <double>0.003</double>
+        </KNO3_xRootLength>
+        <KNH4_yProperty>
+          <double>0</double>
+          <double>0</double>
+        </KNH4_yProperty>
+        <KNH4_xRootLength>
+          <double>0</double>
+          <double>0.003</double>
+        </KNH4_xRootLength>
+        <NuptakeSupply>0</NuptakeSupply>
+      </Root>
+      <SimpleLeaf>
+        <Name>Leaf</Name>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
+        <Constant>
+          <Name>FRGRFunction</Name>
+          <Value>1</Value>
+        </Constant>
+        <Constant>
+          <Name>PotentialBiomass</Name>
+          <Value>5</Value>
+        </Constant>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>PartitionFraction</Name>
+            <Value>1</Value>
+          </Constant>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>NConc</Name>
+          <Value>0.05</Value>
+        </Constant>
+        <Constant>
+          <Name>LAIFunction</Name>
+          <Value>5</Value>
+        </Constant>
+        <Constant>
+          <Name>ExtinctionCoefficientFunction</Name>
+          <Value>0.7</Value>
+        </Constant>
+        <Constant>
+          <Name>HeightFunction</Name>
+          <Value>150</Value>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>0.5</Value>
+        </Constant>
+        <BiomassYesterday>0</BiomassYesterday>
+        <LAI>0</LAI>
+        <Height>0</Height>
+        <FRGR>0</FRGR>
+        <PotentialEP>0</PotentialEP>
+        <K>0</K>
+        <KDead>0</KDead>
+        <DeltaBiomass>0</DeltaBiomass>
+        <LAIDead>0</LAIDead>
+        <WaterAllocation>0</WaterAllocation>
+      </SimpleLeaf>
+      <CropType>Slurp</CropType>
+    </Plant>
+  </Replacements>
   <DataStore>
     <Name>DataStore</Name>
     <Model xsi:type="ExcelInput">
