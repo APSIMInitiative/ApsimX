@@ -70,6 +70,11 @@ namespace Models
         private int rainIndex;
 
         /// <summary>
+        /// The index of the evaporation column in the weather file
+        /// </summary>
+        private int evaporationIndex;
+
+        /// <summary>
         /// The index of the vapor pressure column in the weather file
         /// </summary>
         private int vapourPressureIndex;
@@ -172,7 +177,7 @@ namespace Models
         }
 
         /// <summary>
-        /// Gets or sets the maximum temperature (oc)
+        /// Gets or sets the maximum temperature (oC)
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
         [XmlIgnore]
@@ -190,7 +195,7 @@ namespace Models
         }
 
         /// <summary>
-        /// Gets or sets the minimum temperature (oc)
+        /// Gets or sets the minimum temperature (oC)
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
         [XmlIgnore]
@@ -240,9 +245,26 @@ namespace Models
                 this.todaysMetData.Radn = value;
             }
         }
+		
+        /// <summary>
+        /// Gets or sets the Pan Evaporation (mm) (Class A pan)
+        /// </summary>
+        [XmlIgnore]
+        public double PanEvap
+            {
+            get
+                {
+                return this.MetData.PanEvap;
+                }
+
+            set
+                {
+                this.todaysMetData.PanEvap = value;
+                }
+            }
 
         /// <summary>
-        /// Gets or sets the vapor pressure
+        /// Gets or sets the vapor pressure (hPa)
         /// </summary>
         [XmlIgnore]
         public double VP
@@ -259,7 +281,7 @@ namespace Models
         }
 
         /// <summary>
-        /// Gets or sets the wind value found in weather file or zero if not specified.
+        /// Gets or sets the wind value found in weather file or zero if not specified. (code says 3.0 not zero)
         /// </summary>
         [XmlIgnore]
         public double Wind
@@ -393,6 +415,7 @@ namespace Models
             this.minimumTemperatureIndex = 0;
             this.radiationIndex = 0;
             this.rainIndex = 0;
+            this.evaporationIndex = 0;
             this.vapourPressureIndex = 0;
             this.windIndex = 0;
             this.CO2 = 350;
@@ -480,6 +503,16 @@ namespace Models
                 this.todaysMetData.Rain = Convert.ToSingle(values[this.rainIndex]);
             else
                 this.todaysMetData.Rain = this.reader.ConstantAsDouble("rain");
+				
+            if (this.evaporationIndex == -1)
+                {
+                // If Evap is not present in the weather file assign a default value
+                this.todaysMetData.PanEvap = double.NaN;
+                }
+            else
+                {
+                this.todaysMetData.PanEvap = Convert.ToSingle(values[this.evaporationIndex]);
+                }
 
             if (this.vapourPressureIndex == -1)
             {
@@ -493,7 +526,7 @@ namespace Models
 
             if (this.windIndex == -1)
             {
-                // If Wind is not present in the weather file assign a defalt value
+                // If Wind is not present in the weather file assign a default value
                 this.todaysMetData.Wind = 3.0;
             }
             else
@@ -523,6 +556,7 @@ namespace Models
                     this.minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Mint");
                     this.radiationIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Radn");
                     this.rainIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Rain");
+                    this.evaporationIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Evap");
                     this.vapourPressureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "VP");
                     this.windIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Wind");
                     if (this.maximumTemperatureIndex == -1)
@@ -712,13 +746,13 @@ namespace Models
             public double Radn;
 
             /// <summary>
-            /// Maximum temperature (oc)
+            /// Maximum temperature (oC)
             /// </summary>
             [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
             public double Maxt;
 
             /// <summary>
-            /// Minimum temperature (oc)
+            /// Minimum temperature (oC)
             /// </summary>
             [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
             public double Mint;
@@ -729,12 +763,17 @@ namespace Models
             public double Rain;
 
             /// <summary>
-            /// The vapor pressure
+            /// Pan Evaporation (mm) (Class A pan) (NaN if not present)
+            /// </summary>
+            public double PanEvap;
+
+            /// <summary>
+            /// The vapor pressure (hPa)
             /// </summary>
             public double VP;
 
             /// <summary>
-            /// The wind value found in weather file or zero if not specified.
+            /// The wind value found in weather file or zero if not specified (code says 3.0 not zero).
             /// </summary>
             public double Wind;
         }

@@ -154,7 +154,7 @@
     </Compile>
     <Compile Include="Interfaces\ISupplementView.cs" />
     <Compile Include="Presenters\FolderPresenter.cs" />
-    <Compile Include="Presenters\StaticForestrySystemPresenter.cs" />
+    <Compile Include="Presenters\TreeProxyPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -228,11 +228,11 @@
     <Compile Include="Views\FolderView.Designer.cs">
       <DependentUpon>FolderView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\StaticForestrySystemView.cs">
+    <Compile Include="Views\TreeProxyView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\StaticForestrySystemView.Designer.cs">
-      <DependentUpon>StaticForestrySystemView.cs</DependentUpon>
+    <Compile Include="Views\TreeProxyView.Designer.cs">
+      <DependentUpon>TreeProxyView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\XYPairsView.cs">
       <SubType>UserControl</SubType>
@@ -406,8 +406,8 @@
     <EmbeddedResource Include="Views\FolderView.resx">
       <DependentUpon>FolderView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\StaticForestrySystemView.resx">
-      <DependentUpon>StaticForestrySystemView.cs</DependentUpon>
+    <EmbeddedResource Include="Views\TreeProxyView.resx">
+      <DependentUpon>TreeProxyView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\XYPairsView.resx">
       <DependentUpon>XYPairsView.cs</DependentUpon>
@@ -673,9 +673,8 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\TreeViewImages\Bitmap1.bmp" />
-    <Content Include="Resources\TreeViewImages\GoToPhase.png" />
-    <Content Include="Resources\TreeViewImages\PhaseSetFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LocalMicroClimate.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\TreeProxy.png" />
     <None Include="Service References\BuildService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -686,7 +685,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Regression.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CircularZone.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\RectangularZone.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\StaticForestrySystem.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ForestrySystem.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\FieldPea.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\NodeNumberPhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilArbitrator.png" />
