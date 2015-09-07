@@ -58,16 +58,30 @@ namespace Models.Agroforestry
         public double heightToday { get; set; }
 
         /// <summary>
-        /// 
+        /// The trees water uptake per layer in a single zone
         /// </summary>
         [XmlIgnore]
         [Units("mm")]
         public double[] WaterUptake { get; set; }
 
+        /// <summary>
+        /// The trees water demand across all zones.
+        /// </summary>
+        [XmlIgnore]
+        [Units("L")]
+        public double SWDemand {get; set; }  // Tree water demand (L)
+
         /// <summary>The root radius.</summary>
         /// <value>The root radius.</value>
         [Summary]
         public double RootRadius { get; set; }
+
+        /// <summary>
+        /// Water stress factor.
+        /// </summary>
+        [XmlIgnore]
+        [Units("0-1")]
+        public double WaterStress { get; set; }
 
         /// <summary>
         /// A list containing forestry information for each zone.
@@ -109,7 +123,12 @@ namespace Models.Agroforestry
             foreach (Zone zone in ZoneList)
             {
                 if (zone is RectangularZone)
-                    D += (zone as RectangularZone).Width / 2 - (ZoneList[0] as RectangularZone).Width / 2; //we want the middle of the Zone as measured from the tree which is in the middle of the first Zone
+                {
+                    if (zone == ZoneList[0])
+                        D += 0; // the tree is at distance 0
+                    else
+                        D += (zone as RectangularZone).Width; 
+                }
                 else if (zone is CircularZone)
                     D += (zone as CircularZone).Width;
                 else
@@ -196,7 +215,7 @@ namespace Models.Agroforestry
                 shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0]));
                 nDemand.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][1]));
                 List<double> getRLDs = new List<double>();
-                for (int j = 4; j < Table[0].Count; j++)
+                for (int j = 4; j < Table[1].Count; j++)
                     getRLDs.Add(Convert.ToDouble(Table[i][j]));
                 rld.Add(THCutoffs[i - 2], getRLDs.ToArray());
             }
@@ -276,7 +295,7 @@ namespace Models.Agroforestry
         /// <returns></returns>
         public List<Soils.Arbitrator.ZoneWaterAndN> GetSWUptakes(Soils.Arbitrator.SoilState soilstate)
         {
-            double SWDemand = 0;  // Tree water demand (L)
+            SWDemand = 0;
             double PotSWSupply = 0; // Total water supply (L)
             Zone treeZone = ZoneList[0] as Zone;
             double Etz = (Apsim.Find(treeZone, typeof(Soils.SoilWater)) as Soils.SoilWater).Eo; //Eo of Tree Zone
@@ -284,7 +303,7 @@ namespace Models.Agroforestry
             foreach (Zone ZI in ZoneList)
             {
                 Soils.SoilWater S = Apsim.Find(ZI, typeof(Soils.SoilWater)) as Soils.SoilWater;
-                // SWDemand += S.Eo * (1 / (1 - GetShade(ZI) / 100) - 1) * ZI.Area * 10000;
+                 //SWDemand += S.Eo * (1 / (1 - GetShade(ZI) / 100) - 1) * ZI.Area * 10000;
                 SWDemand += GetShade(ZI) / 100 * ZI.Area * 10000;
             }
             SWDemand *= Etz;
@@ -334,6 +353,7 @@ namespace Models.Agroforestry
             }
             else
                 F = 1;
+            WaterStress = Math.Min(1, Math.Max(0, PotSWSupply / SWDemand));
 
             List<double> uptakeList = new List<double>();
             foreach (ZoneWaterAndN Z in Uptakes)
