@@ -50,6 +50,11 @@ namespace Models.PMF.Phen
             {
                 return 0.999;
             }
+            set
+            {
+                if (Phenology != null)
+                throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
+            }
         }
 
     }

@@ -192,7 +192,12 @@
         /// The list of BiomassRemovalTypes for each organ
         ///</summary>
         public OrganBiomassRemovalType[] OrganList {get; set;}
-        
+
+        /// <summary>
+        /// The Phenological stage that biomass removal resets phenology to.
+        ///</summary>
+        public double PhenologyStageSet { get; set; }
+
         ///<summary>
         ///Method to construct list
         ///</summary>
@@ -212,6 +217,14 @@
         ///Default constructor
         ///</summary>
         public RemovalFractions() { }
+
+        /// <summary>
+        /// Method to set the FractionRemoved for specified Organ
+        ///</summary>
+        public void SetPhenologyStage(double NewStage)
+        {
+            PhenologyStageSet = NewStage;
+        }
 
         /// <summary>
         /// Method to set the FractionRemoved for specified Organ
@@ -238,7 +251,7 @@
             foreach (OrganBiomassRemovalType r in OrganList)
                 if (String.Equals(r.NameOfOrgan, organName, StringComparison.OrdinalIgnoreCase))
                 {
-                    r.FractionRemoved = Fraction;
+                    r.FractionToResidue = Fraction;
                     Matchfound = true;
                 }
             if (Matchfound == false)

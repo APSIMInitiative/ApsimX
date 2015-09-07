@@ -55,9 +55,12 @@ namespace Models.PMF.Phen
 
         /// <summary>Return the target to caller. Can be overridden by derived classes.</summary>
         /// <returns></returns>
-        protected override double CalcTarget()
+        public override double CalcTarget()
         {
-            return ShootLag + Plant.SowingData.Depth * ShootRate;
+            double retVAl = 0;
+            if (Plant != null)
+                retVAl = ShootLag + Plant.SowingData.Depth * ShootRate;
+            return retVAl;
         }
         
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
@@ -110,7 +113,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Return the target to caller. Can be overridden by derived classes.</summary>
         /// <returns></returns>
-        protected override double CalcTarget()
+        public override double CalcTarget()
         {
             return ShootLag + Plant.SowingData.Depth * ShootRate;
         }

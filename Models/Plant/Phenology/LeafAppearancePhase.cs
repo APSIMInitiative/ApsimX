@@ -94,6 +94,10 @@ namespace Models.PMF.Phen
                 if (F > 1) F = 1;
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
             }
+            set
+            {
+                throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
+            }
         }
 
 
