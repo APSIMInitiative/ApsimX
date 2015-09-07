@@ -205,6 +205,9 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Cultivar))]
         [XmlElement(typeof(Models.Zones.CircularZone))]
         [XmlElement(typeof(Models.Zones.RectangularZone))]
+        [XmlElement(typeof(Models.Aqua.PondWater))]
+        [XmlElement(typeof(Models.Aqua.FoodInPond))]
+        [XmlElement(typeof(Models.Aqua.Prawns))]
         public List<Model> Children { get; set; }
 
         /// <summary>
