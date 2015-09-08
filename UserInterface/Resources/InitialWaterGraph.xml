@@ -26,49 +26,53 @@
     <SplitOn>*</SplitOn>
   </Series>  
   <Series>
-    <Type>Line</Type>
+    <Type>Scatter</Type>
     <Title>Air dry</Title>
     <ShowInLegend>true</ShowInLegend>
     <XAxis>Top</XAxis>
     <YAxis>Left</YAxis>
     <ColourArgb>-65536</ColourArgb>
     <Marker>None</Marker>
+    <Line>Solid</Line>
     <XFieldName>[Soil].AirDry</XFieldName>
     <YFieldName>[Soil].DepthMidPoints</YFieldName>
     <SplitOn>*</SplitOn>
   </Series>
   <Series>
-    <Type>Line</Type>
+    <Type>Scatter</Type>
     <Title>LL15</Title>
     <ShowInLegend>true</ShowInLegend>
     <XAxis>Top</XAxis>
     <YAxis>Left</YAxis>
     <ColourArgb>-16711681</ColourArgb>
     <Marker>None</Marker>
+    <Line>Solid</Line>
     <XFieldName>[Soil].LL15</XFieldName>
     <YFieldName>[Soil].DepthMidPoints</YFieldName>
     <SplitOn>*</SplitOn>
   </Series>
   <Series>
-    <Type>Line</Type>
+    <Type>Scatter</Type>
     <Title>DUL</Title>
     <ShowInLegend>true</ShowInLegend>
     <XAxis>Top</XAxis>
     <YAxis>Left</YAxis>
     <ColourArgb>-16776961</ColourArgb>
     <Marker>None</Marker>
+    <Line>Solid</Line>
     <XFieldName>[Soil].DUL</XFieldName>
     <YFieldName>[Soil].DepthMidPoints</YFieldName>
     <SplitOn>*</SplitOn>
   </Series>
   <Series>
-    <Type>Line</Type>
+    <Type>Scatter</Type>
     <Title>SAT</Title>
     <ShowInLegend>true</ShowInLegend>
     <XAxis>Top</XAxis>
     <YAxis>Left</YAxis>
     <ColourArgb>-16760704</ColourArgb>
     <Marker>None</Marker>
+    <Line>Solid</Line>
     <XFieldName>[Soil].SAT</XFieldName>
     <YFieldName>[Soil].DepthMidPoints</YFieldName>
     <SplitOn>*</SplitOn>
