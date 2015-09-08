@@ -17,7 +17,7 @@ namespace Models.Report
     [Serializable]
     [ViewName("UserInterface.Views.ReportView")]
     [PresenterName("UserInterface.Presenters.ReportPresenter")]
-    [ValidParent(typeof(Zone))]
+    [ValidParent(ParentModels = new Type[] { typeof(Zone), typeof(Zones.CircularZone), typeof(Zones.RectangularZone) })]
     public class Report : Model
     {
         /// <summary>
