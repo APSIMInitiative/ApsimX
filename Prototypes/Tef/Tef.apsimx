@@ -5062,33 +5062,18 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
               <SoilCrop>
                 <Name>WheatSoil</Name>
                 <LL>
-                  <double>0.25</double>
-                  <double>0.25</double>
-                  <double>0.26</double>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.27</double>
-                  <double>0.303</double>
-                  <double>0.31</double>
-                  <double>0.16</double>
+                  <double>0.17</double>
+                  <double>0.17</double>
+                  <double>0.18</double>
+                  <double>0.18</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.05</double>
-                  <double>0.04</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.01</double>
                 </KL>
                 <XF>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -5098,33 +5083,18 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
               <SoilCrop>
                 <Name>TefSoil</Name>
                 <LL>
-                  <double>0.25</double>
-                  <double>0.25</double>
-                  <double>0.26</double>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.27</double>
-                  <double>0.303</double>
-                  <double>0.31</double>
-                  <double>0.16</double>
+                  <double>0.17</double>
+                  <double>0.17</double>
+                  <double>0.18</double>
+                  <double>0.18</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.05</double>
-                  <double>0.04</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.01</double>
                 </KL>
                 <XF>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -5134,68 +5104,38 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
               <Thickness>
                 <double>150</double>
                 <double>150</double>
-                <double>150</double>
                 <double>300</double>
                 <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>400</double>
               </Thickness>
               <BD>
-                <double>1.32</double>
-                <double>1.32</double>
-                <double>1.38</double>
-                <double>1.33</double>
-                <double>1.33</double>
-                <double>1.42</double>
-                <double>1.33</double>
-                <double>1.35</double>
                 <double>1.4</double>
+                <double>1.4</double>
+                <double>1.5</double>
+                <double>1.5</double>
               </BD>
               <AirDry>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>0.26</double>
-                <double>0.32</double>
-                <double>0.3</double>
-                <double>0.27</double>
-                <double>0.24</double>
-                <double>0.31</double>
-                <double>0.16</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
               </AirDry>
               <LL15>
-                <double>0.31</double>
-                <double>0.31</double>
-                <double>0.313</double>
-                <double>0.376</double>
-                <double>0.356</double>
-                <double>0.3</double>
-                <double>0.303</double>
-                <double>0.31</double>
-                <double>0.16</double>
+                <double>0.17</double>
+                <double>0.17</double>
+                <double>0.18</double>
+                <double>0.18</double>
               </LL15>
               <DUL>
-                <double>0.413</double>
-                <double>0.413</double>
-                <double>0.454</double>
-                <double>0.495</double>
-                <double>0.495</double>
-                <double>0.418</double>
-                <double>0.4</double>
-                <double>0.37</double>
                 <double>0.29</double>
+                <double>0.29</double>
+                <double>0.32</double>
+                <double>0.32</double>
               </DUL>
               <SAT>
                 <double>0.453</double>
                 <double>0.453</double>
-                <double>0.479</double>
-                <double>0.498</double>
-                <double>0.498</double>
-                <double>0.464</double>
-                <double>0.457</double>
-                <double>0.435</double>
-                <double>0.38</double>
+                <double>0.41</double>
+                <double>0.41</double>
               </SAT>
             </Water>
             <SoilWater>
@@ -6507,12 +6447,8 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
           <Operations>
             <Name>NRate</Name>
             <Operation>
-              <Date>1985-11-08T00:00:00</Date>
-              <Action> [Fertiliser].Apply(50, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1985-11-29T00:00:00</Date>
-              <Action> [Fertiliser].Apply(30, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Date>2008-08-02T00:00:00</Date>
+              <Action> [Fertiliser].Apply(60, Fertiliser.Types.UreaN, 10);</Action>
             </Operation>
           </Operations>
           <Operations>
@@ -6530,7 +6466,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Soil].SoilWater.pond</string>
               <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
               <string>sum([Soil].NO3N) as ProfileNO3</string>
-              <string>sum([Soil].SoilWater.SWmm[1:2]) as SW30cm</string>
+              <string>sum([Soil].SoilWater.SWmm[1:3]) as SW30cm</string>
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
@@ -6562,15 +6498,11 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <SoilCrop>
                 <Name>WheatSoil</Name>
                 <LL>
-                  <double>0.25</double>
-                  <double>0.25</double>
-                  <double>0.26</double>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.27</double>
-                  <double>0.303</double>
-                  <double>0.31</double>
-                  <double>0.16</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
+                  <double>0.22</double>
+                  <double>0.22</double>
+                  <double>0.22</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
@@ -6578,16 +6510,8 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.05</double>
-                  <double>0.04</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.01</double>
                 </KL>
                 <XF>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -6598,15 +6522,11 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <SoilCrop>
                 <Name>TefSoil</Name>
                 <LL>
-                  <double>0.25</double>
-                  <double>0.25</double>
-                  <double>0.26</double>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.27</double>
-                  <double>0.303</double>
-                  <double>0.31</double>
-                  <double>0.16</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
+                  <double>0.22</double>
+                  <double>0.22</double>
+                  <double>0.22</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
@@ -6614,16 +6534,8 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.05</double>
-                  <double>0.04</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.01</double>
                 </KL>
                 <XF>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -6632,71 +6544,54 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
                 </XF>
               </SoilCrop>
               <Thickness>
-                <double>150</double>
-                <double>150</double>
-                <double>150</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
                 <double>300</double>
                 <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>400</double>
               </Thickness>
               <BD>
-                <double>1.32</double>
-                <double>1.32</double>
-                <double>1.38</double>
-                <double>1.33</double>
-                <double>1.33</double>
-                <double>1.42</double>
-                <double>1.33</double>
-                <double>1.35</double>
-                <double>1.4</double>
+                <double>1.55</double>
+                <double>1.55</double>
+                <double>1.45</double>
+                <double>1.45</double>
+                <double>1.45</double>
               </BD>
               <AirDry>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>0.26</double>
-                <double>0.32</double>
-                <double>0.3</double>
-                <double>0.27</double>
-                <double>0.24</double>
-                <double>0.31</double>
-                <double>0.16</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.07</double>
+                <double>0.07</double>
+                <double>0.07</double>
               </AirDry>
               <LL15>
-                <double>0.31</double>
-                <double>0.31</double>
-                <double>0.313</double>
-                <double>0.376</double>
-                <double>0.356</double>
-                <double>0.3</double>
-                <double>0.303</double>
-                <double>0.31</double>
-                <double>0.16</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.22</double>
+                <double>0.22</double>
+                <double>0.22</double>
               </LL15>
               <DUL>
-                <double>0.413</double>
-                <double>0.413</double>
-                <double>0.454</double>
-                <double>0.495</double>
-                <double>0.495</double>
-                <double>0.418</double>
-                <double>0.4</double>
-                <double>0.37</double>
-                <double>0.29</double>
+                <double>0.27</double>
+                <double>0.27</double>
+                <double>0.42</double>
+                <double>0.42</double>
+                <double>0.42</double>
               </DUL>
               <SAT>
-                <double>0.453</double>
-                <double>0.453</double>
-                <double>0.479</double>
-                <double>0.498</double>
-                <double>0.498</double>
-                <double>0.464</double>
-                <double>0.457</double>
-                <double>0.435</double>
-                <double>0.38</double>
+                <double>0.46</double>
+                <double>0.5</double>
+                <double>0.52</double>
+                <double>0.52</double>
+                <double>0.52</double>
               </SAT>
+              <KS>
+                <double>250</double>
+                <double>250</double>
+                <double>175</double>
+                <double>175</double>
+                <double>175</double>
+              </KS>
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
@@ -6710,7 +6605,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <DiffusConst>88</DiffusConst>
               <DiffusSlope>35.4</DiffusSlope>
               <Salb>0.13</Salb>
-              <CN2Bare>50</CN2Bare>
+              <CN2Bare>87</CN2Bare>
               <CNRed>20</CNRed>
               <CNCov>0.8</CNCov>
               <slope>NaN</slope>
@@ -7470,26 +7365,6 @@ Field Crops Research 116 (2010) 196204
           <Operations>
             <Name>IrrigationRate</Name>
           </Operations>
-          <Report>
-            <Name>Report</Name>
-            <VariableNames>
-              <string>[Clock].Today</string>
-              <string>[Soil].SoilWater.SW</string>
-              <string>[Soil].SoilWater.Eo</string>
-              <string>[Soil].SoilWater.Es</string>
-              <string>[Soil].SoilWater.Drainage</string>
-              <string>[Soil].SoilWater.Runoff</string>
-              <string>[Soil].SoilWater.pond</string>
-              <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
-              <string>[Soil].NO3N</string>
-              <string>[MicroClimate].net_radn</string>
-              <string>[MicroClimate].peta</string>
-              <string>[MicroClimate].petr</string>
-            </VariableNames>
-            <EventNames>
-              <string>[Clock].DoReport</string>
-            </EventNames>
-          </Report>
           <Soil>
             <Name>soil</Name>
             <Water>
@@ -7497,15 +7372,11 @@ Field Crops Research 116 (2010) 196204
               <SoilCrop>
                 <Name>WheatSoil</Name>
                 <LL>
-                  <double>0.25</double>
-                  <double>0.25</double>
-                  <double>0.26</double>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.27</double>
-                  <double>0.303</double>
-                  <double>0.31</double>
-                  <double>0.16</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
+                  <double>0.22</double>
+                  <double>0.22</double>
+                  <double>0.22</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
@@ -7513,16 +7384,8 @@ Field Crops Research 116 (2010) 196204
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.05</double>
-                  <double>0.04</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.01</double>
                 </KL>
                 <XF>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -7533,15 +7396,11 @@ Field Crops Research 116 (2010) 196204
               <SoilCrop>
                 <Name>TefSoil</Name>
                 <LL>
-                  <double>0.25</double>
-                  <double>0.25</double>
-                  <double>0.26</double>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.27</double>
-                  <double>0.303</double>
-                  <double>0.31</double>
-                  <double>0.16</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
+                  <double>0.22</double>
+                  <double>0.22</double>
+                  <double>0.22</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
@@ -7549,16 +7408,8 @@ Field Crops Research 116 (2010) 196204
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.05</double>
-                  <double>0.04</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.01</double>
                 </KL>
                 <XF>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -7567,70 +7418,46 @@ Field Crops Research 116 (2010) 196204
                 </XF>
               </SoilCrop>
               <Thickness>
-                <double>150</double>
-                <double>150</double>
-                <double>150</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
                 <double>300</double>
                 <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>400</double>
               </Thickness>
               <BD>
-                <double>1.32</double>
-                <double>1.32</double>
-                <double>1.38</double>
-                <double>1.33</double>
-                <double>1.33</double>
-                <double>1.42</double>
-                <double>1.33</double>
-                <double>1.35</double>
-                <double>1.4</double>
+                <double>1.55</double>
+                <double>1.55</double>
+                <double>1.45</double>
+                <double>1.45</double>
+                <double>1.45</double>
               </BD>
               <AirDry>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>0.26</double>
-                <double>0.32</double>
-                <double>0.3</double>
-                <double>0.27</double>
-                <double>0.24</double>
-                <double>0.31</double>
-                <double>0.16</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.07</double>
+                <double>0.07</double>
+                <double>0.07</double>
               </AirDry>
               <LL15>
-                <double>0.31</double>
-                <double>0.31</double>
-                <double>0.313</double>
-                <double>0.376</double>
-                <double>0.356</double>
-                <double>0.3</double>
-                <double>0.303</double>
-                <double>0.31</double>
-                <double>0.16</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.22</double>
+                <double>0.22</double>
+                <double>0.22</double>
               </LL15>
               <DUL>
-                <double>0.413</double>
-                <double>0.413</double>
-                <double>0.454</double>
-                <double>0.495</double>
-                <double>0.495</double>
-                <double>0.418</double>
-                <double>0.4</double>
-                <double>0.37</double>
-                <double>0.29</double>
+                <double>0.27</double>
+                <double>0.27</double>
+                <double>0.42</double>
+                <double>0.42</double>
+                <double>0.42</double>
               </DUL>
               <SAT>
-                <double>0.453</double>
-                <double>0.453</double>
-                <double>0.479</double>
-                <double>0.498</double>
-                <double>0.498</double>
-                <double>0.464</double>
-                <double>0.457</double>
-                <double>0.435</double>
-                <double>0.38</double>
+                <double>0.46</double>
+                <double>0.5</double>
+                <double>0.52</double>
+                <double>0.52</double>
+                <double>0.52</double>
               </SAT>
             </Water>
             <SoilWater>
@@ -7645,7 +7472,7 @@ Field Crops Research 116 (2010) 196204
               <DiffusConst>88</DiffusConst>
               <DiffusSlope>35.4</DiffusSlope>
               <Salb>0.13</Salb>
-              <CN2Bare>50</CN2Bare>
+              <CN2Bare>87</CN2Bare>
               <CNRed>20</CNRed>
               <CNCov>0.8</CNCov>
               <slope>NaN</slope>
@@ -7810,7 +7637,7 @@ Field Crops Research 116 (2010) 196204
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
             <Sample>
-              <Name>InitialN</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -7845,7 +7672,7 @@ Field Crops Research 116 (2010) 196204
               <PHUnits>Water</PHUnits>
             </Sample>
             <Sample>
-              <Name>InitialSW</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -7874,6 +7701,26 @@ Field Crops Research 116 (2010) 196204
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
           </Soil>
+          <Report>
+            <Name>Report</Name>
+            <VariableNames>
+              <string>[Clock].Today</string>
+              <string>[Soil].SoilWater.SW</string>
+              <string>[Soil].SoilWater.Eo</string>
+              <string>[Soil].SoilWater.Es</string>
+              <string>[Soil].SoilWater.Drainage</string>
+              <string>[Soil].SoilWater.Runoff</string>
+              <string>[Soil].SoilWater.pond</string>
+              <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+              <string>[Soil].NO3N</string>
+              <string>[MicroClimate].net_radn</string>
+              <string>[MicroClimate].peta</string>
+              <string>[MicroClimate].petr</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Clock].DoReport</string>
+            </EventNames>
+          </Report>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
