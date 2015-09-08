@@ -866,7 +866,7 @@ A function is used to provide maturity date as days after sowing(DAS).
           <Name>NumberFunction</Name>
           <VariableReference>
             <Name>CobNumber</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
+            <VariableName>[Panicle].CobNumber.Value</VariableName>
           </VariableReference>
           <LinearInterpolationFunction>
             <Name>KernalsPerCob</Name>
@@ -881,7 +881,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                 <double>550</double>
               </Y>
             </XYPairs>
-            <XProperty>[Rachis].CobSize.Value</XProperty>
+            <XProperty>[Panicle].CobSize.Value</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>GrainPerKernal</Name>
@@ -1691,7 +1691,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
-        <Name>Rachis</Name>
+        <Name>Panicle</Name>
         <MultiplyFunction>
           <Name>CobNumber</Name>
           <VariableReference>
@@ -1707,11 +1707,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>CobSize</Name>
           <VariableReference>
             <Name>CobMass</Name>
-            <VariableName>[Rachis].Live.Wt</VariableName>
+            <VariableName>[Panicle].Live.Wt</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>CobNumber</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
+            <VariableName>[Panicle].CobNumber.Value</VariableName>
           </VariableReference>
         </DivideFunction>
         <PopulationBasedDemandFunction>
@@ -1738,7 +1738,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </Constant>
           <VariableReference>
             <Name>OrganPopulation</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
+            <VariableName>[Panicle].CobNumber.Value</VariableName>
           </VariableReference>
         </PopulationBasedDemandFunction>
         <Biomass>
@@ -1782,64 +1782,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </XYPairs>
           <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
         </LinearInterpolationFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
-      </GenericAboveGroundOrgan>
-      <GenericAboveGroundOrgan>
-        <Name>Husk</Name>
-        <PopulationBasedDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Constant>
-            <Name>ExpansionStress</Name>
-            <Value>1</Value>
-          </Constant>
-          <Constant>
-            <Name>StartStage</Name>
-            <Value>5.2</Value>
-          </Constant>
-          <Constant>
-            <Name>GrowthDuration</Name>
-            <Value>120</Value>
-          </Constant>
-          <Constant>
-            <Name>MaximumOrganWt</Name>
-            <Value>25</Value>
-          </Constant>
-          <VariableReference>
-            <Name>OrganPopulation</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
-          </VariableReference>
-        </PopulationBasedDemandFunction>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
-        <Constant>
-          <Name>NReallocationFactor</Name>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>NRetranslocationFactor</Name>
-          <Value>0.1</Value>
-        </Constant>
-        <Constant>
-          <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
-        </Constant>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>0.2</Value>
-        </Constant>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
-        </Constant>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
@@ -1958,12 +1900,10 @@ The AboveGround composite biomass object includes all organs occurring above the
             <string>[Leaf].Dead</string>
             <string>[Stem].Live</string>
             <string>[Stem].Dead</string>
-            <string>[Husk].Live</string>
-            <string>[Husk].Dead</string>
             <string>[Grain].Live</string>
             <string>[Grain].Dead</string>
-            <string>[Rachis].Live</string>
-            <string>[Rachis].Dead</string>
+            <string>[Panicle].Live</string>
+            <string>[Panicle].Dead</string>
           </Propertys>
         </CompositeBiomass>
         <CompositeBiomass>
@@ -1994,12 +1934,10 @@ The Total composite biomass object includes all organs (above+below ground) to a
             <string>[Leaf].Dead</string>
             <string>[Stem].Live</string>
             <string>[Stem].Dead</string>
-            <string>[Husk].Live</string>
-            <string>[Husk].Dead</string>
             <string>[Grain].Live</string>
             <string>[Grain].Dead</string>
-            <string>[Rachis].Live</string>
-            <string>[Rachis].Dead</string>
+            <string>[Panicle].Live</string>
+            <string>[Panicle].Dead</string>
             <string>[Root].Live</string>
             <string>[Root].Dead</string>
           </Propertys>
@@ -2016,9 +1954,8 @@ The TotalLive composite biomass object includes the Live pools of all organs (ab
           <Propertys>
             <string>[Leaf].Live</string>
             <string>[Stem].Live</string>
-            <string>[Husk].Live</string>
             <string>[Grain].Live</string>
-            <string>[Rachis].Live</string>
+            <string>[Panicle].Live</string>
             <string>[Root].Live</string>
           </Propertys>
         </CompositeBiomass>
@@ -2034,9 +1971,8 @@ The TotalDead composite biomass object includes the Dead pools of all organs (ab
           <Propertys>
             <string>[Leaf].Dead</string>
             <string>[Stem].Dead</string>
-            <string>[Husk].Dead</string>
             <string>[Grain].Dead</string>
-            <string>[Rachis].Dead</string>
+            <string>[Panicle].Dead</string>
             <string>[Root].Dead</string>
           </Propertys>
         </CompositeBiomass>
@@ -2050,9 +1986,8 @@ The EarLive composite biomass object includes the Live pools of all organs withi
 ]]></MemoText>
           </Memo>
           <Propertys>
-            <string>[Husk].Live</string>
             <string>[Grain].Live</string>
-            <string>[Rachis].Live</string>
+            <string>[Panicle].Live</string>
           </Propertys>
         </CompositeBiomass>
         <CompositeBiomass>
@@ -2067,9 +2002,8 @@ The AboveGroundLive composite biomass object includes the Live pools of all orga
           <Propertys>
             <string>[Leaf].Live</string>
             <string>[Stem].Live</string>
-            <string>[Husk].Live</string>
             <string>[Grain].Live</string>
-            <string>[Rachis].Live</string>
+            <string>[Panicle].Live</string>
           </Propertys>
         </CompositeBiomass>
         <CompositeBiomass>
@@ -2084,9 +2018,8 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
           <Propertys>
             <string>[Leaf].Dead</string>
             <string>[Stem].Dead</string>
-            <string>[Husk].Dead</string>
             <string>[Grain].Dead</string>
-            <string>[Rachis].Dead</string>
+            <string>[Panicle].Dead</string>
           </Propertys>
         </CompositeBiomass>
       </Summariser>
@@ -6596,10 +6529,9 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Tef].Leaf.Fn</string>
               <string>[Tef].Leaf.Photosynthesis.Value</string>
               <string>[Tef].Stem.Live.Wt</string>
-              <string>[Tef].Husk.Live.Wt</string>
-              <string>[Tef].Rachis.Live.Wt</string>
+              <string>[Tef].Panicle.Live.Wt</string>
               <string>[Tef].Leaf.Total.Wt</string>
-              <string>[Tef].Rachis.DMDemandFunction.Value</string>
+              <string>[Tef].Panicle.DMDemandFunction.Value</string>
               <string>[Tef].Leaf.Live.Wt</string>
               <string>[Tef].Leaf.Dead.Wt</string>
             </VariableNames>
@@ -7128,7 +7060,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Tef.Rachis.Live.Wt</YFieldName>
+          <YFieldName>Tef.Panicle.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
