@@ -3488,6 +3488,13 @@ van Delden, S.H., Vos, J., Stomph, T.-J., Brouwer, G., Struik, P.C., 2012. Photo
         <string>Mekelle2008SW</string>
       </SheetNames>
     </Model>
+    <Model xsi:type="ExcelInput">
+      <Name>ObservedMekelle08Biomass</Name>
+      <FileName>Observed.xlsx</FileName>
+      <SheetNames>
+        <string>Mekelle2008Crop</string>
+      </SheetNames>
+    </Model>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
       <PredictedTableName>HarvestReport</PredictedTableName>
@@ -6542,6 +6549,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Tef].Panicle.DMDemandFunction.Value</string>
               <string>[Tef].Leaf.Live.Wt</string>
               <string>[Tef].Leaf.Dead.Wt</string>
+              <string>[Tef].Leaf.CoverGreen</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -7044,7 +7052,7 @@ namespace Models
       <Graph>
         <Name>Biomass</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Peredicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7054,6 +7062,21 @@ namespace Models
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>AboveGroundBiomass</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>Mekelle2008Crop</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Biomass</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -7127,6 +7150,58 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>CoverGreen</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Tef.Leaf.CoverGreen</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>Mekelle2008Crop</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>CoverGreen</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
