@@ -3481,6 +3481,13 @@ van Delden, S.H., Vos, J., Stomph, T.-J., Brouwer, G., Struik, P.C., 2012. Photo
         <string>ObservedHarvestData</string>
       </SheetNames>
     </Model>
+    <Model xsi:type="ExcelInput">
+      <Name>ObservedSW</Name>
+      <FileName>Observed.xlsx</FileName>
+      <SheetNames>
+        <string>Mekelle2008SW</string>
+      </SheetNames>
+    </Model>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
       <PredictedTableName>HarvestReport</PredictedTableName>
@@ -6516,6 +6523,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Soil].SoilWater.pond</string>
               <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
               <string>sum([Soil].NO3N) as ProfileNO3</string>
+              <string>sum([Soil].SoilWater.SWmm[1:2]) as SW30cm</string>
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
@@ -7050,66 +7058,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <Series>
-          <Name>Series2</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Tef.Panicle.Live.Wt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series3</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Tef.Stem.Live.Wt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series4</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>GrainWt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series5</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Tef.Leaf.Live.Wt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -7133,7 +7081,7 @@ namespace Models
       <Graph>
         <Name>SoilWater</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7142,7 +7090,22 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>ProfileWater</YFieldName>
+          <YFieldName>SW30cm</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>Mekelle2008SW</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SW30cm</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -7163,7 +7126,7 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
+        <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
