@@ -120,6 +120,10 @@ namespace Models.PMF.Organs
         [Link]
         [Units("0-1")]
         IFunction KLModifier = null;
+        /// <summary>The Maximum Root Depth</summary>
+        [Link]
+        [Units("0-1")]
+        IFunction MaximumRootDepth = null;
 
         #endregion
 
@@ -361,10 +365,15 @@ namespace Models.PMF.Organs
                 double TEM = (TemperatureEffect == null) ? 1 : TemperatureEffect.Value;
 
                 Depth = Depth + RootFrontVelocity.Value * soilCrop.XF[RootLayer] * TEM;
+
+                //Limit root depth for impeded layers
                 double MaxDepth = 0;
                 for (int i = 0; i < Soil.Thickness.Length; i++)
                     if (soilCrop.XF[i] > 0)
                         MaxDepth += Soil.Thickness[i];
+                //Limit root depth for the crop specific maximum depth
+                if (MaximumRootDepth != null)
+                    MaxDepth = Math.Min(MaximumRootDepth.Value, MaxDepth);
 
                 Depth = Math.Min(Depth, MaxDepth);
 
@@ -555,7 +564,7 @@ namespace Models.PMF.Organs
                 {
                     if (AccumulatedDepth < Depth)
                         InitialLayers += 1;
-                    AccumulatedDepth += Soil.SoilWater.Thickness[layer];
+                    AccumulatedDepth += Soil.Thickness[layer];
                 }
                 for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
@@ -1151,7 +1160,7 @@ namespace Models.PMF.Organs
             }
             
             tags.Add(new AutoDocumentation.Heading("Nitrogen Demands", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand from " + this.Name + " is the product of Total DM demand and a Nitrogen concentration of " + MinimumNConc.Value * 100 + "%", indent));
+            tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand from " + this.Name + " is the product of Total DM demand and a Nitrogen concentration of " + MinNconc * 100 + "%", indent));
             if (NitrogenDemandSwitch != null)
             {
                 tags.Add(new AutoDocumentation.Paragraph("The Nitrogen demand swith is a multiplier applied to nitrogen demand so it can be turned off at certain phases.  For the " + Name + " Organ it is set as:", indent));

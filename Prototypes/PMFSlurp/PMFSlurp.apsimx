@@ -3164,6 +3164,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Zone zone;
 		[Link] Simulation simulation;
+		[Link] Summary Summary;
    
 		[Description("File of covers to load")]
 		public string CoverFile { get; set; }
@@ -3266,6 +3267,7 @@ namespace Models
 					else
 						leaflai = 0;
 				}
+				//Summary.WriteMessage(this, "LAI " + leaflai);
 				object LAIResetValue = leaflai;
 				zone.Set("Slurp.Leaf.LAIFunction.Value", LAIResetValue);  
 				object HeightResetValue = CoverToday * MaximumHeight;
