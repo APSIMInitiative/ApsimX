@@ -8401,7 +8401,7 @@ namespace Models
     <Clock>
       <Name>Clock</Name>
       <StartDate>1980-03-01T00:00:00</StartDate>
-      <EndDate>1982-03-01T00:00:00</EndDate>
+      <EndDate>2012-03-01T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
@@ -8527,6 +8527,11 @@ namespace Models
 			{
 				SLURP.Sow(cultivar: "Pasture", population: 1, depth: InitialRootDepth, rowSpacing: 150);
 			}
+			
+			if ((Clock.Today.Month == 7) && (Clock.Today.Day == 1))
+			{
+				SLURP.Harvest(); //Slurp doesn't do anything on harvest but we can use this event to trigger a report at the end of each year.
+			}
 		}
 	}
 }]]></Code>
@@ -8592,6 +8597,21 @@ namespace Models
 		[EventSubscribe("StartOfDay")]
 		private void OnStartOfDay(object sender, EventArgs e)
 		{
+
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			AccumRainfall += Met.Rain;
+			AccumEP -= (double)zone.Get("Slurp.Root.WaterUptake");
+			
+			SWD = (SWC - DUL);
+		}
+		
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
 			if ((Clock.Today.Month == 7) && (Clock.Today.Day == 1))
 			{
 				AccumEO = 0;
@@ -8609,20 +8629,7 @@ namespace Models
 				
 				ZeroTomorrow = false;
 			}
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			AccumRainfall += Met.Rain;
-			AccumEP -= (double)zone.Get("Slurp.Root.WaterUptake");
 			
-			SWD = (SWC - DUL);
-		}
-		
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumEO -= Soil.SoilWater.Eo;
 			AccumES -= Soil.SoilWater.Es; 
@@ -8822,6 +8829,12 @@ namespace Models
 		[EventSubscribe("StartOfDay")]
 		private void OnStartOfDay(object sender, EventArgs e)
 		{ 
+			//Reset irriation use at the start of the season
+			if ((Clock.Today.Month == 7) && (Clock.Today.Day == 1))
+			{
+				Season_Application = 0;
+			}
+			
 			//Can we irrigate?
 			IrrigationIsAvailable = false; 
 			if (Irrigation_Yes_No == "yes")
@@ -8924,7 +8937,6 @@ namespace Models
           <string>[Slurp].Root.Depth as RootDepth</string>
           <string>[Slurp].Leaf.Height as Height</string>
           <string>[ExtraVariables].Script.SWD as SWD</string>
-          <string>[Extravariables].Script.MeanFW as FW</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -9192,6 +9204,25 @@ namespace Models
         <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
         <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
       </Soil>
+      <Report>
+        <Name>AnnualSummary</Name>
+        <VariableNames>
+          <string>[Clock].Today</string>
+          <string>[ExtraVariables].Script.AccumEO as AccumEO</string>
+          <string>[ExtraVariables].Script.AccumEP as AccumEP</string>
+          <string>[ExtraVariables].Script.AccumES as AccumES</string>
+          <string>[ExtraVariables].Script.AccumDrainage as AccumDrainage</string>
+          <string>[ExtraVariables].Script.AccumRunoff as AccumRunoff</string>
+          <string>[ExtraVariables].Script.AccumRainfall as AccumRainfall</string>
+          <string>[ExtraVariables].Script.AccumIrrigation as AccumIrrigation</string>
+          <string>[ExtraVariables].Script.MeanTemp as MeanTemp</string>
+          <string>[ExtraVariables].Script.MeanRadn as MeanRadn</string>
+          <string>[ExtraVariables].Script.MeanFW as MeanFW</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Slurp].Harvesting</string>
+        </EventNames>
+      </Report>
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
@@ -9292,7 +9323,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-12582784</ColourArgb>
+        <ColourArgb>-65408</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
@@ -9536,7 +9567,7 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>Irrigation1</Name>
+      <Name>Stress</Name>
       <Series>
         <Name>DUL</Name>
         <Type>Scatter</Type>
@@ -9568,6 +9599,132 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Annual WaterBalanceComponents</Name>
+      <Series>
+        <Name>AccumEO</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>AnnualSummary</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>AccumEO</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumEP</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>AnnualSummary</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>AccumEP</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumES</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>AnnualSummary</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>AccumES</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumDrainage</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65281</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>AnnualSummary</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>AccumDrainage</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumRunoff</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711681</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>AnnualSummary</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>AccumRunoff</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumRainfall</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8388544</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>AnnualSummary</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>AccumRainfall</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>AccumIrrigation</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65408</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>AnnualSummary</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>AccumIrrigation</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Accumulated Water Changes (mm)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomLeft</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
