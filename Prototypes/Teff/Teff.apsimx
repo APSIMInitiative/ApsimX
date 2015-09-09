@@ -1572,7 +1572,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
               <double>0</double>
             </Y>
           </XYPairs>
-          <XProperty>[Weather].MinT</XProperty>
+          <XProperty>[IWeather].MinT</XProperty>
         </LinearInterpolationFunction>
         <VariableReference>
           <Name>ThermalTime</Name>
@@ -1930,6 +1930,78 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
       </Summariser>
       <Cultivar>
         <Name>Katumani</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
+The variety Katumani Composite B was formed in 1966 and released in 1968 as part of the maize breeding work undertaken at the Katumani Research Station in Kenya which started in 1956.  Katumani Composite B was an advanced generation of Katumani Synthetic V X Katumani Synthetic VI.  It has slight photoperiod sensitivity and relatively small potential cob size.<br/>
+
+]]></MemoText>
+        </Memo>
+        <Command>[Phenology].Juvenile.Target.Value = 50</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 50</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 100</Command>
+        <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
+        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 14</Command>
+        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 405</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Gibe</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
+The variety Katumani Composite B was formed in 1966 and released in 1968 as part of the maize breeding work undertaken at the Katumani Research Station in Kenya which started in 1956.  Katumani Composite B was an advanced generation of Katumani Synthetic V X Katumani Synthetic VI.  It has slight photoperiod sensitivity and relatively small potential cob size.<br/>
+
+]]></MemoText>
+        </Memo>
+        <Command>[Phenology].Juvenile.Target.Value = 50</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 50</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 100</Command>
+        <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
+        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 14</Command>
+        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 405</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Ziquala</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
+The variety Katumani Composite B was formed in 1966 and released in 1968 as part of the maize breeding work undertaken at the Katumani Research Station in Kenya which started in 1956.  Katumani Composite B was an advanced generation of Katumani Synthetic V X Katumani Synthetic VI.  It has slight photoperiod sensitivity and relatively small potential cob size.<br/>
+
+]]></MemoText>
+        </Memo>
+        <Command>[Phenology].Juvenile.Target.Value = 50</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 50</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 100</Command>
+        <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
+        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 14</Command>
+        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 405</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Ayana</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
+The variety Katumani Composite B was formed in 1966 and released in 1968 as part of the maize breeding work undertaken at the Katumani Research Station in Kenya which started in 1956.  Katumani Composite B was an advanced generation of Katumani Synthetic V X Katumani Synthetic VI.  It has slight photoperiod sensitivity and relatively small potential cob size.<br/>
+
+]]></MemoText>
+        </Memo>
+        <Command>[Phenology].Juvenile.Target.Value = 50</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 50</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 100</Command>
+        <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
+        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 14</Command>
+        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 405</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>04T19</Name>
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
@@ -7772,5 +7844,731 @@ namespace Models
     <DisabledSeries />
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
+  <Folder>
+    <Name>ControlledEnvironment</Name>
+    <Memo>
+      <Name>Memo</Name>
+      <MemoText><![CDATA[
+]]></MemoText>
+    </Memo>
+    <Experiment>
+      <Name>VanDelden</Name>
+      <Memo>
+        <Name>Memo</Name>
+        <MemoText><![CDATA[]]></MemoText>
+      </Memo>
+      <Factors>
+        <Name>Factors</Name>
+        <Factor>
+          <Name>Cv</Name>
+          <Operations>
+            <Name>Gibe</Name>
+            <Operation>
+              <Date>2000-01-01T00:00:00</Date>
+              <Action> [Teff].Sow(population:100., cultivar:"Gibe", depth:50, rowSpacing:250);</Action>
+            </Operation>
+          </Operations>
+          <Operations>
+            <Name>Ziquala</Name>
+            <Operation>
+              <Date>2000-01-01T00:00:00</Date>
+              <Action> [Teff].Sow(population:100., cultivar:"Gibe", depth:50, rowSpacing:250);</Action>
+            </Operation>
+          </Operations>
+          <Operations>
+            <Name>Ayana</Name>
+            <Operation>
+              <Date>2000-01-01T00:00:00</Date>
+              <Action> [Teff].Sow(population:100., cultivar:"Gibe", depth:50, rowSpacing:250);</Action>
+            </Operation>
+          </Operations>
+          <Operations>
+            <Name>04T19</Name>
+            <Operation>
+              <Date>2000-01-01T00:00:00</Date>
+              <Action> [Teff].Sow(population:100., cultivar:"Gibe", depth:50, rowSpacing:250);</Action>
+            </Operation>
+          </Operations>
+          <Specifications>
+            <string>[Sowing]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>PP</Name>
+          <Model xsi:type="ControlledEnvironment">
+            <Name>1</Name>
+            <MaxT>23</MaxT>
+            <MinT>16</MinT>
+            <Rain>0</Rain>
+            <Radn>25</Radn>
+            <PanEvap>5</PanEvap>
+            <VP>2</VP>
+            <Wind>0</Wind>
+            <CO2>350</CO2>
+            <Latitude>-2</Latitude>
+            <DayLength>9</DayLength>
+          </Model>
+          <Model xsi:type="ControlledEnvironment">
+            <Name>2</Name>
+            <MaxT>23</MaxT>
+            <MinT>16</MinT>
+            <Rain>0</Rain>
+            <Radn>25</Radn>
+            <PanEvap>5</PanEvap>
+            <VP>2</VP>
+            <Wind>0</Wind>
+            <CO2>350</CO2>
+            <Latitude>-2</Latitude>
+            <DayLength>10.5</DayLength>
+          </Model>
+          <Model xsi:type="ControlledEnvironment">
+            <Name>3</Name>
+            <MaxT>23</MaxT>
+            <MinT>16</MinT>
+            <Rain>0</Rain>
+            <Radn>25</Radn>
+            <PanEvap>5</PanEvap>
+            <VP>2</VP>
+            <Wind>0</Wind>
+            <CO2>350</CO2>
+            <Latitude>-2</Latitude>
+            <DayLength>12</DayLength>
+          </Model>
+          <Model xsi:type="ControlledEnvironment">
+            <Name>4</Name>
+            <MaxT>23</MaxT>
+            <MinT>16</MinT>
+            <Rain>0</Rain>
+            <Radn>25</Radn>
+            <PanEvap>5</PanEvap>
+            <VP>2</VP>
+            <Wind>0</Wind>
+            <CO2>350</CO2>
+            <Latitude>-2</Latitude>
+            <DayLength>13.5</DayLength>
+          </Model>
+          <Model xsi:type="ControlledEnvironment">
+            <Name>5</Name>
+            <MaxT>23</MaxT>
+            <MinT>16</MinT>
+            <Rain>0</Rain>
+            <Radn>25</Radn>
+            <PanEvap>5</PanEvap>
+            <VP>2</VP>
+            <Wind>0</Wind>
+            <CO2>350</CO2>
+            <Latitude>-2</Latitude>
+            <DayLength>15</DayLength>
+          </Model>
+          <Model xsi:type="ControlledEnvironment">
+            <Name>6</Name>
+            <MaxT>23</MaxT>
+            <MinT>16</MinT>
+            <Rain>0</Rain>
+            <Radn>25</Radn>
+            <PanEvap>5</PanEvap>
+            <VP>2</VP>
+            <Wind>0</Wind>
+            <CO2>350</CO2>
+            <Latitude>-2</Latitude>
+            <DayLength>16.5</DayLength>
+          </Model>
+          <Specifications>
+            <string>[ControlledEnvironment]</string>
+          </Specifications>
+        </Factor>
+      </Factors>
+      <Simulation>
+        <Name>VanDelden</Name>
+        <Clock>
+          <Name>clock</Name>
+          <StartDate>2000-01-01T00:00:00</StartDate>
+          <EndDate>2000-12-31T00:00:00</EndDate>
+        </Clock>
+        <Model xsi:type="ControlledEnvironment">
+          <Name>ControlledEnvironment</Name>
+          <MaxT>23</MaxT>
+          <MinT>16</MinT>
+          <Rain>0</Rain>
+          <Radn>25</Radn>
+          <PanEvap>5</PanEvap>
+          <VP>2</VP>
+          <Wind>0</Wind>
+          <CO2>350</CO2>
+          <Latitude>-2</Latitude>
+          <DayLength>9</DayLength>
+        </Model>
+        <Summary>
+          <Name>summaryfile</Name>
+        </Summary>
+        <SoilArbitrator>
+          <Name>Soil Arbitrator</Name>
+        </SoilArbitrator>
+        <Zone>
+          <Name>Field</Name>
+          <MicroClimate>
+            <Name>MicroClimate</Name>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
+          </MicroClimate>
+          <Irrigation>
+            <Name>Irrigation</Name>
+          </Irrigation>
+          <Fertiliser>
+            <Name>Fertiliser</Name>
+          </Fertiliser>
+          <SurfaceOrganicMatter>
+            <Name>SurfaceOrganicMatter</Name>
+            <ResidueTypes>
+              <Name>ResidueTypesList</Name>
+              <LoadFromResource>ResidueTypes</LoadFromResource>
+            </ResidueTypes>
+            <Pools>
+              <Pool>
+                <PoolName>maize</PoolName>
+                <ResidueType>maize</ResidueType>
+                <Mass>500</Mass>
+                <CNRatio>65</CNRatio>
+                <CPRatio>NaN</CPRatio>
+                <StandingFraction>0</StandingFraction>
+              </Pool>
+            </Pools>
+            <PoolName>maize</PoolName>
+            <type>maize</type>
+            <mass>500</mass>
+            <standing_fraction>0</standing_fraction>
+            <cpr />
+            <cnr>65</cnr>
+            <CriticalResidueWeight>2000</CriticalResidueWeight>
+            <OptimumDecompTemp>20</OptimumDecompTemp>
+            <MaxCumulativeEOS>20</MaxCumulativeEOS>
+            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+            <TotalLeachRain>25</TotalLeachRain>
+            <MinRainToLeach>10</MinRainToLeach>
+            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+            <DefaultCPRatio>0</DefaultCPRatio>
+            <DefaultStandingFraction>0</DefaultStandingFraction>
+            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
+          </SurfaceOrganicMatter>
+          <Operations>
+            <Name>Sowing</Name>
+          </Operations>
+          <Operations>
+            <Name>NRate</Name>
+            <Operation>
+              <Date>1985-11-08T00:00:00</Date>
+              <Action> [Fertiliser].Apply(50, Fertiliser.Types.NH4NO3N, 10);</Action>
+            </Operation>
+            <Operation>
+              <Date>1985-11-29T00:00:00</Date>
+              <Action> [Fertiliser].Apply(30, Fertiliser.Types.NH4NO3N, 10);</Action>
+            </Operation>
+          </Operations>
+          <Report>
+            <Name>Report</Name>
+            <VariableNames>
+              <string>[Clock].Today</string>
+              <string>[Teff].Phenology.DaysAfterSowing</string>
+              <string>[Teff].Leaf.AppearedCohortNo</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Clock].DoReport</string>
+            </EventNames>
+          </Report>
+          <Soil>
+            <Name>soil</Name>
+            <Water>
+              <Name>Water</Name>
+              <SoilCrop>
+                <Name>WheatSoil</Name>
+                <LL>
+                  <double>0.25</double>
+                  <double>0.25</double>
+                  <double>0.26</double>
+                  <double>0.32</double>
+                  <double>0.3</double>
+                  <double>0.27</double>
+                  <double>0.303</double>
+                  <double>0.31</double>
+                  <double>0.16</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.05</double>
+                  <double>0.04</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                  <double>0.01</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </XF>
+              </SoilCrop>
+              <SoilCrop>
+                <Name>TeffSoil</Name>
+                <LL>
+                  <double>0.25</double>
+                  <double>0.25</double>
+                  <double>0.26</double>
+                  <double>0.32</double>
+                  <double>0.3</double>
+                  <double>0.27</double>
+                  <double>0.303</double>
+                  <double>0.31</double>
+                  <double>0.16</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.05</double>
+                  <double>0.04</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                  <double>0.01</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </XF>
+              </SoilCrop>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>150</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>400</double>
+              </Thickness>
+              <BD>
+                <double>1.32</double>
+                <double>1.32</double>
+                <double>1.38</double>
+                <double>1.33</double>
+                <double>1.33</double>
+                <double>1.42</double>
+                <double>1.33</double>
+                <double>1.35</double>
+                <double>1.4</double>
+              </BD>
+              <AirDry>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.26</double>
+                <double>0.32</double>
+                <double>0.3</double>
+                <double>0.27</double>
+                <double>0.24</double>
+                <double>0.31</double>
+                <double>0.16</double>
+              </AirDry>
+              <LL15>
+                <double>0.31</double>
+                <double>0.31</double>
+                <double>0.313</double>
+                <double>0.376</double>
+                <double>0.356</double>
+                <double>0.3</double>
+                <double>0.303</double>
+                <double>0.31</double>
+                <double>0.16</double>
+              </LL15>
+              <DUL>
+                <double>0.413</double>
+                <double>0.413</double>
+                <double>0.454</double>
+                <double>0.495</double>
+                <double>0.495</double>
+                <double>0.418</double>
+                <double>0.4</double>
+                <double>0.37</double>
+                <double>0.29</double>
+              </DUL>
+              <SAT>
+                <double>0.453</double>
+                <double>0.453</double>
+                <double>0.479</double>
+                <double>0.498</double>
+                <double>0.498</double>
+                <double>0.464</double>
+                <double>0.457</double>
+                <double>0.435</double>
+                <double>0.38</double>
+              </SAT>
+            </Water>
+            <SoilWater>
+              <Name>SoilWater</Name>
+              <residueinterception>0</residueinterception>
+              <SummerDate>1-Nov</SummerDate>
+              <SummerU>9</SummerU>
+              <SummerCona>3</SummerCona>
+              <WinterDate>1-Apr</WinterDate>
+              <WinterU>9</WinterU>
+              <WinterCona>3</WinterCona>
+              <DiffusConst>88</DiffusConst>
+              <DiffusSlope>35.4</DiffusSlope>
+              <Salb>0.13</Salb>
+              <CN2Bare>50</CN2Bare>
+              <CNRed>20</CNRed>
+              <CNCov>0.8</CNCov>
+              <slope>NaN</slope>
+              <discharge_width>NaN</discharge_width>
+              <catchment_area>NaN</catchment_area>
+              <max_pond>0</max_pond>
+              <Thickness>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <SWCON>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+              </SWCON>
+            </SoilWater>
+            <SoilNitrogen>
+              <Name>SoilNitrogen</Name>
+              <fom_type>
+                <string>default</string>
+                <string>manure</string>
+                <string>mucuna</string>
+                <string>lablab</string>
+                <string>shemp</string>
+                <string>stable</string>
+              </fom_type>
+              <fract_carb>
+                <double>0.2</double>
+                <double>0.3</double>
+                <double>0.54</double>
+                <double>0.57</double>
+                <double>0.45</double>
+                <double>0</double>
+              </fract_carb>
+              <fract_cell>
+                <double>0.7</double>
+                <double>0.3</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.47</double>
+                <double>0.1</double>
+              </fract_cell>
+              <fract_lign>
+                <double>0.1</double>
+                <double>0.4</double>
+                <double>0.09</double>
+                <double>0.06</double>
+                <double>0.08</double>
+                <double>0.9</double>
+              </fract_lign>
+              <wfpsN2N2O_x>
+                <double>22</double>
+                <double>88</double>
+              </wfpsN2N2O_x>
+              <wfpsN2N2O_y>
+                <double>0.1</double>
+                <double>1</double>
+              </wfpsN2N2O_y>
+            </SoilNitrogen>
+            <SoilOrganicMatter>
+              <Name>SoilOrganicMatter</Name>
+              <RootCN>45</RootCN>
+              <RootWt>1000</RootWt>
+              <SoilCN>14.5</SoilCN>
+              <EnrACoeff>7.4</EnrACoeff>
+              <EnrBCoeff>0.2</EnrBCoeff>
+              <Thickness>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <Depth>
+                <string>0-10</string>
+                <string>10-20</string>
+                <string>20-30</string>
+                <string>30-50</string>
+                <string>50-70</string>
+                <string>70-90</string>
+                <string>90-110</string>
+                <string>110-130</string>
+                <string>130-150</string>
+              </Depth>
+              <OC>
+                <double>1.2</double>
+                <double>1</double>
+                <double>0.86</double>
+                <double>0.83</double>
+                <double>0.58</double>
+                <double>0.54</double>
+                <double>0.47</double>
+                <double>0.5</double>
+                <double>0.5</double>
+              </OC>
+              <FBiom>
+                <double>0.02</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+              </FBiom>
+              <FInert>
+                <double>0.42</double>
+                <double>0.5</double>
+                <double>0.58</double>
+                <double>0.55</double>
+                <double>0.86</double>
+                <double>0.9</double>
+                <double>0.95</double>
+                <double>0.95</double>
+                <double>0.95</double>
+              </FInert>
+              <OCUnits>Total</OCUnits>
+            </SoilOrganicMatter>
+            <Analysis>
+              <Name>Analysis</Name>
+              <Thickness>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <PH>
+                <double>6</double>
+                <double>6</double>
+                <double>6</double>
+                <double>6.2</double>
+                <double>6.5</double>
+                <double>6.7</double>
+                <double>6.8</double>
+                <double>6.8</double>
+                <double>6.8</double>
+              </PH>
+              <PHUnits>Water</PHUnits>
+              <BoronUnits>HotWater</BoronUnits>
+            </Analysis>
+            <Sample>
+              <Name>InitialN</Name>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <NO3>
+                <double>14.4</double>
+                <double>6.58</double>
+                <double>2.45</double>
+                <double>1.08</double>
+                <double>0.15</double>
+                <double>0.83</double>
+                <double>2.3</double>
+              </NO3>
+              <NH4>
+                <double>0.6</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+              </NH4>
+              <NO3Units>ppm</NO3Units>
+              <NH4Units>ppm</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
+            <Sample>
+              <Name>InitialSW</Name>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <SW>
+                <double>0.413</double>
+                <double>0.456</double>
+                <double>0.408</double>
+                <double>0.374</double>
+                <double>0.327</double>
+                <double>0.325</double>
+                <double>0.371</double>
+              </SW>
+              <NO3Units>ppm</NO3Units>
+              <NH4Units>ppm</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
+            <RecordNumber>0</RecordNumber>
+            <Latitude>0</Latitude>
+            <Longitude>0</Longitude>
+          </Soil>
+          <Manager>
+            <Name>TeffHarvesting</Name>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Teff;
+		[Link] Zone zone;
+					
+        
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Teff.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			{
+				Teff.Harvest();
+				Teff.EndCrop();
+			}
+		}
+		
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
+			
+		}
+	}
+}
+	   ]]></Code>
+          </Manager>
+          <Plant>
+            <Name>Teff</Name>
+            <CropType>Chickpea</CropType>
+          </Plant>
+          <Area>1</Area>
+          <Slope>0</Slope>
+        </Zone>
+        <Area>0</Area>
+        <Slope>0</Slope>
+      </Simulation>
+      <Graph>
+        <Name>Graph</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Teff.Phenology.DaysAfterSowing</XFieldName>
+          <YFieldName>Teff.Leaf.AppearedCohortNo</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+    </Experiment>
+  </Folder>
   <ExplorerWidth>513</ExplorerWidth>
 </Simulations>
