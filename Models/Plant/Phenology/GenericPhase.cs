@@ -4,6 +4,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
 using System.IO;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Phen
 {
@@ -86,6 +87,7 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Return a fraction of phase complete.
         /// </summary>
+        [XmlIgnore]
         public override double FractionComplete
         {
             get
