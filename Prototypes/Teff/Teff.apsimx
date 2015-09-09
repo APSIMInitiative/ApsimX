@@ -4,15 +4,15 @@
   <Replacements>
     <Name>Replacements</Name>
     <Plant>
-      <Name>Tef</Name>
+      <Name>Teff</Name>
       <Memo>
         <Name>TitlePage</Name>
         <MemoText><![CDATA[
-# The APSIM Tef Model
+# The APSIM Teff Model
 
-The APSIM Tef model has been developed using the Plant Modelling Framework (PMF)[brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. Tef, wheat, sorghum) can be achieved by the model developer without additional coding.
+The APSIM Teff model has been developed using the Plant Modelling Framework (PMF)[brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. Teff, wheat, sorghum) can be achieved by the model developer without additional coding.
 
-The APSIM Tef model includes components to simulate the following plant parts and processes:
+The APSIM Teff model includes components to simulate the following plant parts and processes:
 
 * Phenological development
 * Leaf and canopy development
@@ -32,14 +32,14 @@ The APSIM Tef model includes components to simulate the following plant parts an
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-The phenology model used in the APSIM Tef model follows the approach used in earlier cereal models [Carberry1989CERESMaize][vanOosterom200167][Wang2002GenericCropModel].  The model predicts development of primordia on the apex of the main stem and appearance of individual leaves to predict time to flag leaf.  Other stages use thermal time targets.  After emergence and an initial juvenile phase, photoperiod effects the timing of floral initiation.
+The phenology model used in the APSIM Teff model follows the approach used in earlier cereal models [Carberry1989CERESMaize;vanOosterom200167;Wang2002GenericCropModel].  The model predicts development of primordia on the apex of the main stem and appearance of individual leaves to predict time to flag leaf.  Other stages use thermal time targets.  After emergence and an initial juvenile phase, photoperiod effects the timing of floral initiation.
 ]]></MemoText>
         </Memo>
         <AirTemperatureFunction>
           <Name>ThermalTime</Name>
           <Memo>
             <Name>memo</Name>
-            <MemoText><![CDATA[Little information is available on the impact of air temperature on the rate of development of Tef as is the case for other crops.  Therefore, cardinal temperatures (ie base temperature, optimum temperature, maximum temperature) have been taken from previous work on modelling development in millet [vanOosterom200167].]]></MemoText>
+            <MemoText><![CDATA[Little information is available on the impact of air temperature on the rate of development of Teff as is the case for other crops.  Therefore, cardinal temperatures (ie base temperature, optimum temperature, maximum temperature) have been taken from previous work on modelling development in millet [vanOosterom200167].]]></MemoText>
           </Memo>
           <XYPairs>
             <Name>XYPairs</Name>
@@ -118,20 +118,21 @@ Data from [vanDelden2012] showed that panicle initiation occurred at leaf number
           <Constant>
             <Name>Target</Name>
             <Value>100</Value>
+            <Units>oC.d</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
           <Start>Emergence</Start>
-          <End>End_Juvenile</End>
+          <End>EndJuvenile</End>
         </GenericPhase>
         <GenericPhase>
           <Name>Photosensitive</Name>
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-Data from [vanDelden2012] showed that final leaf number for a selection of tef cultivars increased with increasing photoperiod.  A photoperiod response has been fitted to these data.  Cultivar Gibe showed an increase in final leaf number from 4 to 7 leaves as photoperiod increased from 10.3h to 13.5h.  Cultivar Ziquala showed an increase in final leaf number from 4 to 9 leaves as photoperiod increased from 11.5 h to 13.5h.  The photoperiod response for Dutch cultivars extended to much longer day lengths.  Cultivar Ayana showed an increase in final leaf number from 4 to 5 leaves as photoperiod increased from 10 h to 15 h. Cultivar 04T19  showed an increase in final leaf number from 4 to 7 leaves as photoperiod increased from 9.5 h to 17 h.<br/>
+Data from [vanDelden2012] showed that final leaf number for a selection of teff cultivars increased with increasing photoperiod.  A photoperiod response has been fitted to these data.  Cultivar Gibe showed an increase in final leaf number from 4 to 7 leaves as photoperiod increased from 10.3h to 13.5h.  Cultivar Ziquala showed an increase in final leaf number from 4 to 9 leaves as photoperiod increased from 11.5 h to 13.5h.  The photoperiod response for Dutch cultivars extended to much longer day lengths.  Cultivar Ayana showed an increase in final leaf number from 4 to 5 leaves as photoperiod increased from 10 h to 15 h. Cultivar 04T19  showed an increase in final leaf number from 4 to 7 leaves as photoperiod increased from 9.5 h to 17 h.<br/>
 ]]></MemoText>
           </Memo>
           <VariableReference>
@@ -142,114 +143,6 @@ Data from [vanDelden2012] showed that final leaf number for a selection of tef c
             <Name>Target</Name>
             <XYPairs>
               <Name>XYPairs</Name>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>Target</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <Marker>None</Marker>
-                  <Line>Solid</Line>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>Target</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <Marker>None</Marker>
-                  <Line>Solid</Line>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>Target</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <Marker>None</Marker>
-                  <Line>Solid</Line>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
               <X>
                 <double>0</double>
                 <double>10.3</double>
@@ -265,8 +158,8 @@ Data from [vanDelden2012] showed that final leaf number for a selection of tef c
             </XYPairs>
             <XProperty>[Phenology].Photoperiod.Value</XProperty>
           </LinearInterpolationFunction>
-          <Start>End_Juvenile</Start>
-          <End>Floral_Initiation</End>
+          <Start>EndJuvenile</Start>
+          <End>FloralInitiation</End>
         </GenericPhase>
         <LeafAppearancePhase>
           <Name>LeafAppearance</Name>
@@ -274,26 +167,27 @@ Data from [vanDelden2012] showed that final leaf number for a selection of tef c
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Start>Floral_Initiation</Start>
-          <End>Flag_Leaf</End>
+          <Start>FloralInitiation</Start>
+          <End>FlagLeaf</End>
         </LeafAppearancePhase>
         <GenericPhase>
           <Name>FlagLeafToFlowering</Name>
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-van Delden et al (2012) explain that many tef varieties are self-polinating with flowering co-incident with heading.  We assume that heading occurs one phyllochron after flag leaf.<br/>
+[vanDelden2012] explain that many teff varieties are self-polinating with flowering co-incident with heading.  We assume that heading occurs one phyllochron after flag leaf.<br/>
 ]]></MemoText>
           </Memo>
           <Constant>
             <Name>Target</Name>
             <Value>150</Value>
+            <Units>oC.d</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Start>Flag_Leaf</Start>
+          <Start>FlagLeaf</Start>
           <End>Flowering</End>
         </GenericPhase>
         <GenericPhase>
@@ -307,6 +201,7 @@ Unknown?????????????????????????????????????<br/>
           <Constant>
             <Name>Target</Name>
             <Value>120</Value>
+            <Units>oC.d</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -326,6 +221,7 @@ Unknown?????????????????????????????????????<br/>
           <Constant>
             <Name>Target</Name>
             <Value>550</Value>
+            <Units>oC.d</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -345,6 +241,7 @@ Unknown?????????????????????????????????????<br/>
           <Constant>
             <Name>Target</Name>
             <Value>10</Value>
+            <Units>oC.d</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -365,6 +262,7 @@ Unknown?????????????????????????????????????<br/>
           <Constant>
             <Name>Target</Name>
             <Value>10</Value>
+            <Units>oC.d</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -426,7 +324,6 @@ A function is used to provide maturity date as days after sowing(DAS).
           <SetEvent>Maturity</SetEvent>
           <ReSetEvent>never</ReSetEvent>
         </OnEventFunction>
-        <Emerged>false</Emerged>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -447,7 +344,7 @@ A function is used to provide maturity date as days after sowing(DAS).
               <Value>50</Value>
             </Constant>
             <Start>Emergence</Start>
-            <End>Floral_Initiation</End>
+            <End>FloralInitiation</End>
           </PhaseLookupValue>
         </PhaseLookup>
         <PhaseLookup>
@@ -510,7 +407,7 @@ A function is used to provide maturity date as days after sowing(DAS).
               <XProperty>[Structure].MainStemNodeNo</XProperty>
             </LinearInterpolationFunction>
             <Start>Emergence</Start>
-            <End>Flag_Leaf</End>
+            <End>FlagLeaf</End>
           </PhaseLookupValue>
         </PhaseLookup>
         <MainStemFinalNodeNumberFunction>
@@ -539,7 +436,7 @@ A function is used to provide maturity date as days after sowing(DAS).
               <Name>PostEventValue</Name>
               <VariableName>[Structure].MainStemPrimordiaNo</VariableName>
             </VariableReference>
-            <SetEvent>Floral_Initiation</SetEvent>
+            <SetEvent>FloralInitiation</SetEvent>
             <ReSetEvent />
           </OnEventFunction>
           <MaximumMainStemNodeNumber>30</MaximumMainStemNodeNumber>
@@ -686,7 +583,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                 <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Tef].WaterSupplyDemandRatio</XProperty>
+            <XProperty>[Teff].WaterSupplyDemandRatio</XProperty>
           </LinearInterpolationFunction>
         </HeightFunction>
         <Constant>
@@ -795,6 +692,7 @@ A function is used to provide maturity date as days after sowing(DAS).
         <Constant>
           <Name>MinimumNConc</Name>
           <Value>0.008</Value>
+          <Units>g/g</Units>
         </Constant>
         <PhaseLookup>
           <Name>MaximumNConc</Name>
@@ -803,6 +701,7 @@ A function is used to provide maturity date as days after sowing(DAS).
             <Constant>
               <Name>InitialNconc</Name>
               <Value>0.05</Value>
+              <Units>g/g</Units>
             </Constant>
             <Start>Flowering</Start>
             <End>StartGrainFill</End>
@@ -812,6 +711,7 @@ A function is used to provide maturity date as days after sowing(DAS).
             <Constant>
               <Name>FinalNconc</Name>
               <Value>0.013</Value>
+              <Units>g/g</Units>
             </Constant>
             <Start>StartGrainFill</Start>
             <End>EndGrainFill</End>
@@ -820,6 +720,7 @@ A function is used to provide maturity date as days after sowing(DAS).
         <Constant>
           <Name>WaterContent</Name>
           <Value>0.12</Value>
+          <Units>g/g</Units>
         </Constant>
         <PhaseLookup>
           <Name>NFillingRate</Name>
@@ -911,7 +812,7 @@ A function is used to provide maturity date as days after sowing(DAS).
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-The parameter KL is is described by Meinke et al (1993) to combine elements of soil conductivity (K) with root length (L) in determining root water uptake.  Peake et al (2013) demonstrated that in Tef KL varied with plant population through impacts on root length density.  Here we adjust KL linearly with plant population.
+The parameter KL is is described by Meinke et al (1993) to combine elements of soil conductivity (K) with root length (L) in determining root water uptake.  Peake et al (2013) demonstrated that in maize KL varied with plant population through impacts on root length density.  Here we adjust KL linearly with plant population.
 <br/>
 ]]></MemoText>
           </Memo>
@@ -926,7 +827,7 @@ The parameter KL is is described by Meinke et al (1993) to combine elements of s
               <double>1</double>
             </Y>
           </XYPairs>
-          <XProperty>[Tef].Population</XProperty>
+          <XProperty>[Teff].Population</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>SoilWaterEffect</Name>
@@ -963,7 +864,7 @@ Maximum daily N uptake is set to an arbitrarily high value.<br/>
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Tef model.<br/>
+Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-maize model.<br/>
 ]]></MemoText>
           </Memo>
           <Value>0.005</Value>
@@ -975,10 +876,12 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Te
         <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.01</Value>
+          <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
           <Value>0.01</Value>
+          <Units>g/g</Units>
         </Constant>
         <LinearInterpolationFunction>
           <Name>PartitionFraction</Name>
@@ -1006,7 +909,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Te
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day in their analysis of historical Tef yield trends in the US corn belt.
+Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day in their analysis of historical maize yield trends in the US corn belt.
 <br/>
 ]]></MemoText>
           </Memo>
@@ -1210,7 +1113,7 @@ Potential leaf area is calculated from leaf number using the approach of Keating
                 <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Tef].WaterSupplyDemandRatio</XProperty>
+            <XProperty>[Teff].WaterSupplyDemandRatio</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>ExpansionStress</Name>
@@ -1225,7 +1128,7 @@ Potential leaf area is calculated from leaf number using the approach of Keating
                 <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Tef].WaterSupplyDemandRatio</XProperty>
+            <XProperty>[Teff].WaterSupplyDemandRatio</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>GrowthDuration</Name>
@@ -1306,10 +1209,12 @@ Potential leaf area is calculated from leaf number using the approach of Keating
           <Constant>
             <Name>CriticalNConc</Name>
             <Value>0.015</Value>
+            <Units>g/g</Units>
           </Constant>
           <Constant>
             <Name>MinimumNConc</Name>
             <Value>0.008</Value>
+            <Units>g/g</Units>
           </Constant>
           <AddFunction>
             <Name>DroughtInducedSenAcceleration</Name>
@@ -1336,7 +1241,7 @@ Potential leaf area is calculated from leaf number using the approach of Keating
                     <double>0</double>
                   </Y>
                 </XYPairs>
-                <XProperty>[Tef].WaterSupplyDemandRatio</XProperty>
+                <XProperty>[Teff].WaterSupplyDemandRatio</XProperty>
               </LinearInterpolationFunction>
             </MultiplyFunction>
           </AddFunction>
@@ -1651,7 +1556,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
                 <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Tef].WaterSupplyDemandRatio</XProperty>
+            <XProperty>[Teff].WaterSupplyDemandRatio</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
         <LinearInterpolationFunction>
@@ -2028,7 +1933,7 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-The variety Katumani Composite B was formed in 1966 and released in 1968 as part of the Tef breeding work undertaken at the Katumani Research Station in Kenya which started in 1956.  Katumani Composite B was an advanced generation of Katumani Synthetic V X Katumani Synthetic VI.  It has slight photoperiod sensitivity and relatively small potential cob size.<br/>
+The variety Katumani Composite B was formed in 1966 and released in 1968 as part of the maize breeding work undertaken at the Katumani Research Station in Kenya which started in 1956.  Katumani Composite B was an advanced generation of Katumani Synthetic V X Katumani Synthetic VI.  It has slight photoperiod sensitivity and relatively small potential cob size.<br/>
 
 ]]></MemoText>
         </Memo>
@@ -2041,17 +1946,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 14</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 405</Command>
       </Cultivar>
-      <Memo>
-        <Name>References</Name>
-        <MemoText><![CDATA[
-<h2>References</h2>
-Brown, H.E., Huth, N.I., Holzworth, D.P., Teixeira, E.I., Zyskowski, R.F., Hargreaves, J.N., Moot, D.J., 2014. Plant modelling framework: software for building and running crop models on the APSIM platform. Environmental Modelling & Software 62 385-398.<br/>
-<br/>
-van Delden, S.H., Vos, J., Stomph, T.-J., Brouwer, G., Struik, P.C., 2012. Photoperiodism in Eragrostis tef: Analysis of ontogeny and morphology in response to photoperiod. European Journal of Agronomy 37(1) 105-114.<br/>
-
-]]></MemoText>
-      </Memo>
-      <CropType>Tef</CropType>
+      <CropType>Teff</CropType>
     </Plant>
   </Replacements>
   <Folder>
@@ -2302,7 +2197,6 @@ van Delden, S.H., Vos, J., Stomph, T.-J., Brouwer, G., Struik, P.C., 2012. Photo
           <StartStageForCumulativeVD>Germination</StartStageForCumulativeVD>
           <EndStageForCumulativeVD>TerminalSpikelet</EndStageForCumulativeVD>
         </VernalisationCW>
-        <Emerged>false</Emerged>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -3533,7 +3427,7 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             <Name>Teff</Name>
             <Operation>
               <Date>1990-05-20T00:00:00</Date>
-              <Action> [Tef].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
+              <Action> [Teff].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -3736,7 +3630,7 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
                 </XF>
               </SoilCrop>
               <SoilCrop>
-                <Name>TefSoil</Name>
+                <Name>TeffSoil</Name>
                 <LL>
                   <double>0.25</double>
                   <double>0.25</double>
@@ -4083,21 +3977,21 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>[Tef].Phenology.CurrentStageName as Stage</string>
-              <string>[Tef].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Tef].Grain.Yield</string>
-              <string>[Tef].Grain.Size as GrainSize</string>
-              <string>[Tef].Grain.Live.Wt as GrainWt</string>
-              <string>[Tef].Structure.MainStemFinalNodeNo</string>
-              <string>[Tef].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Tef].Phenology.MaturityDAS.Value  as MaturityDAS</string>
+              <string>[Teff].Phenology.CurrentStageName as Stage</string>
+              <string>[Teff].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Teff].Grain.Yield</string>
+              <string>[Teff].Grain.Size as GrainSize</string>
+              <string>[Teff].Grain.Live.Wt as GrainWt</string>
+              <string>[Teff].Structure.MainStemFinalNodeNo</string>
+              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
-              <string>[Tef].Harvesting</string>
+              <string>[Teff].Harvesting</string>
             </EventNames>
           </Report>
           <Manager>
-            <Name>TefHarvesting</Name>
+            <Name>TeffHarvesting</Name>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -4114,7 +4008,7 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{      
-		[Link] Plant Tef;          
+		[Link] Plant Teff;          
 		[Link] Zone zone;			
 					
         
@@ -4126,10 +4020,10 @@ namespace Models
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-        if (Tef.Phenology.CurrentPhaseName=="ReadyForHarvesting")
+        if (Teff.Phenology.CurrentPhaseName=="ReadyForHarvesting")
            {
-           Tef.Harvest();
-           Tef.EndCrop();
+           Teff.Harvest();
+           Teff.EndCrop();
            }
 		}
 		
@@ -4143,7 +4037,7 @@ namespace Models
 	   ]]></Code>
           </Manager>
           <Plant>
-            <Name>Tef</Name>
+            <Name>Teff</Name>
             <CropType>Chickpea</CropType>
           </Plant>
           <Area>1</Area>
@@ -4169,7 +4063,7 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
             <Name>Teff</Name>
             <Operation>
               <Date>1990-05-20T00:00:00</Date>
-              <Action> [Tef].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
+              <Action> [Teff].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -4372,7 +4266,7 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
                 </XF>
               </SoilCrop>
               <SoilCrop>
-                <Name>TefSoil</Name>
+                <Name>TeffSoil</Name>
                 <LL>
                   <double>0.25</double>
                   <double>0.25</double>
@@ -4719,21 +4613,21 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>[Tef].Phenology.CurrentStageName as Stage</string>
-              <string>[Tef].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Tef].Grain.Yield</string>
-              <string>[Tef].Grain.Size as GrainSize</string>
-              <string>[Tef].Grain.Live.Wt as GrainWt</string>
-              <string>[Tef].Structure.MainStemFinalNodeNo</string>
-              <string>[Tef].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Tef].Phenology.MaturityDAS.Value  as MaturityDAS</string>
+              <string>[Teff].Phenology.CurrentStageName as Stage</string>
+              <string>[Teff].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Teff].Grain.Yield</string>
+              <string>[Teff].Grain.Size as GrainSize</string>
+              <string>[Teff].Grain.Live.Wt as GrainWt</string>
+              <string>[Teff].Structure.MainStemFinalNodeNo</string>
+              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
-              <string>[Tef].Harvesting</string>
+              <string>[Teff].Harvesting</string>
             </EventNames>
           </Report>
           <Manager>
-            <Name>TefHarvesting</Name>
+            <Name>TeffHarvesting</Name>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -4750,7 +4644,7 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{      
-		[Link] Plant Tef;          
+		[Link] Plant Teff;          
 		[Link] Zone zone;			
 					
         
@@ -4762,10 +4656,10 @@ namespace Models
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-        if (Tef.Phenology.CurrentPhaseName=="ReadyForHarvesting")
+        if (Teff.Phenology.CurrentPhaseName=="ReadyForHarvesting")
            {
-           Tef.Harvest();
-           Tef.EndCrop();
+           Teff.Harvest();
+           Teff.EndCrop();
            }
 		}
 		
@@ -4779,7 +4673,7 @@ namespace Models
 	   ]]></Code>
           </Manager>
           <Plant>
-            <Name>Tef</Name>
+            <Name>Teff</Name>
             <CropType>Chickpea</CropType>
           </Plant>
           <Area>1</Area>
@@ -4805,14 +4699,14 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <Name>Low</Name>
             <Operation>
               <Date>2010-11-15T00:00:00</Date>
-              <Action> [Tef].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
+              <Action> [Teff].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>High</Name>
             <Operation>
               <Date>2010-11-15T00:00:00</Date>
-              <Action> [Tef].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
+              <Action> [Teff].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -5049,7 +4943,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
-              <string>Tef.Leaf.LAI</string>
+              <string>Teff.Leaf.LAI</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -5081,7 +4975,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
                 </XF>
               </SoilCrop>
               <SoilCrop>
-                <Name>TefSoil</Name>
+                <Name>TeffSoil</Name>
                 <LL>
                   <double>0.17</double>
                   <double>0.17</double>
@@ -5383,21 +5277,21 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>[Tef].Phenology.CurrentStageName as Stage</string>
-              <string>[Tef].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Tef].Grain.Yield</string>
-              <string>[Tef].Grain.Size as GrainSize</string>
-              <string>[Tef].Grain.Live.Wt as GrainWt</string>
-              <string>[Tef].Structure.MainStemFinalNodeNo</string>
-              <string>[Tef].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Tef].Phenology.MaturityDAS.Value  as MaturityDAS</string>
+              <string>[Teff].Phenology.CurrentStageName as Stage</string>
+              <string>[Teff].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Teff].Grain.Yield</string>
+              <string>[Teff].Grain.Size as GrainSize</string>
+              <string>[Teff].Grain.Live.Wt as GrainWt</string>
+              <string>[Teff].Structure.MainStemFinalNodeNo</string>
+              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
-              <string>[Tef].Harvesting</string>
+              <string>[Teff].Harvesting</string>
             </EventNames>
           </Report>
           <Manager>
-            <Name>TefHarvesting</Name>
+            <Name>TeffHarvesting</Name>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -5414,7 +5308,7 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{      
-		[Link] Plant Tef;          
+		[Link] Plant Teff;          
 		[Link] Zone zone;			
 					
         
@@ -5426,10 +5320,10 @@ namespace Models
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-        if (Tef.Phenology.CurrentPhaseName=="ReadyForHarvesting")
+        if (Teff.Phenology.CurrentPhaseName=="ReadyForHarvesting")
            {
-           Tef.Harvest();
-           Tef.EndCrop();
+           Teff.Harvest();
+           Teff.EndCrop();
            }
 		}
 		
@@ -5443,7 +5337,7 @@ namespace Models
 	   ]]></Code>
           </Manager>
           <Plant>
-            <Name>Tef</Name>
+            <Name>Teff</Name>
             <CropType>Chickpea</CropType>
           </Plant>
           <Area>1</Area>
@@ -5464,7 +5358,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Tef.Leaf.LAI</YFieldName>
+          <YFieldName>Teff.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5702,7 +5596,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <Name>Sowing</Name>
             <Operation>
               <Date>2011-12-01T00:00:00</Date>
-              <Action> [Tef].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
+              <Action> [Teff].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
           <Operations>
@@ -5734,7 +5628,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
-              <string>Tef.Leaf.LAI</string>
+              <string>Teff.Leaf.LAI</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -5781,7 +5675,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
                 </XF>
               </SoilCrop>
               <SoilCrop>
-                <Name>TefSoil</Name>
+                <Name>TeffSoil</Name>
                 <LL>
                   <double>0.25</double>
                   <double>0.25</double>
@@ -6128,21 +6022,21 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>[Tef].Phenology.CurrentStageName as Stage</string>
-              <string>[Tef].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Tef].Grain.Yield</string>
-              <string>[Tef].Grain.Size as GrainSize</string>
-              <string>[Tef].Grain.Live.Wt as GrainWt</string>
-              <string>[Tef].Structure.MainStemFinalNodeNo</string>
-              <string>[Tef].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Tef].Phenology.MaturityDAS.Value  as MaturityDAS</string>
+              <string>[Teff].Phenology.CurrentStageName as Stage</string>
+              <string>[Teff].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Teff].Grain.Yield</string>
+              <string>[Teff].Grain.Size as GrainSize</string>
+              <string>[Teff].Grain.Live.Wt as GrainWt</string>
+              <string>[Teff].Structure.MainStemFinalNodeNo</string>
+              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
-              <string>[Tef].Harvesting</string>
+              <string>[Teff].Harvesting</string>
             </EventNames>
           </Report>
           <Manager>
-            <Name>TefHarvesting</Name>
+            <Name>TeffHarvesting</Name>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -6159,7 +6053,7 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{      
-		[Link] Plant Tef;          
+		[Link] Plant Teff;          
 		[Link] Zone zone;			
 					
         
@@ -6171,10 +6065,10 @@ namespace Models
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-        if (Tef.Phenology.CurrentPhaseName=="ReadyForHarvesting")
+        if (Teff.Phenology.CurrentPhaseName=="ReadyForHarvesting")
            {
-           Tef.Harvest();
-           Tef.EndCrop();
+           Teff.Harvest();
+           Teff.EndCrop();
            }
 		}
 		
@@ -6188,7 +6082,7 @@ namespace Models
 	   ]]></Code>
           </Manager>
           <Plant>
-            <Name>Tef</Name>
+            <Name>Teff</Name>
             <CropType>Chickpea</CropType>
           </Plant>
           <Area>1</Area>
@@ -6209,7 +6103,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Tef.Leaf.LAI</YFieldName>
+          <YFieldName>Teff.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -6441,7 +6335,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <Name>Sowing</Name>
             <Operation>
               <Date>2008-08-02T00:00:00</Date>
-              <Action> [Tef].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
+              <Action> [Teff].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
           <Operations>
@@ -6470,22 +6364,22 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
-              <string>[Tef].Leaf.LAI</string>
-              <string>[Tef].Summariser.Total.Wt as AboveGroundBiomass</string>
-              <string>[Tef].Grain.Live.Wt as GrainWt</string>
-              <string>[Tef].Grain.Size as GrainSize</string>
-              <string>[Tef].Leaf.Transpiration</string>
-              <string>[Tef].Root.Depth</string>
-              <string>[Tef].Leaf.Fw</string>
-              <string>[Tef].Leaf.Fn</string>
-              <string>[Tef].Leaf.Photosynthesis.Value</string>
-              <string>[Tef].Stem.Live.Wt</string>
-              <string>[Tef].Panicle.Live.Wt</string>
-              <string>[Tef].Leaf.Total.Wt</string>
-              <string>[Tef].Panicle.DMDemandFunction.Value</string>
-              <string>[Tef].Leaf.Live.Wt</string>
-              <string>[Tef].Leaf.Dead.Wt</string>
-              <string>[Tef].Leaf.CoverGreen</string>
+              <string>[Teff].Leaf.LAI</string>
+              <string>[Teff].Summariser.Total.Wt as AboveGroundBiomass</string>
+              <string>[Teff].Grain.Live.Wt as GrainWt</string>
+              <string>[Teff].Grain.Size as GrainSize</string>
+              <string>[Teff].Leaf.Transpiration</string>
+              <string>[Teff].Root.Depth</string>
+              <string>[Teff].Leaf.Fw</string>
+              <string>[Teff].Leaf.Fn</string>
+              <string>[Teff].Leaf.Photosynthesis.Value</string>
+              <string>[Teff].Stem.Live.Wt</string>
+              <string>[Teff].Panicle.Live.Wt</string>
+              <string>[Teff].Leaf.Total.Wt</string>
+              <string>[Teff].Panicle.DMDemandFunction.Value</string>
+              <string>[Teff].Leaf.Live.Wt</string>
+              <string>[Teff].Leaf.Dead.Wt</string>
+              <string>[Teff].Leaf.CoverGreen</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -6520,7 +6414,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
                 </XF>
               </SoilCrop>
               <SoilCrop>
-                <Name>TefSoil</Name>
+                <Name>TeffSoil</Name>
                 <LL>
                   <double>0.14</double>
                   <double>0.14</double>
@@ -6838,21 +6732,21 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>[Tef].Phenology.CurrentStageName as Stage</string>
-              <string>[Tef].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Tef].Grain.Yield</string>
-              <string>[Tef].Grain.Size as GrainSize</string>
-              <string>[Tef].Grain.Live.Wt as GrainWt</string>
-              <string>[Tef].Structure.MainStemFinalNodeNo</string>
-              <string>[Tef].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Tef].Phenology.MaturityDAS.Value  as MaturityDASS</string>
+              <string>[Teff].Phenology.CurrentStageName as Stage</string>
+              <string>[Teff].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Teff].Grain.Yield</string>
+              <string>[Teff].Grain.Size as GrainSize</string>
+              <string>[Teff].Grain.Live.Wt as GrainWt</string>
+              <string>[Teff].Structure.MainStemFinalNodeNo</string>
+              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDASS</string>
             </VariableNames>
             <EventNames>
-              <string>[Tef].Harvesting</string>
+              <string>[Teff].Harvesting</string>
             </EventNames>
           </Report>
           <Manager>
-            <Name>TefHarvesting</Name>
+            <Name>TeffHarvesting</Name>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -6869,7 +6763,7 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{
-		[Link] Plant Tef;
+		[Link] Plant Teff;
 		[Link] Zone zone;
 					
         
@@ -6881,10 +6775,10 @@ namespace Models
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (Tef.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			if (Teff.Phenology.CurrentPhaseName == "ReadyForHarvesting")
 			{
-				Tef.Harvest();
-				Tef.EndCrop();
+				Teff.Harvest();
+				Teff.EndCrop();
 			}
 		}
 		
@@ -6898,7 +6792,7 @@ namespace Models
 	   ]]></Code>
           </Manager>
           <Plant>
-            <Name>Tef</Name>
+            <Name>Teff</Name>
             <CropType>Chickpea</CropType>
           </Plant>
           <Area>1</Area>
@@ -6919,7 +6813,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Tef.Leaf.LAI</YFieldName>
+          <YFieldName>Teff.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -7060,7 +6954,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Tef.Leaf.CoverGreen</YFieldName>
+          <YFieldName>Teff.Leaf.CoverGreen</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -7348,7 +7242,7 @@ Field Crops Research 116 (2010) 196204
             <Name>Sowing</Name>
             <Operation>
               <Date>2009-07-31T00:00:00</Date>
-              <Action> [Tef].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
+              <Action> [Teff].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
           <Operations>
@@ -7394,7 +7288,7 @@ Field Crops Research 116 (2010) 196204
                 </XF>
               </SoilCrop>
               <SoilCrop>
-                <Name>TefSoil</Name>
+                <Name>TeffSoil</Name>
                 <LL>
                   <double>0.14</double>
                   <double>0.14</double>
@@ -7725,17 +7619,17 @@ Field Crops Research 116 (2010) 196204
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>[Tef].Phenology.CurrentStageName as Stage</string>
-              <string>[Tef].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Tef].Grain.Yield</string>
-              <string>[Tef].Grain.Size as GrainSize</string>
-              <string>[Tef].Grain.Live.Wt as GrainWt</string>
-              <string>[Tef].Structure.MainStemFinalNodeNo</string>
-              <string>[Tef].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Tef].Phenology.MaturityDAS.Value  as MaturityDAS</string>
+              <string>[Teff].Phenology.CurrentStageName as Stage</string>
+              <string>[Teff].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Teff].Grain.Yield</string>
+              <string>[Teff].Grain.Size as GrainSize</string>
+              <string>[Teff].Grain.Live.Wt as GrainWt</string>
+              <string>[Teff].Structure.MainStemFinalNodeNo</string>
+              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
-              <string>[Tef].Harvesting</string>
+              <string>[Teff].Harvesting</string>
             </EventNames>
           </Report>
           <Manager>
@@ -7756,7 +7650,7 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{
-		[Link] Plant Tef;
+		[Link] Plant Teff;
 		[Link] Zone zone;
 					
         
@@ -7768,10 +7662,10 @@ namespace Models
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (Tef.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			if (Teff.Phenology.CurrentPhaseName == "ReadyForHarvesting")
 			{
-				Tef.Harvest();
-				Tef.EndCrop();
+				Teff.Harvest();
+				Teff.EndCrop();
 			}
 		}
 		
@@ -7785,7 +7679,7 @@ namespace Models
 	   ]]></Code>
           </Manager>
           <Plant>
-            <Name>Tef</Name>
+            <Name>Teff</Name>
             <CropType>Chickpea</CropType>
           </Plant>
           <Area>1</Area>
