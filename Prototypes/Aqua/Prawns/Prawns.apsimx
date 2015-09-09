@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
+  <Name>Simulations</Name>
+  <Simulation>
+    <Name>Prawns</Name>
+    <Weather>
+      <Name>Weather</Name>
+      <FileName>Ingham.met</FileName>
+    </Weather>
+    <Clock>
+      <Name>clock</Name>
+      <StartDate>1990-01-01T00:00:00</StartDate>
+      <EndDate>1990-12-31T00:00:00</EndDate>
+    </Clock>
+    <Summary>
+      <Name>summaryfile</Name>
+    </Summary>
+    <Zone>
+      <Name>Pond</Name>
+      <PondWater>
+        <Name>PondWater</Name>
+        <SurfaceArea>10000</SurfaceArea>
+        <MaxPondDepth>1</MaxPondDepth>
+        <Kpan>1</Kpan>
+      </PondWater>
+      <FoodInPond>
+        <Name>FoodInPond</Name>
+      </FoodInPond>
+      <Prawns>
+        <Name>Prawns</Name>
+        <PrawnSpecies>Penaeus Monodon</PrawnSpecies>
+        <Ki1>0.101</Ki1>
+        <Ki2>0.65</Ki2>
+        <Ki3>2200</Ki3>
+        <Ki4>0.33</Ki4>
+        <Ki5>0.37</Ki5>
+        <Ki6>0.026</Ki6>
+        <Ki7>0.62</Ki7>
+        <Ki8>0.015</Ki8>
+        <Kt1>36</Kt1>
+        <Kt2>15</Kt2>
+        <Kt3>2</Kt3>
+        <Km1>0.115</Km1>
+        <Km2>0.8</Km2>
+        <Ks1>0.0032</Ks1>
+        <Kg1>0.2</Kg1>
+        <Kg4>0.4</Kg4>
+        <Kd1>0.0006</Kd1>
+        <Kd2>0.1</Kd2>
+        <Kd3>20</Kd3>
+        <Kd4>4</Kd4>
+        <Kd5>2.5</Kd5>
+      </Prawns>
+      <Folder>
+        <Name>Manager folder</Name>
+        <Manager>
+          <Name>Add water on fixed date</Name>
+          <Script>
+            <added_date>01-jan</added_date>
+            <volume>10000</volume>
+            <temperature>15</temperature>
+            <salinity>5</salinity>
+            <ph>2</ph>
+            <n>3</n>
+            <p>4</p>
+            <tss>10</tss>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+using Models.Aqua;
+
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+
+		[Link] Clock Clock;
+		[Link] Summary Summary;
+		[Link] PondWater PondWater;
+		
+		
+	    [Description("Add Water on this date (dd-mmm)")]
+		public string added_date {get; set;}
+		
+		[Description("Volume of Water Added (m^3)")]
+		public double volume {get; set;}
+		
+		[Description("Temperature of Water Added (oC)")]
+		public double temperature {get; set;}
+		
+		[Description("Salinity of Water Added (kg/m^3)")]
+		public double salinity {get; set;}
+		
+		[Description("PH of Water Added")]
+		public double ph {get; set;}
+		
+		[Description("Nitrogen of Water Added (kg/m^3)")]
+		public double n {get; set;}
+	
+	    [Description("Phosphorus of Water Added (kg/m^3)")]
+		public double p {get; set;}
+		
+		[Description("Total Suspended Solids of Water Added (kg/m^3)")]
+		public double tss {get; set;}
+
+
+        
+       [EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+		}
+        
+        
+        
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{
+
+        if (DateUtilities.DatesEqual(added_date, Clock.Today))
+			{
+			WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);
+			PondWater.Fill(Volume: volume, WaterProperties: addedProps);
+			}
+
+		}
+      
+	}
+}
+]]></Code>
+        </Manager>
+        <Manager>
+          <Name>Add water on fixed date1</Name>
+          <Script>
+            <added_date>01-oct</added_date>
+            <volume>10000</volume>
+            <temperature>15</temperature>
+            <salinity>5</salinity>
+            <ph>2</ph>
+            <n>3</n>
+            <p>4</p>
+            <tss>10</tss>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+using Models.Aqua;
+
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+
+		[Link] Clock Clock;
+		[Link] Summary Summary;
+		[Link] PondWater PondWater;
+		
+		
+		[Description("Add Water on this date (dd-mmm)")]
+		public string added_date { get; set; }
+		
+		[Description("Volume of Water Added (m^3)")]
+		public double volume { get; set; }
+		
+		[Description("Temperature of Water Added (oC)")]
+		public double temperature { get; set; }
+		
+		[Description("Salinity of Water Added (kg/m^3)")]
+		public double salinity { get; set; }
+		
+		[Description("PH of Water Added")]
+		public double ph { get; set; }
+		
+		[Description("Nitrogen of Water Added (kg/m^3)")]
+		public double n { get; set; }
+	
+		[Description("Phosphorus of Water Added (kg/m^3)")]
+		public double p { get; set; }
+		
+		[Description("Total Suspended Solids of Water Added (kg/m^3)")]
+		public double tss { get; set; }
+
+
+        
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+		}
+        
+        
+        
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{
+
+			if (DateUtilities.DatesEqual(added_date, Clock.Today))
+			{
+				WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);
+				PondWater.Fill(Volume: volume, WaterProperties: addedProps);
+			}
+
+		}
+      
+	}
+}
+]]></Code>
+        </Manager>
+        <Manager>
+          <Name>Add Feed on fixed date</Name>
+          <Script>
+            <added_date>05-jan</added_date>
+            <FeedName>TestFeed</FeedName>
+            <DryMatter>400</DryMatter>
+            <Nitrogen>20</Nitrogen>
+            <DigestibleEnergy>3000</DigestibleEnergy>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+using Models.Aqua;
+
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+
+		[Link] Clock Clock;
+		[Link] Summary Summary;
+		[Link] FoodInPond FoodInPond;
+		
+		
+	    [Description("Add feed on this date (dd-mmm)")]
+		public string added_date {get; set;}
+
+	    [Description("Name of the feed")]
+		public string FeedName {get; set;}
+		
+		[Description("Amount of feed added (as Dry Matter) (kg)")]
+		public double DryMatter {get; set;}
+		
+		[Description("Amount of Nitrogen in the feed added (kg)")]
+		public double Nitrogen {get; set;}
+		
+		[Description("Amount of Digestible Energy in the feed added (MJ)")]
+		public double DigestibleEnergy {get; set;}
+		
+
+
+        
+       [EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+		}
+        
+        
+        
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{
+
+        if (DateUtilities.DatesEqual(added_date, Clock.Today))
+			{
+			Feed newFeed = new Feed(FeedName, DryMatter, Nitrogen, DigestibleEnergy);
+			FoodInPond.Food.AddFeed(newFeed);
+			}
+
+		}
+      
+	}
+}
+]]></Code>
+        </Manager>
+        <Manager>
+          <Name>Add Feed on fixed date1</Name>
+          <Script>
+            <added_date>10-jan</added_date>
+            <FeedName>ShaunFeed</FeedName>
+            <DryMatter>100</DryMatter>
+            <Nitrogen>20</Nitrogen>
+            <DigestibleEnergy>3000</DigestibleEnergy>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+using Models.Aqua;
+
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+
+		[Link] Clock Clock;
+		[Link] Summary Summary;
+		[Link] FoodInPond FoodInPond;
+		
+		
+		[Description("Add feed on this date (dd-mmm)")]
+		public string added_date { get; set; }
+
+		[Description("Name of the feed")]
+		public string FeedName { get; set; }
+		
+		[Description("Amount of feed added (as Dry Matter) (kg)")]
+		public double DryMatter { get; set; }
+		
+		[Description("Amount of Nitrogen in the feed added (kg)")]
+		public double Nitrogen { get; set; }
+		
+		[Description("Amount of Digestible Energy in the feed added (MJ)")]
+		public double DigestibleEnergy { get; set; }
+		
+
+
+        
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+		}
+        
+        
+        
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{
+
+			if (DateUtilities.DatesEqual(added_date, Clock.Today))
+			{
+				Feed newFeed = new Feed(FeedName, DryMatter, Nitrogen, DigestibleEnergy);
+				FoodInPond.Food.AddFeed(newFeed);
+			}
+
+		}
+      
+	}
+}
+]]></Code>
+        </Manager>
+        <Manager>
+          <Name>Add Prawns on fixed date</Name>
+          <Script>
+            <added_date>05-jan</added_date>
+            <NumberOfPrawns>1000</NumberOfPrawns>
+            <LiveWeight>1</LiveWeight>
+            <NitrogenMass>0.02</NitrogenMass>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+using Models.Aqua;
+
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+
+		[Link] Clock Clock;
+		[Link] Summary Summary;
+		[Link] Prawns Prawns;
+		
+		
+		[Description("Add feed on this date (dd-mmm)")]
+		public string added_date { get; set; }
+
+		[Description("Number of prawns to add to the pond")]
+		public int NumberOfPrawns { get; set; }
+		
+		[Description("Starting live weight of a prawn (g/prawn)")]
+		public double LiveWeight { get; set; }
+		
+		[Description("Starting mass of Nitrogen in a prawn (g N/prawn)")]
+		public double NitrogenMass { get; set; }
+		
+
+        
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+		}
+        
+        
+        
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{
+
+			if (DateUtilities.DatesEqual(added_date, Clock.Today))
+			{
+				Prawns.AddPrawnsToPond(NumberOfPrawns, LiveWeight, NitrogenMass);
+			}
+
+		}
+      
+	}
+}
+]]></Code>
+        </Manager>
+      </Folder>
+      <Report>
+        <Name>Report</Name>
+        <VariableNames>
+          <string>[Clock].Today</string>
+          <string>[FoodInPond].Food.TotalDM as FoodDM</string>
+          <string>[FoodInPond].Food.TotalN as FoodN</string>
+          <string>[FoodInPond].Food.TotalDE as FoodDE </string>
+          <string>[Prawns].NumOfPrawns as Prawns</string>
+          <string>[Prawns].LiveWeight as Weight</string>
+          <string>[Prawns].Nitrogen as NWeight</string>
+          <string>[Prawns].Deaths as Deaths</string>
+          <string>[Prawns].ConsumedDM as Consumed</string>
+          <string>[Prawns].FaecesDM as Faeces</string>
+          <string>[Prawns].ExcretedNH4 as Ammonium</string>
+          <string>[FoodInPond].Food.FeedNames as FoodNames</string>
+          <string>[FoodInPond].Food.FeedDMs as FoodDEs</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].DoReport</string>
+        </EventNames>
+      </Report>
+      <Graph>
+        <Name>Graph</Name>
+        <Series>
+          <Name>Series 0</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FoodDM</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FoodN</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series3</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16711936</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FoodDE</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>kg</Title>
+          <Inverted>false</Inverted>
+          <Minimum>0</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Graph1</Name>
+        <Series>
+          <Name>Series 0</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Prawns</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Deaths</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>kg</Title>
+          <Inverted>false</Inverted>
+          <Minimum>0</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Graph2</Name>
+        <Series>
+          <Name>Series 0</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weight</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Consumed</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series3</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16711936</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Deaths</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>kg</Title>
+          <Inverted>false</Inverted>
+          <Minimum>0</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Area>1</Area>
+      <Slope>0</Slope>
+    </Zone>
+    <Area>0</Area>
+    <Slope>0</Slope>
+  </Simulation>
+  <DataStore>
+    <Name>DataStore</Name>
+    <AutoExport>false</AutoExport>
+  </DataStore>
+  <ExplorerWidth>250</ExplorerWidth>
+</Simulations>

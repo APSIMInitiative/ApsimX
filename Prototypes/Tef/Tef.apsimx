@@ -10,37 +10,20 @@
         <MemoText><![CDATA[
 # The APSIM Tef Model
 
-The APSIM Tef model has been developed using the Plant Modelling Framework (PMF) of Brown _et al_(2014).This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. Tef, wheat, sorghum) can be achieved by the model developer without additional coding.]]></MemoText>
+The APSIM Tef model has been developed using the Plant Modelling Framework (PMF)[brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. Tef, wheat, sorghum) can be achieved by the model developer without additional coding.
+
+The APSIM Tef model includes components to simulate the following plant parts and processes:
+
+* Phenological development
+* Leaf and canopy development
+* Stem Growth
+* Panicle Growth
+* Grain Growth
+* Root Growth
+]]></MemoText>
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-There are a number of passes involved in the allocation of Weight (Wt).   
-Wt_Step 1\. Set up DM supplies and demands. Each organ may have a demand for Structural, Metabolic and Non-structural Wt. Each organ may supply Fresh DM from photosynthesis and/or stored DM from retranslocation of its Non-structural pool.  
- Wt_Step 2\. In this step freshly fixed Wt is partitioned to organs based on their relative Structural and Metabolic demands such that if there is not enough freshly fixed Wt to meet these demands the organs with the highest demands get the greatest share of the photosynthesis.  
- Wt_Step 3\. In the second step any freshly fixed DM that was surplus to Structural and Metabolic demands is partitioned to sink organs. An organ will be a sink if it is parameterised to have a Non-structural (mobile) component and the capacity of each organ to receive excess DM depends on its structural fraction (which determines the Non-structural Fraction and subsequent sink capacity). If there is still fresh DM unallocated after the second pass this remains unallocated with the assumption that in this case the plant would down regulate photosynthesis due to lack of sink capacity.  
- Wt_Step 4\. In this step, Non-structural DM is reallocated from Non-Structural pools if there was insufficient DM to meet the structural and metabolic DM demands of organs.  
- The arbitrator then sends a potential DM allocation to each organ that they use to calculate their N demands and then steps through N partitioning routines. The final pass in biomass partitioning comes after N partitioning  
-
-N_Step 1\. Set up N supplies and demands. Each organ may (or may not) supply N in a number of ways. Each organ has (potentially) a structural, metabolic and Non-structural N Demand. The structural N demand is that required to grow immobile biomass components, Metabolic N is that required to produce working biomass such as the photosynthetic mechanism in the leaves. The Non-structural N demand is considered to be the luxury uptake and storage of highly mobile N compounds such as nitrate.  
- Each of the following 4 steps have a number of processes in common; Firstly the arbitrator determines each organs current N demand (that outstanding after previous N partitioning steps), then it allocates N to each demanding organ (There are three ways that N can be allocated, see below), then it sets for each supplying organ the amount of N that was taken up.  
- N_Step 2\. NReallocation. This is the supply of N within the plant by the reallocation of sensing and/or Non-structural N which is the lowest energy form of N available to the plant so is partitioned first.  
- N_Step 3\. NUptake. This is the supply of mineral N from the environment (typically by roots from the soil). In this step the arbitrator partitions the potential N uptake supply to satisfy all organs N demands (Structural, Metabolic and Non-structural). If supply is sufficient this will replenish all Non-structural N that was reallocated in the previous step. If not the N conc of organs with a Non-structural N component will begin to fall. If total N demand is less than the uptake supply the crop will leave the surplus mineral N in the soil.  
- N_Step 4\. NFixation. This is the supply of symbiotically fixed N and is redundant for Non-fixers! The arbitrator will asks all N fixing organs (typically nodules) for their potential N fixation supply and then partition this to meet the Structural and Metabolic N demands of organs. The arbitrator will not fix N to meet Non-structural N demands to minimise the biomass cost of fixation which is metabolically expensive. Fixation follows uptake to enable the arbitrator to capture the "Lazy" N fixing behaviour of some legumes. Once fixation is calculated the arbitrator determines the DM cost of this fixation.  
- N_Step 5\. NRetranslocation. This is only invoked under sever N shortage when NReallocation and Uptake (and fixation if appropriate) cannot meet structural and metabolic N demands. It this step the arbitrator will remove Metabolic N from older leaf cohorts to meet the N demand of new leaves and reproductive organs.  
-
-In all of these N partitioning steps there are three options the developer may chose for determining the allocation of N between demanding organs.  
- 1\. RelativeAllocation. If this option is used all N is partitioned to organs relative to their demand so that the organs with the larger N demand get a larger share of a limited N supply.  
- 2\. PriorityAllocation. If this option is used the arbitrator steps through all organs in order of priority (set by the order they appear in the IDE) allocating N to meet all of the first organs structural and metabolic N demands before partitioning any to the next organ in the hierarchy. Once it has stepped through all organs and allocated their minimum (structural and metabolic) N demands it will then step through them again and allocate their luxury (Non-structural) N demands in the same way.  
- 3\. PrioritythenRelativeAllocation. If this option is used the arbitrator steps through all organs in order of priority allocating N to meet minimum N demands. However on the second pass it allocated N relative to the organs outstanding demands such that the organ with the greatest luxury N demand will get the greatest share of the N allocation.  
-
-Wt_Step 5\. Once N is allocated the arbitrator then reduces the Wt allocation of each organ to account for the metabolic cost of N fixation. The Wt reduction is spread around all organs and an organ will only have its Wt allocation limited until it reaches maximum N conc.  
- Wt_Step 6\. Then the arbitrator determines if the N allocated to each organ is sufficient for that organ to reach its minimum N concentration. If not the arbitrator will constrain the biomass growth of that organ and discards the surplus biomass. This assume that under sever N stress photosynthesis would be down regulated due to N inadequacy limiting sink strength.   
-
-Once these steps are complete the Arbitrator finally communicates to each organ its state changes as a result of arbitration.]]></MemoText>
-        </Memo>
         <NArbitrationOption>PrioritythenRelativeAllocation</NArbitrationOption>
         <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
       </OrganArbitrator>
@@ -49,11 +32,15 @@ Once these steps are complete the Arbitrator finally communicates to each organ 
         <Memo>
           <Name>memo</Name>
           <MemoText><![CDATA[
-The phenology model used in the APSIM Tef model follows the approach used in earlier Tef models(Jones and Kiniry (1986), Carberry and Arbrecht (1991), Carberry et al (1989).  The model predicts development of primordia on the apex of the main stem and appearance of individual leaves to predict time to flag leaf.  Other stages use thermal time targets.  <br/>
+The phenology model used in the APSIM Tef model follows the approach used in earlier cereal models [Carberry1989CERESMaize][vanOosterom200167][Wang2002GenericCropModel].  The model predicts development of primordia on the apex of the main stem and appearance of individual leaves to predict time to flag leaf.  Other stages use thermal time targets.  After emergence and an initial juvenile phase, photoperiod effects the timing of floral initiation.
 ]]></MemoText>
         </Memo>
         <AirTemperatureFunction>
           <Name>ThermalTime</Name>
+          <Memo>
+            <Name>memo</Name>
+            <MemoText><![CDATA[Little information is available on the impact of air temperature on the rate of development of Tef as is the case for other crops.  Therefore, cardinal temperatures (ie base temperature, optimum temperature, maximum temperature) have been taken from previous work on modelling development in millet [vanOosterom200167].]]></MemoText>
+          </Memo>
           <XYPairs>
             <Name>XYPairs</Name>
             <Graph>
@@ -125,7 +112,7 @@ The phenology model used in the APSIM Tef model follows the approach used in ear
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-Data from van Delden et al (2012) showed that panicle initiation occurred at leaf number 4 or 5 for 4 varieties grown under short day lengths.  This suggests that the duration of the juvenile phase should be approximately 4-5 phyllochrons, depending on the cultivar.  The default is assumed to be 4, but this can be changed as required for other cultivars.<br/>
+Data from [vanDelden2012] showed that panicle initiation occurred at leaf number 4 or 5 for 4 varieties grown under short day lengths.  This suggests that the duration of the juvenile phase should be approximately 4-5 phyllochrons, depending on the cultivar.  The default is assumed to be 4, but this can be changed as required for other cultivars.<br/>
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -144,7 +131,7 @@ Data from van Delden et al (2012) showed that panicle initiation occurred at lea
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[
-Data from van Delden et al (2012) showed that final leaf number for a selection of tef cultivars increased with increasing photoperiod.  A photoperiod response has been fitted to these data.  Cultivar Gibe showed an increase in final leaf number from 4 to 7 leaves as photoperiod increased from 10.3h to 13.5h.  Cultivar Ziquala showed an increase in final leaf number from 4 to 9 leaves as photoperiod increased from 11.5 h to 13.5h.  The photoperiod response for Dutch cultivars extended to much longer day lengths.  Cultivar Ayana showed an increase in final leaf number from 4 to 5 leaves as photoperiod increased from 10 h to 15 h. Cultivar 04T19  showed an increase in final leaf number from 4 to 7 leaves as photoperiod increased from 9.5 h to 17 h.<br/>
+Data from [vanDelden2012] showed that final leaf number for a selection of tef cultivars increased with increasing photoperiod.  A photoperiod response has been fitted to these data.  Cultivar Gibe showed an increase in final leaf number from 4 to 7 leaves as photoperiod increased from 10.3h to 13.5h.  Cultivar Ziquala showed an increase in final leaf number from 4 to 9 leaves as photoperiod increased from 11.5 h to 13.5h.  The photoperiod response for Dutch cultivars extended to much longer day lengths.  Cultivar Ayana showed an increase in final leaf number from 4 to 5 leaves as photoperiod increased from 10 h to 15 h. Cultivar 04T19  showed an increase in final leaf number from 4 to 7 leaves as photoperiod increased from 9.5 h to 17 h.<br/>
 ]]></MemoText>
           </Memo>
           <VariableReference>
@@ -879,7 +866,7 @@ A function is used to provide maturity date as days after sowing(DAS).
           <Name>NumberFunction</Name>
           <VariableReference>
             <Name>CobNumber</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
+            <VariableName>[Panicle].CobNumber.Value</VariableName>
           </VariableReference>
           <LinearInterpolationFunction>
             <Name>KernalsPerCob</Name>
@@ -894,7 +881,7 @@ A function is used to provide maturity date as days after sowing(DAS).
                 <double>550</double>
               </Y>
             </XYPairs>
-            <XProperty>[Rachis].CobSize.Value</XProperty>
+            <XProperty>[Panicle].CobSize.Value</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>GrainPerKernal</Name>
@@ -1704,7 +1691,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
-        <Name>Rachis</Name>
+        <Name>Panicle</Name>
         <MultiplyFunction>
           <Name>CobNumber</Name>
           <VariableReference>
@@ -1720,11 +1707,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>CobSize</Name>
           <VariableReference>
             <Name>CobMass</Name>
-            <VariableName>[Rachis].Live.Wt</VariableName>
+            <VariableName>[Panicle].Live.Wt</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>CobNumber</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
+            <VariableName>[Panicle].CobNumber.Value</VariableName>
           </VariableReference>
         </DivideFunction>
         <PopulationBasedDemandFunction>
@@ -1751,7 +1738,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </Constant>
           <VariableReference>
             <Name>OrganPopulation</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
+            <VariableName>[Panicle].CobNumber.Value</VariableName>
           </VariableReference>
         </PopulationBasedDemandFunction>
         <Biomass>
@@ -1795,64 +1782,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </XYPairs>
           <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
         </LinearInterpolationFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
-      </GenericAboveGroundOrgan>
-      <GenericAboveGroundOrgan>
-        <Name>Husk</Name>
-        <PopulationBasedDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Constant>
-            <Name>ExpansionStress</Name>
-            <Value>1</Value>
-          </Constant>
-          <Constant>
-            <Name>StartStage</Name>
-            <Value>5.2</Value>
-          </Constant>
-          <Constant>
-            <Name>GrowthDuration</Name>
-            <Value>120</Value>
-          </Constant>
-          <Constant>
-            <Name>MaximumOrganWt</Name>
-            <Value>25</Value>
-          </Constant>
-          <VariableReference>
-            <Name>OrganPopulation</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
-          </VariableReference>
-        </PopulationBasedDemandFunction>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
-        <Constant>
-          <Name>NReallocationFactor</Name>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>NRetranslocationFactor</Name>
-          <Value>0.1</Value>
-        </Constant>
-        <Constant>
-          <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
-        </Constant>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>0.2</Value>
-        </Constant>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
-        </Constant>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
@@ -1971,12 +1900,10 @@ The AboveGround composite biomass object includes all organs occurring above the
             <string>[Leaf].Dead</string>
             <string>[Stem].Live</string>
             <string>[Stem].Dead</string>
-            <string>[Husk].Live</string>
-            <string>[Husk].Dead</string>
             <string>[Grain].Live</string>
             <string>[Grain].Dead</string>
-            <string>[Rachis].Live</string>
-            <string>[Rachis].Dead</string>
+            <string>[Panicle].Live</string>
+            <string>[Panicle].Dead</string>
           </Propertys>
         </CompositeBiomass>
         <CompositeBiomass>
@@ -2007,12 +1934,10 @@ The Total composite biomass object includes all organs (above+below ground) to a
             <string>[Leaf].Dead</string>
             <string>[Stem].Live</string>
             <string>[Stem].Dead</string>
-            <string>[Husk].Live</string>
-            <string>[Husk].Dead</string>
             <string>[Grain].Live</string>
             <string>[Grain].Dead</string>
-            <string>[Rachis].Live</string>
-            <string>[Rachis].Dead</string>
+            <string>[Panicle].Live</string>
+            <string>[Panicle].Dead</string>
             <string>[Root].Live</string>
             <string>[Root].Dead</string>
           </Propertys>
@@ -2029,9 +1954,8 @@ The TotalLive composite biomass object includes the Live pools of all organs (ab
           <Propertys>
             <string>[Leaf].Live</string>
             <string>[Stem].Live</string>
-            <string>[Husk].Live</string>
             <string>[Grain].Live</string>
-            <string>[Rachis].Live</string>
+            <string>[Panicle].Live</string>
             <string>[Root].Live</string>
           </Propertys>
         </CompositeBiomass>
@@ -2047,9 +1971,8 @@ The TotalDead composite biomass object includes the Dead pools of all organs (ab
           <Propertys>
             <string>[Leaf].Dead</string>
             <string>[Stem].Dead</string>
-            <string>[Husk].Dead</string>
             <string>[Grain].Dead</string>
-            <string>[Rachis].Dead</string>
+            <string>[Panicle].Dead</string>
             <string>[Root].Dead</string>
           </Propertys>
         </CompositeBiomass>
@@ -2063,9 +1986,8 @@ The EarLive composite biomass object includes the Live pools of all organs withi
 ]]></MemoText>
           </Memo>
           <Propertys>
-            <string>[Husk].Live</string>
             <string>[Grain].Live</string>
-            <string>[Rachis].Live</string>
+            <string>[Panicle].Live</string>
           </Propertys>
         </CompositeBiomass>
         <CompositeBiomass>
@@ -2080,9 +2002,8 @@ The AboveGroundLive composite biomass object includes the Live pools of all orga
           <Propertys>
             <string>[Leaf].Live</string>
             <string>[Stem].Live</string>
-            <string>[Husk].Live</string>
             <string>[Grain].Live</string>
-            <string>[Rachis].Live</string>
+            <string>[Panicle].Live</string>
           </Propertys>
         </CompositeBiomass>
         <CompositeBiomass>
@@ -2097,9 +2018,8 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
           <Propertys>
             <string>[Leaf].Dead</string>
             <string>[Stem].Dead</string>
-            <string>[Husk].Dead</string>
             <string>[Grain].Dead</string>
-            <string>[Rachis].Dead</string>
+            <string>[Panicle].Dead</string>
           </Propertys>
         </CompositeBiomass>
       </Summariser>
@@ -3559,6 +3479,20 @@ van Delden, S.H., Vos, J., Stomph, T.-J., Brouwer, G., Struik, P.C., 2012. Photo
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>ObservedHarvestData</string>
+      </SheetNames>
+    </Model>
+    <Model xsi:type="ExcelInput">
+      <Name>ObservedSW</Name>
+      <FileName>Observed.xlsx</FileName>
+      <SheetNames>
+        <string>Mekelle2008SW</string>
+      </SheetNames>
+    </Model>
+    <Model xsi:type="ExcelInput">
+      <Name>ObservedMekelle08Biomass</Name>
+      <FileName>Observed.xlsx</FileName>
+      <SheetNames>
+        <string>Mekelle2008Crop</string>
       </SheetNames>
     </Model>
     <PredictedObserved>
@@ -5128,33 +5062,18 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
               <SoilCrop>
                 <Name>WheatSoil</Name>
                 <LL>
-                  <double>0.25</double>
-                  <double>0.25</double>
-                  <double>0.26</double>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.27</double>
-                  <double>0.303</double>
-                  <double>0.31</double>
-                  <double>0.16</double>
+                  <double>0.17</double>
+                  <double>0.17</double>
+                  <double>0.18</double>
+                  <double>0.18</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.05</double>
-                  <double>0.04</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.01</double>
                 </KL>
                 <XF>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -5164,33 +5083,18 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
               <SoilCrop>
                 <Name>TefSoil</Name>
                 <LL>
-                  <double>0.25</double>
-                  <double>0.25</double>
-                  <double>0.26</double>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.27</double>
-                  <double>0.303</double>
-                  <double>0.31</double>
-                  <double>0.16</double>
+                  <double>0.17</double>
+                  <double>0.17</double>
+                  <double>0.18</double>
+                  <double>0.18</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.05</double>
-                  <double>0.04</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.01</double>
                 </KL>
                 <XF>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -5200,68 +5104,38 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
               <Thickness>
                 <double>150</double>
                 <double>150</double>
-                <double>150</double>
                 <double>300</double>
                 <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>400</double>
               </Thickness>
               <BD>
-                <double>1.32</double>
-                <double>1.32</double>
-                <double>1.38</double>
-                <double>1.33</double>
-                <double>1.33</double>
-                <double>1.42</double>
-                <double>1.33</double>
-                <double>1.35</double>
                 <double>1.4</double>
+                <double>1.4</double>
+                <double>1.5</double>
+                <double>1.5</double>
               </BD>
               <AirDry>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>0.26</double>
-                <double>0.32</double>
-                <double>0.3</double>
-                <double>0.27</double>
-                <double>0.24</double>
-                <double>0.31</double>
-                <double>0.16</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
               </AirDry>
               <LL15>
-                <double>0.31</double>
-                <double>0.31</double>
-                <double>0.313</double>
-                <double>0.376</double>
-                <double>0.356</double>
-                <double>0.3</double>
-                <double>0.303</double>
-                <double>0.31</double>
-                <double>0.16</double>
+                <double>0.17</double>
+                <double>0.17</double>
+                <double>0.18</double>
+                <double>0.18</double>
               </LL15>
               <DUL>
-                <double>0.413</double>
-                <double>0.413</double>
-                <double>0.454</double>
-                <double>0.495</double>
-                <double>0.495</double>
-                <double>0.418</double>
-                <double>0.4</double>
-                <double>0.37</double>
                 <double>0.29</double>
+                <double>0.29</double>
+                <double>0.32</double>
+                <double>0.32</double>
               </DUL>
               <SAT>
                 <double>0.453</double>
                 <double>0.453</double>
-                <double>0.479</double>
-                <double>0.498</double>
-                <double>0.498</double>
-                <double>0.464</double>
-                <double>0.457</double>
-                <double>0.435</double>
-                <double>0.38</double>
+                <double>0.41</double>
+                <double>0.41</double>
               </SAT>
             </Water>
             <SoilWater>
@@ -6573,12 +6447,8 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
           <Operations>
             <Name>NRate</Name>
             <Operation>
-              <Date>1985-11-08T00:00:00</Date>
-              <Action> [Fertiliser].Apply(50, Fertiliser.Types.NH4NO3N, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1985-11-29T00:00:00</Date>
-              <Action> [Fertiliser].Apply(30, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Date>2008-08-02T00:00:00</Date>
+              <Action> [Fertiliser].Apply(60, Fertiliser.Types.UreaN, 10);</Action>
             </Operation>
           </Operations>
           <Operations>
@@ -6596,6 +6466,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Soil].SoilWater.pond</string>
               <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
               <string>sum([Soil].NO3N) as ProfileNO3</string>
+              <string>sum([Soil].SoilWater.SWmm[1:3]) as SW30cm</string>
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
@@ -6609,12 +6480,12 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Tef].Leaf.Fn</string>
               <string>[Tef].Leaf.Photosynthesis.Value</string>
               <string>[Tef].Stem.Live.Wt</string>
-              <string>[Tef].Husk.Live.Wt</string>
-              <string>[Tef].Rachis.Live.Wt</string>
+              <string>[Tef].Panicle.Live.Wt</string>
               <string>[Tef].Leaf.Total.Wt</string>
-              <string>[Tef].Rachis.DMDemandFunction.Value</string>
+              <string>[Tef].Panicle.DMDemandFunction.Value</string>
               <string>[Tef].Leaf.Live.Wt</string>
               <string>[Tef].Leaf.Dead.Wt</string>
+              <string>[Tef].Leaf.CoverGreen</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -6627,15 +6498,11 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <SoilCrop>
                 <Name>WheatSoil</Name>
                 <LL>
-                  <double>0.25</double>
-                  <double>0.25</double>
-                  <double>0.26</double>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.27</double>
-                  <double>0.303</double>
-                  <double>0.31</double>
-                  <double>0.16</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
+                  <double>0.22</double>
+                  <double>0.22</double>
+                  <double>0.22</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
@@ -6643,16 +6510,8 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.05</double>
-                  <double>0.04</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.01</double>
                 </KL>
                 <XF>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -6663,15 +6522,11 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <SoilCrop>
                 <Name>TefSoil</Name>
                 <LL>
-                  <double>0.25</double>
-                  <double>0.25</double>
-                  <double>0.26</double>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.27</double>
-                  <double>0.303</double>
-                  <double>0.31</double>
-                  <double>0.16</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
+                  <double>0.22</double>
+                  <double>0.22</double>
+                  <double>0.22</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
@@ -6679,16 +6534,8 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.05</double>
-                  <double>0.04</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.01</double>
                 </KL>
                 <XF>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -6697,71 +6544,54 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
                 </XF>
               </SoilCrop>
               <Thickness>
-                <double>150</double>
-                <double>150</double>
-                <double>150</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
                 <double>300</double>
                 <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>400</double>
               </Thickness>
               <BD>
-                <double>1.32</double>
-                <double>1.32</double>
-                <double>1.38</double>
-                <double>1.33</double>
-                <double>1.33</double>
-                <double>1.42</double>
-                <double>1.33</double>
-                <double>1.35</double>
-                <double>1.4</double>
+                <double>1.55</double>
+                <double>1.55</double>
+                <double>1.45</double>
+                <double>1.45</double>
+                <double>1.45</double>
               </BD>
               <AirDry>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>0.26</double>
-                <double>0.32</double>
-                <double>0.3</double>
-                <double>0.27</double>
-                <double>0.24</double>
-                <double>0.31</double>
-                <double>0.16</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.07</double>
+                <double>0.07</double>
+                <double>0.07</double>
               </AirDry>
               <LL15>
-                <double>0.31</double>
-                <double>0.31</double>
-                <double>0.313</double>
-                <double>0.376</double>
-                <double>0.356</double>
-                <double>0.3</double>
-                <double>0.303</double>
-                <double>0.31</double>
-                <double>0.16</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.22</double>
+                <double>0.22</double>
+                <double>0.22</double>
               </LL15>
               <DUL>
-                <double>0.413</double>
-                <double>0.413</double>
-                <double>0.454</double>
-                <double>0.495</double>
-                <double>0.495</double>
-                <double>0.418</double>
-                <double>0.4</double>
-                <double>0.37</double>
-                <double>0.29</double>
+                <double>0.27</double>
+                <double>0.27</double>
+                <double>0.42</double>
+                <double>0.42</double>
+                <double>0.42</double>
               </DUL>
               <SAT>
-                <double>0.453</double>
-                <double>0.453</double>
-                <double>0.479</double>
-                <double>0.498</double>
-                <double>0.498</double>
-                <double>0.464</double>
-                <double>0.457</double>
-                <double>0.435</double>
-                <double>0.38</double>
+                <double>0.46</double>
+                <double>0.5</double>
+                <double>0.52</double>
+                <double>0.52</double>
+                <double>0.52</double>
               </SAT>
+              <KS>
+                <double>250</double>
+                <double>250</double>
+                <double>175</double>
+                <double>175</double>
+                <double>175</double>
+              </KS>
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
@@ -6775,7 +6605,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <DiffusConst>88</DiffusConst>
               <DiffusSlope>35.4</DiffusSlope>
               <Salb>0.13</Salb>
-              <CN2Bare>50</CN2Bare>
+              <CN2Bare>87</CN2Bare>
               <CNRed>20</CNRed>
               <CNCov>0.8</CNCov>
               <slope>NaN</slope>
@@ -7117,7 +6947,7 @@ namespace Models
       <Graph>
         <Name>Biomass</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Peredicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7132,61 +6962,16 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Series2</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Tef.Rachis.Live.Wt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series3</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Tef.Stem.Live.Wt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series4</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>GrainWt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series5</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Tef.Leaf.Live.Wt</YFieldName>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>Mekelle2008Crop</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Biomass</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -7214,7 +6999,7 @@ namespace Models
       <Graph>
         <Name>SoilWater</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7223,7 +7008,74 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>ProfileWater</YFieldName>
+          <YFieldName>SW30cm</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>Mekelle2008SW</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SW30cm</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>CoverGreen</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Tef.Leaf.CoverGreen</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>Mekelle2008Crop</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>CoverGreen</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -7513,26 +7365,6 @@ Field Crops Research 116 (2010) 196204
           <Operations>
             <Name>IrrigationRate</Name>
           </Operations>
-          <Report>
-            <Name>Report</Name>
-            <VariableNames>
-              <string>[Clock].Today</string>
-              <string>[Soil].SoilWater.SW</string>
-              <string>[Soil].SoilWater.Eo</string>
-              <string>[Soil].SoilWater.Es</string>
-              <string>[Soil].SoilWater.Drainage</string>
-              <string>[Soil].SoilWater.Runoff</string>
-              <string>[Soil].SoilWater.pond</string>
-              <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
-              <string>[Soil].NO3N</string>
-              <string>[MicroClimate].net_radn</string>
-              <string>[MicroClimate].peta</string>
-              <string>[MicroClimate].petr</string>
-            </VariableNames>
-            <EventNames>
-              <string>[Clock].DoReport</string>
-            </EventNames>
-          </Report>
           <Soil>
             <Name>soil</Name>
             <Water>
@@ -7540,15 +7372,11 @@ Field Crops Research 116 (2010) 196204
               <SoilCrop>
                 <Name>WheatSoil</Name>
                 <LL>
-                  <double>0.25</double>
-                  <double>0.25</double>
-                  <double>0.26</double>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.27</double>
-                  <double>0.303</double>
-                  <double>0.31</double>
-                  <double>0.16</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
+                  <double>0.22</double>
+                  <double>0.22</double>
+                  <double>0.22</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
@@ -7556,16 +7384,8 @@ Field Crops Research 116 (2010) 196204
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.05</double>
-                  <double>0.04</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.01</double>
                 </KL>
                 <XF>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -7576,15 +7396,11 @@ Field Crops Research 116 (2010) 196204
               <SoilCrop>
                 <Name>TefSoil</Name>
                 <LL>
-                  <double>0.25</double>
-                  <double>0.25</double>
-                  <double>0.26</double>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.27</double>
-                  <double>0.303</double>
-                  <double>0.31</double>
-                  <double>0.16</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
+                  <double>0.22</double>
+                  <double>0.22</double>
+                  <double>0.22</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
@@ -7592,16 +7408,8 @@ Field Crops Research 116 (2010) 196204
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.05</double>
-                  <double>0.04</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.01</double>
                 </KL>
                 <XF>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -7610,70 +7418,46 @@ Field Crops Research 116 (2010) 196204
                 </XF>
               </SoilCrop>
               <Thickness>
-                <double>150</double>
-                <double>150</double>
-                <double>150</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
                 <double>300</double>
                 <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>400</double>
               </Thickness>
               <BD>
-                <double>1.32</double>
-                <double>1.32</double>
-                <double>1.38</double>
-                <double>1.33</double>
-                <double>1.33</double>
-                <double>1.42</double>
-                <double>1.33</double>
-                <double>1.35</double>
-                <double>1.4</double>
+                <double>1.55</double>
+                <double>1.55</double>
+                <double>1.45</double>
+                <double>1.45</double>
+                <double>1.45</double>
               </BD>
               <AirDry>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>0.26</double>
-                <double>0.32</double>
-                <double>0.3</double>
-                <double>0.27</double>
-                <double>0.24</double>
-                <double>0.31</double>
-                <double>0.16</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.07</double>
+                <double>0.07</double>
+                <double>0.07</double>
               </AirDry>
               <LL15>
-                <double>0.31</double>
-                <double>0.31</double>
-                <double>0.313</double>
-                <double>0.376</double>
-                <double>0.356</double>
-                <double>0.3</double>
-                <double>0.303</double>
-                <double>0.31</double>
-                <double>0.16</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.22</double>
+                <double>0.22</double>
+                <double>0.22</double>
               </LL15>
               <DUL>
-                <double>0.413</double>
-                <double>0.413</double>
-                <double>0.454</double>
-                <double>0.495</double>
-                <double>0.495</double>
-                <double>0.418</double>
-                <double>0.4</double>
-                <double>0.37</double>
-                <double>0.29</double>
+                <double>0.27</double>
+                <double>0.27</double>
+                <double>0.42</double>
+                <double>0.42</double>
+                <double>0.42</double>
               </DUL>
               <SAT>
-                <double>0.453</double>
-                <double>0.453</double>
-                <double>0.479</double>
-                <double>0.498</double>
-                <double>0.498</double>
-                <double>0.464</double>
-                <double>0.457</double>
-                <double>0.435</double>
-                <double>0.38</double>
+                <double>0.46</double>
+                <double>0.5</double>
+                <double>0.52</double>
+                <double>0.52</double>
+                <double>0.52</double>
               </SAT>
             </Water>
             <SoilWater>
@@ -7688,7 +7472,7 @@ Field Crops Research 116 (2010) 196204
               <DiffusConst>88</DiffusConst>
               <DiffusSlope>35.4</DiffusSlope>
               <Salb>0.13</Salb>
-              <CN2Bare>50</CN2Bare>
+              <CN2Bare>87</CN2Bare>
               <CNRed>20</CNRed>
               <CNCov>0.8</CNCov>
               <slope>NaN</slope>
@@ -7853,7 +7637,7 @@ Field Crops Research 116 (2010) 196204
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
             <Sample>
-              <Name>InitialN</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -7888,7 +7672,7 @@ Field Crops Research 116 (2010) 196204
               <PHUnits>Water</PHUnits>
             </Sample>
             <Sample>
-              <Name>InitialSW</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -7917,6 +7701,26 @@ Field Crops Research 116 (2010) 196204
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
           </Soil>
+          <Report>
+            <Name>Report</Name>
+            <VariableNames>
+              <string>[Clock].Today</string>
+              <string>[Soil].SoilWater.SW</string>
+              <string>[Soil].SoilWater.Eo</string>
+              <string>[Soil].SoilWater.Es</string>
+              <string>[Soil].SoilWater.Drainage</string>
+              <string>[Soil].SoilWater.Runoff</string>
+              <string>[Soil].SoilWater.pond</string>
+              <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+              <string>[Soil].NO3N</string>
+              <string>[MicroClimate].net_radn</string>
+              <string>[MicroClimate].peta</string>
+              <string>[MicroClimate].petr</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Clock].DoReport</string>
+            </EventNames>
+          </Report>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
