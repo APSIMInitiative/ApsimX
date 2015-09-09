@@ -8484,7 +8484,7 @@ namespace Models
         <Name>Fertiliser</Name>
       </Fertiliser>
       <Manager>
-        <Name>SowingHarvesting</Name>
+        <Name>SowPasture</Name>
         <Script>
           <CultivarName>Pasture</CultivarName>
           <InitialRootDepth>10</InitialRootDepth>
@@ -8559,14 +8559,7 @@ namespace Models
 		[Link] Zone zone;
 					
 		[XmlIgnore] private bool ZeroTomorrow { get; set; }
-		
-		[XmlIgnore] public double AccumPlantN { get; set; }
-		[XmlIgnore] public double AccumMineralisation { get; set; }
-		[XmlIgnore] public double AccumDenit { get; set; }
-		[XmlIgnore] public double AccumFert { get; set; }
-		[XmlIgnore] public double AccumLeach { get; set; }
-		[XmlIgnore] public double AccumDetach { get; set; }
-	   
+
 		[XmlIgnore] public double AccumEO { get; set; }
 		[XmlIgnore] public double AccumEP { get; set; }
 		[XmlIgnore] public double AccumES { get; set; }
@@ -8579,12 +8572,16 @@ namespace Models
 		[XmlIgnore] private double AccumTemp { get; set; }
 		[XmlIgnore] private double AccumRadn { get; set; }
 		[XmlIgnore] private double AccumFW { get; set; }
-		[XmlIgnore] private double AccumFN { get; set; }
 		
 		[XmlIgnore] public double MeanTemp { get; set; }
 		[XmlIgnore] public double MeanRadn { get; set; }
 		[XmlIgnore] public double MeanFW { get; set; }
-		[XmlIgnore] public double MeanFN { get; set; }
+		
+		[XmlIgnore] public double DUL { get; set; }
+		[XmlIgnore] public double SWD { get; set; }
+		[XmlIgnore] public double SWC { get; set; }
+		
+
 		
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
@@ -8595,15 +8592,8 @@ namespace Models
 		[EventSubscribe("StartOfDay")]
 		private void OnStartOfDay(object sender, EventArgs e)
 		{
-			if (ZeroTomorrow == true)
+			if ((Clock.Today.Month == 7) && (Clock.Today.Day == 1))
 			{
-				AccumPlantN = 0;
-				AccumMineralisation = 0;    
-				AccumDenit = 0;   
-				AccumFert = 0;  
-				AccumLeach = 0;  
-				AccumDetach = 0;   
-	   
 				AccumEO = 0;
 				AccumEP = 0;
 				AccumES = 0;
@@ -8616,8 +8606,7 @@ namespace Models
 				AccumTemp = 0;   
 				AccumRadn = 0;   
 				AccumFW = 0;  
-				AccumFN = 0;
-			 
+				
 				ZeroTomorrow = false;
 			}
 		}
@@ -8625,18 +8614,15 @@ namespace Models
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			//AccumPlantN -= (double)zone.Get("SLURP.Root.NUptake");
 			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("SLURP.Root.WaterUptake");
+			AccumEP -= (double)zone.Get("Slurp.Root.WaterUptake");
+			
+			SWD = (SWC - DUL);
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			AccumFert += Fert.NitrogenApplied;
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumEO -= Soil.SoilWater.Eo;
 			AccumES -= Soil.SoilWater.Es; 
@@ -8648,30 +8634,96 @@ namespace Models
 				AccumDays += 1;
 				AccumTemp += ((Met.MinT + Met.MaxT) / 2);
 				AccumRadn += Met.Radn;
+				AccumFW += (double)zone.Get("Slurp.Leaf.Fw");
 			}
 		    
 			MeanTemp = AccumTemp / AccumDays;
 			MeanRadn = AccumRadn / AccumDays;
 			MeanFW = AccumFW / AccumDays;
-			MeanFN = AccumFN / AccumDays;
-		}
-		
-		[EventSubscribe("Harvesting")]
-		private void OnHarvesting(object sender, EventArgs e)
-		{
-			ZeroTomorrow = true;
+			
+			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
+			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
 		}
 	}
 }
 	   ]]></Code>
       </Manager>
       <Manager>
-        <Name>AutomaticIrrigation</Name>
+        <Name>GrowAndGrazeCanopy</Name>
+        <Script>
+          <MaxLAI>5</MaxLAI>
+          <LAIRate>0.012</LAIRate>
+          <MaximumHeight>400</MaximumHeight>
+          <LAI>0</LAI>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using System.IO;
+	  
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Zone zone;
+		[Link] Simulation simulation;
+		[Link] Summary Summary;
+		[Link] Weather Met;
+   
+		
+		[Description("Maximum LAI achieved by pasture")]
+		public  double MaxLAI { get; set; }
+		[Description("Leaf Area Expansion Rate")]
+		public double LAIRate { get; set; }
+		//[Description("Extinction coefficient")]
+		//public  double Ext_coef { get; set; }
+		[Description("Maximum height of the crop at full cover")]
+		public double MaximumHeight { get; set; }
+		
+		public double LAI { get; set; }
+		public double ResidualFactor;
+		
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+			LAI = 0;
+			ResidualFactor = 0.4;
+		}
+      
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{
+			LAI += LAIRate * (Met.MaxT + Met.MinT) / 2;
+				
+			if (LAI > MaxLAI)
+			{
+				LAI *= ResidualFactor;
+				Summary.WriteMessage(this, "Defoliation today reduced LAI to " + LAI);
+			}
+			object LeafLAI = LAI;
+			zone.Set("Slurp.Leaf.LAIFunction.Value", LeafLAI);
+			object Height = MaximumHeight * (LAI / MaxLAI);
+			zone.Set("Slurp.Leaf.HeightFunction.Value", Height);  
+		}
+	}
+}
+       ]]></Code>
+      </Manager>
+      <Manager>
+        <Name>IrrigationControl</Name>
         <Script>
           <Irrigation_Yes_No>yes</Irrigation_Yes_No>
           <Season_Start>1-Oct</Season_Start>
           <Season_End>30-Apr</Season_End>
-          <Season_Allocation>0</Season_Allocation>
+          <Season_Allocation>1000</Season_Allocation>
           <Refull_Frac>0.9</Refull_Frac>
           <Trigger_Frac>0.5</Trigger_Frac>
           <Return_days>3</Return_days>
@@ -8826,7 +8878,7 @@ namespace Models
 			//Lets bloody well irrigate then!!!!
 			if ((IrrigationIsAvailable) && (SeasonIsOpen) && (IrrigatorIsAvailable) && (SoilIsDry)) //The conditions are rife for irrigation
 			{
-				Amount_to_apply = Math.Min(Top_Refull - Top_SW, Maximum_Irrigation_Amount);
+				Amount_to_apply = Math.Min(Top_Refull - (Top_SW - Soil.SoilWater.Eo), Maximum_Irrigation_Amount);
 				Amount_to_apply = Math.Min(Amount_to_apply, Season_Allocation - Season_Application); 
 				Amount_to_apply = Math.Max(Amount_to_apply, 0.0);
 				Irrigation.Apply(Amount_to_apply);
@@ -8847,229 +8899,10 @@ namespace Models
              
              ]]></Code>
       </Manager>
-      <Manager>
-        <Name>AutomaticFertiliser</Name>
-        <Script>
-          <Fertiliser_Yes_No>yes</Fertiliser_Yes_No>
-          <Season_Start>1-Aug</Season_Start>
-          <Season_End>30-Apr</Season_End>
-          <Season_Allocation>1000</Season_Allocation>
-          <TriggerN>50</TriggerN>
-          <NApplicationAmount>25</NApplicationAmount>
-          <Return_days>3</Return_days>
-          <Top_Depth>300</Top_Depth>
-        </Script>
-        <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.Soils;
-using System.Xml.Serialization;
-using Models.PMF;
-using APSIM.Shared.Utilities;
-
-        
-namespace Models
-{
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		//Communication to other modules
-		[Link] ISummary summary = null;
-		[Link] Fertiliser Fertiliser;
-		[Link] Clock Clock;
-		[Link] Soils.Soil Soil;
-		[Link] Plant SLURP;
-	   
-		//User inputs from properties tab
-		[Description("Fertiliser on (yes or no)")]
-		public string Fertiliser_Yes_No { get; set; }
-		[Description("SeasonStart (dd-MMM)")]
-		public string Season_Start { get; set; }
-		[Description("SeasonEnd (dd-MMM)")]
-		public string Season_End { get; set; }
-		[Description("Season Allocation (kg/ha)")]
-		public double Season_Allocation { get; set; }
-		[Description("Mineral N to maintain soil above (kg/ha)")]
-		public double TriggerN { get; set; }
-		[Description("Amount of N to apply (kg/ha)")]
-		public double NApplicationAmount { get; set; }
-		[Description("Minimum days for Fertiliser spreader to return")]
-		public double Return_days { get; set; }
-		[Description("Depth to calculate mineral N (mm)")]
-		public double Top_Depth { get; set; }
-	   
-		//Class members
-		[XmlIgnore] private bool FertiliserIsAvailable { get; set; }
-		[XmlIgnore] public bool SeasonIsOpen { get; set; }
-		[XmlIgnore] private bool CropIsActive { get; set; }
-		[XmlIgnore] private bool FertSpreaderIsAvailable { get; set; }
-		[XmlIgnore] private bool SoilNIsLow { get; set; }
-		[XmlIgnore] public double Top_SoilN { get; set; }
-		[XmlIgnore] public double Accumulated_depth { get; set; }
-		[XmlIgnore] public double Days_since_fertiliser { get; set; }
-		[XmlIgnore] public double Season_Application { get; set; }
-		
-		//Variables for date logic testing
-		[XmlIgnore] public string StartString { get; set; }
-		[XmlIgnore] public string EndString { get; set; }
-		[XmlIgnore] public DateTime StartDate { get; set; }
-		[XmlIgnore] public DateTime EndDate { get; set; }
-		[XmlIgnore] public int TodayYear { get; set; }
-		[XmlIgnore] public int TodayMonth { get; set; }
-		[XmlIgnore] public int StartMonth { get; set; }
-		[XmlIgnore] public int EndMonth { get; set; }
-		[XmlIgnore] public int TodayDay { get; set; }
-		[XmlIgnore] public int StartDay { get; set; }
-		[XmlIgnore] public int EndDay { get; set; }
-	   	   
-		//Determine daily requirement for fertiliser
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{ 
-			//Can we irrigate?
-			FertiliserIsAvailable = false; 
-			if (Fertiliser_Yes_No == "yes")
-				FertiliserIsAvailable = true; 
-	
-			//Are we Allowed to Irrigate?
-			TodayYear = Clock.Today.Year;
-			StartString = Season_Start + "-" + TodayYear.ToString();
-			EndString = Season_End + "-" + TodayYear.ToString();
-			StartDate = DateTime.Parse(StartString);
-			EndDate = DateTime.Parse(EndString);
-			TodayMonth = Clock.Today.Month;
-			TodayDay = Clock.Today.Day;
-			StartDay = StartDate.Day;
-			StartMonth = StartDate.Month;
-			EndDay = EndDate.Day;
-			EndMonth = EndDate.Month;
-		  
-			SeasonIsOpen = false;
-			//if we are in the spring and after the start date then yes
-			if ((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
-				SeasonIsOpen = true;
-			//if we are in the autumn and before the end date then yes
-			if ((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
-				SeasonIsOpen = true;
-	      
-			//Is the irrigator available?
-			FertSpreaderIsAvailable = false;
-			Days_since_fertiliser += 1;
-			if (Days_since_fertiliser >= Return_days)
-				FertSpreaderIsAvailable = true;
-	      
-			//Is the soil N low enough to require fertiliser?
-			SoilNIsLow = false;
-			double CurrentRootDepth = 0;
-			double RootDepth = SLURP.Root.Depth;
-			CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
-	      
-			Accumulated_depth = 0;
-			Top_SoilN = 0;
-			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
-			{
-				Top_SoilN += Soil.NO3N[layer];
-				Accumulated_depth += Soil.SoilWater.Thickness[layer];
-			}
-			if (Top_SoilN <= TriggerN)
-				SoilNIsLow = true;
-	            
-			//Lets bloody well irrigate then!!!!
-			if ((FertiliserIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (FertSpreaderIsAvailable) && (SoilNIsLow)) //The conditions are rife for irrigation
-			{
-				Fertiliser.Apply(NApplicationAmount, Fertiliser.Types.UreaN, 10);
-				Days_since_fertiliser = 0;
-				Season_Application += NApplicationAmount;
-				summary.WriteMessage(this, "Automatic Fertiliser");
-            
-			}
-		}
-	    
-		[EventSubscribe("Harvesting")]
-		private void OnHarvesting(object sender, EventArgs e)
-		{
-			Season_Application = 0;
-		}
-	}
-}
-             
-             ]]></Code>
-      </Manager>
-      <Manager>
-        <Name>SetLAIofCrop</Name>
-        <Script>
-          <MaxLAI>5</MaxLAI>
-          <LAIRate>0.012</LAIRate>
-          <MaximumHeight>400</MaximumHeight>
-          <LAI>0</LAI>
-        </Script>
-        <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-using System.IO;
-	  
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Zone zone;
-		[Link] Simulation simulation;
-		[Link] Summary Summary;
-		[Link] Weather Met;
-   
-		
-		[Description("Maximum LAI achieved by pasture")]
-		public  double MaxLAI { get; set; }
-		[Description("Leaf Area Expansion Rate")]
-		public double LAIRate { get; set; }
-		//[Description("Extinction coefficient")]
-		//public  double Ext_coef { get; set; }
-		[Description("Maximum height of the crop at full cover")]
-		public double MaximumHeight { get; set; }
-		
-		public double LAI { get; set; }
-		public double ResidualFactor;
-		
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-			LAI = 0;
-			ResidualFactor = 0.4;
-		}
-      
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-			LAI += LAIRate * (Met.MaxT + Met.MinT) / 2;
-				
-			if (LAI > MaxLAI)
-			{
-				LAI *= ResidualFactor;
-				Summary.WriteMessage(this, "Defoliation today reduced LAI to " + LAI);
-			}
-			object LeafLAI = LAI;
-			zone.Set("Slurp.Leaf.LAIFunction.Value", LeafLAI);
-			object Height = MaximumHeight * (LAI / MaxLAI);
-			zone.Set("Slurp.Leaf.HeightFunction.Value", Height);  
-		}
-	}
-}
-       ]]></Code>
-      </Manager>
       <Report>
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[ExtraVariables].Script.AccumLeach as AccumLeach</string>
           <string>[ExtraVariables].Script.AccumEO as AccumEO</string>
           <string>[ExtraVariables].Script.AccumEP as AccumEP</string>
           <string>[ExtraVariables].Script.AccumES as AccumES</string>
@@ -9080,16 +8913,18 @@ namespace Models
           <string>[ExtraVariables].Script.MeanTemp as MeanTemp</string>
           <string>[ExtraVariables].Script.MeanRadn as MeanRadn</string>
           <string>[ExtraVariables].Script.MeanFW as MeanFW</string>
-          <string>[AutomaticIrrigation].Script.Top_DUL as Top_DUL</string>
-          <string>[AutomaticIrrigation].Script.Top_Refull as Top_Refull</string>
-          <string>[AutomaticIrrigation].Script.Top_Trigger as Top_Trigger</string>
-          <string>[AutomaticIrrigation].Script.Top_LL as Top_LL</string>
-          <string>[AutomaticIrrigation].Script.Top_SW as Top_SW</string>
-          <string>[AutomaticIrrigation].Script.Amount_to_apply as Amount_to_apply</string>
+          <string>[IrrigationControl].Script.Top_DUL as Top_DUL</string>
+          <string>[IrrigationControl].Script.Top_Refull as Top_Refull</string>
+          <string>[IrrigationControl].Script.Top_Trigger as Top_Trigger</string>
+          <string>[IrrigationControl].Script.Top_LL as Top_LL</string>
+          <string>[IrrigationControl].Script.Top_SW as Top_SW</string>
+          <string>[IrrigationControl].Script.Amount_to_apply as Amount_to_apply</string>
           <string>[Irrigation].IrrigationApplied as IrrigationApplied</string>
           <string>[Slurp].Leaf.CoverGreen as Cover</string>
           <string>[Slurp].Root.Depth as RootDepth</string>
           <string>[Slurp].Leaf.Height as Height</string>
+          <string>[ExtraVariables].Script.SWD as SWD</string>
+          <string>[Extravariables].Script.MeanFW as FW</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -9109,11 +8944,11 @@ namespace Models
               <double>0.008</double>
             </LL>
             <KL>
-              <double>0.4</double>
-              <double>0.3</double>
-              <double>0.1</double>
-              <double>0.05</double>
-              <double>0.05</double>
+              <double>0.2</double>
+              <double>0.2</double>
+              <double>0.2</double>
+              <double>0.2</double>
+              <double>0.2</double>
             </KL>
             <XF>
               <double>1</double>
@@ -9361,148 +9196,6 @@ namespace Models
       <Slope>0</Slope>
     </Zone>
     <Graph>
-      <Name>N balance components</Name>
-      <Series>
-        <Name>AccumPlantN</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.AccumPlantN</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>AccumMineralisation</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8388353</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.AccumMineralisation</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>AccumDenit</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744193</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.AccumDenit</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>AccumFert</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.AccumFert</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>AccumLeach</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.AccumLeach</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>DeltaSoilOMN</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8372224</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.DeltaSoilOMN</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>DeltaSurfaceOMN</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.DeltaSurfaceOMN</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>DeltaSoilMineralN</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777152</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.DeltaSoilMineralN</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Accumulated N changes (kg/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
       <Name>WaterBalanceComponents</Name>
       <Series>
         <Name>AccumEO</Name>
@@ -9514,7 +9207,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.AccumEO</YFieldName>
+        <YFieldName>AccumEO</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -9529,7 +9222,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.AccumEP</YFieldName>
+        <YFieldName>AccumEP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -9544,7 +9237,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.AccumES</YFieldName>
+        <YFieldName>AccumES</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -9559,7 +9252,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.AccumDrainage</YFieldName>
+        <YFieldName>AccumDrainage</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -9574,7 +9267,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.AccumRunoff</YFieldName>
+        <YFieldName>AccumRunoff</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -9589,7 +9282,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.AccumRainfall</YFieldName>
+        <YFieldName>AccumRainfall</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -9604,22 +9297,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.AccumIrrigation</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>AccumLatOutFlow</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.AccumOutflowLat</YFieldName>
+        <YFieldName>AccumIrrigation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -9634,7 +9312,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.SoilWaterDeficit</YFieldName>
+        <YFieldName>SWD</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -9659,153 +9337,6 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>Plant Biomass components</Name>
-      <Series>
-        <Name>Stover</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SLURP.Leaf.Live.Wt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Root</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8388608</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SLURP.Root.Live.Wt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Product</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SLURP.Product.Live.Wt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Crop Biomass (g/m2)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>Plant Nitrogen components</Name>
-      <Series>
-        <Name>Leaf</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SLURP.Leaf.Live.N</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Root</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8388608</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SLURP.Root.Live.N</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Product</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32704</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SLURP.Product.Live.N</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Total</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SLURP.Summariser.Total.N</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Crop Nitrogen (g/m2)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
       <Name>CanopyAndRoots</Name>
       <Series>
         <Name>Cover</Name>
@@ -9826,13 +9357,13 @@ namespace Models
         <Name>Height</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-32576</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Cover</YFieldName>
+        <YFieldName>Height</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -9981,6 +9512,42 @@ namespace Models
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Top_LL</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Water (mm)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Irrigation1</Name>
+      <Series>
+        <Name>DUL</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711681</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FW</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
