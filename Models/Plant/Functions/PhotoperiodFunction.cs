@@ -39,18 +39,8 @@ namespace Models.PMF.Functions
         {
             get
             {
-                object val = Apsim.Get(this, "ClimateControl.PhotoPeriod");
-                //If simulation environment has a variable called ClimateControl.PhotoPeriod will use that other wise calculate from day and location
-                if (val != null)  //FIXME.  If climatecontrol does not contain a variable called photoperiod it still returns a value of zero.
-                {
-                    double CCPP = Convert.ToDouble(val);
-                    if (CCPP > 0.0)
-                        return Convert.ToDouble(val);
-                    else
-                        return MathUtilities.DayLength(Clock.Today.DayOfYear, Twilight, MetData.Latitude);
-                }
-                else
-                    return MathUtilities.DayLength(Clock.Today.DayOfYear, Twilight, MetData.Latitude);
+                return MetData.CalculateDayLength(Twilight);
+                    
             }
         }
 

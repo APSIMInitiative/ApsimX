@@ -799,7 +799,7 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
               <double>1.69</double>
             </Y>
           </XYPairs>
-          <XProperty>[Weather].CO2</XProperty>
+          <XProperty>[IWeather].CO2</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>NConcCriticalModifier</Name>
@@ -816,7 +816,7 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
               <double>0.9</double>
             </Y>
           </XYPairs>
-          <XProperty>[Weather].CO2</XProperty>
+          <XProperty>[IWeather].CO2</XProperty>
         </LinearInterpolationFunction>
         <PhaseBasedSwitch>
           <Name>NodeFormationPeriod</Name>
@@ -930,7 +930,7 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
               <double>0</double>
             </Y>
           </XYPairs>
-          <XProperty>[Weather].MinT</XProperty>
+          <XProperty>[IWeather].MinT</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>DMSenescenceFraction</Name>
