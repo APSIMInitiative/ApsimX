@@ -90,6 +90,7 @@ namespace Models.PMF.Phen
         
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
+        [XmlIgnore]
         public double TTinPhase { get; set; }
 
         /// <summary>
