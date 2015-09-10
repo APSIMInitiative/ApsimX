@@ -46,6 +46,11 @@ namespace Models.Report
         public string[] EventNames { get; set; }
 
         /// <summary>
+        /// The number of results to display per page.
+        /// </summary>
+        public int ResultsPerPage { get; set; }
+
+        /// <summary>
         /// An event handler to allow us to initialize ourselves.
         /// </summary>
         /// <param name="sender">Event sender</param>
