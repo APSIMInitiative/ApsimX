@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
+using System.Xml.Serialization;
 
 
 namespace Models.PMF.Phen
@@ -44,11 +45,17 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Return a fraction of phase complete.
         /// </summary>
+       [XmlIgnore]
         public override double FractionComplete
         {
             get
             {
                 return 0.999;
+            }
+            set
+            {
+                if (Phenology != null)
+                throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
             }
         }
 
