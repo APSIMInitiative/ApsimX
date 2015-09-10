@@ -8690,7 +8690,7 @@ namespace Models
           <TableName>Report</TableName>
           <XFieldName>Teff.Phenology.DaysAfterSowing</XFieldName>
           <YFieldName>Teff.Leaf.AppearedCohortNo</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
