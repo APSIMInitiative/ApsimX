@@ -22,6 +22,7 @@ namespace UserInterface.Presenters
         private IReportView View;
         private ExplorerPresenter ExplorerPresenter;
         private DataStore DataStore;
+        private int startIndex = 0;
 
         /// <summary>
         /// Attach the model (report) and the view (IReportView)
@@ -38,13 +39,15 @@ namespace UserInterface.Presenters
             this.View.EventList.ContextItemsNeeded += OnNeedEventNames;
             this.View.VariableList.TextHasChangedByUser += OnVariableNamesChanged;
             this.View.EventList.TextHasChangedByUser += OnEventNamesChanged;
+            this.View.OnPageDataChanged += OnPageDataChanged;
             ExplorerPresenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
 
             Simulation simulation = Apsim.Parent(Report, typeof(Simulation)) as Simulation;
             DataStore = new DataStore(Report);
             this.View.VariableList.SetSyntaxHighlighter("Report");
 
-            PopulateDataGrid();
+            PopulateDataGrid(Report.ResultsPerPage);
+            this.View.SetResultsPerPage(Report.ResultsPerPage);
             this.View.DataGrid.ResizeControls();
         }
 
@@ -57,6 +60,7 @@ namespace UserInterface.Presenters
             this.View.EventList.ContextItemsNeeded -= OnNeedEventNames;
             this.View.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
             this.View.EventList.TextHasChangedByUser -= OnEventNamesChanged;
+            this.View.OnPageDataChanged -= OnPageDataChanged;
             ExplorerPresenter.CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
             DataStore.Disconnect();
         }
@@ -109,6 +113,20 @@ namespace UserInterface.Presenters
             ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
         }
 
+        void OnPageDataChanged(object sender, PageEventArgs e)
+        {
+            Report.ResultsPerPage = e.count;
+            if (e.gotoStart)
+                startIndex = 0;
+            else
+                startIndex += Report.ResultsPerPage * (e.goForward ? 1 : -1);
+
+            if (startIndex < 0)
+                startIndex = 0;
+
+            PopulateDataGrid(Report.ResultsPerPage, startIndex);
+        }
+
         /// <summary>
         /// The model has changed so update our view.
         /// </summary>
@@ -124,7 +142,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Populate the data grid.
         /// </summary>
-        private void PopulateDataGrid()
+        private void PopulateDataGrid(int count = 0, int start = 0)
         {
             Simulation simulation = Apsim.Parent(Report, typeof(Simulation)) as Simulation;
 
@@ -138,7 +156,7 @@ namespace UserInterface.Presenters
                     View.DataGrid.AutoFilterOn = true;
                 }
                 else
-                    View.DataGrid.DataSource = DataStore.GetData(simulation.Name, Report.Name);
+                    View.DataGrid.DataSource = DataStore.GetData(simulation.Name, Report.Name, false, start, count);
             }
             if (View.DataGrid.DataSource != null)
             {
