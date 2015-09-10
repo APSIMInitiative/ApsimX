@@ -74,17 +74,25 @@ namespace UserInterface.Views
         /// <param name="count"></param>
         public void SetResultsPerPage(int count)
         {
-            tbCount.Text = count.ToString();
+            if (count == 0)
+                tbCount.Text = "";
+            else
+                tbCount.Text = count.ToString();
         }
 
         private void tbCount_TextChanged(object sender, EventArgs e)
         {
             PageEventArgs args = new PageEventArgs();
-            int convert;
+            int convert = -1;
+            args.count = -1;
 
-            if (Int32.TryParse(tbCount.Text, out convert))
-            {
+            if(tbCount.Text=="")
+                args.count = 0;
+            else if (Int32.TryParse(tbCount.Text, out convert))
                 args.count = convert;
+
+            if (args.count != -1)
+            {
                 args.gotoStart = true;
                 OnPageDataChanged.Invoke(this, args);
             }
