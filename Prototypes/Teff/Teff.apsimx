@@ -8586,7 +8586,7 @@ namespace Models
           <TableName>VanDelden</TableName>
           <XFieldName>PP</XFieldName>
           <YFieldName>FinalLeafNo</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -8600,8 +8600,8 @@ namespace Models
           <Line>None</Line>
           <TableName>HarvestReport</TableName>
           <XFieldName>ControlledEnvironment.DayLength</XFieldName>
-          <YFieldName>Teff.Leaf.AppearedCohortNo</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
+          <YFieldName />
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -8752,6 +8752,58 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Experiment>
+    <Graph>
+      <Name>FinalLeafNumber</Name>
+      <Series>
+        <Name>Observed</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>Solid</Line>
+        <TableName>VanDelden</TableName>
+        <XFieldName>PP</XFieldName>
+        <YFieldName>FinalLeafNo</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>Circle</Marker>
+        <Line>Dot</Line>
+        <TableName>HarvestReport</TableName>
+        <XFieldName>ControlledEnvironment.DayLength</XFieldName>
+        <YFieldName>Teff.Leaf.AppearedCohortNo</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
   </Folder>
   <ExplorerWidth>513</ExplorerWidth>
 </Simulations>
