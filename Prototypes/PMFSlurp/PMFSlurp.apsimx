@@ -320,6 +320,30 @@ This is important in SLURP as it is set for each species to represent their diff
     </Model>
     <AutoExport>false</AutoExport>
   </DataStore>
+  <Tests>
+    <Name>TestsBinary</Name>
+    <Test>
+      <SimulationName>LandP</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>[ExtraVariables].Script.SWC</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>LandP</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>[Slurp].Leaf.CoverTotal</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Tests</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>AccumIrrigation</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+  </Tests>
   <Simulation>
     <Name>SlurpTestBase</Name>
     <Weather>
@@ -3137,7 +3161,7 @@ namespace Models
         <Manager>
           <Name>SetLAIofCrop</Name>
           <Script>
-            <CoverFile>ShallowSoilTest/CoverInterpolated.csv</CoverFile>
+            <CoverFile>%root%\Prototypes\PMFSlurp\ShallowSoilTest\CoverInterpolated.csv</CoverFile>
             <CoverColumn>0</CoverColumn>
             <IrrigColumn>0</IrrigColumn>
             <Ext_coef>0.8</Ext_coef>
@@ -5113,28 +5137,28 @@ namespace Models
         <Factor>
           <Name>P087073</Name>
           <Specifications>
-            <string>[Weather].FileName = Weather\P087073.met</string>
+            <string>[Weather].FileName = %root%\Prototypes\PMFSlurp\Weather\P087073.met</string>
             <string>[Clock].StartDate = 1980-03-01</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>P108081</Name>
           <Specifications>
-            <string>[Weather].FileName = Weather\P108081.met</string>
+            <string>[Weather].FileName = %root%\Prototypes\PMFSlurp\Weather\P108081.met</string>
             <string>[Clock].StartDate = 1980-03-01</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>P128077</Name>
           <Specifications>
-            <string>[Weather].FileName = Weather\P128077.met</string>
+            <string>[Weather].FileName = %root%\Prototypes\PMFSlurp\Weather\P128077.met</string>
             <string>[Clock].StartDate = 1980-03-01</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>P144102</Name>
           <Specifications>
-            <string>[Weather].FileName = Weather\P144102.met</string>
+            <string>[Weather].FileName = %root%\Prototypes\PMFSlurp\Weather\P144102.met</string>
             <string>[Clock].StartDate = 1980-03-01</string>
           </Specifications>
         </Factor>
@@ -5152,10 +5176,12 @@ namespace Models
                 <double>0.033</double>
                 <double>0.027</double>
                 <double>0.013</double>
+                <double>0.013</double>
                 <double>0.008</double>
                 <double>0.008</double>
               </LL>
               <KL>
+                <double>0.2</double>
                 <double>0.2</double>
                 <double>0.2</double>
                 <double>0.2</double>
@@ -5168,19 +5194,22 @@ namespace Models
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
+                <double>1</double>
               </XF>
             </SoilCrop>
             <Thickness>
               <double>80</double>
               <double>50</double>
               <double>200</double>
-              <double>670</double>
+              <double>270</double>
+              <double>400</double>
               <double>500</double>
             </Thickness>
             <BD>
               <double>0.77</double>
               <double>0.63</double>
               <double>0.4225</double>
+              <double>0.42</double>
               <double>0.2</double>
               <double>0.2</double>
             </BD>
@@ -5188,31 +5217,36 @@ namespace Models
               <double>0.0165</double>
               <double>0.0135</double>
               <double>0.013</double>
+              <double>0.01</double>
               <double>0.008</double>
-              <double>0.008</double>
+              <double>0.01</double>
             </AirDry>
             <LL15>
               <double>0.033</double>
               <double>0.027</double>
               <double>0.013</double>
+              <double>0.01</double>
               <double>0.008</double>
-              <double>0.008</double>
+              <double>0.01</double>
             </LL15>
             <DUL>
               <double>0.1925</double>
               <double>0.1575</double>
               <double>0.04225</double>
+              <double>0.04</double>
               <double>0.022</double>
-              <double>0.022</double>
+              <double>0.02</double>
             </DUL>
             <SAT>
               <double>0.2365</double>
               <double>0.1935</double>
               <double>0.13</double>
+              <double>0.13</double>
               <double>0.1</double>
               <double>0.1</double>
             </SAT>
             <KS>
+              <double>1000</double>
               <double>1000</double>
               <double>1000</double>
               <double>1000</double>
@@ -5487,8 +5521,8 @@ namespace Models
             <Thickness>
               <double>180</double>
               <double>150</double>
-              <double>200</double>
-              <double>300</double>
+              <double>270</double>
+              <double>230</double>
               <double>170</double>
               <double>500</double>
             </Thickness>
@@ -5519,7 +5553,7 @@ namespace Models
             <DUL>
               <double>0.304</double>
               <double>0.285</double>
-              <double>0.14875</double>
+              <double>0.1</double>
               <double>0.039</double>
               <double>0.022</double>
               <double>0.022</double>
@@ -5768,8 +5802,8 @@ namespace Models
             <Thickness>
               <double>200</double>
               <double>150</double>
-              <double>150</double>
-              <double>200</double>
+              <double>250</double>
+              <double>100</double>
               <double>300</double>
               <double>500</double>
             </Thickness>
@@ -5792,7 +5826,7 @@ namespace Models
             <LL15>
               <double>0.1535</double>
               <double>0.152</double>
-              <double>0.05</double>
+              <double>0.07</double>
               <double>0.014</double>
               <double>0.008</double>
               <double>0.008</double>
@@ -5800,7 +5834,7 @@ namespace Models
             <DUL>
               <double>0.3735</double>
               <double>0.32</double>
-              <double>0.165</double>
+              <double>0.2</double>
               <double>0.0455</double>
               <double>0.022</double>
               <double>0.022</double>
@@ -6089,8 +6123,8 @@ namespace Models
             </SoilCrop>
             <Thickness>
               <double>250</double>
-              <double>300</double>
-              <double>300</double>
+              <double>350</double>
+              <double>250</double>
               <double>300</double>
               <double>350</double>
             </Thickness>
@@ -6404,8 +6438,8 @@ namespace Models
             <Thickness>
               <double>200</double>
               <double>150</double>
-              <double>200</double>
-              <double>500</double>
+              <double>250</double>
+              <double>450</double>
               <double>150</double>
               <double>300</double>
             </Thickness>
@@ -6660,12 +6694,12 @@ namespace Models
       <Name>SoilXClimateBase</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>Weather\P087073.met</FileName>
+        <FileName>%root%\Prototypes\PMFSlurp\Weather\P087073.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>1980-03-01T00:00:00</StartDate>
-        <EndDate>2012-03-01T00:00:00</EndDate>
+        <EndDate>1985-03-01T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>Summary</Name>
