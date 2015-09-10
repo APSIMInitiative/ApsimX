@@ -35,14 +35,14 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.GridView = new Views.GridView();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.tbCount = new System.Windows.Forms.TextBox();
             this.lResults = new System.Windows.Forms.Label();
             this.bHome = new System.Windows.Forms.Button();
-            this.bStart = new System.Windows.Forms.Button();
+            this.bBack = new System.Windows.Forms.Button();
             this.bForward = new System.Windows.Forms.Button();
             this.bEnd = new System.Windows.Forms.Button();
-            this.GridView = new Views.GridView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -141,13 +141,28 @@
             this.tabPage1.Text = "Data";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // GridView
+            // 
+            this.GridView.AutoFilterOn = false;
+            this.GridView.DataSource = null;
+            this.GridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GridView.GetCurrentCell = null;
+            this.GridView.Location = new System.Drawing.Point(3, 3);
+            this.GridView.ModelName = null;
+            this.GridView.Name = "GridView";
+            this.GridView.NumericFormat = null;
+            this.GridView.ReadOnly = false;
+            this.GridView.RowCount = 0;
+            this.GridView.Size = new System.Drawing.Size(592, 426);
+            this.GridView.TabIndex = 0;
+            // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.Controls.Add(this.textBox1);
+            this.flowLayoutPanel1.Controls.Add(this.tbCount);
             this.flowLayoutPanel1.Controls.Add(this.lResults);
             this.flowLayoutPanel1.Controls.Add(this.bHome);
-            this.flowLayoutPanel1.Controls.Add(this.bStart);
+            this.flowLayoutPanel1.Controls.Add(this.bBack);
             this.flowLayoutPanel1.Controls.Add(this.bForward);
             this.flowLayoutPanel1.Controls.Add(this.bEnd);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -156,13 +171,13 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(592, 29);
             this.flowLayoutPanel1.TabIndex = 7;
             // 
-            // textBox1
+            // tbCount
             // 
-            this.textBox1.Location = new System.Drawing.Point(3, 3);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(38, 20);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.Text = "100";
+            this.tbCount.Location = new System.Drawing.Point(3, 3);
+            this.tbCount.Name = "tbCount";
+            this.tbCount.Size = new System.Drawing.Size(38, 20);
+            this.tbCount.TabIndex = 1;
+            this.tbCount.TextChanged += new System.EventHandler(this.tbCount_TextChanged);
             // 
             // lResults
             // 
@@ -181,15 +196,17 @@
             this.bHome.TabIndex = 3;
             this.bHome.Text = "<<";
             this.bHome.UseVisualStyleBackColor = true;
+            this.bHome.Click += new System.EventHandler(this.bHome_Click);
             // 
-            // bStart
+            // bBack
             // 
-            this.bStart.Location = new System.Drawing.Point(186, 3);
-            this.bStart.Name = "bStart";
-            this.bStart.Size = new System.Drawing.Size(40, 23);
-            this.bStart.TabIndex = 4;
-            this.bStart.Text = "<";
-            this.bStart.UseVisualStyleBackColor = true;
+            this.bBack.Location = new System.Drawing.Point(186, 3);
+            this.bBack.Name = "bBack";
+            this.bBack.Size = new System.Drawing.Size(40, 23);
+            this.bBack.TabIndex = 4;
+            this.bBack.Text = "<";
+            this.bBack.UseVisualStyleBackColor = true;
+            this.bBack.Click += new System.EventHandler(this.bBack_Click);
             // 
             // bForward
             // 
@@ -199,6 +216,7 @@
             this.bForward.TabIndex = 5;
             this.bForward.Text = ">";
             this.bForward.UseVisualStyleBackColor = true;
+            this.bForward.Click += new System.EventHandler(this.bForward_Click);
             // 
             // bEnd
             // 
@@ -208,21 +226,8 @@
             this.bEnd.TabIndex = 6;
             this.bEnd.Text = ">>";
             this.bEnd.UseVisualStyleBackColor = true;
-            // 
-            // GridView
-            // 
-            this.GridView.AutoFilterOn = false;
-            this.GridView.DataSource = null;
-            this.GridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GridView.GetCurrentCell = null;
-            this.GridView.Location = new System.Drawing.Point(3, 3);
-            this.GridView.ModelName = null;
-            this.GridView.Name = "GridView";
-            this.GridView.NumericFormat = null;
-            this.GridView.ReadOnly = false;
-            this.GridView.RowCount = 0;
-            this.GridView.Size = new System.Drawing.Size(592, 426);
-            this.GridView.TabIndex = 0;
+            this.bEnd.Visible = false;
+            this.bEnd.Click += new System.EventHandler(this.bEnd_Click);
             // 
             // tabPage2
             // 
@@ -271,10 +276,10 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button bEnd;
         private System.Windows.Forms.Button bForward;
-        private System.Windows.Forms.Button bStart;
+        private System.Windows.Forms.Button bBack;
         private System.Windows.Forms.Button bHome;
         private System.Windows.Forms.Label lResults;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox tbCount;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }
