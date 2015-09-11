@@ -65,7 +65,7 @@ namespace Models.Agroforestry
         public double Amp { get { return weather.Amp; } }
 
         /// <summary>Gets the duration of the day in hours.</summary>
-        public double DayLength { get { return weather.DayLength; } }
+        public double CalculateDayLength(double Twilight) { return weather.CalculateDayLength(Twilight); }
 
     }
 }

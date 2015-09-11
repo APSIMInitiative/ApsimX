@@ -3652,7 +3652,7 @@ namespace Models.AgPasture1
 			double Pmax_EarlyLateDay = referencePhotosynthesisRate * effTemp1 * efCO2 * NcFactor;
 			double Pmax_MiddleDay = referencePhotosynthesisRate * effTemp2 * efCO2 * NcFactor;
 
-			double myDayLength = 3600 * MetData.DayLength;  //conversion of hour to seconds
+			double myDayLength = 3600 * MetData.CalculateDayLength(-6);  //conversion of hour to seconds
 
 			// Photosynthetically active radiation, PAR = 0.5*Radn, converted from MJ/m2 to J/2 (10^6)
 			double myPAR = 0.5 * interceptedRadn * 1000000;

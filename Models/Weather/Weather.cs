@@ -366,13 +366,9 @@ namespace Models
         /// <summary>
         /// Gets the duration of the day in hours.
         /// </summary>
-        public double DayLength
+        public double CalculateDayLength(double Twilight)
         {
-            get
-            {
-                // APSIM uses civil twilight
-                return MathUtilities.DayLength(this.clock.Today.DayOfYear, -6.0, this.Latitude);
-            }
+                return MathUtilities.DayLength(this.clock.Today.DayOfYear, Twilight, this.Latitude);
         }
 
         /// <summary>
