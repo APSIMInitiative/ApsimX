@@ -204,7 +204,7 @@ namespace Models.Graph
             if (factorsModel != null)
             {
                 List<Factor> factors = factorsModel.factors;
-                if (factors.Count == 2)
+                if (factors.Count == 2 && factors[0].Children.Count > 0 && factors[1].Children.Count > 0)
                 {
                     int colourIndex = 0;
                     foreach (FactorValue treatmentValue1 in factors[0].CreateValues())
