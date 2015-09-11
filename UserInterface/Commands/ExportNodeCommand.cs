@@ -417,13 +417,14 @@ namespace UserInterface.Commands
 
                                 // If we haven't encountered it, look it up in the .bib file.
                                 if (citation == null)
+                                {
                                     citation = bibTeX.Lookup(inTextCitation);
+                                    if (citation != null)
+                                        citations.Add(citation);
+                                }
 
                                 if (citation != null)
                                 {
-                                    // Add it to our list of citations.
-                                    citations.Add(citation);
-
                                     // Replace the in-text citation with (author et al., year)
                                     if (replacementText != string.Empty)
                                         replacementText += "; ";
