@@ -3687,6 +3687,7 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -4088,6 +4089,7 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -4323,6 +4325,7 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -4724,6 +4727,7 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -5047,6 +5051,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -5388,6 +5393,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -5732,6 +5738,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -6133,6 +6140,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -6483,6 +6491,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -6843,6 +6852,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -7713,6 +7723,7 @@ Field Crops Research 116 (2010) 196204
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>HarvestReport</Name>
@@ -7730,6 +7741,7 @@ Field Crops Research 116 (2010) 196204
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TefHarvesting</Name>
@@ -7922,7 +7934,7 @@ namespace Models
         </Factor>
         <Factor>
           <Name>PP</Name>
-          <Model xsi:type="ControlledEnvironment">
+          <ControlledEnvironment>
             <Name>1</Name>
             <MaxT>23</MaxT>
             <MinT>16</MinT>
@@ -7934,8 +7946,8 @@ namespace Models
             <CO2>350</CO2>
             <Latitude>-2</Latitude>
             <DayLength>9</DayLength>
-          </Model>
-          <Model xsi:type="ControlledEnvironment">
+          </ControlledEnvironment>
+          <ControlledEnvironment>
             <Name>2</Name>
             <MaxT>23</MaxT>
             <MinT>16</MinT>
@@ -7947,8 +7959,8 @@ namespace Models
             <CO2>350</CO2>
             <Latitude>-2</Latitude>
             <DayLength>10.5</DayLength>
-          </Model>
-          <Model xsi:type="ControlledEnvironment">
+          </ControlledEnvironment>
+          <ControlledEnvironment>
             <Name>3</Name>
             <MaxT>23</MaxT>
             <MinT>16</MinT>
@@ -7960,8 +7972,8 @@ namespace Models
             <CO2>350</CO2>
             <Latitude>-2</Latitude>
             <DayLength>12</DayLength>
-          </Model>
-          <Model xsi:type="ControlledEnvironment">
+          </ControlledEnvironment>
+          <ControlledEnvironment>
             <Name>4</Name>
             <MaxT>23</MaxT>
             <MinT>16</MinT>
@@ -7973,8 +7985,8 @@ namespace Models
             <CO2>350</CO2>
             <Latitude>-2</Latitude>
             <DayLength>13.5</DayLength>
-          </Model>
-          <Model xsi:type="ControlledEnvironment">
+          </ControlledEnvironment>
+          <ControlledEnvironment>
             <Name>5</Name>
             <MaxT>23</MaxT>
             <MinT>16</MinT>
@@ -7986,8 +7998,8 @@ namespace Models
             <CO2>350</CO2>
             <Latitude>-2</Latitude>
             <DayLength>15</DayLength>
-          </Model>
-          <Model xsi:type="ControlledEnvironment">
+          </ControlledEnvironment>
+          <ControlledEnvironment>
             <Name>6</Name>
             <MaxT>23</MaxT>
             <MinT>16</MinT>
@@ -7999,7 +8011,7 @@ namespace Models
             <CO2>350</CO2>
             <Latitude>-2</Latitude>
             <DayLength>16.5</DayLength>
-          </Model>
+          </ControlledEnvironment>
           <Specifications>
             <string>[ControlledEnvironment]</string>
           </Specifications>
@@ -8012,7 +8024,7 @@ namespace Models
           <StartDate>2000-01-01T00:00:00</StartDate>
           <EndDate>2000-12-31T00:00:00</EndDate>
         </Clock>
-        <Model xsi:type="ControlledEnvironment">
+        <ControlledEnvironment>
           <Name>ControlledEnvironment</Name>
           <MaxT>23</MaxT>
           <MinT>16</MinT>
@@ -8024,7 +8036,7 @@ namespace Models
           <CO2>350</CO2>
           <Latitude>-2</Latitude>
           <DayLength>9</DayLength>
-        </Model>
+        </ControlledEnvironment>
         <Summary>
           <Name>summaryfile</Name>
         </Summary>
@@ -8117,6 +8129,7 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -8566,6 +8579,7 @@ namespace Models
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -8600,7 +8614,7 @@ namespace Models
           <Line>None</Line>
           <TableName>HarvestReport</TableName>
           <XFieldName>ControlledEnvironment.DayLength</XFieldName>
-          <YFieldName />
+          <YFieldName>Teff.Leaf.AppearedCohortNo</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
