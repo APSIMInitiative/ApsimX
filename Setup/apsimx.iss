@@ -163,8 +163,8 @@ Name: {localappdata}\VirtualStore\Apsim; Type: dirifempty
 [Files]
 Source: ..\Bin\*.exe; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\Bin\*.dll; DestDir: {app}\Bin; Flags: ignoreversion; 
-Source: changes.html; DestDir: {app}\Documentation;
 Source: ..\Bin\UserInterface.exe.config; DestDir: {app}\Bin; Flags: ignoreversion; 
+Source: ..\APSIM.bib; DestDir: {app}; Flags: ignoreversion; 
 
 ;Sample files 
 Source: ..\Examples\*; DestDir: {app}\Examples; Flags: recursesubdirs
