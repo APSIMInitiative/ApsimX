@@ -93,7 +93,7 @@ namespace Models.PMF.Organs
         [Units("/d")]
         IFunction SenescenceRate = null;
         /// <summary>The temperature effect</summary>
-        [Link]
+        [Link(IsOptional = true)]
         [Units("0-1")]
         IFunction TemperatureEffect = null;
         /// <summary>The root front velocity</summary>
@@ -101,11 +101,11 @@ namespace Models.PMF.Organs
         [Units("mm/d")]
         IFunction RootFrontVelocity = null;
         /// <summary>The partition fraction</summary>
-        [Link]
+        [Link(IsOptional = true)]
         [Units("0-1")]
         IFunction PartitionFraction = null;
         /// <summary>The maximum n conc</summary>
-        [Link]
+        [Link(IsOptional = true)]
         [Units("g/g")]
         IFunction MaximumNConc = null;
         /// <summary>The maximum daily n uptake</summary>
@@ -113,13 +113,17 @@ namespace Models.PMF.Organs
         [Units("kg N/ha")]
         IFunction MaxDailyNUptake = null;
         /// <summary>The minimum n conc</summary>
-        [Link]
+        [Link(IsOptional = true)]
         [Units("g/g")]
         IFunction MinimumNConc = null;
         /// <summary>The kl modifier</summary>
         [Link]
         [Units("0-1")]
         IFunction KLModifier = null;
+        /// <summary>The Maximum Root Depth</summary>
+        [Link(IsOptional = true)]
+        [Units("0-1")]
+        IFunction MaximumRootDepth = null;
 
         #endregion
 
@@ -361,10 +365,15 @@ namespace Models.PMF.Organs
                 double TEM = (TemperatureEffect == null) ? 1 : TemperatureEffect.Value;
 
                 Depth = Depth + RootFrontVelocity.Value * soilCrop.XF[RootLayer] * TEM;
+
+                //Limit root depth for impeded layers
                 double MaxDepth = 0;
                 for (int i = 0; i < Soil.Thickness.Length; i++)
                     if (soilCrop.XF[i] > 0)
                         MaxDepth += Soil.Thickness[i];
+                //Limit root depth for the crop specific maximum depth
+                if (MaximumRootDepth != null)
+                    MaxDepth = Math.Min(MaximumRootDepth.Value, MaxDepth);
 
                 Depth = Math.Min(Depth, MaxDepth);
 
@@ -555,7 +564,7 @@ namespace Models.PMF.Organs
                 {
                     if (AccumulatedDepth < Depth)
                         InitialLayers += 1;
-                    AccumulatedDepth += Soil.SoilWater.Thickness[layer];
+                    AccumulatedDepth += Soil.Thickness[layer];
                 }
                 for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
@@ -578,7 +587,7 @@ namespace Models.PMF.Organs
             get
             {
                 double Demand = 0;
-                if (isGrowing)
+                if ((isGrowing)&&(PartitionFraction != null))
                     Demand = Arbitrator.DMSupply * PartitionFraction.Value;
                 TotalDMDemand = Demand;//  The is not really necessary as total demand is always not calculated on a layer basis so doesn't need summing.  However it may some day
                 return new BiomassPoolType { Structural = Demand };
@@ -731,8 +740,8 @@ namespace Models.PMF.Organs
                 foreach (Biomass Layer in LayerLive)
                 {
                     i += 1;
-                    StructuralNDemand[i] = Layer.PotentialDMAllocation * MinimumNConc.Value *  _NitrogenDemandSwitch;
-                    double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Layer.Wt + Layer.PotentialDMAllocation) - Layer.N);
+                    StructuralNDemand[i] = Layer.PotentialDMAllocation * MinNconc *  _NitrogenDemandSwitch;
+                    double NDeficit = Math.Max(0.0, MaxNconc * (Layer.Wt + Layer.PotentialDMAllocation) - Layer.N);
                     NonStructuralNDemand[i] = Math.Max(0, NDeficit - StructuralNDemand[i]) * _NitrogenDemandSwitch;
                 }
                 TotalNonStructuralNDemand = MathUtilities.Sum(NonStructuralNDemand);
@@ -879,21 +888,27 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
-        /// <value>The maximum nconc.</value>
+        /// <value>The maximum nconc.  Has a default of 0.01</value>
         public override double MaxNconc
         {
             get
             {
-                return MaximumNConc.Value;
+                if (MaximumNConc != null)
+                    return MaximumNConc.Value;
+                else
+                    return 0.01; 
             }
         }
         /// <summary>Gets or sets the minimum nconc.</summary>
-        /// <value>The minimum nconc.</value>
+        /// <value>The minimum nconc. Has a default of 0.01</value>
         public override double MinNconc
         {
             get
             {
-                return MinimumNConc.Value;
+                if (MinimumNConc != null)
+                    return MinimumNConc.Value;
+                else
+                    return 0.01;
             }
         }
 
@@ -1145,7 +1160,7 @@ namespace Models.PMF.Organs
             }
             
             tags.Add(new AutoDocumentation.Heading("Nitrogen Demands", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand from " + this.Name + " is the product of Total DM demand and a Nitrogen concentration of " + MinimumNConc.Value * 100 + "%", indent));
+            tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand from " + this.Name + " is the product of Total DM demand and a Nitrogen concentration of " + MinNconc * 100 + "%", indent));
             if (NitrogenDemandSwitch != null)
             {
                 tags.Add(new AutoDocumentation.Paragraph("The Nitrogen demand swith is a multiplier applied to nitrogen demand so it can be turned off at certain phases.  For the " + Name + " Organ it is set as:", indent));
