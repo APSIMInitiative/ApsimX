@@ -80,6 +80,13 @@ namespace Models.Report
             this.FindVariableMembers();
         }
 
+        /// <summary>A method that can be called by other models to perform a line of output.</summary>
+        public void DoOutput()
+        {
+            foreach (ReportColumn column in columns)
+                column.StoreValue();
+        }
+
         /// <summary>
         /// Fill the Members list with VariableMember objects for each variable.
         /// </summary>
