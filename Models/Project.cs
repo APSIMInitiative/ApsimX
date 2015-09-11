@@ -94,7 +94,10 @@ namespace Models
                     jobManager.Start(waitUntilFinished: true);
 
                     if (jobManager.SomeHadErrors)
+                    {
+                        PrintErrors(jobManager);
                         exitCode = 1;
+                    }
                     else
                         exitCode = 0;
                 }
@@ -111,6 +114,19 @@ namespace Models
             if (exitCode != 0)
                 Console.WriteLine("ERRORS FOUND!!");
             return exitCode;
+        }
+
+        /// <summary>
+        /// Print all error messages to console.
+        /// </summary>
+        /// <param name="jobManager">The job manager.</param>
+        private static void PrintErrors(JobManager jobManager)
+        {
+            foreach (JobManager.IRunnable job in jobManager.CompletedJobs)
+            {
+                if (job.ErrorMessage != null && job.ErrorMessage != string.Empty)
+                    Console.WriteLine(job.ErrorMessage + "\r\n");
+            }
         }
 
         /// <summary>
@@ -329,24 +345,32 @@ namespace Models
                 string errors = string.Empty;
                 foreach (string apsimxFileName in files)
                 {
-                    Simulations simulations = Simulations.Read(apsimxFileName);
-                    if (simulations.LoadErrors.Count == 0)
+                    try
                     {
-                        jobs.Add(simulations);
-                        jobManager.AddJob(simulations);
-                    }
-                    else
-                    {
-                        foreach (Exception err in simulations.LoadErrors)
+                        Simulations simulations = Simulations.Read(apsimxFileName);
+                        if (simulations.LoadErrors.Count == 0)
                         {
-                            errors += err.Message + "\r\n";
-                            errors += err.StackTrace + "\r\n";
+                            jobs.Add(simulations);
+                            jobManager.AddJob(simulations);
                         }
-                    }                    
+                        else
+                        {
+                            foreach (Exception err in simulations.LoadErrors)
+                            {
+                                errors += "ERROR in file: " + apsimxFileName + "\r\n";
+                                errors += err.ToString() + "\r\n\r\n";
+                            }
+                        }
+                    }
+                    catch (Exception err)
+                    {
+                        errors += "ERROR in file: " + apsimxFileName + "\r\n" +
+                                  err.ToString() + "\r\n\r\n";
+                    }
                 }
 
                 if (errors != string.Empty)
-                    ErrorMessage = errors;
+                    throw new Exception(errors);
             }
         }
     }
