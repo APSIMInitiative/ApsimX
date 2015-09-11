@@ -324,6 +324,26 @@ A function is used to provide maturity date as days after sowing(DAS).
           <SetEvent>Maturity</SetEvent>
           <ReSetEvent>never</ReSetEvent>
         </OnEventFunction>
+        <OnEventFunction>
+          <Name>PanicleInitiationDAS</Name>
+          <Memo>
+            <Name>memo</Name>
+            <MemoText><![CDATA[
+A function is used to provide flowering date as days after sowing(DAS).
+<br/>
+]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>PreEventValue</Name>
+            <Value>0</Value>
+          </Constant>
+          <VariableReference>
+            <Name>PostEventValue</Name>
+            <VariableName>[Phenology].DaysAfterSowing</VariableName>
+          </VariableReference>
+          <SetEvent>FloralInitiation</SetEvent>
+          <ReSetEvent>never</ReSetEvent>
+        </OnEventFunction>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -1955,9 +1975,9 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
 
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 50</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 50</Command>
+        <Command>[Phenology].Juvenile.Target.Value = 65</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 9, 13.5</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 150</Command>
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 100</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
@@ -1973,7 +1993,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
 
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 50</Command>
+        <Command>[Phenology].Juvenile.Target.Value = 120</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 50</Command>
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
@@ -1991,9 +2011,9 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
 
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 50</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 50</Command>
+        <Command>[Phenology].Juvenile.Target.Value = 40</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 9, 16.5</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 100</Command>
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 100</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
@@ -2009,7 +2029,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
 
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 50</Command>
+        <Command>[Phenology].Juvenile.Target.Value = 120</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 50</Command>
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
@@ -3461,6 +3481,13 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <string>Mekelle2008Crop</string>
       </SheetNames>
     </Model>
+    <Model xsi:type="ExcelInput">
+      <Name>ObservedVanDelden</Name>
+      <FileName>Observed.xlsx</FileName>
+      <SheetNames>
+        <string>VanDelden</string>
+      </SheetNames>
+    </Model>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
       <PredictedTableName>HarvestReport</PredictedTableName>
@@ -3660,6 +3687,7 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -4061,6 +4089,7 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -4296,6 +4325,7 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -4697,6 +4727,7 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -5020,6 +5051,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -5361,6 +5393,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -5705,6 +5738,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -6106,6 +6140,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -6456,6 +6491,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -6816,6 +6852,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -7686,6 +7723,7 @@ Field Crops Research 116 (2010) 196204
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>HarvestReport</Name>
@@ -7703,6 +7741,7 @@ Field Crops Research 116 (2010) 196204
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TefHarvesting</Name>
@@ -7872,21 +7911,21 @@ namespace Models
             <Name>Ziquala</Name>
             <Operation>
               <Date>2000-01-01T00:00:00</Date>
-              <Action> [Teff].Sow(population:100., cultivar:"Gibe", depth:50, rowSpacing:250);</Action>
+              <Action> [Teff].Sow(population:100., cultivar:"Ziquala", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>Ayana</Name>
             <Operation>
               <Date>2000-01-01T00:00:00</Date>
-              <Action> [Teff].Sow(population:100., cultivar:"Gibe", depth:50, rowSpacing:250);</Action>
+              <Action> [Teff].Sow(population:100., cultivar:"Ayana", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>04T19</Name>
             <Operation>
               <Date>2000-01-01T00:00:00</Date>
-              <Action> [Teff].Sow(population:100., cultivar:"Gibe", depth:50, rowSpacing:250);</Action>
+              <Action> [Teff].Sow(population:100., cultivar:"04T19", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -7895,7 +7934,7 @@ namespace Models
         </Factor>
         <Factor>
           <Name>PP</Name>
-          <Model xsi:type="ControlledEnvironment">
+          <ControlledEnvironment>
             <Name>1</Name>
             <MaxT>23</MaxT>
             <MinT>16</MinT>
@@ -7907,8 +7946,8 @@ namespace Models
             <CO2>350</CO2>
             <Latitude>-2</Latitude>
             <DayLength>9</DayLength>
-          </Model>
-          <Model xsi:type="ControlledEnvironment">
+          </ControlledEnvironment>
+          <ControlledEnvironment>
             <Name>2</Name>
             <MaxT>23</MaxT>
             <MinT>16</MinT>
@@ -7920,8 +7959,8 @@ namespace Models
             <CO2>350</CO2>
             <Latitude>-2</Latitude>
             <DayLength>10.5</DayLength>
-          </Model>
-          <Model xsi:type="ControlledEnvironment">
+          </ControlledEnvironment>
+          <ControlledEnvironment>
             <Name>3</Name>
             <MaxT>23</MaxT>
             <MinT>16</MinT>
@@ -7933,8 +7972,8 @@ namespace Models
             <CO2>350</CO2>
             <Latitude>-2</Latitude>
             <DayLength>12</DayLength>
-          </Model>
-          <Model xsi:type="ControlledEnvironment">
+          </ControlledEnvironment>
+          <ControlledEnvironment>
             <Name>4</Name>
             <MaxT>23</MaxT>
             <MinT>16</MinT>
@@ -7946,8 +7985,8 @@ namespace Models
             <CO2>350</CO2>
             <Latitude>-2</Latitude>
             <DayLength>13.5</DayLength>
-          </Model>
-          <Model xsi:type="ControlledEnvironment">
+          </ControlledEnvironment>
+          <ControlledEnvironment>
             <Name>5</Name>
             <MaxT>23</MaxT>
             <MinT>16</MinT>
@@ -7959,8 +7998,8 @@ namespace Models
             <CO2>350</CO2>
             <Latitude>-2</Latitude>
             <DayLength>15</DayLength>
-          </Model>
-          <Model xsi:type="ControlledEnvironment">
+          </ControlledEnvironment>
+          <ControlledEnvironment>
             <Name>6</Name>
             <MaxT>23</MaxT>
             <MinT>16</MinT>
@@ -7972,7 +8011,7 @@ namespace Models
             <CO2>350</CO2>
             <Latitude>-2</Latitude>
             <DayLength>16.5</DayLength>
-          </Model>
+          </ControlledEnvironment>
           <Specifications>
             <string>[ControlledEnvironment]</string>
           </Specifications>
@@ -7985,7 +8024,7 @@ namespace Models
           <StartDate>2000-01-01T00:00:00</StartDate>
           <EndDate>2000-12-31T00:00:00</EndDate>
         </Clock>
-        <Model xsi:type="ControlledEnvironment">
+        <ControlledEnvironment>
           <Name>ControlledEnvironment</Name>
           <MaxT>23</MaxT>
           <MinT>16</MinT>
@@ -7997,7 +8036,7 @@ namespace Models
           <CO2>350</CO2>
           <Latitude>-2</Latitude>
           <DayLength>9</DayLength>
-        </Model>
+        </ControlledEnvironment>
         <Summary>
           <Name>summaryfile</Name>
         </Summary>
@@ -8090,6 +8129,7 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -8525,6 +8565,22 @@ namespace Models
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
           </Plant>
+          <Report>
+            <Name>HarvestReport</Name>
+            <VariableNames>
+              <string>[Clock].Today</string>
+              <string>[Teff].Structure.MainStemFinalNodeNo</string>
+              <string>[Teff].Leaf.AppearedCohortNo</string>
+              <string>[Teff].Phenology.PanicleInitiationDAS.Value as PanicleInitiationDAS</string>
+              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDASS</string>
+              <string>[ControlledEnvironment].DayLength</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Teff].Harvesting</string>
+            </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
+          </Report>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -8532,17 +8588,32 @@ namespace Models
         <Slope>0</Slope>
       </Simulation>
       <Graph>
-        <Name>Graph</Name>
+        <Name>FinalLeafNumber</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
           <Marker>FilledCircle</Marker>
+          <Line>Solid</Line>
+          <TableName>VanDelden</TableName>
+          <XFieldName>PP</XFieldName>
+          <YFieldName>FinalLeafNo</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>Circle</Marker>
           <Line>None</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Teff.Phenology.DaysAfterSowing</XFieldName>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>ControlledEnvironment.DayLength</XFieldName>
           <YFieldName>Teff.Leaf.AppearedCohortNo</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -8568,7 +8639,185 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <Graph>
+        <Name>PanicleInitiationDAS</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>VanDelden</TableName>
+          <XFieldName>PP</XFieldName>
+          <YFieldName>PanicleInitiationDAS</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>Circle</Marker>
+          <Line>None</Line>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>ControlledEnvironment.DayLength</XFieldName>
+          <YFieldName>PanicleInitiationDAS</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Graph1</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Teff.Phenology.DaysAfterSowing</XFieldName>
+          <YFieldName>Teff.Leaf.AppearedCohortNo</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PanicleInitiationDAS1</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>VanDelden</TableName>
+          <XFieldName>PP</XFieldName>
+          <YFieldName>InterNodes</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
     </Experiment>
+    <Graph>
+      <Name>FinalLeafNumber</Name>
+      <Series>
+        <Name>Observed</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>Solid</Line>
+        <TableName>VanDelden</TableName>
+        <XFieldName>PP</XFieldName>
+        <YFieldName>FinalLeafNo</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>Circle</Marker>
+        <Line>Dot</Line>
+        <TableName>HarvestReport</TableName>
+        <XFieldName>ControlledEnvironment.DayLength</XFieldName>
+        <YFieldName>Teff.Leaf.AppearedCohortNo</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
   </Folder>
   <ExplorerWidth>513</ExplorerWidth>
 </Simulations>
