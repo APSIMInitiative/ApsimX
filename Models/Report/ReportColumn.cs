@@ -371,7 +371,7 @@ namespace Models.Report
         /// <summary>
         /// Retrieve the current value and store it in our array of values.
         /// </summary>
-        private void StoreValue()
+        public void StoreValue()
         {
             object value = Apsim.Get(this.parentModel.Parent, this.variableName, true);
 
