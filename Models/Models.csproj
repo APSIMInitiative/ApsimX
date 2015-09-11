@@ -344,7 +344,8 @@
     <Compile Include="Core\ICrop.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Utilities\Accumulator.cs" />
-    <Compile Include="Weather.cs" />
+    <Compile Include="Weather\ControlledEnvironment.cs" />
+    <Compile Include="Weather\Weather.cs" />
     <Compile Include="Report\Report.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
