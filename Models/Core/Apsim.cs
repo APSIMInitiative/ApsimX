@@ -14,6 +14,7 @@ namespace Models.Core
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Xml;
     using APSIM.Shared.Utilities;
+    using PMF.Functions;
 
     /// <summary>
     /// The API for models to discover other models, get and set variables in
@@ -427,45 +428,25 @@ namespace Models.Core
                     object linkedObject = null;
 
                     List<IModel> allMatches = FindAll(model, field.FieldType);
-                    if (allMatches.Count == 1)
-                    {
-                        linkedObject = allMatches[0];
-                    }
-                    else
-                    {
-                        // more that one match so use name to match
-                        foreach (IModel matchingModel in allMatches)
-                        {
-                            if (matchingModel.Name == field.Name)
-                            {
-                                linkedObject = matchingModel;
-                                break;
-                            }
-                        }
 
-                        // If the link isn't optional then choose the closest match.
-                        if (linkedObject == null && !link.IsOptional && allMatches.Count > 1)
-                        {
-                            // Return the first (closest) match.
-                            linkedObject = allMatches[0];
-                        }
+                    // Special case: if the type is an IFunction then must match on name
+                    // and type.
+                    if (typeof(IFunction).IsAssignableFrom(field.FieldType))
+                        linkedObject = allMatches.Find(m => m.Name == field.Name);
 
-                        if ((linkedObject == null) && (!link.IsOptional))
-                        {
-                            errorMsg = string.Format(": Found {0} matches for {1} {2} !", allMatches.Count, field.FieldType.FullName, field.Name);
-                        }
-                    }
+                    else if (allMatches.Count >= 1)
+                        linkedObject = allMatches[0];     // choose closest match.
+
+                    if ((linkedObject == null) && (!link.IsOptional))
+                        errorMsg = string.Format(": Found {0} matches for {1} {2} !", allMatches.Count, field.FieldType.FullName, field.Name);
 
                     if (linkedObject != null)
-                    {
                         field.SetValue(model, linkedObject);
-                    }
+
                     else if (!link.IsOptional)
-                    {
                         throw new ApsimXException(
                                     model,
                                     "Cannot resolve [Link] '" + field.ToString() + errorMsg);
-                    }
                 }
             }
         }
