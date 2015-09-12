@@ -693,7 +693,24 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnCopyToClipboard(object sender, EventArgs e)
         {
-            DataObject content = this.Grid.GetClipboardContent();
+            // this.Grid.EndEdit();
+            DataObject content = new DataObject();
+            if (this.Grid.SelectedCells.Count==1)
+            {
+                if (this.Grid.CurrentCell.IsInEditMode)
+                {
+                    if (this.Grid.EditingControl is System.Windows.Forms.TextBox)
+                    {
+                        string text = ((System.Windows.Forms.TextBox)this.Grid.EditingControl).SelectedText;
+                        content.SetText(text);
+                    }
+                }
+                else
+                    content.SetText(this.Grid.CurrentCell.Value.ToString());
+            }
+            else
+            content = this.Grid.GetClipboardContent();
+
             Clipboard.SetDataObject(content);
         }
 

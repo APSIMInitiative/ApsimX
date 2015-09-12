@@ -204,7 +204,7 @@ namespace Models.Graph
             if (factorsModel != null)
             {
                 List<Factor> factors = factorsModel.factors;
-                if (factors.Count == 2)
+                if (factors.Count == 2 && factors[0].Children.Count > 0 && factors[1].Children.Count > 0)
                 {
                     int colourIndex = 0;
                     foreach (FactorValue treatmentValue1 in factors[0].CreateValues())
@@ -258,10 +258,14 @@ namespace Models.Graph
                 if (thisEnum.Equals(e))
                 {
                     // If pointing to the last element then wrap around to first.
-                    if (i == enumTypes.Length - 1)
-                        return (T)enumTypes.GetValue(0);
-                    else
-                        return (T)enumTypes.GetValue(i + 1);
+                    int indexToReturn = i + 1;
+                    if (indexToReturn >= enumTypes.Length)
+                        indexToReturn = 0;
+
+                    if (enumTypes.GetValue(indexToReturn).ToString() == "None")
+                        indexToReturn++;
+
+                    return (T)enumTypes.GetValue(indexToReturn);
                 }
             }
             throw new Exception("Bad enumeration found");
