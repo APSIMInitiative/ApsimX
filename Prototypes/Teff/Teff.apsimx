@@ -8600,7 +8600,7 @@ namespace Models
           <TableName>VanDelden</TableName>
           <XFieldName>PP</XFieldName>
           <YFieldName>FinalLeafNo</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -8615,7 +8615,7 @@ namespace Models
           <TableName>HarvestReport</TableName>
           <XFieldName>ControlledEnvironment.DayLength</XFieldName>
           <YFieldName>Teff.Leaf.AppearedCohortNo</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
