@@ -219,6 +219,7 @@ namespace Models.Soils
     /// several instances (patches)
     /// </summary>
     [Serializable]
+    [ValidParent(typeof(Soil))]
     public partial class SoilNitrogen : Model
     {
         /// <summary>The surface organic matter</summary>

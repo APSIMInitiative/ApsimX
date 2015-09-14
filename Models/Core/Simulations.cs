@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using Models.Factorial;
 using APSIM.Shared.Utilities;
+using System.Linq;
 
 namespace Models.Core
 {
@@ -111,8 +112,7 @@ namespace Models.Core
                     }
                 }
             }
-            else
-                throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
+
             return simulations;
         }
 
@@ -315,6 +315,8 @@ namespace Models.Core
             DataStore store = Apsim.Child(this, typeof(DataStore)) as DataStore;
 
             // Remove old simulation data.
+            if (store == null)
+                throw new Exception("Cannot find a data store in simulation file " + FileName);
             store.RemoveUnwantedSimulations(this);
 
             Simulation[] simulationsToRun;
@@ -414,7 +416,7 @@ namespace Models.Core
                 {
                     if (ErrorMessage == null)
                         ErrorMessage += "Errors were found in these simulations:\r\n";
-                    ErrorMessage += simulation.Name + "\r\n";
+                    ErrorMessage += simulation.Name + "\r\n\r\n";
                 }
             }
             if (RunAllCompleted)

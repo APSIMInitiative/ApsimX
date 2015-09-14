@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Test</Name>
@@ -749,6 +749,36 @@
   </Tests>
   <Graph>
     <Name>Graph</Name>
+    <Series>
+      <Name>rain</Name>
+      <Type>Bar</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>Weather.Rain</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Series>
+      <Name>sw(1)</Name>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16711681</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>Soil.SoilWater.SWmm(1)</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
     <Axis>
       <Type>Bottom</Type>
       <Title />
@@ -765,56 +795,14 @@
       <Maximum>NaN</Maximum>
       <Interval>NaN</Interval>
     </Axis>
-    <Series>
-      <Title>rain</Title>
-      <Type>Bar</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>Weather.Rain</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-    </Series>
-    <Series>
-      <Title>sw(1)</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16711681</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>Soil.SoilWater.SWmm(1)</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-    </Series>
     <LegendPosition>TopRight</LegendPosition>
-    <ShowRegressionLine>false</ShowRegressionLine>
     <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
   <Memo>
     <Name>Memo</Name>
     <MemoText><![CDATA[
-<html><body>
-
-</body></html>]]></MemoText>
+]]></MemoText>
   </Memo>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

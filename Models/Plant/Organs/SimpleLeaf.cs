@@ -51,6 +51,7 @@ namespace Models.PMF.Organs
         public double LAITotal { get { return LAI + LAIDead; } }
 
         /// <summary>Gets the cover green.</summary>
+        [Units("0-1")]
         public double CoverGreen
         {
             get
@@ -60,8 +61,9 @@ namespace Models.PMF.Organs
                 return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
             }
         }
-        
+
         /// <summary>Gets the cover total.</summary>
+        [Units("0-1")]
         public double CoverTotal
         {
             get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); }
@@ -85,24 +87,10 @@ namespace Models.PMF.Organs
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
         #endregion
 
-
-        #region Class Links
-        /// <summary>The plant</summary>
-        [Link]
-        Plant Plant = null;
-
-        /// <summary>The summary</summary>
-        [Link]
-        ISummary Summary = null;
-        #endregion
-
         #region Parameters
         /// <summary>The FRGR function</summary>
         [Link]
         IFunction FRGRFunction = null;   // VPD effect on Growth Interpolation Set
-        /// <summary>The potential biomass</summary>
-        [Link(IsOptional = true)]
-        IFunction PotentialBiomass = null;
         /// <summary>The dm demand function</summary>
         [Link]
         IFunction DMDemandFunction = null;
@@ -123,7 +111,7 @@ namespace Models.PMF.Organs
         IFunction ExtinctionCoefficientFunction = null;
         /// <summary>The photosynthesis</summary>
         [Link(IsOptional = true)]
-        RUEModel Photosynthesis = null;
+        IFunction Photosynthesis = null;
         /// <summary>The height function</summary>
         [Link(IsOptional = true)]
         IFunction HeightFunction = null;
@@ -254,15 +242,14 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Photosynthesis != null)
-                    DeltaBiomass = Photosynthesis.Growth(RadIntTot);
-                return new BiomassSupplyType { Fixation = DeltaBiomass, Retranslocation = 0, Reallocation = 0 };
+                return new BiomassSupplyType { Fixation = Photosynthesis.Value, Retranslocation = 0, Reallocation = 0 };
             }
         }
         /// <summary>Sets the dm allocation.</summary>
         /// <value>The dm allocation.</value>
         public override BiomassAllocationType DMAllocation
         {
+
             set
             {
                 Live.StructuralWt += value.Structural;
@@ -343,16 +330,6 @@ namespace Models.PMF.Organs
             Clear();
         }
 
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, EventArgs e)
-        {
-            if (sender == Plant)
-                Clear();
-        }
-
         /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -366,20 +343,6 @@ namespace Models.PMF.Organs
 
         #region Component Process Functions
 
-
-        /// <summary>Called when crop is being cut.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Cutting")]
-        private void OnCutting(object sender, EventArgs e)
-        {
-            if (sender == Plant)
-            {
-                Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
-                Live.Clear();
-                Dead.Clear();
-            }
-        }
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -400,6 +363,7 @@ namespace Models.PMF.Organs
         {
             base.Clear();
             Height = 0;
+            LAI = 0;
         }
         #endregion
 
@@ -412,11 +376,6 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
-                if (PotentialBiomass != null)
-                {
-                    DeltaBiomass = PotentialBiomass.Value; //Over the defalt DM supply of 1 if there is a photosynthesis function present
-                }
-
                 FRGR = FRGRFunction.Value;
                 if (CoverFunction == null & ExtinctionCoefficientFunction == null)
                 {
@@ -460,5 +419,220 @@ namespace Models.PMF.Organs
 
         #endregion
 
+        #region Biomass Removal
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on harvest.
+        /// </summary>
+        public override OrganBiomassRemovalType HarvestDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0,
+                    FractionToResidue = 0.3
+                };
+            }
+        }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        public override OrganBiomassRemovalType CutDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0.8,
+                    FractionToResidue = 0
+                };
+            }
+        }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        public override OrganBiomassRemovalType PruneDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0,
+                    FractionToResidue = 0.6
+                };
+            }
+        }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        public override OrganBiomassRemovalType GrazeDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0.6,
+                    FractionToResidue = 0.1
+                };
+            }
+        }
+        #endregion
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            Name = this.Name;
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            tags.Add(new AutoDocumentation.Paragraph(Name + " is parameterised using a simple leaf organ type which provides the core functions of intercepting radiation, providing a photosynthesis supply and a transpiration demand.  It is parameterised as follows.", indent));
+
+            // write memos.
+            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                memo.Document(tags, -1, indent);
+
+            // Describe biomass production
+            tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));  //FIXME, this will need to be changed to photoysnthesis rather that potential Biomass
+            if (Photosynthesis != null)
+                tags.Add(new AutoDocumentation.Paragraph("DryMatter Fixation Supply (Photosynthesis) provided to the Organ Arbitrator (for partitioning between organs) is calculated each day as the product of a unstressed potential and a series of stress factors.", indent));
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                {
+                    if (child.Name == "Photosynthesis")
+                        child.Document(tags, headingLevel + 5, indent + 1);
+                }
+           
+            tags.Add(new AutoDocumentation.Paragraph("DM is not retranslocated out of " + this.Name + " ", indent));
+
+            tags.Add(new AutoDocumentation.Heading("Dry Matter Demands", headingLevel + 1));
+            if (StructuralFraction != null)
+                tags.Add(new AutoDocumentation.Paragraph("Of the organs total DM demand " + StructuralFraction.Value * 100 + "% is structural demand and " + (100 - StructuralFraction.Value * 100) + "is non-structural demand", indent));
+            else
+                tags.Add(new AutoDocumentation.Paragraph("100% of the DM demanded from this organ is structural", indent));
+
+            if (DMDemandFunction != null)
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The daily DM demand from this organ is calculated using", indent));
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                {
+                    if (child.Name == "DMDemandFunction")
+                        child.Document(tags, headingLevel + 5, indent + 1);
+                }
+            }
+
+            tags.Add(new AutoDocumentation.Heading("Nitrogen Demands", headingLevel + 1));
+            tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand from " + this.Name + " is the product of Total DM demand and a Nitrogen concentration of " + NConc.Value * 100 + "%", indent));
+            if (NitrogenDemandSwitch != null)
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The Nitrogen demand swith is a multiplier applied to nitrogen demand so it can be turned off at certain phases.  For the " + Name + " Organ it is set as:", indent));
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                {
+                    if (child.Name == "NitrogenDemandSwitch")
+                        child.Document(tags, headingLevel + 5, indent);
+                }
+            }
+
+            tags.Add(new AutoDocumentation.Heading("Nitrogen Supplies", headingLevel + 1));
+            tags.Add(new AutoDocumentation.Paragraph("N is not reallocated from " + this.Name + " ", indent));
+            tags.Add(new AutoDocumentation.Paragraph("Non-structural N in " + this.Name + "  is not available for re-translocation to other organs", indent));
+            
+            tags.Add(new AutoDocumentation.Heading("Biomass Senescece and Detachment", headingLevel + 1));
+            tags.Add(new AutoDocumentation.Paragraph("No senescence occurs from " + Name, indent));
+            tags.Add(new AutoDocumentation.Paragraph("No Detachment occurs from " + Name, indent));
+
+            tags.Add(new AutoDocumentation.Heading("Canopy", headingLevel + 1));
+            if (CoverFunction != null)
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The cover and LAI estimations are calculated using a CoverFunction as folows"  + " ", indent));
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                {
+                    if (child.Name == "CoverFunction")
+                        child.Document(tags, headingLevel + 5, indent + 1);
+                }
+                tags.Add(new AutoDocumentation.Paragraph("Then the Leaf Area Index (LAI) is calculated using an inverted Beer Lamberts equation with the estimated Cover value:"
+                    + " <b>LAI = Log(1 - Cover) / (ExtinctionCoefficient * -1));", indent));
+                tags.Add(new AutoDocumentation.Paragraph("Where ExtinctionCoefficient has a value of " + ExtinctionCoefficientFunction.Value, indent+1));
+            }
+            if (LAIFunction != null)
+            {
+                tags.Add(new AutoDocumentation.Paragraph("First the leaf area index is calculated as:", indent));
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                {
+                    if (child.Name == "LAIFunction")
+                        child.Document(tags, headingLevel + 5, indent + 1);
+                }
+                tags.Add(new AutoDocumentation.Paragraph("Then the cover produced by the canopy is calculated using LAI and the Beer Lamberts equation:" + this.Name
+                    + " <b>Cover = 1.0 - e<sup>((-1 * ExtinctionCoefficient) * LAI);", indent));
+                tags.Add(new AutoDocumentation.Paragraph("Where ExtinctionCoefficient has a value of " + ExtinctionCoefficientFunction.Value, indent + 1));
+            }
+            tags.Add(new AutoDocumentation.Paragraph("The canopies values of Cover and LAI are passed to the MicroClimate module which uses the Penman Monteith equation to calculate potential evapotranspiration for each canopy and passes the value back to the crop", indent ));
+            tags.Add(new AutoDocumentation.Paragraph("The effect of growth rate on transpiration is captured using the Fractional Growth Rate (FRGR) function which is parameterised as a function of temperature for the simple leaf", indent));
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                if (child.Name == "FRGRFunction")
+                    child.Document(tags, headingLevel + 1, indent + 1);
+            }
+            // write Other functions.
+            bool NonStandardFunctions = false;
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                if (((child.Name != "StructuralFraction") 
+                   | (child.Name != "DMDemandFunction") 
+                   | (child.Name != "NConc") 
+                   | (child.Name != "Photosynthesis") 
+                   | (child.Name != "Photosynthesis")
+                   | (child.Name != "NReallocationFactor") 
+                   | (child.Name != "NRetranslocationFactor")
+                   | (child.Name != "DMRetranslocationFactor") 
+                   | (child.Name != "SenescenceRateFunction") 
+                   | (child.Name != "DetachmentRateFunctionFunction") 
+                   | (child.Name != "LAIFunction") 
+                   | (child.Name != "CoverFunction") 
+                   | (child.Name != "ExtinctionCoefficientFunction")
+                   | (child.Name != "Live") 
+                   | (child.Name != "Dead")
+                   | (child.Name != "FRGRFunction") 
+                   | (child.Name != "NitrogenDemandSwitch"))
+                   && (child.GetType() != typeof(Memo)))
+                {
+                    NonStandardFunctions = true;
+                }
+            }
+
+            if (NonStandardFunctions)
+            {
+                tags.Add(new AutoDocumentation.Heading("Other functionality", headingLevel + 1));
+                tags.Add(new AutoDocumentation.Paragraph("In addition to the core functionality and parameterisation described above, the " + this.Name + " organ has additional functions used to provide paramters for core functions and create additional functionality", indent));
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                {
+                    if ((child.Name == "StructuralFraction")
+                       | (child.Name == "DMDemandFunction")
+                       | (child.Name == "NConc")
+                       | (child.Name == "Photosynthesis")
+                       | (child.Name == "Photosynthesis")
+                       | (child.Name == "NReallocationFactor")
+                       | (child.Name == "NRetranslocationFactor")
+                       | (child.Name == "DMRetranslocationFactor")
+                       | (child.Name == "SenescenceRateFunction")
+                       | (child.Name == "DetachmentRateFunctionFunction")
+                       | (child.Name == "LAIFunction")
+                       | (child.Name == "CoverFunction")
+                       | (child.Name == "ExtinctionCoefficientFunction")
+                       | (child.Name == "Live")
+                       | (child.Name == "Dead")
+                       | (child.Name == "FRGRFunction")
+                       | (child.Name == "NitrogenDemandSwitch")
+                       | (child.GetType() == typeof(Memo)))
+                    {//Already documented 
+                    }
+                    else
+                    {
+                        //tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel + 2));
+                        child.Document(tags, headingLevel + 2, indent + 1);
+                    }
+                }
+            }
+        }
     }
 }

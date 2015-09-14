@@ -23,6 +23,7 @@ namespace Models.Soils
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentModels = new Type[] { typeof(Zone), typeof(Zones.RectangularZone), typeof(Zones.CircularZone) })]
     public class Soil : Model
     {
         /// <summary>Gets the water.</summary>

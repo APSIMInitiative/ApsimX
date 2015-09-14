@@ -9,6 +9,7 @@ namespace Models
 {
     /// <summary>Irrigation class.</summary>
     [Serializable]
+    [ValidParent(typeof(Zone))]
     public class Irrigation : Model
     {
         /// <summary>The summary</summary>

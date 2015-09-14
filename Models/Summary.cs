@@ -23,6 +23,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.SummaryView")]
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
+    [ValidParent(typeof(Simulation))]
     public class Summary : Model, ISummary
     {
         /// <summary>
@@ -707,7 +708,7 @@ namespace Models
             }
             else if (dataTypeName != "String[]")
             {
-                throw new ApsimXException(null, "Invalid property type: " + dataTypeName);
+               // throw new ApsimXException(null, "Invalid property type: " + dataTypeName);
             }
 
             DataTableUtilities.AddColumn(table, heading, stringValues);

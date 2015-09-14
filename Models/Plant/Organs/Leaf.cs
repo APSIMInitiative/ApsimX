@@ -132,7 +132,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets  FRGR.</summary>
         [Units("0-1")]
-        public double FRGR { get { return Photosynthesis.FRGR; } }
+        public double FRGR { get; set; }
         
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [Units("mm")]
@@ -142,14 +142,7 @@ namespace Models.PMF.Organs
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } 
         #endregion
 
-
         #region Links
-        /// <summary>The plant</summary>
-        [Link]
-        public Plant Plant = null;
-        /// <summary>The summary</summary>
-        [Link]
-        ISummary Summary = null;
         /// <summary>The arbitrator</summary>
         [Link]
         public OrganArbitrator Arbitrator = null;
@@ -159,8 +152,6 @@ namespace Models.PMF.Organs
         /// <summary>The phenology</summary>
         [Link]
         public Phenology Phenology = null;
-        [Link]
-        ISurfaceOrganicMatter SurfaceOrganicMatter = null;
         #endregion
 
         #region Structures
@@ -256,7 +247,10 @@ namespace Models.PMF.Organs
         /// <summary>The leaf cohort parameters</summary>
         [Link] LeafCohortParameters CohortParameters = null;
         /// <summary>The photosynthesis</summary>
-        [Link] RUEModel Photosynthesis = null;
+        [Link] IFunction Photosynthesis = null;
+        /// <summary>The Fractional Growth Rate</summary>
+        [Link]
+        IFunction FRGRFunction = null;
         /// <summary>The thermal time</summary>
         [Link]
         IFunction ThermalTime = null;
@@ -302,7 +296,6 @@ namespace Models.PMF.Organs
         public double Albido { get; set; }
         
         #endregion
-
 
         #region States
 
@@ -967,6 +960,8 @@ namespace Models.PMF.Organs
                     }
                 }
                 _ExpandedNodeNo = ExpandedCohortNo + FractionNextleafExpanded;
+
+                FRGR = FRGRFunction.Value;
             }
         }
         /// <summary>Clears this instance.</summary>
@@ -1089,7 +1084,7 @@ namespace Models.PMF.Organs
                 }
 
 
-                return new BiomassSupplyType { Fixation = Photosynthesis.Growth(RadIntTot), Retranslocation = Retranslocation, Reallocation = Reallocation };
+                return new BiomassSupplyType { Fixation = Photosynthesis.Value, Retranslocation = Retranslocation, Reallocation = Reallocation };
             }
         }
         /// <summary>Sets the dm potential allocation.</summary>
@@ -1682,22 +1677,6 @@ namespace Models.PMF.Organs
                 initialLeaves.Add(initialLeaf);
             InitialLeaves = initialLeaves.ToArray();
         }
-
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, EventArgs e)
-        {
-            if (sender == Plant)
-            {
-                if (TotalDM > 0)
-                    SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
-                Clear();
-            }
-        }
         #endregion
-
-
     }
 }

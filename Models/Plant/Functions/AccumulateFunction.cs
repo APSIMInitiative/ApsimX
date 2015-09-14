@@ -99,5 +99,26 @@ namespace Models.PMF.Functions
             AccumulatedValue = 0;
         }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            Name = this.Name;
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            tags.Add(new AutoDocumentation.Paragraph(this.Name + " is a daily accumulation of the values of functions listed below between the " + StartStageName + " and "
+                                                        + EndStageName + " stages.  Function values added to the accumulate total each day are:", indent));
+
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                child.Document(tags, headingLevel + 1, indent + 1);
+            }
+        }
+
     }
 }

@@ -45,7 +45,8 @@ namespace Models.Core
         [XmlElement(typeof(Model))]
         [XmlElement(typeof(ModelCollectionFromResource))]
         [XmlElement(typeof(Models.Agroforestry.LocalMicroClimate))]
-        [XmlElement(typeof(Models.Agroforestry.StaticForestrySystem))]
+        [XmlElement(typeof(Models.Agroforestry.TreeProxy))]
+        [XmlElement(typeof(Models.Agroforestry.ForestrySystem))]
         [XmlElement(typeof(Models.Graph.Graph))]
         [XmlElement(typeof(Models.Graph.Series))]
         [XmlElement(typeof(Models.Graph.Regression))]
@@ -75,6 +76,7 @@ namespace Models.Core
         [XmlElement(typeof(NullSummary))]
         [XmlElement(typeof(Tests))]
         [XmlElement(typeof(Weather))]
+        [XmlElement(typeof(ControlledEnvironment))]
         [XmlElement(typeof(Log))]
         [XmlElement(typeof(Models.Factorial.Experiment))]
         [XmlElement(typeof(Models.Factorial.Factors))]
@@ -131,6 +133,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Phen.LeafAppearancePhase))]
         [XmlElement(typeof(Models.PMF.Phen.LeafDeathPhase))]
         [XmlElement(typeof(Models.PMF.Phen.NodeNumberPhase))]
+        [XmlElement(typeof(Models.PMF.Phen.PhaseSetFunction))]
         [XmlElement(typeof(Models.PMF.Phen.Vernalisation))]
         [XmlElement(typeof(Models.PMF.Phen.VernalisationCW))]
         [XmlElement(typeof(Models.PMF.Functions.AccumulateFunction))]
@@ -203,6 +206,9 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Cultivar))]
         [XmlElement(typeof(Models.Zones.CircularZone))]
         [XmlElement(typeof(Models.Zones.RectangularZone))]
+        [XmlElement(typeof(Models.Aqua.PondWater))]
+        [XmlElement(typeof(Models.Aqua.FoodInPond))]
+        [XmlElement(typeof(Models.Aqua.Prawns))]
         public List<Model> Children { get; set; }
 
         /// <summary>

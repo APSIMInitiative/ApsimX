@@ -19,6 +19,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.DataStoreView")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
+    [ValidParent(typeof(Simulations))]
     public class DataStore : Model
     {
         /// <summary>A SQLite connection shared between all instances of this DataStore.</summary>
@@ -402,8 +403,10 @@ namespace Models
         /// <param name="simulationName">Name of the simulation.</param>
         /// <param name="tableName">Name of the table.</param>
         /// <param name="includeSimulationName">if set to <c>true</c> [include simulation name].</param>
+        /// <param name="from">Only used when 'count' specified. The record number to offset.</param>
+        /// <param name="count">The number of records to return or all if 0.</param>
         /// <returns></returns>
-        public DataTable GetData(string simulationName, string tableName, bool includeSimulationName = false)
+        public DataTable GetData(string simulationName, string tableName, bool includeSimulationName = false, int from = 0, int count = 0)
         {
             Open(forWriting: false);
             if (Connection == null || !TableExists("Simulations") || tableName == null || !TableExists(tableName))
@@ -423,6 +426,9 @@ namespace Models
                     int simulationID = GetSimulationID(simulationName);
                     sql += " WHERE SimulationID = " + simulationID.ToString();
                 }
+
+                if (count > 0)
+                    sql += " LIMIT " + count + " OFFSET " + from;
 
                 return Connection.ExecuteQuery(sql);
             }
@@ -451,8 +457,10 @@ namespace Models
         /// <param name="tableName">Name of the table.</param>
         /// <param name="fieldNames">Field names to get data for.</param>
         /// <param name="filter">The filter.</param>
+        /// <param name="from">Only used when 'count' specified. The record number to offset.</param>
+        /// <param name="count">The number of records to return or all if 0.</param>
         /// <returns></returns>
-        public DataTable GetFilteredData(string tableName, string[] fieldNames, string filter)
+        public DataTable GetFilteredData(string tableName, string[] fieldNames, string filter, int from = 0, int count = 0)
         {
             Open(forWriting: false);
             if (Connection == null || !TableExists("Simulations") || tableName == null)
@@ -470,12 +478,18 @@ namespace Models
                     fieldNameString += "[" + fieldName + "]";
                 }
 
+                if (fieldNameString == "[*]")
+                    fieldNameString = "*";
+
                 sql = "SELECT S.Name as SimulationName, " + fieldNameString + " FROM " + tableName + " T" + ", Simulations S ";
                 sql += "WHERE ID = SimulationID";
                 if (filter != null)
                 {
                     sql += " AND " + filter;
                 }
+
+                if (count > 0)
+                    sql += " LIMIT " + count + " OFFSET " + from;
 
                 return Connection.ExecuteQuery(sql);
             }

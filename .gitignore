@@ -36,3 +36,4 @@ packages/
 *.csv
 Tests/MultiZoneManagement/MultiFieldMultiZoneManagementBasic.db.sum
 *.sum
+Documents/

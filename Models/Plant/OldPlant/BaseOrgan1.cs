@@ -11,6 +11,7 @@ namespace Models.PMF.OldPlant
     /// This class represents a base organ for a Plant15 model
     /// </summary>
     [Serializable]
+    [ValidParent(typeof(Plant15))]
     abstract public class BaseOrgan1 : Model, Organ1
     {
         /// <summary>Gets or sets the live.</summary>

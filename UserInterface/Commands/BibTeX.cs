@@ -91,14 +91,26 @@ namespace UserInterface.Commands
                 {
                     string[] authors = Authors;
                     if (authors.Length == 1)
-                        return authors[0] + ", " + Year;
+                        return LastName(authors[0]) + ", " + Year;
                     else if (authors.Length > 1)
-                        return authors[0] + " et al., " + Year;
+                        return LastName(authors[0]) + " et al., " + Year;
                     else
                         return "<No author>, " + Year;
                 }
             }
-          
+
+            /// <summary>Return the last name of the specified author.</summary>
+            /// <param name="author">The author.</param>
+            /// <returns>The last name</returns>
+            private string LastName(string author)
+            {
+                int posComma = author.IndexOf(',');
+                if (posComma != -1)
+                    return author.Substring(0, posComma);
+                else
+                    return author;
+            }
+
             /// <summary>Gets the authors</summary>
             private string[] Authors
             {

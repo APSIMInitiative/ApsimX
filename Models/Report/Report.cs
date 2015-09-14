@@ -17,6 +17,7 @@ namespace Models.Report
     [Serializable]
     [ViewName("UserInterface.Views.ReportView")]
     [PresenterName("UserInterface.Presenters.ReportPresenter")]
+    [ValidParent(ParentModels = new Type[] { typeof(Zone), typeof(Zones.CircularZone), typeof(Zones.RectangularZone) })]
     public class Report : Model
     {
         /// <summary>
@@ -43,6 +44,11 @@ namespace Models.Report
         [Summary]
         [Description("Output frequency")]
         public string[] EventNames { get; set; }
+
+        /// <summary>
+        /// The number of results to display per page.
+        /// </summary>
+        public int ResultsPerPage { get; set; }
 
         /// <summary>
         /// An event handler to allow us to initialize ourselves.
@@ -72,6 +78,13 @@ namespace Models.Report
             }
             this.VariableNames = variableNames.ToArray();
             this.FindVariableMembers();
+        }
+
+        /// <summary>A method that can be called by other models to perform a line of output.</summary>
+        public void DoOutput()
+        {
+            foreach (ReportColumn column in columns)
+                column.StoreValue();
         }
 
         /// <summary>

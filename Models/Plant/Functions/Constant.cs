@@ -21,6 +21,10 @@ namespace Models.PMF.Functions
         [Description("The value of the constant")]
         public double Value { get; set; }
 
+        /// <summary>Gets the optional units</summary>
+        [Description("The optional units of the constant")]
+        public string Units { get; set; }
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
@@ -37,7 +41,9 @@ namespace Models.PMF.Functions
 
             // get description and units.
             string description = AutoDocumentation.GetDescription(Parent, Name);
-            string units = AutoDocumentation.GetUnits(Parent, Name);
+            string units = Units;
+            if (units == null)
+                units = AutoDocumentation.GetUnits(Parent, Name);
             if (units != string.Empty)
                 units = " (" + units + ")";
 

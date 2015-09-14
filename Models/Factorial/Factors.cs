@@ -17,6 +17,15 @@ namespace Models.Factorial
         /// <summary>Gets the factors.</summary>
         /// <value>The factors.</value>
         [XmlIgnore]
-        public List<IModel> factors { get { return Apsim.Children(this, typeof(Factor)); } }
+        public List<Factor> factors
+        {
+            get
+            {
+                List<Factor> f = new List<Factor>();
+                foreach (Factor factor in Apsim.Children(this, typeof(Factor)))
+                    f.Add(factor);
+                return f;
+            }
+        }
     }
 }

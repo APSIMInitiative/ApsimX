@@ -10,6 +10,7 @@ namespace Models.PMF.OldPlant
     /// Phosphorus stress model
     /// </summary>
     [Serializable]
+    [ValidParent(typeof(Plant15))]
     public class PStress : Model
     {
         /// <summary>Gets the photo.</summary>
