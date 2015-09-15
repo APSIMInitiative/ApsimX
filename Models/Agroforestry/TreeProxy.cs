@@ -510,8 +510,10 @@ namespace Models.Agroforestry
                     if (SearchZ.Name == ZI.Name)
                     {
                         ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+                        double[] NewNO3 = new double[ZI.NO3N.Length];
                         for (int i = 0; i <= ZI.NO3N.Length - 1; i++)
-                           ThisSoil.SoilNitrogen.NO3[i] = ThisSoil.SoilNitrogen.NO3[i] - ZI.NO3N[i] ;
+                            NewNO3[i] = ThisSoil.SoilNitrogen.NO3[i] - ZI.NO3N[i];
+                        ThisSoil.SoilNitrogen.NO3 = NewNO3;
                     }
                 }
             }
