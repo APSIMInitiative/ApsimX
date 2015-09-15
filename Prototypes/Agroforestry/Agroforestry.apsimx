@@ -6,7 +6,7 @@
     <Clock>
       <Name>Clock</Name>
       <StartDate>1900-01-01T00:00:00</StartDate>
-      <EndDate>1900-12-31T00:00:00</EndDate>
+      <EndDate>1903-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>SummaryFile</Name>
@@ -180,8 +180,9 @@
             <string>0</string>
           </ArrayOfString>
         </Table>
-        <NDemand>0</NDemand>
-        <RootRadius>0</RootRadius>
+        <NDemand>1</NDemand>
+        <RootRadius>0.2</RootRadius>
+        <BaseKL>0.02</BaseKL>
         <dates>
           <dateTime>1900-01-01T00:00:00</dateTime>
           <dateTime>1900-03-01T00:00:00</dateTime>
@@ -447,6 +448,7 @@ namespace Models
           <EventNames>
             <string />
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -466,6 +468,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -928,6 +931,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -954,6 +958,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -1419,6 +1424,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -1445,6 +1451,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -1909,6 +1916,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -1932,6 +1940,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -2397,6 +2406,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -2420,6 +2430,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -3217,13 +3228,13 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>TreeProxy.WaterUptake(1)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
+          <Cumulative>true</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
@@ -3232,13 +3243,13 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-8323328</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
+          <Marker>FilledDiamond</Marker>
+          <Line>None</Line>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>TreeProxy.WaterUptake(2)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
+          <Cumulative>true</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
@@ -3247,13 +3258,13 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
+          <Marker>FilledSquare</Marker>
+          <Line>None</Line>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>TreeProxy.WaterUptake(3)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
+          <Cumulative>true</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
@@ -3262,13 +3273,13 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
+          <Marker>FilledTriangle</Marker>
+          <Line>None</Line>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>TreeProxy.WaterUptake(4)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
+          <Cumulative>true</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
@@ -3277,13 +3288,13 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-256</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
+          <Marker>Circle</Marker>
+          <Line>None</Line>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>TreeProxy.WaterUptake(5)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
+          <Cumulative>true</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Axis>
@@ -3413,8 +3424,8 @@ namespace Models
     <Name>Windbreak Example</Name>
     <Clock>
       <Name>Clock</Name>
-      <StartDate>1900-01-01T00:00:00</StartDate>
-      <EndDate>1900-12-31T00:00:00</EndDate>
+      <StartDate>1902-01-01T00:00:00</StartDate>
+      <EndDate>1905-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>SummaryFile</Name>
@@ -3458,7 +3469,7 @@ namespace Models
             <string>150-180</string>
           </ArrayOfString>
           <ArrayOfString>
-            <string>0</string>
+            <string>80</string>
             <string>0</string>
             <string />
             <string />
@@ -3471,7 +3482,7 @@ namespace Models
             <string>0</string>
           </ArrayOfString>
           <ArrayOfString>
-            <string>0</string>
+            <string>20</string>
             <string>0</string>
             <string />
             <string />
@@ -3510,7 +3521,7 @@ namespace Models
             <string>0</string>
           </ArrayOfString>
           <ArrayOfString>
-            <string>10</string>
+            <string>0</string>
             <string>0</string>
             <string />
             <string />
@@ -3588,8 +3599,9 @@ namespace Models
             <string>0</string>
           </ArrayOfString>
         </Table>
-        <NDemand>0</NDemand>
-        <RootRadius>0</RootRadius>
+        <NDemand>1</NDemand>
+        <RootRadius>0.2</RootRadius>
+        <BaseKL>0.02</BaseKL>
         <dates>
           <dateTime>1900-01-01T00:00:00</dateTime>
           <dateTime>1900-03-01T00:00:00</dateTime>
@@ -3749,6 +3761,7 @@ namespace Models
           <EventNames>
             <string />
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -3767,6 +3780,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -4229,6 +4243,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -4255,6 +4270,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -4720,6 +4736,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -4746,6 +4763,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -5210,6 +5228,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -5233,6 +5252,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -5698,6 +5718,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -5721,6 +5742,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -6186,6 +6208,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -6209,6 +6232,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -6674,6 +6698,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -6697,6 +6722,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -7162,6 +7188,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -7185,6 +7212,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -7650,6 +7678,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -7673,6 +7702,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -8138,6 +8168,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -8161,6 +8192,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -8626,6 +8658,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -8649,6 +8682,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -9114,6 +9148,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -9137,6 +9172,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -9602,6 +9638,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -9625,6 +9662,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -10090,6 +10128,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -10113,6 +10152,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -11091,8 +11131,9 @@ namespace Models
             <string>0</string>
           </ArrayOfString>
         </Table>
-        <NDemand>0</NDemand>
-        <RootRadius>0</RootRadius>
+        <NDemand>1</NDemand>
+        <RootRadius>0.2</RootRadius>
+        <BaseKL>0.02</BaseKL>
         <dates>
           <dateTime>1900-01-01T00:00:00</dateTime>
           <dateTime>1900-03-01T00:00:00</dateTime>
@@ -11260,6 +11301,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -11281,6 +11323,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -11726,6 +11769,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -11747,6 +11791,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -12211,6 +12256,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -12232,6 +12278,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -12715,6 +12762,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -12736,6 +12784,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -13200,6 +13249,7 @@ namespace Models
           <EventNames>
             <string>[Wheat].Harvesting</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Report>
           <Name>DailyReport</Name>
@@ -13221,6 +13271,7 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -14038,8 +14089,9 @@ namespace Models
               <string>0</string>
             </ArrayOfString>
           </Table>
-          <NDemand>0</NDemand>
-          <RootRadius>0</RootRadius>
+          <NDemand>1</NDemand>
+          <RootRadius>0.2</RootRadius>
+          <BaseKL>0.02</BaseKL>
           <dates>
             <dateTime>1900-01-01T00:00:00</dateTime>
             <dateTime>1900-03-01T00:00:00</dateTime>
@@ -14092,6 +14144,7 @@ namespace Models
             <EventNames>
               <string />
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
@@ -14115,6 +14168,7 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -14467,6 +14521,7 @@ namespace Models
             <EventNames>
               <string />
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
@@ -14483,6 +14538,7 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -14822,6 +14878,7 @@ namespace Models
             <EventNames>
               <string />
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
@@ -14838,6 +14895,7 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -15176,6 +15234,7 @@ namespace Models
             <EventNames>
               <string />
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
@@ -15192,6 +15251,7 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -15530,6 +15590,7 @@ namespace Models
             <EventNames>
               <string />
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
@@ -15546,6 +15607,7 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -15884,6 +15946,7 @@ namespace Models
             <EventNames>
               <string />
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
@@ -15900,6 +15963,7 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -16238,6 +16302,7 @@ namespace Models
             <EventNames>
               <string />
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
@@ -16254,6 +16319,7 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -16592,6 +16658,7 @@ namespace Models
             <EventNames>
               <string />
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
@@ -16608,6 +16675,7 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -16946,6 +17014,7 @@ namespace Models
             <EventNames>
               <string />
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
@@ -16962,6 +17031,7 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -17300,6 +17370,7 @@ namespace Models
             <EventNames>
               <string />
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
@@ -17316,6 +17387,7 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -17654,6 +17726,7 @@ namespace Models
             <EventNames>
               <string />
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
@@ -17670,6 +17743,7 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
