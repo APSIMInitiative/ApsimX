@@ -185,6 +185,8 @@ namespace UserInterface.Views
                 if (Enum.TryParse<LineStyle>(lineType.ToString(), out oxyLineType))
                 {
                     series.LineStyle = oxyLineType;
+                    if (series.LineStyle == LineStyle.None)
+                        series.Color = OxyColors.Transparent;
                 }
                 
                 // Marker type.
