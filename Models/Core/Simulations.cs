@@ -447,7 +447,7 @@ namespace Models.Core
                 IModel modelToDocument = Apsim.Find(simulation, modelNameToDocument);
 
                 if (modelToDocument == null)
-                    throw new ApsimXException(this, "Cold not find a model of the name " + modelNameToDocument + ". Simulation file name must match the name of the node to document.");
+                    throw new ApsimXException(this, "Could not find a model of the name " + modelNameToDocument + ". Simulation file name must match the name of the node to document.");
 
                 // Get the path of the model (relative to parentSimulation) to document so that 
                 // when replacements happen below we will point to the replacement model not the 
