@@ -31,11 +31,6 @@ namespace Models.Agroforestry
         /// <value>The table.</value>
         public List<List<string>> Table { get; set; }
 
-        /// <summary>Allows the user to set a nitrogen demand for the tree.</summary>
-        /// <value>The nitrogen demand.</value>
-        [Summary]
-        public double NDemand { get; set; }
-
         /// <summary>
         /// The reduction in wind as a fraction.
         /// </summary>
@@ -128,6 +123,12 @@ namespace Models.Agroforestry
         /// </summary>
         [Summary]
         public double[] heights { get; set; }
+
+        /// <summary>
+        /// Tree N demands
+        /// </summary>
+        [Summary]
+        public double[] NDemands { get; set; }
 
         private Dictionary<double, double> shade = new Dictionary<double, double>();
         private Dictionary<double, double> nDemand = new Dictionary<double, double>();
@@ -251,6 +252,16 @@ namespace Models.Agroforestry
                 OADates[i] = dates[i].ToOADate();
             return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, heights, out didInterp) / 1000;
         }
+        private double GetNDemandToday()
+        {
+            double[] OADates = new double[dates.Count()];
+            bool didInterp;
+
+            for (int i = 0; i < dates.Count(); i++)
+                OADates[i] = dates[i].ToOADate();
+            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, NDemands, out didInterp);
+        }
+
         /// <summary>
         /// Return the %Wind Reduction for a given zone
         /// </summary>
@@ -397,7 +408,8 @@ namespace Models.Agroforestry
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
             double PotNO3Supply = 0; // Total N supply (kg)
-            double NDemandkg = NDemand*10 * treeZone.Area * 10000;
+            
+            double NDemandkg = GetNDemandToday()*10 * treeZone.Area * 10000;
 
             foreach (ZoneWaterAndN Z in soilstate.Zones)
             {

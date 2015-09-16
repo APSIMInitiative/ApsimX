@@ -180,7 +180,6 @@
             <string>0</string>
           </ArrayOfString>
         </Table>
-        <NDemand>1</NDemand>
         <RootRadius>0.2</RootRadius>
         <BaseKL>0.02</BaseKL>
         <dates>
@@ -197,6 +196,13 @@
           <double>10000</double>
           <double>10000</double>
         </heights>
+        <NDemands>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+        </NDemands>
       </TreeProxy>
       <Manager>
         <Name>SowingRule</Name>
@@ -3599,7 +3605,6 @@ namespace Models
             <string>0</string>
           </ArrayOfString>
         </Table>
-        <NDemand>1</NDemand>
         <RootRadius>0.2</RootRadius>
         <BaseKL>0.02</BaseKL>
         <dates>
@@ -3616,6 +3621,13 @@ namespace Models
           <double>10000</double>
           <double>10000</double>
         </heights>
+        <NDemands>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+        </NDemands>
       </TreeProxy>
       <Manager>
         <Name>SowingRule</Name>
@@ -11131,7 +11143,6 @@ namespace Models
             <string>0</string>
           </ArrayOfString>
         </Table>
-        <NDemand>1</NDemand>
         <RootRadius>0.2</RootRadius>
         <BaseKL>0.02</BaseKL>
         <dates>
@@ -11148,6 +11159,13 @@ namespace Models
           <double>4000</double>
           <double>5000</double>
         </heights>
+        <NDemands>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+        </NDemands>
       </TreeProxy>
       <Manager>
         <Name>SowingRule</Name>
@@ -14089,7 +14107,6 @@ namespace Models
               <string>0</string>
             </ArrayOfString>
           </Table>
-          <NDemand>1</NDemand>
           <RootRadius>0.2</RootRadius>
           <BaseKL>0.02</BaseKL>
           <dates>
@@ -14106,6 +14123,13 @@ namespace Models
             <double>10000</double>
             <double>10000</double>
           </heights>
+          <NDemands>
+            <double>10000</double>
+            <double>10000</double>
+            <double>10000</double>
+            <double>10000</double>
+            <double>10000</double>
+          </NDemands>
         </TreeProxy>
         <RectangularZone>
           <Name>TreeRow</Name>

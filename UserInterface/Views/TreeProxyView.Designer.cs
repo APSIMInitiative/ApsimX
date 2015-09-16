@@ -30,8 +30,6 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.dgvHeights = new System.Windows.Forms.DataGridView();
-            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TreeHeight = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Grid = new System.Windows.Forms.DataGridView();
             this.pBelowGround = new OxyPlot.WindowsForms.PlotView();
             this.pAboveGround = new OxyPlot.WindowsForms.PlotView();
@@ -39,6 +37,9 @@
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TreeHeight = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NDemands = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHeights)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).BeginInit();
@@ -54,8 +55,9 @@
             this.panel1.Controls.Add(this.pAboveGround);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(527, 563);
+            this.panel1.Size = new System.Drawing.Size(703, 693);
             this.panel1.TabIndex = 0;
             // 
             // dgvHeights
@@ -66,25 +68,15 @@
             this.dgvHeights.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgvHeights.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Date,
-            this.TreeHeight});
+            this.TreeHeight,
+            this.NDemands});
             this.dgvHeights.Location = new System.Drawing.Point(0, 0);
+            this.dgvHeights.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvHeights.Name = "dgvHeights";
-            this.dgvHeights.Size = new System.Drawing.Size(154, 272);
+            this.dgvHeights.Size = new System.Drawing.Size(353, 335);
             this.dgvHeights.TabIndex = 7;
             this.dgvHeights.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvHeights_RowsAdded);
             this.dgvHeights.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgvHeights_RowsRemoved);
-            // 
-            // Date
-            // 
-            this.Date.HeaderText = "Date";
-            this.Date.Name = "Date";
-            this.Date.Width = 55;
-            // 
-            // TreeHeight
-            // 
-            this.TreeHeight.HeaderText = "Height (m)";
-            this.TreeHeight.Name = "TreeHeight";
-            this.TreeHeight.Width = 80;
             // 
             // Grid
             // 
@@ -96,10 +88,11 @@
             this.Grid.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.Grid.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
             this.Grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Grid.Location = new System.Drawing.Point(160, 0);
+            this.Grid.Location = new System.Drawing.Point(378, 0);
+            this.Grid.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Grid.Name = "Grid";
             this.Grid.RowHeadersVisible = false;
-            this.Grid.Size = new System.Drawing.Size(367, 272);
+            this.Grid.Size = new System.Drawing.Size(324, 335);
             this.Grid.TabIndex = 4;
             this.Grid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.Grid_CellEndEdit);
             this.Grid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.Grid_EditingControlShowing);
@@ -111,10 +104,11 @@
             // pBelowGround
             // 
             this.pBelowGround.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pBelowGround.Location = new System.Drawing.Point(271, 294);
+            this.pBelowGround.Location = new System.Drawing.Point(361, 362);
+            this.pBelowGround.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pBelowGround.Name = "pBelowGround";
             this.pBelowGround.PanCursor = System.Windows.Forms.Cursors.Hand;
-            this.pBelowGround.Size = new System.Drawing.Size(256, 269);
+            this.pBelowGround.Size = new System.Drawing.Size(341, 331);
             this.pBelowGround.TabIndex = 3;
             this.pBelowGround.Text = "plot1";
             this.pBelowGround.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
@@ -124,10 +118,11 @@
             // pAboveGround
             // 
             this.pAboveGround.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.pAboveGround.Location = new System.Drawing.Point(0, 275);
+            this.pAboveGround.Location = new System.Drawing.Point(0, 338);
+            this.pAboveGround.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pAboveGround.Name = "pAboveGround";
             this.pAboveGround.PanCursor = System.Windows.Forms.Cursors.Hand;
-            this.pAboveGround.Size = new System.Drawing.Size(265, 288);
+            this.pAboveGround.Size = new System.Drawing.Size(353, 354);
             this.pAboveGround.TabIndex = 2;
             this.pAboveGround.Text = "plot1";
             this.pAboveGround.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
@@ -160,13 +155,32 @@
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             this.dataGridViewTextBoxColumn4.Width = 59;
             // 
-            // StaticForestrySystemView
+            // Date
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.Date.HeaderText = "Date";
+            this.Date.Name = "Date";
+            this.Date.Width = 63;
+            // 
+            // TreeHeight
+            // 
+            this.TreeHeight.HeaderText = "Height (m)";
+            this.TreeHeight.Name = "TreeHeight";
+            this.TreeHeight.Width = 99;
+            // 
+            // NDemands
+            // 
+            this.NDemands.HeaderText = "N Demands (g/m2)";
+            this.NDemands.Name = "NDemands";
+            this.NDemands.Width = 152;
+            // 
+            // TreeProxyView
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
-            this.Name = "StaticForestrySystemView";
-            this.Size = new System.Drawing.Size(527, 563);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Name = "TreeProxyView";
+            this.Size = new System.Drawing.Size(703, 693);
             this.Resize += new System.EventHandler(this.ForestryView_Resize);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvHeights)).EndInit();
@@ -189,5 +203,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.DataGridViewTextBoxColumn TreeHeight;
+        private System.Windows.Forms.DataGridViewTextBoxColumn NDemands;
     }
 }
