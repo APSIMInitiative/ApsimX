@@ -133,6 +133,11 @@ using System.Text;
             // add in the child models.
             if (o != null && o is IModel)
             {
+                // See if object is under replacements.
+                IModel replacementModel =  Apsim.Get(o as IModel, ".Simulations.Replacements." + (o as IModel).Name) as IModel;
+                if (replacementModel != null)
+                    o = replacementModel;
+
                 foreach (IModel model in (o as IModel).Children)
                 {
                     if (allItems.Find(m => m.Name == model.Name) == null)
