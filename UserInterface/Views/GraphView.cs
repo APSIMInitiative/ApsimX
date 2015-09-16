@@ -166,6 +166,8 @@ namespace UserInterface.Views
                 series.OnHoverOverPoint += OnHoverOverPoint;
                 if (showOnLegend)
                     series.Title = title;
+                else
+                    series.ToolTip = title;
                 series.Color = ConverterExtensions.ToOxyColor(colour);
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
                 series.XAxisKey = xAxisType.ToString();
