@@ -301,6 +301,8 @@ namespace UserInterface.Presenters
                 if (definition.title == e.SeriesName)
                 {
                     e.HoverText = GetSimulationNameForPoint(e.X, e.Y);
+                    if (e.HoverText == null)
+                        e.HoverText = e.SeriesName;
                     return;
                 }
             }
