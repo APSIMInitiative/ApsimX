@@ -33,7 +33,11 @@ namespace Utility
             if (hitResult != null && OnHoverOverPoint != null)
             {
                 HoverPointArgs e = new HoverPointArgs();
-                e.SeriesName = Title;
+                if (Title == null)
+                    e.SeriesName = ToolTip;
+                else
+                    e.SeriesName = Title;
+                
                 e.X = hitResult.DataPoint.X;
                 e.Y = hitResult.DataPoint.Y;
                 OnHoverOverPoint.Invoke(this, e);

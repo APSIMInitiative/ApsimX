@@ -222,6 +222,24 @@
     <Compile Include="Utility\DataGridViewAutoFilterTextBoxColumn.cs" />
     <Compile Include="Utility\Excel.cs" />
     <Compile Include="Utility\LineSeriesWithTracker.cs" />
+    <Compile Include="Views\CheckBoxView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\CheckBoxView.Designer.cs">
+      <DependentUpon>CheckBoxView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ColourDropDownView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\ColourDropDownView.Designer.cs">
+      <DependentUpon>ColourDropDownView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DropDownView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\DropDownView.Designer.cs">
+      <DependentUpon>DropDownView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\FolderView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -402,6 +420,15 @@
     <EmbeddedResource Include="Forms\FormInsertHyperlink.resx">
       <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\CheckBoxView.resx">
+      <DependentUpon>CheckBoxView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ColourDropDownView.resx">
+      <DependentUpon>ColourDropDownView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\DropDownView.resx">
+      <DependentUpon>DropDownView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FolderView.resx">
       <DependentUpon>FolderView.cs</DependentUpon>

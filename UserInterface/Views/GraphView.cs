@@ -166,6 +166,8 @@ namespace UserInterface.Views
                 series.OnHoverOverPoint += OnHoverOverPoint;
                 if (showOnLegend)
                     series.Title = title;
+                else
+                    series.ToolTip = title;
                 series.Color = ConverterExtensions.ToOxyColor(colour);
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
                 series.XAxisKey = xAxisType.ToString();
@@ -185,6 +187,8 @@ namespace UserInterface.Views
                 if (Enum.TryParse<LineStyle>(lineType.ToString(), out oxyLineType))
                 {
                     series.LineStyle = oxyLineType;
+                    if (series.LineStyle == LineStyle.None)
+                        series.Color = OxyColors.Transparent;
                 }
                 
                 // Marker type.
