@@ -315,14 +315,7 @@ namespace Models.Core
         /// <returns>A list of all children</returns>
         public static List<IModel> ChildrenRecursively(IModel model)
         {
-            List<IModel> models = new List<IModel>();
-
-            foreach (Model child in model.Children)
-            {
-                models.Add(child);
-                models.AddRange(ChildrenRecursively(child));
-            }
-            return models;
+            return Locator(model).ChildrenRecursively(model);
         }
 
         /// <summary>
@@ -335,7 +328,7 @@ namespace Models.Core
         /// <returns>A list of all children</returns>
         public static List<IModel> ChildrenRecursively(IModel model, Type typeFilter)
         {
-            return ChildrenRecursively(model).FindAll(m => typeFilter.IsAssignableFrom(m.GetType()));
+            return Locator(model).ChildrenRecursively(model, typeFilter);
         }
         
         /// <summary>
@@ -806,19 +799,9 @@ namespace Models.Core
         /// <returns>The list of event subscribers found.</returns>
         private static List<EventSubscriber> FindEventSubscribers(string eventName, IModel relativeTo)
         {
-            List<EventSubscriber> subscribers = new List<EventSubscriber>();
-            foreach (MethodInfo method in relativeTo.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
-            {
-                EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)ReflectionUtilities.GetAttribute(method, typeof(EventSubscribeAttribute), false);
-                if (subscriberAttribute != null && (eventName == null || subscriberAttribute.ToString() == eventName))
-                    subscribers.Add(new EventSubscriber()
-                    {
-                        Name = subscriberAttribute.ToString(),
-                        MethodInfo = method,
-                        Model = relativeTo as Model
-                    });
-            }
-            return subscribers;
+            return Locator(relativeTo).FindEventSubscribers(relativeTo, eventName);
+
+            
         }
 
         /// <summary>
@@ -856,7 +839,7 @@ namespace Models.Core
         /// <summary>
         /// A wrapper around an event subscriber MethodInfo.
         /// </summary>
-        private class EventSubscriber
+        public class EventSubscriber
         {
             /// <summary>
             /// Gets or sets the model instance containing the event hander.
@@ -887,7 +870,7 @@ namespace Models.Core
         /// <summary>
         /// A wrapper around an event publisher EventInfo.
         /// </summary>
-        private class EventPublisher
+        public class EventPublisher
         {
             /// <summary>
             /// Gets or sets the model instance containing the event hander.

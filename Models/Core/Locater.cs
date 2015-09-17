@@ -463,5 +463,91 @@ namespace Models.Core
             AddToCache(cacheKey, relativeTo, modelsToReturn.ToArray());
             return modelsToReturn.ToArray();
         }
+
+        /// <summary>
+        /// Return a list of all child models recursively. Never returns
+        /// null. Can return an empty list.
+        /// </summary>
+        /// <param name="relativeTo">The model</param>
+        /// <returns>A list of all children</returns>
+        public List<IModel> ChildrenRecursively(IModel relativeTo)
+        {
+            // Look in cache first.
+            string cacheKey = "CHILDREN";
+            object value = GetFromCache(cacheKey, relativeTo as Model);
+            if (value != null)
+                return value as List<IModel>;
+
+            // Not in cache.
+            List<IModel> modelsToReturn = new List<IModel>();
+            foreach (Model child in relativeTo.Children)
+            {
+                modelsToReturn.Add(child);
+                modelsToReturn.AddRange(ChildrenRecursively(child));
+            }
+
+            // Add to cache.
+            AddToCache(cacheKey, relativeTo as Model, modelsToReturn);
+
+            return modelsToReturn;
+        }
+
+        /// <summary>
+        /// Return a list of all child models recursively. Never returns
+        /// null. Can return an empty list.
+        /// </summary>
+        /// <param name="relativeTo">The model</param>
+        /// <param name="type">Type to return.</param>
+        /// <returns>A list of all children</returns>
+        public List<IModel> ChildrenRecursively(IModel relativeTo, Type type)
+        {
+            // Look in cache first.
+            string cacheKey = "CHILDRENOFTYPE|" + type.Name;
+            object value = GetFromCache(cacheKey, relativeTo as Model);
+            if (value != null)
+                return value as List<IModel>;
+
+            List<IModel> modelsToReturn = ChildrenRecursively(relativeTo).FindAll(m => type.IsAssignableFrom(m.GetType()));
+
+            // Add to cache.
+            AddToCache(cacheKey, relativeTo as Model, modelsToReturn);
+
+            return modelsToReturn;
+        }
+
+        /// <summary>
+        /// Look through the specified model and return all event subscribers that match the event name. If
+        /// eventName is null then all will be returned.
+        /// </summary>
+        /// <param name="eventName">The name of the event to look for</param>
+        /// <param name="relativeTo">The model to search for event subscribers</param>
+        /// <returns>The list of event subscribers found.</returns>
+        public List<Apsim.EventSubscriber> FindEventSubscribers(IModel relativeTo, string eventName)
+        {
+            // Look in cache first.
+            string cacheKey = "EVENTSUBWITHNAME|" + eventName;
+            object value = GetFromCache(cacheKey, relativeTo as Model);
+            if (value != null)
+                return value as List<Apsim.EventSubscriber>;
+
+            List<Apsim.EventSubscriber> subscribers = new List<Apsim.EventSubscriber>();
+            foreach (MethodInfo method in relativeTo.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
+            {
+                EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)ReflectionUtilities.GetAttribute(method, typeof(EventSubscribeAttribute), false);
+                if (subscriberAttribute != null && (eventName == null || subscriberAttribute.ToString() == eventName))
+                    subscribers.Add(new Apsim.EventSubscriber()
+                    {
+                        Name = subscriberAttribute.ToString(),
+                        MethodInfo = method,
+                        Model = relativeTo as Model
+                    });
+            }
+
+            // Add to cache.
+            AddToCache(cacheKey, relativeTo as Model, subscribers);
+
+            return subscribers;
+        }
+        
     }
 }
