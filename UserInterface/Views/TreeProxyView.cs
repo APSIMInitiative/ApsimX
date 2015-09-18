@@ -631,12 +631,12 @@ namespace UserInterface.Views
             SetupGraphs();
         }
 
-        public void SetupHeights(DateTime[] dates, double[] heights)
+        public void SetupHeights(DateTime[] dates, double[] heights, double[] NDemands)
         {
             dgvHeights.Rows.Clear();
             for (int i = 0; i < dates.Count(); i++)
             {
-                dgvHeights.Rows.Add(dates[i].ToShortDateString(), heights[i] / 1000);
+                dgvHeights.Rows.Add(dates[i].ToShortDateString(), heights[i] / 1000,NDemands[i]);
             }
         }
 
@@ -832,6 +832,16 @@ namespace UserInterface.Views
                     heights.Add(Convert.ToDouble(row.Cells[1].Value.ToString()) * 1000);
             }
             return heights.ToArray();
+        }
+        public double[] SaveNDemands()
+        {
+            List<double> NDemands = new List<double>();
+            foreach (DataGridViewRow row in dgvHeights.Rows)
+            {
+                if (row.Cells[2].Value != null)
+                    NDemands.Add(Convert.ToDouble(row.Cells[2].Value.ToString()));
+            }
+            return NDemands.ToArray();
         }
 
         private void ForestryView_Resize(object sender, EventArgs e)

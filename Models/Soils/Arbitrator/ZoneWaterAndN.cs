@@ -28,6 +28,9 @@ namespace Models.Soils.Arbitrator
         /// <summary>Gets the sum of 'Water' (mm)</summary>
         public double TotalWater { get { return MathUtilities.Sum(Water); } }
 
+        /// <summary>Gets the sum of 'NO3N' (mm)</summary>
+        public double TotalNO3N { get { return MathUtilities.Sum(NO3N); } }
+
         /// <summary>Implements the operator *.</summary>
         /// <param name="zone">The zone</param>
         /// <param name="value">The value.</param>

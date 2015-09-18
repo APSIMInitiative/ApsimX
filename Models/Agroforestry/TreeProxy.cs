@@ -31,11 +31,6 @@ namespace Models.Agroforestry
         /// <value>The table.</value>
         public List<List<string>> Table { get; set; }
 
-        /// <summary>Allows the user to set a nitrogen demand for the tree.</summary>
-        /// <value>The nitrogen demand.</value>
-        [Summary]
-        public double NDemand { get; set; }
-
         /// <summary>
         /// The reduction in wind as a fraction.
         /// </summary>
@@ -65,6 +60,13 @@ namespace Models.Agroforestry
         public double[] WaterUptake { get; set; }
 
         /// <summary>
+        /// The trees N uptake per layer in a single zone
+        /// </summary>
+        [XmlIgnore]
+        [Units("g/m2")]
+        public double[] NUptake { get; set; }
+
+        /// <summary>
         /// The trees water demand across all zones.
         /// </summary>
         [XmlIgnore]
@@ -76,12 +78,26 @@ namespace Models.Agroforestry
         [Summary]
         public double RootRadius { get; set; }
 
+        /// <summary>The uptake coefficient.</summary>
+        /// <value>KL Value at RLD of 1 cm/cm3.</value>
+        [Summary]
+        public double BaseKL { get; set; }
+
+
         /// <summary>
         /// Water stress factor.
         /// </summary>
         [XmlIgnore]
         [Units("0-1")]
         public double WaterStress { get; set; }
+
+        /// <summary>
+        /// N stress factor.
+        /// </summary>
+        [XmlIgnore]
+        [Units("0-1")]
+        public double NStress { get; set; }
+
 
         /// <summary>
         /// A list containing forestry information for each zone.
@@ -107,6 +123,12 @@ namespace Models.Agroforestry
         /// </summary>
         [Summary]
         public double[] heights { get; set; }
+
+        /// <summary>
+        /// Tree N demands
+        /// </summary>
+        [Summary]
+        public double[] NDemands { get; set; }
 
         private Dictionary<double, double> shade = new Dictionary<double, double>();
         private Dictionary<double, double> nDemand = new Dictionary<double, double>();
@@ -230,6 +252,16 @@ namespace Models.Agroforestry
                 OADates[i] = dates[i].ToOADate();
             return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, heights, out didInterp) / 1000;
         }
+        private double GetNDemandToday()
+        {
+            double[] OADates = new double[dates.Count()];
+            bool didInterp;
+
+            for (int i = 0; i < dates.Count(); i++)
+                OADates[i] = dates[i].ToOADate();
+            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, NDemands, out didInterp);
+        }
+
         /// <summary>
         /// Return the %Wind Reduction for a given zone
         /// </summary>
@@ -295,20 +327,16 @@ namespace Models.Agroforestry
         /// <returns></returns>
         public List<Soils.Arbitrator.ZoneWaterAndN> GetSWUptakes(Soils.Arbitrator.SoilState soilstate)
         {
-            SWDemand = 0;
-            double PotSWSupply = 0; // Total water supply (L)
             Zone treeZone = ZoneList[0] as Zone;
             double Etz = (Apsim.Find(treeZone, typeof(Soils.SoilWater)) as Soils.SoilWater).Eo; //Eo of Tree Zone
 
+            SWDemand = 0;
             foreach (Zone ZI in ZoneList)
-            {
-                Soils.SoilWater S = Apsim.Find(ZI, typeof(Soils.SoilWater)) as Soils.SoilWater;
-                 //SWDemand += S.Eo * (1 / (1 - GetShade(ZI) / 100) - 1) * ZI.Area * 10000;
-                SWDemand += GetShade(ZI) / 100 * ZI.Area * 10000;
-            }
-            SWDemand *= Etz;
+                SWDemand += Etz*GetShade(ZI) / 100 * ZI.Area * 10000;
+            
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
+            double PotSWSupply = 0; // Total water supply (L)
             
             foreach (ZoneWaterAndN Z in soilstate.Zones)
             {
@@ -332,10 +360,12 @@ namespace Models.Agroforestry
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
+                        double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15, ThisSoil.Thickness);
+                        double[] RLD = GetRLD(ZI);
+
                         for (int i = 0; i <= SW.Length - 1; i++)
                         {
-                            double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15,ThisSoil.Thickness);
-                            Uptake.Water[i] = (SW[i] - LL15mm[i]) * GetRLD(ZI)[i];
+                            Uptake.Water[i] = (SW[i] - LL15mm[i]) * BaseKL*RLD[i]*100;  // 100 converts RLD from mm/mm3 to cm/cm3
                             PotSWSupply += Uptake.Water[i] * ZI.Area * 10000;
                         }
                         Uptakes.Add(Uptake);
@@ -374,19 +404,24 @@ namespace Models.Agroforestry
         /// <returns></returns>
         public List<Soils.Arbitrator.ZoneWaterAndN> GetNUptakes(Soils.Arbitrator.SoilState soilstate)
         {
+            Zone treeZone = ZoneList[0] as Zone;
+
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
+            double PotNO3Supply = 0; // Total N supply (kg)
+            
+            double NDemandkg = GetNDemandToday()*10 * treeZone.Area * 10000;
 
             foreach (ZoneWaterAndN Z in soilstate.Zones)
             {
-                foreach (Zone zone in ZoneList)
+                foreach (Zone ZI in ZoneList)
                 {
-                    if (Z.Name == zone.Name)
+                    if (Z.Name == ZI.Name)
                     {
                         ZoneWaterAndN Uptake = new ZoneWaterAndN();
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
 
-                        foreach (Zone SearchZ in ZoneList)
+                        foreach (Zone SearchZ in Apsim.ChildrenRecursively(Parent, typeof(Zone)))
                             if (SearchZ.Name == Z.Name)
                             {
                                 ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
@@ -395,27 +430,61 @@ namespace Models.Agroforestry
 
                         Uptake.Name = Z.Name;
                         double[] SW = Z.Water;
+                        
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
+                        double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15, ThisSoil.Thickness);
+                        double[] BD = ThisSoil.BD;
+                        double[] RLD = GetRLD(ZI);
+
+                        for (int i = 0; i <= SW.Length - 1; i++)
+                        {
+                            Uptake.NO3N[i] = PotentialNO3Uptake(ThisSoil.Thickness[i], Z.NO3N[i], Z.Water[i], RLD[i], RootRadius, BD[i])*10.0;
+                            PotNO3Supply += Uptake.NO3N[i] * ZI.Area * 10000;
+                        }
                         Uptakes.Add(Uptake);
+                        break;
                     }
                 }
             }
+            // Now scale back uptakes if supply > demand
+            double F = 0;  // Uptake scaling factor
+            if (PotNO3Supply > 0)
+            {
+                F = NDemandkg / PotNO3Supply;
+                if (F > 1)
+                    F = 1;
+            }
+            else
+                F = 1;
+            NStress = Math.Min(1, Math.Max(0, PotNO3Supply / NDemandkg));
+
+            List<double> uptakeList = new List<double>();
+            foreach (ZoneWaterAndN Z in Uptakes)
+            {
+                Z.NO3N = MathUtilities.Multiply_Value(Z.NO3N, F);
+                uptakeList.Add(Z.TotalNO3N);
+            }
+
+            NUptake = uptakeList.ToArray();
             return Uptakes;
         }
-        double PotentialNO3Uptake(double thickness, double NO3N, double theta, double RLD, double RootRadius)
+        double PotentialNO3Uptake(double thickness, double NO3N, double SWmm, double RLD, double RootRadius, double BD)
         {
 
             double L = RLD / 100 * 1000000;   // Root Length Density (m/m3)
             double D0 = 0.05 /10000*24; // Diffusion Coefficient (m2/d)
-            double tau = theta;         //  Tortuosity (unitless)
+            double theta = SWmm / thickness;
+            double tau = 3.13*Math.Pow(theta,1.92);         //  Tortuosity (unitless)
             double H = thickness / 1000;  // Layer thickness (m)
-            double R0 = RootRadius / 100;  // Root Radius (m)
-            double Nstock = NO3N / 10;  // Concentration in solution (g/m2)
+            double R0 = RootRadius / 1000;  // Root Radius (m)
+            double Nconc = (NO3N / 10)/H;  // Concentration in solution (g/m2)
+            double Kd = 0;
+            double BD_gm3 = BD * 1000;
 
             //Potential Uptake (g/m2)
-            double U = (Math.PI * L * D0 * tau * theta * H * Nstock)/(theta*(-3/8 + 1/2*Math.Log(1/(R0*Math.Pow(Math.PI*L,0.5)))));
+            double U = (Math.PI * L * D0 * tau * theta * H * Nconc)/((BD_gm3*Kd+theta)*(-3.0/8.0 + 1.0/2.0*Math.Log(1.0/(R0*Math.Pow(Math.PI*L,0.5)))));
             return U;
         }
 
@@ -445,8 +514,21 @@ namespace Models.Agroforestry
         /// <param name="info"></param>
         public void SetNUptake(List<Soils.Arbitrator.ZoneWaterAndN> info)
         {
-            // Do nothing with uptakes
-            // throw new NotImplementedException();
+            foreach (ZoneWaterAndN ZI in info)
+            {
+                foreach (Zone SearchZ in Apsim.ChildrenRecursively(Parent, typeof(Zone)))
+                {
+                    Soils.Soil ThisSoil = null;
+                    if (SearchZ.Name == ZI.Name)
+                    {
+                        ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+                        double[] NewNO3 = new double[ZI.NO3N.Length];
+                        for (int i = 0; i <= ZI.NO3N.Length - 1; i++)
+                            NewNO3[i] = ThisSoil.SoilNitrogen.NO3[i] - ZI.NO3N[i];
+                        ThisSoil.SoilNitrogen.NO3 = NewNO3;
+                    }
+                }
+            }
         }
     }
 
