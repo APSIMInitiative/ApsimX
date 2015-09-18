@@ -68,15 +68,6 @@ namespace UserInterface.Views
         /// </summary>
         public double[] SoilMidpoints;
 
-        /// <summary>
-        /// Nitrogen demand across all Zones
-        /// </summary>
-        public double NDemand;
-
-        /// <summary>
-        /// Root radius in cm
-        /// </summary>
-        public double RootRadius;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeProxyView" /> class.
@@ -91,6 +82,11 @@ namespace UserInterface.Views
             smallestDate = DateTime.MaxValue;
             largestDate = DateTime.MinValue;
         }
+
+        /// <summary>
+        /// Constants grid.
+        /// </summary>
+        public GridView ConstantsGrid { get { return gridView1; } }
 
         /// <summary>
         /// Invoked when the user clicks on the plot area (the area inside the axes)

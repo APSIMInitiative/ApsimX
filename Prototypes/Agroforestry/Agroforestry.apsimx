@@ -206,112 +206,6 @@
       </TreeProxy>
       <Manager>
         <Name>SowingRule</Name>
-        <Manager>
-          <Name>SowingRule</Name>
-          <Script>
-            <StartDate>1-may</StartDate>
-            <EndDate>10-jul</EndDate>
-            <MinESW>10</MinESW>
-            <ESWZoneName>0 to 5m</ESWZoneName>
-            <MinRain>25</MinRain>
-            <RainDays>7</RainDays>
-            <CultivarName>Hartog</CultivarName>
-            <SowingDepth>30</SowingDepth>
-            <RowSpacing>250</RowSpacing>
-            <Population>120</Population>
-            <Amount>100</Amount>
-            <CropName>wheat</CropName>
-          </Script>
-          <Code><![CDATA[using System;
-using System.Collections.Generic;
-using Models.Core;
-using Models.Agroforestry;
-using Models.PMF.OldPlant;
-using Models.Soils;
-using Models.Utilities;
-using Models.Zones;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Summary Summary;
-		Accumulator accumulatedRain;
-		[Description("Start of sowing window (d-mmm)")]
-		public string StartDate { get; set; }
-		[Description("End of sowing window (d-mmm)")]
-		public string EndDate { get; set; }
-		[Description("Minimum extractable soil water for sowing (mm)")]
-		public double MinESW { get; set; }
-		[Description("Name of Zone to use for minimum ESW condition")]
-		public string ESWZoneName { get; set; }
-		[Description("Accumulated rainfall required for sowing (mm)")]
-		public double MinRain { get; set; }
-		[Description("Duration of rainfall accumulation (d)")]
-		public int RainDays { get; set; }
-		[Description("Cultivar to be sown")]
-		public string CultivarName { get; set; }
-		[Description("Sowing depth (mm)")]
-		public double SowingDepth { get; set; }
-		[Description("Row spacing (mm)")]
-		public double RowSpacing { get; set; }
-		[Description("Plant population (/m2)")]
-		public double Population { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount { get; set; }
-		[Description("Crop to be fertilised")]
-		public string CropName { get; set; }
-		
-		private Zone ESWZone;
-		private List<IModel> Zones;
-		private Plant15 Wheat;
-		private Soil Soil;
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Zones = Apsim.FindAll(this, typeof(RectangularZone));
-			foreach (Model m in Zones)
-			{
-				if (m.Name == ESWZoneName)
-				{
-					ESWZone = m as Zone;
-					break;
-				}
-			}
-			accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{		
-			accumulatedRain.Update();
-			
-			Soil ESWSoil = Apsim.Find(ESWZone, typeof(Soil)) as Soil;
-			
-			foreach (Zone z in Zones)
-			{
-				Wheat = Apsim.Find(z, typeof(Plant15)) as Plant15;	
-				Soil = Apsim.Find(z, typeof(Soil)) as Soil;
-						
-				if (Wheat != null && DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
-				    Wheat.plant_status == "out" &&
-				    ESWSoil.SoilWater.ESW > MinESW &&
-				    accumulatedRain.Sum > MinRain)
-				{
-					Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);
-					Fertiliser Fertiliser = Apsim.Find(Wheat.Parent, typeof(Fertiliser)) as Fertiliser;
-					Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
-				}
-			}
-		}
-	}
-}
-]]></Code>
-        </Manager>
         <Script>
           <StartDate>1-may</StartDate>
           <EndDate>10-jul</EndDate>
@@ -830,9 +724,6 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
-          <Fertiliser>
-            <Name>Fertiliser</Name>
-          </Fertiliser>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -2859,6 +2750,9 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <TableName>DailyReport</TableName>
@@ -2901,6 +2795,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>Circle</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
@@ -2938,6 +2835,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -2975,6 +2875,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -3012,6 +2915,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -3049,6 +2955,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -3086,6 +2995,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
           <TableName>Report</TableName>
@@ -3123,6 +3035,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -3160,6 +3075,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -3197,6 +3115,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -3234,6 +3155,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
           <TableName>DailyReport</TableName>
@@ -3249,6 +3173,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-8323328</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledDiamond</Marker>
           <Line>None</Line>
           <TableName>DailyReport</TableName>
@@ -3264,6 +3191,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledSquare</Marker>
           <Line>None</Line>
           <TableName>DailyReport</TableName>
@@ -3279,6 +3209,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledTriangle</Marker>
           <Line>None</Line>
           <TableName>DailyReport</TableName>
@@ -3294,6 +3227,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-256</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>Circle</Marker>
           <Line>None</Line>
           <TableName>DailyReport</TableName>
@@ -3331,6 +3267,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -3346,6 +3285,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-8323328</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -3361,6 +3303,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -3376,6 +3321,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -3391,6 +3339,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-256</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -10592,6 +10543,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>Circle</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
@@ -10629,6 +10583,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -10666,6 +10623,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -10703,6 +10663,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -10740,6 +10703,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -10777,6 +10743,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
           <TableName>Report</TableName>
@@ -10814,6 +10783,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -10851,6 +10823,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -10888,6 +10863,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -10935,6 +10913,9 @@ namespace Models
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16744448</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
       <Line>Dash</Line>
       <TableName>Report</TableName>
@@ -13717,6 +13698,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>Circle</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
@@ -13754,6 +13738,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -13791,6 +13778,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -13828,6 +13818,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -13865,6 +13858,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>DailyReport</TableName>
@@ -13902,6 +13898,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
           <TableName>Report</TableName>
@@ -18077,6 +18076,9 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <TableName>DailyReport</TableName>
@@ -18114,6 +18116,9 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <TableName>DailyReport</TableName>
@@ -18131,6 +18136,9 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-65536</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <Line>Solid</Line>
               <TableName>DailyReport</TableName>
@@ -18188,6 +18196,9 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <TableName>DailyReport</TableName>
@@ -18225,6 +18236,9 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <TableName>DailyReport</TableName>
@@ -18262,6 +18276,9 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8323328</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <TableName>DailyReport</TableName>
@@ -18277,6 +18294,9 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8323328</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <TableName>DailyReport</TableName>
@@ -18314,6 +18334,9 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8323328</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <TableName>DailyReport</TableName>
@@ -18351,6 +18374,9 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8323328</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <TableName>DailyReport</TableName>
@@ -18388,6 +18414,9 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8323328</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <TableName>DailyReport</TableName>
@@ -18425,6 +18454,9 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <Line>Solid</Line>
             <TableName>DailyReport</TableName>

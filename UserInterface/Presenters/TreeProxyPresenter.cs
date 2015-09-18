@@ -17,6 +17,7 @@
     {
         private TreeProxy ForestryModel;
         private TreeProxyView ForestryViewer;
+        private PropertyPresenter propertyPresenter;
 
         public double[] SoilMidpoints;
 
@@ -27,10 +28,15 @@
 
             AttachData();
             ForestryViewer.OnCellEndEdit += OnCellEndEdit;
+
+            this.propertyPresenter = new PropertyPresenter();
+            this.propertyPresenter.Attach(ForestryModel, ForestryViewer.ConstantsGrid, explorerPresenter);
+
         }
 
         public void Detach()
         {
+            propertyPresenter.Detach();
             SaveTable();
             ForestryModel.dates = ForestryViewer.SaveDates();
             ForestryModel.heights = ForestryViewer.SaveHeights();
@@ -40,7 +46,6 @@
 
         private void SaveTable()
         {
-            ForestryModel.RootRadius = ForestryViewer.RootRadius;
 
             DataTable table = ForestryViewer.GetTable();
 
@@ -70,7 +75,6 @@
         {
             if (!(ForestryModel.Parent is ForestrySystem))
                 throw new ApsimXException(ForestryModel, "Error: TreeProxy must be a child of ForestrySystem.");
-            ForestryViewer.RootRadius = ForestryModel.RootRadius;
 
             Soil Soil;
             List<IModel> Zones = Apsim.ChildrenRecursively(ForestryModel.Parent, typeof(Zone));

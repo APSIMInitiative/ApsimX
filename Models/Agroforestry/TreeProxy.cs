@@ -76,6 +76,7 @@ namespace Models.Agroforestry
         /// <summary>The root radius.</summary>
         /// <value>The root radius.</value>
         [Summary]
+        [Description("Root Radius (mm)")]
         public double RootRadius { get; set; }
 
         /// <summary>The uptake coefficient.</summary>
