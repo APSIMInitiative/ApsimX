@@ -217,31 +217,57 @@ namespace Models.Report
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
         public static ReportColumn Create(string descriptor, IModel report, string[] frequenciesFromReport)
         {
-            string pattern = @"((?<func>(sum|avg|min|max|first|last|diff))(\s+of\s+))?" +
-                             @"(?<variable>\S+)" +
-                             @"(\s+from\s+(?<from>\S+)\s+to\s+(?<to>\S+))?" +
-                             @"(\s+as\s+(?<alias>.+))?";
+            string columnName = RemoveWordAfter(ref descriptor, "as");
+            string to = RemoveWordAfter(ref descriptor, "to");
+            string from = RemoveWordAfter(ref descriptor, "from");
+            string aggregationFunction = RemoveWordBefore(ref descriptor, "of");
 
-            Regex r = new Regex(pattern);
-            Match m = r.Match(descriptor);
-            if (!m.Success)
-                throw new ApsimXException(report, "Invalid report variable found: " + descriptor);
-
-            GroupCollection c = r.Match(descriptor).Groups;
-            string variableName = c["variable"].Value;
-            string columnName = c["alias"].Value;
-            string aggregationFunction = c["func"].Value;
-            string from = c["from"].Value;
-            string to = c["to"].Value;
+            string variableName = descriptor;  // variable name is what is left over.
 
             // specify a column heading if alias was not specified.
-            if (columnName == string.Empty)
+            if (columnName == null)
                 columnName = variableName.Replace("[", string.Empty).Replace("]", string.Empty);
 
-            if (aggregationFunction != string.Empty)
+            if (aggregationFunction != null)
                 return new ReportColumn(aggregationFunction, variableName, columnName, from, to, frequenciesFromReport, report);
             else
                 return new ReportColumn(variableName, columnName, frequenciesFromReport, report);
+        }
+
+        /// <summary>Remove the end of a string following word and return it.</summary>
+        /// <param name="st">The string.</param>
+        /// <param name="word">Word to look for.</param>
+        /// <returns>The value after the word or null if not found.</returns>
+        private static string RemoveWordAfter(ref string st, string word)
+        {
+            string stringToFind = " " + word + " ";
+            int posWord = st.IndexOf(stringToFind);
+            if (posWord != -1)
+            {   
+                string value = st.Substring(posWord + stringToFind.Length).Trim();
+                st = st.Remove(posWord);
+                return value;
+            }
+            else
+                return null;
+        }
+
+        /// <summary>Remove the start of a string before the word.</summary>
+        /// <param name="st">The string.</param>
+        /// <param name="word">Word to look for.</param>
+        /// <returns>The value before the word or null if not found.</returns>
+        private static string RemoveWordBefore(ref string st, string word)
+        {
+            string stringToFind = " " + word + " ";
+            int posWord = st.IndexOf(stringToFind);
+            if (posWord != -1)
+            {
+                string value = st.Substring(0, posWord).Trim();
+                st = st.Remove(0, posWord + stringToFind.Length);
+                return value;
+            }
+            else
+                return null;
         }
 
         /// <summary>

@@ -446,6 +446,11 @@ namespace Models.Core
                 // Find the model of the right name.
                 IModel modelToDocument = Apsim.Find(simulation, modelNameToDocument);
 
+                // If not found then find a model of the specified type.
+                if (modelToDocument == null)
+                    modelToDocument = Apsim.Get(simulation, "[" + modelNameToDocument + "]") as IModel;
+
+                // If still not found throw an error.
                 if (modelToDocument == null)
                     throw new ApsimXException(this, "Could not find a model of the name " + modelNameToDocument + ". Simulation file name must match the name of the node to document.");
 
