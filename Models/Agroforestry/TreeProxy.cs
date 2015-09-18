@@ -132,7 +132,7 @@ namespace Models.Agroforestry
         public double[] NDemands { get; set; }
 
         private Dictionary<double, double> shade = new Dictionary<double, double>();
-        private Dictionary<double, double> nDemand = new Dictionary<double, double>();
+        //private Dictionary<double, double> nDemand = new Dictionary<double, double>();
         private Dictionary<double, double[]> rld = new Dictionary<double, double[]>();
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace Models.Agroforestry
             for (int i = 2; i < Table.Count; i++)
             {
                 shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0]));
-                nDemand.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][1]));
+                //nDemand.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][1]));
                 List<double> getRLDs = new List<double>();
                 for (int j = 4; j < Table[1].Count; j++)
                     getRLDs.Add(Convert.ToDouble(Table[i][j]));

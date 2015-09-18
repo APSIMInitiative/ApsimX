@@ -28,10 +28,9 @@
 
             AttachData();
             ForestryViewer.OnCellEndEdit += OnCellEndEdit;
-
+            ForestryViewer.SetReadOnly();
             this.propertyPresenter = new PropertyPresenter();
             this.propertyPresenter.Attach(ForestryModel, ForestryViewer.ConstantsGrid, explorerPresenter);
-
         }
 
         public void Detach()
@@ -126,7 +125,6 @@
                 List<string> rowNames = new List<string>();
 
                 rowNames.Add("Shade (%)");
-                rowNames.Add("Nitrogen Demand (kg/ha)");
                 rowNames.Add("Root Length Density (cm/cm3)");
                 rowNames.Add("Depth (cm)");
 
@@ -143,8 +141,8 @@
 
                 for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth and RLD rows to empty strings
                 {
+                    ForestryModel.Table[i][1] = string.Empty;
                     ForestryModel.Table[i][2] = string.Empty;
-                    ForestryModel.Table[i][3] = string.Empty;
                 }
             }
             else
@@ -157,7 +155,7 @@
                 for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth and RLD rows to empty strings
                 {
                     ForestryModel.Table[i][2] = string.Empty;
-                    ForestryModel.Table[i][3] = string.Empty;
+                    //ForestryModel.Table[i][3] = string.Empty;
                 }
 
                 // remove Zones from table that don't exist in simulation
