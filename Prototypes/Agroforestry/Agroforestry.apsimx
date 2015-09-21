@@ -52,70 +52,58 @@
             <string>100</string>
             <string />
             <string />
-            <string>.06</string>
-            <string>.05</string>
-            <string>.04</string>
-            <string>.02</string>
-            <string>.015</string>
-            <string>.01</string>
-            <string>.01</string>
+            <string>6</string>
+            <string>5</string>
+            <string>4</string>
+            <string>2</string>
+            <string>1.5</string>
+            <string>1</string>
+            <string>1</string>
           </ArrayOfString>
           <ArrayOfString>
             <string>0</string>
             <string />
             <string />
-            <string>.06</string>
-            <string>.05</string>
-            <string>.04</string>
-            <string>.02</string>
-            <string>.015</string>
-            <string>.01</string>
-            <string>0</string>
-          </ArrayOfString>
-          <ArrayOfString>
-            <string>0</string>
-            <string />
-            <string />
-            <string>.05</string>
-            <string>.04</string>
-            <string>.035</string>
-            <string>.02</string>
-            <string>.015</string>
-            <string>.01</string>
+            <string>6</string>
+            <string>5</string>
+            <string>4</string>
+            <string>2</string>
+            <string>1.5</string>
+            <string>1</string>
             <string>0</string>
           </ArrayOfString>
           <ArrayOfString>
             <string>0</string>
             <string />
             <string />
-            <string>.04</string>
-            <string>.03</string>
-            <string>.03</string>
-            <string>.015</string>
-            <string>.01</string>
-            <string>.01</string>
+            <string>5</string>
+            <string>4</string>
+            <string>3.5</string>
+            <string>2</string>
+            <string>1.5</string>
+            <string>1</string>
             <string>0</string>
           </ArrayOfString>
           <ArrayOfString>
             <string>0</string>
             <string />
             <string />
-            <string>.03</string>
-            <string>.02</string>
-            <string>.02</string>
-            <string>.01</string>
-            <string>0</string>
-            <string>0</string>
+            <string>4</string>
+            <string>3</string>
+            <string>3</string>
+            <string>1.5</string>
+            <string>1</string>
+            <string>1</string>
             <string>0</string>
           </ArrayOfString>
           <ArrayOfString>
             <string>0</string>
             <string />
             <string />
-            <string>.02</string>
-            <string>.01</string>
-            <string>.01</string>
-            <string>0</string>
+            <string>3</string>
+            <string>2</string>
+            <string>2</string>
+            <string>1</string>
             <string>0</string>
             <string>0</string>
             <string>0</string>
@@ -124,9 +112,21 @@
             <string>0</string>
             <string />
             <string />
-            <string>.01</string>
-            <string>.005</string>
-            <string>.002</string>
+            <string>2</string>
+            <string>1</string>
+            <string>1</string>
+            <string>0</string>
+            <string>0</string>
+            <string>0</string>
+            <string>0</string>
+          </ArrayOfString>
+          <ArrayOfString>
+            <string>0</string>
+            <string />
+            <string />
+            <string>1</string>
+            <string>.5</string>
+            <string>.2</string>
             <string>0</string>
             <string>0</string>
             <string>0</string>
@@ -169,7 +169,8 @@
             <string>0</string>
           </ArrayOfString>
         </Table>
-        <RootRadius>0.2</RootRadius>
+        <RootRadius>0.02</RootRadius>
+        <Kd>0.1</Kd>
         <BaseKL>0.02</BaseKL>
         <dates>
           <dateTime>1900-01-01T00:00:00</dateTime>
@@ -3417,70 +3418,58 @@ namespace Models
             <string>80</string>
             <string />
             <string />
-            <string>.06</string>
-            <string>.05</string>
-            <string>.04</string>
-            <string>.02</string>
-            <string>.015</string>
-            <string>.01</string>
-            <string>0</string>
+            <string>6</string>
+            <string>5</string>
+            <string>4</string>
+            <string>2</string>
+            <string>1.5</string>
+            <string>1</string>
+            <string>1</string>
           </ArrayOfString>
           <ArrayOfString>
             <string>20</string>
             <string />
             <string />
-            <string>.06</string>
-            <string>.05</string>
-            <string>.04</string>
-            <string>.02</string>
-            <string>.015</string>
-            <string>.01</string>
+            <string>6</string>
+            <string>5</string>
+            <string>4</string>
+            <string>2</string>
+            <string>1.5</string>
+            <string>1</string>
+            <string>1</string>
+          </ArrayOfString>
+          <ArrayOfString>
+            <string>0</string>
+            <string />
+            <string />
+            <string>5</string>
+            <string>4</string>
+            <string>3.5</string>
+            <string>2</string>
+            <string>1</string>
+            <string>.5</string>
             <string>0</string>
           </ArrayOfString>
           <ArrayOfString>
             <string>0</string>
             <string />
             <string />
-            <string>.05</string>
-            <string>.04</string>
-            <string>.035</string>
-            <string>.02</string>
-            <string>.015</string>
-            <string>.01</string>
+            <string>4</string>
+            <string>3</string>
+            <string>3</string>
+            <string>1.5</string>
+            <string>1</string>
+            <string>1</string>
             <string>0</string>
           </ArrayOfString>
           <ArrayOfString>
             <string>0</string>
             <string />
             <string />
-            <string>.04</string>
-            <string>.03</string>
-            <string>.03</string>
-            <string>.015</string>
-            <string>.01</string>
-            <string>.01</string>
-            <string>0</string>
-          </ArrayOfString>
-          <ArrayOfString>
-            <string>0</string>
-            <string />
-            <string />
-            <string>.03</string>
-            <string>.02</string>
-            <string>.02</string>
-            <string>.01</string>
-            <string>0</string>
-            <string>0</string>
-            <string>0</string>
-          </ArrayOfString>
-          <ArrayOfString>
-            <string>0</string>
-            <string />
-            <string />
-            <string>.02</string>
-            <string>.01</string>
-            <string>.01</string>
-            <string>0</string>
+            <string>3</string>
+            <string>2</string>
+            <string>2</string>
+            <string>1</string>
             <string>0</string>
             <string>0</string>
             <string>0</string>
@@ -3489,9 +3478,21 @@ namespace Models
             <string>0</string>
             <string />
             <string />
-            <string>.01</string>
-            <string>.005</string>
-            <string>.002</string>
+            <string>2</string>
+            <string>1</string>
+            <string>1</string>
+            <string>0</string>
+            <string>0</string>
+            <string>0</string>
+            <string>0</string>
+          </ArrayOfString>
+          <ArrayOfString>
+            <string>0</string>
+            <string />
+            <string />
+            <string>1</string>
+            <string>.5</string>
+            <string>.2</string>
             <string>0</string>
             <string>0</string>
             <string>0</string>
@@ -3534,7 +3535,8 @@ namespace Models
             <string>0</string>
           </ArrayOfString>
         </Table>
-        <RootRadius>0.2</RootRadius>
+        <RootRadius>0.02</RootRadius>
+        <Kd>0.1</Kd>
         <BaseKL>0.02</BaseKL>
         <dates>
           <dateTime>1900-01-01T00:00:00</dateTime>
@@ -10974,58 +10976,58 @@ namespace Models
             <string>60</string>
             <string />
             <string />
-            <string>.06</string>
-            <string>.05</string>
-            <string>.04</string>
-            <string>.02</string>
-            <string>.015</string>
-            <string>.01</string>
-            <string>0</string>
+            <string>6</string>
+            <string>5</string>
+            <string>4</string>
+            <string>2</string>
+            <string>1.5</string>
+            <string>1</string>
+            <string>1</string>
           </ArrayOfString>
           <ArrayOfString>
             <string>50</string>
             <string />
             <string />
-            <string>.06</string>
-            <string>.05</string>
-            <string>.04</string>
-            <string>.02</string>
-            <string>.015</string>
-            <string>.01</string>
+            <string>6</string>
+            <string>5</string>
+            <string>4</string>
+            <string>2</string>
+            <string>1.5</string>
+            <string>1</string>
             <string>0</string>
           </ArrayOfString>
           <ArrayOfString>
             <string>40</string>
             <string />
             <string />
-            <string>.05</string>
-            <string>.04</string>
-            <string>.035</string>
-            <string>.02</string>
-            <string>.015</string>
-            <string>.01</string>
+            <string>5</string>
+            <string>4</string>
+            <string>3.5</string>
+            <string>2</string>
+            <string>1.5</string>
+            <string>1</string>
             <string>0</string>
           </ArrayOfString>
           <ArrayOfString>
             <string>30</string>
             <string />
             <string />
-            <string>.04</string>
-            <string>.03</string>
-            <string>.03</string>
-            <string>.015</string>
-            <string>.01</string>
-            <string>.01</string>
+            <string>4</string>
+            <string>3</string>
+            <string>3</string>
+            <string>1.5</string>
+            <string>1</string>
+            <string>1</string>
             <string>0</string>
           </ArrayOfString>
           <ArrayOfString>
             <string>20</string>
             <string />
             <string />
-            <string>.03</string>
-            <string>.02</string>
-            <string>.02</string>
-            <string>.01</string>
+            <string>3</string>
+            <string>2</string>
+            <string>2</string>
+            <string>1</string>
             <string>0</string>
             <string>0</string>
             <string>0</string>
@@ -11034,9 +11036,9 @@ namespace Models
             <string>0</string>
             <string />
             <string />
-            <string>.02</string>
-            <string>.01</string>
-            <string>.01</string>
+            <string>2</string>
+            <string>1</string>
+            <string>1</string>
             <string>0</string>
             <string>0</string>
             <string>0</string>
@@ -11046,9 +11048,9 @@ namespace Models
             <string>0</string>
             <string />
             <string />
-            <string>.01</string>
-            <string>.005</string>
-            <string>.002</string>
+            <string>1</string>
+            <string>.5</string>
+            <string>.2</string>
             <string>0</string>
             <string>0</string>
             <string>0</string>
@@ -11091,7 +11093,8 @@ namespace Models
             <string>0</string>
           </ArrayOfString>
         </Table>
-        <RootRadius>0.2</RootRadius>
+        <RootRadius>0.02</RootRadius>
+        <Kd>0.1</Kd>
         <BaseKL>0.02</BaseKL>
         <dates>
           <dateTime>1900-01-01T00:00:00</dateTime>
@@ -13942,7 +13945,6 @@ namespace Models
             </ArrayOfString>
             <ArrayOfString>
               <string>Shade (%)</string>
-              <string>Nitrogen Demand (kg/ha)</string>
               <string>Root Length Density (cm/cm3)</string>
               <string>Depth (cm)</string>
               <string>0-15</string>
@@ -13954,90 +13956,82 @@ namespace Models
             </ArrayOfString>
             <ArrayOfString>
               <string>100</string>
-              <string>0</string>
               <string />
               <string />
-              <string>.06</string>
-              <string>.05</string>
-              <string>.04</string>
-              <string>.02</string>
-              <string>.015</string>
-              <string>.01</string>
+              <string>6</string>
+              <string>5</string>
+              <string>4</string>
+              <string>2</string>
+              <string>1.5</string>
+              <string>1</string>
             </ArrayOfString>
             <ArrayOfString>
               <string>0</string>
-              <string>0</string>
               <string />
               <string />
-              <string>.06</string>
-              <string>.05</string>
-              <string>.04</string>
-              <string>.02</string>
-              <string>.015</string>
-              <string>.01</string>
+              <string>6</string>
+              <string>5</string>
+              <string>4</string>
+              <string>2</string>
+              <string>1.5</string>
+              <string>1</string>
             </ArrayOfString>
             <ArrayOfString>
               <string>0</string>
-              <string>0</string>
               <string />
               <string />
-              <string>.05</string>
-              <string>.04</string>
-              <string>.035</string>
-              <string>.02</string>
-              <string>.015</string>
-              <string>.01</string>
+              <string>5</string>
+              <string>4</string>
+              <string>3.5</string>
+              <string>2</string>
+              <string>1.5</string>
+              <string>1</string>
             </ArrayOfString>
             <ArrayOfString>
               <string>0</string>
-              <string>0</string>
               <string />
               <string />
-              <string>.04</string>
-              <string>.03</string>
-              <string>.03</string>
-              <string>.015</string>
-              <string>.01</string>
-              <string>.01</string>
+              <string>4</string>
+              <string>3</string>
+              <string>3</string>
+              <string>1.5</string>
+              <string>1</string>
+              <string>1</string>
             </ArrayOfString>
             <ArrayOfString>
               <string>0</string>
-              <string>0</string>
               <string />
               <string />
-              <string>.03</string>
-              <string>.02</string>
-              <string>.02</string>
-              <string>.01</string>
+              <string>3</string>
+              <string>2</string>
+              <string>2</string>
+              <string>1</string>
               <string>0</string>
               <string>0</string>
             </ArrayOfString>
             <ArrayOfString>
               <string>0</string>
-              <string>0</string>
               <string />
               <string />
-              <string>.02</string>
-              <string>.01</string>
-              <string>.01</string>
+              <string>2</string>
+              <string>1</string>
+              <string>1</string>
               <string>0</string>
               <string>0</string>
               <string>0</string>
             </ArrayOfString>
             <ArrayOfString>
               <string>0</string>
-              <string>0</string>
               <string />
               <string />
-              <string>.01</string>
-              <string>.005</string>
-              <string>.002</string>
+              <string>1</string>
+              <string>.5</string>
+              <string>.2</string>
               <string>0</string>
               <string>0</string>
               <string>0</string>
             </ArrayOfString>
             <ArrayOfString>
-              <string>0</string>
               <string>0</string>
               <string />
               <string />
@@ -14050,7 +14044,6 @@ namespace Models
             </ArrayOfString>
             <ArrayOfString>
               <string>0</string>
-              <string>0</string>
               <string />
               <string />
               <string>0</string>
@@ -14061,7 +14054,6 @@ namespace Models
               <string>0</string>
             </ArrayOfString>
             <ArrayOfString>
-              <string>0</string>
               <string>0</string>
               <string />
               <string />
@@ -14073,7 +14065,8 @@ namespace Models
               <string>0</string>
             </ArrayOfString>
           </Table>
-          <RootRadius>0.2</RootRadius>
+          <RootRadius>0.02</RootRadius>
+          <Kd>0.1</Kd>
           <BaseKL>0.02</BaseKL>
           <dates>
             <dateTime>1900-01-01T00:00:00</dateTime>
@@ -14090,11 +14083,11 @@ namespace Models
             <double>10000</double>
           </heights>
           <NDemands>
-            <double>10000</double>
-            <double>10000</double>
-            <double>10000</double>
-            <double>10000</double>
-            <double>10000</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
           </NDemands>
         </TreeProxy>
         <RectangularZone>
@@ -18050,7 +18043,7 @@ namespace Models
             <Line>Solid</Line>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>TotalSWmm</YFieldName>
+            <YFieldName>WaterTo90</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -18210,7 +18203,7 @@ namespace Models
             <Line>Solid</Line>
             <TableName>DailyReport</TableName>
             <XFieldName>Distance</XFieldName>
-            <YFieldName>TotalSWmm</YFieldName>
+            <YFieldName>WaterTo90</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
