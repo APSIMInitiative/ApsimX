@@ -310,6 +310,20 @@ namespace UserInterface.Views
                 return null;
         }
 
+        /// <summary>A helper function that asks user for a file.</summary>
+        /// <param name="prompt"></param>
+        /// <returns>
+        /// Returns the selected file or null if action cancelled by user.
+        /// </returns>
+        public string AskUserForFile(string prompt)
+        {
+            openFileDialog.Title = prompt;
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+                return openFileDialog.FileName;
+            else
+                return null;
+        }
+
         /// <summary>Add a status message to the explorer window</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>
@@ -335,6 +349,18 @@ namespace UserInterface.Views
             message += "\n";
             StatusWindow.Text = message;
             this.toolTip1.SetToolTip(this.StatusWindow, message);
+            progressBar.Visible = false;
+            Application.DoEvents();
+        }
+
+        /// <summary>
+        /// Show progress bar with the specified percent.
+        /// </summary>
+        /// <param name="percent"></param>
+        public void ShowProgress(int percent)
+        {
+            progressBar.Visible = true;
+            progressBar.Value = percent;
         }
 
         /// <summary>
@@ -363,6 +389,15 @@ namespace UserInterface.Views
         {
             MainForm mainForm = Application.OpenForms[0] as MainForm;
             mainForm.ToggleSecondExplorerViewVisible();
+        }
+
+        /// <summary>
+        /// Close down APSIMX user interface.
+        /// </summary>
+        public void Close()
+        {
+            MainForm mainForm = Application.OpenForms[0] as MainForm;
+            mainForm.Close();
         }
 
         /// <summary>Gets or sets the width of the tree view.</summary>

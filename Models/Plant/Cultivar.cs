@@ -10,6 +10,7 @@ namespace Models.PMF
     using System.Xml.Serialization;
     using Models.Core;
     using APSIM.Shared.Utilities;
+    using OldPlant;
 
     /// <summary>
     /// Cultivar class for holding cultivar overrides.
@@ -24,6 +25,7 @@ namespace Models.PMF
     [Serializable]
     [ViewName("UserInterface.Views.CultivarView")]
     [PresenterName("UserInterface.Presenters.CultivarPresenter")]
+    [ValidParent(ParentModels=new Type[] { typeof(Plant15), typeof(Plant) })]
     public class Cultivar : Model
     {
         /// <summary>
@@ -89,6 +91,8 @@ namespace Models.PMF
                     if (propertyName != string.Empty && propertyValue != string.Empty)
                     {
                         IVariable property = Apsim.GetVariableObject(model, propertyName) as IVariable;
+                        if (property == null)
+                            throw new Exception("Cannot find cultivar property: " + propertyName);
                         if (property.GetType() != null)
                         {
                             object oldValue = property.Value;
@@ -133,6 +137,23 @@ namespace Models.PMF
 
             this.properties.Clear();
             this.oldPropertyValues.Clear();
+        }
+
+        /// <summary>Writes documentation for this cultivar by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel + 1));
+
+            string aliasString = StringUtilities.BuildString(Aliases, ",");
+            if (aliasString != string.Empty)
+                aliasString = "Also known as " + aliasString;
+            tags.Add(new AutoDocumentation.Paragraph(aliasString, indent + 1));
+
+            foreach (string command in Commands)
+                tags.Add(new AutoDocumentation.Paragraph(command, indent + 1));
         }
     }
 }

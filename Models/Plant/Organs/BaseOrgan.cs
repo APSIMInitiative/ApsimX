@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
+using Models.PMF.Functions;
 
 
 namespace Models.PMF.Organs
@@ -14,6 +15,7 @@ namespace Models.PMF.Organs
     /// This class represents a base organ
     /// </summary>
     [Serializable]
+    [ValidParent(typeof(Plant))]
     public class BaseOrgan : Model, IOrgan, IArbitration
     {
         #region Links to other models or compontnets
@@ -167,5 +169,32 @@ namespace Models.PMF.Organs
         /// </summary>
         virtual public void DoHarvest() { }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write description of this class.
+            AutoDocumentation.GetClassDescription(this, tags, indent);
+
+            // write a list of constant functions.
+            foreach (IModel child in Apsim.Children(this, typeof(Constant)))
+                child.Document(tags, -1, indent);
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                if (child is Constant || child is Biomass || child is CompositeBiomass || child is ArrayBiomass)
+                {
+                    // don't document.
+                }
+                else
+                    child.Document(tags, headingLevel + 1, indent);
+            }
+        }
     }
 }

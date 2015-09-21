@@ -15,13 +15,33 @@ namespace Models.PMF.Organs
     /// A leaf cohort model
     /// </summary>
     /// <remarks>
+    /// 
+    /// @startuml
+    /// Initialized -> Appeared: Appearance 
+    /// Appeared -> Expanded: GrowthDuration
+    /// Expanded -> Senescing: LagDuration
+    /// Senescing -> Senesced: SenescenceDuration
+    /// Senesced -> Detaching: DetachmentLagDuration
+    /// Detaching -> Detached: DetachmentDuration
+    /// Initialized ->Expanded: IsGrowing
+    /// Initialized -> Senesced: IsAlive
+    /// Initialized -> Senesced: IsGreen
+    /// Initialized -> Senescing: IsNotSenescing
+    /// Senescing -> Senesced: IsSenescing
+    /// Expanded -> Detached: IsFullyExpanded
+    /// Senesced -> Detached: ShouldBeDead
+    /// Senesced -> Detached: Finished
+    /// Appeared -> Detached: IsAppeared
+    /// Initialized -> Detached: IsInitialised
+    /// @enduml
+    /// 
     /// Leaf death
     /// ------------------------
     /// The leaf area, structural biomass and structural nitrogen of 
     /// green (live) parts is subtracted by a fraction.
-    ///</remarks>
+    /// 
+    /// </remarks>
     [Serializable]
-    [Description("Leaf Cohort")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class LeafCohort : Model
@@ -1156,6 +1176,19 @@ namespace Models.PMF.Organs
         }
         #endregion
 
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // write memos.
+            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                memo.Document(tags, -1, indent);
+
+            tags.Add(new AutoDocumentation.Paragraph("Area = " + Area, indent));
+        }
     }
 }
    

@@ -201,6 +201,12 @@ namespace UserInterface.Interfaces
         /// </summary>
         /// <returns>Returns the selected folder or null if action cancelled by user.</returns>
         string AskUserForFolder(string prompt);
+        
+        /// <summary>
+        /// A helper function that asks user for a file.
+        /// </summary>
+        /// <returns>Returns the selected file or null if action cancelled by user.</returns>
+        string AskUserForFile(string prompt);
 
         /// <summary>
         /// Add a status message. A message of null will clear the status message.
@@ -227,6 +233,17 @@ namespace UserInterface.Interfaces
         /// Gets or sets the width of the tree view.
         /// </summary>
         Int32 TreeWidth { get; set; }
+
+        /// <summary>
+        /// Close down APSIMX user interface.
+        /// </summary>
+        void Close();
+
+        /// <summary>
+        /// Show progress bar with the specified percent.
+        /// </summary>
+        /// <param name="percent"></param>
+        void ShowProgress(int percent);
     }
 
 

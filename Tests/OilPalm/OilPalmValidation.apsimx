@@ -1,59 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
   <Name>Simulations</Name>
   <Memo>
     <Name>Memo</Name>
     <MemoText><![CDATA[
-<html><body>
-<h1>Datasets</h1>
-Data from three sites across PNG with different climate and soils were used for model testing. Soils ranged from sandy clay (volcanic ash) to alluvial clay. Mean annual rainfall ranged from 2400 mm at Sagarai (1990-2008) and Sangara (1986-2009) to 4350 mm at Hargy(1989-2008) with annual rainfall variability larger at Sagarai than the other two sites. Whilst there is only a small difference in temperature across the sites, rainfall patterns do impact on both annual (Hargy 15.9 MJ; Sangara 17.0 MJ; Sagarai 18.1 MJ) and monthly variation in mean daily solar radiation.<br/>
-<br/>
-Fertiliser trial data were obtained for each location from the PNG Oil Palm Research Association trial database (Table Below). All trials had the same commercial dura x pisifera palms planted in an equilateral triangular pattern. Trials included multiple rates of nitrogen including a control in which no nitrogen was applied. Fertilisers were applied in two to three applications per year. Trial 324 evaluated the effect of nitrogen rate and source (five sources). There was no effect of nitrogen source and so these data have been combined in this study as there was no effect of nitrogen source. Trial 504 investigated nutrient interactions (N x K). Data from treatments for which potassium was not limiting were combined. Trial 212 investigated nitrogen rate only. All other macro- and micronutrients were maintained at sufficient levels in all trials. Plots in each trial consisted of 16 to 30 palms surrounded by guard rows between neighbouring plots. Levels of replication ranged from two to four. In trials 324 and 504, trenches were dug around plots to minimise poaching of nutrients by palms from neighbouring plots.<br/>
-<h1>Description of fertiliser trials and selected treatments used in model development and testing.</h1>
-Location: <b>Hargy</b><br/>
-Trial number: 212<br/>
-Previous land use: Oil Palm<br/>
-Year planted: 1996<br/>
-Treatment commenced: 2002<br/>
-Population: 140 (palms/ha)<br/>
-NRates: 0, 1.0, 2.0 (kg/palm/ha/y)<br/>
-<br/>
-Location: <b>Sangara</b><br/>
-Trial number: 324<br/>
-Previous land use: Oil Palm<br/>
-Year planted: 1996<br/>
-Treatment commenced: 2001<br/>
-Population: 135 (palms/ha)<br/>
-NRates: 0, 0.42, 1.68 (kg/palm/ha/y)<br/>
-<br/>
-Location: <b>Sagarai</b><br/>
-Trial number: 504<br/>
-Previous land use: Forest / Rubber plantation<br/>
-Year planted: 1991<br/>
-Treatment commenced: 1995<br/>
-Population: 127 (palms/ha)<br/>
-NRates: 0, 0.42, 1.26 (kg/palm/ha/y)<br/>
-<br/>
-Harvested ripe bunches were counted and weighed (together with loose fruits) fortnightly for every palm. Leaf samples were collected from frond 17 from selected palms in all plots at least once a year and were oven dried and analysed for nitrogen content. Petiole cross-sectional area, leaflet lengths and frond length of frond 17 was measured to allow calculation of leaf area and mass (Corley et al., 1971). The total number of fronds on each palm was counted, and the first frond was marked twice a year to determine frond production rate. Stem heights of selected palms were measured periodically in two of the trials, and these were combined with a single measurement of stem diameter to calculate stem mass, assuming a linear increase in stem density with plantation age (Corley et al., 1971).<br/>
-<br/>
-Parameterisation of soil process models used information from a variety of sources. Soil hydraulic properties were derived from pressure plate water retention data. Runoff curve number (Hawkins, 1996) was estimated to 72 for clay soils and 50 for ash soils using runoff data from PNG oil palm plantations (Banabas et al., 2008b). Soil organic carbon data were available for Trials 324 and 504. Simulations of Trial 212 utilised carbon measurements available for a nearby planting. The fractionation of soil organic carbon into the various model pools is very important for model accuracy. It has been shown that it is possible to deduce, a priori, the apparent soil organic matter composition from observed patterns (Huth et al., 2010). The inert fraction of the total soil organic matter is an important parameter and methods for its determination for the volcanic soils in PNG have not been developed. In this study, we have assumed that the inert carbon content does not vary significantly with depth and that it can be approximated using the carbon content at a depth of approximately 0.5 m. Most carbon cycling occurs above this depth and carbon contents vary less below this depth. Therefore we assumed that carbon above this value is available for decomposition. Finally, as trials 212 and 324 were planted after felling of existing plantations, we initialised the surface organic matter pools to consist of 24 t/ ha of fronds with a C:N of 39 and 63 t/ ha of stems with a C:N of 145. In the absence of other information, the same initial surface organic matter was used for trial 504.<br/>
-<br/>
-Daily meteorological data (rainfall, sunshine hours, temperature) for Trial 324 were taken from the nearby research station of the PNG Oil Palm Research Association. Sunshine hour data was used to calculate incoming global shortwave radiation as described by Banabas (2007). Complete daily meteorological datasets were not available for the other two sites apart from a limited number of monthly totals for sunshine hours and rainfall. Daily estimates of the required climate weather data for these sites were derived from estimates obtained from the NASA Langley Research Center POWER Project funded through the NASA Earth Science Directorate Applied Science Program  (<a href="http://power.larc.nasa.gov/">http://power.larc.nasa.gov/</a>). Adequacy of this dataset was tested via comparison of satellite-derived estimates of monthly mean solar radiation with that calculated from measured monthly sunshine hours for Hargy (data not shown). No data on sunshine hours were available for Sagarai and neither site had measured temperature data for comparison. Satellite-derived estimates of monthly rainfall proved inadequate when compared to available monthly data. Therefore, observed monthly rainfall totals were disaggregated into daily data using the satellite-derived daily rainfall estimates. Satellite-derived estimates of daily temperatures were used for these two sites but could not be tested for accuracy.<br/>
-<h1>References</h1>
-Banabas, M., 2007. Study of Nitrogen loss pathways in oil palm (Elaeis guineensis Jacq.) growing agro-ecosystems in volcanic ash soils in Papua New Guinea. Soil Sci. Massey University, Palmerston North, New Zealand.<br/>
-<br/>
-Banabas, M., Turner, M.A., Scotter, D.R., Nelson, P.N., 2008. Losses of nitrogen fertiliser under oil palm in Papua New Guinea: 1. Water balance, and nitrogen in soil solution and runoff. Aust J Soil Res 46, 332-339.<br/>
-<br/>
-Banabas, M., Scotter, D.R., Turner, M.A., 2008. Losses of nitrogen fertiliser under oil palm in Papua New Guinea: 2. Nitrogen transformations and leaching, and a residence time model. Aust J Soil Res 46, 340-347.<br/>
-<br/>
-Corley, R.H.V., Hardon, J.J., Tan, G.Y., 1971. Analysis of growth of oil palm (Elaeis-guineensis Jacq) .1. Estimation of growth parameters and application in breeding. Euphytica 20, 307-315.<br/>
-<br/>
-Hawkins, R.H., 1996. Runoff Curve Number: Has It Reached Maturity? Journal of Hydrologic Engineering 1, 11-19.<br/>
-<br/>
-Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010. Impacts of fertilisers and legumes on N2O and CO2 emissions from soils in subtropical agricultural systems: A simulation study. Agriculture Ecosystems And Environment 136, 351-357.<br/>
-<br/>
+### Datasets
 
-</body></html>]]></MemoText>
+Data from three sites across PNG with different climate and soils were used for model testing. Soils ranged from sandy clay (volcanic ash) to alluvial clay. Mean annual rainfall ranged from 2400 mm at Sagarai (1990-2008) and Sangara (1986-2009) to 4350 mm at Hargy(1989-2008) with annual rainfall variability larger at Sagarai than the other two sites. Whilst there is only a small difference in temperature across the sites, rainfall patterns do impact on both annual (Hargy 15.9 MJ; Sangara 17.0 MJ; Sagarai 18.1 MJ) and monthly variation in mean daily solar radiation.  
+
+Fertiliser trial data were obtained for each location from the PNG Oil Palm Research Association trial database (Table Below). All trials had the same commercial dura x pisifera palms planted in an equilateral triangular pattern. Trials included multiple rates of nitrogen including a control in which no nitrogen was applied. Fertilisers were applied in two to three applications per year. Trial 324 evaluated the effect of nitrogen rate and source (five sources). There was no effect of nitrogen source and so these data have been combined in this study as there was no effect of nitrogen source. Trial 504 investigated nutrient interactions (N x K). Data from treatments for which potassium was not limiting were combined. Trial 212 investigated nitrogen rate only. All other macro- and micronutrients were maintained at sufficient levels in all trials. Plots in each trial consisted of 16 to 30 palms surrounded by guard rows between neighbouring plots. Levels of replication ranged from two to four. In trials 324 and 504, trenches were dug around plots to minimise poaching of nutrients by palms from neighbouring plots.  
+
+### Description of fertiliser trials and selected treatments used in model development and testing.
+
+Location: **Hargy**  
+ Trial number: 212  
+ Previous land use: Oil Palm  
+ Year planted: 1996  
+ Treatment commenced: 2002  
+ Population: 140 (palms/ha)  
+ NRates: 0, 1.0, 2.0 (kg/palm/ha/y)  
+
+Location: **Sangara**  
+ Trial number: 324  
+ Previous land use: Oil Palm  
+ Year planted: 1996  
+ Treatment commenced: 2001  
+ Population: 135 (palms/ha)  
+ NRates: 0, 0.42, 1.68 (kg/palm/ha/y)  
+
+Location: **Sagarai**  
+ Trial number: 504  
+ Previous land use: Forest / Rubber plantation  
+ Year planted: 1991  
+ Treatment commenced: 1995  
+ Population: 127 (palms/ha)  
+ NRates: 0, 0.42, 1.26 (kg/palm/ha/y)  
+
+Harvested ripe bunches were counted and weighed (together with loose fruits) fortnightly for every palm. Leaf samples were collected from frond 17 from selected palms in all plots at least once a year and were oven dried and analysed for nitrogen content. Petiole cross-sectional area, leaflet lengths and frond length of frond 17 was measured to allow calculation of leaf area and mass (Corley et al., 1971). The total number of fronds on each palm was counted, and the first frond was marked twice a year to determine frond production rate. Stem heights of selected palms were measured periodically in two of the trials, and these were combined with a single measurement of stem diameter to calculate stem mass, assuming a linear increase in stem density with plantation age (Corley et al., 1971).  
+
+Parameterisation of soil process models used information from a variety of sources. Soil hydraulic properties were derived from pressure plate water retention data. Runoff curve number (Hawkins, 1996) was estimated to 72 for clay soils and 50 for ash soils using runoff data from PNG oil palm plantations (Banabas et al., 2008b). Soil organic carbon data were available for Trials 324 and 504\. Simulations of Trial 212 utilised carbon measurements available for a nearby planting. The fractionation of soil organic carbon into the various model pools is very important for model accuracy. It has been shown that it is possible to deduce, a priori, the apparent soil organic matter composition from observed patterns (Huth et al., 2010). The inert fraction of the total soil organic matter is an important parameter and methods for its determination for the volcanic soils in PNG have not been developed. In this study, we have assumed that the inert carbon content does not vary significantly with depth and that it can be approximated using the carbon content at a depth of approximately 0.5 m. Most carbon cycling occurs above this depth and carbon contents vary less below this depth. Therefore we assumed that carbon above this value is available for decomposition. Finally, as trials 212 and 324 were planted after felling of existing plantations, we initialised the surface organic matter pools to consist of 24 t/ ha of fronds with a C:N of 39 and 63 t/ ha of stems with a C:N of 145\. In the absence of other information, the same initial surface organic matter was used for trial 504.  
+
+Daily meteorological data (rainfall, sunshine hours, temperature) for Trial 324 were taken from the nearby research station of the PNG Oil Palm Research Association. Sunshine hour data was used to calculate incoming global shortwave radiation as described by Banabas (2007). Complete daily meteorological datasets were not available for the other two sites apart from a limited number of monthly totals for sunshine hours and rainfall. Daily estimates of the required climate weather data for these sites were derived from estimates obtained from the NASA Langley Research Center POWER Project funded through the NASA Earth Science Directorate Applied Science Program ([http://power.larc.nasa.gov/](http://power.larc.nasa.gov/)). Adequacy of this dataset was tested via comparison of satellite-derived estimates of monthly mean solar radiation with that calculated from measured monthly sunshine hours for Hargy (data not shown). No data on sunshine hours were available for Sagarai and neither site had measured temperature data for comparison. Satellite-derived estimates of monthly rainfall proved inadequate when compared to available monthly data. Therefore, observed monthly rainfall totals were disaggregated into daily data using the satellite-derived daily rainfall estimates. Satellite-derived estimates of daily temperatures were used for these two sites but could not be tested for accuracy.  
+
+### References
+
+Banabas, M., 2007\. Study of Nitrogen loss pathways in oil palm (Elaeis guineensis Jacq.) growing agro-ecosystems in volcanic ash soils in Papua New Guinea. Soil Sci. Massey University, Palmerston North, New Zealand.  
+
+Banabas, M., Turner, M.A., Scotter, D.R., Nelson, P.N., 2008\. Losses of nitrogen fertiliser under oil palm in Papua New Guinea: 1\. Water balance, and nitrogen in soil solution and runoff. Aust J Soil Res 46, 332-339.  
+
+Banabas, M., Scotter, D.R., Turner, M.A., 2008\. Losses of nitrogen fertiliser under oil palm in Papua New Guinea: 2\. Nitrogen transformations and leaching, and a residence time model. Aust J Soil Res 46, 340-347.  
+
+Corley, R.H.V., Hardon, J.J., Tan, G.Y., 1971\. Analysis of growth of oil palm (Elaeis-guineensis Jacq) .1\. Estimation of growth parameters and application in breeding. Euphytica 20, 307-315.  
+
+Hawkins, R.H., 1996\. Runoff Curve Number: Has It Reached Maturity? Journal of Hydrologic Engineering 1, 11-19.  
+
+Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fertilisers and legumes on N2O and CO2 emissions from soils in subtropical agricultural systems: A simulation study. Agriculture Ecosystems And Environment 136, 351-357.]]></MemoText>
   </Memo>
   <Experiment>
     <Name>Sangara</Name>
@@ -1289,6 +1290,36 @@ namespace Models
     </Simulation>
     <Graph>
       <Name>LAI</Name>
+      <Series>
+        <Name>Series 0</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>MonthlyOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>OilPalm.LAI</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name />
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>OilPalm.LAI</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1305,52 +1336,42 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>StemMass</Name>
       <Series>
-        <Title>Series 0</Title>
+        <Name>Series 0</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>MonthlyOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>OilPalm.StemMass</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Title />
+        <Name>Series 1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>OilPalm.StemMass</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>StemMass</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1367,52 +1388,42 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>FrondProduction</Name>
       <Series>
-        <Title />
+        <Name>Series 0</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualFronds</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Title>Series 1</Title>
+        <Name>Series 1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>OilPalm.AnnualFronds</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>FrondProduction</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1429,52 +1440,42 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>BunchProduction</Name>
       <Series>
-        <Title />
+        <Name>Series 0</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualBunches</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Title>Series 1</Title>
+        <Name>Series 1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualBunches</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopRight</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>BunchProduction</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1491,52 +1492,42 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>AnnualFFB</Name>
       <Series>
-        <Title>Series 0</Title>
+        <Name>Series 0</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualYield</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Title>Series 1</Title>
+        <Name>Series 1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualYield</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopRight</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>AnnualFFB</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1553,52 +1544,42 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>AnnualBunchSize</Name>
       <Series>
-        <Title />
+        <Name>Series 0</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualBunchSize</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Title>Series 1</Title>
+        <Name>Series 1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualBunchSize</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>AnnualBunchSize</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1615,49 +1596,9 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Series>
-        <Title>Series 0</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Series 1</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Experiment>
   <Experiment>
@@ -2795,7 +2736,36 @@ namespace Models
     </Simulation>
     <Graph>
       <Name>LAI</Name>
-      <Title>Leaf Area Index (LAI)</Title>
+      <Series>
+        <Name>Series 0</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>MonthlyOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>OilPalm.LAI</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series 1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>OilPalm.LAI</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -2812,52 +2782,42 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>StemMass</Name>
       <Series>
-        <Title>Series 0</Title>
+        <Name>Series 0</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>MonthlyOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>OilPalm.StemMass</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Title>Series 1</Title>
+        <Name>Series 1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>OilPalm.StemMass</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>StemMass</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -2874,52 +2834,42 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>FrondProduction</Name>
       <Series>
-        <Title />
+        <Name>Series 0</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualFronds</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Title>Series 1</Title>
+        <Name>Series 1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>OilPalm.AnnualFronds</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>FrondProduction</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -2936,52 +2886,42 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>BunchProduction</Name>
       <Series>
-        <Title />
+        <Name>Series 0</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualBunches</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Title>Series 1</Title>
+        <Name>Series 1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualBunches</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopRight</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>BunchProduction</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -2998,52 +2938,42 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>AnnualYield</Name>
       <Series>
-        <Title />
+        <Name>Series 0</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualYield</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Title>Series 1</Title>
+        <Name>Series 1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualYield</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopRight</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>AnnualYield</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -3060,52 +2990,42 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>AnnualBunchSize</Name>
       <Series>
-        <Title />
+        <Name>Series 0</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualBunchSize</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Title>Series 1</Title>
+        <Name>Series 1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualBunchSize</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>AnnualBunchSize</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -3122,49 +3042,9 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Series>
-        <Title />
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Series 1</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Experiment>
   <Experiment>
@@ -4465,6 +4345,36 @@ namespace Models
     </Simulation>
     <Graph>
       <Name>LAI</Name>
+      <Series>
+        <Name>Series 0</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>MonthlyOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>OilPalm.LAI</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series 1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>OilPalm.LAI</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -4481,52 +4391,42 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>StemMass</Name>
       <Series>
-        <Title>Series 0</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Series 1</Title>
+        <Name>Series 0</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>OilPalm.StemMass</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>StemMass</Name>
+      <Series>
+        <Name>Series 2</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8323328</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>MonthlyOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>OilPalm.StemMass</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -4543,52 +4443,42 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>FrondProduction</Name>
       <Series>
-        <Title>Series 0</Title>
+        <Name>Series 0</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualFronds</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series 1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>OilPalm.AnnualFronds</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <Series>
-        <Title>Series 2</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8323328</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>OilPalm.StemMass</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>FrondProduction</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -4605,52 +4495,42 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>BunchProduction</Name>
       <Series>
-        <Title />
+        <Name>Series 0</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualBunches</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Title>Series 1</Title>
+        <Name>Series 1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>OilPalm.AnnualFronds</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualBunches</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopRight</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>BunchProduction</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -4667,52 +4547,42 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>AnnualYield</Name>
       <Series>
-        <Title />
+        <Name>Series 0</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualYield</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Title>Series 1</Title>
+        <Name>Series 1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualYield</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopRight</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>AnnualYield</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -4729,52 +4599,42 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>AnnualBunchSize</Name>
       <Series>
-        <Title />
+        <Name>Series 0</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualBunchSize</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Title>Series 1</Title>
+        <Name>Series 1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Input</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Calculations.Script.AnnualBunchSize</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>AnnualBunchSize</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -4791,49 +4651,9 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Series>
-        <Title>Series 0</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Series 1</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Experiment>
   <DataStore>
@@ -4861,8 +4681,34 @@ namespace Models
     </TimeSeriesStats>
     <AutoExport>false</AutoExport>
   </DataStore>
+  <Memo>
+    <Name>Combined Results</Name>
+    <MemoText><![CDATA[
+#Combined Results
+Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date)
+]]></MemoText>
+  </Memo>
   <Graph>
     <Name>LAI</Name>
+    <Series>
+      <Name>graph</Name>
+      <Regression>
+        <Name>Regression</Name>
+        <ForEachSeries>false</ForEachSeries>
+      </Regression>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16777056</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <TableName>POMonthly</TableName>
+      <XFieldName>Predicted.OilPalm.LAI</XFieldName>
+      <YFieldName>Observed.OilPalm.LAI</YFieldName>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
     <Axis>
       <Type>Bottom</Type>
       <Title />
@@ -4879,32 +4725,31 @@ namespace Models
       <Maximum>NaN</Maximum>
       <Interval>NaN</Interval>
     </Axis>
+    <LegendPosition>BottomRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>FFB</Name>
     <Series>
-      <Title>graph</Title>
+      <Name>graph</Name>
+      <Regression>
+        <Name>Regression</Name>
+        <ForEachSeries>false</ForEachSeries>
+      </Regression>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16777056</ColourArgb>
       <Marker>FilledCircle</Marker>
       <Line>None</Line>
-      <X>
-        <TableName>POMonthly</TableName>
-        <FieldName>Predicted.OilPalm.LAI</FieldName>
-      </X>
-      <Y>
-        <TableName>POMonthly</TableName>
-        <FieldName>Observed.OilPalm.LAI</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
+      <TableName>POAnnual</TableName>
+      <XFieldName>Predicted.Calculations.Script.AnnualYield</XFieldName>
+      <YFieldName>Observed.Calculations.Script.AnnualYield</YFieldName>
       <ShowInLegend>true</ShowInLegend>
       <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
     </Series>
-    <LegendPosition>BottomRight</LegendPosition>
-    <ShowRegressionLine>true</ShowRegressionLine>
-    <DisabledSeries />
-  </Graph>
-  <Graph>
-    <Name>FFB</Name>
     <Axis>
       <Type>Bottom</Type>
       <Title>Predicted Bunch Production</Title>
@@ -4921,32 +4766,31 @@ namespace Models
       <Maximum>NaN</Maximum>
       <Interval>NaN</Interval>
     </Axis>
+    <LegendPosition>BottomRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>BunchSize</Name>
     <Series>
-      <Title>graph</Title>
+      <Name>graph</Name>
+      <Regression>
+        <Name>Regression</Name>
+        <ForEachSeries>false</ForEachSeries>
+      </Regression>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16777056</ColourArgb>
       <Marker>FilledCircle</Marker>
       <Line>None</Line>
-      <X>
-        <TableName>POAnnual</TableName>
-        <FieldName>Predicted.Calculations.Script.AnnualYield</FieldName>
-      </X>
-      <Y>
-        <TableName>POAnnual</TableName>
-        <FieldName>Observed.Calculations.Script.AnnualYield</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
+      <TableName>POAnnual</TableName>
+      <XFieldName>Predicted.Calculations.Script.AnnualBunchSize</XFieldName>
+      <YFieldName>Observed.Calculations.Script.AnnualBunchSize</YFieldName>
       <ShowInLegend>true</ShowInLegend>
       <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
     </Series>
-    <LegendPosition>BottomRight</LegendPosition>
-    <ShowRegressionLine>true</ShowRegressionLine>
-    <DisabledSeries />
-  </Graph>
-  <Graph>
-    <Name>BunchSize</Name>
     <Axis>
       <Type>Bottom</Type>
       <Title>Predicted Bunch Size</Title>
@@ -4963,32 +4807,31 @@ namespace Models
       <Maximum>NaN</Maximum>
       <Interval>NaN</Interval>
     </Axis>
+    <LegendPosition>BottomRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>BunchProduction</Name>
     <Series>
-      <Title>graph</Title>
+      <Name>graph</Name>
+      <Regression>
+        <Name>Regression</Name>
+        <ForEachSeries>false</ForEachSeries>
+      </Regression>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16777056</ColourArgb>
       <Marker>FilledCircle</Marker>
       <Line>None</Line>
-      <X>
-        <TableName>POAnnual</TableName>
-        <FieldName>Predicted.Calculations.Script.AnnualBunchSize</FieldName>
-      </X>
-      <Y>
-        <TableName>POAnnual</TableName>
-        <FieldName>Observed.Calculations.Script.AnnualBunchSize</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
+      <TableName>POAnnual</TableName>
+      <XFieldName>Predicted.Calculations.Script.AnnualBunches</XFieldName>
+      <YFieldName>Observed.Calculations.Script.AnnualBunches</YFieldName>
       <ShowInLegend>true</ShowInLegend>
       <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
     </Series>
-    <LegendPosition>BottomRight</LegendPosition>
-    <ShowRegressionLine>true</ShowRegressionLine>
-    <DisabledSeries />
-  </Graph>
-  <Graph>
-    <Name>BunchProduction</Name>
     <Axis>
       <Type>Bottom</Type>
       <Title>Predicted Bunch Production</Title>
@@ -5005,29 +4848,9 @@ namespace Models
       <Maximum>NaN</Maximum>
       <Interval>NaN</Interval>
     </Axis>
-    <Series>
-      <Title>graph</Title>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16777056</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>None</Line>
-      <X>
-        <TableName>POAnnual</TableName>
-        <FieldName>Predicted.Calculations.Script.AnnualBunches</FieldName>
-      </X>
-      <Y>
-        <TableName>POAnnual</TableName>
-        <FieldName>Observed.Calculations.Script.AnnualBunches</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <Cumulative>false</Cumulative>
-    </Series>
     <LegendPosition>BottomRight</LegendPosition>
-    <ShowRegressionLine>true</ShowRegressionLine>
     <DisabledSeries />
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
   <Tests>
     <Name>Tests</Name>

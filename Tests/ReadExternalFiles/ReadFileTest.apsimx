@@ -5,6 +5,154 @@
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
   </DataStore>
+  <Replacements>
+    <Name>Replacements</Name>
+    <Plant>
+      <Name>PMFSlurp</Name>
+      <Cultivar>
+        <Name>StaticCrop</Name>
+        <Alias>StaticCrop</Alias>
+      </Cultivar>
+      <OrganArbitrator>
+        <Name>Arbitrator</Name>
+        <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
+        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+      </OrganArbitrator>
+      <Root>
+        <Name>Root</Name>
+        <CompositeBiomass>
+          <Name>Live</Name>
+          <Propertys>
+            <string>[Root].LayerLive</string>
+          </Propertys>
+        </CompositeBiomass>
+        <CompositeBiomass>
+          <Name>Dead</Name>
+          <Propertys>
+            <string>[Root].LayerDead</string>
+          </Propertys>
+        </CompositeBiomass>
+        <Constant>
+          <Name>NitrogenDemandSwitch</Name>
+          <Value>1</Value>
+        </Constant>
+        <AirTemperatureFunction>
+          <Name>TemperatureEffect</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>26</double>
+              <double>35</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+        </AirTemperatureFunction>
+        <Constant>
+          <Name>RootFrontVelocity</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>PartitionFraction</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Value>0.01</Value>
+        </Constant>
+        <Constant>
+          <Name>MaxDailyNUptake</Name>
+          <Value>6</Value>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.01</Value>
+        </Constant>
+        <Constant>
+          <Name>KLModifier</Name>
+          <Value>1</Value>
+        </Constant>
+        <InitialDM>50</InitialDM>
+        <SpecificRootLength>40000</SpecificRootLength>
+        <KNO3_yProperty>
+          <double>0.02</double>
+          <double>0.02</double>
+        </KNO3_yProperty>
+        <KNO3_xRootLength>
+          <double>0</double>
+          <double>0.003</double>
+        </KNO3_xRootLength>
+        <KNH4_yProperty>
+          <double>0</double>
+          <double>0</double>
+        </KNH4_yProperty>
+        <KNH4_xRootLength>
+          <double>0</double>
+          <double>0.003</double>
+        </KNH4_xRootLength>
+        <NuptakeSupply>0</NuptakeSupply>
+      </Root>
+      <SimpleLeaf>
+        <Name>Leaf</Name>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
+        <Constant>
+          <Name>FRGRFunction</Name>
+          <Value>1</Value>
+        </Constant>
+        <Constant>
+          <Name>PotentialBiomass</Name>
+          <Value>5</Value>
+        </Constant>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>PartitionFraction</Name>
+            <Value>1</Value>
+          </Constant>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>NConc</Name>
+          <Value>0.05</Value>
+        </Constant>
+        <Constant>
+          <Name>LAIFunction</Name>
+          <Value>5</Value>
+        </Constant>
+        <Constant>
+          <Name>ExtinctionCoefficientFunction</Name>
+          <Value>0.7</Value>
+        </Constant>
+        <Constant>
+          <Name>HeightFunction</Name>
+          <Value>150</Value>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>0.5</Value>
+        </Constant>
+        <BiomassYesterday>0</BiomassYesterday>
+        <LAI>0</LAI>
+        <Height>0</Height>
+        <FRGR>0</FRGR>
+        <PotentialEP>0</PotentialEP>
+        <K>0</K>
+        <KDead>0</KDead>
+        <DeltaBiomass>0</DeltaBiomass>
+        <LAIDead>0</LAIDead>
+        <WaterAllocation>0</WaterAllocation>
+      </SimpleLeaf>
+      <CropType>Slurp</CropType>
+    </Plant>
+  </Replacements>
   <Manager>
     <Name>ResetPMFSlurpProperties</Name>
     <Script>
@@ -57,6 +205,9 @@ namespace Models
     <Summary>
       <Name>Summary</Name>
     </Summary>
+    <SoilArbitrator>
+      <Name>Soil Arbitrator</Name>
+    </SoilArbitrator>
     <Zone>
       <Name>Field</Name>
       <Soil>
@@ -846,6 +997,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Arbitrator>
         <Name>Arbitrator</Name>
@@ -1036,6 +1188,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>WaterBalanceComponents</Name>
@@ -1257,6 +1410,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Plant Biomass components</Name>
@@ -1498,6 +1652,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Plant Nitrogen components</Name>
@@ -1759,6 +1914,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Water supply and demand</Name>
@@ -1928,6 +2084,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Crop structure</Name>
@@ -2076,6 +2233,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>N supply and demand</Name>
@@ -2145,6 +2303,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Stress Factors</Name>
@@ -2214,6 +2373,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Area>0</Area>
     <Slope>0</Slope>

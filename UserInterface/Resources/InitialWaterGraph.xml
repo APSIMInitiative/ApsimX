@@ -19,18 +19,10 @@
     <YAxis>Left</YAxis>
     <ColourArgb>-3479297</ColourArgb>
     <Marker>None</Marker>
-    <X>
-      <FieldName>[Soil].LL15</FieldName>
-    </X>
-    <Y>
-      <FieldName>[Soil].DepthMidPoints</FieldName>
-    </Y>
-    <X2>
-      <FieldName>[Soil].SWAtWaterThickness</FieldName>
-    </X2>
-    <Y2>
-      <FieldName>[Soil].DepthMidPoints</FieldName>
-    </Y2>
+    <XFieldName>[Soil].LL15</XFieldName>
+    <YFieldName>[Soil].DepthMidPoints</YFieldName>
+    <X2FieldName>[Soil].SWAtWaterThickness</X2FieldName>
+    <Y2FieldName>[Soil].DepthMidPoints</Y2FieldName>
     <SplitOn>*</SplitOn>
   </Series>  
   <Series>
@@ -41,12 +33,8 @@
     <YAxis>Left</YAxis>
     <ColourArgb>-65536</ColourArgb>
     <Marker>None</Marker>
-    <X>
-      <FieldName>[Soil].AirDry</FieldName>
-    </X>
-    <Y>
-      <FieldName>[Soil].DepthMidPoints</FieldName>
-    </Y>
+    <XFieldName>[Soil].AirDry</XFieldName>
+    <YFieldName>[Soil].DepthMidPoints</YFieldName>
     <SplitOn>*</SplitOn>
   </Series>
   <Series>
@@ -57,12 +45,8 @@
     <YAxis>Left</YAxis>
     <ColourArgb>-16711681</ColourArgb>
     <Marker>None</Marker>
-    <X>
-      <FieldName>[Soil].LL15</FieldName>
-    </X>
-    <Y>
-      <FieldName>[Soil].DepthMidPoints</FieldName>
-    </Y>
+    <XFieldName>[Soil].LL15</XFieldName>
+    <YFieldName>[Soil].DepthMidPoints</YFieldName>
     <SplitOn>*</SplitOn>
   </Series>
   <Series>
@@ -73,12 +57,8 @@
     <YAxis>Left</YAxis>
     <ColourArgb>-16776961</ColourArgb>
     <Marker>None</Marker>
-    <X>
-      <FieldName>[Soil].DUL</FieldName>
-    </X>
-    <Y>
-      <FieldName>[Soil].DepthMidPoints</FieldName>
-    </Y>
+    <XFieldName>[Soil].DUL</XFieldName>
+    <YFieldName>[Soil].DepthMidPoints</YFieldName>
     <SplitOn>*</SplitOn>
   </Series>
   <Series>
@@ -89,12 +69,8 @@
     <YAxis>Left</YAxis>
     <ColourArgb>-16760704</ColourArgb>
     <Marker>None</Marker>
-    <X>
-      <FieldName>[Soil].SAT</FieldName>
-    </X>
-    <Y>
-      <FieldName>[Soil].DepthMidPoints</FieldName>
-    </Y>
+    <XFieldName>[Soil].SAT</XFieldName>
+    <YFieldName>[Soil].DepthMidPoints</YFieldName>
     <SplitOn>*</SplitOn>
   </Series>
 </Graph>

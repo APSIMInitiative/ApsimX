@@ -36,14 +36,18 @@
             this.PopupMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.TreeImageList = new System.Windows.Forms.ImageList(this.components);
             this.splitter2 = new System.Windows.Forms.Splitter();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.StatusWindow = new System.Windows.Forms.TextBox();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.StatusWindowPopup = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStrip = new System.Windows.Forms.ToolStrip();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.Panel.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.StatusWindowPopup.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -54,7 +58,7 @@
             this.Panel.Controls.Add(this.splitter1);
             this.Panel.Controls.Add(this.TreeView);
             this.Panel.Controls.Add(this.splitter2);
-            this.Panel.Controls.Add(this.StatusWindow);
+            this.Panel.Controls.Add(this.panel1);
             this.Panel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Panel.Location = new System.Drawing.Point(0, 0);
             this.Panel.Margin = new System.Windows.Forms.Padding(4);
@@ -68,7 +72,7 @@
             this.RightHandPanel.Location = new System.Drawing.Point(271, 0);
             this.RightHandPanel.Margin = new System.Windows.Forms.Padding(4);
             this.RightHandPanel.Name = "RightHandPanel";
-            this.RightHandPanel.Size = new System.Drawing.Size(486, 668);
+            this.RightHandPanel.Size = new System.Drawing.Size(486, 665);
             this.RightHandPanel.TabIndex = 10;
             // 
             // splitter1
@@ -79,7 +83,7 @@
             this.splitter1.Margin = new System.Windows.Forms.Padding(4);
             this.splitter1.MinExtra = 0;
             this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(8, 668);
+            this.splitter1.Size = new System.Drawing.Size(8, 665);
             this.splitter1.TabIndex = 9;
             this.splitter1.TabStop = false;
             this.splitter1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.OnSplitterMoved);
@@ -98,7 +102,7 @@
             this.TreeView.Margin = new System.Windows.Forms.Padding(4);
             this.TreeView.Name = "TreeView";
             this.TreeView.SelectedImageIndex = 0;
-            this.TreeView.Size = new System.Drawing.Size(263, 668);
+            this.TreeView.Size = new System.Drawing.Size(263, 665);
             this.TreeView.TabIndex = 8;
             this.TreeView.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.OnBeforeLabelEdit);
             this.TreeView.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.OnAfterLabelEdit);
@@ -110,8 +114,9 @@
             // 
             // PopupMenu
             // 
+            this.PopupMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.PopupMenu.Name = "ContextMenu";
-            this.PopupMenu.Size = new System.Drawing.Size(61, 4);
+            this.PopupMenu.Size = new System.Drawing.Size(67, 4);
             // 
             // TreeImageList
             // 
@@ -123,48 +128,69 @@
             // 
             this.splitter2.BackColor = System.Drawing.SystemColors.Control;
             this.splitter2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitter2.Location = new System.Drawing.Point(0, 668);
+            this.splitter2.Location = new System.Drawing.Point(0, 665);
             this.splitter2.Margin = new System.Windows.Forms.Padding(4);
             this.splitter2.Name = "splitter2";
             this.splitter2.Size = new System.Drawing.Size(757, 7);
             this.splitter2.TabIndex = 11;
             this.splitter2.TabStop = false;
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.StatusWindow);
+            this.panel1.Controls.Add(this.progressBar);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 672);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(757, 25);
+            this.panel1.TabIndex = 14;
+            // 
             // StatusWindow
             // 
             this.StatusWindow.BackColor = System.Drawing.SystemColors.Info;
-            this.StatusWindow.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.StatusWindow.Location = new System.Drawing.Point(0, 675);
+            this.StatusWindow.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.StatusWindow.Location = new System.Drawing.Point(123, 0);
             this.StatusWindow.Multiline = true;
             this.StatusWindow.Name = "StatusWindow";
             this.StatusWindow.ReadOnly = true;
             this.StatusWindow.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.StatusWindow.Size = new System.Drawing.Size(757, 22);
+            this.StatusWindow.Size = new System.Drawing.Size(634, 25);
             this.StatusWindow.TabIndex = 13;
+            // 
+            // progressBar
+            // 
+            this.progressBar.Dock = System.Windows.Forms.DockStyle.Left;
+            this.progressBar.Location = new System.Drawing.Point(0, 0);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(123, 25);
+            this.progressBar.TabIndex = 14;
+            this.progressBar.Visible = false;
             // 
             // StatusWindowPopup
             // 
+            this.StatusWindowPopup.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.StatusWindowPopup.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.closeToolStripMenuItem,
             this.clearToolStripMenuItem});
             this.StatusWindowPopup.Name = "StatusWindowPopup";
-            this.StatusWindowPopup.Size = new System.Drawing.Size(115, 52);
+            this.StatusWindowPopup.Size = new System.Drawing.Size(121, 56);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(120, 26);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.OnCloseStatusWindowClick);
             // 
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(120, 26);
             this.clearToolStripMenuItem.Text = "Clear";
             // 
             // ToolStrip
             // 
+            this.ToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.ToolStrip.Location = new System.Drawing.Point(0, 0);
             this.ToolStrip.Name = "ToolStrip";
             this.ToolStrip.Size = new System.Drawing.Size(757, 25);
@@ -178,6 +204,10 @@
             this.toolTip1.InitialDelay = 500;
             this.toolTip1.ReshowDelay = 100;
             // 
+            // openFileDialog
+            // 
+            this.openFileDialog.Filter = "All files|*.*";
+            // 
             // ExplorerView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -189,7 +219,8 @@
             this.Name = "ExplorerView";
             this.Size = new System.Drawing.Size(757, 697);
             this.Panel.ResumeLayout(false);
-            this.Panel.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.StatusWindowPopup.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -212,8 +243,8 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.TextBox StatusWindow;
-
-
-
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ProgressBar progressBar;
     }
 }

@@ -7,7 +7,7 @@ using Models.PMF.Interfaces;
 namespace Models.PMF.Organs
 {
     /// <summary>
-    /// A generic above ground organ
+    /// This is a generic above ground organ which has DM and Biomass pools.  
     /// </summary>
     [Serializable]
     public class GenericAboveGroundOrgan : GenericOrgan, AboveGround

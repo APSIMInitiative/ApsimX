@@ -6,6 +6,7 @@
 namespace Models
 {
     using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
@@ -33,6 +34,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.TabbedMetDataView")]
     [PresenterName("UserInterface.Presenters.MetDataPresenter")]
+    [ValidParent(typeof(Simulation))]
     public class Weather : Model, IWeather
     {
         /// <summary>
@@ -418,7 +420,13 @@ namespace Models
             this.reader = null;
             if (this.OpenDataFile())
             {
-                return this.reader.ToTable();
+                List<string> metProps = new List<string>();
+                metProps.Add("mint");
+                metProps.Add("maxt");
+                metProps.Add("radn");
+                metProps.Add("rain");
+                metProps.Add("wind");
+                return this.reader.ToTable(metProps);
             }
             else
             {

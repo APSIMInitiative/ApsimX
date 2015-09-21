@@ -22,19 +22,12 @@ namespace Models.PMF.Functions
         /// <summary>The x value</summary>
         [Link]
         IFunction XValue = null;
-
-        /// <summary>The xo</summary>
-        [XmlElement("Xo")]
-        [Description("Xo")]
-        public double Xo { get; set; }
-        //public double Xo = 1.0;
+        /// <summary>The Xo</summary>
+        [Link]
+        IFunction Xo = null;
         /// <summary>The b</summary>
-        [XmlElement("b")]
-        [Description("b")]
-        public double b { get; set; }
-        //public double b = 1.0;
-
-
+        [Link]
+        IFunction b = null;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
@@ -46,7 +39,7 @@ namespace Models.PMF.Functions
 
                 try
                 {
-                    double _return = Ymax.Value * 1 / (1 + Math.Exp(-(XValue.Value - Xo) / b));
+                    double _return = Ymax.Value * 1 / (1 + Math.Exp(-(XValue.Value - Xo.Value) / b.Value));
                     return _return;
                 }
                 catch (Exception)
@@ -55,6 +48,25 @@ namespace Models.PMF.Functions
                 }
             }
         }
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            Name = this.Name;
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
+            tags.Add(new AutoDocumentation.Paragraph(" a sigmoid function of the form " +
+                                                      "y = Xmax * 1 / 1 + exp<sup>-(XValue - Xo) / b</sup>", indent));
+
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                    child.Document(tags, headingLevel + 1, indent+1);
+            }
+        }
     }
 }

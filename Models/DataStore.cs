@@ -19,6 +19,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.DataStoreView")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
+    [ValidParent(typeof(Simulations))]
     public class DataStore : Model
     {
         /// <summary>A SQLite connection shared between all instances of this DataStore.</summary>
@@ -470,6 +471,9 @@ namespace Models
                     fieldNameString += "[" + fieldName + "]";
                 }
 
+                if (fieldNameString == "[*]")
+                    fieldNameString = "*";
+
                 sql = "SELECT S.Name as SimulationName, " + fieldNameString + " FROM " + tableName + " T" + ", Simulations S ";
                 sql += "WHERE ID = SimulationID";
                 if (filter != null)
@@ -572,7 +576,7 @@ namespace Models
             StreamWriter report = report = new StreamWriter(fileName);
             foreach (string simulationName in dataStore.SimulationNames)
             {
-                Summary.WriteReport(dataStore, simulationName, report, null, html: false);
+                Summary.WriteReport(dataStore, simulationName, report, null, outtype: Summary.OutputType.html);
                 report.WriteLine();
                 report.WriteLine();
                 report.WriteLine("############################################################################");

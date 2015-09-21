@@ -87,18 +87,26 @@ namespace Models.Factorial
             }
             else
             {
-                // Not a compound - separate factor value for each path and value.
-                for (int i = 0; i < paths.Count; i++)
+                // Not a compound
+                // Is there only a single path?
+                if (paths.Count == 1)
                 {
-                    string factorName;
-                    if (values[i] is IModel && (values[i] as IModel).Parent.Parent is Factor)
-                        factorName = Name;   // OLD - Need to remove.
-                    else if (values[i] is IModel)
-                        factorName = Name + (values[i] as IModel).Name;
-                    else
-                        factorName = Name + values[i].ToString();
+                    factorValues.Add(new FactorValue(Name, paths[0], values[0]));
+                }
+                else // if multiple paths, separate factor value for each path and value.
+                {
+                    for (int i = 0; i < paths.Count; i++)
+                    {
+                        string factorName;
+                        if (values[i] is IModel && (values[i] as IModel).Parent.Parent is Factor)
+                            factorName = Name;   // OLD - Need to remove.
+                        else if (values[i] is IModel)
+                            factorName = Name + (values[i] as IModel).Name;
+                        else
+                            factorName = Name + values[i].ToString();
 
-                    factorValues.Add(new FactorValue(factorName, paths[i], values[i]));
+                        factorValues.Add(new FactorValue(factorName, paths[i], values[i]));
+                    }
                 }
             }
 

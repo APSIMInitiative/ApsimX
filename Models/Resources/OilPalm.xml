@@ -1,16 +1,34 @@
 <OilPalm>
   <Name>OilPalm</Name>
+  <Memo>
+    <Name>Memo</Name>
+    <MemoText><![CDATA[The base configuration of the oil palm model has been configured to match commercial dura x pisifera palms developed in Dami, West New Britain in Papua New Guinea.  Other varieties are specified in terms of how they differ from this base variety.]]></MemoText>
+  </Memo>
+  <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
+  <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
+  <InterceptionFraction>0</InterceptionFraction>
+  <MaximumRootDepth>5000</MaximumRootDepth>
   <Cultivar>
     <Name>Dami</Name>
-    <Memo>
-      <Name>Memo</Name>
-      <MemoText><![CDATA[The base configuration of the oil palm model has been configured to match commercial dura x pisifera palms developed in Dami, West New Britain in Papua New Guinea.  Other varieties are specified in terms of how they differ from this base variety.]]></MemoText>
-    </Memo>    
-    </Cultivar>
+  </Cultivar>
   <Cultivar>
     <Name>SuperFamily</Name>
     <Command>[FrondMaxArea].XYPairs.X = 0,2,4.5,8.5,14</Command>
     <Command>[FrondMaxArea].XYPairs.Y = 0.1,0.9,0.63,10.8,12.6</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>Nigeria_IRHO</Name>
+    <Command>[BunchSizeMax].XYPairs.X = 0, 1,3,7,11,15</Command>
+    <Command>[BunchSizeMax].XYPairs.Y = 0, 53,265,7000,11600,12750</Command>
+    <Command>[FrondAppearanceRate].XYPairs.X =     0,    2,     5,   10,   15</Command>
+    <Command>[FrondAppearanceRate].XYPairs.Y =  10.1,  7.7,   10.1,  11,   11</Command>    
+  </Cultivar>
+  <Cultivar>
+    <Name>Nigeria_SOCFINDO</Name>
+    <Command>[BunchSizeMax].XYPairs.X = 0, 1,3,7,11,15</Command>
+    <Command>[BunchSizeMax].XYPairs.Y = 0, 53,265,7000,11600,12750</Command>
+    <Command>[FrondAppearanceRate].XYPairs.X =     0,    2,     5,    8,   15</Command>
+    <Command>[FrondAppearanceRate].XYPairs.Y =  10.1,  7.7,   10.1,  11,   11</Command>
   </Cultivar>
   <Constant>
     <Name>KNO3</Name>

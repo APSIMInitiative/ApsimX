@@ -11,7 +11,7 @@ using Models.PMF.Functions.StructureFunctions;
 namespace Models.PMF
 {
     /// <summary>
-    /// A structure model for plant
+    /// The structure model calculates structural development of the plant.  This includes the number of primordia, leaves, stems and nodes, as well as overall plant height.
     /// </summary>
     /// \pre A \ref Models.PMF.Plant "Plant" model has to exist to access 
     /// sowing data, e.g. population, bud number.
@@ -63,9 +63,20 @@ namespace Models.PMF
     /// \retval RelativeNodeApperance Relative progress toward final leaf (0-1).
     /// 
     /// <remarks>
-    /// The Structure model predicts the development and mortality of primordia, node (leaf) and branch
-    /// (tiller). The primary bud number assumes the same in seed and all axillary bud and set in the 
-    /// sowing data with default value 1 (Not sure the assumption is correct).
+    /// The Structure model predicts the development and mortality of phytomer and branch
+    /// (tiller) according to plastochron and phyllochron. The primary bud number assumes the same in seed and all axillary bud and set in the 
+    /// sowing data with default value 1.
+    /// 
+    /// ## Terminology
+    /// - <b>Node (Phytomer)</b> A phytomer unit is defined as consisting of a leaf, and 
+    /// the associated axillary bud, node and internode.
+    /// - <b>Main stem</b> The first culm that emerges from the seeds is the main stem.
+    /// - <b>Branch (Tiller)</b> All remaining culms that emerges from main stem or other branches (tillers),
+    /// are referred as branches or tillers.
+    /// - <b>Plastochron</b> The plastochron is commonly used as the thermal time between the appearance of 
+    /// successive leaf primordia on a shoot.
+    /// - <b>Phyllochron</b> The phyllochron is the thermal time it takes for successive leaves on a shoot to 
+    /// reach the same developmental stage.
     /// 
     /// ## Simulation commencing (OnSimulationCommencing)
     /// Local variables are reset to 0 including total stem population, number of 
@@ -78,63 +89,92 @@ namespace Models.PMF
     /// sowing data (default value equals to 1). The population of main stem
     /// equals to bud number multiplying sowing population.
     /// 
-    /// The maximum node (leaf) number in main stem is calculated 
-    ///     by MainStemFinalNodeNumber. 
+    /// The maximum node (phytomer) number in main stem is set by 
+    /// parameter MainStemFinalNodeNumber. 
     ///     \ref Models.PMF.Functions.StructureFunctions.MainStemFinalNodeNumberFunction "MainStemFinalNodeNumberFunction" is called if 
     ///     MainStemFinalNodeNumber specifies to MainStemFinalNodeNumberFunction.
+    /// The maximum node number in only used to limit the primordia number.
     ///     
-    /// Plant height is calculated by HeightModel.
+    /// Plant height is set by parameter HeightModel, and updated by Leaf model.
     /// 
     /// ## Plant ending (OnPlantEnding)
     /// See simulation commencing
     /// 
     /// ## Potential growth (OnDoPotentialPlantGrowth)
-    /// Daily changes of primordia (\f$\Delta N_{p}\f$) and node (leaf) (\f$\Delta N_{n}\f$) 
+    /// Daily changes of primordia (\f$\Delta N_{pri}\f$) and node (leaf) (\f$\Delta N_{node}\f$) 
     /// number in main stem are calculated using plastochron (\f$P_{pla}\f$) 
     /// and phyllochron (\f$P_{phy}\f$), respectively, after plant initialisation.
     /// 
     /// \f[
-    ///     \Delta N_{p}=\frac{\Delta TT_{d}}{P_{pla}}
+    ///     \Delta N_{pri}=\frac{\Delta TT_{d}}{P_{pla}}
     /// \f]
     /// 
     /// \f[
-    ///     \Delta N_{n}=\frac{\Delta TT_{d}}{P_{phy}}
+    ///     \Delta N_{node}=\frac{\Delta TT_{t}}{P_{phy}}
     /// \f]
-    /// where, \f$\Delta TT_{d}\f$ is the daily thermal time, which calculates 
+    /// where, \f$\Delta TT_{t}\f$ is the daily thermal time, which calculates 
     /// from parameter ThermalTime. \f$P_{pla}\f$ and \f$P_{phy}\f$ calculates
     /// from parameter MainStemPrimordiaInitiationRate and MainStemNodeAppearanceRate,
     /// respectively.
     /// 
-    /// Total number of primordia \f$N_{p}\f$ and node \f$N_{n}\f$ in main stem are summarised since initialisation.
+    /// Total number of primordia (\f$N_{pri}\f$) and node (\f$N_{node}\f$) in 
+    /// main stem are summarised since initialisation.
     /// \f[
-    ///     N_{p}=\sum_{t=T_{i}}^{T}\Delta N_{p}
+    ///     N_{pri}=\sum_{t=T_{0}}^{T}\Delta N_{p}
     /// \f]
     /// 
     /// \f[
-    ///     N_{n}=\sum_{t=T_{i}}^{T}\Delta N_{n}
+    ///     N_{node}=\sum_{t=T_{0}}^{T}\Delta N_{n}
     /// \f]
-    /// where, \f$T_{i}\f$ is day of plant initialisation. \f$T\f$ is today.
+    /// where, \f$T_{0}\f$ is day of plant initialisation which is set by Leaf model. 
+    /// \f$T\f$ is today. In the Structure model, the primordia and node numbers 
+    /// are not calculated for branches or tillers. 
     /// 
-    /// Plant population (\f$P\f$) is daily reduced by the plant mortality (\f$\Delta P\f$).
+    /// Plant population (\f$P\f$) is initialised at sowing from Sow event, and 
+    /// daily reduced by the plant mortality (\f$\Delta P\f$).
     /// \f[
-    ///     P=P_{0}\prod_{t=T_{i}}^{T}(1-\Delta P)
+    ///     P=P_{0} - \sum_{t=T_{0}}^{T}(\Delta P)
     /// \f]
     /// where, \f$P_{0}\f$ is the sown population, which initialised at sowing.
     /// 
-    /// Total stem (main stem + branching) number (\f$N_{s}\f$) is initialised 
-    /// according plant population (\f$P\f$) and primary bud number (\f$N_b\f$).
+    /// Population of main stem number (\f$P_{ms}\f$) is calculated  
+    /// according to plant population (\f$P\f$) and primary bud number (\f$N_{bud}\f$) 
+    /// with default value 1. The unit of \f$P_{ms}\f$ is per square meter.
     /// \f[
-    ///     N_{s}=P \times N_b
+    ///     P_{ms}=P \times N_{bud}
     /// \f]
-    /// The total stem number is calculated by the daily increase of branching 
-    /// (\f$\Delta N_{s}\f$), and daily decrease caused by drought 
-    /// (\f$\Delta N_{drought}\f$) and shade mortality (\f$\Delta N_{shade}\f$).
+    /// 
+    /// Population of total stem (\f$P_{stem}\f$) is summed up 
+    /// population of main stem (\f$P_{ms}\f$) and branches ((\f$P_{branch}\f$)).
     /// \f[
-    /// N_{s}=PN_{b}[1+\sum_{t=t_{i}}^{T}\Delta N_{s}+\prod_{t=T_{i}}^{T}(1-\Delta N_{drought}-\Delta N_{shade})]
+    ///     P_{stem} = P_{ms} + P_{branch}
     /// \f]
-    /// Daily increase of branching (\f$\Delta N_{s}\f$) is calculated by parameter
-    /// BranchingRate. The mortalities, caused by drought (\f$\Delta N_{drought}\f$)  
-    /// and shade (\f$\Delta N_{shade}\f$) are calculated by parameters 
+    /// New branches are initialised when increase of the node number in 
+    /// main stem (\f$\Delta N_{node}\f$) is more than 1. 
+    /// The new branch number for each plant 
+    /// is specified by parameter BranchingRate (\f$\Delta N_{branch}\f$), which could be a function of 
+    /// branch number on leaf rank in main stem.
+    /// \f[
+    ///      P_{branch} = P \times \sum_{t=T_{0}}^{T}\Delta N_{branch}
+    /// \f]
+    /// 
+    /// Three factors are considered to reduce the population of total stem (\f$P_{stem}\f$), i.e.
+    /// 1) Plant mortality (\f$\Delta P\f$), 2) Drought(\f$\Delta N_{drought}\f$), 
+    /// 3) Shade (\f$\Delta N_{shade}\f$). 
+    /// 
+    /// During a day, branches are first killed by plant mortality which 
+    /// reduces population through killing all stems in a plant.
+    /// \f[
+    /// P_{branch} = P_{branch} - \frac{(P_{branch} + P_{ms})}{P_{ms}} \times \Delta P
+    /// \f]
+    /// 
+    /// Then environmental stresses (drought and shade) only cause mortality of 
+    /// the remaining branches.
+    /// \f[
+    ///     P_{branch} = P_{branch} \times [1 - (\Delta N_{drought}+\Delta N_{shade})]
+    /// \f]
+    /// The mortalities, caused by drought (\f$\Delta N_{drought}\f$)  
+    /// and shade (\f$\Delta N_{shade}\f$), are calculated by parameters 
     /// DroughtInducedBranchMortality and ShadeInducedBranchMortality, respectively.
     /// 
     /// ## Actual growth (OnDoActualPlantGrowth)
@@ -142,7 +182,7 @@ namespace Models.PMF
     /// and population.
     /// </remarks>
     [Serializable]
-    [Description("Keeps Track of Plants Structural Development")]
+    [ValidParent(typeof(Plant))]
     public class Structure : Model
     {
         private double _MainStemFinalNodeNo;
@@ -386,7 +426,10 @@ namespace Models.PMF
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             //Set PlantTotalNodeNo    
-            PlantTotalNodeNo = Leaf.PlantAppearedLeafNo / Plant.Population;
+            if (Plant.IsAlive)
+            {
+                PlantTotalNodeNo = Leaf.PlantAppearedLeafNo / Plant.Population;
+            }
         }
         #endregion
 
@@ -447,6 +490,34 @@ namespace Models.PMF
         }
         
         #endregion
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write description of this class.
+            AutoDocumentation.GetClassDescription(this, tags, indent);
+
+            // write a list of constant functions.
+            foreach (IModel child in Apsim.Children(this, typeof(Constant)))
+                child.Document(tags, -1, indent);
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                if (child is Constant || child is Biomass || child is CompositeBiomass)
+                {
+                    // don't document.
+                }
+                else
+                    child.Document(tags, headingLevel + 1, indent);
+            }
+        }
     }
 
 }

@@ -14,6 +14,7 @@ namespace Models.Report
     using System.Text.RegularExpressions;
     using Models.Core;
     using APSIM.Shared.Utilities;
+    using PMF.Functions;
 
     /// <summary>
     /// A class for looking after a column of output. A column will store a value 
@@ -378,7 +379,11 @@ namespace Models.Report
                 this.values.Add(null);
             else
             {
-                if (value.GetType().IsArray || value.GetType().IsClass)
+                if (value != null && value is IFunction)
+                {
+                    value = (value as IFunction).Value;
+                }
+                else if (value.GetType().IsArray || value.GetType().IsClass)
                 {
                     try
                     {

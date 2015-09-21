@@ -11,6 +11,7 @@ namespace Models.PMF
     /// A summeriser model
     /// </summary>
     [Serializable]
+    [ValidParent(typeof(Plant))]
     public class Summariser : Model
     {
         /// <summary>The above ground</summary>
@@ -42,6 +43,23 @@ namespace Models.PMF
                 message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
             }
             Summary.WriteMessage(this, message);
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                if (child is CompositeBiomass)
+                {
+                }
+                else
+                    child.Document(tags, headingLevel, indent);
+            }
         }
     }
 

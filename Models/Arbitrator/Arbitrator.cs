@@ -21,6 +21,7 @@ namespace Models.Arbitrator
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(typeof(Zone))]
     public class Arbitrator : Model
     {
 

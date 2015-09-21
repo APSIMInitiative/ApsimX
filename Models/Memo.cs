@@ -3,6 +3,8 @@ using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
 using System.Xml;
+using System.Collections.Generic;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -12,20 +14,12 @@ namespace Models
     [PresenterName("UserInterface.Presenters.MemoPresenter")]
     public class Memo : Model
     {
-        /// <summary>Initializes a new instance of the <see cref="Memo"/> class.</summary>
-        public Memo()
-        {
-
-        }
-
         /// <summary>Gets or sets the memo text.</summary>
-        /// <value>The memo text.</value>
         [XmlIgnore]
         [Description("Text of the memo")]
         public string MemoText { get; set; }
 
         /// <summary>Gets or sets the code c data.</summary>
-        /// <value>The code c data.</value>
         [XmlElement("MemoText")]
         public XmlNode CodeCData
         {
@@ -42,5 +36,17 @@ namespace Models
                 }
             }
         }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (!Name.Equals("TitlePage", StringComparison.CurrentCultureIgnoreCase) || headingLevel == 1)
+                tags.Add(new AutoDocumentation.Paragraph(MemoText, indent));
+        }
+
+
     }
 }

@@ -15,12 +15,13 @@ namespace Models.Core
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
+    [ValidParent(typeof(Simulation))]
     public class Zone : Model
     {
         /// <summary>Area of the zone.</summary>
         /// <value>The area.</value>
         [Description("Area of zone (ha)")]
-        public double Area { get; set; }
+        virtual public double Area { get; set; }
 
         /// <summary>Gets or sets the slope.</summary>
         /// <value>The slope.</value>

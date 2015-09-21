@@ -18,39 +18,41 @@ namespace Models.PMF.Organs
     /// </summary>
     /// \param KDead The extinction coefficient for dead leaf (\f$k_d\f$).
     /// \param FrostFraction The fraction of leaf death caused by frost event.
+    /// \param GsMax The maximum stomatal conductance (m/s).
+    /// \param R50 SolRad at which stomatal conductance decreases to 50% (W/m2).
     /// \retval MaxCover The maximum coverage (\f$C_{max}\f$) with default value 1, 
     ///     which is set by manager sowing. 
     /// \retval LAI Leaf area index for green leaf (\f$\text{LAI}_{g}\f$, \f$m^2 m^{-2}\f$)
     /// \retval LAIDead Leaf area index for dead leaf  (\f$\text{LAI}_{d}\f$, \f$m^2 m^{-2}\f$)
     /// \retval LAITotal Total LAI including live and dead parts (\f$m^2 m^{-2}\f$)
     ///     \f[
-    /// /// LAI = \text{LAI}_{g} + \text{LAI}_{d}
+    ///     LAI = \text{LAI}_{g} + \text{LAI}_{d}
     ///     \f]
     /// \retval CoverGreen Cover for green leaf (\f$C_g\f$, unitless). 
     ///     \f$C_g\f$ is calculated according to
     ///     extinction coefficient of green leaf (\f$k_{g}\f$).
     ///     \f[
-    /// /// C_{g}=C_{max}(1-\exp(-k_{g}\frac{\text{LAI}_{g}}{C_{max}}))
+    ///     C_{g}=C_{max}(1-\exp(-k_{g}\frac{\text{LAI}_{g}}{C_{max}}))
     ///     \f]
     ///     where, \f$k\f$ is the extinction coefficient which calculates 
     ///     by parameter "ExtinctionCoeff". 
     ///     As the default value of \f$C_{max}\f$ is 1, the function is reduced to
     ///     \f[
-    /// /// C_{g}=1-\exp(-k_{g}\text{LAI}_{g})
+    ///      C_{g}=1-\exp(-k_{g}\text{LAI}_{g})
     ///     \f]
     /// \retval CoverDead Cover for dead leaf (\f$C_d\f$, unitless).
     ///     \f$C_d\f$ is calculated according to
     ///     extinction coefficient of dead leaf (\f$k_{d}\f$).
     ///     \f[
-    /// /// C_{d}=1-\exp(-k_{d}\text{LAI}_{d})
+    ///     C_{d}=1-\exp(-k_{d}\text{LAI}_{d})
     ///     \f]
     /// \retval CoverTotal Total cover for green and dead leaves (\f$C_t\f$, unitless).
     ///     \f[
-    /// /// C_{t} = 1 - (1 - C_{g})(1 - C_{d})
+    ///     C_{t} = 1 - (1 - C_{g})(1 - C_{d})
     ///     \f]
     /// 
-    /// \retval Height Plant height (mm). 
-    /// \retval Depth Plant depth (mm). Equal to plant height (not sure its function?)
+    /// \retval Height Plant height from Structure (mm). 
+    /// \retval Depth Plant height from Structure (mm). Equal to plant height (not sure its function?)
     /// \retval FRGR Fractional relative growth rate (unitless, 0-1)
     ///     with 1.0 at full growth rate and 0.0 at no growth.
     /// \retval PotentialEP Potential evapotranspiration. Set by MICROCLIMATE.
@@ -66,6 +68,11 @@ namespace Models.PMF.Organs
     /// The leaves in the seed are initialized from all children with model 
     /// \ref Models.PMF.Organs.LeafCohort "LeafCohort". 
     /// 
+    /// Potential growth 
+    /// ------------------------
+    /// 
+    /// Senescence
+    /// ------------------------
     /// Frost impact on leaf death
     /// ------------------------
     /// Each cohort leaf is killed by a fraction if value of FrostFraction is more than 0. 
@@ -327,7 +334,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return Leaves[CurrentRank-1].CoverAbove;
+                if (CurrentRank - 1 < Leaves.Count || CurrentRank - 1 >= Leaves.Count)
+                    return 0;
+                else
+                    return Leaves[CurrentRank-1].CoverAbove;
             }
         }
 
@@ -590,6 +600,23 @@ namespace Models.PMF.Organs
                     i++;
                 }
                 return values;
+            }
+        }
+
+        /// <summary>Returns the area of the largest leaf.</summary>
+        /// <value>The area of the largest leaf</value>
+        [Units("mm2")]
+        public double AreaLargestLeaf
+        {
+            get
+            {
+                double LLA = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    LLA = Math.Max(LLA, L.MaxArea);
+                }
+
+                return LLA;
             }
         }
 
@@ -976,18 +1003,20 @@ namespace Models.PMF.Organs
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
            // WaterAllocation = 0;
-            
-            foreach (LeafCohort L in Leaves)
-                L.DoActualGrowth(ThermalTime.Value, CohortParameters);
-
-            Structure.UpdateHeight();
-
-            //Work out what proportion of the canopy has died today.  This variable is addressed by other classes that need to perform senescence proces at the same rate as leaf senescnce
-            FractionDied = 0;
-            if (DeadCohortNo > 0 && GreenCohortNo > 0)
+            if (Plant.IsAlive)
             {
-                double DeltaDeadLeaves = DeadCohortNo - DeadNodesYesterday; //Fixme.  DeadNodesYesterday is never given a value as far as I can see.
-                FractionDied = DeltaDeadLeaves / GreenCohortNo;
+                foreach (LeafCohort L in Leaves)
+                    L.DoActualGrowth(ThermalTime.Value, CohortParameters);
+
+                Structure.UpdateHeight();
+
+                //Work out what proportion of the canopy has died today.  This variable is addressed by other classes that need to perform senescence proces at the same rate as leaf senescnce
+                FractionDied = 0;
+                if (DeadCohortNo > 0 && GreenCohortNo > 0)
+                {
+                    double DeltaDeadLeaves = DeadCohortNo - DeadNodesYesterday; //Fixme.  DeadNodesYesterday is never given a value as far as I can see.
+                    FractionDied = DeltaDeadLeaves / GreenCohortNo;
+                }
             }
         }
         /// <summary>Zeroes the leaves.</summary>

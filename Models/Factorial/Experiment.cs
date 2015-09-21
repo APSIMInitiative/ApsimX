@@ -13,6 +13,7 @@ namespace Models.Factorial
     [Serializable]
     [ViewName("UserInterface.Views.MemoView")]
     [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
+    [ValidParent(typeof(Simulations))]
     public class Experiment : Model
     {
         /// <summary>

@@ -562,16 +562,7 @@
     <Memo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <Name>Memo</Name>
       <MemoText>
-        <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
- <head>
-  <title></title>
- </head>
- <body>
-  <p></p>
- </body>
-</html>]]>
+        <![CDATA[]]>
       </MemoText>
     </Memo>
   </Folder>
@@ -836,25 +827,17 @@
       </Axis>
       <Series>
         <Title>Series1</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName></FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
     </Graph>
+    <Regression></Regression>
   </Folder>
   <Folder>
     <Name>Data store and analysis models</Name>

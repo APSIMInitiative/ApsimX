@@ -78,7 +78,6 @@ namespace UserInterface.Presenters
             this.graph.Parent = this.xyPairs;
             this.graphPresenter = new GraphPresenter();
             this.graphPresenter.Attach(this.graph, this.xyPairsView.Graph, this.explorerPresenter);
-
         }
 
         /// <summary>
@@ -88,7 +87,7 @@ namespace UserInterface.Presenters
         {
             this.explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             this.DisconnectViewEvents();
-            this.xyPairs.Parent.Children.Remove(this.graph);
+            this.xyPairs.Children.Remove(this.graph);
         }
 
         /// <summary>
@@ -114,6 +113,11 @@ namespace UserInterface.Presenters
             DataTable table = this.CreateTable();
             this.xyPairsView.VariablesGrid.DataSource = table;
             this.xyPairsView.VariablesGrid.RowCount = 100;
+            for (int i = 0; i < table.Columns.Count; i++)
+            {
+                this.xyPairsView.VariablesGrid.GetColumn(i).Width = 100;
+                this.xyPairsView.VariablesGrid.GetColumn(i).Width = 100;
+            }
         }
 
         /// <summary>

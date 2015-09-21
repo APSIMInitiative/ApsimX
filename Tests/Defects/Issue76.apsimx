@@ -6,11 +6,9 @@
     <Memo>
       <Name>Memo</Name>
       <MemoText><![CDATA[
-<html><body>
 Shows different colour graph series from outputs in 2 fields. Issue 76:<br/>
-<br/>
 https://github.com/APSIMInitiative/ApsimX/issues/76
-</body></html>]]></MemoText>
+]]></MemoText>
     </Memo>
     <Clock>
       <Name>Clock</Name>

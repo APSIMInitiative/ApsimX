@@ -10,7 +10,6 @@ namespace Models.PMF.Functions
     /// Returns a value of 1 if phenology is between start and end phases and otherwise a value of 0.
     /// </summary>
     [Serializable]
-    [Description("Returns a value of 1 if phenology is between start and end phases and otherwise a value of 0.")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PhaseBasedSwitch : Model, IFunction

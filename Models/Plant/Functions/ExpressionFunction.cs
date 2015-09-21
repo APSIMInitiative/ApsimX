@@ -21,7 +21,7 @@ namespace Models.PMF.Functions
     {
         /// <summary>The expression</summary>
         [Core.Description("Expression")]
-        public string Expression = "";
+        public string Expression { get; set; }
 
         /// <summary>The function</summary>
         private ExpressionEvaluator fn = new ExpressionEvaluator();
@@ -44,6 +44,14 @@ namespace Models.PMF.Functions
                 Evaluate(fn);
                 return fn.Result;
             }
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ExpressionFunction()
+        {
+            Expression = string.Empty;
         }
 
         /// <summary>Parses the specified function.</summary>
