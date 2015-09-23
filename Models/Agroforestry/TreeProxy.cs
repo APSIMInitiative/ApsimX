@@ -448,7 +448,7 @@ namespace Models.Agroforestry
 
                         for (int i = 0; i <= SW.Length - 1; i++)
                         {
-                            Uptake.NO3N[i] = PotentialNO3Uptake(ThisSoil.Thickness[i], Z.NO3N[i], Z.Water[i], RLD[i], RootRadius, BD[i], Kd)*10.0;
+                            Uptake.NO3N[i] = PotentialNO3Uptake(ThisSoil.Thickness[i], Z.NO3N[i], Z.Water[i], RLD[i], RootRadius, BD[i], Kd);
                             PotNO3Supply += Uptake.NO3N[i] * ZI.Area * 10000;
                         }
                         Uptakes.Add(Uptake);
@@ -482,19 +482,26 @@ namespace Models.Agroforestry
         {
 
             double L = RLD / 100 * 1000000;   // Root Length Density (m/m3)
-            double D0 = 0.05 /10000*24; // Diffusion Coefficient (m2/d)
-            double theta = SWmm / thickness;
-            double tau = 3.13*Math.Pow(theta,1.92);         //  Tortuosity (unitless)
+            double D0 = 0.05 /10000*24;       // Diffusion Coefficient (m2/d)
+            double theta = SWmm / thickness;  // Volumetric soil water (m3/m3)
+            double tau = 3.13*Math.Pow(theta,1.92);    //  Tortuosity (unitless)
             double H = thickness / 1000;  // Layer thickness (m)
             double R0 = RootRadius / 100;  // Root Radius (m)
-            double Nconc = (NO3N / 10)/H;  // Concentration in solution (g/m2)
-            double BD_gm3 = BD * 1000;
+            double Nconc = (NO3N / 10)/H;  // Concentration in solution (g/m3 soil)
+            double BD_gm3 = BD * 1000000.0;
 
             //Potential Uptake (g/m2)
-            double U = (Math.PI * L * D0 * tau * theta * H * Nconc)/((BD_gm3*Kd+theta)*(-3.0/8.0 + 1.0/2.0*Math.Log(1.0/(R0*Math.Pow(Math.PI*L,0.5)))));
+            double U = (Math.PI * L * D0 * tau * theta * H * Nconc)/((BD_gm3*Kd+theta)*(-3.0/8.0 + 1.0/2.0*Math.Log(1.0/(R0*Math.Pow(Math.PI*L,0.5)))))*10; // 10 converts g/m2 to kg/ha
+
+            if (U > NO3N)
+                U = NO3N;
             return U;
         }
 
+        double PotentialSWUptake(double thickness, double RLD)
+        {
+            return 0;
+        }
         /// <summary>
         ///  Accepts the actual soil water uptake from the soil arbitrator.
         /// </summary>

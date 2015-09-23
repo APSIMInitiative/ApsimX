@@ -170,7 +170,7 @@
           </ArrayOfString>
         </Table>
         <RootRadius>0.02</RootRadius>
-        <Kd>0.1</Kd>
+        <Kd>1E-07</Kd>
         <BaseKL>0.02</BaseKL>
         <dates>
           <dateTime>1900-01-01T00:00:00</dateTime>
@@ -187,11 +187,11 @@
           <double>10000</double>
         </heights>
         <NDemands>
-          <double>1</double>
-          <double>1</double>
-          <double>1</double>
-          <double>1</double>
-          <double>1</double>
+          <double>0.1</double>
+          <double>0.1</double>
+          <double>0.1</double>
+          <double>0.1</double>
+          <double>0.1</double>
         </NDemands>
       </TreeProxy>
       <Manager>
@@ -3536,7 +3536,7 @@ namespace Models
           </ArrayOfString>
         </Table>
         <RootRadius>0.02</RootRadius>
-        <Kd>0.1</Kd>
+        <Kd>1E-07</Kd>
         <BaseKL>0.02</BaseKL>
         <dates>
           <dateTime>1900-01-01T00:00:00</dateTime>
@@ -3553,11 +3553,11 @@ namespace Models
           <double>10000</double>
         </heights>
         <NDemands>
-          <double>1</double>
-          <double>1</double>
-          <double>1</double>
-          <double>1</double>
-          <double>1</double>
+          <double>0.1</double>
+          <double>0.1</double>
+          <double>0.1</double>
+          <double>0.1</double>
+          <double>0.1</double>
         </NDemands>
       </TreeProxy>
       <Manager>
@@ -11094,7 +11094,7 @@ namespace Models
           </ArrayOfString>
         </Table>
         <RootRadius>0.02</RootRadius>
-        <Kd>0.1</Kd>
+        <Kd>1E-07</Kd>
         <BaseKL>0.02</BaseKL>
         <dates>
           <dateTime>1900-01-01T00:00:00</dateTime>
@@ -11111,11 +11111,11 @@ namespace Models
           <double>5000</double>
         </heights>
         <NDemands>
-          <double>1</double>
-          <double>1</double>
-          <double>1</double>
-          <double>1</double>
-          <double>1</double>
+          <double>0.1</double>
+          <double>0.1</double>
+          <double>0.1</double>
+          <double>0.1</double>
+          <double>0.1</double>
         </NDemands>
       </TreeProxy>
       <Manager>
@@ -14066,7 +14066,7 @@ namespace Models
             </ArrayOfString>
           </Table>
           <RootRadius>0.02</RootRadius>
-          <Kd>0.1</Kd>
+          <Kd>1E-07</Kd>
           <BaseKL>0.02</BaseKL>
           <dates>
             <dateTime>1900-01-01T00:00:00</dateTime>
@@ -14083,11 +14083,11 @@ namespace Models
             <double>10000</double>
           </heights>
           <NDemands>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
           </NDemands>
         </TreeProxy>
         <RectangularZone>
