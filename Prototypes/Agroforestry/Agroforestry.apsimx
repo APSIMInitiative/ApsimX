@@ -33,6 +33,113 @@
       </SoilArbitrator>
       <ForestrySystem>
         <Name>WindbreakSystem</Name>
+        <Manager>
+          <Name>SowingRule</Name>
+          <Script>
+            <StartDate>1-jun</StartDate>
+            <EndDate>2-jun</EndDate>
+            <MinESW>0</MinESW>
+            <ESWZoneName>50m</ESWZoneName>
+            <MinRain>0</MinRain>
+            <RainDays>7</RainDays>
+            <CultivarName>Hartog</CultivarName>
+            <SowingDepth>30</SowingDepth>
+            <RowSpacing>250</RowSpacing>
+            <Population>120</Population>
+            <Amount>100</Amount>
+            <CropName>wheat</CropName>
+          </Script>
+          <Code><![CDATA[using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.Agroforestry;
+using Models.PMF.OldPlant;
+using Models.Soils;
+using Models.Utilities;
+using Models.Zones;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Summary Summary;
+		Accumulator accumulatedRain;
+		
+		[Description("Start of sowing window (d-mmm)")]
+		public string StartDate { get; set; }
+		[Description("End of sowing window (d-mmm)")]
+		public string EndDate { get; set; }
+		[Description("Minimum extractable soil water for sowing (mm)")]
+		public double MinESW { get; set; }
+		[Description("Name of Zone to use for minimum ESW condition")]
+		public string ESWZoneName { get; set; }
+		[Description("Accumulated rainfall required for sowing (mm)")]
+		public double MinRain { get; set; }
+		[Description("Duration of rainfall accumulation (d)")]
+		public int RainDays { get; set; }
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set; }
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set; }
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set; }
+		[Description("Plant population (/m2)")]
+		public double Population { get; set; }
+		[Description("Amount of fertiliser to be applied (kg/ha)")]
+		public double Amount { get; set; }
+		[Description("Crop to be fertilised")]
+		public string CropName { get; set; }
+		
+		private Zone ESWZone;
+		private List<IModel> Zones;
+		private Plant15 Wheat;
+		private Soil Soil;
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Zones = Apsim.FindAll(this, typeof(RectangularZone));
+			foreach (Model m in Zones)
+			{
+				if (m.Name == ESWZoneName)
+				{
+					ESWZone = m as Zone;
+					break;
+				}
+			}
+			accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{		
+			accumulatedRain.Update();
+			
+			Soil ESWSoil = Apsim.Find(ESWZone, typeof(Soil)) as Soil;
+			
+			foreach (Zone z in Zones)
+			{
+				Wheat = Apsim.Find(z, typeof(Plant15)) as Plant15;	
+				Soil = Apsim.Find(z, typeof(Soil)) as Soil;
+						
+				if (Wheat != null && DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
+				    Wheat.plant_status == "out" &&
+				    ESWSoil.SoilWater.ESW > MinESW &&
+				    accumulatedRain.Sum > MinRain)
+				{
+					Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);
+					Fertiliser Fertiliser = Apsim.Find(Wheat.Parent, typeof(Fertiliser)) as Fertiliser;
+					Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
+				}
+			}
+		}
+	}
+}
+]]></Code>
+        </Manager>
         <TreeProxy>
           <Name>TreeProxy</Name>
           <Table>
@@ -61,78 +168,78 @@
               <string>120-150</string>
             </ArrayOfString>
             <ArrayOfString>
-              <string>100</string>
+              <string>80</string>
               <string />
               <string />
-              <string>6</string>
-              <string>5</string>
-              <string>4</string>
-              <string>2</string>
+              <string>1</string>
               <string>1.5</string>
-              <string>1</string>
-            </ArrayOfString>
-            <ArrayOfString>
-              <string>0</string>
-              <string />
-              <string />
-              <string>6</string>
-              <string>5</string>
-              <string>4</string>
-              <string>2</string>
-              <string>1.5</string>
-              <string>1</string>
-            </ArrayOfString>
-            <ArrayOfString>
-              <string>0</string>
-              <string />
-              <string />
-              <string>5</string>
-              <string>4</string>
-              <string>3.5</string>
-              <string>2</string>
-              <string>1.5</string>
-              <string>1</string>
-            </ArrayOfString>
-            <ArrayOfString>
-              <string>0</string>
-              <string />
-              <string />
-              <string>4</string>
-              <string>3</string>
-              <string>3</string>
-              <string>1.5</string>
-              <string>1</string>
-              <string>1</string>
-            </ArrayOfString>
-            <ArrayOfString>
-              <string>0</string>
-              <string />
-              <string />
-              <string>3</string>
-              <string>2</string>
-              <string>2</string>
-              <string>1</string>
-              <string>0</string>
-              <string>0</string>
-            </ArrayOfString>
-            <ArrayOfString>
-              <string>0</string>
-              <string />
-              <string />
-              <string>2</string>
-              <string>1</string>
-              <string>1</string>
-              <string>0</string>
-              <string>0</string>
-              <string>0</string>
-            </ArrayOfString>
-            <ArrayOfString>
-              <string>0</string>
-              <string />
-              <string />
-              <string>1</string>
               <string>.5</string>
               <string>.2</string>
+              <string>.1</string>
+              <string>.1</string>
+            </ArrayOfString>
+            <ArrayOfString>
+              <string>0</string>
+              <string />
+              <string />
+              <string>.7</string>
+              <string>.7</string>
+              <string>.3</string>
+              <string>.2</string>
+              <string>.1</string>
+              <string>.1</string>
+            </ArrayOfString>
+            <ArrayOfString>
+              <string>0</string>
+              <string />
+              <string />
+              <string>.5</string>
+              <string>.3</string>
+              <string>.2</string>
+              <string>.1</string>
+              <string>.05</string>
+              <string>0</string>
+            </ArrayOfString>
+            <ArrayOfString>
+              <string>0</string>
+              <string />
+              <string />
+              <string>.3</string>
+              <string>.2</string>
+              <string>.1</string>
+              <string>.05</string>
+              <string>.05</string>
+              <string>0</string>
+            </ArrayOfString>
+            <ArrayOfString>
+              <string>0</string>
+              <string />
+              <string />
+              <string>.2</string>
+              <string>.1</string>
+              <string>.05</string>
+              <string>.01</string>
+              <string>0</string>
+              <string>0</string>
+            </ArrayOfString>
+            <ArrayOfString>
+              <string>0</string>
+              <string />
+              <string />
+              <string>.1</string>
+              <string>.05</string>
+              <string>.02</string>
+              <string>0</string>
+              <string>0</string>
+              <string>0</string>
+            </ArrayOfString>
+            <ArrayOfString>
+              <string>0</string>
+              <string />
+              <string />
+              <string>.1</string>
+              <string>.05</string>
+              <string>.01</string>
               <string>0</string>
               <string>0</string>
               <string>0</string>
@@ -173,7 +280,7 @@
           </Table>
           <RootRadius>0.02</RootRadius>
           <Kd>1E-07</Kd>
-          <BaseKL>0.02</BaseKL>
+          <BaseKL>0.01</BaseKL>
           <dates>
             <dateTime>1900-01-01T00:00:00</dateTime>
             <dateTime>1900-03-01T00:00:00</dateTime>
@@ -326,12 +433,12 @@
                 <double>0.22</double>
               </AirDry>
               <LL15>
-                <double>0.22</double>
-                <double>0.21</double>
-                <double>0.22</double>
-                <double>0.24</double>
-                <double>0.26</double>
-                <double>0.34</double>
+                <double>0.18</double>
+                <double>0.19</double>
+                <double>0.19</double>
+                <double>0.2</double>
+                <double>0.23</double>
+                <double>0.25</double>
               </LL15>
               <DUL>
                 <double>0.4</double>
@@ -365,8 +472,8 @@
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
               <WinterDate>1-Apr</WinterDate>
-              <WinterU>4</WinterU>
-              <WinterCona>2.5</WinterCona>
+              <WinterU>6</WinterU>
+              <WinterCona>3.5</WinterCona>
               <DiffusConst>40</DiffusConst>
               <DiffusSlope>16</DiffusSlope>
               <Salb>0.12</Salb>
@@ -512,7 +619,7 @@
             <InitialWater>
               <Name>InitialWater</Name>
               <PercentMethod>FilledFromTop</PercentMethod>
-              <FractionFull>0.24875621890547264</FractionFull>
+              <FractionFull>0.33</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
             </InitialWater>
             <Sample>
@@ -671,6 +778,33 @@
             <Name>Soil</Name>
             <Water>
               <Name>Water</Name>
+              <SoilCrop>
+                <Name>WheatSoil</Name>
+                <LL>
+                  <double>0.22</double>
+                  <double>0.21</double>
+                  <double>0.22</double>
+                  <double>0.24</double>
+                  <double>0.26</double>
+                  <double>0.34</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.04</double>
+                  <double>0.02</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </XF>
+              </SoilCrop>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -696,12 +830,12 @@
                 <double>0.22</double>
               </AirDry>
               <LL15>
-                <double>0.22</double>
-                <double>0.21</double>
-                <double>0.22</double>
-                <double>0.24</double>
-                <double>0.26</double>
-                <double>0.34</double>
+                <double>0.18</double>
+                <double>0.19</double>
+                <double>0.19</double>
+                <double>0.2</double>
+                <double>0.23</double>
+                <double>0.25</double>
               </LL15>
               <DUL>
                 <double>0.4</double>
@@ -727,8 +861,8 @@
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
               <WinterDate>1-Apr</WinterDate>
-              <WinterU>4</WinterU>
-              <WinterCona>2.5</WinterCona>
+              <WinterU>6</WinterU>
+              <WinterCona>3.5</WinterCona>
               <DiffusConst>40</DiffusConst>
               <DiffusSlope>16</DiffusSlope>
               <Salb>0.12</Salb>
@@ -872,7 +1006,7 @@
             <InitialWater>
               <Name>InitialWater</Name>
               <PercentMethod>FilledFromTop</PercentMethod>
-              <FractionFull>0.32338308457711445</FractionFull>
+              <FractionFull>0.36</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
             </InitialWater>
             <Sample>
@@ -924,6 +1058,12 @@
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
           </Soil>
+          <Plant15>
+            <Name>Wheat</Name>
+            <ResourceName>Wheat</ResourceName>
+            <AutoHarvest>true</AutoHarvest>
+            <CropType>Wheat</CropType>
+          </Plant15>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -1028,6 +1168,33 @@
             <Name>Soil</Name>
             <Water>
               <Name>Water</Name>
+              <SoilCrop>
+                <Name>WheatSoil</Name>
+                <LL>
+                  <double>0.22</double>
+                  <double>0.21</double>
+                  <double>0.22</double>
+                  <double>0.24</double>
+                  <double>0.26</double>
+                  <double>0.34</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.04</double>
+                  <double>0.02</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </XF>
+              </SoilCrop>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -1053,12 +1220,12 @@
                 <double>0.22</double>
               </AirDry>
               <LL15>
-                <double>0.22</double>
-                <double>0.21</double>
-                <double>0.22</double>
-                <double>0.24</double>
-                <double>0.26</double>
-                <double>0.34</double>
+                <double>0.18</double>
+                <double>0.19</double>
+                <double>0.19</double>
+                <double>0.2</double>
+                <double>0.23</double>
+                <double>0.25</double>
               </LL15>
               <DUL>
                 <double>0.4</double>
@@ -1084,8 +1251,8 @@
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
               <WinterDate>1-Apr</WinterDate>
-              <WinterU>4</WinterU>
-              <WinterCona>2.5</WinterCona>
+              <WinterU>6</WinterU>
+              <WinterCona>3.5</WinterCona>
               <DiffusConst>40</DiffusConst>
               <DiffusSlope>16</DiffusSlope>
               <Salb>0.12</Salb>
@@ -1281,6 +1448,12 @@
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
           </Soil>
+          <Plant15>
+            <Name>Wheat</Name>
+            <ResourceName>Wheat</ResourceName>
+            <AutoHarvest>true</AutoHarvest>
+            <CropType>Wheat</CropType>
+          </Plant15>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -1384,6 +1557,33 @@
             <Name>Soil</Name>
             <Water>
               <Name>Water</Name>
+              <SoilCrop>
+                <Name>WheatSoil</Name>
+                <LL>
+                  <double>0.22</double>
+                  <double>0.21</double>
+                  <double>0.22</double>
+                  <double>0.24</double>
+                  <double>0.26</double>
+                  <double>0.34</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.04</double>
+                  <double>0.02</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </XF>
+              </SoilCrop>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -1409,12 +1609,12 @@
                 <double>0.22</double>
               </AirDry>
               <LL15>
-                <double>0.22</double>
-                <double>0.21</double>
-                <double>0.22</double>
-                <double>0.24</double>
-                <double>0.26</double>
-                <double>0.34</double>
+                <double>0.18</double>
+                <double>0.19</double>
+                <double>0.19</double>
+                <double>0.2</double>
+                <double>0.23</double>
+                <double>0.25</double>
               </LL15>
               <DUL>
                 <double>0.4</double>
@@ -1440,8 +1640,8 @@
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
               <WinterDate>1-Apr</WinterDate>
-              <WinterU>4</WinterU>
-              <WinterCona>2.5</WinterCona>
+              <WinterU>6</WinterU>
+              <WinterCona>3.5</WinterCona>
               <DiffusConst>40</DiffusConst>
               <DiffusSlope>16</DiffusSlope>
               <Salb>0.12</Salb>
@@ -1637,6 +1837,12 @@
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
           </Soil>
+          <Plant15>
+            <Name>Wheat</Name>
+            <ResourceName>Wheat</ResourceName>
+            <AutoHarvest>true</AutoHarvest>
+            <CropType>Wheat</CropType>
+          </Plant15>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -1740,6 +1946,33 @@
             <Name>Soil</Name>
             <Water>
               <Name>Water</Name>
+              <SoilCrop>
+                <Name>WheatSoil</Name>
+                <LL>
+                  <double>0.22</double>
+                  <double>0.21</double>
+                  <double>0.22</double>
+                  <double>0.24</double>
+                  <double>0.26</double>
+                  <double>0.34</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.04</double>
+                  <double>0.02</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </XF>
+              </SoilCrop>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -1765,12 +1998,12 @@
                 <double>0.22</double>
               </AirDry>
               <LL15>
-                <double>0.22</double>
-                <double>0.21</double>
-                <double>0.22</double>
-                <double>0.24</double>
-                <double>0.26</double>
-                <double>0.34</double>
+                <double>0.18</double>
+                <double>0.19</double>
+                <double>0.19</double>
+                <double>0.2</double>
+                <double>0.23</double>
+                <double>0.25</double>
               </LL15>
               <DUL>
                 <double>0.4</double>
@@ -1796,8 +2029,8 @@
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
               <WinterDate>1-Apr</WinterDate>
-              <WinterU>4</WinterU>
-              <WinterCona>2.5</WinterCona>
+              <WinterU>6</WinterU>
+              <WinterCona>3.5</WinterCona>
               <DiffusConst>40</DiffusConst>
               <DiffusSlope>16</DiffusSlope>
               <Salb>0.12</Salb>
@@ -1993,6 +2226,12 @@
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
           </Soil>
+          <Plant15>
+            <Name>Wheat</Name>
+            <ResourceName>Wheat</ResourceName>
+            <AutoHarvest>true</AutoHarvest>
+            <CropType>Wheat</CropType>
+          </Plant15>
           <Area>0.1</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -2096,6 +2335,33 @@
             <Name>Soil</Name>
             <Water>
               <Name>Water</Name>
+              <SoilCrop>
+                <Name>WheatSoil</Name>
+                <LL>
+                  <double>0.22</double>
+                  <double>0.21</double>
+                  <double>0.22</double>
+                  <double>0.24</double>
+                  <double>0.26</double>
+                  <double>0.34</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.04</double>
+                  <double>0.02</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </XF>
+              </SoilCrop>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -2121,12 +2387,12 @@
                 <double>0.22</double>
               </AirDry>
               <LL15>
-                <double>0.22</double>
-                <double>0.21</double>
-                <double>0.22</double>
-                <double>0.24</double>
-                <double>0.26</double>
-                <double>0.34</double>
+                <double>0.18</double>
+                <double>0.19</double>
+                <double>0.19</double>
+                <double>0.2</double>
+                <double>0.23</double>
+                <double>0.25</double>
               </LL15>
               <DUL>
                 <double>0.4</double>
@@ -2152,8 +2418,8 @@
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
               <WinterDate>1-Apr</WinterDate>
-              <WinterU>4</WinterU>
-              <WinterCona>2.5</WinterCona>
+              <WinterU>6</WinterU>
+              <WinterCona>3.5</WinterCona>
               <DiffusConst>40</DiffusConst>
               <DiffusSlope>16</DiffusSlope>
               <Salb>0.12</Salb>
@@ -2349,6 +2615,12 @@
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
           </Soil>
+          <Plant15>
+            <Name>Wheat</Name>
+            <ResourceName>Wheat</ResourceName>
+            <AutoHarvest>true</AutoHarvest>
+            <CropType>Wheat</CropType>
+          </Plant15>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -2452,6 +2724,33 @@
             <Name>Soil</Name>
             <Water>
               <Name>Water</Name>
+              <SoilCrop>
+                <Name>WheatSoil</Name>
+                <LL>
+                  <double>0.22</double>
+                  <double>0.21</double>
+                  <double>0.22</double>
+                  <double>0.24</double>
+                  <double>0.26</double>
+                  <double>0.34</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.04</double>
+                  <double>0.02</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </XF>
+              </SoilCrop>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -2477,12 +2776,12 @@
                 <double>0.22</double>
               </AirDry>
               <LL15>
-                <double>0.22</double>
-                <double>0.21</double>
-                <double>0.22</double>
-                <double>0.24</double>
-                <double>0.26</double>
-                <double>0.34</double>
+                <double>0.18</double>
+                <double>0.19</double>
+                <double>0.19</double>
+                <double>0.2</double>
+                <double>0.23</double>
+                <double>0.25</double>
               </LL15>
               <DUL>
                 <double>0.4</double>
@@ -2508,8 +2807,8 @@
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
               <WinterDate>1-Apr</WinterDate>
-              <WinterU>4</WinterU>
-              <WinterCona>2.5</WinterCona>
+              <WinterU>6</WinterU>
+              <WinterCona>3.5</WinterCona>
               <DiffusConst>40</DiffusConst>
               <DiffusSlope>16</DiffusSlope>
               <Salb>0.12</Salb>
@@ -2705,6 +3004,12 @@
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
           </Soil>
+          <Plant15>
+            <Name>Wheat</Name>
+            <ResourceName>Wheat</ResourceName>
+            <AutoHarvest>true</AutoHarvest>
+            <CropType>Wheat</CropType>
+          </Plant15>
           <Area>0.1</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -2808,6 +3113,33 @@
             <Name>Soil</Name>
             <Water>
               <Name>Water</Name>
+              <SoilCrop>
+                <Name>WheatSoil</Name>
+                <LL>
+                  <double>0.22</double>
+                  <double>0.21</double>
+                  <double>0.22</double>
+                  <double>0.24</double>
+                  <double>0.26</double>
+                  <double>0.34</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.04</double>
+                  <double>0.02</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </XF>
+              </SoilCrop>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -2833,12 +3165,12 @@
                 <double>0.22</double>
               </AirDry>
               <LL15>
-                <double>0.22</double>
-                <double>0.21</double>
-                <double>0.22</double>
-                <double>0.24</double>
-                <double>0.26</double>
-                <double>0.34</double>
+                <double>0.18</double>
+                <double>0.19</double>
+                <double>0.19</double>
+                <double>0.2</double>
+                <double>0.23</double>
+                <double>0.25</double>
               </LL15>
               <DUL>
                 <double>0.4</double>
@@ -2864,8 +3196,8 @@
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
               <WinterDate>1-Apr</WinterDate>
-              <WinterU>4</WinterU>
-              <WinterCona>2.5</WinterCona>
+              <WinterU>6</WinterU>
+              <WinterCona>3.5</WinterCona>
               <DiffusConst>40</DiffusConst>
               <DiffusSlope>16</DiffusSlope>
               <Salb>0.12</Salb>
@@ -3061,6 +3393,12 @@
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
           </Soil>
+          <Plant15>
+            <Name>Wheat</Name>
+            <ResourceName>Wheat</ResourceName>
+            <AutoHarvest>true</AutoHarvest>
+            <CropType>Wheat</CropType>
+          </Plant15>
           <Area>0.1</Area>
           <Slope>0</Slope>
           <Length>100</Length>
