@@ -10,6 +10,12 @@
         <string>ObservedWarraBlock1</string>
       </SheetNames>
     </Model>
+    <PredictedObserved>
+      <Name>PredictedObserved</Name>
+      <PredictedTableName>DailyReport</PredictedTableName>
+      <ObservedTableName>ObservedWarraBlock1</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
     <AutoExport>false</AutoExport>
   </DataStore>
   <Folder>
@@ -36,8 +42,8 @@
         <Manager>
           <Name>SowingRule</Name>
           <Script>
-            <StartDate>1-jun</StartDate>
-            <EndDate>2-jun</EndDate>
+            <StartDate>23-jun</StartDate>
+            <EndDate>24-jun</EndDate>
             <MinESW>0</MinESW>
             <ESWZoneName>50m</ESWZoneName>
             <MinRain>0</MinRain>
@@ -127,8 +133,8 @@ namespace Models
 						
 				if (Wheat != null && DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
 				    Wheat.plant_status == "out" &&
-				    ESWSoil.SoilWater.ESW > MinESW &&
-				    accumulatedRain.Sum > MinRain)
+				    ESWSoil.SoilWater.ESW >= MinESW &&
+				    accumulatedRain.Sum >= MinRain)
 				{
 					Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);
 					Fertiliser Fertiliser = Apsim.Find(Wheat.Parent, typeof(Fertiliser)) as Fertiliser;
@@ -171,31 +177,42 @@ namespace Models
               <string>80</string>
               <string />
               <string />
+              <string>3</string>
+              <string>2</string>
               <string>1</string>
-              <string>1.5</string>
+              <string>.5</string>
+              <string>.1</string>
+              <string>.1</string>
+            </ArrayOfString>
+            <ArrayOfString>
+              <string>0</string>
+              <string />
+              <string />
+              <string>2</string>
+              <string>1</string>
+              <string>.5</string>
+              <string>.5</string>
+              <string>.1</string>
+              <string>.1</string>
+            </ArrayOfString>
+            <ArrayOfString>
+              <string>0</string>
+              <string />
+              <string />
+              <string>1</string>
               <string>.5</string>
               <string>.2</string>
               <string>.1</string>
               <string>.1</string>
+              <string>0</string>
             </ArrayOfString>
             <ArrayOfString>
               <string>0</string>
               <string />
               <string />
-              <string>.7</string>
-              <string>.7</string>
-              <string>.3</string>
-              <string>.2</string>
               <string>.1</string>
               <string>.1</string>
-            </ArrayOfString>
-            <ArrayOfString>
-              <string>0</string>
-              <string />
-              <string />
-              <string>.5</string>
-              <string>.3</string>
-              <string>.2</string>
+              <string>.1</string>
               <string>.1</string>
               <string>.05</string>
               <string>0</string>
@@ -204,31 +221,20 @@ namespace Models
               <string>0</string>
               <string />
               <string />
-              <string>.3</string>
-              <string>.2</string>
-              <string>.1</string>
-              <string>.05</string>
-              <string>.05</string>
-              <string>0</string>
-            </ArrayOfString>
-            <ArrayOfString>
-              <string>0</string>
-              <string />
-              <string />
-              <string>.2</string>
-              <string>.1</string>
-              <string>.05</string>
-              <string>.01</string>
-              <string>0</string>
-              <string>0</string>
-            </ArrayOfString>
-            <ArrayOfString>
-              <string>0</string>
-              <string />
-              <string />
-              <string>.1</string>
-              <string>.05</string>
               <string>.02</string>
+              <string>.02</string>
+              <string>.02</string>
+              <string>.01</string>
+              <string>0</string>
+              <string>0</string>
+            </ArrayOfString>
+            <ArrayOfString>
+              <string>0</string>
+              <string />
+              <string />
+              <string>.01</string>
+              <string>.01</string>
+              <string>0</string>
               <string>0</string>
               <string>0</string>
               <string>0</string>
@@ -237,9 +243,9 @@ namespace Models
               <string>0</string>
               <string />
               <string />
-              <string>.1</string>
-              <string>.05</string>
               <string>.01</string>
+              <string>.01</string>
+              <string>0</string>
               <string>0</string>
               <string>0</string>
               <string>0</string>
@@ -730,6 +736,7 @@ namespace Models
               <string>sum([Soil].NH4N) as TotalNH4N</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
+              <string>[Wheat].AboveGround.Wt as BiomassWt</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -1120,6 +1127,7 @@ namespace Models
               <string>sum([Soil].NH4N) as TotalNH4N</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
+              <string>[Wheat].AboveGround.Wt as BiomassWt</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -1509,6 +1517,7 @@ namespace Models
               <string>sum([Soil].NH4N) as TotalNH4N</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
+              <string>[Wheat].AboveGround.Wt as BiomassWt</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -1898,6 +1907,7 @@ namespace Models
               <string>sum([Soil].NH4N) as TotalNH4N</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
+              <string>[Wheat].AboveGround.Wt as BiomassWt</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2287,6 +2297,7 @@ namespace Models
               <string>sum([Soil].NH4N) as TotalNH4N</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
+              <string>[Wheat].AboveGround.Wt as BiomassWt</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2676,6 +2687,7 @@ namespace Models
               <string>sum([Soil].NH4N) as TotalNH4N</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
+              <string>[Wheat].AboveGround.Wt as BiomassWt</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -3065,6 +3077,7 @@ namespace Models
               <string>sum([Soil].NH4N) as TotalNH4N</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
+              <string>[Wheat].AboveGround.Wt as BiomassWt</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -3436,9 +3449,67 @@ namespace Models
             <Marker>FilledCircle</Marker>
             <Line>None</Line>
             <TableName>ObservedWarraBlock1</TableName>
-            <XFieldName>Date</XFieldName>
+            <XFieldName>Clock.Today</XFieldName>
             <YFieldName>SW90cm</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Biomass</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>BiomassWt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <TableName>ObservedWarraBlock1</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>BiomassWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3468,6 +3539,50 @@ namespace Models
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
+    <Graph>
+      <Name>SW90cm</Name>
+      <Series>
+        <Name>Series1</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>true</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.SW90cm</XFieldName>
+        <YFieldName>Predicted.SW90cm</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
   </Folder>
   <ExplorerWidth>287</ExplorerWidth>
 </Simulations>
