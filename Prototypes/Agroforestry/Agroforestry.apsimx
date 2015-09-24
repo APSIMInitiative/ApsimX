@@ -369,6 +369,7 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Soil].SoilWater.Eo</string>
               <string>[TreeProxy].WaterStress</string>
+              <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -714,17 +715,18 @@ namespace Models
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Report>
-            <Name>Report</Name>
+            <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
-              <string>Radn</string>
-              <string>[LocalMicroClimate].Radn</string>
-              <string>[TreeProxy].Shade</string>
+              <string>[Wheat].AboveGround.Wt as BiomassWt</string>
+              <string>[Wheat].Grain.Wt as GrainWt</string>
+              <string>[Wheat].Grain.Size as GrainSize</string>
+              <string>[Wheat].Grain.GrainNo as GrainNumber</string>
             </VariableNames>
             <EventNames>
-              <string />
+              <string>[Wheat].Harvesting</string>
             </EventNames>
             <ResultsPerPage>0</ResultsPerPage>
           </Report>
@@ -741,6 +743,7 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
+              <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -1105,18 +1108,18 @@ namespace Models
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Report>
-            <Name>Report</Name>
+            <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>Distance</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
-              <string>Radn</string>
-              <string>[LocalMicroClimate].Radn</string>
-              <string>[TreeProxy].Shade</string>
+              <string>[Wheat].AboveGround.Wt as BiomassWt</string>
+              <string>[Wheat].Grain.Wt as GrainWt</string>
+              <string>[Wheat].Grain.Size as GrainSize</string>
+              <string>[Wheat].Grain.GrainNo as GrainNumber</string>
             </VariableNames>
             <EventNames>
-              <string />
+              <string>[Wheat].Harvesting</string>
             </EventNames>
             <ResultsPerPage>0</ResultsPerPage>
           </Report>
@@ -1133,6 +1136,7 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
+              <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -1497,17 +1501,18 @@ namespace Models
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Report>
-            <Name>Report</Name>
+            <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
-              <string>Radn</string>
-              <string>[LocalMicroClimate].Radn</string>
-              <string>[TreeProxy].Shade</string>
+              <string>[Wheat].AboveGround.Wt as BiomassWt</string>
+              <string>[Wheat].Grain.Wt as GrainWt</string>
+              <string>[Wheat].Grain.Size as GrainSize</string>
+              <string>[Wheat].Grain.GrainNo as GrainNumber</string>
             </VariableNames>
             <EventNames>
-              <string />
+              <string>[Wheat].Harvesting</string>
             </EventNames>
             <ResultsPerPage>0</ResultsPerPage>
           </Report>
@@ -1524,6 +1529,7 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
+              <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -1888,17 +1894,18 @@ namespace Models
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Report>
-            <Name>Report</Name>
+            <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
-              <string>Radn</string>
-              <string>[LocalMicroClimate].Radn</string>
-              <string>[TreeProxy].Shade</string>
+              <string>[Wheat].AboveGround.Wt as BiomassWt</string>
+              <string>[Wheat].Grain.Wt as GrainWt</string>
+              <string>[Wheat].Grain.Size as GrainSize</string>
+              <string>[Wheat].Grain.GrainNo as GrainNumber</string>
             </VariableNames>
             <EventNames>
-              <string />
+              <string>[Wheat].Harvesting</string>
             </EventNames>
             <ResultsPerPage>0</ResultsPerPage>
           </Report>
@@ -1915,6 +1922,7 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
+              <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2279,17 +2287,18 @@ namespace Models
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Report>
-            <Name>Report</Name>
+            <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
-              <string>Radn</string>
-              <string>[LocalMicroClimate].Radn</string>
-              <string>[TreeProxy].Shade</string>
+              <string>[Wheat].AboveGround.Wt as BiomassWt</string>
+              <string>[Wheat].Grain.Wt as GrainWt</string>
+              <string>[Wheat].Grain.Size as GrainSize</string>
+              <string>[Wheat].Grain.GrainNo as GrainNumber</string>
             </VariableNames>
             <EventNames>
-              <string />
+              <string>[Wheat].Harvesting</string>
             </EventNames>
             <ResultsPerPage>0</ResultsPerPage>
           </Report>
@@ -2306,6 +2315,7 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
+              <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2670,17 +2680,18 @@ namespace Models
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Report>
-            <Name>Report</Name>
+            <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
-              <string>Radn</string>
-              <string>[LocalMicroClimate].Radn</string>
-              <string>[TreeProxy].Shade</string>
+              <string>[Wheat].AboveGround.Wt as BiomassWt</string>
+              <string>[Wheat].Grain.Wt as GrainWt</string>
+              <string>[Wheat].Grain.Size as GrainSize</string>
+              <string>[Wheat].Grain.GrainNo as GrainNumber</string>
             </VariableNames>
             <EventNames>
-              <string />
+              <string>[Wheat].Harvesting</string>
             </EventNames>
             <ResultsPerPage>0</ResultsPerPage>
           </Report>
@@ -2697,6 +2708,7 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
+              <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -3061,17 +3073,18 @@ namespace Models
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Report>
-            <Name>Report</Name>
+            <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
-              <string>Radn</string>
-              <string>[LocalMicroClimate].Radn</string>
-              <string>[TreeProxy].Shade</string>
+              <string>[Wheat].AboveGround.Wt as BiomassWt</string>
+              <string>[Wheat].Grain.Wt as GrainWt</string>
+              <string>[Wheat].Grain.Size as GrainSize</string>
+              <string>[Wheat].Grain.GrainNo as GrainNumber</string>
             </VariableNames>
             <EventNames>
-              <string />
+              <string>[Wheat].Harvesting</string>
             </EventNames>
             <ResultsPerPage>0</ResultsPerPage>
           </Report>
@@ -3088,6 +3101,7 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
+              <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -3149,10 +3163,10 @@ namespace Models
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.06</double>
                   <double>0.04</double>
-                  <double>0.04</double>
+                  <double>0.03</double>
                   <double>0.02</double>
+                  <double>0.01</double>
                 </KL>
                 <XF>
                   <double>1</double>
@@ -3601,9 +3615,281 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
+        <Graph>
+          <Name>SurfaceSW</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>SurfaceSW</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
         <Area>0.55</Area>
         <Slope>0</Slope>
       </ForestrySystem>
+      <Graph>
+        <Name>YieldTransect</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Distance</XFieldName>
+          <YFieldName>GrainWt</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>ObservedWarraBlock1</TableName>
+          <XFieldName>Distance</XFieldName>
+          <YFieldName>GrainWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>BiomassTransect</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Distance</XFieldName>
+          <YFieldName>BiomassWt</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>ObservedWarraBlock1</TableName>
+          <XFieldName>Distance</XFieldName>
+          <YFieldName>BiomassWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>GrainSizeTransect</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Distance</XFieldName>
+          <YFieldName>GrainSize</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>ObservedWarraBlock1</TableName>
+          <XFieldName>Distance</XFieldName>
+          <YFieldName>GrainSize</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>GrainNumberTransect</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Distance</XFieldName>
+          <YFieldName>GrainNumber</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>ObservedWarraBlock1</TableName>
+          <XFieldName>Distance</XFieldName>
+          <YFieldName>GrainNumber</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
