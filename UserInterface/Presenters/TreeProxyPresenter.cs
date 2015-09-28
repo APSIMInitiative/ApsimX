@@ -34,12 +34,12 @@
             SaveTable();
             ForestryModel.dates = ForestryViewer.SaveDates();
             ForestryModel.heights = ForestryViewer.SaveHeights();
+            ForestryModel.NDemands = ForestryViewer.SaveNDemands();
             ForestryViewer.OnCellEndEdit -= OnCellEndEdit;
         }
 
         private void SaveTable()
         {
-            ForestryModel.NDemand = ForestryViewer.NDemand;
             ForestryModel.RootRadius = ForestryViewer.RootRadius;
 
             DataTable table = ForestryViewer.GetTable();
@@ -70,7 +70,6 @@
         {
             if (!(ForestryModel.Parent is ForestrySystem))
                 throw new ApsimXException(ForestryModel, "Error: TreeProxy must be a child of ForestrySystem.");
-            ForestryViewer.NDemand = ForestryModel.NDemand;
             ForestryViewer.RootRadius = ForestryModel.RootRadius;
 
             Soil Soil;
@@ -79,7 +78,7 @@
                 return;
 
             //setup tree heights
-            ForestryViewer.SetupHeights(ForestryModel.dates, ForestryModel.heights);
+            ForestryViewer.SetupHeights(ForestryModel.dates, ForestryModel.heights,ForestryModel.NDemands);
 
       /*      //get the distance of each Zone from Tree.
             double zoneWidth = 0;
