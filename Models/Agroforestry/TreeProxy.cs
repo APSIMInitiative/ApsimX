@@ -76,11 +76,19 @@ namespace Models.Agroforestry
         /// <summary>The root radius.</summary>
         /// <value>The root radius.</value>
         [Summary]
+        [Description("Root Radius (cm)")]
         public double RootRadius { get; set; }
+
+        /// <summary>Adsoption Cofficient for NO3</summary>
+        /// <value>Adsoption Cofficient for NO3</value>
+        [Summary]
+        [Description("Adsoption Cofficient for NO3 (m3/g)")]
+        public double Kd { get; set; }
 
         /// <summary>The uptake coefficient.</summary>
         /// <value>KL Value at RLD of 1 cm/cm3.</value>
         [Summary]
+        [Description("Base KL (KL at RLD of 1) (/d/cm/cm3)")]
         public double BaseKL { get; set; }
 
 
@@ -131,7 +139,7 @@ namespace Models.Agroforestry
         public double[] NDemands { get; set; }
 
         private Dictionary<double, double> shade = new Dictionary<double, double>();
-        private Dictionary<double, double> nDemand = new Dictionary<double, double>();
+        //private Dictionary<double, double> nDemand = new Dictionary<double, double>();
         private Dictionary<double, double[]> rld = new Dictionary<double, double[]>();
 
         /// <summary>
@@ -235,9 +243,9 @@ namespace Models.Agroforestry
             for (int i = 2; i < Table.Count; i++)
             {
                 shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0]));
-                nDemand.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][1]));
+                //nDemand.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][1]));
                 List<double> getRLDs = new List<double>();
-                for (int j = 4; j < Table[1].Count; j++)
+                for (int j = 3; j < Table[1].Count; j++)
                     getRLDs.Add(Convert.ToDouble(Table[i][j]));
                 rld.Add(THCutoffs[i - 2], getRLDs.ToArray());
             }
@@ -365,7 +373,7 @@ namespace Models.Agroforestry
 
                         for (int i = 0; i <= SW.Length - 1; i++)
                         {
-                            Uptake.Water[i] = (SW[i] - LL15mm[i]) * BaseKL*RLD[i]*100;  // 100 converts RLD from mm/mm3 to cm/cm3
+                            Uptake.Water[i] = (SW[i] - LL15mm[i]) * BaseKL*RLD[i]; 
                             PotSWSupply += Uptake.Water[i] * ZI.Area * 10000;
                         }
                         Uptakes.Add(Uptake);
@@ -440,7 +448,7 @@ namespace Models.Agroforestry
 
                         for (int i = 0; i <= SW.Length - 1; i++)
                         {
-                            Uptake.NO3N[i] = PotentialNO3Uptake(ThisSoil.Thickness[i], Z.NO3N[i], Z.Water[i], RLD[i], RootRadius, BD[i])*10.0;
+                            Uptake.NO3N[i] = PotentialNO3Uptake(ThisSoil.Thickness[i], Z.NO3N[i], Z.Water[i], RLD[i], RootRadius, BD[i], Kd);
                             PotNO3Supply += Uptake.NO3N[i] * ZI.Area * 10000;
                         }
                         Uptakes.Add(Uptake);
@@ -470,24 +478,30 @@ namespace Models.Agroforestry
             NUptake = uptakeList.ToArray();
             return Uptakes;
         }
-        double PotentialNO3Uptake(double thickness, double NO3N, double SWmm, double RLD, double RootRadius, double BD)
+        double PotentialNO3Uptake(double thickness, double NO3N, double SWmm, double RLD, double RootRadius, double BD, double Kd)
         {
 
             double L = RLD / 100 * 1000000;   // Root Length Density (m/m3)
-            double D0 = 0.05 /10000*24; // Diffusion Coefficient (m2/d)
-            double theta = SWmm / thickness;
-            double tau = 3.13*Math.Pow(theta,1.92);         //  Tortuosity (unitless)
+            double D0 = 0.05 /10000*24;       // Diffusion Coefficient (m2/d)
+            double theta = SWmm / thickness;  // Volumetric soil water (m3/m3)
+            double tau = 3.13*Math.Pow(theta,1.92);    //  Tortuosity (unitless)
             double H = thickness / 1000;  // Layer thickness (m)
-            double R0 = RootRadius / 1000;  // Root Radius (m)
-            double Nconc = (NO3N / 10)/H;  // Concentration in solution (g/m2)
-            double Kd = 0;
-            double BD_gm3 = BD * 1000;
+            double R0 = RootRadius / 100;  // Root Radius (m)
+            double Nconc = (NO3N / 10)/H;  // Concentration in solution (g/m3 soil)
+            double BD_gm3 = BD * 1000000.0;
 
             //Potential Uptake (g/m2)
-            double U = (Math.PI * L * D0 * tau * theta * H * Nconc)/((BD_gm3*Kd+theta)*(-3.0/8.0 + 1.0/2.0*Math.Log(1.0/(R0*Math.Pow(Math.PI*L,0.5)))));
+            double U = (Math.PI * L * D0 * tau * theta * H * Nconc)/((BD_gm3*Kd+theta)*(-3.0/8.0 + 1.0/2.0*Math.Log(1.0/(R0*Math.Pow(Math.PI*L,0.5)))))*10; // 10 converts g/m2 to kg/ha
+
+            if (U > NO3N)
+                U = NO3N;
             return U;
         }
 
+        double PotentialSWUptake(double thickness, double RLD)
+        {
+            return 0;
+        }
         /// <summary>
         ///  Accepts the actual soil water uptake from the soil arbitrator.
         /// </summary>

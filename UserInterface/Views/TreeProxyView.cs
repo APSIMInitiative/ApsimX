@@ -68,15 +68,6 @@ namespace UserInterface.Views
         /// </summary>
         public double[] SoilMidpoints;
 
-        /// <summary>
-        /// Nitrogen demand across all Zones
-        /// </summary>
-        public double NDemand;
-
-        /// <summary>
-        /// Root radius in cm
-        /// </summary>
-        public double RootRadius;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeProxyView" /> class.
@@ -91,6 +82,11 @@ namespace UserInterface.Views
             smallestDate = DateTime.MaxValue;
             largestDate = DateTime.MinValue;
         }
+
+        /// <summary>
+        /// Constants grid.
+        /// </summary>
+        public GridView ConstantsGrid { get { return gridView1; } }
 
         /// <summary>
         /// Invoked when the user clicks on the plot area (the area inside the axes)
@@ -622,13 +618,22 @@ namespace UserInterface.Views
             }
             Grid.DataSource = table;
             Grid.Columns[0].ReadOnly = true; //name column
-            Grid.Rows[2].ReadOnly = true; //RLD title row
+            Grid.Rows[1].ReadOnly = true; //RLD title row
+            Grid.Rows[1].DefaultCellStyle.BackColor = Color.LightGray;
+            Grid.Rows[2].ReadOnly = true; //Depth title row
             Grid.Rows[2].DefaultCellStyle.BackColor = Color.LightGray;
-            Grid.Rows[3].ReadOnly = true; //Depth title row
-            Grid.Rows[3].DefaultCellStyle.BackColor = Color.LightGray;
             ResizeControls();
 
             SetupGraphs();
+        }
+
+        public void SetReadOnly()
+        {
+            Grid.Columns[0].ReadOnly = true; //name column
+            Grid.Rows[1].ReadOnly = true; //RLD title row
+            Grid.Rows[1].DefaultCellStyle.BackColor = Color.LightGray;
+            Grid.Rows[2].ReadOnly = true; //Depth title row
+            Grid.Rows[2].DefaultCellStyle.BackColor = Color.LightGray;
         }
 
         public void SetupHeights(DateTime[] dates, double[] heights, double[] NDemands)
@@ -942,6 +947,11 @@ namespace UserInterface.Views
                             Grid.Rows[r + iRow].Cells[c + iCol].Value = valuesInRow[iCol];
                 }
             }
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetReadOnly();
         }
     }
 }
