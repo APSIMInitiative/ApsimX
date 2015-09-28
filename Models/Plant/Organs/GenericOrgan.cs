@@ -215,11 +215,12 @@ namespace Models.PMF.Organs
                     _DMRetranslocationFactor = DMRetranslocationFactor.Value;
                 double _DMReallocationFactor = 0;
                 double _DMReallocated = 0;
-                if ((DMReallocationFactor != null) && (SenescenceRateFunction != null))
-                    _DMReallocationFactor = 0* DMReallocationFactor.Value;
+                //if ((DMReallocationFactor != null) && (SenescenceRateFunction != null))
+                //    _DMReallocationFactor = 0* DMReallocationFactor.Value;
                     /* RFZ we need reallocation however we also need to conserve biomass
-                    ** TO Do
-                    if ((DMReallocationFactor != null) && (SenescenceRateFunction != null)) 
+                    /** TO Do
+                 */   
+                if ((DMReallocationFactor != null) && (SenescenceRateFunction != null)) 
                     {
 
                         // DM to reallocate.
@@ -236,7 +237,7 @@ namespace Models.PMF.Organs
                         _DMReallocated = 0;
 
                     }
-                    */
+                   
                     return new BiomassSupplyType
                 {
                     Fixation = 0,

@@ -1344,7 +1344,7 @@
         </VariableReference>
         <Constant>
           <Name>DMReallocationFactor</Name>
-          <Value>0.95</Value>
+          <Value>0.05</Value>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
@@ -1864,6 +1864,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
             <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value</string>
             <string>[FodderBeet].Leaf.Live.Wt</string>
             <string>[FodderBeet].Summariser.Total.Wt</string>
+            <string>[FodderBeet].Summariser.TotalLive.Wt</string>
             <string>[FodderBeet].Petiole.Live.Wt</string>
             <string>[FodderBeet].Bulb.Live.Wt</string>
             <string>[FodderBeet].Leaf.LAI</string>
@@ -2267,7 +2268,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <Graph>
           <Name>Total</Name>
           <Series>
-            <Name>BulbWt</Name>
+            <Name>TotalWt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2276,13 +2277,13 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
             <Line>Solid</Line>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>FodderBeet.Summariser.Total.Wt</YFieldName>
+            <YFieldName>FodderBeet.Summariser.TotalLive.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>ObsBulbWt</Name>
+            <Name>ObsTotalWt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2291,7 +2292,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
             <Line>None</Line>
             <TableName>FRNLObserved</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>FodderBeet.Bulb.LiveWt</YFieldName>
+            <YFieldName>FodderBeet.Total.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -2811,7 +2812,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <Graph>
         <Name>Total</Name>
         <Series>
-          <Name>BulbWt</Name>
+          <Name>TotalLiveWt</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2820,13 +2821,13 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Summariser.Total.Wt</YFieldName>
+          <YFieldName>FodderBeet.Summariser.TotalLive.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>ObsBulbWt</Name>
+          <Name>ObsWt</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2835,7 +2836,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Line>None</Line>
           <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Bulb.LiveWt</YFieldName>
+          <YFieldName>FodderBeet.Total.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
