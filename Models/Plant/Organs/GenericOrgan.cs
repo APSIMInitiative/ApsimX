@@ -71,6 +71,10 @@ namespace Models.PMF.Organs
         /// <summary>The n retranslocation factor</summary>
         [Link(IsOptional = true)]
         [Units("/d")]
+        IFunction DMReallocationFactor = null;
+        /// <summary>The n retranslocation factor</summary>
+        [Link(IsOptional = true)]
+        [Units("/d")]
         IFunction NRetranslocationFactor = null;
         /// <summary>The nitrogen demand switch</summary>
         [Link(IsOptional = true)]
@@ -209,11 +213,35 @@ namespace Models.PMF.Organs
                 double _DMRetranslocationFactor = 0;
                 if (DMRetranslocationFactor != null) //Default of 0 means retranslocation is always truned off!!!!
                     _DMRetranslocationFactor = DMRetranslocationFactor.Value;
-                return new BiomassSupplyType
+                double _DMReallocationFactor = 0;
+                double _DMReallocated = 0;
+                if ((DMReallocationFactor != null) && (SenescenceRateFunction != null))
+                    _DMReallocationFactor = 0* DMReallocationFactor.Value;
+                    /* RFZ we need reallocation however we also need to conserve biomass
+                    ** TO Do
+                    if ((DMReallocationFactor != null) && (SenescenceRateFunction != null)) 
+                    {
+
+                        // DM to reallocate.
+                        _DMReallocationFactor = DMReallocationFactor.Value;
+                        double SenescedFrac = SenescenceRateFunction.Value;
+                        double _DMMetabolicDMReallocationSupply = StartLive.MetabolicWt * SenescedFrac * _DMReallocationFactor;
+                        double _DMNonStructuralDMReallocationSupply = StartLive.NonStructuralWt * SenescedFrac * _DMReallocationFactor;
+
+                        _DMReallocated = _DMMetabolicDMReallocationSupply + _DMNonStructuralDMReallocationSupply;
+
+                    }
+                    else
+                    {
+                        _DMReallocated = 0;
+
+                    }
+                    */
+                    return new BiomassSupplyType
                 {
                     Fixation = 0,
                     Retranslocation = StartLive.NonStructuralWt * _DMRetranslocationFactor,
-                    Reallocation = 0
+                    Reallocation = _DMReallocated
                 };
             }
         }
