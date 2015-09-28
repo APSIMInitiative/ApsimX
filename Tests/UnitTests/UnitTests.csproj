@@ -60,6 +60,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SWIMTests.cs" />
     <Compile Include="TestSoils.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +91,10 @@
     <ProjectReference Include="..\..\Models\Models.csproj">
       <Project>{A3E10705-F2BB-4182-A19C-7F63222584DF}</Project>
       <Name>Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SWIMFrame\SWIMFrame.csproj">
+      <Project>{e456aba4-bf7b-4be7-9c29-26e66f49922b}</Project>
+      <Name>SWIMFrame</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\UserInterface\UserInterface.csproj">
       <Project>{27056DED-A49C-4351-90A8-DFA9C8AC906E}</Project>
