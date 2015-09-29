@@ -157,7 +157,7 @@
           <Name>LinearGrowth</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>1000</Value>
+            <Value>1200</Value>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -416,7 +416,7 @@
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>1.6</Value>
+            <Value>1.8</Value>
           </Constant>
           <Constant>
             <Name>FN</Name>
@@ -1081,7 +1081,7 @@
             <Name>PhaseLookUp</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0.05</Value>
+              <Value>0.1</Value>
             </Constant>
             <Start>PreEmerge</Start>
             <End>Maturity</End>
@@ -1209,7 +1209,7 @@
               <Name>Middle</Name>
               <Constant>
                 <Name>Target</Name>
-                <Value>0.7</Value>
+                <Value>0.8</Value>
               </Constant>
               <Start>BulbGrowth</Start>
               <End>EndLinear</End>
@@ -1294,7 +1294,7 @@
                 <Name>MultiplyFunction</Name>
                 <Constant>
                   <Name>Target</Name>
-                  <Value>0.05</Value>
+                  <Value>0.03</Value>
                 </Constant>
                 <VariableReference>
                   <Name>VariableReference</Name>
@@ -1310,7 +1310,7 @@
                 <Name>MultiplyFunction</Name>
                 <Constant>
                   <Name>Target</Name>
-                  <Value>0.05</Value>
+                  <Value>0.02</Value>
                 </Constant>
                 <VariableReference>
                   <Name>VariableReference</Name>
@@ -1326,7 +1326,7 @@
                 <Name>MultiplyFunction</Name>
                 <Constant>
                   <Name>Target</Name>
-                  <Value>0.05</Value>
+                  <Value>0</Value>
                 </Constant>
                 <VariableReference>
                   <Name>VariableReference</Name>
@@ -1338,10 +1338,6 @@
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <VariableReference>
-          <Name>SenescenceRateFunction</Name>
-          <VariableName>[leaf].FractionDied</VariableName>
-        </VariableReference>
         <Constant>
           <Name>DMReallocationFactor</Name>
           <Value>0.05</Value>
@@ -1350,6 +1346,66 @@
           <Name>NReallocationFactor</Name>
           <Value>0.95</Value>
         </Constant>
+        <PhaseLookup>
+          <Name>SenescenceRateFunction</Name>
+          <PhaseLookupValue>
+            <Name>Early</Name>
+            <Constant>
+              <Name>Target</Name>
+              <Value>0</Value>
+            </Constant>
+            <Start>PreEmerge</Start>
+            <End>BulbGrowth</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>Middle</Name>
+            <MultiplyFunction>
+              <Name>MultiplyFunction</Name>
+              <Constant>
+                <Name>Target</Name>
+                <Value>0.5</Value>
+              </Constant>
+              <VariableReference>
+                <Name>SenescenceRateFunction</Name>
+                <VariableName>[leaf].FractionDied</VariableName>
+              </VariableReference>
+            </MultiplyFunction>
+            <Start>BulbGrowth</Start>
+            <End>EndLinear</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>Maturity</Name>
+            <MultiplyFunction>
+              <Name>MultiplyFunction</Name>
+              <Constant>
+                <Name>Target</Name>
+                <Value>1</Value>
+              </Constant>
+              <VariableReference>
+                <Name>SenescenceRateFunction</Name>
+                <VariableName>[leaf].FractionDied</VariableName>
+              </VariableReference>
+            </MultiplyFunction>
+            <Start>EndLinear</Start>
+            <End>EndSenescence</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>PostMaturity</Name>
+            <MultiplyFunction>
+              <Name>MultiplyFunction</Name>
+              <Constant>
+                <Name>Target</Name>
+                <Value>1</Value>
+              </Constant>
+              <VariableReference>
+                <Name>SenescenceRateFunction</Name>
+                <VariableName>[leaf].FractionDied</VariableName>
+              </VariableReference>
+            </MultiplyFunction>
+            <Start>EndSenescence</Start>
+            <End>Maturity</End>
+          </PhaseLookupValue>
+        </PhaseLookup>
       </GenericAboveGroundOrgan>
       <Summariser>
         <Name>Summariser</Name>
@@ -1486,14 +1542,14 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <Clock>
         <Name>clock</Name>
         <StartDate>2014-09-01T00:00:00</StartDate>
-        <EndDate>2015-05-10T00:00:00</EndDate>
+        <EndDate>2015-06-30T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <FileName>%root%\Prototypes\FodderBeet\Weather\lincoln from 2014.met</FileName>
+        <FileName>Weather\lincoln from 2014.met</FileName>
       </Weather>
       <Zone>
         <Name>paddock</Name>
@@ -2162,13 +2218,13 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>Total</Name>
+        <Name>TotalWt</Name>
         <Series>
-          <Name>BulbWt</Name>
+          <Name>TotalWt</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-65281</ColourArgb>
+          <ColourArgb>-65408</ColourArgb>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
@@ -2179,7 +2235,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>ObsBulbWt</Name>
+          <Name>Obs_TotalWt</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2188,7 +2244,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Line>None</Line>
           <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Bulb.LiveWt</YFieldName>
+          <YFieldName>FodderBeet.Total.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -2506,6 +2562,57 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
       </Folder>
+      <Graph>
+        <Name>TotalLiveWt</Name>
+        <Series>
+          <Name>TotalWt</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65408</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FodderBeet.Summariser.TotalLive.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Obs_TotalWt</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>FRNLObserved</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FodderBeet.Summariser.LiveDM</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Crop Biomass (g/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
@@ -2836,7 +2943,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Line>None</Line>
           <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Total.Wt</YFieldName>
+          <YFieldName>FodderBeet.Summariser.LiveDM</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
