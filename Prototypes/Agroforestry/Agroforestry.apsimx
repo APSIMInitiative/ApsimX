@@ -3448,7 +3448,7 @@ namespace Models
             <TableName>ObservedWarraBlock1</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>SW90cm</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
