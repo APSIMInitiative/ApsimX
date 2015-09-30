@@ -919,9 +919,11 @@ namespace UserInterface.Views
         private void Grid_KeyUp(object sender, KeyEventArgs e)
         {
             //TODO: Get this working with data copied from other cells in the grid.
+            //      Also needs to work with blank cells and block deletes.
             //source: https://social.msdn.microsoft.com/Forums/windows/en-US/e9cee429-5f36-4073-85b4-d16c1708ee1e/how-to-paste-ctrlv-shiftins-the-data-from-clipboard-to-datagridview-datagridview1-c?forum=winforms
             if ((e.Shift && e.KeyCode == Keys.Insert) || (e.Control && e.KeyCode == Keys.V))
             {
+                DataGridView grid = sender as DataGridView;
                 char[] rowSplitter = { '\r', '\n' };
                 char[] columnSplitter = { '\t' };
                 //get the text from clipboard
@@ -930,11 +932,11 @@ namespace UserInterface.Views
                 //split it into lines
                 string[] rowsInClipboard = stringInClipboard.Split(rowSplitter, StringSplitOptions.RemoveEmptyEntries);
                 //get the row and column of selected cell in Grid
-                int r = Grid.SelectedCells[0].RowIndex;
-                int c = Grid.SelectedCells[0].ColumnIndex;
+                int r = grid.SelectedCells[0].RowIndex;
+                int c = grid.SelectedCells[0].ColumnIndex;
                 //add rows into Grid to fit clipboard lines
-                if (Grid.Rows.Count < (r + rowsInClipboard.Length))
-                    Grid.Rows.Add(r + rowsInClipboard.Length - Grid.Rows.Count);
+                if (grid.Rows.Count < (r + rowsInClipboard.Length))
+                    grid.Rows.Add(r + rowsInClipboard.Length - grid.Rows.Count);
                 // loop through the lines, split them into cells and place the values in the corresponding cell.
                 for (int iRow = 0; iRow < rowsInClipboard.Length; iRow++)
                 {
@@ -943,8 +945,8 @@ namespace UserInterface.Views
                     //cycle through cell values
                     for (int iCol = 0; iCol < valuesInRow.Length; iCol++)
                         //assign cell value, only if it within columns of the Grid
-                        if (Grid.ColumnCount - 1 >= c + iCol)
-                            Grid.Rows[r + iRow].Cells[c + iCol].Value = valuesInRow[iCol];
+                        if (grid.ColumnCount - 1 >= c + iCol)
+                            grid.Rows[r + iRow].Cells[c + iCol].Value = valuesInRow[iCol];
                 }
             }
         }
