@@ -108,6 +108,11 @@ namespace Models.Agroforestry
         [Description("Base KL (KL at RLD of 1) (/d/cm/cm3)")]
         public double BaseKL { get; set; }
 
+        /// <summary>Extinction Coefficient.</summary>
+        /// <value>Light Extinction Coefficient.</value>
+        [Summary]
+        [Description("Extinction Coefficient (-)")]
+        public double KValue { get; set; }
 
         /// <summary>
         /// Water stress factor.

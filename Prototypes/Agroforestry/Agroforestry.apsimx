@@ -3,6 +3,31 @@
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
+    <Report>
+      <Name>DailyReport</Name>
+      <VariableNames>
+        <string>[Clock].Today</string>
+        <string>Distance</string>
+        <string>LocalMicroClimate.Wind</string>
+        <string>sum([Soil].NO3N) as TotalNO3N</string>
+        <string>sum([Soil].NH4N) as TotalNH4N</string>
+        <string>sum([TreeProxy].WaterUptake) as WaterUptake</string>
+        <string>sum([Soil].SoilWater.SWmm[1:5]) as SW90cm</string>
+        <string>[TreeProxy].Urel</string>
+        <string>[TreeProxy].H</string>
+        <string>[TreeProxy].SWDemand</string>
+        <string>[TreeProxy].heightToday</string>
+        <string>[MicroClimate].peta</string>
+        <string>[MicroClimate].petr</string>
+        <string>[Soil].SoilWater.Eo</string>
+        <string>[TreeProxy].WaterStress</string>
+        <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+      </VariableNames>
+      <EventNames>
+        <string>[Clock].DoReport</string>
+      </EventNames>
+      <ResultsPerPage>0</ResultsPerPage>
+    </Report>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
@@ -142,7 +167,8 @@ namespace Models
               <string>Shade (%)</string>
               <string>Root Length Density (cm/cm3)</string>
               <string>Depth (cm)</string>
-              <string>0-15</string>
+              <string>0-5</string>
+              <string>5-15</string>
               <string>15-30</string>
               <string>30-60</string>
               <string>60-90</string>
@@ -153,6 +179,7 @@ namespace Models
               <string>80</string>
               <string />
               <string />
+              <string>3</string>
               <string>3</string>
               <string>2</string>
               <string>1</string>
@@ -165,6 +192,7 @@ namespace Models
               <string />
               <string />
               <string>2</string>
+              <string>2</string>
               <string>1</string>
               <string>.5</string>
               <string>.5</string>
@@ -175,6 +203,7 @@ namespace Models
               <string>0</string>
               <string />
               <string />
+              <string>1</string>
               <string>1</string>
               <string>.5</string>
               <string>.2</string>
@@ -190,6 +219,7 @@ namespace Models
               <string>.1</string>
               <string>.1</string>
               <string>.1</string>
+              <string>.1</string>
               <string>.05</string>
               <string>0</string>
             </ArrayOfString>
@@ -200,6 +230,7 @@ namespace Models
               <string>.02</string>
               <string>.02</string>
               <string>.02</string>
+              <string>.02</string>
               <string>.01</string>
               <string>0</string>
               <string>0</string>
@@ -209,16 +240,6 @@ namespace Models
               <string />
               <string />
               <string>.01</string>
-              <string>.01</string>
-              <string>0</string>
-              <string>0</string>
-              <string>0</string>
-              <string>0</string>
-            </ArrayOfString>
-            <ArrayOfString>
-              <string>0</string>
-              <string />
-              <string />
               <string>.01</string>
               <string>.01</string>
               <string>0</string>
@@ -230,8 +251,9 @@ namespace Models
               <string>0</string>
               <string />
               <string />
-              <string>0</string>
-              <string>0</string>
+              <string>.01</string>
+              <string>.01</string>
+              <string>.01</string>
               <string>0</string>
               <string>0</string>
               <string>0</string>
@@ -247,11 +269,25 @@ namespace Models
               <string>0</string>
               <string>0</string>
               <string>0</string>
+              <string>0</string>
             </ArrayOfString>
             <ArrayOfString>
               <string>0</string>
               <string />
               <string />
+              <string>0</string>
+              <string>0</string>
+              <string>0</string>
+              <string>0</string>
+              <string>0</string>
+              <string>0</string>
+              <string>0</string>
+            </ArrayOfString>
+            <ArrayOfString>
+              <string>0</string>
+              <string />
+              <string />
+              <string>0</string>
               <string>0</string>
               <string>0</string>
               <string>0</string>
@@ -263,6 +299,7 @@ namespace Models
           <RootRadius>0.02</RootRadius>
           <Kd>1E-07</Kd>
           <BaseKL>0.01</BaseKL>
+          <KValue>0.5</KValue>
           <dates>
             <dateTime>1900-01-01T00:00:00</dateTime>
             <dateTime>1900-03-01T00:00:00</dateTime>
@@ -347,7 +384,7 @@ namespace Models
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
               <string>sum([TreeProxy].WaterUptake) as WaterUptake</string>
-              <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
+              <string>sum([Soil].SoilWater.SWmm[1:5]) as SW90cm</string>
               <string>[TreeProxy].Urel</string>
               <string>[TreeProxy].H</string>
               <string>[TreeProxy].SWDemand</string>
@@ -406,7 +443,8 @@ namespace Models
             <Water>
               <Name>Water</Name>
               <Thickness>
-                <double>150</double>
+                <double>50</double>
+                <double>100</double>
                 <double>150</double>
                 <double>300</double>
                 <double>300</double>
@@ -415,6 +453,7 @@ namespace Models
               </Thickness>
               <BD>
                 <double>1.39</double>
+                <double>1.39</double>
                 <double>1.35</double>
                 <double>1.35</double>
                 <double>1.43</double>
@@ -422,14 +461,16 @@ namespace Models
                 <double>1.45</double>
               </BD>
               <AirDry>
+                <double>0.06</double>
                 <double>0.1</double>
-                <double>0.168</double>
-                <double>0.168</double>
-                <double>0.168</double>
-                <double>0.168</double>
-                <double>0.168</double>
+                <double>0.17</double>
+                <double>0.17</double>
+                <double>0.17</double>
+                <double>0.17</double>
+                <double>0.17</double>
               </AirDry>
               <LL15>
+                <double>0.18</double>
                 <double>0.18</double>
                 <double>0.19</double>
                 <double>0.19</double>
@@ -439,6 +480,7 @@ namespace Models
               </LL15>
               <DUL>
                 <double>0.4</double>
+                <double>0.4</double>
                 <double>0.41</double>
                 <double>0.41</double>
                 <double>0.38</double>
@@ -447,6 +489,7 @@ namespace Models
               </DUL>
               <SAT>
                 <double>0.45</double>
+                <double>0.45</double>
                 <double>0.46</double>
                 <double>0.46</double>
                 <double>0.43</double>
@@ -454,6 +497,7 @@ namespace Models
                 <double>0.42</double>
               </SAT>
               <KS>
+                <double>20</double>
                 <double>20</double>
                 <double>20</double>
                 <double>20</double>
@@ -783,6 +827,7 @@ namespace Models
                 <Name>WheatSoil</Name>
                 <LL>
                   <double>0.22</double>
+                  <double>0.22</double>
                   <double>0.21</double>
                   <double>0.22</double>
                   <double>0.24</double>
@@ -792,9 +837,10 @@ namespace Models
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.06</double>
                   <double>0.04</double>
-                  <double>0.04</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
                   <double>0.02</double>
                 </KL>
                 <XF>
@@ -804,10 +850,12 @@ namespace Models
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
+                  <double>1</double>
                 </XF>
               </SoilCrop>
               <Thickness>
-                <double>150</double>
+                <double>50</double>
+                <double>100</double>
                 <double>150</double>
                 <double>300</double>
                 <double>300</double>
@@ -816,6 +864,7 @@ namespace Models
               </Thickness>
               <BD>
                 <double>1.39</double>
+                <double>1.39</double>
                 <double>1.35</double>
                 <double>1.35</double>
                 <double>1.43</double>
@@ -823,6 +872,7 @@ namespace Models
                 <double>1.45</double>
               </BD>
               <AirDry>
+                <double>0.06</double>
                 <double>0.1</double>
                 <double>0.17</double>
                 <double>0.17</double>
@@ -832,6 +882,7 @@ namespace Models
               </AirDry>
               <LL15>
                 <double>0.18</double>
+                <double>0.18</double>
                 <double>0.19</double>
                 <double>0.19</double>
                 <double>0.2</double>
@@ -840,6 +891,7 @@ namespace Models
               </LL15>
               <DUL>
                 <double>0.4</double>
+                <double>0.4</double>
                 <double>0.41</double>
                 <double>0.41</double>
                 <double>0.38</double>
@@ -847,6 +899,7 @@ namespace Models
                 <double>0.37</double>
               </DUL>
               <SAT>
+                <double>0.45</double>
                 <double>0.45</double>
                 <double>0.46</double>
                 <double>0.46</double>
@@ -1176,6 +1229,7 @@ namespace Models
                 <Name>WheatSoil</Name>
                 <LL>
                   <double>0.22</double>
+                  <double>0.22</double>
                   <double>0.21</double>
                   <double>0.22</double>
                   <double>0.24</double>
@@ -1185,9 +1239,10 @@ namespace Models
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.06</double>
                   <double>0.04</double>
-                  <double>0.04</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
                   <double>0.02</double>
                 </KL>
                 <XF>
@@ -1197,10 +1252,12 @@ namespace Models
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
+                  <double>1</double>
                 </XF>
               </SoilCrop>
               <Thickness>
-                <double>150</double>
+                <double>50</double>
+                <double>100</double>
                 <double>150</double>
                 <double>300</double>
                 <double>300</double>
@@ -1209,6 +1266,7 @@ namespace Models
               </Thickness>
               <BD>
                 <double>1.39</double>
+                <double>1.39</double>
                 <double>1.35</double>
                 <double>1.35</double>
                 <double>1.43</double>
@@ -1216,6 +1274,7 @@ namespace Models
                 <double>1.45</double>
               </BD>
               <AirDry>
+                <double>0.06</double>
                 <double>0.1</double>
                 <double>0.17</double>
                 <double>0.17</double>
@@ -1225,6 +1284,7 @@ namespace Models
               </AirDry>
               <LL15>
                 <double>0.18</double>
+                <double>0.18</double>
                 <double>0.19</double>
                 <double>0.19</double>
                 <double>0.2</double>
@@ -1233,6 +1293,7 @@ namespace Models
               </LL15>
               <DUL>
                 <double>0.4</double>
+                <double>0.4</double>
                 <double>0.41</double>
                 <double>0.41</double>
                 <double>0.38</double>
@@ -1240,6 +1301,7 @@ namespace Models
                 <double>0.37</double>
               </DUL>
               <SAT>
+                <double>0.45</double>
                 <double>0.45</double>
                 <double>0.46</double>
                 <double>0.46</double>
@@ -1569,6 +1631,7 @@ namespace Models
                 <Name>WheatSoil</Name>
                 <LL>
                   <double>0.22</double>
+                  <double>0.22</double>
                   <double>0.21</double>
                   <double>0.22</double>
                   <double>0.24</double>
@@ -1578,9 +1641,10 @@ namespace Models
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.06</double>
                   <double>0.04</double>
-                  <double>0.04</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
                   <double>0.02</double>
                 </KL>
                 <XF>
@@ -1590,10 +1654,12 @@ namespace Models
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
+                  <double>1</double>
                 </XF>
               </SoilCrop>
               <Thickness>
-                <double>150</double>
+                <double>50</double>
+                <double>100</double>
                 <double>150</double>
                 <double>300</double>
                 <double>300</double>
@@ -1602,6 +1668,7 @@ namespace Models
               </Thickness>
               <BD>
                 <double>1.39</double>
+                <double>1.39</double>
                 <double>1.35</double>
                 <double>1.35</double>
                 <double>1.43</double>
@@ -1609,6 +1676,7 @@ namespace Models
                 <double>1.45</double>
               </BD>
               <AirDry>
+                <double>0.06</double>
                 <double>0.1</double>
                 <double>0.17</double>
                 <double>0.17</double>
@@ -1618,6 +1686,7 @@ namespace Models
               </AirDry>
               <LL15>
                 <double>0.18</double>
+                <double>0.18</double>
                 <double>0.19</double>
                 <double>0.19</double>
                 <double>0.2</double>
@@ -1626,6 +1695,7 @@ namespace Models
               </LL15>
               <DUL>
                 <double>0.4</double>
+                <double>0.4</double>
                 <double>0.41</double>
                 <double>0.41</double>
                 <double>0.38</double>
@@ -1633,6 +1703,7 @@ namespace Models
                 <double>0.37</double>
               </DUL>
               <SAT>
+                <double>0.45</double>
                 <double>0.45</double>
                 <double>0.46</double>
                 <double>0.46</double>
@@ -1962,6 +2033,7 @@ namespace Models
                 <Name>WheatSoil</Name>
                 <LL>
                   <double>0.22</double>
+                  <double>0.22</double>
                   <double>0.21</double>
                   <double>0.22</double>
                   <double>0.24</double>
@@ -1971,9 +2043,10 @@ namespace Models
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.06</double>
                   <double>0.04</double>
-                  <double>0.04</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
                   <double>0.02</double>
                 </KL>
                 <XF>
@@ -1983,10 +2056,12 @@ namespace Models
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
+                  <double>1</double>
                 </XF>
               </SoilCrop>
               <Thickness>
-                <double>150</double>
+                <double>50</double>
+                <double>100</double>
                 <double>150</double>
                 <double>300</double>
                 <double>300</double>
@@ -1995,6 +2070,7 @@ namespace Models
               </Thickness>
               <BD>
                 <double>1.39</double>
+                <double>1.39</double>
                 <double>1.35</double>
                 <double>1.35</double>
                 <double>1.43</double>
@@ -2002,6 +2078,7 @@ namespace Models
                 <double>1.45</double>
               </BD>
               <AirDry>
+                <double>0.06</double>
                 <double>0.1</double>
                 <double>0.17</double>
                 <double>0.17</double>
@@ -2011,6 +2088,7 @@ namespace Models
               </AirDry>
               <LL15>
                 <double>0.18</double>
+                <double>0.18</double>
                 <double>0.19</double>
                 <double>0.19</double>
                 <double>0.2</double>
@@ -2019,6 +2097,7 @@ namespace Models
               </LL15>
               <DUL>
                 <double>0.4</double>
+                <double>0.4</double>
                 <double>0.41</double>
                 <double>0.41</double>
                 <double>0.38</double>
@@ -2026,6 +2105,7 @@ namespace Models
                 <double>0.37</double>
               </DUL>
               <SAT>
+                <double>0.45</double>
                 <double>0.45</double>
                 <double>0.46</double>
                 <double>0.46</double>
@@ -2355,6 +2435,7 @@ namespace Models
                 <Name>WheatSoil</Name>
                 <LL>
                   <double>0.22</double>
+                  <double>0.22</double>
                   <double>0.21</double>
                   <double>0.22</double>
                   <double>0.24</double>
@@ -2364,9 +2445,10 @@ namespace Models
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.06</double>
                   <double>0.04</double>
-                  <double>0.04</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
                   <double>0.02</double>
                 </KL>
                 <XF>
@@ -2376,10 +2458,12 @@ namespace Models
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
+                  <double>1</double>
                 </XF>
               </SoilCrop>
               <Thickness>
-                <double>150</double>
+                <double>50</double>
+                <double>100</double>
                 <double>150</double>
                 <double>300</double>
                 <double>300</double>
@@ -2388,6 +2472,7 @@ namespace Models
               </Thickness>
               <BD>
                 <double>1.39</double>
+                <double>1.39</double>
                 <double>1.35</double>
                 <double>1.35</double>
                 <double>1.43</double>
@@ -2395,6 +2480,7 @@ namespace Models
                 <double>1.45</double>
               </BD>
               <AirDry>
+                <double>0.06</double>
                 <double>0.1</double>
                 <double>0.17</double>
                 <double>0.17</double>
@@ -2404,6 +2490,7 @@ namespace Models
               </AirDry>
               <LL15>
                 <double>0.18</double>
+                <double>0.18</double>
                 <double>0.19</double>
                 <double>0.19</double>
                 <double>0.2</double>
@@ -2412,6 +2499,7 @@ namespace Models
               </LL15>
               <DUL>
                 <double>0.4</double>
+                <double>0.4</double>
                 <double>0.41</double>
                 <double>0.41</double>
                 <double>0.38</double>
@@ -2419,6 +2507,7 @@ namespace Models
                 <double>0.37</double>
               </DUL>
               <SAT>
+                <double>0.45</double>
                 <double>0.45</double>
                 <double>0.46</double>
                 <double>0.46</double>
@@ -2748,6 +2837,7 @@ namespace Models
                 <Name>WheatSoil</Name>
                 <LL>
                   <double>0.22</double>
+                  <double>0.22</double>
                   <double>0.21</double>
                   <double>0.22</double>
                   <double>0.24</double>
@@ -2757,9 +2847,10 @@ namespace Models
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.06</double>
                   <double>0.04</double>
-                  <double>0.04</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
                   <double>0.02</double>
                 </KL>
                 <XF>
@@ -2769,10 +2860,12 @@ namespace Models
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
+                  <double>1</double>
                 </XF>
               </SoilCrop>
               <Thickness>
-                <double>150</double>
+                <double>50</double>
+                <double>100</double>
                 <double>150</double>
                 <double>300</double>
                 <double>300</double>
@@ -2781,6 +2874,7 @@ namespace Models
               </Thickness>
               <BD>
                 <double>1.39</double>
+                <double>1.39</double>
                 <double>1.35</double>
                 <double>1.35</double>
                 <double>1.43</double>
@@ -2788,6 +2882,7 @@ namespace Models
                 <double>1.45</double>
               </BD>
               <AirDry>
+                <double>0.06</double>
                 <double>0.1</double>
                 <double>0.17</double>
                 <double>0.17</double>
@@ -2797,6 +2892,7 @@ namespace Models
               </AirDry>
               <LL15>
                 <double>0.18</double>
+                <double>0.18</double>
                 <double>0.19</double>
                 <double>0.19</double>
                 <double>0.2</double>
@@ -2805,6 +2901,7 @@ namespace Models
               </LL15>
               <DUL>
                 <double>0.4</double>
+                <double>0.4</double>
                 <double>0.41</double>
                 <double>0.41</double>
                 <double>0.38</double>
@@ -2812,6 +2909,7 @@ namespace Models
                 <double>0.37</double>
               </DUL>
               <SAT>
+                <double>0.45</double>
                 <double>0.45</double>
                 <double>0.46</double>
                 <double>0.46</double>
@@ -3141,6 +3239,7 @@ namespace Models
                 <Name>WheatSoil</Name>
                 <LL>
                   <double>0.22</double>
+                  <double>0.22</double>
                   <double>0.21</double>
                   <double>0.22</double>
                   <double>0.24</double>
@@ -3153,9 +3252,11 @@ namespace Models
                   <double>0.04</double>
                   <double>0.03</double>
                   <double>0.02</double>
-                  <double>0.01</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
                 </KL>
                 <XF>
+                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -3165,7 +3266,8 @@ namespace Models
                 </XF>
               </SoilCrop>
               <Thickness>
-                <double>150</double>
+                <double>50</double>
+                <double>100</double>
                 <double>150</double>
                 <double>300</double>
                 <double>300</double>
@@ -3174,6 +3276,7 @@ namespace Models
               </Thickness>
               <BD>
                 <double>1.39</double>
+                <double>1.39</double>
                 <double>1.35</double>
                 <double>1.35</double>
                 <double>1.43</double>
@@ -3181,6 +3284,7 @@ namespace Models
                 <double>1.45</double>
               </BD>
               <AirDry>
+                <double>0.06</double>
                 <double>0.1</double>
                 <double>0.17</double>
                 <double>0.17</double>
@@ -3190,6 +3294,7 @@ namespace Models
               </AirDry>
               <LL15>
                 <double>0.18</double>
+                <double>0.18</double>
                 <double>0.19</double>
                 <double>0.19</double>
                 <double>0.2</double>
@@ -3198,6 +3303,7 @@ namespace Models
               </LL15>
               <DUL>
                 <double>0.4</double>
+                <double>0.4</double>
                 <double>0.41</double>
                 <double>0.41</double>
                 <double>0.38</double>
@@ -3205,6 +3311,7 @@ namespace Models
                 <double>0.37</double>
               </DUL>
               <SAT>
+                <double>0.45</double>
                 <double>0.45</double>
                 <double>0.46</double>
                 <double>0.46</double>
@@ -4194,6 +4301,7 @@ namespace Models
           <RootRadius>0.02</RootRadius>
           <Kd>1E-07</Kd>
           <BaseKL>0.01</BaseKL>
+          <KValue>0</KValue>
           <dates>
             <dateTime>1900-01-01T00:00:00</dateTime>
             <dateTime>1900-03-01T00:00:00</dateTime>
@@ -4215,6 +4323,20 @@ namespace Models
             <double>0.1</double>
             <double>0.1</double>
           </NDemands>
+          <CanopyWidths>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+          </CanopyWidths>
+          <TreeLeafAreas>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+          </TreeLeafAreas>
         </TreeProxy>
         <RectangularZone>
           <Name>TreeRow</Name>
