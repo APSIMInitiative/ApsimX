@@ -141,6 +141,7 @@ namespace Models.Agroforestry
         private Dictionary<double, double> shade = new Dictionary<double, double>();
         //private Dictionary<double, double> nDemand = new Dictionary<double, double>();
         private Dictionary<double, double[]> rld = new Dictionary<double, double[]>();
+        private List<IModel> forestryZones;
 
         /// <summary>
         /// Return the distance from the tree for a given zone. The tree is assumed to be in the first Zone.
@@ -326,6 +327,7 @@ namespace Models.Agroforestry
         {
             ZoneList = Apsim.Children(this.Parent, typeof(Zone));
             SetupTreeProperties();
+            forestryZones = Apsim.ChildrenRecursively(Parent, typeof(Zone));
         }
 
         /// <summary>
@@ -356,7 +358,7 @@ namespace Models.Agroforestry
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
 
-                        foreach (Zone SearchZ in Apsim.ChildrenRecursively(Parent, typeof(Zone)))
+                        foreach (Zone SearchZ in forestryZones)
                             if (SearchZ.Name == Z.Name)
                             {
                                 ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
@@ -429,7 +431,7 @@ namespace Models.Agroforestry
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
 
-                        foreach (Zone SearchZ in Apsim.ChildrenRecursively(Parent, typeof(Zone)))
+                        foreach (Zone SearchZ in forestryZones)
                             if (SearchZ.Name == Z.Name)
                             {
                                 ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
@@ -510,7 +512,7 @@ namespace Models.Agroforestry
         {
             foreach (ZoneWaterAndN ZI in info)
             {
-                foreach (Zone SearchZ in Apsim.ChildrenRecursively(Parent, typeof(Zone)))
+                foreach (Zone SearchZ in forestryZones)
                 {
                     Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Name)
@@ -530,7 +532,7 @@ namespace Models.Agroforestry
         {
             foreach (ZoneWaterAndN ZI in info)
             {
-                foreach (Zone SearchZ in Apsim.ChildrenRecursively(Parent, typeof(Zone)))
+                foreach (Zone SearchZ in forestryZones)
                 {
                     Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Name)
