@@ -776,10 +776,16 @@ namespace Models.PMF.Organs
         /// <value>The water supply.</value>
         public override double[] NO3NSupply(List<ZoneWaterAndN> zones)
         {
-            if (zones.Count != 1)
-                throw new Exception("PMF can only deal with one soil arbitrator zone at the moment");
+             
+            // Model can only handle one root zone at present
+            ZoneWaterAndN MyZone = new ZoneWaterAndN();
+            Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+            foreach (ZoneWaterAndN Z in zones)
+                if (Z.Name == ParentZone.Name)
+                    MyZone = Z;
 
-            double[] NO3 = zones[0].NO3N;
+
+            double[] NO3 = MyZone.NO3N;
 
             double[] NO3Supply = new double[Soil.Thickness.Length];
 
@@ -812,10 +818,14 @@ namespace Models.PMF.Organs
         /// <value>The water supply.</value>
         public override double[] NH4NSupply(List<ZoneWaterAndN> zones)
         {
-            if (zones.Count != 1)
-                throw new Exception("PMF can only deal with one soil arbitrator zone at the moment");
+            // Model can only handle one root zone at present
+            ZoneWaterAndN MyZone = new ZoneWaterAndN();
+            Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+            foreach (ZoneWaterAndN Z in zones)
+                if (Z.Name == ParentZone.Name)
+                    MyZone = Z;
 
-            double[] NH4 = zones[0].NH4N;
+            double[] NH4 = MyZone.NH4N;
 
             double[] NH4Supply = new double[Soil.Thickness.Length];
 
@@ -917,10 +927,14 @@ namespace Models.PMF.Organs
         /// <value>The water supply.</value>
         public override double[] WaterSupply(List<ZoneWaterAndN> zones)
         {
-            if (zones.Count != 1)
-                throw new Exception("PMF can only deal with one soil arbitrator zone at the moment");
+            // Model can only handle one root zone at present
+            ZoneWaterAndN MyZone = new ZoneWaterAndN();
+            Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+            foreach (ZoneWaterAndN Z in zones)
+                if (Z.Name == ParentZone.Name)
+                    MyZone = Z;
 
-            double[] SW = zones[0].Water;
+            double[] SW = MyZone.Water;
             double[] supply = new double[Soil.Thickness.Length];
 
             double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)

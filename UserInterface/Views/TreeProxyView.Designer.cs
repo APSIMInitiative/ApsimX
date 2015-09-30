@@ -160,6 +160,7 @@
             this.dgvHeights.TabIndex = 7;
             this.dgvHeights.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvHeights_RowsAdded);
             this.dgvHeights.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgvHeights_RowsRemoved);
+            this.dgvHeights.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Grid_KeyUp);
             // 
             // Date
             // 
