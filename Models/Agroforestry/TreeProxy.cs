@@ -50,7 +50,24 @@ namespace Models.Agroforestry
         /// </summary>
         [XmlIgnore]
         [Units("m")]
-        public double heightToday { get; set; }
+        public double heightToday { get { return GetHeightToday();}}
+
+        /// <summary>
+        /// CanopyWidth
+        /// </summary>
+        [XmlIgnore]
+        [Units("m")]
+        public double CanopyWidthToday { 
+            get
+            { return GetCanopyWidthToday();}
+            }
+
+        /// <summary>
+        /// Leaf Area
+        /// </summary>
+        [XmlIgnore]
+        [Units("m2")]
+        public double LeafAreaToday { get { return GetTreeLeafAreaToday();} }
 
         /// <summary>
         /// The trees water uptake per layer in a single zone
@@ -137,6 +154,18 @@ namespace Models.Agroforestry
         /// </summary>
         [Summary]
         public double[] NDemands { get; set; }
+
+        /// <summary>
+        /// Tree canopy widths
+        /// </summary>
+        [Summary]
+        public double[] CanopyWidths { get; set; }
+
+        /// <summary>
+        /// Tree leaf areas
+        /// </summary>
+        [Summary]
+        public double[] TreeLeafAreas { get; set; }
 
         private Dictionary<double, double> shade = new Dictionary<double, double>();
         private Dictionary<double, double[]> rld = new Dictionary<double, double[]>();
@@ -271,6 +300,25 @@ namespace Models.Agroforestry
             return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, NDemands, out didInterp);
         }
 
+        private double GetCanopyWidthToday()
+        {
+            double[] OADates = new double[dates.Count()];
+            bool didInterp;
+
+            for (int i = 0; i < dates.Count(); i++)
+                OADates[i] = dates[i].ToOADate();
+            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, CanopyWidths, out didInterp);
+        }
+
+        private double GetTreeLeafAreaToday()
+        {
+            double[] OADates = new double[dates.Count()];
+            bool didInterp;
+
+            for (int i = 0; i < dates.Count(); i++)
+                OADates[i] = dates[i].ToOADate();
+            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, TreeLeafAreas, out didInterp);
+        }
         /// <summary>
         /// Return the %Wind Reduction for a given zone
         /// </summary>
@@ -282,8 +330,6 @@ namespace Models.Agroforestry
                 if (zone == z)
                 {
                     double UrelMin = Math.Max(0.0, 1.14 * 0.5 - 0.16); // 0.5 is porosity, will be dynamic in the future
-
-                    heightToday = GetHeightToday();
 
                     if (heightToday < 1)
                         Urel = 1;
