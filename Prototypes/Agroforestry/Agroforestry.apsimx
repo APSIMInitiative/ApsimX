@@ -284,6 +284,20 @@ namespace Models
             <double>0.1</double>
             <double>0.1</double>
           </NDemands>
+          <CanopyWidths>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+          </CanopyWidths>
+          <TreeLeafAreas>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+          </TreeLeafAreas>
         </TreeProxy>
         <RectangularZone>
           <Name>TreeRow</Name>
