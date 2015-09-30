@@ -139,8 +139,10 @@ namespace Models.Agroforestry
         public double[] NDemands { get; set; }
 
         private Dictionary<double, double> shade = new Dictionary<double, double>();
-        //private Dictionary<double, double> nDemand = new Dictionary<double, double>();
         private Dictionary<double, double[]> rld = new Dictionary<double, double[]>();
+        private List<IModel> forestryZones;
+        private Zone treeZone;
+        private Soils.SoilWater treeZoneWater;
 
         /// <summary>
         /// Return the distance from the tree for a given zone. The tree is assumed to be in the first Zone.
@@ -243,7 +245,6 @@ namespace Models.Agroforestry
             for (int i = 2; i < Table.Count; i++)
             {
                 shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0]));
-                //nDemand.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][1]));
                 List<double> getRLDs = new List<double>();
                 for (int j = 3; j < Table[1].Count; j++)
                     getRLDs.Add(Convert.ToDouble(Table[i][j]));
@@ -281,9 +282,6 @@ namespace Models.Agroforestry
                 if (zone == z)
                 {
                     double UrelMin = Math.Max(0.0, 1.14 * 0.5 - 0.16); // 0.5 is porosity, will be dynamic in the future
-                    //double Urel;
-                  //  double H;
-                   // double heightToday;
 
                     heightToday = GetHeightToday();
 
@@ -326,6 +324,11 @@ namespace Models.Agroforestry
         {
             ZoneList = Apsim.Children(this.Parent, typeof(Zone));
             SetupTreeProperties();
+
+            //pre-fetch static information
+            forestryZones = Apsim.ChildrenRecursively(Parent, typeof(Zone));
+            treeZone = ZoneList[0] as Zone;
+            treeZoneWater = Apsim.Find(treeZone, typeof(Soils.SoilWater)) as Soils.SoilWater;
         }
 
         /// <summary>
@@ -335,8 +338,7 @@ namespace Models.Agroforestry
         /// <returns></returns>
         public List<Soils.Arbitrator.ZoneWaterAndN> GetSWUptakes(Soils.Arbitrator.SoilState soilstate)
         {
-            Zone treeZone = ZoneList[0] as Zone;
-            double Etz = (Apsim.Find(treeZone, typeof(Soils.SoilWater)) as Soils.SoilWater).Eo; //Eo of Tree Zone
+            double Etz = treeZoneWater.Eo; //Eo of Tree Zone
 
             SWDemand = 0;
             foreach (Zone ZI in ZoneList)
@@ -356,7 +358,7 @@ namespace Models.Agroforestry
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
 
-                        foreach (Zone SearchZ in Apsim.ChildrenRecursively(Parent, typeof(Zone)))
+                        foreach (Zone SearchZ in forestryZones)
                             if (SearchZ.Name == Z.Name)
                             {
                                 ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
@@ -429,7 +431,7 @@ namespace Models.Agroforestry
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
 
-                        foreach (Zone SearchZ in Apsim.ChildrenRecursively(Parent, typeof(Zone)))
+                        foreach (Zone SearchZ in forestryZones)
                             if (SearchZ.Name == Z.Name)
                             {
                                 ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
@@ -510,7 +512,7 @@ namespace Models.Agroforestry
         {
             foreach (ZoneWaterAndN ZI in info)
             {
-                foreach (Zone SearchZ in Apsim.ChildrenRecursively(Parent, typeof(Zone)))
+                foreach (Zone SearchZ in forestryZones)
                 {
                     Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Name)
@@ -530,7 +532,7 @@ namespace Models.Agroforestry
         {
             foreach (ZoneWaterAndN ZI in info)
             {
-                foreach (Zone SearchZ in Apsim.ChildrenRecursively(Parent, typeof(Zone)))
+                foreach (Zone SearchZ in forestryZones)
                 {
                     Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Name)
