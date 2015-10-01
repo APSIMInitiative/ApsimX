@@ -615,7 +615,7 @@ namespace UserInterface.Presenters
                 {
                     foreach (Type allowedParentType in validParent.ParentModels)
                     {
-                        if (allowedParentType == destinationModel.GetType())
+                        if (allowedParentType.IsAssignableFrom(destinationModel.GetType()))
                         {
                             e.Allow = true;
                         }
