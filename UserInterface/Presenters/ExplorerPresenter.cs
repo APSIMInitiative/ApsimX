@@ -600,7 +600,9 @@ namespace UserInterface.Presenters
             Model destinationModel = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
             if (destinationModel != null)
             {
-                if (destinationModel.GetType() == typeof(Folder) || destinationModel.GetType() == typeof(Factor))
+                if (destinationModel.GetType() == typeof(Folder) || 
+                    destinationModel.GetType() == typeof(Factor) || 
+                    destinationModel.GetType() == typeof(Replacements))
                     e.Allow = true;
 
                 DragObject dragObject = e.DragObject as DragObject;
