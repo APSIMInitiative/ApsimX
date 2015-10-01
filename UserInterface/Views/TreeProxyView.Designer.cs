@@ -39,6 +39,8 @@
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TreeHeight = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NDemands = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CanopyWidths = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TreeLeafAreas = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.Grid = new System.Windows.Forms.DataGridView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -151,7 +153,9 @@
             this.dgvHeights.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Date,
             this.TreeHeight,
-            this.NDemands});
+            this.NDemands,
+            this.CanopyWidths,
+            this.TreeLeafAreas});
             this.dgvHeights.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvHeights.Location = new System.Drawing.Point(3, 3);
             this.dgvHeights.Margin = new System.Windows.Forms.Padding(4);
@@ -179,6 +183,19 @@
             this.NDemands.HeaderText = "N Demands (g/m2)";
             this.NDemands.Name = "NDemands";
             this.NDemands.Width = 152;
+            // 
+            // Canopy Widths
+            // 
+            this.CanopyWidths.HeaderText = "Canopy Width (m)";
+            this.CanopyWidths.Name = "CanopyWidth";
+            this.CanopyWidths.Width = 152;
+            // 
+            // 
+            // Tree Leaf Areas
+            // 
+            this.TreeLeafAreas.HeaderText = "Tree Leaf Area (m2)";
+            this.TreeLeafAreas.Name = "TreeLeafArea";
+            this.TreeLeafAreas.Width = 200;
             // 
             // tabPage2
             // 
@@ -303,6 +320,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.DataGridViewTextBoxColumn TreeHeight;
         private System.Windows.Forms.DataGridViewTextBoxColumn NDemands;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CanopyWidths;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TreeLeafAreas;
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;

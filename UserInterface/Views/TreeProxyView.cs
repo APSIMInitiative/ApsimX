@@ -636,12 +636,12 @@ namespace UserInterface.Views
             Grid.Rows[2].DefaultCellStyle.BackColor = Color.LightGray;
         }
 
-        public void SetupHeights(DateTime[] dates, double[] heights, double[] NDemands)
+        public void SetupHeights(DateTime[] dates, double[] heights, double[] NDemands, double[] CanopyWidths, double[] TreeLeafAreas)
         {
             dgvHeights.Rows.Clear();
             for (int i = 0; i < dates.Count(); i++)
             {
-                dgvHeights.Rows.Add(dates[i].ToShortDateString(), heights[i] / 1000,NDemands[i]);
+                dgvHeights.Rows.Add(dates[i].ToShortDateString(), heights[i] / 1000,NDemands[i], CanopyWidths[i], TreeLeafAreas[i]);
             }
         }
 
@@ -848,7 +848,26 @@ namespace UserInterface.Views
             }
             return NDemands.ToArray();
         }
-
+        public double[] SaveCanopyWidths()
+        {
+            List<double> CanopyWidths = new List<double>();
+            foreach (DataGridViewRow row in dgvHeights.Rows)
+            {
+                if (row.Cells[2].Value != null)
+                    CanopyWidths.Add(Convert.ToDouble(row.Cells[3].Value.ToString()));
+            }
+            return CanopyWidths.ToArray();
+        }
+        public double[] SaveTreeLeafAreas()
+        {
+            List<double> TreeLeafAreas = new List<double>();
+            foreach (DataGridViewRow row in dgvHeights.Rows)
+            {
+                if (row.Cells[2].Value != null)
+                    TreeLeafAreas.Add(Convert.ToDouble(row.Cells[4].Value.ToString()));
+            }
+            return TreeLeafAreas.ToArray();
+        }
         private void ForestryView_Resize(object sender, EventArgs e)
         {
             ResizeControls();

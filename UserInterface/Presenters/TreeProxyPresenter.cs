@@ -40,6 +40,8 @@
             ForestryModel.dates = ForestryViewer.SaveDates();
             ForestryModel.heights = ForestryViewer.SaveHeights();
             ForestryModel.NDemands = ForestryViewer.SaveNDemands();
+            ForestryModel.CanopyWidths = ForestryViewer.SaveCanopyWidths();
+            ForestryModel.TreeLeafAreas = ForestryViewer.SaveTreeLeafAreas();
             ForestryViewer.OnCellEndEdit -= OnCellEndEdit;
         }
 
@@ -81,7 +83,7 @@
                 return;
 
             //setup tree heights
-            ForestryViewer.SetupHeights(ForestryModel.dates, ForestryModel.heights,ForestryModel.NDemands);
+            ForestryViewer.SetupHeights(ForestryModel.dates, ForestryModel.heights,ForestryModel.NDemands,ForestryModel.CanopyWidths,ForestryModel.TreeLeafAreas);
 
       /*      //get the distance of each Zone from Tree.
             double zoneWidth = 0;
