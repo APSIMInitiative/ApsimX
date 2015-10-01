@@ -22,6 +22,8 @@
         <string>[Soil].SoilWater.Eo</string>
         <string>[TreeProxy].WaterStress</string>
         <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+        <string>[Wheat].AboveGround.Wt as BiomassWt</string>
+        <string>[Wheat].Grain.Wt as GrainWt</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
