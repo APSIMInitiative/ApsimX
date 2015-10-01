@@ -364,7 +364,8 @@
       <Name>PredictedObserved</Name>
       <PredictedTableName>DailyReport</PredictedTableName>
       <ObservedTableName>ObservedWarraBlock1</ObservedTableName>
-      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+      <FieldNameUsedForMatch>ZoneName</FieldNameUsedForMatch>
+      <FieldName2UsedForMatch>Clock.Today</FieldName2UsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
   </DataStore>
@@ -4395,7 +4396,7 @@ namespace Models
         <Name>Series1</Name>
         <Regression>
           <Name>Regression</Name>
-          <ForEachSeries>true</ForEachSeries>
+          <ForEachSeries>false</ForEachSeries>
         </Regression>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
