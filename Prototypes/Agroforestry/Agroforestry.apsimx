@@ -3,6 +3,326 @@
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
+    <Soil>
+      <Name>SoilX</Name>
+      <Water>
+        <Name>Water</Name>
+        <SoilCrop>
+          <Name>WheatSoil</Name>
+          <LL>
+            <double>0.18</double>
+            <double>0.18</double>
+            <double>0.19</double>
+            <double>0.19</double>
+            <double>0.2</double>
+            <double>0.23</double>
+            <double>0.25</double>
+          </LL>
+          <KL>
+            <double>0.06</double>
+            <double>0.06</double>
+            <double>0.04</double>
+            <double>0.03</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.02</double>
+          </KL>
+          <XF>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </XF>
+        </SoilCrop>
+        <Thickness>
+          <double>50</double>
+          <double>100</double>
+          <double>150</double>
+          <double>300</double>
+          <double>300</double>
+          <double>300</double>
+          <double>300</double>
+        </Thickness>
+        <BD>
+          <double>1.39</double>
+          <double>1.39</double>
+          <double>1.35</double>
+          <double>1.35</double>
+          <double>1.43</double>
+          <double>1.44</double>
+          <double>1.45</double>
+        </BD>
+        <AirDry>
+          <double>0.06</double>
+          <double>0.1</double>
+          <double>0.17</double>
+          <double>0.17</double>
+          <double>0.17</double>
+          <double>0.17</double>
+          <double>0.17</double>
+        </AirDry>
+        <LL15>
+          <double>0.18</double>
+          <double>0.18</double>
+          <double>0.19</double>
+          <double>0.19</double>
+          <double>0.2</double>
+          <double>0.23</double>
+          <double>0.25</double>
+        </LL15>
+        <DUL>
+          <double>0.4</double>
+          <double>0.4</double>
+          <double>0.41</double>
+          <double>0.41</double>
+          <double>0.38</double>
+          <double>0.38</double>
+          <double>0.37</double>
+        </DUL>
+        <SAT>
+          <double>0.45</double>
+          <double>0.45</double>
+          <double>0.46</double>
+          <double>0.46</double>
+          <double>0.43</double>
+          <double>0.43</double>
+          <double>0.42</double>
+        </SAT>
+        <KS>
+          <double>20</double>
+          <double>20</double>
+          <double>20</double>
+          <double>20</double>
+          <double>20</double>
+          <double>20</double>
+          <double>20</double>
+        </KS>
+      </Water>
+      <SoilWater>
+        <Name>SoilWater</Name>
+        <residueinterception>0</residueinterception>
+        <SummerDate>1-Nov</SummerDate>
+        <SummerU>6</SummerU>
+        <SummerCona>3.5</SummerCona>
+        <WinterDate>1-Apr</WinterDate>
+        <WinterU>6</WinterU>
+        <WinterCona>3.5</WinterCona>
+        <DiffusConst>40</DiffusConst>
+        <DiffusSlope>16</DiffusSlope>
+        <Salb>0.12</Salb>
+        <CN2Bare>73</CN2Bare>
+        <CNRed>20</CNRed>
+        <CNCov>0.8</CNCov>
+        <slope>NaN</slope>
+        <discharge_width>NaN</discharge_width>
+        <catchment_area>NaN</catchment_area>
+        <max_pond>0</max_pond>
+        <Thickness>
+          <double>150</double>
+          <double>150</double>
+          <double>300</double>
+          <double>300</double>
+          <double>300</double>
+          <double>300</double>
+        </Thickness>
+        <SWCON>
+          <double>0.3</double>
+          <double>0.3</double>
+          <double>0.3</double>
+          <double>0.3</double>
+          <double>0.3</double>
+          <double>0.3</double>
+        </SWCON>
+      </SoilWater>
+      <SoilNitrogen>
+        <Name>SoilNitrogen</Name>
+        <fom_type>
+          <string>default</string>
+          <string>manure</string>
+          <string>mucuna</string>
+          <string>lablab</string>
+          <string>shemp</string>
+          <string>stable</string>
+        </fom_type>
+        <fract_carb>
+          <double>0.2</double>
+          <double>0.3</double>
+          <double>0.54</double>
+          <double>0.57</double>
+          <double>0.45</double>
+          <double>0</double>
+        </fract_carb>
+        <fract_cell>
+          <double>0.7</double>
+          <double>0.3</double>
+          <double>0.37</double>
+          <double>0.37</double>
+          <double>0.47</double>
+          <double>0.1</double>
+        </fract_cell>
+        <fract_lign>
+          <double>0.1</double>
+          <double>0.4</double>
+          <double>0.09</double>
+          <double>0.06</double>
+          <double>0.08</double>
+          <double>0.9</double>
+        </fract_lign>
+        <wfpsN2N2O_x>
+          <double>22</double>
+          <double>88</double>
+        </wfpsN2N2O_x>
+        <wfpsN2N2O_y>
+          <double>0.1</double>
+          <double>1</double>
+        </wfpsN2N2O_y>
+      </SoilNitrogen>
+      <SoilOrganicMatter>
+        <Name>SoilOrganicMatter</Name>
+        <RootCN>40</RootCN>
+        <RootWt>1000</RootWt>
+        <SoilCN>12</SoilCN>
+        <EnrACoeff>7.4</EnrACoeff>
+        <EnrBCoeff>0.2</EnrBCoeff>
+        <Thickness>
+          <double>150</double>
+          <double>150</double>
+          <double>300</double>
+          <double>300</double>
+          <double>300</double>
+          <double>300</double>
+        </Thickness>
+        <Depth>
+          <string>0-15</string>
+          <string>15-30</string>
+          <string>30-60</string>
+          <string>60-90</string>
+          <string>90-120</string>
+          <string>120-150</string>
+        </Depth>
+        <OC>
+          <double>0.915</double>
+          <double>0.777</double>
+          <double>0.346</double>
+          <double>0.231</double>
+          <double>0.154</double>
+          <double>0.123</double>
+        </OC>
+        <FBiom>
+          <double>0.04</double>
+          <double>0.02</double>
+          <double>0.02</double>
+          <double>0.02</double>
+          <double>0.01</double>
+          <double>0.01</double>
+        </FBiom>
+        <FInert>
+          <double>0.4</double>
+          <double>0.6</double>
+          <double>0.8</double>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+        </FInert>
+        <OCUnits>Total</OCUnits>
+      </SoilOrganicMatter>
+      <Analysis>
+        <Name>Analysis</Name>
+        <Thickness>
+          <double>150</double>
+          <double>150</double>
+          <double>300</double>
+          <double>300</double>
+          <double>300</double>
+          <double>300</double>
+        </Thickness>
+        <Texture />
+        <MunsellColour />
+        <PH>
+          <double>8</double>
+          <double>8</double>
+          <double>8</double>
+          <double>8</double>
+          <double>8</double>
+          <double>8</double>
+        </PH>
+        <PHUnits>Water</PHUnits>
+        <BoronUnits>HotWater</BoronUnits>
+      </Analysis>
+      <InitialWater>
+        <Name>InitialWater</Name>
+        <PercentMethod>FilledFromTop</PercentMethod>
+        <FractionFull>0.33</FractionFull>
+        <DepthWetSoil>NaN</DepthWetSoil>
+      </InitialWater>
+      <Sample>
+        <Name>InitialN</Name>
+        <Thickness>
+          <double>150</double>
+          <double>150</double>
+          <double>300</double>
+          <double>300</double>
+          <double>300</double>
+          <double>300</double>
+        </Thickness>
+        <NO3>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+          <double>1</double>
+        </NO3>
+        <NH4>
+          <double>0.1</double>
+          <double>0.1</double>
+          <double>0.1</double>
+          <double>0.1</double>
+          <double>0.1</double>
+          <double>0.1</double>
+        </NH4>
+        <NO3Units>ppm</NO3Units>
+        <NH4Units>ppm</NH4Units>
+        <SWUnits>Volumetric</SWUnits>
+        <OCUnits>Total</OCUnits>
+        <PHUnits>Water</PHUnits>
+      </Sample>
+      <Fertiliser>
+        <Name>Fertiliser</Name>
+      </Fertiliser>
+      <RecordNumber>37</RecordNumber>
+      <ASCOrder>Vertosol
+</ASCOrder>
+      <ASCSubOrder>Grey
+</ASCSubOrder>
+      <SoilType>Clay
+</SoilType>
+      <LocalName />
+      <Site>Warra
+</Site>
+      <NearestTown>Warra, Q, 4411
+</NearestTown>
+      <Region>Darling Downs and Granite Belt
+</Region>
+      <State>Queensland
+</State>
+      <Country>Australia
+</Country>
+      <NaturalVegetation>Brigalow scrub
+</NaturalVegetation>
+      <ApsoilNumber>19
+</ApsoilNumber>
+      <Latitude>-26.897</Latitude>
+      <Longitude>150.909</Longitude>
+      <LocationAccuracy> +/- 20m
+</LocationAccuracy>
+      <DataSource>0
+</DataSource>
+      <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
+    </Soil>
     <Report>
       <Name>DailyReport</Name>
       <VariableNames>
@@ -77,7 +397,7 @@
             <SowingDepth>30</SowingDepth>
             <RowSpacing>250</RowSpacing>
             <Population>120</Population>
-            <Amount>100</Amount>
+            <Amount>60</Amount>
             <CropName>wheat</CropName>
           </Script>
           <Code><![CDATA[using System;
@@ -659,12 +979,6 @@ namespace Models
               <PHUnits>Water</PHUnits>
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
-            <InitialWater>
-              <Name>InitialWater</Name>
-              <PercentMethod>FilledFromTop</PercentMethod>
-              <FractionFull>0.33</FractionFull>
-              <DepthWetSoil>NaN</DepthWetSoil>
-            </InitialWater>
             <Sample>
               <Name>InitialN</Name>
               <Thickness>
@@ -700,6 +1014,50 @@ namespace Models
             <Fertiliser>
               <Name>Fertiliser</Name>
             </Fertiliser>
+            <Sample>
+              <Name>Sample</Name>
+              <Thickness>
+                <double>50</double>
+                <double>100</double>
+                <double>150</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <NO3>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </NO3>
+              <NH4>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+              </NH4>
+              <SW>
+                <double>0.2</double>
+                <double>0.3</double>
+                <double>0.29</double>
+                <double>0.28</double>
+                <double>0.26</double>
+                <double>0.26</double>
+                <double>0.29</double>
+              </SW>
+              <NO3Units>ppm</NO3Units>
+              <NH4Units>ppm</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
             <RecordNumber>37</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Grey</ASCSubOrder>
@@ -828,22 +1186,22 @@ namespace Models
               <SoilCrop>
                 <Name>WheatSoil</Name>
                 <LL>
-                  <double>0.22</double>
-                  <double>0.22</double>
-                  <double>0.21</double>
-                  <double>0.22</double>
-                  <double>0.24</double>
-                  <double>0.26</double>
-                  <double>0.34</double>
+                  <double>0.18</double>
+                  <double>0.18</double>
+                  <double>0.19</double>
+                  <double>0.19</double>
+                  <double>0.2</double>
+                  <double>0.23</double>
+                  <double>0.25</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.04</double>
-                  <double>0.03</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
                 </KL>
                 <XF>
                   <double>1</double>
@@ -1059,16 +1417,11 @@ namespace Models
               <PHUnits>Water</PHUnits>
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
-            <InitialWater>
-              <Name>InitialWater</Name>
-              <PercentMethod>FilledFromTop</PercentMethod>
-              <FractionFull>0.36</FractionFull>
-              <DepthWetSoil>NaN</DepthWetSoil>
-            </InitialWater>
             <Sample>
               <Name>Sample</Name>
               <Thickness>
-                <double>150</double>
+                <double>50</double>
+                <double>100</double>
                 <double>150</double>
                 <double>300</double>
                 <double>300</double>
@@ -1076,6 +1429,7 @@ namespace Models
                 <double>300</double>
               </Thickness>
               <NO3>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -1090,7 +1444,17 @@ namespace Models
                 <double>0.1</double>
                 <double>0.1</double>
                 <double>0.1</double>
+                <double>0.1</double>
               </NH4>
+              <SW>
+                <double>0.2</double>
+                <double>0.25</double>
+                <double>0.28</double>
+                <double>0.3</double>
+                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.3</double>
+              </SW>
               <NO3Units>ppm</NO3Units>
               <NH4Units>ppm</NH4Units>
               <SWUnits>Volumetric</SWUnits>
@@ -1230,22 +1594,22 @@ namespace Models
               <SoilCrop>
                 <Name>WheatSoil</Name>
                 <LL>
-                  <double>0.22</double>
-                  <double>0.22</double>
-                  <double>0.21</double>
-                  <double>0.22</double>
-                  <double>0.24</double>
-                  <double>0.26</double>
-                  <double>0.34</double>
+                  <double>0.18</double>
+                  <double>0.18</double>
+                  <double>0.19</double>
+                  <double>0.19</double>
+                  <double>0.2</double>
+                  <double>0.23</double>
+                  <double>0.25</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.04</double>
-                  <double>0.03</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
                 </KL>
                 <XF>
                   <double>1</double>
@@ -1461,16 +1825,11 @@ namespace Models
               <PHUnits>Water</PHUnits>
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
-            <InitialWater>
-              <Name>InitialWater</Name>
-              <PercentMethod>FilledFromTop</PercentMethod>
-              <FractionFull>0.39800995024875624</FractionFull>
-              <DepthWetSoil>NaN</DepthWetSoil>
-            </InitialWater>
             <Sample>
               <Name>Sample</Name>
               <Thickness>
-                <double>150</double>
+                <double>50</double>
+                <double>100</double>
                 <double>150</double>
                 <double>300</double>
                 <double>300</double>
@@ -1478,6 +1837,7 @@ namespace Models
                 <double>300</double>
               </Thickness>
               <NO3>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -1492,7 +1852,17 @@ namespace Models
                 <double>0.1</double>
                 <double>0.1</double>
                 <double>0.1</double>
+                <double>0.1</double>
               </NH4>
+              <SW>
+                <double>0.2</double>
+                <double>0.3</double>
+                <double>0.35</double>
+                <double>0.33</double>
+                <double>0.3</double>
+                <double>0.26</double>
+                <double>0.29</double>
+              </SW>
               <NO3Units>ppm</NO3Units>
               <NH4Units>ppm</NH4Units>
               <SWUnits>Volumetric</SWUnits>
@@ -1632,22 +2002,22 @@ namespace Models
               <SoilCrop>
                 <Name>WheatSoil</Name>
                 <LL>
-                  <double>0.22</double>
-                  <double>0.22</double>
-                  <double>0.21</double>
-                  <double>0.22</double>
-                  <double>0.24</double>
-                  <double>0.26</double>
-                  <double>0.34</double>
+                  <double>0.18</double>
+                  <double>0.18</double>
+                  <double>0.19</double>
+                  <double>0.19</double>
+                  <double>0.2</double>
+                  <double>0.23</double>
+                  <double>0.25</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.04</double>
-                  <double>0.03</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
                 </KL>
                 <XF>
                   <double>1</double>
@@ -1863,16 +2233,11 @@ namespace Models
               <PHUnits>Water</PHUnits>
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
-            <InitialWater>
-              <Name>InitialWater</Name>
-              <PercentMethod>FilledFromTop</PercentMethod>
-              <FractionFull>0.58</FractionFull>
-              <DepthWetSoil>NaN</DepthWetSoil>
-            </InitialWater>
             <Sample>
               <Name>Sample</Name>
               <Thickness>
-                <double>150</double>
+                <double>50</double>
+                <double>100</double>
                 <double>150</double>
                 <double>300</double>
                 <double>300</double>
@@ -1880,6 +2245,7 @@ namespace Models
                 <double>300</double>
               </Thickness>
               <NO3>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -1894,7 +2260,17 @@ namespace Models
                 <double>0.1</double>
                 <double>0.1</double>
                 <double>0.1</double>
+                <double>0.1</double>
               </NH4>
+              <SW>
+                <double>0.2</double>
+                <double>0.32</double>
+                <double>0.34</double>
+                <double>0.35</double>
+                <double>0.38</double>
+                <double>0.34</double>
+                <double>0.32</double>
+              </SW>
               <NO3Units>ppm</NO3Units>
               <NH4Units>ppm</NH4Units>
               <SWUnits>Volumetric</SWUnits>
@@ -2034,22 +2410,22 @@ namespace Models
               <SoilCrop>
                 <Name>WheatSoil</Name>
                 <LL>
-                  <double>0.22</double>
-                  <double>0.22</double>
-                  <double>0.21</double>
-                  <double>0.22</double>
-                  <double>0.24</double>
-                  <double>0.26</double>
-                  <double>0.34</double>
+                  <double>0.18</double>
+                  <double>0.18</double>
+                  <double>0.19</double>
+                  <double>0.19</double>
+                  <double>0.2</double>
+                  <double>0.23</double>
+                  <double>0.25</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.04</double>
-                  <double>0.03</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
                 </KL>
                 <XF>
                   <double>1</double>
@@ -2265,16 +2641,11 @@ namespace Models
               <PHUnits>Water</PHUnits>
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
-            <InitialWater>
-              <Name>InitialWater</Name>
-              <PercentMethod>FilledFromTop</PercentMethod>
-              <FractionFull>0.65</FractionFull>
-              <DepthWetSoil>NaN</DepthWetSoil>
-            </InitialWater>
             <Sample>
               <Name>Sample</Name>
               <Thickness>
-                <double>150</double>
+                <double>50</double>
+                <double>100</double>
                 <double>150</double>
                 <double>300</double>
                 <double>300</double>
@@ -2282,6 +2653,7 @@ namespace Models
                 <double>300</double>
               </Thickness>
               <NO3>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -2296,7 +2668,17 @@ namespace Models
                 <double>0.1</double>
                 <double>0.1</double>
                 <double>0.1</double>
+                <double>0.1</double>
               </NH4>
+              <SW>
+                <double>0.2</double>
+                <double>0.32</double>
+                <double>0.39</double>
+                <double>0.39</double>
+                <double>0.38</double>
+                <double>0.36</double>
+                <double>0.35</double>
+              </SW>
               <NO3Units>ppm</NO3Units>
               <NH4Units>ppm</NH4Units>
               <SWUnits>Volumetric</SWUnits>
@@ -2436,22 +2818,22 @@ namespace Models
               <SoilCrop>
                 <Name>WheatSoil</Name>
                 <LL>
-                  <double>0.22</double>
-                  <double>0.22</double>
-                  <double>0.21</double>
-                  <double>0.22</double>
-                  <double>0.24</double>
-                  <double>0.26</double>
-                  <double>0.34</double>
+                  <double>0.18</double>
+                  <double>0.18</double>
+                  <double>0.19</double>
+                  <double>0.19</double>
+                  <double>0.2</double>
+                  <double>0.23</double>
+                  <double>0.25</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.04</double>
-                  <double>0.03</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
                 </KL>
                 <XF>
                   <double>1</double>
@@ -2667,16 +3049,11 @@ namespace Models
               <PHUnits>Water</PHUnits>
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
-            <InitialWater>
-              <Name>InitialWater</Name>
-              <PercentMethod>FilledFromTop</PercentMethod>
-              <FractionFull>0.63</FractionFull>
-              <DepthWetSoil>NaN</DepthWetSoil>
-            </InitialWater>
             <Sample>
               <Name>Sample</Name>
               <Thickness>
-                <double>150</double>
+                <double>50</double>
+                <double>100</double>
                 <double>150</double>
                 <double>300</double>
                 <double>300</double>
@@ -2684,6 +3061,7 @@ namespace Models
                 <double>300</double>
               </Thickness>
               <NO3>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -2698,7 +3076,17 @@ namespace Models
                 <double>0.1</double>
                 <double>0.1</double>
                 <double>0.1</double>
+                <double>0.1</double>
               </NH4>
+              <SW>
+                <double>0.32</double>
+                <double>0.32</double>
+                <double>0.34</double>
+                <double>0.35</double>
+                <double>0.38</double>
+                <double>0.34</double>
+                <double>0.32</double>
+              </SW>
               <NO3Units>ppm</NO3Units>
               <NH4Units>ppm</NH4Units>
               <SWUnits>Volumetric</SWUnits>
@@ -2838,22 +3226,22 @@ namespace Models
               <SoilCrop>
                 <Name>WheatSoil</Name>
                 <LL>
-                  <double>0.22</double>
-                  <double>0.22</double>
-                  <double>0.21</double>
-                  <double>0.22</double>
-                  <double>0.24</double>
-                  <double>0.26</double>
-                  <double>0.34</double>
+                  <double>0.18</double>
+                  <double>0.18</double>
+                  <double>0.19</double>
+                  <double>0.19</double>
+                  <double>0.2</double>
+                  <double>0.23</double>
+                  <double>0.25</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.04</double>
-                  <double>0.03</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
                 </KL>
                 <XF>
                   <double>1</double>
@@ -3069,16 +3457,11 @@ namespace Models
               <PHUnits>Water</PHUnits>
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
-            <InitialWater>
-              <Name>InitialWater</Name>
-              <PercentMethod>FilledFromTop</PercentMethod>
-              <FractionFull>0.56</FractionFull>
-              <DepthWetSoil>NaN</DepthWetSoil>
-            </InitialWater>
             <Sample>
               <Name>Sample</Name>
               <Thickness>
-                <double>150</double>
+                <double>50</double>
+                <double>100</double>
                 <double>150</double>
                 <double>300</double>
                 <double>300</double>
@@ -3086,6 +3469,7 @@ namespace Models
                 <double>300</double>
               </Thickness>
               <NO3>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -3100,7 +3484,17 @@ namespace Models
                 <double>0.1</double>
                 <double>0.1</double>
                 <double>0.1</double>
+                <double>0.1</double>
               </NH4>
+              <SW>
+                <double>0.32</double>
+                <double>0.32</double>
+                <double>0.34</double>
+                <double>0.35</double>
+                <double>0.38</double>
+                <double>0.34</double>
+                <double>0.32</double>
+              </SW>
               <NO3Units>ppm</NO3Units>
               <NH4Units>ppm</NH4Units>
               <SWUnits>Volumetric</SWUnits>
@@ -3240,22 +3634,22 @@ namespace Models
               <SoilCrop>
                 <Name>WheatSoil</Name>
                 <LL>
-                  <double>0.22</double>
-                  <double>0.22</double>
-                  <double>0.21</double>
-                  <double>0.22</double>
-                  <double>0.24</double>
-                  <double>0.26</double>
-                  <double>0.34</double>
+                  <double>0.18</double>
+                  <double>0.18</double>
+                  <double>0.19</double>
+                  <double>0.19</double>
+                  <double>0.2</double>
+                  <double>0.23</double>
+                  <double>0.25</double>
                 </LL>
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.04</double>
-                  <double>0.03</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
                 </KL>
                 <XF>
                   <double>1</double>
@@ -3471,16 +3865,11 @@ namespace Models
               <PHUnits>Water</PHUnits>
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
-            <InitialWater>
-              <Name>InitialWater</Name>
-              <PercentMethod>FilledFromTop</PercentMethod>
-              <FractionFull>0.55</FractionFull>
-              <DepthWetSoil>NaN</DepthWetSoil>
-            </InitialWater>
             <Sample>
               <Name>Sample</Name>
               <Thickness>
-                <double>150</double>
+                <double>50</double>
+                <double>100</double>
                 <double>150</double>
                 <double>300</double>
                 <double>300</double>
@@ -3488,6 +3877,7 @@ namespace Models
                 <double>300</double>
               </Thickness>
               <NO3>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -3502,7 +3892,17 @@ namespace Models
                 <double>0.1</double>
                 <double>0.1</double>
                 <double>0.1</double>
+                <double>0.1</double>
               </NH4>
+              <SW>
+                <double>0.32</double>
+                <double>0.32</double>
+                <double>0.34</double>
+                <double>0.35</double>
+                <double>0.38</double>
+                <double>0.34</double>
+                <double>0.32</double>
+              </SW>
               <NO3Units>ppm</NO3Units>
               <NH4Units>ppm</NH4Units>
               <SWUnits>Volumetric</SWUnits>
@@ -3591,7 +3991,7 @@ namespace Models
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
+          <LegendPosition>TopRight</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
