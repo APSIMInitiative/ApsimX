@@ -921,16 +921,16 @@ namespace UserInterface.Views
             //TODO: Get this working with data copied from other cells in the grid.
             //      Also needs to work with blank cells and block deletes.
             //source: https://social.msdn.microsoft.com/Forums/windows/en-US/e9cee429-5f36-4073-85b4-d16c1708ee1e/how-to-paste-ctrlv-shiftins-the-data-from-clipboard-to-datagridview-datagridview1-c?forum=winforms
+            DataGridView grid = sender as DataGridView;
             if ((e.Shift && e.KeyCode == Keys.Insert) || (e.Control && e.KeyCode == Keys.V))
             {
-                DataGridView grid = sender as DataGridView;
-                char[] rowSplitter = { '\r', '\n' };
+                string[] rowSplitter = { Environment.NewLine };
                 char[] columnSplitter = { '\t' };
                 //get the text from clipboard
                 IDataObject dataInClipboard = Clipboard.GetDataObject();
                 string stringInClipboard = (string)dataInClipboard.GetData(DataFormats.Text);
                 //split it into lines
-                string[] rowsInClipboard = stringInClipboard.Split(rowSplitter, StringSplitOptions.RemoveEmptyEntries);
+                string[] rowsInClipboard = stringInClipboard.Split(rowSplitter, StringSplitOptions.None);
                 //get the row and column of selected cell in Grid
                 int r = grid.SelectedCells[0].RowIndex;
                 int c = grid.SelectedCells[0].ColumnIndex;
@@ -948,6 +948,12 @@ namespace UserInterface.Views
                         if (grid.ColumnCount - 1 >= c + iCol)
                             grid.Rows[r + iRow].Cells[c + iCol].Value = valuesInRow[iCol];
                 }
+            }
+
+            if (e.KeyCode == Keys.Delete)
+            {
+                foreach ( DataGridViewCell cell in grid.SelectedCells)
+                    cell.Value = string.Empty;
             }
         }
 

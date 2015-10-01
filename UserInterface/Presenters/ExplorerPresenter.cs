@@ -393,7 +393,14 @@ namespace UserInterface.Presenters
             try
             {
                 XmlDocument document = new XmlDocument();
-                document.LoadXml(xml);
+                try
+                {
+                    document.LoadXml(xml);
+                }
+                catch(XmlException)
+                {
+                    this.view.ShowMessage("Invalid XML. Are you sure you're trying to paste an APSIM model?", DataStore.ErrorLevel.Error);
+                }
                 object newModel = XmlUtilities.Deserialise(document.DocumentElement, Assembly.GetExecutingAssembly());
 
                 // See if the presenter is happy with this model being added.
