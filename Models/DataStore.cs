@@ -301,6 +301,7 @@ namespace Models
                 tableToWrite.TableName = tableName;
                 tableToWrite.Data = table;
 
+                DeleteTable(tableName);
                 WriteTable(new TableToWrite[1] { tableToWrite });
             }
             else
