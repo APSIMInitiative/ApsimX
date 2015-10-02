@@ -19,7 +19,7 @@ namespace Models.Agroforestry
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentModels = new Type[] { typeof(Simulation), typeof(Zone) })]
-    public class ForestrySystem : Zone
+    public class AgroforestrySystem : Zone
     {
         /// <summary>
         /// Return the area of the zone.

@@ -74,7 +74,7 @@
 
         public void AttachData()
         {
-            if (!(ForestryModel.Parent is ForestrySystem))
+            if (!(ForestryModel.Parent is AgroforestrySystem))
                 throw new ApsimXException(ForestryModel, "Error: TreeProxy must be a child of ForestrySystem.");
 
             Soil Soil;

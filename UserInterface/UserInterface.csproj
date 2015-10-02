@@ -169,8 +169,12 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Utility\ColumnXYSeries.cs" />
-    <Compile Include="Utility\DateTimeCellType.cs" />
-    <Compile Include="Utility\FindAndReplaceForm.cs" />
+    <Compile Include="Utility\DateTimeCellType.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Utility\FindAndReplaceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Utility\FindAndReplaceForm.designer.cs">
       <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
     </Compile>
@@ -712,7 +716,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Regression.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CircularZone.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\RectangularZone.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\ForestrySystem.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AgroforestrySystem.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\FieldPea.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\NodeNumberPhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilArbitrator.png" />
