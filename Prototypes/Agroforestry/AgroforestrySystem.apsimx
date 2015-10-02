@@ -351,6 +351,7 @@ The APSIM Agroforestry model has been developed to facilitate the modelling of t
         <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
         <string>[Wheat].AboveGround.Wt as BiomassWt</string>
         <string>[Wheat].Grain.Wt as GrainWt</string>
+        <string>[Soil].SoilWater.Es as Es</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -363,6 +364,22 @@ The APSIM Agroforestry model has been developed to facilitate the modelling of t
       <AutoHarvest>true</AutoHarvest>
       <CropType>Wheat</CropType>
     </Plant15>
+    <Report>
+      <Name>HarvestReport</Name>
+      <VariableNames>
+        <string>[Clock].Today</string>
+        <string>[Zone].Area</string>
+        <string>Distance</string>
+        <string>[Wheat].AboveGround.Wt as BiomassWt</string>
+        <string>[Wheat].Grain.Wt as GrainWt</string>
+        <string>[Wheat].Grain.Size as GrainSize</string>
+        <string>[Wheat].Grain.GrainNo as GrainNumber</string>
+      </VariableNames>
+      <EventNames>
+        <string>[Wheat].Harvesting</string>
+      </EventNames>
+      <ResultsPerPage>0</ResultsPerPage>
+    </Report>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
@@ -390,7 +407,7 @@ The APSIM Agroforestry model has been developed to facilitate the modelling of t
         <Name>memo</Name>
         <MemoText><![CDATA[This test evaluates the performance of the APSIM AgroforestrySystem model in simulating the crop and soil water data for the data of [HuthPhD2010].  Monitoring of tree-crop competition was undertaken on a farm near the township of Warra, Qld (26.93<sup>o</sup>S, 150.93<sup>o</sup>E), where a belt of four rows of Eucalyptus argophloia Blakely at approximately 5 x 5 m spacing had been planted along the edge of fields used to grow wheat (*Triticum aestivum* L.), cotton (*Gossypium hirsutum* L.) and chickpeas (*Cicer arietinum* L.).  The trees were about 7 years old and nearly 10 m high at the start of the study. Tree-crop competition was monitored over 3 cropping seasons (two winters and one summer).  Agronomic management in the 2 cropping bays varied as they were at different stages of a cropping rotation.  The bay used in this model test was sown to wheat in the winter of 2004 and remained fallow during the ensuing summer and winter growing seasons.   Prior to harvest of the crop, plant samples were taken from quadrats consisting of 1 m of a plant row in 5 linear transects out to 50 m from the shelterbelt [HuthRobertsonPoulton2010].  Germination failure was significant next to the trees and so the positioning of samples was chosen to account for this (25m, 30m, 35m, 40m 50m).  The monitoring of soil moisture and its extraction by both trees and crops was undertaken using electromagnetic induction measurements [HuthPoulton2007] taken at 5 m intervals in four 50 m transects from the belt of trees.
 
-The simulations have been developed using data from various sources.  Rainfall data was obtained from an Australian Bureau of Meteorology rainfall station (No. 41291) situated on a farm 4.1 km from the study site. The soil properties have been developed using the data of [HuthRobertsonPoulton2010].  Tree height was set to 10m for the duration of the simulation.
+The simulations have been developed using data from various sources.  Rainfall data was obtained from an Australian Bureau of Meteorology rainfall station (No. 41291) situated on a farm 4.1 km from the study site. The soil properties have been developed using the data of [HuthRobertsonPoulton2010].
 ]]></MemoText>
       </Memo>
       <Simulation>
@@ -681,6 +698,17 @@ namespace Models
               <double>0.1</double>
             </TreeLeafAreas>
           </TreeProxy>
+          <Report>
+            <Name>TreeReport</Name>
+            <VariableNames>
+              <string>[Clock].Today</string>
+              <string>[TreeProxy].WaterUptake</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Clock].DoReport</string>
+            </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
+          </Report>
           <RectangularZone>
             <Name>TreeRow</Name>
             <LocalMicroClimate>
@@ -2694,7 +2722,7 @@ namespace Models
                   <double>0.1</double>
                 </NH4>
                 <SW>
-                  <double>0.2</double>
+                  <double>0.32</double>
                   <double>0.32</double>
                   <double>0.39</double>
                   <double>0.39</double>
@@ -4016,7 +4044,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopRight</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Biomass</Name>
@@ -4150,7 +4178,7 @@ namespace Models
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>SurfaceSW</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
+              <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -4214,6 +4242,46 @@ namespace Models
             <DisabledSeries />
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
+          <Graph>
+            <Name>Evaporation</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-65536</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Es</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Graph>
           <Area>0.55</Area>
           <Slope>0</Slope>
         </AgroforestrySystem>
@@ -4273,7 +4341,7 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>BiomassTransect</Name>
@@ -4331,7 +4399,7 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>GrainSizeTransect</Name>
@@ -4389,7 +4457,7 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>GrainNumberTransect</Name>
@@ -4447,7 +4515,173 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>TreeWaterUptakes</Name>
+          <Series>
+            <Name>TreeRow</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.WaterUptake(1)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>5m</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.WaterUptake(2)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>10m</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-11094807</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.WaterUptake(3)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>15m</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.WaterUptake(3)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>20m</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.WaterUptake(3)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>30m</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.WaterUptake(3)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>40m</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-3376729</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.WaterUptake(3)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>50m</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-990142</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.WaterUptake(3)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Area>0</Area>
         <Slope>0</Slope>
