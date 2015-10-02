@@ -393,7 +393,14 @@ namespace UserInterface.Presenters
             try
             {
                 XmlDocument document = new XmlDocument();
-                document.LoadXml(xml);
+                try
+                {
+                    document.LoadXml(xml);
+                }
+                catch(XmlException)
+                {
+                    this.view.ShowMessage("Invalid XML. Are you sure you're trying to paste an APSIM model?", DataStore.ErrorLevel.Error);
+                }
                 object newModel = XmlUtilities.Deserialise(document.DocumentElement, Assembly.GetExecutingAssembly());
 
                 // See if the presenter is happy with this model being added.
@@ -593,7 +600,9 @@ namespace UserInterface.Presenters
             Model destinationModel = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
             if (destinationModel != null)
             {
-                if (destinationModel.GetType() == typeof(Folder) || destinationModel.GetType() == typeof(Factor))
+                if (destinationModel.GetType() == typeof(Folder) || 
+                    destinationModel.GetType() == typeof(Factor) || 
+                    destinationModel.GetType() == typeof(Replacements))
                     e.Allow = true;
 
                 DragObject dragObject = e.DragObject as DragObject;
@@ -606,7 +615,7 @@ namespace UserInterface.Presenters
                 {
                     foreach (Type allowedParentType in validParent.ParentModels)
                     {
-                        if (allowedParentType == destinationModel.GetType())
+                        if (allowedParentType.IsAssignableFrom(destinationModel.GetType()))
                         {
                             e.Allow = true;
                         }

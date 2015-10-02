@@ -17,6 +17,7 @@
     {
         private TreeProxy ForestryModel;
         private TreeProxyView ForestryViewer;
+        private PropertyPresenter propertyPresenter;
 
         public double[] SoilMidpoints;
 
@@ -27,20 +28,25 @@
 
             AttachData();
             ForestryViewer.OnCellEndEdit += OnCellEndEdit;
+            ForestryViewer.SetReadOnly();
+            this.propertyPresenter = new PropertyPresenter();
+            this.propertyPresenter.Attach(ForestryModel, ForestryViewer.ConstantsGrid, explorerPresenter);
         }
 
         public void Detach()
         {
+            propertyPresenter.Detach();
             SaveTable();
             ForestryModel.dates = ForestryViewer.SaveDates();
             ForestryModel.heights = ForestryViewer.SaveHeights();
             ForestryModel.NDemands = ForestryViewer.SaveNDemands();
+            ForestryModel.CanopyWidths = ForestryViewer.SaveCanopyWidths();
+            ForestryModel.TreeLeafAreas = ForestryViewer.SaveTreeLeafAreas();
             ForestryViewer.OnCellEndEdit -= OnCellEndEdit;
         }
 
         private void SaveTable()
         {
-            ForestryModel.RootRadius = ForestryViewer.RootRadius;
 
             DataTable table = ForestryViewer.GetTable();
 
@@ -70,7 +76,6 @@
         {
             if (!(ForestryModel.Parent is ForestrySystem))
                 throw new ApsimXException(ForestryModel, "Error: TreeProxy must be a child of ForestrySystem.");
-            ForestryViewer.RootRadius = ForestryModel.RootRadius;
 
             Soil Soil;
             List<IModel> Zones = Apsim.ChildrenRecursively(ForestryModel.Parent, typeof(Zone));
@@ -78,7 +83,7 @@
                 return;
 
             //setup tree heights
-            ForestryViewer.SetupHeights(ForestryModel.dates, ForestryModel.heights,ForestryModel.NDemands);
+            ForestryViewer.SetupHeights(ForestryModel.dates, ForestryModel.heights,ForestryModel.NDemands,ForestryModel.CanopyWidths,ForestryModel.TreeLeafAreas);
 
       /*      //get the distance of each Zone from Tree.
             double zoneWidth = 0;
@@ -122,7 +127,6 @@
                 List<string> rowNames = new List<string>();
 
                 rowNames.Add("Shade (%)");
-                rowNames.Add("Nitrogen Demand (kg/ha)");
                 rowNames.Add("Root Length Density (cm/cm3)");
                 rowNames.Add("Depth (cm)");
 
@@ -139,8 +143,8 @@
 
                 for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth and RLD rows to empty strings
                 {
+                    ForestryModel.Table[i][1] = string.Empty;
                     ForestryModel.Table[i][2] = string.Empty;
-                    ForestryModel.Table[i][3] = string.Empty;
                 }
             }
             else
@@ -153,7 +157,7 @@
                 for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth and RLD rows to empty strings
                 {
                     ForestryModel.Table[i][2] = string.Empty;
-                    ForestryModel.Table[i][3] = string.Empty;
+                    //ForestryModel.Table[i][3] = string.Empty;
                 }
 
                 // remove Zones from table that don't exist in simulation

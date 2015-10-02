@@ -68,15 +68,6 @@ namespace UserInterface.Views
         /// </summary>
         public double[] SoilMidpoints;
 
-        /// <summary>
-        /// Nitrogen demand across all Zones
-        /// </summary>
-        public double NDemand;
-
-        /// <summary>
-        /// Root radius in cm
-        /// </summary>
-        public double RootRadius;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeProxyView" /> class.
@@ -91,6 +82,11 @@ namespace UserInterface.Views
             smallestDate = DateTime.MaxValue;
             largestDate = DateTime.MinValue;
         }
+
+        /// <summary>
+        /// Constants grid.
+        /// </summary>
+        public GridView ConstantsGrid { get { return gridView1; } }
 
         /// <summary>
         /// Invoked when the user clicks on the plot area (the area inside the axes)
@@ -622,21 +618,30 @@ namespace UserInterface.Views
             }
             Grid.DataSource = table;
             Grid.Columns[0].ReadOnly = true; //name column
-            Grid.Rows[2].ReadOnly = true; //RLD title row
+            Grid.Rows[1].ReadOnly = true; //RLD title row
+            Grid.Rows[1].DefaultCellStyle.BackColor = Color.LightGray;
+            Grid.Rows[2].ReadOnly = true; //Depth title row
             Grid.Rows[2].DefaultCellStyle.BackColor = Color.LightGray;
-            Grid.Rows[3].ReadOnly = true; //Depth title row
-            Grid.Rows[3].DefaultCellStyle.BackColor = Color.LightGray;
             ResizeControls();
 
             SetupGraphs();
         }
 
-        public void SetupHeights(DateTime[] dates, double[] heights, double[] NDemands)
+        public void SetReadOnly()
+        {
+            Grid.Columns[0].ReadOnly = true; //name column
+            Grid.Rows[1].ReadOnly = true; //RLD title row
+            Grid.Rows[1].DefaultCellStyle.BackColor = Color.LightGray;
+            Grid.Rows[2].ReadOnly = true; //Depth title row
+            Grid.Rows[2].DefaultCellStyle.BackColor = Color.LightGray;
+        }
+
+        public void SetupHeights(DateTime[] dates, double[] heights, double[] NDemands, double[] CanopyWidths, double[] TreeLeafAreas)
         {
             dgvHeights.Rows.Clear();
             for (int i = 0; i < dates.Count(); i++)
             {
-                dgvHeights.Rows.Add(dates[i].ToShortDateString(), heights[i] / 1000,NDemands[i]);
+                dgvHeights.Rows.Add(dates[i].ToShortDateString(), heights[i] / 1000,NDemands[i], CanopyWidths[i], TreeLeafAreas[i]);
             }
         }
 
@@ -843,7 +848,26 @@ namespace UserInterface.Views
             }
             return NDemands.ToArray();
         }
-
+        public double[] SaveCanopyWidths()
+        {
+            List<double> CanopyWidths = new List<double>();
+            foreach (DataGridViewRow row in dgvHeights.Rows)
+            {
+                if (row.Cells[2].Value != null)
+                    CanopyWidths.Add(Convert.ToDouble(row.Cells[3].Value.ToString()));
+            }
+            return CanopyWidths.ToArray();
+        }
+        public double[] SaveTreeLeafAreas()
+        {
+            List<double> TreeLeafAreas = new List<double>();
+            foreach (DataGridViewRow row in dgvHeights.Rows)
+            {
+                if (row.Cells[2].Value != null)
+                    TreeLeafAreas.Add(Convert.ToDouble(row.Cells[4].Value.ToString()));
+            }
+            return TreeLeafAreas.ToArray();
+        }
         private void ForestryView_Resize(object sender, EventArgs e)
         {
             ResizeControls();
@@ -914,22 +938,24 @@ namespace UserInterface.Views
         private void Grid_KeyUp(object sender, KeyEventArgs e)
         {
             //TODO: Get this working with data copied from other cells in the grid.
+            //      Also needs to work with blank cells and block deletes.
             //source: https://social.msdn.microsoft.com/Forums/windows/en-US/e9cee429-5f36-4073-85b4-d16c1708ee1e/how-to-paste-ctrlv-shiftins-the-data-from-clipboard-to-datagridview-datagridview1-c?forum=winforms
+            DataGridView grid = sender as DataGridView;
             if ((e.Shift && e.KeyCode == Keys.Insert) || (e.Control && e.KeyCode == Keys.V))
             {
-                char[] rowSplitter = { '\r', '\n' };
+                string[] rowSplitter = { Environment.NewLine };
                 char[] columnSplitter = { '\t' };
                 //get the text from clipboard
                 IDataObject dataInClipboard = Clipboard.GetDataObject();
                 string stringInClipboard = (string)dataInClipboard.GetData(DataFormats.Text);
                 //split it into lines
-                string[] rowsInClipboard = stringInClipboard.Split(rowSplitter, StringSplitOptions.RemoveEmptyEntries);
+                string[] rowsInClipboard = stringInClipboard.Split(rowSplitter, StringSplitOptions.None);
                 //get the row and column of selected cell in Grid
-                int r = Grid.SelectedCells[0].RowIndex;
-                int c = Grid.SelectedCells[0].ColumnIndex;
+                int r = grid.SelectedCells[0].RowIndex;
+                int c = grid.SelectedCells[0].ColumnIndex;
                 //add rows into Grid to fit clipboard lines
-                if (Grid.Rows.Count < (r + rowsInClipboard.Length))
-                    Grid.Rows.Add(r + rowsInClipboard.Length - Grid.Rows.Count);
+                if (grid.Rows.Count < (r + rowsInClipboard.Length))
+                    grid.Rows.Add(r + rowsInClipboard.Length - grid.Rows.Count);
                 // loop through the lines, split them into cells and place the values in the corresponding cell.
                 for (int iRow = 0; iRow < rowsInClipboard.Length; iRow++)
                 {
@@ -938,10 +964,21 @@ namespace UserInterface.Views
                     //cycle through cell values
                     for (int iCol = 0; iCol < valuesInRow.Length; iCol++)
                         //assign cell value, only if it within columns of the Grid
-                        if (Grid.ColumnCount - 1 >= c + iCol)
-                            Grid.Rows[r + iRow].Cells[c + iCol].Value = valuesInRow[iCol];
+                        if (grid.ColumnCount - 1 >= c + iCol)
+                            grid.Rows[r + iRow].Cells[c + iCol].Value = valuesInRow[iCol];
                 }
             }
+
+            if (e.KeyCode == Keys.Delete)
+            {
+                foreach ( DataGridViewCell cell in grid.SelectedCells)
+                    cell.Value = string.Empty;
+            }
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetReadOnly();
         }
     }
 }

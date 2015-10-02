@@ -301,6 +301,7 @@ namespace Models
                 tableToWrite.TableName = tableName;
                 tableToWrite.Data = table;
 
+                DeleteTable(tableName);
                 WriteTable(new TableToWrite[1] { tableToWrite });
             }
             else
@@ -506,7 +507,14 @@ namespace Models
         {
             Open(forWriting: false);
 
-            return Connection.ExecuteQuery(sql);
+            try
+            {
+                return Connection.ExecuteQuery(sql);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>Return all data from the specified simulation and table name.</summary>
