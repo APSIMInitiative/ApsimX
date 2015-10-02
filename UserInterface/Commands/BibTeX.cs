@@ -202,6 +202,16 @@ namespace UserInterface.Commands
                         else
                             text += ", " + pages + ".";
                     }
+                    else if (Get("university") != string.Empty)
+                    {
+                        text = string.Format("{0}, {1}. {2}. {3}. {4}.",
+                                            new object[] {
+                                             authors,
+                                             Year,
+                                             Get("title"),
+                                             Get("type"),
+                                             Get("university") });
+                    }
                     else
                     {
                         text = string.Format("{0}, {1}. {2}. {3}. {4} ({5}), {6}.",
