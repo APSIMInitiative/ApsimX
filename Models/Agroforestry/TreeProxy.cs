@@ -14,7 +14,18 @@ using Models.Zones;
 namespace Models.Agroforestry
 {
     /// <summary>
-    /// A simple tree model
+    /// A simple proxy for a full tree model is provided for use in agroforestry simulations.  It allows the user to directly specify the size and structural data for trees within the simulation rather than having to simulate complex tree situations (e.g. trees under specific pruning regimes).
+    /// 
+    /// Several parameters are required of the user to specify the state of the trees within the simulation.  These include:
+    /// 
+    /// * Tree height (m)
+    /// * Tree canopy width (m)
+    /// * Tree leaf area (m<sup>2</sup>/tree)
+    /// * Tree root radius (cm)
+    /// * Shade at a range of distances from the trees (%)
+    /// * Tree root length density at various depths and distances from the trees (cm/cm<sup>3</sup>)
+    /// * Tree daily nitrogen demand (g/tree/day)
+    /// 
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.TreeProxyView")]
@@ -596,6 +607,21 @@ namespace Models.Agroforestry
                     }
                 }
             }
+        }
+        /// <summary>Writes documentation for this cultivar by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // need to put something here
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write description of this class.
+            AutoDocumentation.GetClassDescription(this, tags, indent);
+
+            
         }
     }
 
