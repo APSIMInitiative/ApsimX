@@ -21,6 +21,20 @@ namespace Models.Agroforestry
     [ValidParent(ParentModels = new Type[] { typeof(Simulation), typeof(Zone) })]
     public class AgroforestrySystem : Zone
     {
+
+        /// <summary>
+        /// The reduction in wind as a fraction.
+        /// </summary>
+        [Units("0-1")]
+        [XmlIgnore]
+        public double Urel { get; set; }
+
+        /// <summary>
+        /// A list containing forestry information for each zone.
+        /// </summary>
+        [XmlIgnore]
+        public List<IModel> ZoneList;
+
         /// <summary>
         /// Return the area of the zone.
         /// </summary>
@@ -40,7 +54,7 @@ namespace Models.Agroforestry
         }
 
         /// <summary>
-        /// 
+        /// A pointer to the tree model.
         /// </summary>
         [XmlIgnore]
         public TreeProxy tree = null;
@@ -51,8 +65,8 @@ namespace Models.Agroforestry
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            //find the tree
             tree = Apsim.Child(this, typeof(TreeProxy)) as TreeProxy;
+            ZoneList = Apsim.Children(this, typeof(Zone));
         }
 
         /// <summary>
@@ -64,6 +78,35 @@ namespace Models.Agroforestry
         public double GetDistanceFromTrees(Zone z)
         {
             return tree.GetDistanceFromTrees(z);
+        }
+
+        /// <summary>
+        /// Return the %Wind Reduction for a given zone
+        /// </summary>
+        /// <param name="z">Zone</param>
+        /// <returns>%Wind Reduction</returns>
+        public double GetWindReduction(Zone z)
+        {
+            foreach (Zone zone in ZoneList)
+                if (zone == z)
+                {
+                    double UrelMin = Math.Max(0.0, 1.14 * 0.5 - 0.16); // 0.5 is porosity, will be dynamic in the future
+
+                    if (tree.heightToday < 1)
+                        Urel = 1;
+                    else
+                    {
+                        tree.H = GetDistanceFromTrees(z) / tree.heightToday;
+                        if (tree.H < 6)
+                            Urel = UrelMin + (1 - UrelMin) / 2 - tree.H / 6 * (1 - UrelMin) / 2;
+                        else if (tree.H < 6.1)
+                            Urel = UrelMin;
+                        else
+                            Urel = UrelMin + (1 - UrelMin) / (1 + 0.000928 * Math.Exp(12.9372 * Math.Pow((tree.H - 6), -0.26953)));
+                    }
+                    return Urel;
+                }
+            throw new ApsimXException(this, "Could not find zone called " + z.Name);
         }
     }
 }
