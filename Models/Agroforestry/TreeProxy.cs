@@ -32,11 +32,9 @@ namespace Models.Agroforestry
         public List<List<string>> Table { get; set; }
 
         /// <summary>
-        /// The reduction in wind as a fraction.
+        /// Reference to the parent agroforestry system.
         /// </summary>
-        [Units("0-1")]
-        [XmlIgnore]
-        public double Urel { get; set; }
+        public AgroforestrySystem AFsystem = null;
 
         /// <summary>
         /// Distance from zone in tree heights
@@ -323,34 +321,6 @@ namespace Models.Agroforestry
             for (int i = 0; i < dates.Count(); i++)
                 OADates[i] = dates[i].ToOADate();
             return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, TreeLeafAreas, out didInterp);
-        }
-        /// <summary>
-        /// Return the %Wind Reduction for a given zone
-        /// </summary>
-        /// <param name="z">Zone</param>
-        /// <returns>%Wind Reduction</returns>
-        public double GetWindReduction(Zone z)
-        {
-            foreach (Zone zone in ZoneList)
-                if (zone == z)
-                {
-                    double UrelMin = Math.Max(0.0, 1.14 * 0.5 - 0.16); // 0.5 is porosity, will be dynamic in the future
-
-                    if (heightToday < 1)
-                        Urel = 1;
-                    else
-                    {
-                        H = GetDistanceFromTrees(z) / heightToday;
-                        if (H < 6)
-                            Urel = UrelMin + (1 - UrelMin) / 2 - H / 6 * (1 - UrelMin) / 2;
-                        else if (H < 6.1)
-                            Urel = UrelMin;
-                        else
-                            Urel = UrelMin + (1 - UrelMin) / (1 + 0.000928 * Math.Exp(12.9372 * Math.Pow((H - 6), -0.26953)));
-                    }
-                    return Urel;
-                }
-            throw new ApsimXException(this, "Could not find zone called " + z.Name);
         }
 
         /// <summary>
