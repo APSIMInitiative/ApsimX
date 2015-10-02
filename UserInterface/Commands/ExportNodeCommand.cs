@@ -459,8 +459,7 @@ namespace UserInterface.Commands
             citations.Sort(new BibTeX.CitationComparer());
             foreach (BibTeX.Citation citation in citations)
             {
-                string url = citation.URL.Replace("=", "EQUALS");
-                url = url.Replace("&", "AND");
+                string url = citation.URL;
                 string text;
                 if (url != string.Empty)
                     text = string.Format("<a href=\"{0}\">{1}</a>", url, citation.BibliographyText);
