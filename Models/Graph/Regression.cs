@@ -17,6 +17,7 @@ namespace Models.Graph
     /// <summary>
     /// A regression model.
     /// </summary>
+    [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(typeof(Series))]
@@ -87,26 +88,29 @@ namespace Models.Graph
                                               Color colour, string title)
         {
             MathUtilities.RegrStats stat = MathUtilities.CalcRegressionStats(x, y);
-            stats.Add(stat);
-            double minimumX = MathUtilities.Min(x);
-            double maximumX = MathUtilities.Max(x);
-            double minimumY = MathUtilities.Min(y);
-            double maximumY = MathUtilities.Max(y);
-            double lowestAxisScale = Math.Min(minimumX, minimumY);
-            double largestAxisScale = Math.Max(maximumX, maximumY);
+            if (stat != null)
+            {
+                stats.Add(stat);
+                double minimumX = MathUtilities.Min(x);
+                double maximumX = MathUtilities.Max(x);
+                double minimumY = MathUtilities.Min(y);
+                double maximumY = MathUtilities.Max(y);
+                double lowestAxisScale = Math.Min(minimumX, minimumY);
+                double largestAxisScale = Math.Max(maximumX, maximumY);
 
-            SeriesDefinition regressionDefinition = new SeriesDefinition();
-            regressionDefinition.title = title;
-            regressionDefinition.colour = colour;
-            regressionDefinition.line = LineType.Solid;
-            regressionDefinition.marker = MarkerType.None;
-            regressionDefinition.showInLegend = true;
-            regressionDefinition.type = SeriesType.Scatter;
-            regressionDefinition.xAxis = Axis.AxisType.Bottom;
-            regressionDefinition.yAxis = Axis.AxisType.Left;
-            regressionDefinition.x = new double[] { minimumX, maximumX };
-            regressionDefinition.y = new double[] { stat.m * minimumX + stat.c, stat.m * maximumX + stat.c };
-            definitions.Add(regressionDefinition);
+                SeriesDefinition regressionDefinition = new SeriesDefinition();
+                regressionDefinition.title = title;
+                regressionDefinition.colour = colour;
+                regressionDefinition.line = LineType.Solid;
+                regressionDefinition.marker = MarkerType.None;
+                regressionDefinition.showInLegend = true;
+                regressionDefinition.type = SeriesType.Scatter;
+                regressionDefinition.xAxis = Axis.AxisType.Bottom;
+                regressionDefinition.yAxis = Axis.AxisType.Left;
+                regressionDefinition.x = new double[] { minimumX, maximumX };
+                regressionDefinition.y = new double[] { stat.m * minimumX + stat.c, stat.m * maximumX + stat.c };
+                definitions.Add(regressionDefinition);
+            }
         }
 
         /// <summary>Puts the 1:1 line on graph.</summary>
