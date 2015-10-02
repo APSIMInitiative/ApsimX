@@ -98,7 +98,7 @@
     <Compile Include="AgPasture.cs" />
     <Compile Include="AgPasture\AgPasture1.Sward.cs" />
     <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
-    <Compile Include="Agroforestry\ForestrySystem.cs" />
+    <Compile Include="Agroforestry\AgroforestrySystem.cs" />
     <Compile Include="Agroforestry\LocalMicroClimate.cs" />
     <Compile Include="Agroforestry\TreeProxy.cs" />
     <Compile Include="Aqua\FoodInPond.cs" />

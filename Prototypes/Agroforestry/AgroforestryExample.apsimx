@@ -18,7 +18,7 @@
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
     </SoilArbitrator>
-    <ForestrySystem>
+    <AgroforestrySystem>
       <Name>WindbreakSystem</Name>
       <TreeProxy>
         <Name>TreeProxy</Name>
@@ -3363,7 +3363,7 @@ namespace Models
       </Graph>
       <Area>0.25</Area>
       <Slope>0</Slope>
-    </ForestrySystem>
+    </AgroforestrySystem>
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
@@ -3384,7 +3384,7 @@ namespace Models
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
     </SoilArbitrator>
-    <ForestrySystem>
+    <AgroforestrySystem>
       <Name>WindbreakSystem</Name>
       <TreeProxy>
         <Name>TreeProxy</Name>
@@ -10877,7 +10877,7 @@ namespace Models
       </Graph>
       <Area>3.05</Area>
       <Slope>0</Slope>
-    </ForestrySystem>
+    </AgroforestrySystem>
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
@@ -10949,7 +10949,7 @@ namespace Models
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
     </SoilArbitrator>
-    <ForestrySystem>
+    <AgroforestrySystem>
       <Name>SingleTreeSystem</Name>
       <TreeProxy>
         <Name>TreeProxy</Name>
@@ -13909,7 +13909,7 @@ namespace Models
       </Graph>
       <Area>0.19634954084936207</Area>
       <Slope>0</Slope>
-    </ForestrySystem>
+    </AgroforestrySystem>
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
@@ -13932,7 +13932,7 @@ namespace Models
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
       </SoilArbitrator>
-      <ForestrySystem>
+      <AgroforestrySystem>
         <Name>WindbreakSystem</Name>
         <TreeProxy>
           <Name>TreeProxy</Name>
@@ -18455,7 +18455,7 @@ namespace Models
         </Graph>
         <Area>0.54999999999999993</Area>
         <Slope>0</Slope>
-      </ForestrySystem>
+      </AgroforestrySystem>
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>

@@ -350,6 +350,12 @@
       </EventNames>
       <ResultsPerPage>0</ResultsPerPage>
     </Report>
+    <Plant15>
+      <Name>Wheat</Name>
+      <ResourceName>Wheat</ResourceName>
+      <AutoHarvest>true</AutoHarvest>
+      <CropType>Wheat</CropType>
+    </Plant15>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
@@ -388,7 +394,7 @@
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
       </SoilArbitrator>
-      <ForestrySystem>
+      <AgroforestrySystem>
         <Name>WindbreakSystem</Name>
         <Manager>
           <Name>SowingRule</Name>
@@ -4194,7 +4200,7 @@ namespace Models
         </Graph>
         <Area>0.55</Area>
         <Slope>0</Slope>
-      </ForestrySystem>
+      </AgroforestrySystem>
       <Graph>
         <Name>YieldTransect</Name>
         <Series>
@@ -4494,7 +4500,7 @@ namespace Models
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
       </SoilArbitrator>
-      <ForestrySystem>
+      <AgroforestrySystem>
         <Name>WindbreakSystem</Name>
         <Manager>
           <Name>SowingRule</Name>
@@ -9484,7 +9490,7 @@ namespace Models
         </RectangularZone>
         <Area>2.05</Area>
         <Slope>0</Slope>
-      </ForestrySystem>
+      </AgroforestrySystem>
       <Graph>
         <Name>YieldTransect</Name>
         <Series>

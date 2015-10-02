@@ -46,7 +46,7 @@ namespace Models.Core
         [XmlElement(typeof(ModelCollectionFromResource))]
         [XmlElement(typeof(Models.Agroforestry.LocalMicroClimate))]
         [XmlElement(typeof(Models.Agroforestry.TreeProxy))]
-        [XmlElement(typeof(Models.Agroforestry.ForestrySystem))]
+        [XmlElement(typeof(Models.Agroforestry.AgroforestrySystem))]
         [XmlElement(typeof(Models.Graph.Graph))]
         [XmlElement(typeof(Models.Graph.Series))]
         [XmlElement(typeof(Models.Graph.Regression))]
