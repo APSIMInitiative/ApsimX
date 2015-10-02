@@ -152,8 +152,11 @@ namespace Models.PMF
                 aliasString = "Also known as " + aliasString;
             tags.Add(new AutoDocumentation.Paragraph(aliasString, indent + 1));
 
-            foreach (string command in Commands)
-                tags.Add(new AutoDocumentation.Paragraph(command, indent + 1));
+            if (Commands != null)
+            {
+                foreach (string command in Commands)
+                    tags.Add(new AutoDocumentation.Paragraph(command, indent + 1));
+            }
         }
     }
 }
