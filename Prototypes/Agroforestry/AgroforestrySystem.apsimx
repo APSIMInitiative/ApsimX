@@ -4741,15 +4741,15 @@ namespace Models
       <Name>South Australia</Name>
       <Clock>
         <Name>Clock</Name>
-        <StartDate>2004-03-22T00:00:00</StartDate>
-        <EndDate>2005-10-04T00:00:00</EndDate>
+        <StartDate>2000-01-01T00:00:00</StartDate>
+        <EndDate>2010-12-31T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>SummaryFile</Name>
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <FileName>Validation\warra.met</FileName>
+        <FileName>Roseworthy.met</FileName>
       </Weather>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
@@ -9757,7 +9757,7 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>Circle</Marker>
-          <Line>Solid</Line>
+          <Line>None</Line>
           <TableName>HarvestReport</TableName>
           <XFieldName>Distance</XFieldName>
           <YFieldName>GrainWt</YFieldName>
