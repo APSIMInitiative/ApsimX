@@ -351,6 +351,7 @@ The APSIM Agroforestry model has been developed to facilitate the modelling of t
         <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
         <string>[Wheat].AboveGround.Wt as BiomassWt</string>
         <string>[Wheat].Grain.Wt as GrainWt</string>
+        <string>[Soil].SoilWater.Es as Es</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -363,6 +364,22 @@ The APSIM Agroforestry model has been developed to facilitate the modelling of t
       <AutoHarvest>true</AutoHarvest>
       <CropType>Wheat</CropType>
     </Plant15>
+    <Report>
+      <Name>HarvestReport</Name>
+      <VariableNames>
+        <string>[Clock].Today</string>
+        <string>[Zone].Area</string>
+        <string>Distance</string>
+        <string>[Wheat].AboveGround.Wt as BiomassWt</string>
+        <string>[Wheat].Grain.Wt as GrainWt</string>
+        <string>[Wheat].Grain.Size as GrainSize</string>
+        <string>[Wheat].Grain.GrainNo as GrainNumber</string>
+      </VariableNames>
+      <EventNames>
+        <string>[Wheat].Harvesting</string>
+      </EventNames>
+      <ResultsPerPage>0</ResultsPerPage>
+    </Report>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
@@ -681,6 +698,17 @@ namespace Models
               <double>0.1</double>
             </TreeLeafAreas>
           </TreeProxy>
+          <Report>
+            <Name>TreeReport</Name>
+            <VariableNames>
+              <string>[Clock].Today</string>
+              <string>[TreeProxy].WaterUptake</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Clock].DoReport</string>
+            </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
+          </Report>
           <RectangularZone>
             <Name>TreeRow</Name>
             <LocalMicroClimate>
@@ -2694,7 +2722,7 @@ namespace Models
                   <double>0.1</double>
                 </NH4>
                 <SW>
-                  <double>0.2</double>
+                  <double>0.32</double>
                   <double>0.32</double>
                   <double>0.39</double>
                   <double>0.39</double>
@@ -4150,7 +4178,7 @@ namespace Models
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>SurfaceSW</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
+              <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -4213,6 +4241,46 @@ namespace Models
             <LegendPosition>BottomRight</LegendPosition>
             <DisabledSeries />
             <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>Evaporation</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-65536</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Es</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Area>0.55</Area>
           <Slope>0</Slope>
@@ -4449,6 +4517,172 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
+        <Graph>
+          <Name>TreeWaterUptakes</Name>
+          <Series>
+            <Name>TreeRow</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.WaterUptake(1)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>5m</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.WaterUptake(2)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>10m</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-11094807</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.WaterUptake(3)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>15m</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.WaterUptake(3)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>20m</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.WaterUptake(3)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>30m</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.WaterUptake(3)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>40m</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-3376729</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.WaterUptake(3)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>50m</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-990142</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.WaterUptake(3)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
         <Area>0</Area>
         <Slope>0</Slope>
       </Simulation>
@@ -4507,15 +4741,15 @@ namespace Models
       <Name>South Australia</Name>
       <Clock>
         <Name>Clock</Name>
-        <StartDate>2004-03-22T00:00:00</StartDate>
-        <EndDate>2005-10-04T00:00:00</EndDate>
+        <StartDate>2000-01-01T00:00:00</StartDate>
+        <EndDate>2010-12-31T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>SummaryFile</Name>
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <FileName>Validation\warra.met</FileName>
+        <FileName>Roseworthy.met</FileName>
       </Weather>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
@@ -9523,7 +9757,7 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>Circle</Marker>
-          <Line>Solid</Line>
+          <Line>None</Line>
           <TableName>HarvestReport</TableName>
           <XFieldName>Distance</XFieldName>
           <YFieldName>GrainWt</YFieldName>
