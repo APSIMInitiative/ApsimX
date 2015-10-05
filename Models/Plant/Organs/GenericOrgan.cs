@@ -163,6 +163,14 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         [Units("g/m^2")]
         public double LiveFWt { get; set; }
+
+        /// <summary>Gets  the potentail amount reallocated yeasterday</summary>
+        /// <value>The reallocated wt.</value>
+        [XmlIgnore]
+        [Units("g/m^2")]
+        public double DailyReallocationPot { get { return PotentialDMAllocation; } private set { } }
+
+
         #endregion
 
         #region Organ functions

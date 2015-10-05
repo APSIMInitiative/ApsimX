@@ -332,6 +332,31 @@ namespace Models.PMF
             }
         }
 
+
+        /// <summary>Gets the dm reallocatied</summary>
+        /// <value>Reallocation of DM to sipply</value>
+        [XmlIgnore]
+        public double DMReAllocated
+        {
+            get
+            {
+                if (Plant.IsAlive)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                            return (MathUtilities.Sum(DM.ReallocationSupply));
+                        else return 0;
+                    }
+                    else
+                        return (MathUtilities.Sum(DM.ReallocationSupply));
+                }
+                else
+                    return 0.0;
+            }
+        }
+
+
         /// <summary>Gets the sink limitation to growth</summary>
         /// <value>The amount of DM that was not fixed because potential growth from organs did not require it</value>
         [XmlIgnore]

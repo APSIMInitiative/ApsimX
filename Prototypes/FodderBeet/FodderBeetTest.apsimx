@@ -1875,6 +1875,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
             <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
             <string>[FodderBeet].Leaf.FractionDied</string>
             <string>[FodderBeet].Petiole.SenescenceRateFunction.Value</string>
+            <string>[FodderBeet].Arbitrator.DMReAllocated</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -1951,6 +1952,66 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
             <Action>[Irrigation].Apply(10);</Action>
           </Operation>
         </Operations>
+        <Manager>
+          <Name>ExtraVariables</Name>
+          <Script />
+          <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soils.Soil Soil;
+		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
+		[Link] Weather Met;
+		[Link] Fertiliser Fert;
+		[Link] Irrigation Irrig;
+		[Link] Plant FodderBeet;
+		[Link] Zone zone;
+					
+		
+		
+		[XmlIgnore] public double PetioleReallocation
+		{
+			get
+			{
+				return _Petiole_Reallocation;
+			
+			}
+			set { }
+		}
+		private double _Petiole_Reallocation;
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{ 
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+		}
+		
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
+			
+			
+		}
+	}
+}
+	   ]]></Code>
+        </Manager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
