@@ -25,6 +25,18 @@ namespace Models.Agroforestry
     public class AgroforestrySystem : Zone
     {
         /// <summary>
+        /// Fraction of rainfall intercepted by canopy
+        /// </summary>
+        [Description("Fraction of rainfall incepted within the tree canopy (0-1)")]
+        public double RainfallInterceptionFraction { get; set; }
+
+        /// <summary>
+        /// Width of the tree rain shaddow in terms of tree heights
+        /// </summary>
+        [Description("Width of tree rainfall shaddow (H)")]
+        public double RainShaddowWidth { get; set; }
+
+        /// <summary>
         /// Return the area of the zone.
         /// </summary>
         [XmlIgnore]
