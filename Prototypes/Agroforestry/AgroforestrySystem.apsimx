@@ -353,6 +353,7 @@ The APSIM Agroforestry model has been developed to facilitate the modelling of t
         <string>[Wheat].Grain.Wt as GrainWt</string>
         <string>[Soil].SoilWater.Es as Es</string>
         <string>[Soil].SoilWater.ESW as ESW</string>
+        <string>[Soil].SoilWater.Eo as Eo</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -4827,29 +4828,13 @@ namespace Models
                 <string>1</string>
                 <string>1</string>
                 <string>1</string>
-                <string>1</string>
-                <string>1</string>
-                <string>1</string>
-                <string>1</string>
                 <string>.5</string>
                 <string>.5</string>
                 <string>.5</string>
-              </ArrayOfString>
-              <ArrayOfString>
-                <string>50</string>
-                <string />
-                <string />
-                <string>1</string>
-                <string>1</string>
-                <string>1</string>
-                <string>1</string>
-                <string>.5</string>
-                <string>.5</string>
-                <string>.5</string>
-                <string>.5</string>
-                <string>.5</string>
-                <string>0</string>
-                <string>0</string>
+                <string>.3</string>
+                <string>.3</string>
+                <string>.2</string>
+                <string>.2</string>
               </ArrayOfString>
               <ArrayOfString>
                 <string>0</string>
@@ -4876,24 +4861,8 @@ namespace Models
                 <string>1</string>
                 <string>1</string>
                 <string>.5</string>
-                <string>0</string>
-                <string>0</string>
-                <string>0</string>
-                <string>0</string>
-                <string>0</string>
-                <string>0</string>
-              </ArrayOfString>
-              <ArrayOfString>
-                <string>0</string>
-                <string />
-                <string />
-                <string>1</string>
-                <string>1</string>
-                <string>1</string>
-                <string>1</string>
-                <string>0</string>
-                <string>0</string>
-                <string>0</string>
+                <string>.5</string>
+                <string>.5</string>
                 <string>0</string>
                 <string>0</string>
                 <string>0</string>
@@ -4907,9 +4876,25 @@ namespace Models
                 <string>1</string>
                 <string>1</string>
                 <string>1</string>
+                <string>.5</string>
+                <string>.5</string>
+                <string>.5</string>
                 <string>0</string>
                 <string>0</string>
                 <string>0</string>
+                <string>0</string>
+              </ArrayOfString>
+              <ArrayOfString>
+                <string>0</string>
+                <string />
+                <string />
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>.5</string>
+                <string>.5</string>
+                <string>.5</string>
                 <string>0</string>
                 <string>0</string>
                 <string>0</string>
@@ -4923,9 +4908,9 @@ namespace Models
                 <string>1</string>
                 <string>1</string>
                 <string>1</string>
-                <string>0</string>
-                <string>0</string>
-                <string>0</string>
+                <string>.5</string>
+                <string>.5</string>
+                <string>.5</string>
                 <string>0</string>
                 <string>0</string>
                 <string>0</string>
@@ -4935,13 +4920,29 @@ namespace Models
                 <string>0</string>
                 <string />
                 <string />
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>.5</string>
+                <string>.5</string>
+                <string>.5</string>
                 <string>0</string>
                 <string>0</string>
                 <string>0</string>
                 <string>0</string>
+              </ArrayOfString>
+              <ArrayOfString>
                 <string>0</string>
-                <string>0</string>
-                <string>0</string>
+                <string />
+                <string />
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>.5</string>
+                <string>.5</string>
+                <string>.5</string>
                 <string>0</string>
                 <string>0</string>
                 <string>0</string>
@@ -4967,7 +4968,7 @@ namespace Models
             <RootRadius>0.02</RootRadius>
             <NumberOfTrees>143</NumberOfTrees>
             <Kd>1E-07</Kd>
-            <BaseKL>0.02</BaseKL>
+            <BaseKL>0.05</BaseKL>
             <KValue>0.5</KValue>
             <dates>
               <dateTime>1996-06-20T00:00:00</dateTime>
@@ -5215,8 +5216,8 @@ namespace Models
                 <WinterDate>1-Apr</WinterDate>
                 <WinterU>4</WinterU>
                 <WinterCona>2</WinterCona>
-                <DiffusConst>40</DiffusConst>
-                <DiffusSlope>16</DiffusSlope>
+                <DiffusConst>88</DiffusConst>
+                <DiffusSlope>35</DiffusSlope>
                 <Salb>0.12</Salb>
                 <CN2Bare>60</CN2Bare>
                 <CNRed>20</CNRed>
@@ -5422,11 +5423,11 @@ namespace Models
                   <double>0.1</double>
                 </NH4>
                 <SW>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
                   <double>0.03</double>
-                  <double>0.03</double>
-                  <double>0.04</double>
                   <double>0.05</double>
-                  <double>0.06</double>
                   <double>0.06</double>
                   <double>0.07</double>
                 </SW>
@@ -5646,8 +5647,8 @@ namespace Models
                 <WinterDate>1-Apr</WinterDate>
                 <WinterU>4</WinterU>
                 <WinterCona>2</WinterCona>
-                <DiffusConst>40</DiffusConst>
-                <DiffusSlope>16</DiffusSlope>
+                <DiffusConst>88</DiffusConst>
+                <DiffusSlope>35</DiffusSlope>
                 <Salb>0.12</Salb>
                 <CN2Bare>60</CN2Bare>
                 <CNRed>20</CNRed>
@@ -5816,9 +5817,9 @@ namespace Models
                   <double>0.1</double>
                 </NH4>
                 <SW>
-                  <double>0.03</double>
-                  <double>0.03</double>
-                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
                   <double>0.03</double>
                   <double>0.05</double>
                   <double>0.06</double>
@@ -6039,8 +6040,8 @@ namespace Models
                 <WinterDate>1-Apr</WinterDate>
                 <WinterU>4</WinterU>
                 <WinterCona>2</WinterCona>
-                <DiffusConst>40</DiffusConst>
-                <DiffusSlope>16</DiffusSlope>
+                <DiffusConst>88</DiffusConst>
+                <DiffusSlope>35</DiffusSlope>
                 <Salb>0.12</Salb>
                 <CN2Bare>60</CN2Bare>
                 <CNRed>20</CNRed>
@@ -6209,10 +6210,10 @@ namespace Models
                   <double>0.1</double>
                 </NH4>
                 <SW>
-                  <double>0.08</double>
-                  <double>0.08</double>
-                  <double>0.08</double>
-                  <double>0.08</double>
+                  <double>0.04</double>
+                  <double>0.04</double>
+                  <double>0.04</double>
+                  <double>0.06</double>
                   <double>0.08</double>
                   <double>0.08</double>
                   <double>0.07</double>
@@ -6432,8 +6433,8 @@ namespace Models
                 <WinterDate>1-Apr</WinterDate>
                 <WinterU>4</WinterU>
                 <WinterCona>2</WinterCona>
-                <DiffusConst>40</DiffusConst>
-                <DiffusSlope>16</DiffusSlope>
+                <DiffusConst>88</DiffusConst>
+                <DiffusSlope>35</DiffusSlope>
                 <Salb>0.12</Salb>
                 <CN2Bare>60</CN2Bare>
                 <CNRed>20</CNRed>
@@ -6825,8 +6826,8 @@ namespace Models
                 <WinterDate>1-Apr</WinterDate>
                 <WinterU>4</WinterU>
                 <WinterCona>2</WinterCona>
-                <DiffusConst>40</DiffusConst>
-                <DiffusSlope>16</DiffusSlope>
+                <DiffusConst>88</DiffusConst>
+                <DiffusSlope>35</DiffusSlope>
                 <Salb>0.12</Salb>
                 <CN2Bare>60</CN2Bare>
                 <CNRed>20</CNRed>
@@ -7218,8 +7219,8 @@ namespace Models
                 <WinterDate>1-Apr</WinterDate>
                 <WinterU>4</WinterU>
                 <WinterCona>2</WinterCona>
-                <DiffusConst>40</DiffusConst>
-                <DiffusSlope>16</DiffusSlope>
+                <DiffusConst>88</DiffusConst>
+                <DiffusSlope>35</DiffusSlope>
                 <Salb>0.12</Salb>
                 <CN2Bare>60</CN2Bare>
                 <CNRed>20</CNRed>
@@ -7611,8 +7612,8 @@ namespace Models
                 <WinterDate>1-Apr</WinterDate>
                 <WinterU>4</WinterU>
                 <WinterCona>2</WinterCona>
-                <DiffusConst>40</DiffusConst>
-                <DiffusSlope>16</DiffusSlope>
+                <DiffusConst>88</DiffusConst>
+                <DiffusSlope>35</DiffusSlope>
                 <Salb>0.12</Salb>
                 <CN2Bare>60</CN2Bare>
                 <CNRed>20</CNRed>
@@ -8004,8 +8005,8 @@ namespace Models
                 <WinterDate>1-Apr</WinterDate>
                 <WinterU>4</WinterU>
                 <WinterCona>2</WinterCona>
-                <DiffusConst>40</DiffusConst>
-                <DiffusSlope>16</DiffusSlope>
+                <DiffusConst>88</DiffusConst>
+                <DiffusSlope>35</DiffusSlope>
                 <Salb>0.12</Salb>
                 <CN2Bare>60</CN2Bare>
                 <CNRed>20</CNRed>
@@ -8397,8 +8398,8 @@ namespace Models
                 <WinterDate>1-Apr</WinterDate>
                 <WinterU>4</WinterU>
                 <WinterCona>2</WinterCona>
-                <DiffusConst>40</DiffusConst>
-                <DiffusSlope>16</DiffusSlope>
+                <DiffusConst>88</DiffusConst>
+                <DiffusSlope>35</DiffusSlope>
                 <Salb>0.12</Salb>
                 <CN2Bare>60</CN2Bare>
                 <CNRed>20</CNRed>
@@ -8705,11 +8706,109 @@ namespace Models
             <DisabledSeries />
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
+          <Graph>
+            <Name>Eo Timeseries</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-65536</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Date</XFieldName>
+              <YFieldName>Eo</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopRight</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Graph>
           <Area>0.185</Area>
           <Slope>0</Slope>
           <RainfallInterceptionFraction>0.1</RainfallInterceptionFraction>
           <RainShaddowWidth>1</RainShaddowWidth>
         </AgroforestrySystem>
+        <Graph>
+          <Name>TreeWaterUptake</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.TreeWaterUptake(5)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Predicted1</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>TreeReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TreeProxy.TreeWaterUptake(9)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
         <Area>0</Area>
         <Slope>0</Slope>
       </Simulation>
