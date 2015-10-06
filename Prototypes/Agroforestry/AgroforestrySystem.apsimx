@@ -396,6 +396,7 @@ The APSIM Agroforestry model has been developed to facilitate the modelling of t
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>Moora</string>
+        <string>MooraET</string>
       </SheetNames>
     </Model>
     <PredictedObserved>
@@ -674,6 +675,7 @@ namespace Models
               </ArrayOfString>
             </Table>
             <RootRadius>0.02</RootRadius>
+            <NumberOfTrees>20</NumberOfTrees>
             <Kd>1E-07</Kd>
             <BaseKL>0.01</BaseKL>
             <KValue>0.5</KValue>
@@ -4802,80 +4804,64 @@ namespace Models
                 <string>300-370</string>
               </ArrayOfString>
               <ArrayOfString>
-                <string>80</string>
-                <string />
-                <string />
-                <string>3</string>
-                <string>3</string>
-                <string>2</string>
-                <string>1</string>
-                <string>.5</string>
-                <string>.1</string>
-                <string>.1</string>
-                <string>.1</string>
-                <string>.1</string>
-                <string>.1</string>
-                <string>.1</string>
-              </ArrayOfString>
-              <ArrayOfString>
-                <string>80</string>
-                <string />
-                <string />
-                <string>2</string>
-                <string>2</string>
-                <string>1</string>
-                <string>.5</string>
-                <string>.5</string>
-                <string>.1</string>
-                <string>.1</string>
-                <string>.1</string>
-                <string>.1</string>
-                <string>.1</string>
-                <string>.1</string>
-              </ArrayOfString>
-              <ArrayOfString>
-                <string>80</string>
+                <string>100</string>
                 <string />
                 <string />
                 <string>1</string>
                 <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+              </ArrayOfString>
+              <ArrayOfString>
+                <string>100</string>
+                <string />
+                <string />
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
                 <string>.5</string>
-                <string>.2</string>
-                <string>.1</string>
-                <string>.1</string>
-                <string>.1</string>
-                <string>.1</string>
-                <string>.1</string>
+                <string>.5</string>
+                <string>.5</string>
+              </ArrayOfString>
+              <ArrayOfString>
+                <string>50</string>
+                <string />
+                <string />
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>.5</string>
+                <string>.5</string>
+                <string>.5</string>
+                <string>.5</string>
+                <string>.5</string>
                 <string>0</string>
                 <string>0</string>
               </ArrayOfString>
               <ArrayOfString>
-                <string>80</string>
+                <string>0</string>
                 <string />
                 <string />
-                <string>.1</string>
-                <string>.1</string>
-                <string>.1</string>
-                <string>.1</string>
-                <string>0</string>
-                <string>0</string>
-                <string>0</string>
-                <string>0</string>
-                <string>0</string>
-                <string>0</string>
-                <string>0</string>
-              </ArrayOfString>
-              <ArrayOfString>
-                <string>80</string>
-                <string />
-                <string />
-                <string>.02</string>
-                <string>.02</string>
-                <string>.02</string>
-                <string>.02</string>
-                <string>0</string>
-                <string>0</string>
-                <string>0</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>.5</string>
+                <string>.5</string>
+                <string>.5</string>
                 <string>0</string>
                 <string>0</string>
                 <string>0</string>
@@ -4885,11 +4871,11 @@ namespace Models
                 <string>0</string>
                 <string />
                 <string />
-                <string>.01</string>
-                <string>.01</string>
-                <string>.01</string>
-                <string>.01</string>
-                <string>0</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>.5</string>
                 <string>0</string>
                 <string>0</string>
                 <string>0</string>
@@ -4901,10 +4887,10 @@ namespace Models
                 <string>0</string>
                 <string />
                 <string />
-                <string>.01</string>
-                <string>.01</string>
-                <string>.01</string>
-                <string>.01</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
                 <string>0</string>
                 <string>0</string>
                 <string>0</string>
@@ -4917,10 +4903,26 @@ namespace Models
                 <string>0</string>
                 <string />
                 <string />
-                <string>.01</string>
-                <string>.01</string>
-                <string>.01</string>
-                <string>.01</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>0</string>
+                <string>0</string>
+                <string>0</string>
+                <string>0</string>
+                <string>0</string>
+                <string>0</string>
+                <string>0</string>
+              </ArrayOfString>
+              <ArrayOfString>
+                <string>0</string>
+                <string />
+                <string />
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
+                <string>1</string>
                 <string>0</string>
                 <string>0</string>
                 <string>0</string>
@@ -4963,8 +4965,9 @@ namespace Models
               </ArrayOfString>
             </Table>
             <RootRadius>0.02</RootRadius>
+            <NumberOfTrees>143</NumberOfTrees>
             <Kd>1E-07</Kd>
-            <BaseKL>0.05</BaseKL>
+            <BaseKL>0.02</BaseKL>
             <KValue>0.5</KValue>
             <dates>
               <dateTime>1996-06-20T00:00:00</dateTime>
@@ -4972,9 +4975,9 @@ namespace Models
               <dateTime>1998-05-06T00:00:00</dateTime>
             </dates>
             <heights>
-              <double>10000</double>
-              <double>10000</double>
-              <double>10000</double>
+              <double>4000</double>
+              <double>4000</double>
+              <double>4000</double>
             </heights>
             <NDemands>
               <double>0.1</double>
@@ -4996,7 +4999,9 @@ namespace Models
             <Name>TreeReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>[TreeProxy].WaterUptake</string>
+              <string>[TreeProxy].TreeWaterUptake</string>
+              <string>[TreeProxy].IndividualTreeWaterDemand</string>
+              <string>[TreeProxy].IndividualTreeWaterUptake</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -5417,10 +5422,10 @@ namespace Models
                   <double>0.1</double>
                 </NH4>
                 <SW>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
+                  <double>0.03</double>
+                  <double>0.03</double>
+                  <double>0.04</double>
+                  <double>0.05</double>
                   <double>0.06</double>
                   <double>0.06</double>
                   <double>0.07</double>
@@ -5811,12 +5816,12 @@ namespace Models
                   <double>0.1</double>
                 </NH4>
                 <SW>
-                  <double>0.08</double>
-                  <double>0.08</double>
-                  <double>0.08</double>
-                  <double>0.08</double>
-                  <double>0.08</double>
-                  <double>0.08</double>
+                  <double>0.03</double>
+                  <double>0.03</double>
+                  <double>0.03</double>
+                  <double>0.03</double>
+                  <double>0.05</double>
+                  <double>0.06</double>
                   <double>0.07</double>
                 </SW>
                 <NO3Units>ppm</NO3Units>
@@ -8599,7 +8604,7 @@ namespace Models
             <Width>5</Width>
           </RectangularZone>
           <Graph>
-            <Name>ESW</Name>
+            <Name>ESW Timeseries</Name>
             <Series>
               <Name>Predicted</Name>
               <Type>Scatter</Type>
@@ -8614,7 +8619,7 @@ namespace Models
               <TableName>DailyReport</TableName>
               <XFieldName>Date</XFieldName>
               <YFieldName>ESW</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
+              <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -8656,6 +8661,50 @@ namespace Models
             <DisabledSeries />
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
+          <Graph>
+            <Name>ESW</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16776961</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <Line>None</Line>
+              <TableName>PredictedObservedMoora</TableName>
+              <XFieldName>Observed.ESW</XFieldName>
+              <YFieldName>Predicted.ESW</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Graph>
           <Area>0.185</Area>
           <Slope>0</Slope>
           <RainfallInterceptionFraction>0.1</RainfallInterceptionFraction>
@@ -8684,6 +8733,82 @@ namespace Models
           <TableName>PredictedObservedMoora</TableName>
           <XFieldName>Observed.ESW</XFieldName>
           <YFieldName>Predicted.ESW</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>IndividualTreeWaterUptake</Name>
+        <Series>
+          <Name>PredictedUptake</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>TreeReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TreeProxy.IndividualTreeWaterUptake</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>PredictedDemand</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>TreeReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TreeProxy.IndividualTreeWaterDemand</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>MooraET</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>MonthlyTreeET_L</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -8980,6 +9105,7 @@ namespace Models
             </ArrayOfString>
           </Table>
           <RootRadius>0.02</RootRadius>
+          <NumberOfTrees>20</NumberOfTrees>
           <Kd>1E-07</Kd>
           <BaseKL>0.01</BaseKL>
           <KValue>0</KValue>

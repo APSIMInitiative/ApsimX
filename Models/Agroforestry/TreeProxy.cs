@@ -110,6 +110,12 @@ namespace Models.Agroforestry
         [Description("Root Radius (cm)")]
         public double RootRadius { get; set; }
 
+        /// <summary>Number of Trees in the System</summary>
+        /// <value>The number of trees</value>
+        [Summary]
+        [Description("Number of Trees in the System ")]
+        public double NumberOfTrees { get; set; }
+
         /// <summary>Adsoption Cofficient for NO3</summary>
         /// <value>Adsoption Cofficient for NO3</value>
         [Summary]
@@ -381,6 +387,43 @@ namespace Models.Agroforestry
             }
         }
 
+        /// <summary>
+        /// Calculate water use from each zone (mm)
+        /// </summary>
+        [Units("mm")]
+        [XmlIgnore]
+        public double[] TreeWaterUptake { get; private set; }
+
+        /// <summary>
+        /// Calculate water use on a per tree basis (L)
+        /// </summary>
+        [Units("L")]
+        public double IndividualTreeWaterUptake { 
+            get
+            {
+                double TWU = 0;
+                int i=0;
+
+                foreach (Zone zone in ZoneList)
+                {
+                    TWU += TreeWaterUptake[i] * zone.Area * 10000.0/NumberOfTrees;
+                    i++;
+                }
+                return TWU;
+            }
+        }
+
+        /// <summary>
+        /// Calculate water use on a per tree basis (L)
+        /// </summary>
+        [Units("L")]
+        [XmlIgnore]
+        public double IndividualTreeWaterDemand
+        {
+            get;
+            private set;
+        }
+        
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -394,6 +437,9 @@ namespace Models.Agroforestry
             forestryZones = Apsim.ChildrenRecursively(Parent, typeof(Zone));
             treeZone = ZoneList[0] as Zone;
             treeZoneWater = Apsim.Find(treeZone, typeof(Soils.SoilWater)) as Soils.SoilWater;
+
+            TreeWaterUptake = new double[ZoneList.Count];
+
         }
 
         /// <summary>
@@ -408,7 +454,8 @@ namespace Models.Agroforestry
             SWDemand = 0;
             foreach (Zone ZI in ZoneList)
                 SWDemand += Etz*GetShade(ZI) / 100 * ZI.Area * 10000;
-            
+
+            IndividualTreeWaterDemand = SWDemand / NumberOfTrees;
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
             double PotSWSupply = 0; // Total water supply (L)
@@ -575,18 +622,22 @@ namespace Models.Agroforestry
         /// <param name="info"></param>
         public void SetSWUptake(List<Soils.Arbitrator.ZoneWaterAndN> info)
         {
-            foreach (ZoneWaterAndN ZI in info)
+            int i = 0;
+            foreach (Zone SearchZ in forestryZones)
             {
-                foreach (Zone SearchZ in forestryZones)
+                foreach (ZoneWaterAndN ZI in info)
                 {
                     Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Name)
                     {
                         ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
                         ThisSoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(ZI.Water, -1); ;
+                        TreeWaterUptake[i] = MathUtilities.Sum(ZI.Water);
+                        i++;
                     }
                 }
             }
+            
         }
 
         /// <summary>
