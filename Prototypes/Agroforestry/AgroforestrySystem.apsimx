@@ -2147,6 +2147,12 @@ VShort duration variety released in New Zealand by Pioneer
   </DataStore>
   <Simulation>
     <Name>Moora</Name>
+    <Memo>
+      <Name>Memo</Name>
+      <MemoText><![CDATA[[Lefroy2001] present results for the fodder tree tagasaste (*Chamaecytisus proliferus* Link.) at alley and plantation densities on a deep sandy soil at Moora in Western Australia.  Alleys were planted as single rows of trees 30 m apart orientated north–south with 0.7 m between trees within a row.
+The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surface and 4.8 between 1 and 3 m. Water holding capacity was very low, with a drained upper limit of 0.10 and a lower limit of 0.03 m<sup>3</sup>/m<sup>3</sup>. A permanent fresh (<1 dS/m) perched watertable has developed over a clay layer approximately 10 m below the surface.  Soil water content was measured with neutron probes at 20-cm intervals
+to a depth of 3.7 m from July 1996 to December 1998 at 2-week intervals in winter and monthly over summer.  Transpiration was measured using sapflow sensors.  The data shown here are for the alley-fallow plots, which had Tagastaste rows spaced at 30m with no crop planted between.]]></MemoText>
+    </Memo>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1996-09-17T00:00:00</StartDate>
@@ -6254,7 +6260,7 @@ VShort duration variety released in New Zealand by Pioneer
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>IndividualTreeWaterUptake</Name>
@@ -6330,7 +6336,7 @@ VShort duration variety released in New Zealand by Pioneer
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -6342,7 +6348,8 @@ VShort duration variety released in New Zealand by Pioneer
       <MemoText><![CDATA[This test evaluates the performance of the APSIM AgroforestrySystem model in simulating the crop and soil water data for the data of [HuthPhD2010].  Monitoring of tree-crop competition was undertaken on a farm near the township of Warra, Qld (26.93<sup>o</sup>S, 150.93<sup>o</sup>E), where a belt of four rows of Eucalyptus argophloia Blakely at approximately 5 x 5 m spacing had been planted along the edge of fields used to grow wheat (*Triticum aestivum* L.), cotton (*Gossypium hirsutum* L.) and chickpeas (*Cicer arietinum* L.).  The trees were about 7 years old and nearly 10 m high at the start of the study. Tree-crop competition was monitored over 3 cropping seasons (two winters and one summer).  Agronomic management in the 2 cropping bays varied as they were at different stages of a cropping rotation.  The bay used in this model test was sown to wheat in the winter of 2004 and remained fallow during the ensuing summer and winter growing seasons.   Prior to harvest of the crop, plant samples were taken from quadrats consisting of 1 m of a plant row in 5 linear transects out to 50 m from the shelterbelt [HuthRobertsonPoulton2010].  Germination failure was significant next to the trees and so the positioning of samples was chosen to account for this (25m, 30m, 35m, 40m 50m).  The monitoring of soil moisture and its extraction by both trees and crops was undertaken using electromagnetic induction measurements [HuthPoulton2007] taken at 5 m intervals in four 50 m transects from the belt of trees.
 
 The simulations have been developed using data from various sources.  Rainfall data was obtained from an Australian Bureau of Meteorology rainfall station (No. 41291) situated on a farm 4.1 km from the study site. The soil properties have been developed using the data of [HuthRobertsonPoulton2010].
-]]></MemoText>
+
+NOTE: Yield predictions at this site are adequate, but an issue with simulating failed germination has been identified.  Data from the trial show complete germination failure out to a distance of 22 m from the trees.  The APSIM-Wheat model was not able to capture this germination failure, though much of the yield impact was captured through competition for water resources.]]></MemoText>
     </Memo>
     <Clock>
       <Name>Clock</Name>
@@ -10521,7 +10528,7 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>BiomassTransect</Name>
@@ -10579,7 +10586,7 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>GrainSizeTransect</Name>
@@ -10637,7 +10644,7 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>GrainNumberTransect</Name>
@@ -10695,7 +10702,7 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>TreeWaterUptakes</Name>
@@ -10880,6 +10887,7 @@ Soils are well-drained dark brown sandy clays. These soils are weakly to moderat
 
 At the beginning of each wet season, 1 to 2 m deep trenches (depending on depth to bedrock) were dug at the margins of each plot to stop roots from one plot penetrating into and exploiting adjacent plots. All cultivations were by hand tools which mimics farmer practise and caused minimal disturbance to tree roots. Similarly, each season, weeds were controlled by cutting/uprooting them with hand tools on 2 occasions after crop germination. Key measurements reported include transects from the tree row out to 8 maize rows for: soil water, tree and crop root length density, tree growth, and maize germination, biomass and grain yield. Maize germination and growth was severely limited by low rainfall and tree competition for water.
 
+NOTE: Germination failure was an important factor in determining yield impacts by trees within this trial.  The Maize model was not able to capture changes in plant population next to the trees.  Therefore, the measured plant populations for each row of crop next to the trees have been used in these simulations.
 ]]></MemoText>
     </Memo>
     <Simulation>
@@ -10914,166 +10922,6 @@ At the beginning of each wet season, 1 to 2 m deep trenches (depending on depth 
           </EventNames>
           <ResultsPerPage>0</ResultsPerPage>
         </Report>
-        <Manager>
-          <Name>Sowing1996</Name>
-          <Script>
-            <SowDate>13/03/1996</SowDate>
-            <CultivarName>Katumani</CultivarName>
-            <SowingDepth>30</SowingDepth>
-            <RowSpacing>1000</RowSpacing>
-            <Population>2.8</Population>
-            <Amount>100</Amount>
-            <CropName>Maize</CropName>
-          </Script>
-          <Code><![CDATA[using System;
-using System.Collections.Generic;
-using Models.Core;
-using Models.Agroforestry;
-using Models.PMF;
-using Models.Soils;
-using Models.Utilities;
-using Models.Zones;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Summary Summary;
-		
-		[Description("Sowing date (d-mmm-yyyy)")]
-		public string SowDate { get; set; }
-		[Description("Cultivar to be sown")]
-		public string CultivarName { get; set; }
-		[Description("Sowing depth (mm)")]
-		public double SowingDepth { get; set; }
-		[Description("Row spacing (mm)")]
-		public double RowSpacing { get; set; }
-		[Description("Plant population (/m2)")]
-		public double Population { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount { get; set; }
-		[Description("Crop to be fertilised")]
-		public string CropName { get; set; }
-		
-		private List<IModel> Zones;
-		private Plant Maize;
-		private Soil Soil;
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Zones = Apsim.FindAll(this, typeof(RectangularZone));
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{		
-			if (DateUtilities.DMYtoDate(SowDate) == Clock.Today)
-			{
-			
-				foreach (Zone z in Zones)
-				{
-					Maize = Apsim.Find(z, typeof(Plant)) as Plant;	
-					Soil = Apsim.Find(z, typeof(Soil)) as Soil;
-							
-					if (Maize != null)
-					{
-						Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);
-						Fertiliser Fertiliser = Apsim.Find(Maize.Parent, typeof(Fertiliser)) as Fertiliser;
-						Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
-					}
-					//else
-					//	throw new ApsimXException(null, "Cannot sow Maize on that date");
-				}
-			}
-		}
-	}
-}
-]]></Code>
-        </Manager>
-        <Manager>
-          <Name>Sowing1997</Name>
-          <Script>
-            <SowDate>02/04/1997</SowDate>
-            <CultivarName>Katumani</CultivarName>
-            <SowingDepth>30</SowingDepth>
-            <RowSpacing>1000</RowSpacing>
-            <Population>2.8</Population>
-            <Amount>100</Amount>
-            <CropName>Maize</CropName>
-          </Script>
-          <Code><![CDATA[using System;
-using System.Collections.Generic;
-using Models.Core;
-using Models.Agroforestry;
-using Models.PMF;
-using Models.Soils;
-using Models.Utilities;
-using Models.Zones;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Summary Summary;
-		
-		[Description("Sowing date (d-mmm-yyyy)")]
-		public string SowDate { get; set; }
-		[Description("Cultivar to be sown")]
-		public string CultivarName { get; set; }
-		[Description("Sowing depth (mm)")]
-		public double SowingDepth { get; set; }
-		[Description("Row spacing (mm)")]
-		public double RowSpacing { get; set; }
-		[Description("Plant population (/m2)")]
-		public double Population { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount { get; set; }
-		[Description("Crop to be fertilised")]
-		public string CropName { get; set; }
-		
-		private List<IModel> Zones;
-		private Plant Maize;
-		private Soil Soil;
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Zones = Apsim.FindAll(this, typeof(RectangularZone));
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{		
-			if (DateUtilities.DMYtoDate(SowDate) == Clock.Today)
-			{
-			
-				foreach (Zone z in Zones)
-				{
-					Maize = Apsim.Find(z, typeof(Plant)) as Plant;	
-					Soil = Apsim.Find(z, typeof(Soil)) as Soil;
-							
-					if (Maize != null)
-					{
-						Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);
-						Fertiliser Fertiliser = Apsim.Find(Maize.Parent, typeof(Fertiliser)) as Fertiliser;
-						Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
-					}
-					//else
-					//	throw new ApsimXException(null, "Cannot sow Maize on that date");
-				}
-			}
-		}
-	}
-}
-]]></Code>
-        </Manager>
         <TreeProxy>
           <Name>TreeProxy</Name>
           <Table>
@@ -11929,6 +11777,25 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Maize].Sow(population:0.21, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Maize].Sow(population: 0.21, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -12425,6 +12292,25 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Maize].Sow(population:0.58, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Maize].Sow(population: 0.58, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -12921,6 +12807,25 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Maize].Sow(population: 1.45, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Maize].Sow(population: 1.45, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -13417,6 +13322,25 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.1, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.1, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -13913,6 +13837,25 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.29, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.29, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -14409,6 +14352,25 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.56, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.56, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -14905,6 +14867,25 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.8, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.8, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -15401,6 +15382,25 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.8, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.8, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -16108,246 +16108,6 @@ namespace Models
           </EventNames>
           <ResultsPerPage>0</ResultsPerPage>
         </Report>
-        <Manager>
-          <Name>Sowing1996</Name>
-          <Script>
-            <SowDate>13/03/1996</SowDate>
-            <CultivarName>Katumani</CultivarName>
-            <SowingDepth>30</SowingDepth>
-            <RowSpacing>1000</RowSpacing>
-            <Population>2.8</Population>
-            <Amount>0</Amount>
-            <CropName>Maize</CropName>
-          </Script>
-          <Code><![CDATA[using System;
-using System.Collections.Generic;
-using Models.Core;
-using Models.Agroforestry;
-using Models.PMF;
-using Models.Soils;
-using Models.Utilities;
-using Models.Zones;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Summary Summary;
-		
-		[Description("Sowing date (d-mmm-yyyy)")]
-		public string SowDate { get; set; }
-		[Description("Cultivar to be sown")]
-		public string CultivarName { get; set; }
-		[Description("Sowing depth (mm)")]
-		public double SowingDepth { get; set; }
-		[Description("Row spacing (mm)")]
-		public double RowSpacing { get; set; }
-		[Description("Plant population (/m2)")]
-		public double Population { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount { get; set; }
-		[Description("Crop to be fertilised")]
-		public string CropName { get; set; }
-		
-		private List<IModel> Zones;
-		private Plant Maize;
-		private Soil Soil;
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Zones = Apsim.FindAll(this, typeof(RectangularZone));
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{		
-			if (DateUtilities.DMYtoDate(SowDate) == Clock.Today)
-			{
-			
-				foreach (Zone z in Zones)
-				{
-					Maize = Apsim.Find(z, typeof(Plant)) as Plant;	
-					Soil = Apsim.Find(z, typeof(Soil)) as Soil;
-							
-					if (Maize != null)
-					{
-						Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);
-						Fertiliser Fertiliser = Apsim.Find(Maize.Parent, typeof(Fertiliser)) as Fertiliser;
-						Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
-					}
-					//else
-					//	throw new ApsimXException(null, "Cannot sow Maize on that date");
-				}
-			}
-		}
-	}
-}
-]]></Code>
-        </Manager>
-        <Manager>
-          <Name>Sowing1996Short</Name>
-          <Script>
-            <SowDate>1/11/2015</SowDate>
-            <CultivarName>Katumani</CultivarName>
-            <SowingDepth>30</SowingDepth>
-            <RowSpacing>1000</RowSpacing>
-            <Population>2.8</Population>
-            <Amount>0</Amount>
-            <CropName>Maize</CropName>
-          </Script>
-          <Code><![CDATA[using System;
-using System.Collections.Generic;
-using Models.Core;
-using Models.Agroforestry;
-using Models.PMF;
-using Models.Soils;
-using Models.Utilities;
-using Models.Zones;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Summary Summary;
-		
-		[Description("Sowing date (d-mmm-yyyy)")]
-		public string SowDate { get; set; }
-		[Description("Cultivar to be sown")]
-		public string CultivarName { get; set; }
-		[Description("Sowing depth (mm)")]
-		public double SowingDepth { get; set; }
-		[Description("Row spacing (mm)")]
-		public double RowSpacing { get; set; }
-		[Description("Plant population (/m2)")]
-		public double Population { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount { get; set; }
-		[Description("Crop to be fertilised")]
-		public string CropName { get; set; }
-		
-		private List<IModel> Zones;
-		private Plant Maize;
-		private Soil Soil;
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Zones = Apsim.FindAll(this, typeof(RectangularZone));
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{		
-			if (DateUtilities.DMYtoDate(SowDate) == Clock.Today)
-			{
-			
-				foreach (Zone z in Zones)
-				{
-					Maize = Apsim.Find(z, typeof(Plant)) as Plant;	
-					Soil = Apsim.Find(z, typeof(Soil)) as Soil;
-							
-					if (Maize != null)
-					{
-						Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);
-						Fertiliser Fertiliser = Apsim.Find(Maize.Parent, typeof(Fertiliser)) as Fertiliser;
-						Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
-					}
-					//else
-					//	throw new ApsimXException(null, "Cannot sow Maize on that date");
-				}
-			}
-		}
-	}
-}
-]]></Code>
-        </Manager>
-        <Manager>
-          <Name>Sowing1997</Name>
-          <Script>
-            <SowDate>02/04/1997</SowDate>
-            <CultivarName>Katumani</CultivarName>
-            <SowingDepth>30</SowingDepth>
-            <RowSpacing>1000</RowSpacing>
-            <Population>2.8</Population>
-            <Amount>30</Amount>
-            <CropName>Maize</CropName>
-          </Script>
-          <Code><![CDATA[using System;
-using System.Collections.Generic;
-using Models.Core;
-using Models.Agroforestry;
-using Models.PMF;
-using Models.Soils;
-using Models.Utilities;
-using Models.Zones;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Summary Summary;
-		
-		[Description("Sowing date (d-mmm-yyyy)")]
-		public string SowDate { get; set; }
-		[Description("Cultivar to be sown")]
-		public string CultivarName { get; set; }
-		[Description("Sowing depth (mm)")]
-		public double SowingDepth { get; set; }
-		[Description("Row spacing (mm)")]
-		public double RowSpacing { get; set; }
-		[Description("Plant population (/m2)")]
-		public double Population { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount { get; set; }
-		[Description("Crop to be fertilised")]
-		public string CropName { get; set; }
-		
-		private List<IModel> Zones;
-		private Plant Maize;
-		private Soil Soil;
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Zones = Apsim.FindAll(this, typeof(RectangularZone));
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{		
-			if (DateUtilities.DMYtoDate(SowDate) == Clock.Today)
-			{
-			
-				foreach (Zone z in Zones)
-				{
-					Maize = Apsim.Find(z, typeof(Plant)) as Plant;	
-					Soil = Apsim.Find(z, typeof(Soil)) as Soil;
-							
-					if (Maize != null)
-					{
-						Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);
-						Fertiliser Fertiliser = Apsim.Find(Maize.Parent, typeof(Fertiliser)) as Fertiliser;
-						Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
-					}
-					//else
-					//	throw new ApsimXException(null, "Cannot sow Maize on that date");
-				}
-			}
-		}
-	}
-}
-]]></Code>
-        </Manager>
         <TreeProxy>
           <Name>TreeProxy</Name>
           <Table>
@@ -17178,6 +16938,25 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Maize].Sow(population: 0.21, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Maize].Sow(population: 0.21, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -17674,6 +17453,25 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Maize].Sow(population: 0.3, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Maize].Sow(population: 0.3, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -18170,6 +17968,25 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Maize].Sow(population: 1.0, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Maize].Sow(population: 1.0, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -18666,6 +18483,25 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Maize].Sow(population: 1.83, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Maize].Sow(population: 1.83, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -19162,6 +18998,25 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.29, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.29, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -19658,6 +19513,25 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.62, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.62, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -20154,6 +20028,25 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.8, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.8, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -20650,6 +20543,25 @@ namespace Models
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.8, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-03-13T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Maize].Sow(population: 2.8, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-04-02T00:00:00</Date>
+              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -21794,6 +21706,14 @@ namespace Models
   </Folder>
   <Folder>
     <Name>Sensibility Test</Name>
+    <Memo>
+      <Name>Memo</Name>
+      <MemoText><![CDATA[[Bennell2008] summarised yield data from cereal and pulse crops collected from windbreak sites through the eastern agricultural
+districts of South Australia, using a harvester equipped with a yield monitor. The yield response in the sheltered benefit zone is +3.7%
+for all cereals (2.2H–9.7H).  They found, for wheat, that the average width of expression of the competition zone to be 2 tree heights with a 4% increase in yields within the sheltered zone (2H-11H).
+
+This sensibility test assumes a tree windbreak with a of height of 10m.  The competition zone should therefore be evident out to 20m from the trees with only marginal increase in yields from 20-110m from the trees.]]></MemoText>
+    </Memo>
     <Simulation>
       <Name>South Australia</Name>
       <Clock>
@@ -21816,17 +21736,17 @@ namespace Models
         <Manager>
           <Name>SowingRule</Name>
           <Script>
-            <StartDate>23-jun</StartDate>
+            <StartDate>15-may</StartDate>
             <EndDate>24-jun</EndDate>
-            <MinESW>0</MinESW>
+            <MinESW>30</MinESW>
             <ESWZoneName>50m</ESWZoneName>
-            <MinRain>0</MinRain>
+            <MinRain>25</MinRain>
             <RainDays>7</RainDays>
             <CultivarName>h45</CultivarName>
             <SowingDepth>30</SowingDepth>
             <RowSpacing>250</RowSpacing>
             <Population>120</Population>
-            <Amount>100</Amount>
+            <Amount>60</Amount>
             <CropName>wheat</CropName>
           </Script>
           <Code><![CDATA[using System;
@@ -24027,10 +23947,399 @@ namespace Models
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
-          <Area>0.1</Area>
+          <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
-          <Width>10</Width>
+          <Width>5</Width>
+        </RectangularZone>
+        <RectangularZone>
+          <Name>25m</Name>
+          <LocalMicroClimate>
+            <Name>LocalMicroClimate</Name>
+          </LocalMicroClimate>
+          <MicroClimate>
+            <Name>MicroClimate</Name>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
+            <a_interception>0</a_interception>
+            <b_interception>0</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
+          </MicroClimate>
+          <Report>
+            <Name>HarvestReport</Name>
+            <VariableNames>
+              <string>[Clock].Today</string>
+              <string>[Zone].Area</string>
+              <string>Distance</string>
+              <string>[Wheat].AboveGround.Wt as BiomassWt</string>
+              <string>[Wheat].Grain.Wt as GrainWt</string>
+              <string>[Wheat].Grain.Size as GrainSize</string>
+              <string>[Wheat].Grain.GrainNo as GrainNumber</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Wheat].Harvesting</string>
+            </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
+          </Report>
+          <Report>
+            <Name>DailyReport</Name>
+            <VariableNames>
+              <string>[Clock].Today</string>
+              <string>Distance</string>
+              <string>LocalMicroClimate.Wind</string>
+              <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
+              <string>sum([Soil].NO3N) as TotalNO3N</string>
+              <string>sum([Soil].NH4N) as TotalNH4N</string>
+              <string>[MicroClimate].peta</string>
+              <string>[MicroClimate].petr</string>
+              <string>[Wheat].AboveGround.Wt as BiomassWt</string>
+              <string>[Wheat].Grain.Wt as GrainWt</string>
+              <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Clock].DoReport</string>
+            </EventNames>
+            <ResultsPerPage>0</ResultsPerPage>
+          </Report>
+          <Fertiliser>
+            <Name>Fertiliser</Name>
+          </Fertiliser>
+          <SurfaceOrganicMatter>
+            <Name>SurfaceOrganicMatter</Name>
+            <ResidueTypes>
+              <Name>ResidueTypes</Name>
+              <LoadFromResource>ResidueTypes</LoadFromResource>
+            </ResidueTypes>
+            <Pools>
+              <Pool>
+                <PoolName>wheat_stubble</PoolName>
+                <ResidueType>wheat</ResidueType>
+                <Mass>500</Mass>
+                <CNRatio>100</CNRatio>
+                <CPRatio>NaN</CPRatio>
+                <StandingFraction>0</StandingFraction>
+              </Pool>
+            </Pools>
+            <PoolName>wheat_stubble</PoolName>
+            <type>wheat</type>
+            <mass>500</mass>
+            <standing_fraction>0</standing_fraction>
+            <cpr />
+            <cnr>100</cnr>
+            <CriticalResidueWeight>2000</CriticalResidueWeight>
+            <OptimumDecompTemp>20</OptimumDecompTemp>
+            <MaxCumulativeEOS>20</MaxCumulativeEOS>
+            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+            <TotalLeachRain>25</TotalLeachRain>
+            <MinRainToLeach>10</MinRainToLeach>
+            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+            <DefaultCPRatio>0</DefaultCPRatio>
+            <DefaultStandingFraction>0</DefaultStandingFraction>
+            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
+          </SurfaceOrganicMatter>
+          <Plant15>
+            <Name>Wheat</Name>
+            <ResourceName>Wheat</ResourceName>
+            <AutoHarvest>true</AutoHarvest>
+            <CropType>Wheat</CropType>
+          </Plant15>
+          <Soil>
+            <Name>Soil</Name>
+            <Water>
+              <Name>Water</Name>
+              <SoilCrop>
+                <Name>WheatSoil</Name>
+                <LL>
+                  <double>0.05</double>
+                  <double>0.18</double>
+                  <double>0.21</double>
+                  <double>0.24</double>
+                  <double>0.23</double>
+                  <double>0.3</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.04</double>
+                  <double>0.02</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </XF>
+              </SoilCrop>
+              <Thickness>
+                <double>100</double>
+                <double>150</double>
+                <double>250</double>
+                <double>200</double>
+                <double>300</double>
+                <double>400</double>
+              </Thickness>
+              <BD>
+                <double>1.4</double>
+                <double>1.36</double>
+                <double>1.33</double>
+                <double>1.34</double>
+                <double>1.31</double>
+                <double>1.35</double>
+              </BD>
+              <AirDry>
+                <double>0.05</double>
+                <double>0.15</double>
+                <double>0.21</double>
+                <double>0.24</double>
+                <double>0.23</double>
+                <double>0.3</double>
+              </AirDry>
+              <LL15>
+                <double>0.05</double>
+                <double>0.18</double>
+                <double>0.21</double>
+                <double>0.24</double>
+                <double>0.23</double>
+                <double>0.3</double>
+              </LL15>
+              <DUL>
+                <double>0.33</double>
+                <double>0.41</double>
+                <double>0.42</double>
+                <double>0.41</double>
+                <double>0.43</double>
+                <double>0.41</double>
+              </DUL>
+              <SAT>
+                <double>0.44</double>
+                <double>0.46</double>
+                <double>0.47</double>
+                <double>0.46</double>
+                <double>0.48</double>
+                <double>0.46</double>
+              </SAT>
+            </Water>
+            <SoilWater>
+              <Name>SoilWater</Name>
+              <residueinterception>0</residueinterception>
+              <SummerDate>1-Nov</SummerDate>
+              <SummerU>6</SummerU>
+              <SummerCona>3.5</SummerCona>
+              <WinterDate>1-Apr</WinterDate>
+              <WinterU>6</WinterU>
+              <WinterCona>3.5</WinterCona>
+              <DiffusConst>40</DiffusConst>
+              <DiffusSlope>16</DiffusSlope>
+              <Salb>0.12</Salb>
+              <CN2Bare>75</CN2Bare>
+              <CNRed>20</CNRed>
+              <CNCov>0.8</CNCov>
+              <slope>NaN</slope>
+              <discharge_width>NaN</discharge_width>
+              <catchment_area>NaN</catchment_area>
+              <max_pond>0</max_pond>
+              <Thickness>
+                <double>100</double>
+                <double>150</double>
+                <double>250</double>
+                <double>200</double>
+                <double>300</double>
+                <double>400</double>
+              </Thickness>
+              <SWCON>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.3</double>
+                <double>0.3</double>
+              </SWCON>
+            </SoilWater>
+            <SoilNitrogen>
+              <Name>SoilNitrogen</Name>
+              <fom_type>
+                <string>default</string>
+                <string>manure</string>
+                <string>mucuna</string>
+                <string>lablab</string>
+                <string>shemp</string>
+                <string>stable</string>
+              </fom_type>
+              <fract_carb>
+                <double>0.2</double>
+                <double>0.3</double>
+                <double>0.54</double>
+                <double>0.57</double>
+                <double>0.45</double>
+                <double>0</double>
+              </fract_carb>
+              <fract_cell>
+                <double>0.7</double>
+                <double>0.3</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.47</double>
+                <double>0.1</double>
+              </fract_cell>
+              <fract_lign>
+                <double>0.1</double>
+                <double>0.4</double>
+                <double>0.09</double>
+                <double>0.06</double>
+                <double>0.08</double>
+                <double>0.9</double>
+              </fract_lign>
+              <wfpsN2N2O_x>
+                <double>22</double>
+                <double>88</double>
+              </wfpsN2N2O_x>
+              <wfpsN2N2O_y>
+                <double>0.1</double>
+                <double>1</double>
+              </wfpsN2N2O_y>
+            </SoilNitrogen>
+            <SoilOrganicMatter>
+              <Name>SoilOrganicMatter</Name>
+              <RootCN>40</RootCN>
+              <RootWt>1000</RootWt>
+              <SoilCN>12</SoilCN>
+              <EnrACoeff>7.4</EnrACoeff>
+              <EnrBCoeff>0.2</EnrBCoeff>
+              <Thickness>
+                <double>100</double>
+                <double>150</double>
+                <double>250</double>
+                <double>200</double>
+                <double>300</double>
+                <double>400</double>
+              </Thickness>
+              <Depth>
+                <string>0-10</string>
+                <string>10-25</string>
+                <string>25-50</string>
+                <string>50-70</string>
+                <string>70-100</string>
+                <string>100-140</string>
+              </Depth>
+              <OC>
+                <double>1.7</double>
+                <double>0.8</double>
+                <double>0.3</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </OC>
+              <FBiom>
+                <double>0.04</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.01</double>
+                <double>0.01</double>
+              </FBiom>
+              <FInert>
+                <double>0.5</double>
+                <double>0.6</double>
+                <double>0.8</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </FInert>
+              <OCUnits>Total</OCUnits>
+            </SoilOrganicMatter>
+            <Analysis>
+              <Name>Analysis</Name>
+              <Thickness>
+                <double>100</double>
+                <double>150</double>
+                <double>250</double>
+                <double>200</double>
+                <double>300</double>
+                <double>400</double>
+              </Thickness>
+              <PH>
+                <double>7.8</double>
+                <double>7.9</double>
+                <double>8.3</double>
+                <double>8.3</double>
+                <double>8.3</double>
+                <double>8.4</double>
+              </PH>
+              <PHUnits>Water</PHUnits>
+              <BoronUnits>HotWater</BoronUnits>
+            </Analysis>
+            <InitialWater>
+              <Name>InitialWater</Name>
+              <PercentMethod>FilledFromTop</PercentMethod>
+              <FractionFull>0.33</FractionFull>
+              <DepthWetSoil>NaN</DepthWetSoil>
+            </InitialWater>
+            <Sample>
+              <Name>Sample</Name>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <NO3>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </NO3>
+              <NH4>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+              </NH4>
+              <NO3Units>ppm</NO3Units>
+              <NH4Units>ppm</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
+            <RecordNumber>580</RecordNumber>
+            <SoilType>Clay</SoilType>
+            <Site>Wolseley</Site>
+            <NearestTown>Wolseley</NearestTown>
+            <Region>Upper South East</Region>
+            <State>South Australia</State>
+            <Country>Australia</Country>
+            <ApsoilNumber>344</ApsoilNumber>
+            <Latitude>-36.389</Latitude>
+            <Longitude>140.899</Longitude>
+            <DataSource>APSoil</DataSource>
+            <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
+          </Soil>
+          <Area>0.05</Area>
+          <Slope>0</Slope>
+          <Length>100</Length>
+          <Width>5</Width>
         </RectangularZone>
         <RectangularZone>
           <Name>30m</Name>
