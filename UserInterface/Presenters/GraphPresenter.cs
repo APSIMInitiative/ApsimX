@@ -212,7 +212,8 @@ namespace UserInterface.Presenters
 
             graphView.Export(img, true);
 
-            string fileName = Path.Combine(folder, graph.Name + ".png");
+            string path = Apsim.FullPath(graph).Replace(".Simulations.", "");
+            string fileName = Path.Combine(folder, path + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 
             return fileName;
