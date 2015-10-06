@@ -62,6 +62,9 @@ namespace UserInterface.Views
         /// <summary>Graph.</summary>
         public IGraphView GraphView { get { return graphView1; } }
 
+        /// <summary>Filter box.</summary>
+        public IEditView Filter { get { return editView1; } }
+
         /// <summary>Show or hide the x2 and y2 drop downs.</summary>
         /// <param name="show"></param>
         public void ShowX2Y2(bool show)

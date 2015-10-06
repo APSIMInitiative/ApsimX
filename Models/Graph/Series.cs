@@ -90,20 +90,17 @@ namespace Models.Graph
         /// <summary>Gets or sets the name of the y2 field</summary>
         public string Y2FieldName { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the series should be shown in the legend
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether the series should be shown in the legend</summary>
         public bool ShowInLegend { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the Y variables should be cumulative.
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether the Y variables should be cumulative.</summary>
         public bool Cumulative { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the X variables should be cumulative.
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether the X variables should be cumulative.</summary>
         public bool CumulativeX { get; set; }
+
+        /// <summary>Optional data filter.</summary>
+        public string Filter { get; set; }
 
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
@@ -479,8 +476,13 @@ namespace Models.Graph
                 if (Y2FieldName != null)
                     fieldNames.Add(Y2FieldName);
 
+                string where = "(" + filter;
+                if (Filter != null && Filter != string.Empty)
+                    where += " AND (" + Filter + ")";
+                where += ")";
+
                 DataStore dataStore = new DataStore(this);
-                DataTable data = dataStore.GetFilteredData(TableName, fieldNames.ToArray(), "(" + filter + ")");
+                DataTable data = dataStore.GetFilteredData(TableName, fieldNames.ToArray(), where);
                 
                 dataStore.Disconnect();
 

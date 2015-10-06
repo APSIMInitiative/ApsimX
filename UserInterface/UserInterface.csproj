@@ -238,6 +238,12 @@
     <Compile Include="Views\ColourDropDownView.Designer.cs">
       <DependentUpon>ColourDropDownView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\EditBoxView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\EditBoxView.Designer.cs">
+      <DependentUpon>EditBoxView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\DropDownView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -430,6 +436,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ColourDropDownView.resx">
       <DependentUpon>ColourDropDownView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\EditBoxView.resx">
+      <DependentUpon>EditBoxView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\DropDownView.resx">
       <DependentUpon>DropDownView.cs</DependentUpon>

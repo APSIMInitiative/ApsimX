@@ -57,6 +57,9 @@ namespace UserInterface.Interfaces
         /// <summary>Graph.</summary>
         IGraphView GraphView { get; }
 
+        /// <summary>Filter box.</summary>
+        IEditView Filter { get; }
+
         /// <summary>Show or hide the x2 and y2 drop downs.</summary>
         /// <param name="show"></param>
         void ShowX2Y2(bool show);
