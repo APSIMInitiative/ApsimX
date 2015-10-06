@@ -78,7 +78,11 @@ namespace Models.PostSimulationTools
                 StringBuilder query = new StringBuilder("SELECT ");
                 foreach (string s in commonCols)
                 {
-                    query.Append("I.'@field' AS 'Observed.@field', R.'@field' AS 'Predicted.@field', ");
+                    if (s == FieldNameUsedForMatch || s == FieldName2UsedForMatch || s == FieldName3UsedForMatch)
+                        query.Append("I.'@field', ");
+                    else
+                        query.Append("I.'@field' AS 'Observed.@field', R.'@field' AS 'Predicted.@field', ");
+
                     query.Replace("@field", s);
                 }
 

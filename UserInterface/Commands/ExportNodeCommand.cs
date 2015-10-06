@@ -18,6 +18,8 @@ using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.DocumentObjectModel.Shapes;
 using UserInterface.Classes;
 using MigraDoc.DocumentObjectModel.Fields;
+using Models.Agroforestry;
+using Models.Zones;
 
 namespace UserInterface.Commands
 {
@@ -36,7 +38,11 @@ namespace UserInterface.Commands
         private static Type[] modelTypesToRecurseDown = new Type[] {typeof(Folder),
                                                                     typeof(Simulations),
                                                                     typeof(Simulation),
-                                                                    typeof(Experiment)};
+                                                                    typeof(Experiment),
+                                                                    typeof(Zone),
+                                                                    typeof(AgroforestrySystem),
+                                                                    typeof(CircularZone),
+                                                                    typeof(RectangularZone)};
 
         /// <summary>A .bib file instance.</summary>
         private BibTeX bibTeX;
@@ -123,8 +129,7 @@ namespace UserInterface.Commands
         /// <returns>True if something was written to index.</returns>
         private void AddValidationTags(List<AutoDocumentation.ITag> tags, IModel modelToExport, int headingLevel, string workingDirectory)
         {
-            if (modelToExport.Name != "Simulations")
-                tags.Add(new AutoDocumentation.Heading(modelToExport.Name, headingLevel));
+            int savedIndex = tags.Count;
 
             // Look for child models that are a folder or simulation etc
             // that we need to recurse down through.
@@ -143,6 +148,10 @@ namespace UserInterface.Commands
                         child.Document(tags, headingLevel, 0);
                 }
             }
+
+            bool somethingAdded = savedIndex != tags.Count;
+            if (somethingAdded && modelToExport.Name != "Simulations")
+                tags.Insert(savedIndex, new AutoDocumentation.Heading(modelToExport.Name, headingLevel));
         }
 
         #region PDF
@@ -190,6 +199,8 @@ namespace UserInterface.Commands
             // Document model validation.
             tags.Add(new AutoDocumentation.Heading("Validation", 1));
             AddValidationTags(tags, ExplorerPresenter.ApsimXFile, 1, workingDirectory);
+
+
 
             // Scan for citations.
             ScanForCitations(tags);
@@ -459,8 +470,7 @@ namespace UserInterface.Commands
             citations.Sort(new BibTeX.CitationComparer());
             foreach (BibTeX.Citation citation in citations)
             {
-                string url = citation.URL.Replace("=", "EQUALS");
-                url = url.Replace("&", "AND");
+                string url = citation.URL;
                 string text;
                 if (url != string.Empty)
                     text = string.Format("<a href=\"{0}\">{1}</a>", url, citation.BibliographyText);

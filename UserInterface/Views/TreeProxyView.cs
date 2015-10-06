@@ -822,7 +822,7 @@ namespace UserInterface.Views
             List<DateTime> dates = new List<DateTime>();
             foreach (DataGridViewRow row in dgvHeights.Rows)
             {
-                if (row.Cells[0].Value != null)
+                if (row.Cells[0].Value != null && row.Cells[0].Value.ToString() != "")
                     dates.Add(DateTime.Parse(row.Cells[0].Value.ToString()));
             }
             return dates.ToArray();

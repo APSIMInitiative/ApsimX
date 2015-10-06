@@ -96,6 +96,7 @@
         {
             string href = node.GetAttributeValue("href", "");
             Hyperlink link;
+            href = href.Replace("&amp;", "&");
             if (href.StartsWith("#"))
                 link = GetParagraph(section).AddHyperlink(href.Substring(1), HyperlinkType.Bookmark);
             else
