@@ -60,6 +60,7 @@ namespace Models.PMF.OldPlant
         public double FRGR { get { return Plant.FRGR; } }
 
         /// <summary>Sets the potential evapotranspiration.</summary>
+        [XmlIgnore]
         public double PotentialEP { get { return Plant.PotentialEP; } set { Plant.PotentialEP = value; } }
 
         /// <summary>Sets the light profile.</summary>
