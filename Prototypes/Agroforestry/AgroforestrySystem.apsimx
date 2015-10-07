@@ -2364,7 +2364,6 @@ to a depth of 3.7 m from July 1996 to December 1998 at 2-week intervals in winte
           </ArrayOfString>
         </Table>
         <RootRadius>0.02</RootRadius>
-        <NumberOfTrees>143</NumberOfTrees>
         <Kd>1E-07</Kd>
         <BaseKL>0.05</BaseKL>
         <KValue>0.5</KValue>
@@ -6157,8 +6156,8 @@ to a depth of 3.7 m from July 1996 to December 1998 at 2-week intervals in winte
       </Graph>
       <Area>0.185</Area>
       <Slope>0</Slope>
-      <RainfallInterceptionFraction>0.1</RainfallInterceptionFraction>
-      <RainShaddowWidth>1</RainShaddowWidth>
+      <RainfallInterceptionFraction>0</RainfallInterceptionFraction>
+      <RainShaddowWidth>0</RainShaddowWidth>
     </AgroforestrySystem>
     <Graph>
       <Name>TreeWaterUptake</Name>
@@ -6598,7 +6597,6 @@ namespace Models
           </ArrayOfString>
         </Table>
         <RootRadius>0.02</RootRadius>
-        <NumberOfTrees>20</NumberOfTrees>
         <Kd>1E-07</Kd>
         <BaseKL>0.05</BaseKL>
         <KValue>0.5</KValue>
@@ -11083,7 +11081,6 @@ NOTE: Germination failure was an important factor in determining yield impacts b
             </ArrayOfString>
           </Table>
           <RootRadius>0.02</RootRadius>
-          <NumberOfTrees>0</NumberOfTrees>
           <Kd>1E-07</Kd>
           <BaseKL>0.05</BaseKL>
           <KValue>0</KValue>
@@ -16269,7 +16266,6 @@ namespace Models
             </ArrayOfString>
           </Table>
           <RootRadius>0.02</RootRadius>
-          <NumberOfTrees>0</NumberOfTrees>
           <Kd>1E-07</Kd>
           <BaseKL>0.05</BaseKL>
           <KValue>0</KValue>
@@ -21979,7 +21975,6 @@ namespace Models
             </ArrayOfString>
           </Table>
           <RootRadius>0.02</RootRadius>
-          <NumberOfTrees>20</NumberOfTrees>
           <Kd>1E-07</Kd>
           <BaseKL>0.01</BaseKL>
           <KValue>0</KValue>
