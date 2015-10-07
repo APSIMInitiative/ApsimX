@@ -10,72 +10,49 @@ using System.Windows.Forms;
 namespace UserInterface.Views
 {
     /// <summary>An interface for a drop down</summary>
-    public interface IDropDownView
+    public interface IEditView
     {
         /// <summary>Invoked when the user changes the selection</summary>
         event EventHandler Changed;
 
-        /// <summary>Get or sets the list of valid values.</summary>
-        string[] Values { get; set; }
-
-        /// <summary>Gets or sets the selected value.</summary>
-        string SelectedValue { get; set; }
+        /// <summary>Gets or sets the Text</summary>
+        string Value { get; set; }
 
         /// <summary>Return true if dropdown is visible.</summary>
         bool IsVisible { get; set; }
     }
 
     /// <summary>A drop down view.</summary>
-    public partial class DropDownView : UserControl, IDropDownView
+    public partial class EditView : UserControl, IEditView
     {
         /// <summary>Invoked when the user changes the selection</summary>
         public event EventHandler Changed;
 
         /// <summary>Constructor</summary>
-        public DropDownView()
+        public EditView()
         {
             InitializeComponent();
-            comboBox1.Visible = true;
+            textBox1.Visible = true;
         }
 
-        /// <summary>Get or sets the list of valid values.</summary>
-        public string[] Values
+        /// <summary>Gets or sets the Text.</summary>
+        public string Value
         {
             get
             {
-                List<string> items = new List<string>();
-                foreach (string item in comboBox1.Items)
-                    items.Add(item);
-                return items.ToArray();
+                return textBox1.Text;
             }
             set
             {
-                comboBox1.Items.Clear();
-                comboBox1.Items.AddRange(value);
-            }
-        }
-
-        /// <summary>Gets or sets the selected value.</summary>
-        public string SelectedValue
-        {
-            get
-            {
-                if (comboBox1.SelectedItem == null)
-                    return null;
-                return comboBox1.SelectedItem.ToString();
-            }
-            set
-            {
-                if (comboBox1.Text != value)
-                    comboBox1.Text = value;
+                textBox1.Text = value;
             }
         }
 
         /// <summary>Return true if dropdown is visible.</summary>
         public bool IsVisible
         {
-            get { return comboBox1.Visible; }
-            set { comboBox1.Visible = value; }
+            get { return textBox1.Visible; }
+            set { textBox1.Visible = value; }
         }
 
         /// <summary>User has changed the selection.</summary>

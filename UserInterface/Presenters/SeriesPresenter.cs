@@ -84,6 +84,7 @@ namespace UserInterface.Presenters
             this.seriesView.ShowInLegend.Changed += OnShowInLegendChanged;
             this.seriesView.YCumulative.Changed += OnCumulativeYChanged;
             this.seriesView.XCumulative.Changed += OnCumulativeXChanged;
+            this.seriesView.Filter.Changed += OnFilterChanged;
         }
 
         /// <summary>Disconnect all view events.</summary>
@@ -103,6 +104,7 @@ namespace UserInterface.Presenters
             this.seriesView.ShowInLegend.Changed -= OnShowInLegendChanged;
             this.seriesView.YCumulative.Changed -= OnCumulativeYChanged;
             this.seriesView.XCumulative.Changed -= OnCumulativeXChanged;
+            this.seriesView.Filter.Changed -= OnFilterChanged;
         }
 
         /// <summary>Set the value of the graph models property</summary>
@@ -278,6 +280,14 @@ namespace UserInterface.Presenters
             this.SetModelProperty("ShowInLegend", this.seriesView.ShowInLegend.IsChecked);
         }
 
+        /// <summary>User has changed the filter</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnFilterChanged(object sender, EventArgs e)
+        {
+            this.SetModelProperty("Filter", this.seriesView.Filter.Value);
+        }
+
         #endregion
 
         /// <summary>Populate the views series editor with the current selected series.</summary>
@@ -306,6 +316,7 @@ namespace UserInterface.Presenters
             this.seriesView.XCumulative.IsChecked = series.CumulativeX;
             this.seriesView.YCumulative.IsChecked = series.Cumulative;
             this.seriesView.DataSource.SelectedValue = series.TableName;
+            this.seriesView.Filter.Value = series.Filter;
 
             PopulateFieldNames(dataStore);
             dataStore.Disconnect();
