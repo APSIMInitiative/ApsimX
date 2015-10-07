@@ -132,7 +132,7 @@ namespace Models.Agroforestry
         {
             // need to put something here
             // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            //tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
             // write description of this class.
             AutoDocumentation.GetClassDescription(this, tags, indent);
