@@ -554,7 +554,7 @@ namespace Models.Report
             if (type == null)
             {
                 // Whole column is null.
-                flattenedValues.Add(new FlattenedValue() { Name = name, Type = typeof(int) });
+                flattenedValues.Add(new FlattenedValue() { Name = name, Type = typeof(double) });
             }
             else if (type.IsArray)
             {
