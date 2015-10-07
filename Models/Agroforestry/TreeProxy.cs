@@ -14,9 +14,9 @@ using Models.Zones;
 namespace Models.Agroforestry
 {
     /// <summary>
-    /// A simple proxy for a full tree model is provided for use in agroforestry simulations.  It allows the user to directly specify the size and structural data for trees within the simulation rather than having to simulate complex tree situations (e.g. trees under specific pruning regimes).
+    /// A simple proxy for a full tree model is provided for use in agroforestry simulations.  It allows the user to directly specify the size and structural data for trees within the simulation rather than having to simulate complex tree development (e.g. tree canopy structure under specific pruning regimes).
     /// 
-    /// Several parameters are required of the user to specify the state of the trees within the simulation.  These include:
+    /// Several parameters are required of the user to specify the state of trees within the simulation.  These include:
     /// 
     /// * Tree height (m)
     /// * Tree canopy width (m)
@@ -26,7 +26,7 @@ namespace Models.Agroforestry
     /// * Tree root length density at various depths and distances from the trees (cm/cm<sup>3</sup>)
     /// * Tree daily nitrogen demand (g/tree/day)
     /// 
-    /// The model calculates N uptake using the equations of [DeWilligen1994] as formulated in the model WANULCAS [WANULCAS2011].
+    /// The model calculates diffusive nutrient uptake using the equations of [DeWilligen1994] as formulated in the model WANULCAS [WANULCAS2011] and modified to better represent nutrient buffering[smethurst1997paste][smethurst1999phase][van1990defining].
     /// Water uptake is calculated using an adaptation of the approach of [Meinkeetal1993] where the extraction coefficient is assumed to be proportional to root length density [Peakeetal2013].  The user specifies a value of the uptake coefficient at a base root length density of 1 cm/cm<sup>3</sup> and spatial water uptake is scales using this value and the user-input of tree root length density.
     /// 
     /// </summary>

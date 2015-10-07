@@ -283,8 +283,8 @@ The proxy tree component of this model is intended also to be a guide for develo
           <double>200</double>
         </Thickness>
         <NO3>
-          <double>10</double>
           <double>5</double>
+          <double>3</double>
           <double>2</double>
           <double>1</double>
           <double>0.5</double>
@@ -10917,6 +10917,7 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             <string>[TreeProxy].heightToday</string>
             <string>[TreeProxy].LeafAreaToday</string>
             <string>[TreeProxy].CanopyWidthToday</string>
+            <string>[TreeProxy].IndividualTreeWaterUptake</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -10995,10 +10996,10 @@ NOTE: Germination failure was an important factor in determining yield impacts o
               <string>0</string>
               <string />
               <string />
-              <string>0</string>
-              <string>0</string>
-              <string>0</string>
-              <string>0</string>
+              <string>.4</string>
+              <string>.2</string>
+              <string>.1</string>
+              <string>.1</string>
               <string>0</string>
               <string>0</string>
               <string>0</string>
@@ -11084,7 +11085,7 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             </ArrayOfString>
           </Table>
           <RootRadius>0.02</RootRadius>
-          <NumberOfTrees>0</NumberOfTrees>
+          <NumberOfTrees>20</NumberOfTrees>
           <Kd>1E-07</Kd>
           <BaseKL>0.05</BaseKL>
           <KValue>0</KValue>
@@ -11786,7 +11787,7 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             </Operation>
             <Operation>
               <Date>1996-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
@@ -11794,13 +11795,14 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -12301,7 +12303,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1996-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
@@ -12309,13 +12311,14 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -12816,7 +12819,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1996-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
@@ -12824,13 +12827,14 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -13331,7 +13335,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1996-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
@@ -13339,13 +13343,14 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -13846,7 +13851,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1996-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
@@ -13854,13 +13859,14 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -14361,7 +14367,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1996-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
@@ -14369,13 +14375,14 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -14876,7 +14883,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1996-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
@@ -14884,13 +14891,14 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -15391,7 +15399,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1996-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
@@ -15399,13 +15407,14 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -16074,6 +16083,104 @@ namespace Models
         <RainfallInterceptionFraction>0</RainfallInterceptionFraction>
         <RainShaddowWidth>0</RainShaddowWidth>
       </AgroforestrySystem>
+      <Graph>
+        <Name>Yield Transect</Name>
+        <Series>
+          <Name>Observed1996</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>OBSCrop</TableName>
+          <XFieldName>Distance</XFieldName>
+          <YFieldName>GrainWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Year]=1996</Filter>
+        </Series>
+        <Series>
+          <Name>Observed1997</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>OBSCrop</TableName>
+          <XFieldName>Distance</XFieldName>
+          <YFieldName>GrainWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Year]=1997</Filter>
+        </Series>
+        <Series>
+          <Name>Predicted1996</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Distance</XFieldName>
+          <YFieldName>GrainWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Year]=1996</Filter>
+        </Series>
+        <Series>
+          <Name>Predicted1997</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Distance</XFieldName>
+          <YFieldName>GrainWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Year]=1997</Filter>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Distnce from Tree (m)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Grain Weight (g/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
@@ -16947,7 +17054,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1996-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
@@ -16955,13 +17062,14 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -17462,7 +17570,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1996-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
@@ -17470,13 +17578,14 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -17977,7 +18086,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1996-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
@@ -17985,13 +18094,14 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -18492,7 +18602,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1996-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
@@ -18500,13 +18610,14 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -19007,7 +19118,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1996-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
@@ -19015,13 +19126,14 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -19522,7 +19634,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1996-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
@@ -19530,13 +19642,14 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -20037,7 +20150,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1996-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
@@ -20045,13 +20158,14 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -20552,7 +20666,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1996-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
@@ -20560,13 +20674,14 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
               <string>Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -20988,8 +21103,8 @@ namespace Models
                 <double>200</double>
               </Thickness>
               <NO3>
-                <double>10</double>
                 <double>5</double>
+                <double>2</double>
                 <double>2</double>
                 <double>1</double>
                 <double>0.5</double>
@@ -20998,14 +21113,14 @@ namespace Models
                 <double>0.5</double>
               </NO3>
               <NH4>
-                <double>10</double>
-                <double>5</double>
-                <double>2</double>
-                <double>1</double>
-                <double>0.5</double>
-                <double>0.5</double>
-                <double>0.5</double>
-                <double>0.5</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
               </NH4>
               <SW>
                 <double>0.1</double>
@@ -21281,8 +21396,8 @@ namespace Models
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>Circle</Marker>
-            <Line>Dot</Line>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
             <TableName>DailyReport</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>TotalNO3N</YFieldName>
@@ -21316,31 +21431,13 @@ namespace Models
         <RainShaddowWidth>0</RainShaddowWidth>
       </AgroforestrySystem>
       <Graph>
-        <Name>YieldTransect</Name>
+        <Name>Yield Transect</Name>
         <Series>
-          <Name>Predicted</Name>
+          <Name>Observed1996</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16736653</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>Circle</Marker>
-          <Line>Dot</Line>
-          <TableName>HarvestReport</TableName>
-          <XFieldName>Distance</XFieldName>
-          <YFieldName>GrainWt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Observed</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -21352,89 +21449,29 @@ namespace Models
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
+          <Filter>[Year]=1996</Filter>
         </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>Yield Trends</Name>
         <Series>
-          <Name>Predicted</Name>
+          <Name>Observed1997</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16736653</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>Circle</Marker>
-          <Line>Dot</Line>
-          <TableName>HarvestReport</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Summariser.Total.Wt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Observed</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
+          <ColourArgb>-1663232</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
           <TableName>OBSCrop</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Distance</XFieldName>
           <YFieldName>GrainWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
+          <Filter>[Year]=1997</Filter>
         </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>TotalNO3</Name>
         <Series>
-          <Name>Predicted</Name>
+          <Name>Predicted1996</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -21442,18 +21479,38 @@ namespace Models
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>Circle</Marker>
-          <Line>Dot</Line>
-          <TableName>DailyReport</TableName>
-          <XFieldName>Date</XFieldName>
-          <YFieldName>TotalNO3N</YFieldName>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Distance</XFieldName>
+          <YFieldName>GrainWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
+          <Filter>[Year]=1996</Filter>
+        </Series>
+        <Series>
+          <Name>Predicted1997</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Distance</XFieldName>
+          <YFieldName>GrainWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Year]=1997</Filter>
         </Series>
         <Axis>
           <Type>Bottom</Type>
-          <Title />
+          <Title>Distnce from Tree (m)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -21461,7 +21518,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title />
+          <Title>Grain Weight (g/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -21469,7 +21526,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -21647,27 +21704,9 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>Yield Transect</Name>
+      <Name>TreeWaterUse</Name>
       <Series>
         <Name>Predicted</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16736653</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>Circle</Marker>
-        <Line>Dot</Line>
-        <TableName>HarvestReport</TableName>
-        <XFieldName>Distance</XFieldName>
-        <YFieldName>GrainWt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Observed</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -21675,18 +21714,18 @@ namespace Models
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <TableName>OBSCrop</TableName>
-        <XFieldName>Distance</XFieldName>
-        <YFieldName>GrainWt</YFieldName>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>TreeReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>TreeProxy.IndividualTreeWaterUptake</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Axis>
         <Type>Bottom</Type>
-        <Title>Distnce from Tree (m)</Title>
+        <Title />
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -21694,15 +21733,15 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Grain Weight (g/m2)</Title>
+        <Title />
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>TopRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Folder>
   <Folder>
