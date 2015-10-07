@@ -11373,6 +11373,7 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today as Date</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>[Soil].SoilWater.Es</string>
@@ -11838,6 +11839,7 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today as Date</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>[Soil].SoilWater.Es</string>
@@ -12354,6 +12356,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today as Date</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>[Soil].SoilWater.Es</string>
@@ -12870,6 +12873,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today as Date</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>[Soil].SoilWater.Es</string>
@@ -13386,6 +13390,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today as Date</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>[Soil].SoilWater.Es</string>
@@ -13902,6 +13907,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today as Date</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>[Soil].SoilWater.Es</string>
@@ -14418,6 +14424,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today as Date</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>[Soil].SoilWater.Es</string>
@@ -14934,6 +14941,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today as Date</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>[Soil].SoilWater.Es</string>
@@ -15450,6 +15458,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today as Date</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>[Soil].SoilWater.Es</string>
@@ -15469,12 +15478,13 @@ namespace Models
               <string>[Soil].SoilWater.Eo</string>
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
-              <string>[Maize].Leaf.Fw</string>
+              <string>([Maize].Leaf.Fw * 100.0) as WaterStressPercent</string>
               <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
               <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
-              <string>[Maize].Leaf.Fn</string>
+              <string>([Maize].Leaf.Fn * 100.0) as NStressPercent</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
+              <string>[Maize].Leaf.LAI</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -16075,6 +16085,82 @@ namespace Models
             <string>5m</string>
             <string>6m</string>
             <string>8m</string>
+          </DisabledSeries>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Debug</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>NStressPercent</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[Year]=1997</Filter>
+          </Series>
+          <Series>
+            <Name>Predicted1</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Maize.Leaf.LAI</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[Year]=1997</Filter>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Right</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries>
+            <string>TreeRow</string>
+            <string>1m</string>
+            <string>2m</string>
+            <string>3m</string>
+            <string>4m</string>
+            <string>5m</string>
+            <string>6m</string>
+            <string>7m</string>
           </DisabledSeries>
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
