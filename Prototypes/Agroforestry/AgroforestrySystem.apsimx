@@ -6,9 +6,11 @@
     <MemoText><![CDATA[#The APSIM AgroforestrySystem Model#
 *Huth, N.I., Fainges, J.L., Smethurst, P. and Masikati, P.*
 
-The APSIM Agroforestry model has been developed to facilitate the modelling of tree-crop and silvopastoral systems.  It has been tested on a range of datasets from around the world to provide tests across a range of environmental conditions.  It makes use of APSIM's ability to simulation multiple zones within a production system [holzworth_apsim_2014] to simulate soil and plant processes at different locations within a windbreak, isolated tree or alley system.
+The APSIM Agroforestry model has been developed to facilitate the modelling of tree-crop and silvopastoral systems.  It has been tested on a range of datasets from constrasting agorforestry systems, soils and climates.  It makes use of APSIM's ability to simulate multiple zones within a production system [holzworth_apsim_2014] for simulating soil and plant processes at different locations within a windbreak, isolated tree or alley system.
 
-The role of this model is not to simulation tree production, but to facilitate the simulation of agroforestry systems by calculating the tree-crop interactions such as microclimate impacts.
+The role of this model is not to simulate tree production, but to simulate crop or pasture production in agroforestry systems by calculating tree-crop interactions via microclimate and soil effects.
+
+The proxy tree component of this model is intended also to be a guide for developing active trees for use in this model, as such trees would need to interact similarly with the crop or pasture component of the system.  
 
 
 ]]></MemoText>
@@ -2149,9 +2151,8 @@ VShort duration variety released in New Zealand by Pioneer
     <Name>Moora</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[[Lefroy2001] present results for the fodder tree tagasaste (*Chamaecytisus proliferus* Link.) at alley and plantation densities on a deep sandy soil at Moora in Western Australia.  Alleys were planted as single rows of trees 30 m apart orientated north–south with 0.7 m between trees within a row.
-The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surface and 4.8 between 1 and 3 m. Water holding capacity was very low, with a drained upper limit of 0.10 and a lower limit of 0.03 m<sup>3</sup>/m<sup>3</sup>. A permanent fresh (<1 dS/m) perched watertable has developed over a clay layer approximately 10 m below the surface.  Soil water content was measured with neutron probes at 20-cm intervals
-to a depth of 3.7 m from July 1996 to December 1998 at 2-week intervals in winter and monthly over summer.  Transpiration was measured using sapflow sensors.  The data shown here are for the alley-fallow plots, which had Tagastaste rows spaced at 30m with no crop planted between.]]></MemoText>
+      <MemoText><![CDATA[Data from Western Australia [Lefroy2001] present results for the fodder tree tagasaste (*Chamaecytisus proliferus* Link.) at alley and plantation densities on a deep sand at Moora.  Alleys were planted as single rows of trees 30 m apart orientated north–south with 0.7 m between trees within a row.
+The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surface and 4.8 between 1 and 3 m. Water holding capacity was very low, with a drained upper limit of 0.10 and a lower limit of 0.03 m<sup>3</sup>/m<sup>3</sup>. A permanent fresh (<1 dS/m) perched watertable has developed over a clay layer approximately 10 m below the surface. Soil water content was measured with neutron probes at 20-cm intervals to a depth of 3.7 m from July 1996 to December 1998 at 2-week intervals in winter and monthly during summer.  Transpiration was measured using sapflow sensors.  The data shown here are for the alley-fallow plots, which had Tagastaste rows spaced at 30m with no crop planted in between.]]></MemoText>
     </Memo>
     <Clock>
       <Name>Clock</Name>
@@ -2364,6 +2365,7 @@ to a depth of 3.7 m from July 1996 to December 1998 at 2-week intervals in winte
           </ArrayOfString>
         </Table>
         <RootRadius>0.02</RootRadius>
+        <NumberOfTrees>0</NumberOfTrees>
         <Kd>1E-07</Kd>
         <BaseKL>0.05</BaseKL>
         <KValue>0.5</KValue>
@@ -6011,7 +6013,7 @@ to a depth of 3.7 m from July 1996 to December 1998 at 2-week intervals in winte
         <Width>5</Width>
       </RectangularZone>
       <Graph>
-        <Name>ESW Timeseries</Name>
+        <Name>Extractable Soil Water Timeseries</Name>
         <Series>
           <Name>Predicted</Name>
           <Type>Scatter</Type>
@@ -6054,11 +6056,11 @@ to a depth of 3.7 m from July 1996 to December 1998 at 2-week intervals in winte
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
+          <Interval>66.66667</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title />
+          <Title>Extractable Soil Water (mm to 370cm)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -6096,7 +6098,7 @@ to a depth of 3.7 m from July 1996 to December 1998 at 2-week intervals in winte
         </Series>
         <Axis>
           <Type>Bottom</Type>
-          <Title />
+          <Title>Observed (mm)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -6104,7 +6106,7 @@ to a depth of 3.7 m from July 1996 to December 1998 at 2-week intervals in winte
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title />
+          <Title>Predicted (mm)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -6243,7 +6245,7 @@ to a depth of 3.7 m from July 1996 to December 1998 at 2-week intervals in winte
       </Series>
       <Axis>
         <Type>Bottom</Type>
-        <Title />
+        <Title>Observed (mm)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -6251,7 +6253,7 @@ to a depth of 3.7 m from July 1996 to December 1998 at 2-week intervals in winte
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title />
+        <Title>Predicted (mm)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -6344,9 +6346,9 @@ to a depth of 3.7 m from July 1996 to December 1998 at 2-week intervals in winte
     <Name>Warra</Name>
     <Memo>
       <Name>memo</Name>
-      <MemoText><![CDATA[This test evaluates the performance of the APSIM AgroforestrySystem model in simulating the crop and soil water data for the data of [HuthPhD2010].  Monitoring of tree-crop competition was undertaken on a farm near the township of Warra, Qld (26.93<sup>o</sup>S, 150.93<sup>o</sup>E), where a belt of four rows of Eucalyptus argophloia Blakely at approximately 5 x 5 m spacing had been planted along the edge of fields used to grow wheat (*Triticum aestivum* L.), cotton (*Gossypium hirsutum* L.) and chickpeas (*Cicer arietinum* L.).  The trees were about 7 years old and nearly 10 m high at the start of the study. Tree-crop competition was monitored over 3 cropping seasons (two winters and one summer).  Agronomic management in the 2 cropping bays varied as they were at different stages of a cropping rotation.  The bay used in this model test was sown to wheat in the winter of 2004 and remained fallow during the ensuing summer and winter growing seasons.   Prior to harvest of the crop, plant samples were taken from quadrats consisting of 1 m of a plant row in 5 linear transects out to 50 m from the shelterbelt [HuthRobertsonPoulton2010].  Germination failure was significant next to the trees and so the positioning of samples was chosen to account for this (25m, 30m, 35m, 40m 50m).  The monitoring of soil moisture and its extraction by both trees and crops was undertaken using electromagnetic induction measurements [HuthPoulton2007] taken at 5 m intervals in four 50 m transects from the belt of trees.
+      <MemoText><![CDATA[This test evaluates the performance of the APSIM AgroforestrySystem model in simulating the crop and soil water data for the data of [HuthPhD2010].  Monitoring of tree-crop interactions was undertaken on a farm near the township of Warra, Qld (26.93<sup>o</sup>S, 150.93<sup>o</sup>E), where a belt of four rows of Eucalyptus argophloia at approximately 5 x 5 m spacing had been planted along the edge of fields used to grow wheat (*Triticum aestivum* L.), cotton (*Gossypium hirsutum* L.) and chickpeas (*Cicer arietinum* L.). The trees were about 7 years old and nearly 10 m high at the start of the study. Tree-crop interactions were monitored over 3 cropping seasons (two winters and one summer) in two bays on opposite sides of the eucalypt belt. Agronomic management in the two cropping bays varied as they were at different stages of a cropping rotation. The bay used in this model test was sown to wheat in the winter of 2004 and remained fallow during the ensuing summer and winter growing seasons. Prior to harvest of the crop, plant samples were taken from quadrats consisting of 1 m of each plant row in 5 linear transects out to 50 m from the shelterbelt [HuthRobertsonPoulton2010]. As germination failure was significant next to the trees, sampling positions were at 25, 30, 35, 40 and 50 m. The monitoring of soil moisture and its extraction by both trees and crops was undertaken using electromagnetic induction measurements [HuthPoulton2007] taken at 5 m intervals in four 50 m transects from the belt of trees.
 
-The simulations have been developed using data from various sources.  Rainfall data was obtained from an Australian Bureau of Meteorology rainfall station (No. 41291) situated on a farm 4.1 km from the study site. The soil properties have been developed using the data of [HuthRobertsonPoulton2010].
+The simulations were developed using data from various sources. Rainfall data were obtained from an Australian Bureau of Meteorology rainfall station (No. 41291) situated on a farm 4.1 km from the study site. Soil properties were based on the data of [HuthRobertsonPoulton2010].
 
 NOTE: Yield predictions at this site are adequate, but an issue with simulating failed germination has been identified.  Data from the trial show complete germination failure out to a distance of 22 m from the trees.  The APSIM-Wheat model was not able to capture this germination failure, though much of the yield impact was captured through competition for water resources.]]></MemoText>
     </Memo>
@@ -6597,6 +6599,7 @@ namespace Models
           </ArrayOfString>
         </Table>
         <RootRadius>0.02</RootRadius>
+        <NumberOfTrees>0</NumberOfTrees>
         <Kd>1E-07</Kd>
         <BaseKL>0.05</BaseKL>
         <KValue>0.5</KValue>
@@ -10049,7 +10052,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title />
+          <Title>Soil Water (mm to 90cm)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -10107,7 +10110,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title />
+          <Title>Crop Biomass (g/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -10165,7 +10168,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title />
+          <Title>Grain Weight (g/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -10241,7 +10244,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Bottom</Type>
-          <Title />
+          <Title>Observed (mm)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -10249,7 +10252,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title />
+          <Title>Predicted (mm)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -10471,7 +10474,7 @@ namespace Models
       <RainShaddowWidth>0</RainShaddowWidth>
     </AgroforestrySystem>
     <Graph>
-      <Name>YieldTransect</Name>
+      <Name>Yield Transect</Name>
       <Series>
         <Name>Predicted</Name>
         <Type>Scatter</Type>
@@ -10510,7 +10513,7 @@ namespace Models
       </Series>
       <Axis>
         <Type>Bottom</Type>
-        <Title />
+        <Title>Distance (m)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -10518,7 +10521,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title />
+        <Title>Grain Weight (g/m2)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -10529,7 +10532,7 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>BiomassTransect</Name>
+      <Name>Biomass Transect</Name>
       <Series>
         <Name>Predicted</Name>
         <Type>Scatter</Type>
@@ -10568,7 +10571,7 @@ namespace Models
       </Series>
       <Axis>
         <Type>Bottom</Type>
-        <Title />
+        <Title>Distance (m)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -10576,7 +10579,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title />
+        <Title>Biomass (g/m2)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -10587,7 +10590,7 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>GrainSizeTransect</Name>
+      <Name>Grain Size Transect</Name>
       <Series>
         <Name>Predicted</Name>
         <Type>Scatter</Type>
@@ -10626,7 +10629,7 @@ namespace Models
       </Series>
       <Axis>
         <Type>Bottom</Type>
-        <Title />
+        <Title>Distance (m)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -10634,7 +10637,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title />
+        <Title>Grain Size (g per grain)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -10645,7 +10648,7 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>GrainNumberTransect</Name>
+      <Name>Grain Number Transect</Name>
       <Series>
         <Name>Predicted</Name>
         <Type>Scatter</Type>
@@ -10684,7 +10687,7 @@ namespace Models
       </Series>
       <Axis>
         <Type>Bottom</Type>
-        <Title />
+        <Title>Distance (m)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -10692,7 +10695,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title />
+        <Title>Grain Number (/m2)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -10703,7 +10706,7 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>TreeWaterUptakes</Name>
+      <Name>Tree Water Uptakes</Name>
       <Series>
         <Name>TreeRow</Name>
         <Type>Scatter</Type>
@@ -10875,17 +10878,17 @@ namespace Models
     <Name>Machakos</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[This test evaluates performance of the APSIM AgroforestrySystem model in simulating crop and soil water data for the data of [odhiambo1999tree][odhiambo2001roots][wilson1998comparison]. The experiment was conducted at ICRAF’s field station at Machakos, Kenya (1<sup>o</sup> 33’S and 37<sup>o</sup> 8’E) at a mean elevation of 1660 m. Bimodal annual rainfall averages 740 mm. 
+      <MemoText><![CDATA[This test evaluates performance of the APSIM AgroforestrySystem model in simulating crop and soil water data of [odhiambo1999tree][odhiambo2001roots][wilson1998comparison]. The experiment was conducted at ICRAF’s field station at Machakos, Kenya (1<sup>o</sup> 33’S and 37<sup>o</sup> 8’E) at a mean elevation of 1660 m. Bimodal annual rainfall averages 740 mm. 
 
-Treatments were Gliricidia-maize, Grevillea-maize and sole maize. Grevillea and Gliricidia were planted in October 1993 as a single row in the middle of each 20 m x 18 m plot. Tree rows were oriented east-west to minimize shading effects on crops. Grevillea was pruned to 2.5. m height, but Gliricidia, which was grown as a hedgerow, was heavily cut back before each rainy season. Maize (‘Katumani composite’ ) was sown at the start of each ‘long’ season (March-July), and beans at the start of each ‘short’ season October-February). Results were reported for two ‘long’ seasons 1996-1997, but beans failed during the intervening ‘short’ season. Trees heights during 1996-1997 were approximately 5-7 m for Grevillea and 4-5 m for Gliricidia.
+Treatments were Gliricidia-maize, Grevillea-maize and sole maize. Grevillea and Gliricidia were planted in October 1993 as a single row in the middle of each 20 m x 18 m plot (1 m within-row spacing). Tree rows were oriented east-west to minimize shading effects on crops. Grevillea was pruned to 2.5. m height, but Gliricidia, which was grown as a hedgerow, was heavily cut back before each rainy season. Maize (‘Katumani composite’ ) was sown at the start of each ‘long’ season (March-July), and beans at the start of each ‘short’ season (October-February). Results were reported for two ‘long’ seasons 1996-1997, but beans failed during the intervening ‘short’ season. Tree heights during 1996-1997 were approximately 5-7 m for Grevillea and 4-5 m for Gliricidia.
 
-This experiment should not be confused with that CIRUS experiment reported by [Howard1997][lott2009understorey] and intervening papers and reports, but it was conducted at the same research station and over-lapped temporally. Some site data, including meteorological data, were used from these sources, or from data supplied by researchers from the two studies. For example, for the met files was collated mainly from a Campbell weather station managed by Nick Jackson, and supplemented by Delta-T weather station data from James Lott. These weather station data were provided by Julia Wilson (Centre for Ecology and Hydrology, Natural Environment Research Council, Scotland). Watch Forcing Data [Weedon2011] interpolated data also helped fill some data gaps. 
+This experiment should not be confused with the CIRUS experiment reported by [Howard1997][lott2009understorey] and intervening papers and reports, but it was conducted at the same research station and over-lapped temporally. Some site data, including meteorological data, were used from these sources, or from data supplied by researchers from the two studies. For example, the met file was collated mainly from data collected using a Campbell weather station managed by Nick Jackson, and supplemented with data from a Delta-T weather station managed by James Lott. These weather station data were provided by Julia Wilson (Centre for Ecology and Hydrology, Natural Environment Research Council, Scotland). Watch Forcing Data [Weedon2011] interpolated data helped fill some data gaps. 
 
-Soils are well-drained dark brown sandy clays. These soils are weakly to moderately leached with a pH of 6 to 6.5 and possess medium base saturation (50 to 80 %) in the topsoil. Nitrogen and phosphorus contents were considered less than optimal, but like other nutrients, adequate for growth [mathuva1998improving].
+Soils are well-drained dark brown sandy clays. These soils are weakly to moderately leached with a pH of 6 to 6.5 and possess medium base saturation (50 to 80%) in the topsoil. Nitrogen and phosphorus contents were considered less than optimal, but like other nutrients, adequate for growth [mathuva1998improving].
 
-At the beginning of each wet season, 1 to 2 m deep trenches (depending on depth to bedrock) were dug at the margins of each plot to stop roots from one plot penetrating into and exploiting adjacent plots. All cultivations were by hand tools which mimics farmer practise and caused minimal disturbance to tree roots. Similarly, each season, weeds were controlled by cutting/uprooting them with hand tools on 2 occasions after crop germination. Key measurements reported include transects from the tree row out to 8 maize rows for: soil water, tree and crop root length density, tree growth, and maize germination, biomass and grain yield. Maize germination and growth was severely limited by low rainfall and tree competition for water.
+At the beginning of each wet season, 1 to 2 m deep trenches (depending on depth to bedrock) were dug at the margins of each plot to stop roots from one plot penetrating into and exploiting adjacent plots. All cultivations were by hand tools, which mimiced farmer practise and caused minimal disturbance to tree roots. Similarly, each season, weeds were controlled by cutting/uprooting them with hand tools on two occasions after crop germination. Key measurements reported include transects from the tree row out to 8 maize rows for: soil water, tree and crop root length density, tree growth, and maize germination, biomass and grain yield. Maize germination and growth was severely limited by low rainfall and tree competition for water.
 
-NOTE: Germination failure was an important factor in determining yield impacts by trees within this trial.  The Maize model was not able to capture changes in plant population next to the trees.  Therefore, the measured plant populations for each row of crop next to the trees have been used in these simulations.
+NOTE: Germination failure was an important factor in determining yield impacts of trees within this trial. The Maize model was not able to simulate changes in plant population density away from the tree row, but instead it was specifically coded into the model for this case. 
 ]]></MemoText>
     </Memo>
     <Simulation>
@@ -11081,6 +11084,7 @@ NOTE: Germination failure was an important factor in determining yield impacts b
             </ArrayOfString>
           </Table>
           <RootRadius>0.02</RootRadius>
+          <NumberOfTrees>0</NumberOfTrees>
           <Kd>1E-07</Kd>
           <BaseKL>0.05</BaseKL>
           <KValue>0</KValue>
@@ -16266,6 +16270,7 @@ namespace Models
             </ArrayOfString>
           </Table>
           <RootRadius>0.02</RootRadius>
+          <NumberOfTrees>0</NumberOfTrees>
           <Kd>1E-07</Kd>
           <BaseKL>0.05</BaseKL>
           <KValue>0</KValue>
@@ -21470,7 +21475,7 @@ namespace Models
       <Slope>0</Slope>
     </Simulation>
     <Graph>
-      <Name>SW at 35cm</Name>
+      <Name>Soil Water at 35 cm</Name>
       <Series>
         <Name>PvsO</Name>
         <Regression>
@@ -21495,7 +21500,7 @@ namespace Models
       </Series>
       <Axis>
         <Type>Bottom</Type>
-        <Title />
+        <Title>Observed Volumetric Soil Water</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -21503,7 +21508,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title />
+        <Title>Predicted Volumetric Soil Water</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -21514,7 +21519,7 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>SW at 55cm</Name>
+      <Name>SW at 55 cm</Name>
       <Series>
         <Name>PvsO</Name>
         <Regression>
@@ -21558,7 +21563,7 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>SW at 75cm</Name>
+      <Name>SW at 75 cm</Name>
       <Series>
         <Name>PvsO</Name>
         <Regression>
@@ -21602,7 +21607,7 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>TreeGrowth</Name>
+      <Name>Tree Growth</Name>
       <Series>
         <Name>Height</Name>
         <Type>Scatter</Type>
@@ -21631,7 +21636,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title />
+        <Title>Tree Hieght (m, proxy)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -21642,7 +21647,7 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>YieldTransect</Name>
+      <Name>Yield Transect</Name>
       <Series>
         <Name>Predicted</Name>
         <Type>Scatter</Type>
@@ -21681,7 +21686,7 @@ namespace Models
       </Series>
       <Axis>
         <Type>Bottom</Type>
-        <Title />
+        <Title>Distnce from Tree (m)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -21689,7 +21694,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title />
+        <Title>Grain Weight (g/m2)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -21704,11 +21709,9 @@ namespace Models
     <Name>Sensibility Test</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[[Bennell2008] summarised yield data from cereal and pulse crops collected from windbreak sites through the eastern agricultural
-districts of South Australia, using a harvester equipped with a yield monitor. The yield response in the sheltered benefit zone is +3.7%
-for all cereals (2.2H–9.7H).  They found, for wheat, that the average width of expression of the competition zone to be 2 tree heights with a 4% increase in yields within the sheltered zone (2H-11H).
+      <MemoText><![CDATA[Yield data from cereal and pulse crops [Bennell2008] have been collected from windbreak sites through the eastern agricultural districts of South Australia using a harvester equipped with a yield monitor. The yield response in the sheltered benefit zone was +3.7% for cereal yield averaged across zones (2.2H–9.7H) outside the competition zone. They found, for wheat, that the average width of expression of the competition zone to be 2 tree heights (2H) with a 4% increase in yields within the sheltered zone (2H-11H).
 
-This sensibility test assumes a tree windbreak with a of height of 10m.  The competition zone should therefore be evident out to 20m from the trees with only marginal increase in yields from 20-110m from the trees.]]></MemoText>
+This sensibility test assumes a tree windbreak with a of height of 10 m. The competition zone should therefore be evident out to 20m from the trees with only a marginal increase in yield at 20-110 m from the trees.]]></MemoText>
     </Memo>
     <Simulation>
       <Name>South Australia</Name>
@@ -21975,6 +21978,7 @@ namespace Models
             </ArrayOfString>
           </Table>
           <RootRadius>0.02</RootRadius>
+          <NumberOfTrees>0</NumberOfTrees>
           <Kd>1E-07</Kd>
           <BaseKL>0.01</BaseKL>
           <KValue>0</KValue>
@@ -27065,7 +27069,7 @@ namespace Models
         <RainShaddowWidth>0</RainShaddowWidth>
       </AgroforestrySystem>
       <Graph>
-        <Name>YieldTransect</Name>
+        <Name>Yield Transect</Name>
         <Series>
           <Name>Predicted</Name>
           <Type>Scatter</Type>
@@ -27086,7 +27090,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Bottom</Type>
-          <Title />
+          <Title>Distance from Tree (m)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -27094,7 +27098,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title />
+          <Title>Grain Weight (g/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
