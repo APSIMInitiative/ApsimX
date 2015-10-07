@@ -42,12 +42,16 @@ namespace Models
         public event EventHandler StartOfMonth;
         /// <summary>Occurs when [start of year].</summary>
         public event EventHandler StartOfYear;
+        /// <summary>Occurs when [start of week].</summary>
+        public event EventHandler StartOfWeek;
         /// <summary>Occurs when [end of day].</summary>
         public event EventHandler EndOfDay;
         /// <summary>Occurs when [end of month].</summary>
         public event EventHandler EndOfMonth;
         /// <summary>Occurs when [end of year].</summary>
         public event EventHandler EndOfYear;
+        /// <summary>Occurs when [end of week].</summary>
+        public event EventHandler EndOfWeek;
         /// <summary>Occurs when [end of simulation].</summary>
         public event EventHandler EndOfSimulation;
 
@@ -146,6 +150,12 @@ namespace Models
 
                 if (Today.DayOfYear == 1 && StartOfYear != null)
                     StartOfYear.Invoke(this, args);
+
+                if (Today.DayOfWeek == DayOfWeek.Sunday && StartOfWeek != null)
+                    StartOfWeek.Invoke(this, args);
+
+                if (Today.DayOfWeek == DayOfWeek.Saturday && EndOfWeek != null)
+                    EndOfWeek.Invoke(this, args);
 
                 if (DoManagement != null)
                     DoManagement.Invoke(this, args);
