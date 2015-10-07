@@ -457,7 +457,7 @@ namespace Models.Agroforestry
 
                         for (int i = 0; i <= SW.Length - 1; i++)
                         {
-                            Uptake.Water[i] = (SW[i] - LL15mm[i]) * BaseKL*RLD[i]; 
+                            Uptake.Water[i] = Math.Max(SW[i] - LL15mm[i],0.0) * BaseKL*RLD[i]; 
                             PotSWSupply += Uptake.Water[i] * ZI.Area * 10000;
                         }
                         Uptakes.Add(Uptake);
@@ -603,6 +603,8 @@ namespace Models.Agroforestry
                         ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
                         ThisSoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(ZI.Water, -1); ;
                         TreeWaterUptake[i] = MathUtilities.Sum(ZI.Water);
+                        if (TreeWaterUptake[i] < 0)
+                        { }
                         i++;
                     }
                 }
