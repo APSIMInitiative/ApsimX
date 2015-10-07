@@ -18,19 +18,13 @@ namespace SWIMFrame
         /// </summary>
         public static T[] Slice<T>(this T[] source, int start, int end)
         {
-            start--; // Align with FORTRAN one-indexed arrays
-            // Handles negative ends.
-            if (end < 0)
-            {
-                end = source.Length + end;
-            }
-            int len = end - start;
+            int len = end - start + 1;
 
             // Return new array.
-            T[] res = new T[len];
+            T[] res = new T[len+1];
             for (int i = 0; i < len; i++)
             {
-                res[i] = source[i + start];
+                res[i + 1] = source[i + start];
             }
             return res;
         }

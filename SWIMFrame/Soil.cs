@@ -114,21 +114,21 @@ namespace SWIMFrame
             // fill out the rest of the structure.
              sp.nld = nld; sp.nc = nc;
              sp.h = h; 
-             sp.lnh = new double[nld];
-             sp.Sd = new double[nld];
-             sp.Kco = new double[3, nc - 1];
-             sp.phico = new double[3, nc - 1];
-             sp.Sco = new double[3, nc - 1];
+             sp.lnh = new double[nld+1];
+             sp.Sd = new double[nld+1];
+             sp.Kco = new double[3, nc];
+             sp.phico = new double[3, nc];
+             sp.Sco = new double[3, nc];
 
             // Store Sd and lnh in sp.
-            sp.lnh[0] = lhd;
-            for (j = 1; j <= nli1; j++)
+            sp.lnh[1] = lhd;
+            for (j = 2; j <= nli1; j++)
                 sp.lnh[j] = lhd - dlh * j;
 
             if (Kgiven)
             {
-                sp.Sd[0] = MVG.Sofh(sPar.hd);
-                for (j = 1; j < nld; j++)
+                sp.Sd[1] = MVG.Sofh(sPar.hd);
+                for (j = 2; j <= nld; j++)
                 {
                     x = sp.lnh[j];
                     sp.Sd[j] = MVG.Sofh(-Math.Exp(x));
@@ -137,8 +137,8 @@ namespace SWIMFrame
             else
             {
                 MVG.Sdofh(sPar.hd, out x, out dSdh);
-                sp.Sd[0] = x;
-                for (j = 1; j < nld; j++)
+                sp.Sd[1] = x;
+                for (j = 2; j <= nld; j++)
                 {
                     x = sp.lnh[j];
                     MVG.Sdofh(-Math.Exp(x), out x, out dSdh);
@@ -147,33 +147,34 @@ namespace SWIMFrame
             }
 
             // Get polynomial coefficients.
-            j = -1;
-            sp.Sc = new double[sp.n];
-            sp.hc = new double[sp.n];
-            sp.phic = new double[sp.n];
+            j = 0;
+            sp.Sc = new double[sp.n+1];
+            sp.hc = new double[sp.n+1];
+            sp.phic = new double[sp.n+1];
             Matrix<double> KcoM = Matrix<double>.Build.DenseOfArray(sp.Kco);
             Matrix<double> phicoM = Matrix<double>.Build.DenseOfArray(sp.phico);
             Matrix<double> ScoM = Matrix<double>.Build.DenseOfArray(sp.Sco);
-            for (i = 0; i <= sp.n; i += 3)
+            for (i = 1; i <= sp.n; i += 3)
             {
                 j = j + 1;
                 sp.Sc[j] = S[i];
                 sp.hc[j] = h[i];
                 sp.Kc[j] = sp.K[i];
                 sp.phic[j] = sp.phi[i];
-                if (i == sp.n - 1)
+                if (i == sp.n)
                     break;
 
-                cco = Cuco(sp.phi.Slice(i+1,i+4), sp.K.Slice(i+1, i+4));
-                KcoM.SetColumn(j, cco.Slice(2, 4));
+                cco = Cuco(sp.phi.Slice(i,i+3), sp.K.Slice(i, i+3));
+                double[] temp = cco.Slice(2, 4).Skip(1).ToArray();
+                KcoM.SetColumn(j, cco.Slice(2, 4).Skip(1).ToArray());
                 sp.Kco = KcoM.ToArray();
 
-                cco = Cuco(sp.S.Slice(i + 1, i + 4), sp.phi.Slice(i + 1, i + 4));
-                phicoM.SetColumn(j, cco.Slice(2, 4));
+                cco = Cuco(sp.S.Slice(i, i + 3), sp.phi.Slice(i, i + 3));
+                phicoM.SetColumn(j, cco.Slice(2, 4).Skip(1).ToArray());
                 sp.phico = phicoM.ToArray();
 
-                cco = Cuco(sp.phi.Slice(i + 1, i + 4), sp.S.Slice(i + 1, i + 4));
-                ScoM.SetColumn(j, cco.Slice(2, 4));
+                cco = Cuco(sp.phi.Slice(i, i + 3), sp.S.Slice(i, i + 3));
+                ScoM.SetColumn(j, cco.Slice(2, 4).Skip(1).ToArray());
                 sp.Sco = ScoM.ToArray();
             }
             // diags - end timing
@@ -183,59 +184,60 @@ namespace SWIMFrame
         private static void Props(ref SoilProps sp, double hdry, double phidry, double[] lhr, double[] h, bool Kgiven)
         {
             int i, j, nli;
-            double[] g = new double[200];
-            double[] dSdhg = new double[200];
+            double[] g = new double[201];
+            double[] dSdhg = new double[201];
 
             j = 2 * (nliapprox / 6); // an even number
             nli = 3 * j; //nli divisible by 2 (for integrations) and 3 (for cubic coeffs)
-            if (sp.he > hwet) nli = 3 * (j + 1) - 1; // to allow for extra points
+            if (sp.he > hwet)
+                nli = 3 * (j + 1) - 1; // to allow for extra points
             dlhr = -Math.Log(hdry / hwet) / nli; // even spacing in log(-h)
 
             double[] slice = lhr.Slice(1, nli + 1);
-            for (int idx = nli; idx >= 0; idx--)    //
+            for (int idx = nli; idx > 0; idx--)    //
                 slice[idx] = -idx * dlhr;              // will need to check this, fortran syntax is unknown: lhr(1:nli+1)=(/(-i*dlhr,i=nli,0,-1)/)
             Array.Reverse(slice);
-            Array.Copy(slice, lhr, slice.Length);
-            for (int idx = 0; idx < nli + 1; idx++)
+            Array.Copy(slice, 0, lhr, 0, slice.Length);
+            for (int idx = 1; idx <= nli + 1; idx++)
                 h[idx] = hwet * Math.Exp(lhr[idx]);
 
             if (sp.he > hwet)  // add extra points
             {
                 sp.n = nli + 3;
-                h[nli - 1] = 0.5 * (sp.he + hwet);
+                h[sp.n - 1] = 0.5 * (sp.he + hwet);
                 h[sp.n] = sp.he;
             }
             else
                 sp.n = nli + 1;
 
-            sp.K = new double[sp.n];
-            sp.Kc = new double[sp.n];
-            sp.phi = new double[sp.n];
+            sp.K = new double[sp.n+1];
+            sp.Kc = new double[sp.n+1];
+            sp.phi = new double[sp.n+1];
 
             if (Kgiven)
             {
-                for (i = 0; i < sp.n; i++)
+                for (i = 1; i <= sp.n; i++)
                 {
 
                     sp.S[i] = MVG.Sofh(h[i]);
                     sp.K[i] = MVG.KofhS(h[i], sp.S[i]);
                 }
-                sp.S[sp.n] = MVG.Sofh(h[sp.n]);
+               sp.S[sp.n] = MVG.Sofh(h[sp.n]);
             }
             else // calculate relative K by integration using dln(-h)
             {
 
-                for (i = 0; i < sp.n; i++)
+                for (i = 1; i <= sp.n; i++)
                     MVG.Sdofh(h[i], out sp.S[i], out dSdhg[i]);
 
-                g[0] = 0;
+                g[1] = 0;
 
-                for (i = 1; i < nli; i += 2)  // integrate using Simpson's rule
+                for (i = 2; i <= nli; i += 2)  // integrate using Simpson's rule
                     g[i + 1] = g[i - 1] + dlhr * (dSdhg[i - 1] + 4.0 * dSdhg[i] + dSdhg[i + 1]) / 3.0;
 
-                g[1] = 0.5 * (g[0] + g[2]);
+                g[2] = 0.5 * (g[0] + g[2]);
 
-                for (i = 2; i < nli - 1; i += 2)
+                for (i = 3; i <= nli - 1; i += 2)
                     g[i + 1] = g[i - 1] + dlhr * (dSdhg[i - 1] + 4.0 * dSdhg[i] + dSdhg[i + 1]) / 3.0;
 
                 if (sp.he > hwet)
@@ -244,19 +246,19 @@ namespace SWIMFrame
                     g[sp.n - 1] = g[sp.n]; // not accurate, but K[sp.n-1] will be discarded
                 }
 
-                for (i = 0; i < sp.n; i++)
+                for (i = 1; i <= sp.n; i++)
                     sp.K[i] = sp.ks * Math.Pow(sp.S[i], MVG.GetP()) * Math.Pow(g[i] / g[sp.n], 2);
             }
 
             // Calculate phi by integration using dln(-h).
-            sp.phi[0] = phidry;
+            sp.phi[1] = phidry;
 
-            for (i = 1; i < nli; i += 2) // integrate using Simpson's rule
+            for (i = 2; i <= nli; i += 2) // integrate using Simpson's rule
                 sp.phi[i + 1] = sp.phi[i - 1] + dlhr * (sp.K[i - 1] * h[i - 1] + 4.0 * sp.K[i] * h[i] + sp.K[i + 1] * h[i + 1]) / 3.0;
 
-            sp.phi[1] = 0.5 * (sp.phi[0] + sp.phi[2]);
+            sp.phi[2] = 0.5 * (sp.phi[1] + sp.phi[3]);
 
-            for (i = 2; i < nli - 1; i += 2)
+            for (i = 3; i <= nli - 1; i += 2)
                 sp.phi[i + 1] = sp.phi[i - 1] + dlhr * (sp.K[i - 1] * h[i - 1] + 4.0 * sp.K[i] * h[i] + sp.K[i + 1] * h[i + 1]) / 3.0;
 
             if (sp.he > hwet)  // drop unwanted point
@@ -267,7 +269,7 @@ namespace SWIMFrame
                 sp.K[sp.n - 1] = sp.K[sp.n];
                 sp.n = sp.n - 1;
             }
-            phie = sp.phi[sp.n - 1];
+            phie = sp.phi[sp.n];
             sp.phie = phie;
         }
 
@@ -275,29 +277,29 @@ namespace SWIMFrame
         {
             // Get coeffs of cubic through (x,y)
             double s, x1, x2, y3, x12, x13, x22, x23, a1, a2, a3, b1, b2, b3, c1, c2, c3;
-            double[] co = new double[4];
+            double[] co = new double[5];
 
-            s = 1.0 / (x[3] - x[0]);
-            x1 = s * (x[1] - x[0]);
-            x2 = s * (x[2] - x[0]);
-            y3 = y[3] - y[0];
+            s = 1.0 / (x[4] - x[1]);
+            x1 = s * (x[2] - x[1]);
+            x2 = s * (x[3] - x[1]);
+            y3 = y[4] - y[1];
             x12 = x1 * x1;
             x13 = x1 * x12;
             x22 = x2 * x2;
             x23 = x2 * x22;
             a1 = x1 - x13;
             a2 = x12 - x13;
-            a3 = y[1] - y[0] - x13 * y3;
+            a3 = y[2] - y[1] - x13 * y3;
             b1 = x2 - x23;
             b2 = x22 - x23;
-            b3 = y[2] - y[0] - x23 * y3;
+            b3 = y[3] - y[1] - x23 * y3;
             c1 = (a3 * b2 - a2 * b3) / (a1 * b2 - a2 * b1);
             c2 = (a3 - a1 * c1) / a2;
             c3 = y3 - c1 - c2;
-            co[0] = y[0];
-            co[1] = s * c1;
-            co[2] = s * s * c2;
-            co[3] = s * s * s * c3;
+            co[1] = y[1];
+            co[2] = s * c1;
+            co[3] = s * s * c2;
+            co[4] = s * s * s * c3;
             return co;
         }
     }

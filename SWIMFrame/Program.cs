@@ -40,7 +40,7 @@ namespace SWIMFrame
             dz[1, 1] = 20;
             dz[1, 2] = 30;
             dz[1, 4] = 40;
-            for (i = 0; i < 2; i++)
+            for (i = 0; i < 1; i++) //should be 2, using the first one for debugging.
             {
                 BinaryWriter b = new BinaryWriter(File.OpenWrite("soil" + soils[i].sid + ".dat"));
                 MVG.Params(soils[i].sid, soils[i].ths, soils[i].ks, soils[i].he, soils[i].hd, soils[i].p, soils[i].hg, soils[i].em, soils[i].en);
@@ -53,10 +53,11 @@ namespace SWIMFrame
                     Fluxes.FluxTable(dz[i, j], soils[i].sp);
                     b = new BinaryWriter(File.OpenWrite("soil" + soils[i].sid + "dz" + dz[i, j] * 10));
                     b.Write(soils[i].sid);
-                    WriteFluxes(b, Fluxes.ft);
+                 //   WriteFluxes(b, Fluxes.ft);
                     b.Close();
                 }
             }
+            Fluxes.WriteDiags();
 
             //generate and write composite flux table for path with two soil types
             sp1 = ReadProps("soil103.dat");
@@ -67,8 +68,7 @@ namespace SWIMFrame
 
             FluxTable ftwo = TwoFluxes.TwoTables(ft1, sp1, ft2, sp2); 
             BinaryWriter bw = new BinaryWriter(File.OpenWrite("soil0103dz0050_soil0109dz0100.dat"));
-            WriteFluxes(bw, ftwo);
-
+//            WriteFluxes(bw, ftwo);
         }
 
         private static FluxTable ReadFluxes(string file)
