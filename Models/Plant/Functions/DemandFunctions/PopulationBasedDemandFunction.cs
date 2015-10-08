@@ -60,6 +60,10 @@ namespace Models.PMF.Functions.DemandFunctions
                 ThermalTimeToday = Math.Min(ThermalTime.Value, GrowthDuration.Value - AccumulatedThermalTime);
                 AccumulatedThermalTime += ThermalTimeToday;
             }
+            else if(Phenology.Stage < StartStage.Value)
+            {
+                AccumulatedThermalTime = 0.0;
+            }
         }
 
 

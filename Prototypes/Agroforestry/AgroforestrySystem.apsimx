@@ -10889,7 +10889,7 @@ Soils are well-drained dark brown sandy clays. These soils are weakly to moderat
 
 At the beginning of each wet season, 1 to 2 m deep trenches (depending on depth to bedrock) were dug at the margins of each plot to stop roots from one plot penetrating into and exploiting adjacent plots. All cultivations were by hand tools, which mimiced farmer practise and caused minimal disturbance to tree roots. Similarly, each season, weeds were controlled by cutting/uprooting them with hand tools on two occasions after crop germination. Key measurements reported include transects from the tree row out to 8 maize rows for: soil water, tree and crop root length density, tree growth, and maize germination, biomass and grain yield. Maize germination and growth was severely limited by low rainfall and tree competition for water.
 
-NOTE: Germination failure was an important factor in determining yield impacts of trees within this trial. The Maize model was not able to simulate changes in plant population density away from the tree row, but instead it was specifically coded into the model for this case. 
+NOTE: Germination failure was an important factor in determining yield impacts of trees within this trial. The Maize model was not able to simulate changes in plant population density away from the tree row, but instead it was specifically coded into the model for this case. Also, we do not simulate the intervening bean crop between the two maize seasons. We add fertiliser to the second crop to provide N that would have been provided by the bean crop.
 ]]></MemoText>
     </Memo>
     <Simulation>
@@ -11187,52 +11187,52 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             <double>7097.29</double>
           </heights>
           <NDemands>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </NDemands>
           <CanopyWidths>
             <double>2</double>
@@ -11792,12 +11792,16 @@ NOTE: Germination failure was an important factor in determining yield impacts o
               <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
+              <Date>1997-03-01T00:00:00</Date>
+              <Action>[SurfaceOrganicMatter].Add(mass: 0, N: 30, P:0,type: "cowpea", name: "cowpea");</Action>
+            </Operation>
+            <Operation>
               <Date>1997-04-02T00:00:00</Date>
               <Action>[Maize].Sow(population: 0.21, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
@@ -12309,12 +12313,16 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
+              <Date>1997-03-01T00:00:00</Date>
+              <Action>[SurfaceOrganicMatter].Add(mass: 0, N: 30, P:0,type: "cowpea", name: "cowpea");</Action>
+            </Operation>
+            <Operation>
               <Date>1997-04-02T00:00:00</Date>
               <Action>[Maize].Sow(population: 0.58, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
@@ -12826,12 +12834,16 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
+              <Date>1997-03-01T00:00:00</Date>
+              <Action>[SurfaceOrganicMatter].Add(mass: 0, N: 30, P:0,type: "cowpea", name: "cowpea");</Action>
+            </Operation>
+            <Operation>
               <Date>1997-04-02T00:00:00</Date>
               <Action>[Maize].Sow(population: 1.45, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
@@ -13343,12 +13355,16 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
+              <Date>1997-03-01T00:00:00</Date>
+              <Action>[SurfaceOrganicMatter].Add(mass: 0, N: 30, P:0,type: "cowpea", name: "cowpea");</Action>
+            </Operation>
+            <Operation>
               <Date>1997-04-02T00:00:00</Date>
               <Action>[Maize].Sow(population: 2.1, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
@@ -13860,12 +13876,16 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
+              <Date>1997-03-01T00:00:00</Date>
+              <Action>[SurfaceOrganicMatter].Add(mass: 0, N: 30, P:0,type: "cowpea", name: "cowpea");</Action>
+            </Operation>
+            <Operation>
               <Date>1997-04-02T00:00:00</Date>
               <Action>[Maize].Sow(population: 2.29, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
@@ -14377,12 +14397,16 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
+              <Date>1997-03-01T00:00:00</Date>
+              <Action>[SurfaceOrganicMatter].Add(mass: 0, N: 30, P:0,type: "cowpea", name: "cowpea");</Action>
+            </Operation>
+            <Operation>
               <Date>1997-04-02T00:00:00</Date>
               <Action>[Maize].Sow(population: 2.56, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
@@ -14894,12 +14918,16 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
+              <Date>1997-03-01T00:00:00</Date>
+              <Action>[SurfaceOrganicMatter].Add(mass: 0, N: 30, P:0,type: "cowpea", name: "cowpea");</Action>
+            </Operation>
+            <Operation>
               <Date>1997-04-02T00:00:00</Date>
               <Action>[Maize].Sow(population: 2.8, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
@@ -15411,12 +15439,16 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
             <Operation>
+              <Date>1997-02-01T00:00:00</Date>
+              <Action>[SurfaceOrganicMatter].Add(mass: 0, N: 30, P:0,type: "cowpea", name: "cowpea");</Action>
+            </Operation>
+            <Operation>
               <Date>1997-04-02T00:00:00</Date>
               <Action>[Maize].Sow(population: 2.8, cultivar: "Katumani", depth: 30, rowSpacing: 1000);</Action>
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
@@ -15479,13 +15511,40 @@ namespace Models
               <string>[Soil].SoilWater.Eo</string>
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
-              <string>([Maize].Leaf.Fw * 100.0) as WaterStressPercent</string>
+              <string>[Maize].Leaf.Fw</string>
               <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
               <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
-              <string>[Maize].Leaf.Fn as somethingelse</string>
+              <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Leaf.LAI</string>
+              <string>[Maize].Phenology.CurrentStageName as Stage</string>
+              <string>[Maize].Grain.Live.Wt as GrainWt</string>
+              <string>[Maize].Stem.Live.Wt</string>
+              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].Leaf.Live.Wt</string>
+              <string>[Maize].Root.Live.Wt</string>
+              <string>[Maize].Husk.Live.Wt</string>
+              <string>[Maize].Rachis.Live.Wt</string>
+              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].Grain.Live.N</string>
+              <string>[Maize].Stem.Live.N</string>
+              <string>[Maize].Leaf.Live.N</string>
+              <string>[Maize].Root.Live.N</string>
+              <string>[Maize].Root.Depth</string>
+              <string>[Maize].Summariser.AboveGround.N</string>
+              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Maize].Summariser.Total.N</string>
+              <string>[Maize].Summariser.Total.Wt</string>
+              <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
+              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.Size as GrainSize</string>
+              <string>[Maize].Population</string>
+              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Rachis.CobNumber.Value</string>
+              <string>[Maize].Rachis.Live.Wt</string>
+              <string>[Maize].Rachis.CobSize.Value</string>
+              <string>[SurfaceOrganicMatter].Wt</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -16086,56 +16145,6 @@ namespace Models
             <string>5m</string>
             <string>6m</string>
             <string>8m</string>
-          </DisabledSeries>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>Debug</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Date</XFieldName>
-            <YFieldName>somethingelse</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-            <Filter>[Year]=1997</Filter>
-          </Series>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopRight</LegendPosition>
-          <DisabledSeries>
-            <string>TreeRow</string>
-            <string>1m</string>
-            <string>2m</string>
-            <string>3m</string>
-            <string>4m</string>
-            <string>5m</string>
-            <string>6m</string>
-            <string>7m</string>
           </DisabledSeries>
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
@@ -17123,7 +17132,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
@@ -17639,7 +17648,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
@@ -18155,7 +18164,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
@@ -18671,7 +18680,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
@@ -19187,7 +19196,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
@@ -19703,7 +19712,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
@@ -20219,7 +20228,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
@@ -20735,7 +20744,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-04-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+              <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N)</Action>
             </Operation>
           </Operations>
           <Report>
