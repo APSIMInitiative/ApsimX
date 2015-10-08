@@ -164,6 +164,7 @@ Name: {localappdata}\VirtualStore\Apsim; Type: dirifempty
 Source: ..\Bin\*.exe; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\Bin\*.dll; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\Bin\UserInterface.exe.config; DestDir: {app}\Bin; Flags: ignoreversion; 
+Source: ..\Bin\Model.xml; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\APSIM.bib; DestDir: {app}; Flags: ignoreversion; 
 
 ;Sample files 
