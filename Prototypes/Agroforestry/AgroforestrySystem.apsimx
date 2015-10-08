@@ -10511,6 +10511,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <Caption />
       <Axis>
         <Type>Bottom</Type>
         <Title>Distance (m)</Title>
@@ -10878,11 +10879,11 @@ namespace Models
     <Name>Machakos</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[This test evaluates performance of the APSIM AgroforestrySystem model in simulating crop and soil water data of [odhiambo1999tree][odhiambo2001roots][wilson1998comparison]. The experiment was conducted at ICRAF’s field station at Machakos, Kenya (1<sup>o</sup> 33’S and 37<sup>o</sup> 8’E) at a mean elevation of 1660 m. Bimodal annual rainfall averages 740 mm. 
+      <MemoText><![CDATA[This test evaluates performance of the APSIM AgroforestrySystem model in simulating crop and soil water data of [odhiambo1999tree;odhiambo2001roots;wilson1998comparison]. The experiment was conducted at ICRAF’s field station at Machakos, Kenya (1<sup>o</sup> 33’S and 37<sup>o</sup> 8’E) at a mean elevation of 1660 m. Bimodal annual rainfall averages 740 mm. 
 
 Treatments were Gliricidia-maize, Grevillea-maize and sole maize. Grevillea and Gliricidia were planted in October 1993 as a single row in the middle of each 20 m x 18 m plot (1 m within-row spacing). Tree rows were oriented east-west to minimize shading effects on crops. Grevillea was pruned to 2.5. m height, but Gliricidia, which was grown as a hedgerow, was heavily cut back before each rainy season. Maize (‘Katumani composite’ ) was sown at the start of each ‘long’ season (March-July), and beans at the start of each ‘short’ season (October-February). Results were reported for two ‘long’ seasons 1996-1997, but beans failed during the intervening ‘short’ season. Tree heights during 1996-1997 were approximately 5-7 m for Grevillea and 4-5 m for Gliricidia.
 
-This experiment should not be confused with the CIRUS experiment reported by [Howard1997][lott2009understorey] and intervening papers and reports, but it was conducted at the same research station and over-lapped temporally. Some site data, including meteorological data, were used from these sources, or from data supplied by researchers from the two studies. For example, the met file was collated mainly from data collected using a Campbell weather station managed by Nick Jackson, and supplemented with data from a Delta-T weather station managed by James Lott. These weather station data were provided by Julia Wilson (Centre for Ecology and Hydrology, Natural Environment Research Council, Scotland). Watch Forcing Data [Weedon2011] interpolated data helped fill some data gaps. 
+This experiment should not be confused with the CIRUS experiment reported by [Howard1997;lott2009understorey] and intervening papers and reports, but it was conducted at the same research station and over-lapped temporally.  This experiment was funded by DFID (Project T01065s5) led by Prof. Chin Ong (currently, University of Nottingham, UK). Some site data, including meteorological data, were used from these sources, or from data supplied by researchers from the two studies. For example, the met file was collated mainly from data collected using a Campbell weather station managed by Nick Jackson, and supplemented with data from a Delta-T weather station managed by James Lott. These weather station data were provided by Julia Wilson (Centre for Ecology and Hydrology, Natural Environment Research Council, UK). Watch Forcing Data [Weedon2011] interpolated data helped fill some data gaps. 
 
 Soils are well-drained dark brown sandy clays. These soils are weakly to moderately leached with a pH of 6 to 6.5 and possess medium base saturation (50 to 80%) in the topsoil. Nitrogen and phosphorus contents were considered less than optimal, but like other nutrients, adequate for growth [mathuva1998improving].
 
@@ -15481,7 +15482,7 @@ namespace Models
               <string>([Maize].Leaf.Fw * 100.0) as WaterStressPercent</string>
               <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
               <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
-              <string>([Maize].Leaf.Fn * 100.0) as NStressPercent</string>
+              <string>[Maize].Leaf.Fn as somethingelse</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Leaf.LAI</string>
@@ -16103,26 +16104,7 @@ namespace Models
             <Line>Solid</Line>
             <TableName>DailyReport</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>NStressPercent</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-            <Filter>[Year]=1997</Filter>
-          </Series>
-          <Series>
-            <Name>Predicted1</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Right</YAxis>
-            <ColourArgb>-16747854</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Date</XFieldName>
-            <YFieldName>Maize.Leaf.LAI</YFieldName>
+            <YFieldName>somethingelse</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -16139,13 +16121,6 @@ namespace Models
           <Axis>
             <Type>Left</Type>
             <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Right</Type>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -16249,7 +16224,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Bottom</Type>
-          <Title>Distnce from Tree (m)</Title>
+          <Title>Distance from Tree (m)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -21596,7 +21571,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Bottom</Type>
-          <Title>Distnce from Tree (m)</Title>
+          <Title>Distance from Tree (m)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -21617,6 +21592,11 @@ namespace Models
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
+    <Memo>
+      <Name>Memo re SW</Name>
+      <MemoText><![CDATA[NOTE: Soil water data were obtained from digitising graphs of the measured data from the technical report for the trial [wilson1998comparison].  As such, exact dates for observations are not known and error in estimates of measurement dates will cause problems in the following graphs.  For example, where observations occur close to rainfall events.
+]]></MemoText>
+    </Memo>
     <Graph>
       <Name>Soil Water at 35 cm</Name>
       <Series>
@@ -21842,15 +21822,15 @@ This sensibility test assumes a tree windbreak with a of height of 10 m. The com
       <Name>South Australia</Name>
       <Clock>
         <Name>Clock</Name>
-        <StartDate>2000-01-01T00:00:00</StartDate>
-        <EndDate>2010-12-31T00:00:00</EndDate>
+        <StartDate>1900-01-01T00:00:00</StartDate>
+        <EndDate>1909-12-31T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>SummaryFile</Name>
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <FileName>Roseworthy.met</FileName>
+        <FileName>DalbyWithWind.met</FileName>
       </Weather>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
@@ -22564,6 +22544,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
@@ -22574,11 +22555,13 @@ namespace Models
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+              <string>[Wheat].EP</string>
+              <string>[Wheat].WaterDemand</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
+            <ResultsPerPage>100</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -22953,6 +22936,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
@@ -22963,11 +22947,13 @@ namespace Models
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+              <string>[Wheat].EP</string>
+              <string>[Wheat].WaterDemand</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
+            <ResultsPerPage>100</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -23342,6 +23328,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
@@ -23352,11 +23339,13 @@ namespace Models
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+              <string>[Wheat].EP</string>
+              <string>[Wheat].WaterDemand</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
+            <ResultsPerPage>100</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -23731,6 +23720,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
@@ -23741,11 +23731,13 @@ namespace Models
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+              <string>[Wheat].EP</string>
+              <string>[Wheat].WaterDemand</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
+            <ResultsPerPage>100</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -24120,6 +24112,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
@@ -24130,11 +24123,13 @@ namespace Models
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+              <string>[Wheat].EP</string>
+              <string>[Wheat].WaterDemand</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
+            <ResultsPerPage>100</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -24509,6 +24504,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
@@ -24519,11 +24515,13 @@ namespace Models
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+              <string>[Wheat].EP</string>
+              <string>[Wheat].WaterDemand</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
+            <ResultsPerPage>100</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -24898,6 +24896,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
@@ -24908,11 +24907,13 @@ namespace Models
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+              <string>[Wheat].EP</string>
+              <string>[Wheat].WaterDemand</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
+            <ResultsPerPage>100</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -25287,6 +25288,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
@@ -25297,11 +25299,13 @@ namespace Models
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+              <string>[Wheat].EP</string>
+              <string>[Wheat].WaterDemand</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
+            <ResultsPerPage>100</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -25676,6 +25680,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
@@ -25686,6 +25691,8 @@ namespace Models
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+              <string>[Wheat].EP</string>
+              <string>[Wheat].WaterDemand</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -26065,6 +26072,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
@@ -26075,11 +26083,13 @@ namespace Models
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+              <string>[Wheat].EP</string>
+              <string>[Wheat].WaterDemand</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
+            <ResultsPerPage>100</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -26454,6 +26464,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
@@ -26464,11 +26475,13 @@ namespace Models
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+              <string>[Wheat].EP</string>
+              <string>[Wheat].WaterDemand</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
+            <ResultsPerPage>100</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -26804,25 +26817,6 @@ namespace Models
           <LocalMicroClimate>
             <Name>LocalMicroClimate</Name>
           </LocalMicroClimate>
-          <MicroClimate>
-            <Name>MicroClimate</Name>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>0</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
-          </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
             <VariableNames>
@@ -26843,6 +26837,7 @@ namespace Models
             <Name>DailyReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>[Clock].Today.Year as Year</string>
               <string>Distance</string>
               <string>LocalMicroClimate.Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
@@ -26853,11 +26848,13 @@ namespace Models
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+              <string>[Wheat].EP</string>
+              <string>[Wheat].WaterDemand</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
+            <ResultsPerPage>100</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -26903,6 +26900,25 @@ namespace Models
             <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
           </Plant15>
+          <MicroClimate>
+            <Name>MicroClimate</Name>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
+            <a_interception>0</a_interception>
+            <b_interception>0</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
+          </MicroClimate>
           <Soil>
             <Name>Soil</Name>
             <Water>
@@ -27188,11 +27204,100 @@ namespace Models
           <Length>100</Length>
           <Width>50</Width>
         </RectangularZone>
+        <Graph>
+          <Name>EP</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.EP</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>true</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>Distance from Tree (m)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries>
+            <string>TreeRow</string>
+            <string>5m</string>
+            <string>10m</string>
+            <string>15m</string>
+            <string>20m</string>
+            <string>25m</string>
+            <string>30m</string>
+          </DisabledSeries>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
         <Area>2.05</Area>
         <Slope>0</Slope>
         <RainfallInterceptionFraction>0</RainfallInterceptionFraction>
         <RainShaddowWidth>0</RainShaddowWidth>
       </AgroforestrySystem>
+      <Graph>
+        <Name>WindSpeed</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>Circle</Marker>
+          <Line>None</Line>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Distance</XFieldName>
+          <YFieldName>LocalMicroClimate.Wind</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Distance from Tree (m)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Wind Speed (m/2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
       <Graph>
         <Name>Yield Transect</Name>
         <Series>

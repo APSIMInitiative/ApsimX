@@ -105,7 +105,7 @@ namespace Models.Agroforestry
             foreach (Zone zone in ZoneList)
                 if (zone == z)
                 {
-                    double UrelMin = Math.Max(0.0, 1.14 * 0.5 - 0.16); // 0.5 is porosity, will be dynamic in the future
+                    double UrelMin = Math.Max(0.0, 1.14 * 0.40 - 0.16); // 0.4 is porosity, will be dynamic in the future
 
                     if (tree.heightToday < 1)
                         Urel = 1;
