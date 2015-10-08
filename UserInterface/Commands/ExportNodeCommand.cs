@@ -362,6 +362,7 @@ namespace UserInterface.Commands
                     GraphPresenter graphPresenter = new GraphPresenter();
                     GraphView graphView = new GraphView();
                     graphView.BackColor = System.Drawing.Color.White;
+                    graphView.FontSize = 12;
                     graphPresenter.Attach(tag, graphView, ExplorerPresenter);
                     string PNGFileName = graphPresenter.ExportToPDF(workingDirectory);
                     section.AddImage(PNGFileName);
