@@ -10904,7 +10904,7 @@ NOTE: Germination failure was an important factor in determining yield impacts o
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <FileName>Machakos1992-1998 PS1509020.met</FileName>
+        <FileName>Machakos1992-1998 PS151007.met</FileName>
       </Weather>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
@@ -16266,7 +16266,7 @@ namespace Models
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <FileName>Machakos1992-1998 PS1509020.met</FileName>
+        <FileName>Machakos1992-1998 PS151007.met</FileName>
       </Weather>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
