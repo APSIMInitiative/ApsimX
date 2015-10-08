@@ -21831,15 +21831,15 @@ This sensibility test assumes a tree windbreak with a of height of 10 m. The com
       <Name>South Australia</Name>
       <Clock>
         <Name>Clock</Name>
-        <StartDate>1900-01-01T00:00:00</StartDate>
-        <EndDate>1909-12-31T00:00:00</EndDate>
+        <StartDate>2000-01-01T00:00:00</StartDate>
+        <EndDate>2010-12-31T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>SummaryFile</Name>
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <FileName>DalbyWithWind.met</FileName>
+        <FileName>Roseworthy.met</FileName>
       </Weather>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
@@ -27213,55 +27213,6 @@ namespace Models
           <Length>100</Length>
           <Width>50</Width>
         </RectangularZone>
-        <Graph>
-          <Name>EP</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.EP</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <Cumulative>true</Cumulative>
-            <CumulativeX>false</CumulativeX>
-            <Filter />
-          </Series>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>Distance from Tree (m)</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries>
-            <string>TreeRow</string>
-            <string>5m</string>
-            <string>10m</string>
-            <string>15m</string>
-            <string>20m</string>
-            <string>25m</string>
-            <string>30m</string>
-          </DisabledSeries>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Graph>
         <Area>2.05</Area>
         <Slope>0</Slope>
         <RainfallInterceptionFraction>0</RainfallInterceptionFraction>
@@ -27297,7 +27248,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title>Wind Speed (m/2)</Title>
+          <Title>Wind Speed (m/s)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
