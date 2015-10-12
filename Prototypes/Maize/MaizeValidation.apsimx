@@ -19,7 +19,15 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
 
 _Brown, H.E., Teixeira, E.I., Huth, N.I. and Holzworth, D.P._
 
-The APSIM maize model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.]]></MemoText>
+The APSIM maize model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
+
+The model consists of:
+
+* a phenology model to simulate development between growth phases  
+* a structure model to simulate plant morphology  
+* a collection of organs to simulate the various plant parts  
+* an arbitrator to allocate resources (N, biomass) to the various plant organs  
+]]></MemoText>
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
@@ -69,6 +77,7 @@ The APSIM maize model has been developed using the Plant Modelling Framework (PM
           <Constant>
             <Name>Target</Name>
             <Value>200</Value>
+            <Units>deg day</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -123,6 +132,7 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
           <Constant>
             <Name>Target</Name>
             <Value>50</Value>
+            <Units>deg day</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -136,6 +146,7 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
           <Constant>
             <Name>Target</Name>
             <Value>120</Value>
+            <Units>deg day</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -149,6 +160,7 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
           <Constant>
             <Name>Target</Name>
             <Value>550</Value>
+            <Units>deg day</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -162,6 +174,7 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
           <Constant>
             <Name>Target</Name>
             <Value>10</Value>
+            <Units>deg day</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -175,6 +188,7 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
           <Constant>
             <Name>Target</Name>
             <Value>10</Value>
+            <Units>deg day</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -382,6 +396,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
           <Value>0.3</Value>
+          <Units>g</Units>
         </Constant>
         <PhaseLookup>
           <Name>DMDemandFunction</Name>
@@ -464,6 +479,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <Constant>
           <Name>MinimumNConc</Name>
           <Value>0.008</Value>
+          <Units>g/g</Units>
         </Constant>
         <PhaseLookup>
           <Name>MaximumNConc</Name>
@@ -489,6 +505,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <Constant>
           <Name>WaterContent</Name>
           <Value>0.12</Value>
+          <Units>g/g</Units>
         </Constant>
         <PhaseLookup>
           <Name>NFillingRate</Name>
@@ -561,6 +578,7 @@ The number of kernals per cob is likely to vary with individual maize cultivars.
           <Constant>
             <Name>GrainsPerKernal</Name>
             <Value>1</Value>
+            <Units>/kernal</Units>
           </Constant>
         </MultiplyFunction>
         <ExpressionFunction>
@@ -635,6 +653,7 @@ Maximum daily N uptake is set to an arbitrarily high value.
 ]]></MemoText>
           </Memo>
           <Value>20</Value>
+          <Units>g/m2/d</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
@@ -645,6 +664,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
 ]]></MemoText>
           </Memo>
           <Value>0.005</Value>
+          <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
@@ -653,10 +673,12 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
         <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.01</Value>
+          <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
           <Value>0.01</Value>
+          <Units>g/g</Units>
         </Constant>
         <LinearInterpolationFunction>
           <Name>PartitionFraction</Name>
@@ -692,6 +714,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Constant>
               <Name>RootFrontVelocity</Name>
               <Value>25</Value>
+              <Units>mm/d</Units>
             </Constant>
             <Start>Germination</Start>
             <End>Flowering</End>
@@ -701,6 +724,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Constant>
               <Name>RootFrontVelocity</Name>
               <Value>0</Value>
+              <Units>mm/d</Units>
             </Constant>
             <Start>Flowering</Start>
             <End>Maturity</End>
@@ -983,10 +1007,12 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           <Constant>
             <Name>CriticalNConc</Name>
             <Value>0.015</Value>
+            <Units>g/g</Units>
           </Constant>
           <Constant>
             <Name>MinimumNConc</Name>
             <Value>0.008</Value>
+            <Units>g/g</Units>
           </Constant>
           <AddFunction>
             <Name>DroughtInducedSenAcceleration</Name>
@@ -1079,6 +1105,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           <Constant>
             <Name>InitialNConc</Name>
             <Value>0</Value>
+            <Units>g/g</Units>
           </Constant>
         </LeafCohortParameters>
         <RUEModel>
@@ -1303,14 +1330,17 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.01</Value>
+          <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>0.2</Value>
+          <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
           <Value>0.01</Value>
+          <Units>g/g</Units>
         </Constant>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
@@ -1383,14 +1413,17 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.008</Value>
+          <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>1</Value>
+          <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
           <Value>0.003</Value>
+          <Units>g/g</Units>
         </Constant>
         <LinearInterpolationFunction>
           <Name>ExpansionStress</Name>
@@ -1442,6 +1475,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <Constant>
           <Name>MinimumNConc</Name>
           <Value>0.006</Value>
+          <Units>g/g</Units>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -2812,7 +2846,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -2830,11 +2864,11 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>Circle</Marker>
-          <Line>None</Line>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
           <TableName>HarvestData</TableName>
           <XFieldName>Population</XFieldName>
           <YFieldName>GrainWt</YFieldName>
@@ -2870,7 +2904,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -2888,11 +2922,11 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>Circle</Marker>
-          <Line>None</Line>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
           <TableName>HarvestData</TableName>
           <XFieldName>Population</XFieldName>
           <YFieldName>GPSM</YFieldName>
@@ -2928,7 +2962,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -2946,11 +2980,11 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>Circle</Marker>
-          <Line>None</Line>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
           <TableName>HarvestData</TableName>
           <XFieldName>Population</XFieldName>
           <YFieldName>GrainSize</YFieldName>
@@ -3885,7 +3919,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -3903,11 +3937,11 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>Circle</Marker>
-          <Line>None</Line>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
           <TableName>HarvestData</TableName>
           <XFieldName>Population</XFieldName>
           <YFieldName>GrainWt</YFieldName>
@@ -3943,7 +3977,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -3961,11 +3995,11 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>Circle</Marker>
-          <Line>None</Line>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
           <TableName>HarvestData</TableName>
           <XFieldName>Population</XFieldName>
           <YFieldName>GPSM</YFieldName>
@@ -4001,7 +4035,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -4019,11 +4053,11 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>Circle</Marker>
-          <Line>None</Line>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
           <TableName>HarvestData</TableName>
           <XFieldName>Population</XFieldName>
           <YFieldName>GrainSize</YFieldName>
@@ -17305,7 +17339,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
@@ -17323,7 +17357,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -17408,7 +17442,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
@@ -17426,7 +17460,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -18135,7 +18169,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
@@ -18153,7 +18187,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -18862,7 +18896,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
@@ -18880,7 +18914,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -19100,7 +19134,7 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <LegendPosition>TopRight</LegendPosition>
+      <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
@@ -19145,7 +19179,7 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <LegendPosition>TopRight</LegendPosition>
+      <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
@@ -20916,7 +20950,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16736653</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -20934,7 +20968,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16736653</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -20974,7 +21008,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16736653</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -20992,7 +21026,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16736653</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -21010,7 +21044,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
+          <ColourArgb>-1663232</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -21028,7 +21062,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
+          <ColourArgb>-1663232</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -21843,7 +21877,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16736653</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -21861,7 +21895,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16736653</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -21901,7 +21935,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16736653</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -21919,7 +21953,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16736653</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -21937,7 +21971,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
+          <ColourArgb>-1663232</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -21955,7 +21989,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
+          <ColourArgb>-1663232</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
