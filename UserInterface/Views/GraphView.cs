@@ -134,6 +134,15 @@ namespace UserInterface.Views
             foreach (OxyPlot.Axes.Axis axis in this.plot1.Model.Axes)
                 this.FormatAxisTickLabels(axis);
 
+            this.plot1.Model.LegendFontSize = FontSize;
+
+            foreach (OxyPlot.Annotations.Annotation annotation in this.plot1.Model.Annotations)
+            {
+                TextAnnotation textAnnotation = annotation as TextAnnotation;
+                if (textAnnotation != null)
+                    textAnnotation.FontSize = FontSize;
+            }
+
             this.plot1.Model.InvalidatePlot(true);
         }
 
