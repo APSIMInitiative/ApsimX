@@ -438,7 +438,11 @@ namespace Models.Core
                         typeof(IFunctionArray).IsAssignableFrom(field.FieldType) ||
                         typeof(Biomass).IsAssignableFrom(field.FieldType) ||
                         field.FieldType.Name == "Object")
+                    {
                         linkedObject = allMatches.Find(m => m.Name == field.Name);
+                        if (linkedObject == null)
+                            allMatches.Clear();
+                    }
 
                     else if (allMatches.Count >= 1)
                         linkedObject = allMatches[0];     // choose closest match.

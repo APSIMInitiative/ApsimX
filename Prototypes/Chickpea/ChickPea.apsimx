@@ -994,6 +994,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Value>0</Value>
         </Constant>
         <Constant>
+          <Name>HeightModel</Name>
+          <Value>1</Value>
+        </Constant>        
+        <Constant>
           <Name>MainStemFinalNodeNumber</Name>
           <Value>40</Value>
         </Constant>
@@ -3795,7 +3799,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
             <XProperty>[Leaf].Fw</XProperty>
           </LinearInterpolationFunction>
           <RUECO2Function>
-            <Name>Fco2</Name>
+            <Name>FCO2</Name>
             <PhotosyntheticPathway>C3</PhotosyntheticPathway>
           </RUECO2Function>
           <Memo>
