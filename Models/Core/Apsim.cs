@@ -430,9 +430,14 @@ namespace Models.Core
 
                     List<IModel> allMatches = FindAll(model, field.FieldType);
 
-                    // Special case: if the type is an IFunction then must match on name
-                    // and type.
-                    if (typeof(IFunction).IsAssignableFrom(field.FieldType) || typeof(Biomass).IsAssignableFrom(field.FieldType))
+                    // Special cases: 
+                    //   if the type is an IFunction then must match on name and type.
+                    //   PMF organs have Live and Dead Biomass types. Need to link to correct one.
+                    //   Root1 has 'object NUptake3'. Need to use name to do link.
+                    if (typeof(IFunction).IsAssignableFrom(field.FieldType) ||
+                        typeof(IFunctionArray).IsAssignableFrom(field.FieldType) ||
+                        typeof(Biomass).IsAssignableFrom(field.FieldType) ||
+                        field.FieldType.Name == "Object")
                         linkedObject = allMatches.Find(m => m.Name == field.Name);
 
                     else if (allMatches.Count >= 1)
