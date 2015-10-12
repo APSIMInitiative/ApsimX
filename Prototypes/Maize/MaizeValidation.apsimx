@@ -1120,10 +1120,10 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>8</double>
-                <double>15</double>
-                <double>35</double>
-                <double>50</double>
+                <double>6</double>
+                <double>20</double>
+                <double>32</double>
+                <double>46</double>
               </X>
               <Y>
                 <double>0</double>
@@ -1734,9 +1734,9 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
       </Cultivar>
       <Cultivar>
         <Name>Hycorn_40</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 200</Command>
+        <Command>[Phenology].Juvenile.Target.Value = 220</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 300</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 124</Command>
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 50</Command>
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 713</Command>
@@ -1746,9 +1746,9 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
       </Cultivar>
       <Cultivar>
         <Name>GH_5019WX</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 245</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 300</Command>
+        <Command>[Phenology].Juvenile.Target.Value = 255</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24.0</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 124</Command>
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 101</Command>
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 694</Command>
@@ -2766,6 +2766,7 @@ namespace Models
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
               <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -3839,6 +3840,7 @@ namespace Models
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
               <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -14208,6 +14210,7 @@ namespace Models
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
               <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -14507,6 +14510,50 @@ namespace Models
         <TableName>PredictedObserved</TableName>
         <XFieldName>Observed.FloweringDAS</XFieldName>
         <YFieldName>Predicted.FloweringDAS</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>MaturityDAS</Name>
+      <Series>
+        <Name>Series1</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.MaturityDAS</XFieldName>
+        <YFieldName>Predicted.MaturityDAS</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -15407,6 +15454,7 @@ namespace Models
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
               <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -15473,11 +15521,11 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
           <TableName>HarvestReport</TableName>
           <XFieldName>Maize.Population</XFieldName>
           <YFieldName>GrainWt</YFieldName>
@@ -15491,7 +15539,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>Circle</Marker>
@@ -15531,11 +15579,11 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
           <TableName>HarvestReport</TableName>
           <XFieldName>Maize.Population</XFieldName>
           <YFieldName>GPSM</YFieldName>
@@ -15549,7 +15597,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>Circle</Marker>
@@ -16474,6 +16522,7 @@ namespace Models
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
               <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -16540,11 +16589,11 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
           <TableName>HarvestReport</TableName>
           <XFieldName>Maize.Population</XFieldName>
           <YFieldName>GrainWt</YFieldName>
@@ -16558,7 +16607,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>Circle</Marker>
@@ -16844,8 +16893,9 @@ namespace Models
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
-              <string>[Maize].Leaf.AppearedCohortNo</string>
+              <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
               <string>[Maize].Structure.MainStemPrimordiaNo</string>
+              <string>[Maize].Phenology.Photoperiod.Value</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -17211,6 +17261,7 @@ namespace Models
               <string>[Maize].Population</string>
               <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
               <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
+              <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -17332,7 +17383,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Leaf.AppearedCohortNo</YFieldName>
+          <YFieldName>FinalLeafNo</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -17355,6 +17406,24 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <Series>
+          <Name>Photoperiod</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Maize.Phenology.Photoperiod.Value</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -17366,6 +17435,13 @@ namespace Models
         <Axis>
           <Type>Left</Type>
           <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -17543,7 +17619,7 @@ namespace Models
         <Name>DRK2</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Prototypes\Maize\DRK.met</FileName>
+          <FileName>DRK.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
@@ -17674,8 +17750,9 @@ namespace Models
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
-              <string>[Maize].Leaf.AppearedCohortNo</string>
+              <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
               <string>[Maize].Structure.MainStemPrimordiaNo</string>
+              <string>[Maize].Phenology.Photoperiod.Value</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -18041,6 +18118,7 @@ namespace Models
               <string>[Maize].Population</string>
               <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
               <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
+              <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -18162,7 +18240,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Leaf.AppearedCohortNo</YFieldName>
+          <YFieldName>FinalLeafNo</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -18185,6 +18263,24 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <Series>
+          <Name>Photoperiod</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Maize.Phenology.Photoperiod.Value</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -18201,7 +18297,104 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
         <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>FinalLeafNumber</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FinalLeafNo</XFieldName>
+          <YFieldName>Predicted.FinalLeafNo</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Maximum LAI</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.LAImax</XFieldName>
+          <YFieldName>Predicted.LAImax</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
@@ -18394,15 +18587,16 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGroundLive.N</string>
-              <string>[Maize].Summariser.AboveGroundLive.Wt</string>
+              <string>[Maize].Summariser.AboveGround.N</string>
+              <string>[Maize].Summariser.AboveGround.Wt</string>
               <string>[Maize].Summariser.Total.N</string>
               <string>[Maize].Summariser.Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
-              <string>[Maize].Leaf.AppearedCohortNo</string>
+              <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
               <string>[Maize].Structure.MainStemPrimordiaNo</string>
+              <string>[Maize].Phenology.Photoperiod.Value</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -18768,6 +18962,7 @@ namespace Models
               <string>[Maize].Population</string>
               <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
               <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
+              <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -18889,7 +19084,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Leaf.AppearedCohortNo</YFieldName>
+          <YFieldName>FinalLeafNo</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -18908,6 +19103,89 @@ namespace Models
           <TableName>HarvestData</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>FinalLeafNo</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Photoperiod</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Maize.Phenology.Photoperiod.Value</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>LAI</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Maize.Leaf.LAI</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>Solid</Line>
+          <TableName>HarvestData</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>LAImax</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -18933,9 +19211,13 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>LAI</Name>
+        <Name>FinalLeafNumber</Name>
         <Series>
-          <Name>Predicted</Name>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -18943,12 +19225,53 @@ namespace Models
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FinalLeafNo</XFieldName>
+          <YFieldName>Predicted.FinalLeafNo</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Biomass</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Leaf.LAI</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
+          <YFieldName>Maize.Summariser.AboveGround.Wt</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -18958,14 +19281,32 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>Solid</Line>
           <TableName>HarvestData</TableName>
           <XFieldName>Date</XFieldName>
-          <YFieldName>LAImax</YFieldName>
+          <YFieldName>Biomass</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Photoperiod</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Maize.Phenology.Photoperiod.Value</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -18981,6 +19322,13 @@ namespace Models
         <Axis>
           <Type>Left</Type>
           <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -19254,7 +19602,52 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <LegendPosition>TopRight</LegendPosition>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>FinalLeafNumber</Name>
+      <Series>
+        <Name>Series1</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.FinalLeafNo</XFieldName>
+        <YFieldName>Predicted.FinalLeafNo</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Caption />
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
