@@ -298,8 +298,8 @@ namespace Models.Core
 
         /// <summary>The number to run</summary>
         private int NumToRun;
-        /// <summary>The number completed</summary>
-        private int NumCompleted;
+        ///// <summary>The number completed</summary>
+        //private int NumCompleted;
 
         /// <summary>Run all simulations.</summary>
         /// <param name="sender"></param>
@@ -336,21 +336,23 @@ namespace Models.Core
             MakeSubstitutions(simulationsToRun);
 
             NumToRun = simulationsToRun.Length;
-            NumCompleted = 0;
+            //NumCompleted = 0;
 
+            jobManager.AllJobsCompleted -= OnSimulationCompleted;
+            jobManager.AllJobsCompleted += OnSimulationCompleted;
             if (NumToRun == 1)
             {
                 // Skip running in another thread.
-                simulationsToRun[0].Commencing -= OnSimulationCommencing;
-                simulationsToRun[0].Commencing += OnSimulationCommencing;
+                //simulationsToRun[0].Commencing -= OnSimulationCommencing;
+                //simulationsToRun[0].Commencing += OnSimulationCommencing;
                 simulationsToRun[0].Run(null, null);
             }
             else
             {
                 foreach (Simulation simulation in simulationsToRun)
                 {
-                    simulation.Commencing -= OnSimulationCommencing;
-                    simulation.Commencing += OnSimulationCommencing;
+                    //simulation.Commencing -= OnSimulationCommencing;
+                    //simulation.Commencing += OnSimulationCommencing;
                     jobManager.AddJob(simulation);
                 }
             }
@@ -406,24 +408,7 @@ namespace Models.Core
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            Simulation simulation = sender as Simulation;
-            bool RunAllCompleted = false;
-            lock (this)
-            {
-                NumCompleted++;
-                RunAllCompleted = NumCompleted == NumToRun;
-                if (simulation.ErrorMessage != null)
-                {
-                    if (ErrorMessage == null)
-                        ErrorMessage += "Errors were found in these simulations:\r\n";
-                    ErrorMessage += simulation.Name + "\r\n\r\n";
-                }
-            }
-            if (RunAllCompleted)
-            {
-                CallAllCompleted();
-                simulation.Commencing -= OnSimulationCommencing;
-            }
+            CallAllCompleted();
         }
 
         /// <summary>Call the all completed event in all models.</summary>
