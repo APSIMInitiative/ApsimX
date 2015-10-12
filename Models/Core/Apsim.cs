@@ -15,6 +15,7 @@ namespace Models.Core
     using System.Xml;
     using APSIM.Shared.Utilities;
     using PMF.Functions;
+    using PMF;
 
     /// <summary>
     /// The API for models to discover other models, get and set variables in
@@ -431,7 +432,7 @@ namespace Models.Core
 
                     // Special case: if the type is an IFunction then must match on name
                     // and type.
-                    if (typeof(IFunction).IsAssignableFrom(field.FieldType))
+                    if (typeof(IFunction).IsAssignableFrom(field.FieldType) || typeof(Biomass).IsAssignableFrom(field.FieldType))
                         linkedObject = allMatches.Find(m => m.Name == field.Name);
 
                     else if (allMatches.Count >= 1)
@@ -447,9 +448,46 @@ namespace Models.Core
                         throw new ApsimXException(
                                     model,
                                     "Cannot resolve [Link] '" + field.ToString() + errorMsg);
+
                 }
             }
         }
+
+        /// <summary>
+        /// Get all links. Useful for debugging.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetAllLinks(IModel model)
+        {
+            string st = string.Empty;
+
+            st += "\r\n******" + Apsim.FullPath(model) + "******\r\n";
+
+            // Go looking for [Link]s
+            foreach (FieldInfo field in ReflectionUtilities.GetAllFields(
+                                                            model.GetType(),
+                                                            BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
+            {
+                var link = ReflectionUtilities.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
+                if (link != null)
+                {
+                    st += field.Name + " = ";
+                    object value = field.GetValue(model);
+                    if (value == null)
+                        st += "null\r\n";
+                    else if (value is IModel)
+                        st += Apsim.FullPath(value as IModel) + "\r\n";
+                    else
+                        st += "??\r\n";
+                }
+            }
+
+            foreach (IModel child in model.Children)
+                st += GetAllLinks(child);
+
+            return st;
+        }
+
 
         /// <summary>
         /// Set to null all link fields in the specified model.
