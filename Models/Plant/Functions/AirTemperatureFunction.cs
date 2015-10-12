@@ -7,10 +7,9 @@ using Models.Interfaces;
 namespace Models.PMF.Functions
 {
     /// <summary>
-    /// An air temperature function
+    /// A value is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures.  
     /// </summary>
     [Serializable]
-    [Description("A value is calculated from the mean of 3-hourly estimates of air temperature calculated from daily max and min temperatures")]
     public class AirTemperatureFunction : Model, IFunction
     {
 
@@ -124,6 +123,8 @@ namespace Models.PMF.Functions
         {
             // add a heading.
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            AutoDocumentation.GetClassDescription(this,tags,indent);
 
             // write memos.
             foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
