@@ -340,21 +340,11 @@ namespace Models.Core
 
             jobManager.AllJobsCompleted -= OnSimulationCompleted;
             jobManager.AllJobsCompleted += OnSimulationCompleted;
-            if (NumToRun == 1)
+            foreach (Simulation simulation in simulationsToRun)
             {
-                // Skip running in another thread.
-                //simulationsToRun[0].Commencing -= OnSimulationCommencing;
-                //simulationsToRun[0].Commencing += OnSimulationCommencing;
-                simulationsToRun[0].Run(null, null);
-            }
-            else
-            {
-                foreach (Simulation simulation in simulationsToRun)
-                {
-                    //simulation.Commencing -= OnSimulationCommencing;
-                    //simulation.Commencing += OnSimulationCommencing;
-                    jobManager.AddJob(simulation);
-                }
+                //simulation.Commencing -= OnSimulationCommencing;
+                //simulation.Commencing += OnSimulationCommencing;
+                jobManager.AddJob(simulation);
             }
         }
 
