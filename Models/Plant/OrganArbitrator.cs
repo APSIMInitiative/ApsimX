@@ -1163,10 +1163,14 @@ namespace Models.PMF
             {
                 if ((DM.MetabolicAllocation[i] + DM.StructuralAllocation[i]) != 0)
                 {
-                    double proportion = DM.MetabolicAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i]);
-                    DM.StructuralAllocation[i] = Math.Min(DM.StructuralAllocation[i], N.ConstrainedGrowth[i] * (1 - proportion));  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
-                    DM.MetabolicAllocation[i] = Math.Min(DM.MetabolicAllocation[i], N.ConstrainedGrowth[i] * proportion);
-                //Question.  Why do I not restrain non-structural DM allocations.  I think this may be wrong and require further thought HEB 15-1-2015
+                    double MetabolicProportion = DM.MetabolicAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.NonStructuralAllocation[i]);
+                    double StructuralProportion = DM.StructuralAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.NonStructuralAllocation[i]);
+                    double NonStructuralProportion = DM.NonStructuralAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.NonStructuralAllocation[i]);
+                    DM.MetabolicAllocation[i] = Math.Min(DM.MetabolicAllocation[i], N.ConstrainedGrowth[i] * MetabolicProportion);
+                    DM.StructuralAllocation[i] = Math.Min(DM.StructuralAllocation[i], N.ConstrainedGrowth[i] * StructuralProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
+                    DM.NonStructuralAllocation[i] = Math.Min(DM.NonStructuralAllocation[i], N.ConstrainedGrowth[i] * NonStructuralProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
+
+                    //Question.  Why do I not restrain non-structural DM allocations.  I think this may be wrong and require further thought HEB 15-1-2015
                 }
             }
             //Recalculated DM Allocation totals
@@ -1287,7 +1291,7 @@ namespace Models.PMF
                 if (NonStructuralRequirement > 0.0)
                 {
                     double NonStructuralAllocation = Math.Min(FirstPassNotAllocated * BAT.RelativeNonStructuralDemand[i], NonStructuralRequirement);
-                    BAT.NonStructuralAllocation[i] += NonStructuralAllocation;
+                    BAT.NonStructuralAllocation[i] += Math.Max(0,NonStructuralAllocation);
                     NotAllocated -= NonStructuralAllocation;
                     TotalAllocated += NonStructuralAllocation;
                 }
@@ -1324,7 +1328,7 @@ namespace Models.PMF
                 if (NonStructuralRequirement > 0.0)
                 {
                     double NonStructuralAllocation = Math.Min(NonStructuralRequirement, NotAllocated);
-                    BAT.NonStructuralAllocation[i] += NonStructuralAllocation;
+                    BAT.NonStructuralAllocation[i] += Math.Max(0, NonStructuralAllocation);
                     NotAllocated -= NonStructuralAllocation;
                     TotalAllocated += NonStructuralAllocation;
                 }
@@ -1362,17 +1366,49 @@ namespace Models.PMF
                 if (NonStructuralRequirement > 0.0)
                 {
                     double NonStructuralAllocation = Math.Min(FirstPassNotallocated * BAT.RelativeNonStructuralDemand[i], NonStructuralRequirement);
-                    BAT.NonStructuralAllocation[i] += NonStructuralAllocation;
+                    BAT.NonStructuralAllocation[i] += Math.Max(0, NonStructuralAllocation);
                     NotAllocated -= NonStructuralAllocation;
                     TotalAllocated += NonStructuralAllocation;
                 }
             }
         }
+        /// <summary>Partitions biomass between organs based on their relative demand in a single pass so non-structural always gets some if there is a non-structural demand</summary>
+        /// <param name="Organs">The organs.</param>
+        /// <param name="TotalSupply">The total supply.</param>
+        /// <param name="TotalAllocated">The total allocated.</param>
+        /// <param name="BAT">The bat.</param>
+        private void RelativeAllocationSingle(IArbitration[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
+        {
+            double NotAllocated = TotalSupply;
+            ////allocate to all pools based on their relative demands
+            for (int i = 0; i < Organs.Length; i++)
+            {
+                double StructuralRequirement = Math.Max(0, BAT.StructuralDemand[i] - BAT.StructuralAllocation[i]); //N needed to get to Minimum N conc and satisfy structural and metabolic N demands
+                double MetabolicRequirement = Math.Max(0, BAT.MetabolicDemand[i] - BAT.MetabolicAllocation[i]);
+                double NonStructuralRequirement = Math.Max(0, BAT.NonStructuralDemand[i] - BAT.TotalNonStructuralAllocation);
+                if ((StructuralRequirement + MetabolicRequirement + NonStructuralRequirement) > 0.0)
+                {
+                    double StructuralFraction = BAT.TotalStructuralDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand);
+                    double MetabolicFraction = BAT.TotalMetabolicDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand);
+                    double NonStructuralFraction = BAT.TotalNonStructuralDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand);
+
+                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * StructuralFraction * BAT.RelativeStructuralDemand[i]);
+                    double MetabolicAllocation = Math.Min(MetabolicRequirement, TotalSupply * MetabolicFraction * BAT.RelativeMetabolicDemand[i]);
+                    double NonStructuralAllocation = Math.Min(NonStructuralRequirement, TotalSupply * NonStructuralFraction * BAT.RelativeNonStructuralDemand[i]);
+
+                    BAT.StructuralAllocation[i] += StructuralAllocation;
+                    BAT.MetabolicAllocation[i] += MetabolicAllocation;
+                    BAT.NonStructuralAllocation[i] += Math.Max(0, NonStructuralAllocation);
+                    NotAllocated -= (StructuralAllocation + MetabolicAllocation + NonStructuralAllocation);
+                    TotalAllocated += (StructuralAllocation + MetabolicAllocation + NonStructuralAllocation);
+                }
+            }
+        }
         #endregion
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+            /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+            /// <param name="tags">The list of tags to add to.</param>
+            /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+            /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             // add a heading.

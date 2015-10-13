@@ -151,6 +151,7 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         [Units("g/m^2")]
         public double LiveFWt { get; set; }
+
         #endregion
 
         #region Organ functions

@@ -361,11 +361,11 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>0.3</double>
-                <double>1</double>
+                <double>0</double>
+                <double>0.6</double>
               </X>
               <Y>
-                <double>1</double>
+                <double>0</double>
                 <double>1</double>
               </Y>
             </XYPairs>
@@ -918,11 +918,13 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>0.3</double>
+                <double>0</double>
+                <double>0.6</double>
                 <double>1</double>
               </X>
               <Y>
                 <double>0.1</double>
+                <double>1</double>
                 <double>1</double>
               </Y>
             </XYPairs>
@@ -953,13 +955,13 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>0.5</double>
-                <double>1</double>
+                <double>0.4</double>
+                <double>0.6</double>
               </X>
               <Y>
-                <double>350</double>
+                <double>300</double>
+                <double>300</double>
                 <double>650</double>
-                <double>600</double>
               </Y>
             </XYPairs>
             <XProperty>[Structure].RelativeNodeApperance</XProperty>
@@ -970,12 +972,12 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>11</double>
-                <double>20</double>
+                <double>0.4</double>
+                <double>0.6</double>
               </X>
               <Y>
-                <double>359</double>
-                <double>350</double>
+                <double>150</double>
+                <double>150</double>
                 <double>350</double>
               </Y>
             </XYPairs>
@@ -1032,10 +1034,10 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                   <Name>XYPairs</Name>
                   <X>
                     <double>0</double>
-                    <double>0.7</double>
+                    <double>1</double>
                   </X>
                   <Y>
-                    <double>0</double>
+                    <double>1</double>
                     <double>0</double>
                   </Y>
                 </XYPairs>
@@ -1293,10 +1295,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
           <Constant>
-            <Name>ExpansionStress</Name>
-            <Value>1</Value>
-          </Constant>
-          <Constant>
             <Name>StartStage</Name>
             <Value>5.2</Value>
           </Constant>
@@ -1312,6 +1310,21 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Name>OrganPopulation</Name>
             <VariableName>[Rachis].CobNumber.Value</VariableName>
           </VariableReference>
+          <LinearInterpolationFunction>
+            <Name>ExpansionStress</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>0.8</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
+          </LinearInterpolationFunction>
         </PopulationBasedDemandFunction>
         <Biomass>
           <Name>Live</Name>
@@ -1376,10 +1389,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
           <Constant>
-            <Name>ExpansionStress</Name>
-            <Value>1</Value>
-          </Constant>
-          <Constant>
             <Name>StartStage</Name>
             <Value>5.5</Value>
           </Constant>
@@ -1395,6 +1404,21 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Name>OrganPopulation</Name>
             <VariableName>[Rachis].CobNumber.Value</VariableName>
           </VariableReference>
+          <LinearInterpolationFunction>
+            <Name>ExpansionStress</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>0.7</double>
+              </X>
+              <Y>
+                <double>0.4</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
+          </LinearInterpolationFunction>
         </PopulationBasedDemandFunction>
         <Biomass>
           <Name>Live</Name>
@@ -1434,7 +1458,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
               <double>0.6</double>
             </X>
             <Y>
-              <double>1</double>
+              <double>0</double>
               <double>1</double>
             </Y>
           </XYPairs>
@@ -1453,7 +1477,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </Biomass>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.8</Value>
+          <Value>0.6</Value>
         </Constant>
         <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
@@ -1813,79 +1837,86 @@ VShort duration variety released in New Zealand by Pioneer
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
-    <Model xsi:type="ExcelInput">
+    <ExcelInput>
       <Name>Observed</Name>
       <FileName>%root%\Prototypes\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>HarvestData</string>
       </SheetNames>
-    </Model>
+    </ExcelInput>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
       <PredictedTableName>HarvestReport</PredictedTableName>
       <ObservedTableName>HarvestData</ObservedTableName>
       <FieldNameUsedForMatch>Stage</FieldNameUsedForMatch>
     </PredictedObserved>
-    <Model xsi:type="ExcelInput">
+    <ExcelInput>
       <Name>ObservedTimeSeries</Name>
       <FileName>%root%\Prototypes\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>TimeSeriesData</string>
       </SheetNames>
-    </Model>
-    <Model xsi:type="ExcelInput">
+    </ExcelInput>
+    <ExcelInput>
       <Name>NZObserved</Name>
       <FileName>%root%\Prototypes\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>observed</string>
       </SheetNames>
-    </Model>
-    <Model xsi:type="ExcelInput">
+    </ExcelInput>
+    <ExcelInput>
       <Name>RainShelterN</Name>
       <FileName>%root%\Prototypes\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>RainShelterNitrogen</string>
       </SheetNames>
-    </Model>
-    <Model xsi:type="ExcelInput">
+    </ExcelInput>
+    <ExcelInput>
       <Name>RainShelterSW</Name>
       <FileName>%root%\Prototypes\Maize\Observations\SoilWater.xlsx</FileName>
       <SheetNames>
         <string>SoilWater</string>
       </SheetNames>
-    </Model>
-    <Model xsi:type="ExcelInput">
+    </ExcelInput>
+    <ExcelInput>
       <Name>RainShelterCob</Name>
       <FileName>%root%\Prototypes\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>RachisHusk_RainS</string>
       </SheetNames>
-    </Model>
+    </ExcelInput>
     <TimeSeriesStats>
       <Name>TimeSeriesStats</Name>
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
-    <Model xsi:type="ExcelInput">
+    <ExcelInput>
       <Name>PhenologySimple</Name>
       <FileName>%root%\Prototypes\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>PhenologySimple</string>
       </SheetNames>
-    </Model>
-    <Model xsi:type="ExcelInput">
+    </ExcelInput>
+    <ExcelInput>
       <Name>RainShelterSen</Name>
       <FileName>Observations\LeafSenesCount.xlsx</FileName>
       <SheetNames>
         <string>EndSenes</string>
       </SheetNames>
-    </Model>
-    <Model xsi:type="ExcelInput">
+    </ExcelInput>
+    <ExcelInput>
       <Name>RainShelterSenStart</Name>
       <FileName>Observations\LeafSenesCount.xlsx</FileName>
       <SheetNames>
         <string>StartSenes</string>
       </SheetNames>
-    </Model>
+    </ExcelInput>
+    <ExcelInput>
+      <Name>RainShelterLeafSize</Name>
+      <FileName>Observations\IndLeafData_MaizeRainshelter.xlsx</FileName>
+      <SheetNames>
+        <string>MaxLeafSize</string>
+      </SheetNames>
+    </ExcelInput>
     <AutoExport>false</AutoExport>
   </DataStore>
   <Tests>
@@ -22163,11 +22194,11 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
             </Operation>
             <Operation>
               <Date>2012-11-23T00:00:00</Date>
-              <Action>[Irrigation].Apply(20);</Action>
+              <Action>[Irrigation].Apply(25);</Action>
             </Operation>
             <Operation>
               <Date>2012-11-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(20);</Action>
+              <Action>[Irrigation].Apply(25);</Action>
             </Operation>
             <Operation>
               <Date>2012-11-30T00:00:00</Date>
@@ -22270,11 +22301,11 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
             </Operation>
             <Operation>
               <Date>2012-11-23T00:00:00</Date>
-              <Action>[Irrigation].Apply(20);</Action>
+              <Action>[Irrigation].Apply(25);</Action>
             </Operation>
             <Operation>
               <Date>2012-11-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(20);</Action>
+              <Action>[Irrigation].Apply(25);</Action>
             </Operation>
             <Operation>
               <Date>2012-12-20T00:00:00</Date>
@@ -22326,7 +22357,7 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <double>0.06</double>
                 </LL>
                 <KL>
-                  <double>0.15</double>
+                  <double>0.1</double>
                   <double>0.075</double>
                   <double>0.06</double>
                   <double>0.06</double>
@@ -22338,7 +22369,7 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 <XF>
                   <double>1</double>
                   <double>1</double>
-                  <double>1</double>
+                  <double>0.5</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -22587,8 +22618,8 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 <double>0.53999999999999926</double>
               </NH4>
               <SW>
-                <double>0.2</double>
-                <double>0.2</double>
+                <double>0.06</double>
+                <double>0.25</double>
                 <double>0.2</double>
                 <double>0.2</double>
                 <double>0.2</double>
@@ -22668,6 +22699,49 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
+          <Manager>
+            <Name>ClimateControl</Name>
+            <Script>
+              <StartDate>2012-10-23</StartDate>
+              <EndDate>2013-04-10</EndDate>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+
+
+
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Weather Met;
+		[Link] Clock Clock;
+    
+		[Description("Start Date")]
+		public DateTime StartDate { get; set; }
+        
+		[Description("End Date")]
+		public DateTime EndDate { get; set; }
+ 
+    
+		[EventSubscribe("PreparingNewWeatherData")]
+		private void OnPreparingNewWeatherData(object sender, EventArgs e)
+		{
+			if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
+				Met.Rain = 0;		
+		}
+	}
+}]]></Code>
+          </Manager>
           <Operations>
             <Name>Irrig</Name>
             <Operation>
@@ -22823,15 +22897,15 @@ namespace Models
 {
 	[Serializable] 
 	public class Script : Model
-	{      
+	{
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;   
+		[Link] Weather Met;
 		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;  
-		[Link] Plant Maize;          
-		[Link] Zone zone;			
+		[Link] Irrigation Irrig;
+		[Link] Plant Maize;
+		[Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
@@ -22875,16 +22949,16 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
-		[XmlIgnore] public double LeafExpandedPosition {get; set;}
-        [XmlIgnore] public double LeafAppearedPosition {get; set;}
-        [XmlIgnore] public double ExpandedLeafNoYesterday {get; set;}
-        [XmlIgnore] public double AppearedLeafNoYesterday {get; set;}
-        [XmlIgnore] public double MostRecentlyExpandedLeafSize {get; set;}
-        [XmlIgnore] public double MostRecentlyAppearedLeafMaxSize {get; set;}
+		[XmlIgnore] public double LeafExpandedPosition { get; set; }
+		[XmlIgnore] public double LeafAppearedPosition { get; set; }
+		[XmlIgnore] public double ExpandedLeafNoYesterday { get; set; }
+		[XmlIgnore] public double AppearedLeafNoYesterday { get; set; }
+		[XmlIgnore] public double MostRecentlyExpandedLeafSize { get; set; }
+		[XmlIgnore] public double MostRecentlyAppearedLeafMaxSize { get; set; }
         
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
 			InitialDay = true;
 			LeafExpandedPosition = 0;
 			LeafAppearedPosition = 0;
@@ -22892,16 +22966,16 @@ namespace Models
 			AppearedLeafNoYesterday = 0;
 			MostRecentlyExpandedLeafSize = 0;
 			MostRecentlyAppearedLeafMaxSize = 0;
-		}	   
+		}
 		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
@@ -22909,7 +22983,7 @@ namespace Models
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
 			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            int layers = Soil.Thickness.Length;
+			int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
 				InitialSurfaceOMN = SOM.N;
@@ -22920,8 +22994,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Maize.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -22933,8 +23007,8 @@ namespace Models
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
 			//AccumEP -= (double)zone.Get("[Maize].Leaf.Transpiration");
-            AccumEP -= (double)zone.Get("Maize.Root.WaterUptake");
-			SoilWaterDeficit =  (SWC - DUL);
+			AccumEP -= (double)zone.Get("Maize.Root.WaterUptake");
+			SoilWaterDeficit = (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
 			
@@ -22948,7 +23022,7 @@ namespace Models
 		{
 			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
@@ -22960,19 +23034,65 @@ namespace Models
 			
 			if ((double)zone.Get("Maize.Leaf.ExpandedCohortNo") > ExpandedLeafNoYesterday)
 			{
-			LeafExpandedPosition = (double)zone.Get("Maize.Leaf.ExpandedCohortNo");
-			MostRecentlyExpandedLeafSize = (double)zone.Get("Maize.Leaf.CohortSize["+(int)LeafExpandedPosition+"]");
+				LeafExpandedPosition = (double)zone.Get("Maize.Leaf.ExpandedCohortNo");
+				MostRecentlyExpandedLeafSize = (double)zone.Get("Maize.Leaf.CohortSize[" + (int)LeafExpandedPosition + "]");
 			}
-			else
-			LeafExpandedPosition = 0;
+			//else
+			//	LeafExpandedPosition = 0;
 			
-			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday) 
+			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday)
 			{
-			LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
-			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value");
+				LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
+				MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value");
 			}
 			//else
 			//LeafAppearedPosition = 0;
+			
+		}
+	}
+}
+	   ]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Harvesting</Name>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Maize;
+		[Link] Zone zone;
+					
+        
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Maize.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			{
+				Maize.Harvest();
+				Maize.EndCrop();
+			}
+		}
+		
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
 			
 		}
 	}
@@ -23100,6 +23220,7 @@ namespace Models
               <string>[Maize].Rachis.Live.NConc</string>
               <string>[Maize].Leaf.Dead.NConc</string>
               <string>[Maize].Leaf.Photosynthesis.RueAct</string>
+              <string>[Maize].Stem.Live.StructuralWt</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -24501,49 +24622,6 @@ namespace Models
             <DisabledSeries />
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
-          <Manager>
-            <Name>ClimateControl</Name>
-            <Script>
-              <StartDate>2012-10-23</StartDate>
-              <EndDate>2013-04-10</EndDate>
-            </Script>
-            <Code><![CDATA[using System;
-using Models.Core;
-using APSIM.Shared.Utilities;
-
-
-
-using System.Collections.Generic;
-using System.Text;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-
-namespace Models
-{
-[Serializable] 
-[System.Xml.Serialization.XmlInclude(typeof(Model))]
-public class Script : Model
- {      
-   [Link] Weather Met;  
-   [Link] Clock Clock;
-    
-   [Description("Start Date")]
-        public DateTime StartDate { get; set; }
-        
-   [Description("End Date")]
-        public DateTime EndDate { get; set; }
- 
-    
-   [EventSubscribe("PreparingNewWeatherData")]
-   private void OnPreparingNewWeatherData(object sender, EventArgs e)
-   {
-   if ((Clock.Today.Date >= StartDate)  && (Clock.Today.Date <= EndDate))
-	Met.Rain = 0;		
-   }
- }
-}]]></Code>
-          </Manager>
           <Folder>
             <Name>SWCLayers</Name>
             <Graph>
@@ -25192,52 +25270,6 @@ public class Script : Model
             <DisabledSeries />
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
-          <Manager>
-            <Name>Harvesting</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{      
-		[Link] Plant Maize;          
-		[Link] Zone zone;			
-					
-        
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-		}	   
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-        if (Maize.Phenology.CurrentPhaseName=="ReadyForHarvesting")
-           {
-           Maize.Harvest();
-           Maize.EndCrop();
-           }
-		}
-		
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			
-		}
-	}
-}
-	   ]]></Code>
-          </Manager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -25512,7 +25544,7 @@ namespace Models
               <TableName>SoilWater</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
+              <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -25551,7 +25583,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -25569,7 +25601,7 @@ namespace Models
               <TableName>SoilWater</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -25608,7 +25640,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -25665,7 +25697,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -25722,7 +25754,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -25779,7 +25811,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -25836,7 +25868,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -25893,7 +25925,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -26298,7 +26330,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Maize.Leaf.Live.N</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -26316,7 +26348,7 @@ namespace Models
               <TableName>RainShelterNitrogen</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Maize.Leaf.Live.N</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -26355,7 +26387,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Maize.Grain.Live.N</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -26373,7 +26405,7 @@ namespace Models
               <TableName>RainShelterNitrogen</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Maize.Grain.Live.N</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -26412,7 +26444,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Maize.Stem.Live.N</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -26430,7 +26462,7 @@ namespace Models
               <TableName>RainShelterNitrogen</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Maize.Stem.Live.N</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -26469,7 +26501,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Maize.Rachis.Live.N</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -26487,7 +26519,7 @@ namespace Models
               <TableName>RainShelterNitrogen</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Maize.Rachis.Live.N</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -26526,7 +26558,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Maize.Husk.Live.N</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -26544,7 +26576,7 @@ namespace Models
               <TableName>RainShelterNitrogen</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Maize.Husk.Live.N</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -26782,7 +26814,7 @@ namespace Models
             <Caption>Caption can be written</Caption>
             <Axis>
               <Type>Left</Type>
-              <Title>Leaf Tips (n)</Title>
+              <Title>Husk weight (g/m2)</Title>
               <Inverted>false</Inverted>
               <Minimum>NaN</Minimum>
               <Maximum>NaN</Maximum>
@@ -26898,6 +26930,110 @@ namespace Models
             <DisabledSeries />
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
+          <Graph>
+            <Name>FW</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Maize.Leaf.Fw</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Actual Radiation Use Efficiency (g/MJ)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>Arbitrator</Name>
+            <Series>
+              <Name>Supply</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Maize.Arbitrator.DMSupply</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+              <Filter />
+            </Series>
+            <Series>
+              <Name>Demand</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Maize.Arbitrator.DMDemand</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+              <Filter />
+            </Series>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Actual Radiation Use Efficiency (g/MJ)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries>
+              <string>NitrogenNilIrrigationFull</string>
+              <string>NitrogenLowIrrigationFull</string>
+              <string>NitrogenNilIrrigationNil</string>
+              <string>NitrogenLowIrrigationNil</string>
+              <string>NitrogenMedIrrigationNil</string>
+            </DisabledSeries>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Graph>
         </Folder>
         <Folder>
           <Name>Canopy</Name>
@@ -26911,13 +27047,13 @@ namespace Models
               <ColourArgb>-8388608</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Maize.Leaf.AppearedCohortNo</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
+              <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -26928,7 +27064,7 @@ namespace Models
               <YAxis>Left</YAxis>
               <ColourArgb>-16776961</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <Line>None</Line>
@@ -26954,7 +27090,7 @@ namespace Models
               <Maximum>NaN</Maximum>
               <Interval>NaN</Interval>
             </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
+            <LegendPosition>BottomRight</LegendPosition>
             <DisabledSeries />
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
@@ -26968,13 +27104,13 @@ namespace Models
               <ColourArgb>-8388608</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Maize.Leaf.ExpandedCohortNo</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -26985,14 +27121,14 @@ namespace Models
               <YAxis>Left</YAxis>
               <ColourArgb>-16776961</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <Line>None</Line>
               <TableName>observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Leaf.ExpandedCohortNo</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -27253,13 +27389,13 @@ namespace Models
               <ColourArgb>-8388608</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
-              <Line>Solid</Line>
-              <TableName>LeafAreas</TableName>
-              <XFieldName>Predicted.ExtraVariables.Script.LeafExpandedPosition</XFieldName>
-              <YFieldName>Predicted.ExtraVariables.Script.MostRecentlyExpandedLeafSize</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <Line>None</Line>
+              <TableName>Report</TableName>
+              <XFieldName>ExtraVariables.Script.LeafExpandedPosition</XFieldName>
+              <YFieldName>ExtraVariables.Script.MostRecentlyExpandedLeafSize</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -27270,13 +27406,13 @@ namespace Models
               <YAxis>Left</YAxis>
               <ColourArgb>-16776961</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <Line>None</Line>
-              <TableName>LeafAreas</TableName>
-              <XFieldName>Observed.ExtraVariables.Script.LeafExpandedPosition</XFieldName>
-              <YFieldName>Observed.ExtraVariables.Script.MostRecentlyExpandedLeafSize</YFieldName>
+              <TableName>MaxLeafSize</TableName>
+              <XFieldName>ExtraVariables.Script.LeafExpandedPosition</XFieldName>
+              <YFieldName>ExtraVariables.Script.MostRecentlyExpandedLeafSize</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -27286,16 +27422,16 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <Line>DashDot</Line>
+              <Marker>Star</Marker>
+              <Line>None</Line>
               <TableName>Report</TableName>
               <XFieldName>ExtraVariables.Script.LeafAppearedPosition</XFieldName>
               <YFieldName>ExtraVariables.Script.MostRecentlyAppearedLeafMaxSize</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -27310,45 +27446,6 @@ namespace Models
             <Axis>
               <Type>Bottom</Type>
               <Title>Leaf position</Title>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-          </Graph>
-          <Graph>
-            <Name>SenescedLeaves</Name>
-            <Series>
-              <Name>Predicted</Name>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <Line>Solid</Line>
-              <TableName>Report</TableName>
-              <XFieldName>Maize.Leaf.DeadCohortNo</XFieldName>
-              <YFieldName>Phenology.ThermalTime.Value</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
-              <Cumulative>true</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Axis>
-              <Type>Left</Type>
-              <Title>Senesced leaves (n)</Title>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Bottom</Type>
               <Inverted>false</Inverted>
               <Minimum>NaN</Minimum>
               <Maximum>NaN</Maximum>
@@ -27431,9 +27528,9 @@ namespace Models
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <Line>None</Line>
-              <TableName>GrainsData_RainS</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.Grain.NumberFunction.Value</YFieldName>
+              <TableName>HarvestData</TableName>
+              <XFieldName>Date</XFieldName>
+              <YFieldName>GPSM</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -33898,5 +33995,5 @@ Simulation results for the combined datasets from the various countries are show
     <DisabledSeries />
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
-  <ExplorerWidth>379</ExplorerWidth>
+  <ExplorerWidth>394</ExplorerWidth>
 </Simulations>
