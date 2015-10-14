@@ -25814,11 +25814,7 @@ namespace Models
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-<<<<<<< HEAD
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-=======
-            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
->>>>>>> 348c28ce5a11267d09c26575f3c70408550463bc
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
             <Line>None</Line>
@@ -27461,11 +27457,7 @@ namespace Models
               <YAxis>Left</YAxis>
               <ColourArgb>-16776961</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-<<<<<<< HEAD
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-=======
-              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
->>>>>>> 348c28ce5a11267d09c26575f3c70408550463bc
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <Line>None</Line>
@@ -27522,11 +27514,7 @@ namespace Models
               <YAxis>Left</YAxis>
               <ColourArgb>-16776961</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-<<<<<<< HEAD
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-=======
-              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
->>>>>>> 348c28ce5a11267d09c26575f3c70408550463bc
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <Line>None</Line>
@@ -27811,11 +27799,7 @@ namespace Models
               <YAxis>Left</YAxis>
               <ColourArgb>-16776961</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-<<<<<<< HEAD
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-=======
-              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
->>>>>>> 348c28ce5a11267d09c26575f3c70408550463bc
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <Line>None</Line>
@@ -27865,48 +27849,6 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
-<<<<<<< HEAD
-            <Name>SenescedLeaves</Name>
-            <Series>
-              <Name>Predicted</Name>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <Line>Solid</Line>
-              <TableName>Report</TableName>
-              <XFieldName>Maize.Leaf.DeadCohortNo</XFieldName>
-              <YFieldName>Phenology.ThermalTime.Value</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
-              <Cumulative>true</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Axis>
-              <Type>Left</Type>
-              <Title>Senesced leaves (n)</Title>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-          </Graph>
-          <Graph>
-=======
->>>>>>> 348c28ce5a11267d09c26575f3c70408550463bc
             <Name>Height</Name>
             <Series>
               <Name>Predicted</Name>
