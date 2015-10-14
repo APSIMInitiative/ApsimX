@@ -91,6 +91,11 @@ Stuff regarding Root]]></MemoText>
           <Value>1000</Value>
           <Units>mm</Units>
         </Constant>
+        <Constant>
+          <Name>NitrogenDemandSwitch</Name>
+          <Value>1</Value>
+          <Units>mm</Units>
+        </Constant>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
           <XYPairs>

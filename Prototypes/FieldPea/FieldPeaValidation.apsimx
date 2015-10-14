@@ -227,7 +227,7 @@
           <Value>40</Value>
         </Constant>
         <LinearInterpolationFunction>
-          <Name>Height</Name>
+          <Name>HeightModel</Name>
           <XYPairs>
             <Name>XYPairs</Name>
             <X>
@@ -1279,7 +1279,7 @@
             <XProperty>[Leaf].Fw</XProperty>
           </LinearInterpolationFunction>
           <RUECO2Function>
-            <Name>Fco2</Name>
+            <Name>FCO2</Name>
             <PhotosyntheticPathway>C3</PhotosyntheticPathway>
           </RUECO2Function>
           <Memo>
