@@ -710,7 +710,7 @@ namespace Models
             SetupCropTypes("kale2", "Crop");
             SetupCropTypes("lolium_rigidum", "Crop");
             SetupCropTypes("lucerne", "Crop");
-            SetupCropTypes("maize", "Crop");
+            SetupCropTypes("Maize", "Maize");
             SetupCropTypes("MCSP", "Crop");
             SetupCropTypes("nativepasture", "C4Grass");
             SetupCropTypes("oats", "Crop");
@@ -791,7 +791,13 @@ namespace Models
                 CropType.Albedo = 0.26;
                 CropType.Gsmax = 0.011;
             }
-
+            else if (Type.Equals("Maize"))
+            {
+                CropType.Albedo = 0.15;
+                CropType.Gsmax = 0.009;
+                CropType.Emissivity = 0.96;
+                CropType.R50 = 80;
+            }
             ComponentDataDefinitions.Add(CropType);
         }
 
