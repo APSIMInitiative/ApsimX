@@ -1832,6 +1832,18 @@ VShort duration variety released in New Zealand by Pioneer
         <Name>Pioneer_33M54</Name>
         <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
       </Cultivar>
+      <Cultivar>
+        <Name>Hycorn_53</Name>
+        <Command>[Phenology].Juvenile.Target.Value = 220</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 124</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 50</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.Value = 520</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
+        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 25</Command>
+        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 550</Command>
+      </Cultivar>
       <CropType>Maize</CropType>
     </Plant>
   </Replacements>
