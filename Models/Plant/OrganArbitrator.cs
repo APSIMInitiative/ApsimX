@@ -928,6 +928,8 @@ namespace Models.PMF
                     PriorityAllocation(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
                 if (string.Compare(Option, "PrioritythenRelativeAllocation", true) == 0)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
+                if (string.Compare(Option, "RelativeAllocationSinglePass", true) == 0)
+                    RelativeAllocationSinglePass(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
 
                 //Then calculate how much biomass is realloced from each supplying organ based on relative reallocation supply
                 for (int i = 0; i < Organs.Length; i++)
@@ -1004,6 +1006,8 @@ namespace Models.PMF
                     PriorityAllocation(Organs, BAT.TotalUptakeSupply, ref BiomassTakenUp, BAT);
                 if (string.Compare(Option, "PrioritythenRelativeAllocation", true) == 0)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalUptakeSupply, ref BiomassTakenUp, BAT);
+                if (string.Compare(Option, "RelativeAllocationSinglePass", true) == 0)
+                    RelativeAllocationSinglePass(Organs, BAT.TotalUptakeSupply, ref BiomassTakenUp, BAT);
 
                 // Then calculate how much N is taken up by each supplying organ based on relative uptake supply
                 for (int i = 0; i < Organs.Length; i++)
@@ -1032,6 +1036,8 @@ namespace Models.PMF
                     PriorityAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
                 if (string.Compare(Option, "PrioritythenRelativeAllocation", true) == 0)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
+                if (string.Compare(Option, "RelativeAllocationSinglePass", true) == 0)
+                    RelativeAllocationSinglePass(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
 
                 // Then calculate how much N (and associated biomass) is retranslocated from each supplying organ based on relative retranslocation supply
                 for (int i = 0; i < Organs.Length; i++)
@@ -1061,6 +1067,8 @@ namespace Models.PMF
                     PriorityAllocation(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
                 if (string.Compare(Option, "PrioritythenRelativeAllocation", true) == 0)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
+                if (string.Compare(Option, "RelativeAllocationSinglePass", true) == 0)
+                    RelativeAllocationSinglePass(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
 
                 // Then calculate how much resource is fixed from each supplying organ based on relative fixation supply
                 if (BiomassFixed > 0)
@@ -1377,7 +1385,7 @@ namespace Models.PMF
         /// <param name="TotalSupply">The total supply.</param>
         /// <param name="TotalAllocated">The total allocated.</param>
         /// <param name="BAT">The bat.</param>
-        private void RelativeAllocationSingle(IArbitration[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
+        private void RelativeAllocationSinglePass(IArbitration[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
             double NotAllocated = TotalSupply;
             ////allocate to all pools based on their relative demands
@@ -1385,7 +1393,7 @@ namespace Models.PMF
             {
                 double StructuralRequirement = Math.Max(0, BAT.StructuralDemand[i] - BAT.StructuralAllocation[i]); //N needed to get to Minimum N conc and satisfy structural and metabolic N demands
                 double MetabolicRequirement = Math.Max(0, BAT.MetabolicDemand[i] - BAT.MetabolicAllocation[i]);
-                double NonStructuralRequirement = Math.Max(0, BAT.NonStructuralDemand[i] - BAT.TotalNonStructuralAllocation);
+                double NonStructuralRequirement = Math.Max(0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]);
                 if ((StructuralRequirement + MetabolicRequirement + NonStructuralRequirement) > 0.0)
                 {
                     double StructuralFraction = BAT.TotalStructuralDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand);
