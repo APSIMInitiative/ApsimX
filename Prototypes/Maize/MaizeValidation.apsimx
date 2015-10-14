@@ -36,26 +36,72 @@ The model consists of:
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
-        <AirTemperatureFunction>
+        <MultiplyFunction>
           <Name>ThermalTime</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>18</double>
-              <double>26</double>
-              <double>34</double>
-              <double>44</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>10</double>
-              <double>18</double>
-              <double>26</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-        </AirTemperatureFunction>
+          <AirTemperatureFunction>
+            <Name>BaseThermalTime</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>18</double>
+                <double>26</double>
+                <double>34</double>
+                <double>44</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>10</double>
+                <double>18</double>
+                <double>26</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+          </AirTemperatureFunction>
+          <PhaseLookup>
+            <Name>StressEffect</Name>
+            <PhaseLookupValue>
+              <Name>PreEmergence</Name>
+              <Constant>
+                <Name>PreEmergenceEffect</Name>
+                <Value>1</Value>
+              </Constant>
+              <Start>Germination</Start>
+              <End>Emergence</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Early</Name>
+              <LinearInterpolationFunction>
+                <Name>EarlyEffect</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.5</double>
+                    <double>1</double>
+                  </X>
+                  <Y>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Leaf].Fn</XProperty>
+              </LinearInterpolationFunction>
+              <Start>Emergence</Start>
+              <End>Flag_Leaf</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Late</Name>
+              <Constant>
+                <Name>LateEffect</Name>
+                <Value>1</Value>
+              </Constant>
+              <Start>Flag_Leaf</Start>
+              <End>HarvestRipe</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
+        </MultiplyFunction>
         <GerminatingPhase>
           <Name>Germinating</Name>
           <Start>Sowing</Start>
@@ -1484,7 +1530,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <XYPairs>
             <Name>XYPairs</Name>
             <X>
-              <double>1</double>
+              <double>0</double>
               <double>10</double>
               <double>11</double>
             </X>
@@ -1834,10 +1880,10 @@ VShort duration variety released in New Zealand by Pioneer
       </Cultivar>
       <Cultivar>
         <Name>Hycorn_53</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 215</Command>
+        <Command>[Phenology].Juvenile.Target.Value = 235</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 124</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 50</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 520</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
@@ -19571,6 +19617,7 @@ namespace Models
               <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
               <string>[Maize].Structure.MainStemPrimordiaNo</string>
               <string>[Maize].Phenology.Photoperiod.Value</string>
+              <string>[Maize].Phenology.ThermalTime.Value</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -23096,6 +23143,46 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>NStress</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Maize.Leaf.Fn</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
