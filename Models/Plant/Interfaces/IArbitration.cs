@@ -62,10 +62,10 @@ namespace Models.PMF.Interfaces
         double NFixationCost { get; set; }
 
         /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
-        double TotalDM { get; }
+        double Wt { get; }
 
         /// <summary>Gets the total (live + dead) n (g/m2).</summary>
-        double TotalN { get; }
+        double N { get; }
 
         /// <summary>Gets or sets the water demand.</summary>
         double WaterDemand { get; set; }

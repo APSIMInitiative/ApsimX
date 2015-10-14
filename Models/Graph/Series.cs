@@ -361,13 +361,16 @@ namespace Models.Graph
         private void CreateFactorAndIndex(Factor factor, List<List<FactorAndIndex>> factorIndexes, FactorAndIndex.TypeToVary typeToVary)
         {
             List<FactorAndIndex> factorValueIndexes = new List<FactorAndIndex>();
-            for (int j = 0; j < factor.Children.Count; j++)
+            List<FactorValue> factorValues = factor.CreateValues();
+            for (int j = 0; j < factorValues.Count; j++)
+            //for (int j = 0; j < factor.Children.Count; j++)
             {
                 factorValueIndexes.Add(new FactorAndIndex()
                 {
                     factorValueIndex = j,
                     factorName = factor.Name,
-                    factorValue = factor.Children[j].Name,
+                    factorValue = factorValues[j].Name.Replace(factor.Name, ""),
+                    //factorValue = factor.Children[j].Name,
                     typeToVary = typeToVary
                 });
             }
