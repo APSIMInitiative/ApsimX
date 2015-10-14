@@ -1653,8 +1653,8 @@ namespace Models.PMF.Organs
             {
                 Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
 
-                if (TotalDM > 0)
-                    SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
+                if (Wt > 0)
+                    SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
 
                 Structure.MainStemNodeNo = 0;
                 Structure.Clear();

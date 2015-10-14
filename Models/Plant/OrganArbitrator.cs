@@ -769,7 +769,7 @@ namespace Models.PMF
                 DM.UptakeSupply[i] = Supply.Uptake;
                 DM.FixationSupply[i] = Supply.Fixation;
                 DM.RetranslocationSupply[i] = Supply.Retranslocation;
-                DM.Start += Organs[i].TotalDM;
+                DM.Start += Organs[i].Wt;
             }
 
             DM.TotalReallocationSupply = MathUtilities.Sum(DM.ReallocationSupply);
@@ -866,7 +866,7 @@ namespace Models.PMF
                 //BAT.UptakeSupply[i] = Supply.Uptake;             This is done on DoNutrientUptakeCalculations
                 BAT.FixationSupply[i] = Supply.Fixation;
                 BAT.RetranslocationSupply[i] = Supply.Retranslocation;
-                BAT.Start += Organs[i].TotalN;
+                BAT.Start += Organs[i].N;
             }
 
             BAT.TotalReallocationSupply = MathUtilities.Sum(BAT.ReallocationSupply);
@@ -1235,7 +1235,7 @@ namespace Models.PMF
             //Finally Check Mass balance adds up
             N.End = 0;
             for (int i = 0; i < Organs.Length; i++)
-                N.End += Organs[i].TotalN;
+                N.End += Organs[i].N;
             N.BalanceError = (N.End - (N.Start + N.TotalUptakeSupply + N.TotalFixationSupply));
             if (N.BalanceError > 0.000000001)
                 throw new Exception("N Mass balance violated!!!!.  Daily Plant N increment is greater than N supply");
@@ -1244,7 +1244,7 @@ namespace Models.PMF
                 throw new Exception("N Mass balance violated!!!!  Daily Plant N increment is greater than N demand");
             DM.End = 0;
             for (int i = 0; i < Organs.Length; i++)
-                DM.End += Organs[i].TotalDM;
+                DM.End += Organs[i].Wt;
             DM.BalanceError = (DM.End - (DM.Start + DM.TotalFixationSupply));
             if (DM.BalanceError > 0.0001)
                 throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than Photosynthetic DM supply");
