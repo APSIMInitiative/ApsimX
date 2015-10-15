@@ -11,18 +11,6 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
     <Name>Replacements</Name>
     <Plant>
       <Name>Wheat</Name>
-      <Cultivar>
-        <Name>JerseyBenny</Name>
-        <Alias>Gamenya</Alias>
-        <Alias>GattonHartog</Alias>
-        <Alias>Gutha</Alias>
-        <Alias>Rongotea</Alias>
-        <Alias>gamenya</Alias>
-        <Alias>hartog</Alias>
-        <Alias>spear</Alias>
-        <Alias>wilgoyne</Alias>
-        <Alias>Wakanui</Alias>
-      </Cultivar>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
         <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
@@ -1473,6 +1461,70 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
           </Propertys>
         </CompositeBiomass>
       </Summariser>
+      <Cultivar>
+        <Name>Wakanui</Name>
+      </Cultivar>
+      <Cultivar>
+        <Name>GattonHartog</Name>
+        <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
+        <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>h45</Name>
+        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+        <Command>[Phenology].Vernalisation.PhotopSens = 1.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Rongotea</Name>
+        <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
+        <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+        <Command>[Grain].NumberFunction.GrainsPerSpike.XYPairs.X = 0, 1</Command>
+        <Command>[Grain].NumberFunction.GrainsPerSpike.XYPairs.Y = 0, 50</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Hartog</Name>
+        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+        <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Gamenya</Name>
+        <Command>[Phenology].Vernalisation.VernSens = 1.6</Command>
+        <Command>[Phenology].Vernalisation.PhotopSens = 2.0</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Spear</Name>
+        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+        <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+        <Command>[Grain].NumberFunction.GrainsPerSpike.XYPairs.X = 0, 1</Command>
+        <Command>[Grain].NumberFunction.GrainsPerSpike.XYPairs.Y = 0, 50</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
+        <Command>[Phenology].GrainFilling.Target.Value = 580</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Gutha</Name>
+        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+        <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+        <Command>[Grain].NumberFunction.GrainsPerSpike.XYPairs.X = 0, 1</Command>
+        <Command>[Grain].NumberFunction.GrainsPerSpike.XYPairs.Y = 0, 50</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Wilgoyne</Name>
+        <Command>[Phenology].Vernalisation.VernSens = 1.4</Command>
+        <Command>[Phenology].Vernalisation.PhotopSens = 1.8</Command>
+        <Command>[Grain].NumberFunction.GrainsPerSpike.XYPairs.X = 0, 1</Command>
+        <Command>[Grain].NumberFunction.GrainsPerSpike.XYPairs.Y = 0, 50</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
+        <Command>[Phenology].GrainFilling.Target.Value = 580</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>BattenWinter</Name>
+        <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
+        <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+        <Command>[Grain].NumberFunction.GrainsPerSpike.XYPairs.X = 0, 1</Command>
+        <Command>[Grain].NumberFunction.GrainsPerSpike.XYPairs.Y = 0, 50</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
+      </Cultivar>
       <CropType>Wheat</CropType>
     </Plant>
   </Replacements>
@@ -6988,7 +7040,7 @@ private void OnDoManagement(object sender, EventArgs e)
             <Name>Operations</Name>
             <Operation>
               <Date>1991-06-08T00:00:00</Date>
-              <Action>[Wheat].Sow(population:300, cultivar:"GattonHartog", depth:40, rowSpacing:250);</Action>
+              <Action>[Wheat].Sow(population:300, cultivar:"BattenWinter", depth:40, rowSpacing:250);</Action>
             </Operation>
           </Operations>
           <Operations>
@@ -7098,7 +7150,7 @@ private void OnDoManagement(object sender, EventArgs e)
             </Operation>
           </Operations>
           <Manager>
-            <Name>PotatoSowingRule</Name>
+            <Name>RainShelter</Name>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -7106,18 +7158,18 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-[Serializable] 
-[System.Xml.Serialization.XmlInclude(typeof(Model))]
-public class Script : Model
- {      
-   [Link] Weather Met;  
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Weather Met;
                
-   [EventSubscribe("PreparingNewWeatherData")]
-   private void OnPreparingNewWeatherData(object sender, EventArgs e)
-   {
-	Met.Rain = 0;		
-   }
- }
+		[EventSubscribe("PreparingNewWeatherData")]
+		private void OnPreparingNewWeatherData(object sender, EventArgs e)
+		{
+			Met.Rain = 0;		
+		}
+	}
 }
 				]]></Code>
           </Manager>
@@ -8669,7 +8721,7 @@ using Models.SurfaceOM;
 using APSIM.Shared.Utilities;
 
 namespace Models
-{ 
+{
 	[Serializable]
 	[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
@@ -8678,15 +8730,15 @@ namespace Models
 		[Link] Soil Soil;
 		[Link] SurfaceOrganicMatter SurfaceOM;
 		[Description("Reset date")]
-		public DateTime reset_date {get; set;}
+		public DateTime reset_date { get; set; }
 
 		
-       [EventSubscribe("DoManagement")]
-       private void OnDoManagement(object sender, EventArgs e)
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
 		{
-		if (Clock.Today == reset_date)
-		   Soil.SoilWater.Reset();
-        }
+			if (Clock.Today == reset_date)
+				Soil.SoilWater.Reset();
+		}
 	}
 }
 ]]></Code>
@@ -8840,35 +8892,35 @@ namespace Models
           <Name>SpearEarly</Name>
           <Operation>
             <Date>1997-06-06T00:00:00</Date>
-            <Action>[Wheat].Sow(population:150, cultivar:"spear", depth:30, rowSpacing:250);</Action>
+            <Action>[Wheat].Sow(population:150, cultivar:"Spear", depth:30, rowSpacing:250);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>SpearMid</Name>
           <Operation>
             <Date>1997-07-08T00:00:00</Date>
-            <Action>[Wheat].Sow(population:108, cultivar:"spear", depth:30, rowSpacing:250);</Action>
+            <Action>[Wheat].Sow(population:108, cultivar:"Spear", depth:30, rowSpacing:250);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>WilgoyneEarly</Name>
           <Operation>
             <Date>1997-06-06T00:00:00</Date>
-            <Action>[Wheat].Sow(population:150, cultivar:"wilgoyne", depth:30, rowSpacing:250);</Action>
+            <Action>[Wheat].Sow(population:150, cultivar:"Wilgoyne", depth:30, rowSpacing:250);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>WilgoyneMid</Name>
           <Operation>
             <Date>1997-07-08T00:00:00</Date>
-            <Action>[Wheat].Sow(population:108, cultivar:"wilgoyne", depth:30, rowSpacing:250);</Action>
+            <Action>[Wheat].Sow(population:108, cultivar:"Wilgoyne", depth:30, rowSpacing:250);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>WilgoyneLate</Name>
           <Operation>
             <Date>1997-07-08T00:00:00</Date>
-            <Action>[Wheat].Sow(population:100, cultivar:"wilgoyne", depth:30, rowSpacing:250);</Action>
+            <Action>[Wheat].Sow(population:100, cultivar:"Wilgoyne", depth:30, rowSpacing:250);</Action>
           </Operation>
         </Operations>
         <Specifications>
@@ -10895,7 +10947,7 @@ namespace Models
           <Name>SowingSchedule</Name>
           <Operation>
             <Date>2002-08-15T00:00:00</Date>
-            <Action>[Wheat].Sow(population:100, cultivar:"hartog", depth:30, rowSpacing:250);</Action>
+            <Action>[Wheat].Sow(population:100, cultivar:"Hartog", depth:30, rowSpacing:250);</Action>
           </Operation>
         </Operations>
         <Manager>
@@ -13237,65 +13289,6 @@ Simulation results for the combined datasets from the various countries are show
     <DisabledSeries />
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
-  <Tests>
-    <Name>Tests</Name>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>n</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>residual</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>R^2</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>RMSD</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>SB</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Mean</Type>
-      <ColumnNames>SDSD</ColumnNames>
-      <Parameters>1,value</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>LCS</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>%</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-  </Tests>
   <Experiment>
     <Name>Lincoln2014</Name>
     <Factors>
