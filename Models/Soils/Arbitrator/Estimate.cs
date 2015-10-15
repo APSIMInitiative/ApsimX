@@ -42,12 +42,13 @@ namespace Models.Soils.Arbitrator
         /// <param name="parent">The parent model</param>
         /// <param name="Type">The type of estimate</param>
         /// <param name="soilstate">The state of the soil</param>
-        public Estimate(IModel parent, CalcType Type, SoilState soilstate)
+        /// <param name="uptakeModels">A list of models that do uptake.</param>
+        public Estimate(IModel parent, CalcType Type, SoilState soilstate, List<IModel> uptakeModels)
         {
             Values = new List<CropUptakes>();
 
             Parent = parent;
-            foreach (IUptake crop in Apsim.ChildrenRecursively(Parent, typeof(IUptake)))
+            foreach (IUptake crop in uptakeModels)
             {
                 List<ZoneWaterAndN> uptake;
                 if (Type == CalcType.Water)
