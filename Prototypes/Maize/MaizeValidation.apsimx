@@ -25814,7 +25814,7 @@ namespace Models
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
             <Line>None</Line>
@@ -27457,7 +27457,7 @@ namespace Models
               <YAxis>Left</YAxis>
               <ColourArgb>-16776961</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <Line>None</Line>
@@ -27514,7 +27514,7 @@ namespace Models
               <YAxis>Left</YAxis>
               <ColourArgb>-16776961</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <Line>None</Line>
@@ -27799,7 +27799,7 @@ namespace Models
               <YAxis>Left</YAxis>
               <ColourArgb>-16776961</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <Line>None</Line>
