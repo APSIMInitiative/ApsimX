@@ -392,7 +392,7 @@ namespace Models.Graph
             if (index < 0)
                 throw new Exception("Invalid index found while getting " + enumValues[0].GetType().Name);
 
-            while (index > enumValues.Count)
+            while (index >= enumValues.Count)
                 index -= enumValues.Count;
 
             return enumValues[index];
