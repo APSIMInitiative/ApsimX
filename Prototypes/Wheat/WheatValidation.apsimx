@@ -11,6 +11,23 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
     <Name>Replacements</Name>
     <Plant>
       <Name>Wheat</Name>
+      <Memo>
+        <Name>TitlePage</Name>
+        <MemoText><![CDATA[
+# The APSIM Wheat Model
+
+_Brown, H.E., Huth, N.I. and Holzworth, D.P._
+
+The APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
+
+The model consists of:
+
+* a phenology model to simulate development between growth phases  
+* a structure model to simulate plant morphology  
+* a collection of organs to simulate the various plant parts  
+* an arbitrator to allocate resources (N, biomass) to the various plant organs  
+]]></MemoText>
+      </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
         <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
@@ -135,26 +152,44 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
           <Start>Emergence</Start>
           <End>TerminalSpikelet</End>
         </GenericPhase>
-        <LeafAppearancePhase>
-          <Name>FloralInitiationToFlagLeaf</Name>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Start>TerminalSpikelet</Start>
-          <End>FlagLeaf</End>
-        </LeafAppearancePhase>
         <GenericPhase>
-          <Name>SpikeDevelopment</Name>
+          <Name>EarlyReproductive</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>333</Value>
+            <Value>555</Value>
           </Constant>
-          <VariableReference>
+          <LinearInterpolationFunction>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Start>FlagLeaf</Start>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>26</double>
+                <double>34</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>26</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Vernalisation].CrownTemperature</XProperty>
+          </LinearInterpolationFunction>
+          <MultiplyFunction>
+            <Name>Stress</Name>
+            <MinimumFunction>
+              <Name>MinimumFunction</Name>
+              <VariableReference>
+                <Name>VariableReference</Name>
+                <VariableName>[Vernalisation].VernEff</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>Variable1</Name>
+                <VariableName>[Vernalisation].PhotopEff</VariableName>
+              </VariableReference>
+            </MinimumFunction>
+          </MultiplyFunction>
+          <Start>TerminalSpikelet</Start>
           <End>Flowering</End>
         </GenericPhase>
         <GenericPhase>
@@ -251,27 +286,34 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
           <StartStageForCumulativeVD>Germination</StartStageForCumulativeVD>
           <EndStageForCumulativeVD>TerminalSpikelet</EndStageForCumulativeVD>
         </VernalisationCW>
+        <ZadokPMF>
+          <Name>Zadok</Name>
+        </ZadokPMF>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
         <PhaseLookup>
           <Name>MainStemPrimordiaInitiationRate</Name>
           <PhaseLookupValue>
-            <Name>MainStemPrimordiaInitiationRate</Name>
+            <Name>VegetativePrimordiaInitiationRate</Name>
             <DivideFunction>
-              <Name>NodeInitiationRateFunction</Name>
+              <Name>RelativeToPyllochron</Name>
               <VariableReference>
                 <Name>Phyllochron</Name>
                 <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value</VariableName>
               </VariableReference>
               <Constant>
                 <Name>PrimordiaPerMainstemNode</Name>
-                <Value>2</Value>
+                <Value>1.1</Value>
               </Constant>
             </DivideFunction>
             <Start>Emergence</Start>
             <End>TerminalSpikelet</End>
           </PhaseLookupValue>
+          <Memo>
+            <Name>Rational</Name>
+            <MemoText><![CDATA[[Brown_Anthesis_2013] showed final leaf number (FLN) could be estimated as 2.86 + HSTS * 1.1 where HS<sup>TS</sup> is the the Haun stage at terminal spikelet.  To caputre this in the wheat model we have set the initial number of primordia (determined by the number of initialleaf objects on the leaf class) to 3 and have set this function to produce primordia 10% faster than mainstem leaves.  Primordia are initiated until the therminal spikelet stage and then the number remains fixed, giving final leaf number.]]></MemoText>
+          </Memo>
         </PhaseLookup>
         <MultiplyFunction>
           <Name>MainStemNodeAppearanceRate</Name>
@@ -282,14 +324,18 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
               <X>
                 <double>0</double>
                 <double>2</double>
+                <double>3</double>
                 <double>7</double>
+                <double>8</double>
                 <double>14</double>
               </X>
               <Y>
                 <double>0.6</double>
-                <double>0.8</double>
+                <double>0.6</double>
+                <double>1</double>
+                <double>1</double>
                 <double>1.3</double>
-                <double>1.4</double>
+                <double>1.3</double>
               </Y>
             </XYPairs>
             <XProperty>[Structure].MainStemNodeNo</XProperty>
@@ -298,6 +344,10 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
             <Name>BasePhyllochron</Name>
             <Value>120</Value>
           </Constant>
+          <Memo>
+            <Name>Rational</Name>
+            <MemoText><![CDATA[Based on [Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7]]></MemoText>
+          </Memo>
         </MultiplyFunction>
         <HeightFunction>
           <Name>HeightModel</Name>
@@ -801,6 +851,11 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
           <Rank>2</Rank>
+          <Area>0</Area>
+        </LeafCohort>
+        <LeafCohort>
+          <Name>InitialLeaves[3]</Name>
+          <Rank>3</Rank>
           <Area>0</Area>
         </LeafCohort>
         <CompositeBiomass>
@@ -1327,8 +1382,8 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
                 </X>
                 <Y>
                   <double>0</double>
-                  <double>6</double>
-                  <double>30</double>
+                  <double>10</double>
+                  <double>40</double>
                 </Y>
               </XYPairs>
               <XProperty>[Phenology].Stage</XProperty>
@@ -1463,6 +1518,8 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
       </Summariser>
       <Cultivar>
         <Name>Wakanui</Name>
+        <Command>[Phenology].Vernalisation.VernSens = 5</Command>
+        <Command>[Phenology].Vernalisation.PhotopSens = 4</Command>
       </Cultivar>
       <Cultivar>
         <Name>GattonHartog</Name>
@@ -1491,6 +1548,7 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
         <Name>Gamenya</Name>
         <Command>[Phenology].Vernalisation.VernSens = 1.6</Command>
         <Command>[Phenology].Vernalisation.PhotopSens = 2.0</Command>
+        <Command>[Phenology].EarlyReproductive.Target.Value = 630.0</Command>
       </Cultivar>
       <Cultivar>
         <Name>Spear</Name>
@@ -1500,6 +1558,7 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
         <Command>[Grain].NumberFunction.GrainsPerSpike.XYPairs.Y = 0, 50</Command>
         <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 580</Command>
+        <Command>[Phenology].EarlyReproductive.Target.Value = 555.0</Command>
       </Cultivar>
       <Cultivar>
         <Name>Gutha</Name>
@@ -1516,6 +1575,7 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
         <Command>[Grain].NumberFunction.GrainsPerSpike.XYPairs.Y = 0, 50</Command>
         <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 580</Command>
+        <Command>[Phenology].EarlyReproductive.Target.Value = 555.0</Command>
       </Cultivar>
       <Cultivar>
         <Name>BattenWinter</Name>
@@ -14289,16 +14349,13 @@ namespace Models
             <string>[Wheat].Summariser.EarLive.Wt</string>
             <string>[Wheat].Leaf.Live.Wt</string>
             <string>[Wheat].Root.Live.Wt</string>
-            <string>[Wheat].Husk.Live.Wt</string>
-            <string>[Wheat].Rachis.Live.Wt</string>
-            <string>[Wheat].Tastle.Live.Wt</string>
-            <string>[Wheat].Summariser.EarLive.N</string>
+            <string>[Wheat].Spike.Live.Wt</string>
+            <string>[Wheat].Summariser.HeadLive.N</string>
             <string>[Wheat].Grain.Live.N</string>
             <string>[Wheat].Stem.Live.N</string>
             <string>[Wheat].Leaf.Live.N</string>
             <string>[Wheat].Root.Live.N</string>
-            <string>[Wheat].Rachis.Live.N</string>
-            <string>[Wheat].Husk.Live.N</string>
+            <string>[Wheat].Spike.Live.N</string>
             <string>[Wheat].Root.WaterSupply</string>
             <string>[Wheat].Root.WaterUptake</string>
             <string>[Wheat].Leaf.Transpiration</string>
@@ -14357,11 +14414,11 @@ namespace Models
             <string>[Wheat].Stem.Live.NConc</string>
             <string>[Wheat].Leaf.Live.NConc</string>
             <string>[Wheat].Grain.Live.NConc</string>
-            <string>[Wheat].Husk.Live.NConc</string>
-            <string>[Wheat].Rachis.Live.NConc</string>
+            <string>[Wheat].Spike.Live.NConc</string>
             <string>[Wheat].Leaf.Dead.NConc</string>
             <string>[Wheat].Leaf.Photosynthesis.RueAct</string>
             <string>[Wheat].Stem.Live.StructuralWt</string>
+            <string>[Wheat].Phenology.Zadok.Stage</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -15062,6 +15119,63 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>ZadokScore</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>SoilWater</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ProfileWater</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Volumetric soil water (mm)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
@@ -16190,9 +16304,9 @@ namespace Models
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
             <Line>None</Line>
-            <TableName>observed</TableName>
+            <TableName>TimeSeries</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Leaf.Live.Wt</YFieldName>
+            <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -16247,9 +16361,9 @@ namespace Models
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
             <Line>None</Line>
-            <TableName>observed</TableName>
+            <TableName>TimeSeries</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Stem.Live.Wt</YFieldName>
+            <YFieldName>Wheat.Stem.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -16304,7 +16418,7 @@ namespace Models
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
             <Line>None</Line>
-            <TableName>observed</TableName>
+            <TableName>TimeSeries</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -16331,7 +16445,7 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>HuskBiomass</Name>
+          <Name>SpikeBiomass</Name>
           <Series>
             <Name>Predicted</Name>
             <Type>Scatter</Type>
@@ -16345,7 +16459,7 @@ namespace Models
             <Line>Solid</Line>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Husk.Live.Wt</YFieldName>
+            <YFieldName>Wheat.Spike.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -16361,9 +16475,9 @@ namespace Models
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
             <Line>None</Line>
-            <TableName>RachisHusk_RainS</TableName>
+            <TableName>TimeSeries</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Husk.Live.Wt</YFieldName>
+            <YFieldName>Wheat.Spike.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -16372,63 +16486,6 @@ namespace Models
           <Axis>
             <Type>Left</Type>
             <Title>Husk weight (g/m2)</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>RachisBiomass</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Rachis.Live.Wt</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <Line>None</Line>
-            <TableName>RachisHusk_RainS</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Rachis.Live.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Rachis N (g/m2)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -16632,6 +16689,42 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <Series>
+            <Name>Primordia</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Leaf.InitialisedCohortNo</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Stage</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Phenology.Stage</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Left</Type>
             <Title>Leaf Tips (n)</Title>
@@ -16642,6 +16735,13 @@ namespace Models
           </Axis>
           <Axis>
             <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Right</Type>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
