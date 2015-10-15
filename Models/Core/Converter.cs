@@ -150,7 +150,11 @@ namespace Models.Core
             foreach (XmlNode cultivarNode in XmlUtilities.FindAllRecursivelyByType(node, "Cultivar"))
             {
                 List<string> aliases = XmlUtilities.Values(cultivarNode, "Alias");
-                cultivarNode.RemoveAll();
+
+                // Delete all alias children.
+                foreach (XmlNode alias in XmlUtilities.ChildNodes(cultivarNode, "Alias"))
+                    alias.ParentNode.RemoveChild(alias);
+
                 foreach (string alias in aliases)
                 {
                     XmlNode aliasNode = cultivarNode.AppendChild(cultivarNode.OwnerDocument.CreateElement("Alias"));
