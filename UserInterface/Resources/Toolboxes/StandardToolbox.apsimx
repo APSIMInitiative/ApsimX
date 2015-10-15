@@ -790,8 +790,6 @@
         </Cultivar>
         <Cultivar>
           <Name>Marombi</Name>
-          <Alias><Name>marombi</Name></Alias>
-          <Alias />
           <Command>[Phenology].Vernalisation.VernSens = 3.9</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
           <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 455</Command>
