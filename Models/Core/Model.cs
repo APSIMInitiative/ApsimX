@@ -205,6 +205,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.OldPlant.SWStress))]
         [XmlElement(typeof(Models.PMF.SimpleTree))]
         [XmlElement(typeof(Models.PMF.Cultivar))]
+        [XmlElement(typeof(Alias))]
         [XmlElement(typeof(Models.Zones.CircularZone))]
         [XmlElement(typeof(Models.Zones.RectangularZone))]
         [XmlElement(typeof(Models.Aqua.PondWater))]

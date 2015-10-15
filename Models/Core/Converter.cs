@@ -21,7 +21,7 @@ namespace Models.Core
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 1; } }
+        public static int LastestVersion { get { return 2; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -121,6 +121,41 @@ namespace Models.Core
                 if (seriesType == "Line")
                     XmlUtilities.SetValue(seriesNode, "Type", "Scatter");
 
+                XmlUtilities.DeleteValue(seriesNode, "X");
+                XmlUtilities.DeleteValue(seriesNode, "Y");
+
+            }
+        }
+
+        /// <summary>Upgrades to version 2.</summary>
+        /// <remarks>
+        ///    Converts:
+        ///      <Cultivar>
+        ///        <Alias>Cultivar1</Alias>
+        ///        <Alias>Cultivar2</Alias>
+        ///      </Cultivar>
+        ///     to:
+        ///      <Cultivar>
+        ///        <Alias>
+        ///          <Name>Cultivar1</Name>
+        ///        </Alias>
+        ///        <Alias>
+        ///          <Name>Cultivar2</Name>
+        ///        </Alias>
+        ///      </Cultivar>
+        /// </remarks>
+        /// <param name="node">The node to upgrade.</param>
+        private static void UpgradeToVersion2(XmlNode node)
+        {
+            foreach (XmlNode cultivarNode in XmlUtilities.FindAllRecursivelyByType(node, "Cultivar"))
+            {
+                List<string> aliases = XmlUtilities.Values(cultivarNode, "Alias");
+                cultivarNode.RemoveAll();
+                foreach (string alias in aliases)
+                {
+                    XmlNode aliasNode = cultivarNode.AppendChild(cultivarNode.OwnerDocument.CreateElement("Alias"));
+                    XmlUtilities.SetValue(aliasNode, "Name", alias);
+                }
             }
         }
     }
