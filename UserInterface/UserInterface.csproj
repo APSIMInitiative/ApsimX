@@ -189,7 +189,6 @@
     <Compile Include="Interfaces\IGridColumn.cs" />
     <Compile Include="Interfaces\IGridView.cs" />
     <Compile Include="Interfaces\ISeriesView.cs" />
-    <Compile Include="Interfaces\IDataStoreView.cs" />
     <Compile Include="Interfaces\IInitialWaterView.cs">
       <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
     </Compile>
