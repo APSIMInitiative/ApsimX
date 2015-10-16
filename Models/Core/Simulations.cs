@@ -326,12 +326,12 @@ namespace Models.Core
                 // will clean up order of columns in the tables and removed unused ones.
                 store.DeleteAllTables();
 
-                store.Disconnect();
-
                 simulationsToRun = Simulations.FindAllSimulationsToRun(this);
             }
             else
                 simulationsToRun = Simulations.FindAllSimulationsToRun(SimulationToRun);
+
+            store.Disconnect();
 
             MakeSubstitutions(simulationsToRun);
 

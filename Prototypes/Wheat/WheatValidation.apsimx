@@ -15043,7 +15043,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>ProfileWater</YFieldName>
+          <YFieldName>Wheat.Grain.NumberFunction.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -17303,7 +17303,7 @@ namespace Models
             <Line>Solid</Line>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
+            <YFieldName>Wheat.Structure.MainStemPopn</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
