@@ -1691,6 +1691,7 @@ The model consists of:
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
     <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Experiment>
     <Name>APS26</Name>
@@ -2419,7 +2420,6 @@ namespace Models
             <string>[Clock].DoReport</string>
             <string />
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -2594,6 +2594,9 @@ namespace Models
       <Name>Factors</Name>
       <Factor>
         <Name>NRate</Name>
+        <Operations>
+          <Name>0</Name>
+        </Operations>
         <Operations>
           <Name>40</Name>
           <Operation>
@@ -3155,7 +3158,6 @@ namespace Models
             <string>[Clock].DoReport</string>
             <string />
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -4068,7 +4070,6 @@ private void OnDoManagement(object sender, EventArgs e)
             <string>[Clock].DoReport</string>
             <string />
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -5040,7 +5041,6 @@ private void OnDoManagement(object sender, EventArgs e)
             <string>[Clock].DoReport</string>
             <string />
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -6049,7 +6049,6 @@ private void OnDoManagement(object sender, EventArgs e)
             <string>[Clock].DoReport</string>
             <string />
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -7757,7 +7756,6 @@ namespace Models
             <string>[Clock].DoReport</string>
             <string />
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -8910,7 +8908,6 @@ namespace Models
             <string>[Clock].DoReport</string>
             <string />
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -10182,7 +10179,6 @@ namespace Models
             <string>[Clock].DoReport</string>
             <string />
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -11322,7 +11318,6 @@ private void OnDoManagement(object sender, EventArgs e)
             <string>[Clock].DoReport</string>
             <string />
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -13229,7 +13224,6 @@ private void OnDoManagement(object sender, EventArgs e)
             <string>[Clock].DoReport</string>
             <string />
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -14499,7 +14493,6 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -17793,7 +17786,6 @@ namespace Models
             <string>[Clock].DoReport</string>
             <string />
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -17854,18 +17846,18 @@ namespace Models
       </Factor>
     </Factors>
     <Simulation>
-      <Name>Gatton2009Base</Name>
+      <Name>APS2Base</Name>
       <Clock>
         <Name>Clock</Name>
-        <StartDate>2009-01-01T00:00:00</StartDate>
-        <EndDate>2009-12-30T00:00:00</EndDate>
+        <StartDate>1991-01-01T00:00:00</StartDate>
+        <EndDate>1991-12-30T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <FileName>Gatton2009.met</FileName>
+        <FileName>aps02.met</FileName>
       </Weather>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
@@ -18235,9 +18227,8 @@ namespace Models
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if ((Clock.Today.DayOfYear == 120) && (TOS == 1) ||
-			    (Clock.Today.DayOfYear == 150) && (TOS == 2) ||
-			    (Clock.Today.DayOfYear == 177) && (TOS == 3))
+			if ((Clock.Today.DayOfYear == 150) && (TOS == 1) ||
+			    (Clock.Today.DayOfYear == 211) && (TOS == 2))
 			{
 				Wheat.Sow(population: 100, cultivar: Cultivar, depth: 30, rowSpacing: 250);
 			}
@@ -18339,7 +18330,6 @@ namespace Models
             <string>[Clock].DoReport</string>
             <string />
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
