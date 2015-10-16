@@ -13,10 +13,13 @@ namespace Models.PMF
     /// A composite biomass i.e. a biomass made up of 1 or more biomass objects.
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class CompositeBiomass : Biomass
     {
         /// <summary>The propertys</summary>
-        public string[] Propertys = null;
+        [Description("List of organs to agregate into composite biomass")]
+        public string[] Propertys {get; set;}
 
         /// <summary>Update this biomass object.</summary>
         /// <exception cref="System.Exception">

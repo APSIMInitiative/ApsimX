@@ -1515,6 +1515,15 @@ The model consists of:
             <string>[Grain].Dead</string>
           </Propertys>
         </CompositeBiomass>
+        <CompositeBiomass>
+          <Name>AboveGroundLive</Name>
+          <Propertys>
+            <string>[Leaf].Live</string>
+            <string>[Stem].Live</string>
+            <string>[Spike].Live</string>
+            <string>[Grain].Live</string>
+          </Propertys>
+        </CompositeBiomass>
       </Summariser>
       <Cultivar>
         <Name>Wakanui</Name>
@@ -1673,6 +1682,8 @@ The model consists of:
         <string>Observed</string>
         <string>TimeSeries</string>
         <string>LeafAppearance</string>
+        <string>Zadok</string>
+        <string>SoilWater</string>
       </SheetNames>
     </ExcelInput>
     <PredictedObserved>
@@ -13729,8 +13740,8 @@ Simulation results for the combined datasets from the various countries are show
                 <double>0.08</double>
                 <double>0.03</double>
                 <double>0.01</double>
-                <double>0</double>
-                <double>0</double>
+                <double>0.01</double>
+                <double>0.01</double>
               </KL>
               <XF>
                 <double>1</double>
@@ -13765,43 +13776,43 @@ Simulation results for the combined datasets from the various countries are show
             </BD>
             <AirDry>
               <double>0.05</double>
-              <double>0.1</double>
-              <double>0.149</double>
-              <double>0.14</double>
               <double>0.15</double>
-              <double>0.149</double>
+              <double>0.1</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
               <double>0.1</double>
               <double>0.06</double>
             </AirDry>
             <LL15>
               <double>0.1</double>
-              <double>0.1</double>
-              <double>0.149</double>
-              <double>0.14</double>
               <double>0.15</double>
-              <double>0.149</double>
               <double>0.1</double>
-              <double>0.06</double>
+              <double>0.08</double>
+              <double>0.07</double>
+              <double>0.08</double>
+              <double>0.1</double>
+              <double>0.1</double>
             </LL15>
             <DUL>
               <double>0.35</double>
               <double>0.33</double>
-              <double>0.33</double>
-              <double>0.33</double>
-              <double>0.33</double>
-              <double>0.33</double>
-              <double>0.33</double>
-              <double>0.33</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.28</double>
+              <double>0.25</double>
+              <double>0.23</double>
+              <double>0.27</double>
             </DUL>
             <SAT>
               <double>0.419</double>
               <double>0.405000013</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.4</double>
+              <double>0.37</double>
+              <double>0.37</double>
+              <double>0.33</double>
+              <double>0.32</double>
+              <double>0.3</double>
+              <double>0.35</double>
             </SAT>
           </Water>
           <SoilWater>
@@ -13841,7 +13852,7 @@ Simulation results for the combined datasets from the various countries are show
               <double>0.4</double>
               <double>0.4</double>
               <double>0.9</double>
-              <double>0.9</double>
+              <double>0.01</double>
             </SWCON>
           </SoilWater>
           <SoilNitrogen>
@@ -13965,13 +13976,13 @@ Simulation results for the combined datasets from the various countries are show
             </NH4>
             <SW>
               <double>0.35</double>
-              <double>0.33</double>
-              <double>0.33</double>
-              <double>0.33</double>
-              <double>0.33</double>
-              <double>0.33</double>
-              <double>0.33</double>
-              <double>0.33</double>
+              <double>0.28</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.22</double>
+              <double>0.2</double>
+              <double>0.2</double>
             </SW>
             <NO3Units>kgha</NO3Units>
             <NH4Units>kgha</NH4Units>
@@ -14093,6 +14104,13 @@ Simulation results for the combined datasets from the various countries are show
             <Operation>
               <Date>2013-11-13T00:00:00</Date>
               <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);;</Action>
+            </Operation>
+          </Operations>
+          <Operations>
+            <Name>Flood</Name>
+            <Operation>
+              <Date>2013-06-18T00:00:00</Date>
+              <Action>[Irrigation].Apply(80);</Action>
             </Operation>
           </Operations>
         </Folder>
@@ -14489,6 +14507,8 @@ namespace Models
             <string>[Wheat].Leaf.Photosynthesis.RueAct</string>
             <string>[Wheat].Stem.Live.StructuralWt</string>
             <string>[Wheat].Phenology.Zadok.Stage</string>
+            <string>[Wheat].Structure.TotalStemPopn</string>
+            <string>[Wheat].Structure.MainStemPopn</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -14989,13 +15009,13 @@ namespace Models
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
-          <TableName>observed</TableName>
+          <TableName>TimeSeries</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>Summariser.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -15047,7 +15067,7 @@ namespace Models
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
@@ -15092,7 +15112,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>ProfileWater</YFieldName>
+          <YFieldName>Wheat.Grain.NumberFunction.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -15161,11 +15181,11 @@ namespace Models
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
-          <TableName>observed</TableName>
+          <TableName>TimeSeries</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -15222,9 +15242,9 @@ namespace Models
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
-          <TableName>SoilWater</TableName>
+          <TableName>Zadok</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>ProfileWater</YFieldName>
+          <YFieldName>Zadock</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -17257,6 +17277,120 @@ namespace Models
             <TableName>HarvestData</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>GPSM</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Grain number (grains/m2)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>TillerNumber</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <TableName>TimeSeries</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Grain number (grains/m2)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>PlantNumber</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Structure.MainStemPopn</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <TableName>TimeSeries</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
