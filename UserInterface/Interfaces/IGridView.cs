@@ -110,5 +110,9 @@ namespace UserInterface.Interfaces
         /// End the user editing the cell.
         /// </summary>
         void EndEdit();
+
+        /// <summary>Lock the left most number of columns.</summary>
+        /// <param name="number"></param>
+        void LockLeftMostColumns(int number);
     }
 }
