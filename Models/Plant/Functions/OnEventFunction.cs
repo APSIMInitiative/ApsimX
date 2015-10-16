@@ -18,9 +18,11 @@ namespace Models.PMF.Functions
         private double _Value = 0;
 
         /// <summary>The set event</summary>
+        [Description("The event that triggers change from pre to post event value")]
         public string SetEvent { get; set; }
 
         /// <summary>The re set event</summary>
+        [Description("(optional) The event resets to pre event value")]
         public string ReSetEvent {get; set;}
 
 
