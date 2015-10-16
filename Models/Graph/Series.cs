@@ -118,7 +118,7 @@ namespace Models.Graph
                 Experiment parentExperiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;
 
                 // If the graph is in a zone then just graph the zone.
-                if (parentZone != null)
+                if (parentZone != null && !(parentZone is Simulation))
                 {
                     GraphSimulation(parentZone, ourDefinitions);
                 }
@@ -198,7 +198,7 @@ namespace Models.Graph
             }
             else
             {
-                string filter = string.Format("Name='{0}'", model.Name);
+                string filter = string.Format("Name='{0}'", parentSimulation.Name);
                 ourDefinitions.Add(CreateDefinition(Name, filter, Colour, Marker, Line));
             }
         }
@@ -266,7 +266,7 @@ namespace Models.Graph
 
                 List<List<FactorAndIndex>> permutations = MathUtilities.AllCombinationsOf(factorIndexes.ToArray());
 
-                // If not 'vary by' were specified then create a dummy one. All data will be on one series.
+                // If no 'vary by' were specified then create a dummy one. All data will be on one series.
                 if (permutations == null || permutations.Count == 0)
                 {
                     permutations = new List<List<FactorAndIndex>>();
@@ -330,8 +330,19 @@ namespace Models.Graph
                 FactorAndIndex factorAndIndex = combination.Find(f => factor.Name == f.factorName);
                 if (factorAndIndex == null)
                 {
-                    foreach (IModel child in factor.Children)
-                        names.Add(new KeyValuePair<string, string> (factor.Name, child.Name));
+                    if (factor.Children.Count > 0)
+                    {
+                        foreach (IModel child in factor.Children)
+                            names.Add(new KeyValuePair<string, string>(factor.Name, child.Name));
+                    }
+                    else
+                    {
+                        foreach (FactorValue factorValue in factor.CreateValues())
+                        {
+                            if (factorValue.Values.Count >= 1)
+                                names.Add(new KeyValuePair<string, string>(factor.Name, factorValue.Values[0].ToString()));
+                        }
+                    }
                 }
                 else
                     names.Add(new KeyValuePair<string, string>(factor.Name, factorAndIndex.factorValue));
