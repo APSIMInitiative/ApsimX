@@ -13453,7 +13453,7 @@ Simulation results for the combined datasets from the various countries are show
           </Operation>
           <Operation>
             <Date>2013-09-25T00:00:00</Date>
-            <Action>[Irrigation].Apply(13);</Action>
+            <Action>[Irrigation].Apply(46.3);</Action>
           </Operation>
           <Operation>
             <Date>2013-10-01T00:00:00</Date>
@@ -13557,10 +13557,6 @@ Simulation results for the combined datasets from the various countries are show
             <Date>2013-12-24T00:00:00</Date>
             <Action>[Irrigation].Apply(49);</Action>
           </Operation>
-          <Operation>
-            <Date>2013-12-31T00:00:00</Date>
-            <Action>[Irrigation].Apply(20.3);</Action>
-          </Operation>
         </Operations>
         <Operations>
           <Name>Early</Name>
@@ -13582,7 +13578,7 @@ Simulation results for the combined datasets from the various countries are show
           </Operation>
           <Operation>
             <Date>2013-09-25T00:00:00</Date>
-            <Action>[Irrigation].Apply(3.5);</Action>
+            <Action>[Irrigation].Apply(46.5);</Action>
           </Operation>
           <Operation>
             <Date>2013-12-10T00:00:00</Date>
@@ -13629,7 +13625,7 @@ Simulation results for the combined datasets from the various countries are show
           </Operation>
           <Operation>
             <Date>2013-09-25T00:00:00</Date>
-            <Action>[Irrigation].Apply(13);</Action>
+            <Action>[Irrigation].Apply(46.3);</Action>
           </Operation>
           <Operation>
             <Date>2013-10-01T00:00:00</Date>
@@ -13668,7 +13664,7 @@ Simulation results for the combined datasets from the various countries are show
           </Operation>
           <Operation>
             <Date>2013-09-25T00:00:00</Date>
-            <Action>[Irrigation].Apply(13);</Action>
+            <Action>[Irrigation].Apply(46.3);</Action>
           </Operation>
           <Operation>
             <Date>2013-10-01T00:00:00</Date>
