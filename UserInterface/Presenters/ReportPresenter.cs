@@ -1,78 +1,81 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models;
-using UserInterface.Views;
-using System.Reflection;
-using Models.Core;
-using System.Data;
-using System.IO;
-using UserInterface.Interfaces;
-using UserInterface.EventArguments;
-using Models.Report;
-using Models.Factorial;
-using APSIM.Shared.Utilities;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="ReportPresenter.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
+    using APSIM.Shared.Utilities;
+    using Models;
+    using Models.Core;
+    using Models.Factorial;
+    using Models.Report;
+    using System;
+    using System.Data;
+    using EventArguments;
+    using Interfaces;
+    using Views;
+
     class ReportPresenter : IPresenter
     {
-        private Report Report;
-        private IReportView View;
-        private ExplorerPresenter ExplorerPresenter;
-        private DataStore DataStore;
-        private int startIndex = 0;
+        private Report report;
+        private IReportView view;
+        private ExplorerPresenter explorerPresenter;
+        private DataStore dataStore;
+        private DataStorePresenter dataStorePresenter;
 
-        /// <summary>
-        /// Attach the model (report) and the view (IReportView)
-        /// </summary>
+        /// <summary>Attach the model (report) and the view (IReportView)</summary>
         public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
         {
-            this.Report = Model as Report;
-            this.ExplorerPresenter = explorerPresenter;
-            this.View = View as IReportView;
+            this.report = Model as Report;
+            this.explorerPresenter = explorerPresenter;
+            this.view = View as IReportView;
 
-            this.View.VariableList.Lines = Report.VariableNames;
-            this.View.EventList.Lines = Report.EventNames;
-            this.View.VariableList.ContextItemsNeeded += OnNeedVariableNames;
-            this.View.EventList.ContextItemsNeeded += OnNeedEventNames;
-            this.View.VariableList.TextHasChangedByUser += OnVariableNamesChanged;
-            this.View.EventList.TextHasChangedByUser += OnEventNamesChanged;
-            this.View.OnPageDataChanged += OnPageDataChanged;
-            ExplorerPresenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
+            this.view.VariableList.Lines = report.VariableNames;
+            this.view.EventList.Lines = report.EventNames;
+            this.view.VariableList.ContextItemsNeeded += OnNeedVariableNames;
+            this.view.EventList.ContextItemsNeeded += OnNeedEventNames;
+            this.view.VariableList.TextHasChangedByUser += OnVariableNamesChanged;
+            this.view.EventList.TextHasChangedByUser += OnEventNamesChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
-            Simulation simulation = Apsim.Parent(Report, typeof(Simulation)) as Simulation;
-            DataStore = new DataStore(Report);
-            this.View.VariableList.SetSyntaxHighlighter("Report");
+            Simulations simulations = Apsim.Parent(report, typeof(Simulations)) as Simulations;
+            dataStore = Apsim.Child(simulations, typeof(DataStore)) as DataStore;
+            this.view.VariableList.SetSyntaxHighlighter("Report");
 
-            PopulateDataGrid(Report.ResultsPerPage);
-            this.View.SetResultsPerPage(Report.ResultsPerPage);
-            this.View.DataGrid.ResizeControls();
+            dataStorePresenter = new DataStorePresenter();
+            dataStorePresenter.Attach(dataStore, this.view.DataStoreView, explorerPresenter);
+            this.view.DataStoreView.TableList.SelectedValue = this.report.Name;
+
+            Simulation simulation = Apsim.Parent(report, typeof(Simulation)) as Simulation;
+            if (simulation != null)
+            {
+                if (simulation.Parent is Experiment)
+                    dataStorePresenter.ExperimentFilter = simulation.Parent as Experiment;
+                else
+                    dataStorePresenter.SimulationFilter = simulation;
+                dataStorePresenter.PopulateGrid();
+            }
+
         }
 
-        /// <summary>
-        /// Detach the model from the view.
-        /// </summary>
+        /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            this.View.VariableList.ContextItemsNeeded -= OnNeedVariableNames;
-            this.View.EventList.ContextItemsNeeded -= OnNeedEventNames;
-            this.View.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
-            this.View.EventList.TextHasChangedByUser -= OnEventNamesChanged;
-            this.View.OnPageDataChanged -= OnPageDataChanged;
-            ExplorerPresenter.CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
-            DataStore.Disconnect();
+            this.view.VariableList.ContextItemsNeeded -= OnNeedVariableNames;
+            this.view.EventList.ContextItemsNeeded -= OnNeedEventNames;
+            this.view.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
+            this.view.EventList.TextHasChangedByUser -= OnEventNamesChanged;
+            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            dataStorePresenter.Detach();
         }
 
-        /// <summary>
-        /// The view is asking for variable names.
-        /// </summary>
+        /// <summary>The view is asking for variable names.</summary>
         void OnNeedVariableNames(object Sender, NeedContextItemsArgs e)
         {
             if (e.ObjectName == "")
                 e.ObjectName = ".";
-            object o = Apsim.Get(Report, e.ObjectName);
+            object o = Apsim.Get(report, e.ObjectName);
 
             if (o != null)
             {
@@ -80,12 +83,10 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>
-        /// The view is asking for event names.
-        /// </summary>
+        /// <summary>The view is asking for event names.</summary>
         void OnNeedEventNames(object Sender, NeedContextItemsArgs e)
         {
-            object o = Apsim.Get(Report, e.ObjectName);
+            object o = Apsim.Get(report, e.ObjectName);
 
             if (o != null)
             {
@@ -93,82 +94,31 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>
-        /// The variable names have changed in the view.
-        /// </summary>
+        /// <summary>The variable names have changed in the view.</summary>
         void OnVariableNamesChanged(object sender, EventArgs e)
         {
-            ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Report, "VariableNames", View.VariableList.Lines));
-            ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
+            explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(OnModelChanged);
+            explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(report, "VariableNames", view.VariableList.Lines));
+            explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(OnModelChanged);
         }
 
-        /// <summary>
-        /// The event names have changed in the view.
-        /// </summary>
+        /// <summary>The event names have changed in the view.</summary>
         void OnEventNamesChanged(object sender, EventArgs e)
         {
-            ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Report, "EventNames", View.EventList.Lines));
-            ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
+            explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(OnModelChanged);
+            explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(report, "EventNames", view.EventList.Lines));
+            explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(OnModelChanged);
         }
 
-        void OnPageDataChanged(object sender, PageEventArgs e)
+        /// <summary>The model has changed so update our view.</summary>
+        void OnModelChanged(object changedModel)
         {
-            Report.ResultsPerPage = e.count;
-            if (e.gotoStart)
-                startIndex = 0;
-            else
-                startIndex += Report.ResultsPerPage * (e.goForward ? 1 : -1);
-
-            if (startIndex < 0)
-                startIndex = 0;
-
-            PopulateDataGrid(Report.ResultsPerPage, startIndex);
-        }
-
-        /// <summary>
-        /// The model has changed so update our view.
-        /// </summary>
-        void CommandHistory_ModelChanged(object changedModel)
-        {
-            if (changedModel == Report)
+            if (changedModel == report)
             {
-                View.VariableList.Lines = Report.VariableNames;
-                View.EventList.Lines = Report.EventNames;
+                view.VariableList.Lines = report.VariableNames;
+                view.EventList.Lines = report.EventNames;
             }
         }
 
-        /// <summary>
-        /// Populate the data grid.
-        /// </summary>
-        private void PopulateDataGrid(int count = 0, int start = 0)
-        {
-            Simulation simulation = Apsim.Parent(Report, typeof(Simulation)) as Simulation;
-
-            if (simulation != null)
-            {
-                if (simulation.Parent is Experiment)
-                {
-                    Experiment experiment = simulation.Parent as Experiment;
-                    string filter = "NAME IN " + "(" + StringUtilities.Build(experiment.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
-                    View.DataGrid.DataSource = DataStore.GetFilteredData(Report.Name, filter);
-                    View.DataGrid.AutoFilterOn = true;
-                }
-                else
-                    View.DataGrid.DataSource = DataStore.GetData(simulation.Name, Report.Name, false, start, count);
-            }
-            if (View.DataGrid.DataSource != null)
-            {
-                // Make all numeric columns have a format of N3
-                foreach (DataColumn col in View.DataGrid.DataSource.Columns)
-                {
-                    IGridColumn gridColumn = this.View.DataGrid.GetColumn(col.Ordinal);
-                    gridColumn.LeftAlignment = false;
-                    if (col.DataType == typeof(double))
-                        gridColumn.Format = "N3";
-                }
-            }
-        }
     }
 }
