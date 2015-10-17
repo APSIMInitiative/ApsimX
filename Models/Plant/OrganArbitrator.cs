@@ -829,12 +829,15 @@ namespace Models.PMF
             DM.TotalMetabolicAllocation = MathUtilities.Sum(DM.MetabolicAllocation);
             DM.TotalNonStructuralAllocation = MathUtilities.Sum(DM.NonStructuralAllocation);
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
-            DM.SinkLimitation = Math.Max(0.0, DM.TotalFixationSupply + DM.TotalRetranslocationSupply + DM.TotalReallocationSupply - DM.Allocated);
+            //DM.SinkLimitation = Math.Max(0.0, DM.TotalFixationSupply + DM.TotalRetranslocationSupply + DM.TotalReallocationSupply - DM.Allocated);
             
             // Then check it all adds up
-            DM.BalanceError = Math.Abs((DM.Allocated + DM.SinkLimitation) - (DM.TotalFixationSupply + DM.TotalRetranslocationSupply + DM.TotalReallocationSupply));
-            if (DM.BalanceError > 0.0000001 & DM.TotalStructuralDemand > 0)
-                throw new Exception("Mass Balance Error in Photosynthesis DM Allocation");
+            //DM.BalanceError = Math.Abs((DM.Allocated + DM.SinkLimitation) - (DM.TotalFixationSupply + DM.TotalRetranslocationSupply + DM.TotalReallocationSupply));
+            //if (DM.BalanceError > 0.0000001 & DM.TotalStructuralDemand > 0)
+            if (DM.Allocated > DM.TotalPlantSupply) 
+                throw new Exception("Potential DM allocation by " + this.Name + " exceeds DM supply.   Thats not really possible so something has gone a miss");
+            if (DM.Allocated > DM.TotalPlantDemand)
+                throw new Exception("Potential DM allocation by " + this.Name + " exceeds DM Demand.   Thats not really possible so something has gone a miss");
 
             // Send potential DM allocation to organs to set this variable for calculating N demand
             for (int i = 0; i < Organs.Length; i++)
@@ -1070,6 +1073,9 @@ namespace Models.PMF
                 if (string.Compare(Option, "RelativeAllocationSinglePass", true) == 0)
                     RelativeAllocationSinglePass(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
 
+                //Set the sink limitation variable.  BAT.NotAllocated changes after each allocation step so it must be caught here and assigned as sink limitation
+                BAT.SinkLimitation = BAT.NotAllocated;
+                
                 // Then calculate how much resource is fixed from each supplying organ based on relative fixation supply
                 if (BiomassFixed > 0)
                 {
@@ -1304,6 +1310,9 @@ namespace Models.PMF
                     TotalAllocated += NonStructuralAllocation;
                 }
             }
+            //Set the amount of biomass not allocated.  Note, that this value is overwritten following by each arbitration step so if it is to be used correctly 
+            //it must be caught in that step.  Currently only using to catch DM not allocated so we can report as sink limitaiton
+            BAT.NotAllocated = NotAllocated;
         }
         /// <summary>Priorities the allocation.</summary>
         /// <param name="Organs">The organs.</param>
