@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Xml.Schema;
 using System.Reflection;
 using System.Linq;
+using Models;
 
 namespace Models.Core
 {
@@ -15,7 +16,7 @@ namespace Models.Core
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
-    [ValidParent(typeof(Simulation))]
+    [ValidParent(ParentModels = new Type[] { typeof(Simulation), typeof(Agroforestry.AgroforestrySystem) })]
     public class Zone : Model
     {
         /// <summary>Area of the zone.</summary>

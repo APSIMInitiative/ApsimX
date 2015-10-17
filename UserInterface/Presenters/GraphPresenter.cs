@@ -212,7 +212,8 @@ namespace UserInterface.Presenters
 
             graphView.Export(img, true);
 
-            string fileName = Path.Combine(folder, graph.Name + ".png");
+            string path = Apsim.FullPath(graph).Replace(".Simulations.", "");
+            string fileName = Path.Combine(folder, path + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 
             return fileName;
@@ -301,6 +302,8 @@ namespace UserInterface.Presenters
                 if (definition.title == e.SeriesName)
                 {
                     e.HoverText = GetSimulationNameForPoint(e.X, e.Y);
+                    if (e.HoverText == null)
+                        e.HoverText = e.SeriesName;
                     return;
                 }
             }

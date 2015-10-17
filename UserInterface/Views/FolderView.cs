@@ -40,20 +40,39 @@ namespace UserInterface.Views
             int numControls = Controls.Count;
             if (numControls > 0)
             {
-
+                int numCols = 2;
                 int numRows;
                 if (numControls == 1)
+                {
+                    numCols = 1;
                     numRows = 1;
+                }
                 else
-                    numRows = (int)Math.Sqrt(numControls - 1) + 1;
-                int numCols = (int)Math.Ceiling((double)numControls / numRows);
+                {
+                    numCols = 2;
+                    numRows = (int)Math.Ceiling((double)numControls / numCols);
+                }
+
                 int width = Size.Width / numCols;
                 int height = Size.Height / numRows - 1;
+                if (height < Size.Height / 2)
+                {
+                    height = Size.Height / 2;
+                    AutoScroll = true;
+                    VScroll = true;
+                }
                 int controlNumber = 0;
                 int col = 0;
                 int row = 0;
                 foreach (Control control in Controls)
                 {
+                    GraphView graphView = control as GraphView;
+                    if (graphView != null)
+                    {
+                        graphView.FontSize = 10;
+                        graphView.Refresh(); 
+                    }
+
                     control.Location = new Point(col * width, row * height);
                     control.Width = width;
                     control.Height = height;

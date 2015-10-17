@@ -17,7 +17,7 @@ namespace Models.Report
     [Serializable]
     [ViewName("UserInterface.Views.ReportView")]
     [PresenterName("UserInterface.Presenters.ReportPresenter")]
-    [ValidParent(typeof(Zone))]
+    [ValidParent(ParentModels = new Type[] { typeof(Zone), typeof(Zones.CircularZone), typeof(Zones.RectangularZone) })]
     public class Report : Model
     {
         /// <summary>
@@ -73,6 +73,13 @@ namespace Models.Report
             }
             this.VariableNames = variableNames.ToArray();
             this.FindVariableMembers();
+        }
+
+        /// <summary>A method that can be called by other models to perform a line of output.</summary>
+        public void DoOutput()
+        {
+            foreach (ReportColumn column in columns)
+                column.StoreValue();
         }
 
         /// <summary>

@@ -299,6 +299,13 @@ namespace UserInterface.Views
             this.Grid.EndEdit();
         }
 
+        /// <summary>Lock the left most number of columns.</summary>
+        /// <param name="number"></param>
+        public void LockLeftMostColumns(int number)
+        {
+            this.Grid.Columns[number - 1].Frozen = true;
+        }
+
         /// <summary>
         /// Populate the grid from the DataSource.
         /// </summary>
@@ -393,6 +400,15 @@ namespace UserInterface.Views
                         }
                         this.Grid.RowCount = this.DataSource.Rows.Count;
                     }
+
+                    // Format DateTime columns
+                    for (int col = 0; col < this.DataSource.Columns.Count; col++)
+                    {
+                        if (DataSource.Columns[col].DataType == typeof(DateTime))
+                        {
+                            this.Grid.Columns[col].DefaultCellStyle.Format = "yyyy-MM-d";
+                        }
+                    }
                 }
 
                 // ColIndex doesn't matter since we're resizing all of them.
@@ -403,10 +419,10 @@ namespace UserInterface.Views
                 {
                     col.Width = Convert.ToInt32(col.GetPreferredWidth(DataGridViewAutoSizeColumnMode.DisplayedCells, true) * 1.2);
 
-                    //col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-                    //int newWidth = Convert.ToInt32(col.Width * 1.0);
-                    //col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                    //col.Width = newWidth;
+                    col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+                    int newWidth = Convert.ToInt32(col.Width * 1.0);
+                    col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    col.Width = newWidth;
                 }
 
                 // Reinstate Grid.CellValueChanged event.
@@ -693,7 +709,24 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnCopyToClipboard(object sender, EventArgs e)
         {
-            DataObject content = this.Grid.GetClipboardContent();
+            // this.Grid.EndEdit();
+            DataObject content = new DataObject();
+            if (this.Grid.SelectedCells.Count==1)
+            {
+                if (this.Grid.CurrentCell.IsInEditMode)
+                {
+                    if (this.Grid.EditingControl is System.Windows.Forms.TextBox)
+                    {
+                        string text = ((System.Windows.Forms.TextBox)this.Grid.EditingControl).SelectedText;
+                        content.SetText(text);
+                    }
+                }
+                else
+                    content.SetText(this.Grid.CurrentCell.Value.ToString());
+            }
+            else
+            content = this.Grid.GetClipboardContent();
+
             Clipboard.SetDataObject(content);
         }
 

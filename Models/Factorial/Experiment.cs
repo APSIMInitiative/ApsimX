@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Models.Core;
 using Models.Factorial;
+using APSIM.Shared.Utilities;
 
 namespace Models.Factorial
 {
@@ -138,44 +139,11 @@ namespace Models.Factorial
                     allValues.Add(factorValues);
                 }
                 if (doFullFactorial)
-                    return AllCombinationsOf<FactorValue>(allValues.ToArray());
+                    return MathUtilities.AllCombinationsOf<FactorValue>(allValues.ToArray());
                 else
                     return allValues;
             }
             return null;
         }
-
-        /// <summary>
-        /// From: http://stackoverflow.com/questions/545703/combination-of-listlistint
-        /// </summary>
-        private static List<List<T>> AllCombinationsOf<T>(params List<T>[] sets)
-        {
-            // need array bounds checking etc for production
-            var combinations = new List<List<T>>();
-
-            // prime the data
-            if (sets.Length > 0)
-            {
-                foreach (var value in sets[0])
-                    combinations.Add(new List<T> { value });
-
-                foreach (var set in sets.Skip(1))
-                    combinations = AddExtraSet(combinations, set);
-            }
-            return combinations;
-        }
-
-        private static List<List<T>> AddExtraSet<T>
-             (List<List<T>> combinations, List<T> set)
-        {
-            var newCombinations = from value in set
-                                  from combination in combinations
-                                  select new List<T>(combination) { value };
-
-            return newCombinations.ToList();
-        }
-
     }
-
-     
 }

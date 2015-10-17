@@ -12,7 +12,7 @@ using APSIM.Shared.Utilities;
 
 namespace Models.PMF
 {
-    ///<summary>    /// The Arbitrator class determines the allocation of total dry matter (DM) and Nitrogen components of Biomass between each of the organs in the crop model. Eacn organ potentially has three pools of biomass:    ///     /// * Structural biomass which is fixed within an organ once it is partitioned to an organ    /// * Non-structural biomass which is available for re-translocation to other organs with high demand and is re-allocated to other organs when this organ senesces.    /// * Metabolic biomass which is generally fixed in an organ but is able to be reallocated and may be re-translocated in some cases.    ///     /// The process followed for biomass arbitration are shown in Figure 1. Arbitration responds to events broadcast daily by the central APSIM infrastructure:     ///     /// 1. **doPotentialPlantGrowth**.  When this event is broadcast the attached method executes code to determine the potential growth of each organ, the extent of moisture stress that a crop encounters and the potential biomass supplies and demands of each organ based on these.  In addition to demands for structural, non-structural and metabolic biomass (DM and N) each organ may have the following biomass supplies:     /// 	* Fixation supply.  From photosynthesis (DM) or symbiotic fixation (N)    /// 	* Uptake supply.  Typically uptake of N from the soil by the roots but could be uptake by other organs.    /// 	* Retranslocation supply.  Non-structural biomass that may be moved from one organ to meet demands of other organs    /// 	* Reallocation supply. Biomass that can be moved from senescing organs to meet the demands of other organs.    /// 2. **doPotentialPlantPartitioning.** On this event the Arbitrator first executes the DoDMSetup() to establish the DM supplies and demands from each organ.  Then it executes the DoPotentialDMAllocation() method which works out how much biomass each organ would be allocated assuming N supply is not limiting and sends these allocations to the organs.  Each organ then uses their potential DM allocation to determine their N demand (how much N is needed to produce that much DM) and the arbitrator calls DoNSetup() establish N supplies and Demands and begin N arbitration.  Firstly DoNReallocation() is called to redistribute N that the plant has available from senescing organs.  After this step any unmet N demand is considered the plants demand for N uptake from the soil (N Uptake Demand).    /// 3. **doNutrientArbitration** When this event is broadcast by the model framework the soil arbitrator gets the N uptake demands from each plant (where multiple plants are growing in competition) and their potential uptake from the soil and determines how nuch of their demand that the soil is able to provide.  This value is then passed back to each plant instance as their Nuptake and doNUptakeAllocation() is called to distribute this N between organs.      /// 4. **doActualPlantPartitioning**  On this event the arbitrator call DoNRetranslocation() and DoNFixation() to satisify any unmet N demands from these sources.  Finally, DoActualDMAllocation is called where DM allocations to each organ are reduced if the N allocation is insufficient to achieve the organs minimum N conentration and final allocations are sent to organs.     /// 
+    ///<summary>    /// The Arbitrator class determines the allocation of dry matter (DM) and Nitrogen between each of the organs in the crop model. Eacn organ potentially has three pools of biomass:    ///     /// * **Structural biomass** which is fixed within an organ once it is partitioned    /// * **Non-structural biomass** which is available for re-translocation to other organs with high priority demand and is reallocated to other organs when this organ senesces.    /// * **Metabolic biomass** which is generally fixed in an organ but is able to be reallocated and retranslocated in some cases.    ///     /// The process followed for biomass arbitration is shown in Figure 1. Arbitration responds to events broadcast daily by the central APSIM infrastructure:     ///     /// 1. **doPotentialPlantGrowth**.  When this event is broadcast the attached method executes code to determine the potential growth of each organ, the extent of moisture stress that a crop encounters and the potential biomass supplies and demands of each organ based on these.  In addition to demands for structural, non-structural and metabolic biomass (DM and N) each organ may have the following biomass supplies:     /// 	* **Fixation supply**.  From photosynthesis (DM) or symbiotic fixation (N)    /// 	* **Uptake supply**.  Typically uptake of N from the soil by the roots but could be uptake by other organs.    /// 	* **Retranslocation supply**.  Non-structural biomass that may be moved from one organ to meet demands of other organs.    /// 	* **Reallocation supply**. Biomass that can be moved from senescing organs to meet the demands of other organs.    /// 2. **doPotentialPlantPartitioning.** On this event the Arbitrator first executes the DoDMSetup() method to establish the DM supplies and demands from each organ.  It then executes the DoPotentialDMAllocation() method which works out how much biomass each organ would be allocated assuming N supply is not limiting and sends these allocations to the organs.  Each organ then uses their potential DM allocation to determine their N demand (how much N is needed to produce that much DM) and the arbitrator calls DoNSetup() establish N supplies and Demands and begin N arbitration.  Firstly DoNReallocation() is called to redistribute N that the plant has available from senescing organs.  After this step any unmet N demand is considered the plants demand for N uptake from the soil (N Uptake Demand).    /// 3. **doNutrientArbitration.** When this event is broadcast by the model framework the soil arbitrator gets the N uptake demands from each plant (where multiple plants are growing in competition) and their potential uptake from the soil and determines how nuch of their demand that the soil is able to provide.  This value is then passed back to each plant instance as their Nuptake and doNUptakeAllocation() is called to distribute this N between organs.      /// 4. **doActualPlantPartitioning.**  On this event the arbitrator call DoNRetranslocation() and DoNFixation() to satisify any unmet N demands from these sources.  Finally, DoActualDMAllocation is called where DM allocations to each organ are reduced if the N allocation is insufficient to achieve the organs minimum N conentration and final allocations are sent to organs.     /// 
     /// ![Alt Text](..\\..\\Documentation\\Images\\ArbitrationDiagram.PNG)    ///     /// **Figure 1.**  Schematic showing procedure for biomass partitioning arbitration.  Orange boxes contain properties that make up the organ/arbitrator interface.  Green boxes are organ specific properties, pink boxes are events that are broadcast each day by the model infrastructure and blue boxes are methods that are triggered by these events.    /// </summary>
 
     [Serializable]
@@ -510,6 +510,13 @@ namespace Models.PMF
         {
             if (Plant.IsAlive)
             {
+                // Model can only handle one root zone at present
+                ZoneWaterAndN MyZone = new ZoneWaterAndN();
+                Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+                foreach (ZoneWaterAndN Z in soilstate.Zones)
+                    if (Z.Name == ParentZone.Name)
+                        MyZone = Z;
+
                 double Supply = 0;
                 double Demand = 0;
                 double[] supply = null;
@@ -528,8 +535,9 @@ namespace Models.PMF
                 if (Supply > 0)
                     FractionUsed = Math.Min(1.0, Demand / Supply);
 
+                // Just send uptake from my zone
                 ZoneWaterAndN uptake = new ZoneWaterAndN();
-                uptake.Name = soilstate.Zones[0].Name;
+                uptake.Name = MyZone.Name;
                 uptake.Water = MathUtilities.Multiply_Value(supply, FractionUsed);
                 uptake.NO3N = new double[uptake.Water.Length];
                 uptake.NH4N = new double[uptake.Water.Length];
@@ -546,7 +554,14 @@ namespace Models.PMF
         /// </summary>
         public void SetSWUptake(List<ZoneWaterAndN> zones)
         {
-            double[] uptake = zones[0].Water;
+            // Model can only handle one root zone at present
+            ZoneWaterAndN MyZone = new ZoneWaterAndN();
+            Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+            foreach (ZoneWaterAndN Z in zones)
+                if (Z.Name == ParentZone.Name)
+                    MyZone = Z;
+
+            double[] uptake = MyZone.Water;
             double Supply = MathUtilities.Sum(uptake);
             double Demand = 0;
             foreach (IArbitration o in Organs)
@@ -570,6 +585,13 @@ namespace Models.PMF
         {
             if (Plant.IsAlive)
             {
+                // Model can only handle one root zone at present
+                ZoneWaterAndN MyZone = new ZoneWaterAndN();
+                Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+                foreach (ZoneWaterAndN Z in soilstate.Zones)
+                    if (Z.Name == ParentZone.Name)
+                        MyZone = Z;
+
                 ZoneWaterAndN UptakeDemands = new ZoneWaterAndN();
                 if (Plant.Phenology != null)
                 {
@@ -583,21 +605,21 @@ namespace Models.PMF
                     }
                     else //Uptakes are zero
                     {
-                        UptakeDemands.NO3N = new double[soilstate.Zones[0].NO3N.Length];
+                        UptakeDemands.NO3N = new double[MyZone.NO3N.Length];
                         for (int i = 0; i < UptakeDemands.NO3N.Length; i++) { UptakeDemands.NO3N[i] = 0; }
-                        UptakeDemands.NH4N = new double[soilstate.Zones[0].NH4N.Length];
+                        UptakeDemands.NH4N = new double[MyZone.NH4N.Length];
                         for (int i = 0; i < UptakeDemands.NH4N.Length; i++) { UptakeDemands.NH4N[i] = 0; }
                     }
                 }
                 else //Uptakes are zero
                 {
-                    UptakeDemands.NO3N = new double[soilstate.Zones[0].NO3N.Length];
+                    UptakeDemands.NO3N = new double[MyZone.NO3N.Length];
                     for (int i = 0; i < UptakeDemands.NO3N.Length; i++) { UptakeDemands.NO3N[i] = 0; }
-                    UptakeDemands.NH4N = new double[soilstate.Zones[0].NH4N.Length];
+                    UptakeDemands.NH4N = new double[MyZone.NH4N.Length];
                     for (int i = 0; i < UptakeDemands.NH4N.Length; i++) { UptakeDemands.NH4N[i] = 0; }
                 }
 
-                UptakeDemands.Name = soilstate.Zones[0].Name;
+                UptakeDemands.Name = MyZone.Name;
                 UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
 
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
@@ -613,23 +635,32 @@ namespace Models.PMF
         public void SetNUptake(List<ZoneWaterAndN> zones)
         {
             if (Plant.IsAlive)
+            {
+                // Model can only handle one root zone at present
+                ZoneWaterAndN MyZone = new ZoneWaterAndN();
+                Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+                foreach (ZoneWaterAndN Z in zones)
+                    if (Z.Name == ParentZone.Name)
+                        MyZone = Z;
+
                 if (Plant.Phenology != null)
                 {
                     if (Plant.Phenology.Emerged == true)
                     {
-                        double[] AllocatedNO3Nuptake = zones[0].NO3N;
-                        double[] AllocatedNH4Nuptake = zones[0].NH4N;
+                        double[] AllocatedNO3Nuptake = MyZone.NO3N;
+                        double[] AllocatedNH4Nuptake = MyZone.NH4N;
                         DoNUptakeAllocations(AllocatedNO3Nuptake, AllocatedNH4Nuptake); //Fixme, needs to send allocations to arbitrator
                         Plant.Root.DoNitrogenUptake(AllocatedNO3Nuptake, AllocatedNH4Nuptake);
                     }
                 }
                 else
                 {
-                    double[] AllocatedNO3Nuptake = zones[0].NO3N;
-                    double[] AllocatedNH4Nuptake = zones[0].NH4N;
+                    double[] AllocatedNO3Nuptake = MyZone.NO3N;
+                    double[] AllocatedNH4Nuptake = MyZone.NH4N;
                     DoNUptakeAllocations(AllocatedNO3Nuptake, AllocatedNH4Nuptake); //Fixme, needs to send allocations to arbitrator
                     Plant.Root.DoNitrogenUptake(AllocatedNO3Nuptake, AllocatedNH4Nuptake);
                 }
+            }
         }
         #endregion
 
@@ -738,7 +769,7 @@ namespace Models.PMF
                 DM.UptakeSupply[i] = Supply.Uptake;
                 DM.FixationSupply[i] = Supply.Fixation;
                 DM.RetranslocationSupply[i] = Supply.Retranslocation;
-                DM.Start += Organs[i].TotalDM;
+                DM.Start += Organs[i].Wt;
             }
 
             DM.TotalReallocationSupply = MathUtilities.Sum(DM.ReallocationSupply);
@@ -835,7 +866,7 @@ namespace Models.PMF
                 //BAT.UptakeSupply[i] = Supply.Uptake;             This is done on DoNutrientUptakeCalculations
                 BAT.FixationSupply[i] = Supply.Fixation;
                 BAT.RetranslocationSupply[i] = Supply.Retranslocation;
-                BAT.Start += Organs[i].TotalN;
+                BAT.Start += Organs[i].N;
             }
 
             BAT.TotalReallocationSupply = MathUtilities.Sum(BAT.ReallocationSupply);
@@ -897,6 +928,8 @@ namespace Models.PMF
                     PriorityAllocation(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
                 if (string.Compare(Option, "PrioritythenRelativeAllocation", true) == 0)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
+                if (string.Compare(Option, "RelativeAllocationSinglePass", true) == 0)
+                    RelativeAllocationSinglePass(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
 
                 //Then calculate how much biomass is realloced from each supplying organ based on relative reallocation supply
                 for (int i = 0; i < Organs.Length; i++)
@@ -916,8 +949,15 @@ namespace Models.PMF
         /// <param name="soilstate">The soilstate.</param>
         virtual public void DoPotentialNutrientUptake(IArbitration[] Organs, ref BiomassArbitrationType BAT, SoilState soilstate)
         {
-            PotentialNO3NUptake = new double[soilstate.Zones[0].NO3N.Length];
-            PotentialNH4NUptake = new double[soilstate.Zones[0].NH4N.Length];
+            // Model can only handle one root zone at present
+            ZoneWaterAndN MyZone = new ZoneWaterAndN();
+            Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+            foreach (ZoneWaterAndN Z in soilstate.Zones)
+                if (Z.Name == ParentZone.Name)
+                    MyZone = Z;
+
+            PotentialNO3NUptake = new double[MyZone.NO3N.Length];
+            PotentialNH4NUptake = new double[MyZone.NH4N.Length];
 
             //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
             for (int i = 0; i < Organs.Length; i++)
@@ -966,6 +1006,8 @@ namespace Models.PMF
                     PriorityAllocation(Organs, BAT.TotalUptakeSupply, ref BiomassTakenUp, BAT);
                 if (string.Compare(Option, "PrioritythenRelativeAllocation", true) == 0)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalUptakeSupply, ref BiomassTakenUp, BAT);
+                if (string.Compare(Option, "RelativeAllocationSinglePass", true) == 0)
+                    RelativeAllocationSinglePass(Organs, BAT.TotalUptakeSupply, ref BiomassTakenUp, BAT);
 
                 // Then calculate how much N is taken up by each supplying organ based on relative uptake supply
                 for (int i = 0; i < Organs.Length; i++)
@@ -994,6 +1036,8 @@ namespace Models.PMF
                     PriorityAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
                 if (string.Compare(Option, "PrioritythenRelativeAllocation", true) == 0)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
+                if (string.Compare(Option, "RelativeAllocationSinglePass", true) == 0)
+                    RelativeAllocationSinglePass(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
 
                 // Then calculate how much N (and associated biomass) is retranslocated from each supplying organ based on relative retranslocation supply
                 for (int i = 0; i < Organs.Length; i++)
@@ -1023,6 +1067,8 @@ namespace Models.PMF
                     PriorityAllocation(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
                 if (string.Compare(Option, "PrioritythenRelativeAllocation", true) == 0)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
+                if (string.Compare(Option, "RelativeAllocationSinglePass", true) == 0)
+                    RelativeAllocationSinglePass(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
 
                 // Then calculate how much resource is fixed from each supplying organ based on relative fixation supply
                 if (BiomassFixed > 0)
@@ -1125,10 +1171,14 @@ namespace Models.PMF
             {
                 if ((DM.MetabolicAllocation[i] + DM.StructuralAllocation[i]) != 0)
                 {
-                    double proportion = DM.MetabolicAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i]);
-                    DM.StructuralAllocation[i] = Math.Min(DM.StructuralAllocation[i], N.ConstrainedGrowth[i] * (1 - proportion));  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
-                    DM.MetabolicAllocation[i] = Math.Min(DM.MetabolicAllocation[i], N.ConstrainedGrowth[i] * proportion);
-                //Question.  Why do I not restrain non-structural DM allocations.  I think this may be wrong and require further thought HEB 15-1-2015
+                    double MetabolicProportion = DM.MetabolicAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.NonStructuralAllocation[i]);
+                    double StructuralProportion = DM.StructuralAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.NonStructuralAllocation[i]);
+                    double NonStructuralProportion = DM.NonStructuralAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.NonStructuralAllocation[i]);
+                    DM.MetabolicAllocation[i] = Math.Min(DM.MetabolicAllocation[i], N.ConstrainedGrowth[i] * MetabolicProportion);
+                    DM.StructuralAllocation[i] = Math.Min(DM.StructuralAllocation[i], N.ConstrainedGrowth[i] * StructuralProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
+                    DM.NonStructuralAllocation[i] = Math.Min(DM.NonStructuralAllocation[i], N.ConstrainedGrowth[i] * NonStructuralProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
+
+                    //Question.  Why do I not restrain non-structural DM allocations.  I think this may be wrong and require further thought HEB 15-1-2015
                 }
             }
             //Recalculated DM Allocation totals
@@ -1197,7 +1247,7 @@ namespace Models.PMF
             //Finally Check Mass balance adds up
             N.End = 0;
             for (int i = 0; i < Organs.Length; i++)
-                N.End += Organs[i].TotalN;
+                N.End += Organs[i].N;
             N.BalanceError = (N.End - (N.Start + N.TotalUptakeSupply + N.TotalFixationSupply));
             if (N.BalanceError > 0.000000001)
                 throw new Exception("N Mass balance violated!!!!.  Daily Plant N increment is greater than N supply");
@@ -1206,7 +1256,7 @@ namespace Models.PMF
                 throw new Exception("N Mass balance violated!!!!  Daily Plant N increment is greater than N demand");
             DM.End = 0;
             for (int i = 0; i < Organs.Length; i++)
-                DM.End += Organs[i].TotalDM;
+                DM.End += Organs[i].Wt;
             DM.BalanceError = (DM.End - (DM.Start + DM.TotalFixationSupply));
             if (DM.BalanceError > 0.0001)
                 throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than Photosynthetic DM supply");
@@ -1249,7 +1299,7 @@ namespace Models.PMF
                 if (NonStructuralRequirement > 0.0)
                 {
                     double NonStructuralAllocation = Math.Min(FirstPassNotAllocated * BAT.RelativeNonStructuralDemand[i], NonStructuralRequirement);
-                    BAT.NonStructuralAllocation[i] += NonStructuralAllocation;
+                    BAT.NonStructuralAllocation[i] += Math.Max(0,NonStructuralAllocation);
                     NotAllocated -= NonStructuralAllocation;
                     TotalAllocated += NonStructuralAllocation;
                 }
@@ -1286,7 +1336,7 @@ namespace Models.PMF
                 if (NonStructuralRequirement > 0.0)
                 {
                     double NonStructuralAllocation = Math.Min(NonStructuralRequirement, NotAllocated);
-                    BAT.NonStructuralAllocation[i] += NonStructuralAllocation;
+                    BAT.NonStructuralAllocation[i] += Math.Max(0, NonStructuralAllocation);
                     NotAllocated -= NonStructuralAllocation;
                     TotalAllocated += NonStructuralAllocation;
                 }
@@ -1324,17 +1374,49 @@ namespace Models.PMF
                 if (NonStructuralRequirement > 0.0)
                 {
                     double NonStructuralAllocation = Math.Min(FirstPassNotallocated * BAT.RelativeNonStructuralDemand[i], NonStructuralRequirement);
-                    BAT.NonStructuralAllocation[i] += NonStructuralAllocation;
+                    BAT.NonStructuralAllocation[i] += Math.Max(0, NonStructuralAllocation);
                     NotAllocated -= NonStructuralAllocation;
                     TotalAllocated += NonStructuralAllocation;
                 }
             }
         }
+        /// <summary>Partitions biomass between organs based on their relative demand in a single pass so non-structural always gets some if there is a non-structural demand</summary>
+        /// <param name="Organs">The organs.</param>
+        /// <param name="TotalSupply">The total supply.</param>
+        /// <param name="TotalAllocated">The total allocated.</param>
+        /// <param name="BAT">The bat.</param>
+        private void RelativeAllocationSinglePass(IArbitration[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
+        {
+            double NotAllocated = TotalSupply;
+            ////allocate to all pools based on their relative demands
+            for (int i = 0; i < Organs.Length; i++)
+            {
+                double StructuralRequirement = Math.Max(0, BAT.StructuralDemand[i] - BAT.StructuralAllocation[i]); //N needed to get to Minimum N conc and satisfy structural and metabolic N demands
+                double MetabolicRequirement = Math.Max(0, BAT.MetabolicDemand[i] - BAT.MetabolicAllocation[i]);
+                double NonStructuralRequirement = Math.Max(0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]);
+                if ((StructuralRequirement + MetabolicRequirement + NonStructuralRequirement) > 0.0)
+                {
+                    double StructuralFraction = BAT.TotalStructuralDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand);
+                    double MetabolicFraction = BAT.TotalMetabolicDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand);
+                    double NonStructuralFraction = BAT.TotalNonStructuralDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand);
+
+                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * StructuralFraction * BAT.RelativeStructuralDemand[i]);
+                    double MetabolicAllocation = Math.Min(MetabolicRequirement, TotalSupply * MetabolicFraction * BAT.RelativeMetabolicDemand[i]);
+                    double NonStructuralAllocation = Math.Min(NonStructuralRequirement, TotalSupply * NonStructuralFraction * BAT.RelativeNonStructuralDemand[i]);
+
+                    BAT.StructuralAllocation[i] += StructuralAllocation;
+                    BAT.MetabolicAllocation[i] += MetabolicAllocation;
+                    BAT.NonStructuralAllocation[i] += Math.Max(0, NonStructuralAllocation);
+                    NotAllocated -= (StructuralAllocation + MetabolicAllocation + NonStructuralAllocation);
+                    TotalAllocated += (StructuralAllocation + MetabolicAllocation + NonStructuralAllocation);
+                }
+            }
+        }
         #endregion
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+            /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+            /// <param name="tags">The list of tags to add to.</param>
+            /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+            /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             // add a heading.
@@ -1347,9 +1429,9 @@ namespace Models.PMF
             // write description of this class.
             AutoDocumentation.GetClassDescription(this, tags, indent);
 
-            string RelativeDocString = "Arbitration is performed in two passes for for each of the biomass supply sources.  On the first pass structural and metabilis biomass is allocated to each organ based on their demnad relative to the demand from all organs.On the second pass any remaining biomass is allocated to non-structural demands based on the organs relative demand.";
-            string RelativeThenPriorityDocStirng = "Arbitration is performed in two passes for for each of the biomass supply sources.  On the first pass structural and metabilis biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand before the next organ is partitioned anything.On the second pass any remaining biomass is allocated to non-structural demands based on the organs demand relative to the demand from all organs.";
-            string PriorityDocString = "Arbitration is performed in two passes for for each of the biomass supply sources.  On the first pass structural and metabilis biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand before the next organ is partitioned anything.On the second pass any remaining biomass is allocated to non-structural demands based on the same order of priority.";
+            string RelativeDocString = "Arbitration is performed in two passes for for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their demand relative to the demand from all organs.  On the second pass any remaining biomass is allocated to non-structural demands based on the organ's relative demand.";
+            string RelativeThenPriorityDocStirng = "Arbitration is performed in two passes for for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand first. On the second pass any remaining biomass is allocated to non-structural demands based on the relative demand from all organs.";
+            string PriorityDocString = "Arbitration is performed in two passes for for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand first.  On the second pass any remaining biomass is allocated to non-structural demands based on the same order of priority.";
             if (string.Compare(NArbitrationOption, "RelativeAllocation", true) == 0)
                 tags.Add(new AutoDocumentation.Paragraph(RelativeDocString, indent));
             if (string.Compare(NArbitrationOption, "PriorityAllocation", true) == 0)

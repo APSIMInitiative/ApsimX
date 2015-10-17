@@ -38,6 +38,9 @@ namespace Models
         /// <value><c>true</c> if [automatic export]; otherwise, <c>false</c>.</value>
         public bool AutoExport { get; set; }
 
+        /// <summary>The maximum number of results to display per page.</summary>
+        public int MaximumResultsPerPage { get; set; }
+
         /// <summary>A flag that when true indicates that the DataStore is in post processing model.</summary>
         private bool DoingPostProcessing = false;
 
@@ -301,6 +304,7 @@ namespace Models
                 tableToWrite.TableName = tableName;
                 tableToWrite.Data = table;
 
+                DeleteTable(tableName);
                 WriteTable(new TableToWrite[1] { tableToWrite });
             }
             else
@@ -403,8 +407,10 @@ namespace Models
         /// <param name="simulationName">Name of the simulation.</param>
         /// <param name="tableName">Name of the table.</param>
         /// <param name="includeSimulationName">if set to <c>true</c> [include simulation name].</param>
+        /// <param name="from">Only used when 'count' specified. The record number to offset.</param>
+        /// <param name="count">The number of records to return or all if 0.</param>
         /// <returns></returns>
-        public DataTable GetData(string simulationName, string tableName, bool includeSimulationName = false)
+        public DataTable GetData(string simulationName, string tableName, bool includeSimulationName = false, int from = 0, int count = 0)
         {
             Open(forWriting: false);
             if (Connection == null || !TableExists("Simulations") || tableName == null || !TableExists(tableName))
@@ -425,6 +431,9 @@ namespace Models
                     sql += " WHERE SimulationID = " + simulationID.ToString();
                 }
 
+                if (count > 0)
+                    sql += " LIMIT " + count + " OFFSET " + from;
+
                 return Connection.ExecuteQuery(sql);
             }
             catch (Exception)
@@ -439,10 +448,12 @@ namespace Models
         /// </summary>
         /// <param name="tableName">Name of the table.</param>
         /// <param name="filter">The filter.</param>
+        /// <param name="from">Only used when 'count' specified. The record number to offset.</param>
+        /// <param name="count">The number of records to return or all if 0.</param>
         /// <returns></returns>
-        public DataTable GetFilteredData(string tableName, string filter)
+        public DataTable GetFilteredData(string tableName, string filter, int from = 0, int count = 0)
         {
-            return GetFilteredData(tableName, new string[] { "*" }, filter);
+            return GetFilteredData(tableName, new string[] { "*" }, filter, from, count);
         }
 
         /// <summary>
@@ -452,8 +463,10 @@ namespace Models
         /// <param name="tableName">Name of the table.</param>
         /// <param name="fieldNames">Field names to get data for.</param>
         /// <param name="filter">The filter.</param>
+        /// <param name="from">Only used when 'count' specified. The record number to offset.</param>
+        /// <param name="count">The number of records to return or all if 0.</param>
         /// <returns></returns>
-        public DataTable GetFilteredData(string tableName, string[] fieldNames, string filter)
+        public DataTable GetFilteredData(string tableName, string[] fieldNames, string filter, int from = 0, int count = 0)
         {
             Open(forWriting: false);
             if (Connection == null || !TableExists("Simulations") || tableName == null)
@@ -481,6 +494,9 @@ namespace Models
                     sql += " AND " + filter;
                 }
 
+                if (count > 0)
+                    sql += " LIMIT " + count + " OFFSET " + from;
+
                 return Connection.ExecuteQuery(sql);
             }
             catch (Exception)
@@ -496,7 +512,14 @@ namespace Models
         {
             Open(forWriting: false);
 
-            return Connection.ExecuteQuery(sql);
+            try
+            {
+                return Connection.ExecuteQuery(sql);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>Return all data from the specified simulation and table name.</summary>

@@ -45,6 +45,18 @@ namespace Models.Graph
         /// <summary>No marker should be display</summary>
         None,
 
+        /// <summary>A filled circle marker</summary>
+        FilledCircle,
+
+        /// <summary>A filled diamond marker</summary>
+        FilledDiamond,
+
+        /// <summary>A filled square marker</summary>
+        FilledSquare,
+
+        /// <summary>A filled triangle marker</summary>
+        FilledTriangle,
+
         /// <summary>A circle marker</summary>
         Circle,
 
@@ -64,19 +76,7 @@ namespace Models.Graph
         Plus,
 
         /// <summary>A star marker</summary>
-        Star,
-
-        /// <summary>A filled circle marker</summary>
-        FilledCircle,
-
-        /// <summary>A filled diamond marker</summary>
-        FilledDiamond,
-
-        /// <summary>A filled square marker</summary>
-        FilledSquare,
-
-        /// <summary>A filled triangle marker</summary>
-        FilledTriangle 
+        Star
     }
 
     /// <summary>An enumeration representing the different types of lines</summary>

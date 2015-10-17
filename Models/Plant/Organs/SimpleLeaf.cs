@@ -51,6 +51,7 @@ namespace Models.PMF.Organs
         public double LAITotal { get { return LAI + LAIDead; } }
 
         /// <summary>Gets the cover green.</summary>
+        [Units("0-1")]
         public double CoverGreen
         {
             get
@@ -60,8 +61,9 @@ namespace Models.PMF.Organs
                 return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
             }
         }
-        
+
         /// <summary>Gets the cover total.</summary>
+        [Units("0-1")]
         public double CoverTotal
         {
             get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); }

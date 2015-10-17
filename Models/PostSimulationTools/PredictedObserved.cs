@@ -25,20 +25,29 @@ namespace Models.PostSimulationTools
     public class PredictedObserved : Model, IPostSimulationTool
     {
         /// <summary>Gets or sets the name of the predicted table.</summary>
-        /// <value>The name of the predicted table.</value>
         [Description("Predicted table")]
         [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.TableName)]
         public string PredictedTableName { get; set; }
+
         /// <summary>Gets or sets the name of the observed table.</summary>
-        /// <value>The name of the observed table.</value>
         [Description("Observed table")]
         [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.TableName)]
         public string ObservedTableName { get; set; }
+        
         /// <summary>Gets or sets the field name used for match.</summary>
-        /// <value>The field name used for match.</value>
         [Description("Field name to use for matching predicted with observed data")]
         [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.FieldName)]
         public string FieldNameUsedForMatch { get; set; }
+
+        /// <summary>Gets or sets the second field name used for match.</summary>
+        [Description("Second field name to use for matching predicted with observed data (optional)")]
+        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.FieldName)]
+        public string FieldName2UsedForMatch { get; set; }
+
+        /// <summary>Gets or sets the third field name used for match.</summary>
+        [Description("Third field name to use for matching predicted with observed data (optional)")]
+        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.FieldName)]
+        public string FieldName3UsedForMatch { get; set; }
 
         /// <summary>Main run method for performing our calculations and storing data.</summary>
         /// <param name="dataStore">The data store.</param>
@@ -69,15 +78,25 @@ namespace Models.PostSimulationTools
                 StringBuilder query = new StringBuilder("SELECT ");
                 foreach (string s in commonCols)
                 {
-                    query.Append("I.'@field' AS 'Observed.@field', R.'@field' AS 'Predicted.@field', ");
+                    if (s == FieldNameUsedForMatch || s == FieldName2UsedForMatch || s == FieldName3UsedForMatch)
+                        query.Append("I.'@field', ");
+                    else
+                        query.Append("I.'@field' AS 'Observed.@field', R.'@field' AS 'Predicted.@field', ");
+
                     query.Replace("@field", s);
                 }
 
-                query.Append("FROM " + ObservedTableName + " I INNER JOIN " + PredictedTableName + " R USING (SimulationID) WHERE I.'@match' = R.'@match'");
+                query.Append("FROM " + ObservedTableName + " I INNER JOIN " + PredictedTableName + " R USING (SimulationID) WHERE I.'@match1' = R.'@match1'");
+                if (FieldName2UsedForMatch != null)
+                    query.Append(" AND I.'@match2' = R.'@match2'");
+                if (FieldName3UsedForMatch != null)
+                    query.Append(" AND I.'@match3' = R.'@match3'");
                 query.Replace(", FROM", " FROM"); // get rid of the last comma
                 query.Replace("I.'SimulationID' AS 'Observed.SimulationID', R.'SimulationID' AS 'Predicted.SimulationID'", "I.'SimulationID' AS 'SimulationID'");
 
-                query = query.Replace("@match", FieldNameUsedForMatch);
+                query = query.Replace("@match1", FieldNameUsedForMatch);
+                query = query.Replace("@match2", FieldName2UsedForMatch);
+                query = query.Replace("@match3", FieldName3UsedForMatch);
 
                 DataTable predictedObservedData = dataStore.RunQuery(query.ToString());
 

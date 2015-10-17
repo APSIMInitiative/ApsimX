@@ -10,6 +10,7 @@
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Reflection;
     using System.Text;
 
     class HtmlToMigraDoc
@@ -95,6 +96,7 @@
         {
             string href = node.GetAttributeValue("href", "");
             Hyperlink link;
+            href = href.Replace("&amp;", "&");
             if (href.StartsWith("#"))
                 link = GetParagraph(section).AddHyperlink(href.Substring(1), HyperlinkType.Bookmark);
             else
@@ -115,16 +117,18 @@
             if (srcAttribute != null)
             {
                 string fullPath = Path.Combine(imagePath, srcAttribute.Value);
+                if (!File.Exists(fullPath))
+                {
+                    // Look in documentation folder.
+                    string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    fullPath = Path.Combine(binDirectory, @"..\Documentation\Images", Path.GetFileName(fullPath));
+                    fullPath = Path.GetFullPath(fullPath);
+                }
+
                 if (File.Exists(fullPath))
                 {
                     Paragraph para = section.Section.AddParagraph();
                     Image image1 = para.AddImage(fullPath);
-                    //image1.Height = "8cm";
-                    //image1.Width = "8cm";
-                    //image1.LockAspectRatio = true;
-                    //Image image = section.Section.AddImage(fullPath);
-                    //image.Height = new Unit(100, UnitType.Millimeter);
-                    //image.
                 }
             }
             return section;

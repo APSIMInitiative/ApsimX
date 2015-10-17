@@ -395,25 +395,17 @@ namespace Models
         /// <summary>Gets all canopies in simulation</summary>
         private void GetAllCanopies()
         {
-            foreach (ICanopy canopy in Apsim.FindAll(this.Parent, typeof(ICanopy)))
-            {
-                ComponentDataStruct componentData = ComponentData.Find(c => c.Name == canopy.CanopyType);
-                if (componentData == null)
-                {
-                    componentData = CreateNewComonentData(canopy.CanopyType);
-                    Clear(componentData);
-                }
 
-                componentData.Name = canopy.CanopyType;
-                componentData.Type = canopy.CanopyType;
-                componentData.Canopy = canopy;
-                componentData.LAI = canopy.LAI;
-                componentData.LAItot = canopy.LAITotal;
-                componentData.CoverGreen = canopy.CoverGreen;
-                componentData.CoverTot = canopy.CoverTotal;
-                componentData.Height = Math.Round(canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m
-                componentData.Depth = Math.Round(canopy.Depth, 5) / 1000.0;   // Round off a bit and convert mm to m
-                componentData.Canopy = canopy;
+            foreach (ComponentDataStruct componentData in ComponentData)
+            { 
+                componentData.Name = componentData.Canopy.CanopyType;
+                componentData.Type = componentData.Canopy.CanopyType;
+                componentData.LAI = componentData.Canopy.LAI;
+                componentData.LAItot = componentData.Canopy.LAITotal;
+                componentData.CoverGreen = componentData.Canopy.CoverGreen;
+                componentData.CoverTot = componentData.Canopy.CoverTotal;
+                componentData.Height = Math.Round(componentData.Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m
+                componentData.Depth = Math.Round(componentData.Canopy.Depth, 5) / 1000.0;   // Round off a bit and convert mm to m
             }
         }
 
@@ -522,7 +514,12 @@ namespace Models
             DeltaZ = new double[-1 + 1];
             layerKtot = new double[-1 + 1];
             layerLAIsum = new double[-1 + 1];
-           
+            foreach (ICanopy canopy in Apsim.FindAll(this.Parent, typeof(ICanopy)))
+            {
+                ComponentDataStruct componentData = componentData = CreateNewComonentData(canopy.CanopyType);
+                componentData.Canopy = canopy;
+                Clear(componentData);
+            }
         }
 
 
@@ -713,7 +710,7 @@ namespace Models
             SetupCropTypes("kale2", "Crop");
             SetupCropTypes("lolium_rigidum", "Crop");
             SetupCropTypes("lucerne", "Crop");
-            SetupCropTypes("maize", "Crop");
+            SetupCropTypes("Maize", "Maize");
             SetupCropTypes("MCSP", "Crop");
             SetupCropTypes("nativepasture", "C4Grass");
             SetupCropTypes("oats", "Crop");
@@ -738,7 +735,7 @@ namespace Models
             SetupCropTypes("vine", "Crop");
             SetupCropTypes("weed", "Crop");
             SetupCropTypes("wheat", "Crop");
-            SetupCropTypes("Tef", "Crop");
+            SetupCropTypes("Teff", "Crop");
             SetupCropTypes("WheatPMFPrototype", "Crop");
             SetupCropTypes("WhiteClover", "Legume");
             SetupCropTypes("FodderBeet", "Crop");
@@ -794,7 +791,13 @@ namespace Models
                 CropType.Albedo = 0.26;
                 CropType.Gsmax = 0.011;
             }
-
+            else if (Type.Equals("Maize"))
+            {
+                CropType.Albedo = 0.15;
+                CropType.Gsmax = 0.009;
+                CropType.Emissivity = 0.96;
+                CropType.R50 = 80;
+            }
             ComponentDataDefinitions.Add(CropType);
         }
 
@@ -937,7 +940,7 @@ namespace Models
                 if (ComponentDataDefinitions[i].Name.Equals(name, StringComparison.CurrentCultureIgnoreCase))
                 {
                     // found
-                    ComponentData.Add(ComponentDataDefinitions[i]);
+                    ComponentData.Add(ReflectionUtilities.Clone(ComponentDataDefinitions[i]) as ComponentDataStruct);
                     return ComponentData[ComponentData.Count - 1];
                 }
             }

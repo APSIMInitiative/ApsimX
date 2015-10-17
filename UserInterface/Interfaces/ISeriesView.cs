@@ -5,123 +5,64 @@
 // -----------------------------------------------------------------------
 namespace UserInterface.Interfaces
 {
-    using System;
-    using System.Data;
-    using System.Drawing;
+    using Views;
 
     /// <summary>
     /// This interface defines the API for talking to an initial water view.
     /// </summary>
     public interface ISeriesView
     {
-        /// <summary>Invoked when the user changes the series type</summary>
-        event EventHandler SeriesTypeChanged;
+        /// <summary>Data source</summary>
+        IDropDownView DataSource { get; }
 
-        /// <summary>Invoked when the user changes the series line type</summary>
-        event EventHandler SeriesLineTypeChanged;
+        /// <summary>X field</summary>
+        IDropDownView X { get; }
 
-        /// <summary>Invoked when the user changes the series marker type</summary>
-        event EventHandler SeriesMarkerTypeChanged;
+        /// <summary>Y field</summary>
+        IDropDownView Y { get; }
 
-        /// <summary>Invoked when the user changes the color</summary>
-        event EventHandler ColourChanged;
+        /// <summary>X2 field</summary>
+        IDropDownView X2 { get; }
 
-        /// <summary>Invoked when the user changes the x on top field</summary>
-        event EventHandler XOnTopChanged;
+        /// <summary>Y2 field</summary>
+        IDropDownView Y2 { get; }
 
-        /// <summary>Invoked when the user changes the y on right field</summary>
-        event EventHandler YOnRightChanged;
+        /// <summary>Series type</summary>
+        IDropDownView SeriesType { get; }
 
-        /// <summary>Invoked when the user changes the cumulative Y field</summary>
-        event EventHandler CumulativeYChanged;
+        /// <summary>Line type</summary>
+        IDropDownView LineType { get; }
 
-        /// <summary>Invoked when the user changes the cumulative X field</summary>
-        event EventHandler CumulativeXChanged;
+        /// <summary>MarkerType</summary>
+        IDropDownView MarkerType { get; }
 
-        /// <summary>Invoked when the user changes the x</summary>
-        event EventHandler XChanged;
+        /// <summary>Colour</summary>
+        IColourDropDownView Colour { get; }
 
-        /// <summary>Invoked when the user changes the y</summary>
-        event EventHandler YChanged;
+        /// <summary>X on top checkbox.</summary>
+        ICheckBoxView XOnTop { get; }
 
-        /// <summary>Invoked when the user changes the x2</summary>
-        event EventHandler X2Changed;
+        /// <summary>Y on right checkbox.</summary>
+        ICheckBoxView YOnRight { get; }
 
-        /// <summary>Invoked when the user changes the y2</summary>
-        event EventHandler Y2Changed;
+        /// <summary>X cumulative checkbox.</summary>
+        ICheckBoxView XCumulative { get; }
 
-        /// <summary>Invoked when the user changes the data source</summary>
-        event EventHandler DataSourceChanged;
+        /// <summary>Y cumulative checkbox.</summary>
+        ICheckBoxView YCumulative { get; }
 
-        /// <summary>Invoked when the user changes the show in legend</summary>
-        event EventHandler ShowInLegendChanged;
+        /// <summary>Show in lengend checkbox.</summary>
+        ICheckBoxView ShowInLegend { get; }
 
-        /// <summary>Gets or sets the series type</summary>
-        string SeriesType { get; set; }
-
-        /// <summary>Gets or sets the series line type</summary>
-        string SeriesLineType { get; set; }
-
-        /// <summary>Gets or sets the series marker type</summary>
-        string SeriesMarkerType { get; set; }
-
-        /// <summary>Gets or sets the series color.</summary>
-        Color Colour { get; set; }
-
-        /// <summary>Gets or sets a value indicating whether x is on top.</summary>
-        /// <value><c>true</c> if [x on top]; otherwise, <c>false</c>.</value>
-        bool XOnTop { get; set; }
-
-        /// <summary>Gets or sets a value indicating whether y is on right.</summary>
-        /// <value><c>true</c> if [y on right]; otherwise, <c>false</c>.</value>
-        bool YOnRight { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the Y series is cumulative.
-        /// </summary>
-        /// <value><c>true</c> if cumulative; otherwise, <c>false</c>.</value>
-        bool CumulativeY { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the X series is cumulative.
-        /// </summary>
-        /// <value><c>true</c> if cumulative; otherwise, <c>false</c>.</value>
-        bool CumulativeX { get; set; }
-
-        /// <summary>Gets or sets the x variable name</summary>
-        string X { get; set; }
-
-        /// <summary>Gets or sets the y variable name</summary>
-        string Y { get; set; }
-
-        /// <summary>Gets or sets the second x variable name</summary>
-        string X2 { get; set; }
-
-        /// <summary>Gets or sets the second y variable name</summary>
-        string Y2 { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the series should be shown in the legend
-        /// </summary>
-        /// <value><c>true</c> if [show in legend]; otherwise, <c>false</c>.</value>
-        bool ShowInLegend { get; set; }
-
-        /// <summary>Gets or sets the selected data source name.</summary>
-        string DataSource { get; set; }
-
-        /// <summary>Gets the graph view.</summary>
+        /// <summary>Graph.</summary>
         IGraphView GraphView { get; }
 
-        /// <summary>Gets or sets a list of field names</summary>
-        /// <param name="fieldNames">The available field names</param>
-        void SetFieldNames(string[] fieldNames);
+        /// <summary>Filter box.</summary>
+        IEditView Filter { get; }
 
-        /// <summary>Sets the list of available data sources.</summary>
-        /// <param name="dataSources">The available data sources</param>
-        void SetDataSources(string[] dataSources);
-
-        /// <summary>Show the x2 an y2 fields?</summary>
-        /// <param name="show">Indicates whether the fields should be shown</param>
+        /// <summary>Show or hide the x2 and y2 drop downs.</summary>
+        /// <param name="show"></param>
         void ShowX2Y2(bool show);
+
     }
 }

@@ -4298,7 +4298,7 @@ namespace Models
             Species.simToday = clock.Today;
 
             //pass some metData to species
-            Species.DayLength = MetData.DayLength;
+            Species.DayLength = MetData.CalculateDayLength(-6);
             Species.localLatitude = MetData.Latitude;
             Species.Tmax = MetData.MaxT;
             Species.Tmin = MetData.MinT;

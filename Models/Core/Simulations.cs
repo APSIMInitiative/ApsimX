@@ -112,8 +112,7 @@ namespace Models.Core
                     }
                 }
             }
-            else
-                throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
+
             return simulations;
         }
 
@@ -299,8 +298,8 @@ namespace Models.Core
 
         /// <summary>The number to run</summary>
         private int NumToRun;
-        /// <summary>The number completed</summary>
-        private int NumCompleted;
+        ///// <summary>The number completed</summary>
+        //private int NumCompleted;
 
         /// <summary>Run all simulations.</summary>
         /// <param name="sender"></param>
@@ -316,6 +315,8 @@ namespace Models.Core
             DataStore store = Apsim.Child(this, typeof(DataStore)) as DataStore;
 
             // Remove old simulation data.
+            if (store == null)
+                throw new Exception("Cannot find a data store in simulation file " + FileName);
             store.RemoveUnwantedSimulations(this);
 
             Simulation[] simulationsToRun;
@@ -325,33 +326,25 @@ namespace Models.Core
                 // will clean up order of columns in the tables and removed unused ones.
                 store.DeleteAllTables();
 
-                store.Disconnect();
-
                 simulationsToRun = Simulations.FindAllSimulationsToRun(this);
             }
             else
                 simulationsToRun = Simulations.FindAllSimulationsToRun(SimulationToRun);
 
+            store.Disconnect();
+
             MakeSubstitutions(simulationsToRun);
 
             NumToRun = simulationsToRun.Length;
-            NumCompleted = 0;
+            //NumCompleted = 0;
 
-            if (NumToRun == 1)
+            jobManager.AllJobsCompleted -= OnSimulationCompleted;
+            jobManager.AllJobsCompleted += OnSimulationCompleted;
+            foreach (Simulation simulation in simulationsToRun)
             {
-                // Skip running in another thread.
-                simulationsToRun[0].Commencing -= OnSimulationCommencing;
-                simulationsToRun[0].Commencing += OnSimulationCommencing;
-                simulationsToRun[0].Run(null, null);
-            }
-            else
-            {
-                foreach (Simulation simulation in simulationsToRun)
-                {
-                    simulation.Commencing -= OnSimulationCommencing;
-                    simulation.Commencing += OnSimulationCommencing;
-                    jobManager.AddJob(simulation);
-                }
+                //simulation.Commencing -= OnSimulationCommencing;
+                //simulation.Commencing += OnSimulationCommencing;
+                jobManager.AddJob(simulation);
             }
         }
 
@@ -405,24 +398,7 @@ namespace Models.Core
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            Simulation simulation = sender as Simulation;
-            bool RunAllCompleted = false;
-            lock (this)
-            {
-                NumCompleted++;
-                RunAllCompleted = NumCompleted == NumToRun;
-                if (simulation.ErrorMessage != null)
-                {
-                    if (ErrorMessage == null)
-                        ErrorMessage += "Errors were found in these simulations:\r\n";
-                    ErrorMessage += simulation.Name + "\r\n";
-                }
-            }
-            if (RunAllCompleted)
-            {
-                CallAllCompleted();
-                simulation.Commencing -= OnSimulationCommencing;
-            }
+            CallAllCompleted();
         }
 
         /// <summary>Call the all completed event in all models.</summary>
@@ -444,6 +420,14 @@ namespace Models.Core
             {
                 // Find the model of the right name.
                 IModel modelToDocument = Apsim.Find(simulation, modelNameToDocument);
+
+                // If not found then find a model of the specified type.
+                if (modelToDocument == null)
+                    modelToDocument = Apsim.Get(simulation, "[" + modelNameToDocument + "]") as IModel;
+
+                // If still not found throw an error.
+                if (modelToDocument == null)
+                    throw new ApsimXException(this, "Could not find a model of the name " + modelNameToDocument + ". Simulation file name must match the name of the node to document.");
 
                 // Get the path of the model (relative to parentSimulation) to document so that 
                 // when replacements happen below we will point to the replacement model not the 

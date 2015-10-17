@@ -26,7 +26,9 @@ namespace Models.Graph
         public Series()
         {
             this.XAxis = Axis.AxisType.Bottom;
-            this.Colour = Color.Blue;
+            this.FactorIndexToVaryColours = -1;
+            this.FactorIndexToVaryLines = -1;
+            this.FactorIndexToVaryMarkers = -1;
         }
 
         /// <summary>Gets or sets the series type</summary>
@@ -58,6 +60,15 @@ namespace Models.Graph
             }
         }
 
+        /// <summary>The FactorIndex to vary colours.</summary>
+        public int FactorIndexToVaryColours { get; set; }
+
+        /// <summary>The FactorIndex to vary markers types.</summary>
+        public int FactorIndexToVaryMarkers { get; set; }
+
+        /// <summary>The FactorIndex to vary line types.</summary>
+        public int FactorIndexToVaryLines { get; set; }
+
         /// <summary>Gets or sets the marker to show</summary>
         public MarkerType Marker { get; set; }
 
@@ -79,20 +90,17 @@ namespace Models.Graph
         /// <summary>Gets or sets the name of the y2 field</summary>
         public string Y2FieldName { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the series should be shown in the legend
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether the series should be shown in the legend</summary>
         public bool ShowInLegend { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the Y variables should be cumulative.
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether the Y variables should be cumulative.</summary>
         public bool Cumulative { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the X variables should be cumulative.
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether the X variables should be cumulative.</summary>
         public bool CumulativeX { get; set; }
+
+        /// <summary>Optional data filter.</summary>
+        public string Filter { get; set; }
 
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
@@ -110,7 +118,7 @@ namespace Models.Graph
                 Experiment parentExperiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;
 
                 // If the graph is in a zone then just graph the zone.
-                if (parentZone != null)
+                if (parentZone != null && !(parentZone is Simulation))
                 {
                     GraphSimulation(parentZone, ourDefinitions);
                 }
@@ -143,7 +151,9 @@ namespace Models.Graph
                     }
 
                     // Now create series definitions for each experiment found.
-                    int colourIndex = 0;
+                    int colourIndex = Array.IndexOf(ColourUtilities.Colours, Colour);
+                    if (colourIndex == -1)
+                        colourIndex = 0;
                     foreach (Experiment experiment in experiments)
                     {
                         string filter = "SimulationName IN " + "(" + StringUtilities.Build(experiment.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
@@ -188,9 +198,18 @@ namespace Models.Graph
             }
             else
             {
-                string filter = string.Format("Name='{0}'", model.Name);
+                string filter = string.Format("Name='{0}'", parentSimulation.Name);
                 ourDefinitions.Add(CreateDefinition(Name, filter, Colour, Marker, Line));
             }
+        }
+
+        class FactorAndIndex
+        {
+            public enum TypeToVary { Colour, Line, Marker }
+            public int factorValueIndex;
+            public string factorName;
+            public string factorValue;
+            public TypeToVary typeToVary;
         }
 
         /// <summary>
@@ -200,71 +219,194 @@ namespace Models.Graph
         /// <param name="ourDefinitions"></param>
         private void GraphExperiment(Experiment parentExperiment, List<SeriesDefinition> ourDefinitions)
         {
-            Factors factorsModel = Apsim.Child(parentExperiment as IModel, typeof(Factors)) as Factors;
-            if (factorsModel != null)
+            Factors factors = Apsim.Child(parentExperiment as IModel, typeof(Factors)) as Factors;
+            if (factors != null)
             {
-                List<Factor> factors = factorsModel.factors;
-                if (factors.Count == 2)
+                // Given this example (from Teff.apsimx).
+                //    Factors
+                //       CV   - Gibe, Ziquala, Ayana, 04T19   (4 factor values)
+                //       PP   - 1, 2, 3, 4, 5, 6              (6 factor values)
+                // -----------------------------------------------------------
+                //    If FactorIndexToVaryColours = 0  (index of CV factor)
+                //       FactorIndexToVaryLines   = 1  (index of PP factor)
+                //       FactorIndexToVaryMarkers = -1 (doesn't point to a factor)
+                //    Then permutations will be:
+                //       CVGibe & PP1
+                //       CVZiquala & PP2
+                //       CVAyana & PP3
+                //       ... (24 in total - 4 x 6)
+                // -----------------------------------------------------------
+                //    If FactorIndexToVaryColours = 0  (index of CV factor)
+                //       FactorIndexToVaryLines   = -1 (doesn't point to a factor)
+                //       FactorIndexToVaryMarkers = -1 (doesn't point to a factor)
+                //    Then permutations will be:
+                //       CVGibe
+                //       CVZiquala
+                //       CVAyana
+                //       CV04T19  (4 in total - 4)
+                // -----------------------------------------------------------
+                // The FactorIndexToVary... variables denote which factors should be 
+                // separate series.
+
+                List<List<FactorAndIndex>> factorIndexes = new List<List<FactorAndIndex>>();
+                for (int f = 0; f != factors.Children.Count; f++)
                 {
-                    int colourIndex = 0;
-                    foreach (FactorValue treatmentValue1 in factors[0].CreateValues())
-                    {
-                        MarkerType marker = Marker;
-                        LineType line = Line;
+                    if (FactorIndexToVaryColours == f)
+                        CreateFactorAndIndex(factors.Children[FactorIndexToVaryColours] as Factor, factorIndexes,
+                                             FactorAndIndex.TypeToVary.Colour);
 
-                        foreach (FactorValue treatmentValue2 in factors[1].CreateValues())
-                        {
-                            string simulationName = parentExperiment.Name + treatmentValue1.Name + treatmentValue2.Name;
-                            string filter = "SimulationName = '" + simulationName + "'";
+                    if (FactorIndexToVaryLines == f)
+                        CreateFactorAndIndex(factors.Children[FactorIndexToVaryLines] as Factor, factorIndexes,
+                                             FactorAndIndex.TypeToVary.Line);
 
-                            CreateDefinitions(parentExperiment.BaseSimulation, simulationName, filter, ref colourIndex,
-                                              marker, line, ourDefinitions);
-                            colourIndex--; // put colourIndex back to original value.
-
-                            if (Marker == MarkerType.None)
-                                line = IncrementEnum(line);
-                            else
-                                marker = IncrementEnum(marker);
-                        }
-
-                        colourIndex++;
-                    }
+                    if (FactorIndexToVaryMarkers == f)
+                        CreateFactorAndIndex(factors.Children[FactorIndexToVaryMarkers] as Factor, factorIndexes,
+                                             FactorAndIndex.TypeToVary.Marker);
                 }
-                else
+
+                List<List<FactorAndIndex>> permutations = MathUtilities.AllCombinationsOf(factorIndexes.ToArray());
+
+                // If no 'vary by' were specified then create a dummy one. All data will be on one series.
+                if (permutations == null || permutations.Count == 0)
                 {
-                    int colourIndex1 = 0;
-                    foreach (string simulationName in parentExperiment.Names())
+                    permutations = new List<List<FactorAndIndex>>();
+                    permutations.Add(new List<FactorAndIndex>());
+                }
+
+                // Loop through all permutations and create a graph series definition for each.
+                foreach (List<FactorAndIndex> combination in permutations)
+                {
+                    // Determine the marker, line and colour for this combination.
+                    MarkerType marker = Marker;
+                    LineType line = Line;
+                    int colourIndex = Array.IndexOf(ColourUtilities.Colours, Colour);
+                    if (colourIndex == -1)
+                        colourIndex = 0;
+                    string seriesName = string.Empty;
+                    for (int i = 0; i < combination.Count; i++)
                     {
-                        string filter = "SimulationName = '" + simulationName + "'";
-                        CreateDefinitions(parentExperiment.BaseSimulation, simulationName, filter, ref colourIndex1, Marker, Line, ourDefinitions);
+                        if (combination[i].typeToVary == FactorAndIndex.TypeToVary.Colour)
+                            colourIndex = combination[i].factorValueIndex;
+                        if (combination[i].typeToVary == FactorAndIndex.TypeToVary.Marker)
+                            marker = GetEnumValue<MarkerType>(combination[i].factorValueIndex);
+                        if (combination[i].typeToVary == FactorAndIndex.TypeToVary.Line)
+                            line = GetEnumValue<LineType>(combination[i].factorValueIndex);
+                        seriesName += combination[i].factorName + combination[i].factorValue;
                     }
+
+                    string filter = GetFilter(parentExperiment, combination);
+
+                    CreateDefinitions(parentExperiment.BaseSimulation, seriesName, filter, ref colourIndex,
+                                      marker, line, ourDefinitions);
                 }
             }
         }
 
-        /// <summary>
-        /// Increment an enumeration. Will wrap back to first one when it goes past the end of 
-        /// possible enumerations.
+        /// <summary>Get a .db filter for the specified combination.</summary>
+        /// <param name="experiment">The experiment</param>
+        /// <param name="combination">The combination</param>
+        /// <returns>The filter</returns>
+        private string GetFilter(Experiment experiment, List<FactorAndIndex> combination)
+        {
+            // Need to determine all the simulation names that match the specified combination.
+            // If the combination is just a single factor value then the simulation names will be
+            // a permutation of that factor value and all other factor values in other factors 
+            // For example:
+            //   IF combination is CVGibe
+            //   THEN filter = SimulationName = 'VanDeldenCvGibePP1' or SimulationName = 'VanDeldenCvGibePP2' or SimulationName = 'VanDeldenCvGibePP3' ...
+            // If the combintation of 2 factor values for 2 different factors then the filter will
+            // be a permutation of those 2 factor values and all OTHER factor values in OTHER factors.
+            // For example:
+            //   IF combintation is CVGibePP1
+            //   THEN filter = SimulationName = 'SimulationName = 'VanDeldenCvGibePP1'
+            //   (This is because the example has no other factors other than CV and PP.
+            Factors factors = Apsim.Child(experiment as IModel, typeof(Factors)) as Factors;
+
+            List<List<KeyValuePair<string, string>>> simulationBits = new List<List<KeyValuePair<string, string>>>();
+
+            foreach (Factor factor in factors.factors)
+            {
+                List<KeyValuePair<string, string>> names = new List<KeyValuePair<string, string>>();
+                FactorAndIndex factorAndIndex = combination.Find(f => factor.Name == f.factorName);
+                if (factorAndIndex == null)
+                {
+                    if (factor.Children.Count > 0)
+                    {
+                        foreach (IModel child in factor.Children)
+                            names.Add(new KeyValuePair<string, string>(factor.Name, child.Name));
+                    }
+                    else
+                    {
+                        foreach (FactorValue factorValue in factor.CreateValues())
+                        {
+                            if (factorValue.Values.Count >= 1)
+                                names.Add(new KeyValuePair<string, string>(factor.Name, factorValue.Values[0].ToString()));
+                        }
+                    }
+                }
+                else
+                    names.Add(new KeyValuePair<string, string>(factor.Name, factorAndIndex.factorValue));
+                simulationBits.Add(names);
+            }
+
+            List<List<KeyValuePair<string, string>>> combinations = MathUtilities.AllCombinationsOf<KeyValuePair<string, string>>(simulationBits.ToArray());
+
+            string filter = string.Empty;
+            foreach (List<KeyValuePair<string, string>> c in combinations)
+            {
+                if (filter != string.Empty)
+                    filter += " or ";
+                filter += "SimulationName = '" + experiment.Name;
+                foreach (KeyValuePair<string, string> pair in c)
+                    filter += pair.Key + pair.Value;
+                filter += "'";
+            }
+
+            return filter;
+        }
+
+        /// <summary>Create a series of FactorAndIndex objects for the values of the specified factor.</summary>
+        /// <param name="factor"></param>
+        /// <param name="factorIndexes"></param>
+        /// <param name="typeToVary"></param>
+        private void CreateFactorAndIndex(Factor factor, List<List<FactorAndIndex>> factorIndexes, FactorAndIndex.TypeToVary typeToVary)
+        {
+            List<FactorAndIndex> factorValueIndexes = new List<FactorAndIndex>();
+            List<FactorValue> factorValues = factor.CreateValues();
+            for (int j = 0; j < factorValues.Count; j++)
+            //for (int j = 0; j < factor.Children.Count; j++)
+            {
+                factorValueIndexes.Add(new FactorAndIndex()
+                {
+                    factorValueIndex = j,
+                    factorName = factor.Name,
+                    factorValue = factorValues[j].Name.Replace(factor.Name, ""),
+                    //factorValue = factor.Children[j].Name,
+                    typeToVary = typeToVary
+                });
+            }
+            factorIndexes.Add(factorValueIndexes);
+        }
+
+        /// <summary>Increment an enumeration. Will wrap back to first one when it goes past the end of possible enumerations.
         /// </summary>
         /// <typeparam name="T">The enum type</typeparam>
-        /// <param name="e">The enum itself.</param>
-        /// <returns>The next enum.</returns>
-        private static T IncrementEnum<T>(T e)
+        /// <param name="index">The index of the enum to return.</param>
+        /// <returns>The specified enum value.</returns>
+        private static T GetEnumValue<T>(int index)
         {
-            Array enumTypes = Enum.GetValues(typeof(T));
-            for (int i = 0; i < enumTypes.Length; i++)
-            {
-                T thisEnum = (T)enumTypes.GetValue(i);
-                if (thisEnum.Equals(e))
-                {
-                    // If pointing to the last element then wrap around to first.
-                    if (i == enumTypes.Length - 1)
-                        return (T)enumTypes.GetValue(0);
-                    else
-                        return (T)enumTypes.GetValue(i + 1);
-                }
-            }
-            throw new Exception("Bad enumeration found");
+            List<T> enumValues = new List<T>();
+            foreach (T value in Enum.GetValues(typeof(T)))
+                if (value.ToString() != "None")
+                    enumValues.Add(value);
+
+            if (index < 0)
+                throw new Exception("Invalid index found while getting " + enumValues[0].GetType().Name);
+
+            while (index >= enumValues.Count)
+                index -= enumValues.Count;
+
+            return enumValues[index];
         }
 
         /// <summary>Creates series definitions for the specified simulation.</summary>
@@ -298,6 +440,9 @@ namespace Models.Graph
                                                  marker, line));
                 colourIndex++;
             }
+
+            if (colourIndex >= ColourUtilities.Colours.Length)
+                colourIndex = 0;
         }
 
         /// <summary>Creates a series definition.</summary>
@@ -345,8 +490,14 @@ namespace Models.Graph
                 if (Y2FieldName != null)
                     fieldNames.Add(Y2FieldName);
 
+                string where = "(" + filter;
+                if (Filter != null && Filter != string.Empty)
+                    where += " AND (" + Filter + ")";
+                where += ")";
+
                 DataStore dataStore = new DataStore(this);
-                DataTable data = dataStore.GetFilteredData(TableName, fieldNames.ToArray(), filter);
+                DataTable data = dataStore.GetFilteredData(TableName, fieldNames.ToArray(), where);
+                
                 dataStore.Disconnect();
 
                 // If the field exists in our data table then return it.

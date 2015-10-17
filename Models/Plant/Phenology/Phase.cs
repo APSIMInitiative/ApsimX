@@ -5,6 +5,7 @@ using Models.Core;
 using System.ComponentModel;
 using Models.PMF.Functions;
 using System.IO;
+using System.Xml.Serialization;
 
 
 namespace Models.PMF.Phen
@@ -89,6 +90,7 @@ namespace Models.PMF.Phen
         
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
+        [XmlIgnore]
         public double TTinPhase { get; set; }
 
         /// <summary>
@@ -126,6 +128,7 @@ namespace Models.PMF.Phen
         virtual public void Add(double dlt_tt) { TTinPhase += dlt_tt; }
         /// <summary>Gets the fraction complete.</summary>
         /// <value>The fraction complete.</value>
+        [XmlIgnore]
         abstract public double FractionComplete { get; set; }
 
         /// <summary>Called when [simulation commencing].</summary>

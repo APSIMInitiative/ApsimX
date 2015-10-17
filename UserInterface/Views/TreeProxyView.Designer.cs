@@ -29,34 +29,120 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.pBelowGround = new OxyPlot.WindowsForms.PlotView();
+            this.pAboveGround = new OxyPlot.WindowsForms.PlotView();
+            this.splitter1 = new System.Windows.Forms.Splitter();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.dgvHeights = new System.Windows.Forms.DataGridView();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TreeHeight = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NDemands = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CanopyWidths = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TreeLeafAreas = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.Grid = new System.Windows.Forms.DataGridView();
-            this.pBelowGround = new OxyPlot.WindowsForms.PlotView();
-            this.pAboveGround = new OxyPlot.WindowsForms.PlotView();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.gridView1 = new Views.GridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHeights)).BeginInit();
+            this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).BeginInit();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.AutoSize = true;
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel1.Controls.Add(this.dgvHeights);
-            this.panel1.Controls.Add(this.Grid);
-            this.panel1.Controls.Add(this.pBelowGround);
-            this.panel1.Controls.Add(this.pAboveGround);
+            this.panel1.Controls.Add(this.panel2);
+            this.panel1.Controls.Add(this.splitter1);
+            this.panel1.Controls.Add(this.tabControl1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(527, 563);
+            this.panel1.Size = new System.Drawing.Size(703, 693);
             this.panel1.TabIndex = 0;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.pBelowGround);
+            this.panel2.Controls.Add(this.pAboveGround);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 316);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(703, 377);
+            this.panel2.TabIndex = 10;
+            // 
+            // pBelowGround
+            // 
+            this.pBelowGround.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pBelowGround.Location = new System.Drawing.Point(333, 0);
+            this.pBelowGround.Margin = new System.Windows.Forms.Padding(4);
+            this.pBelowGround.Name = "pBelowGround";
+            this.pBelowGround.PanCursor = System.Windows.Forms.Cursors.Hand;
+            this.pBelowGround.Size = new System.Drawing.Size(370, 377);
+            this.pBelowGround.TabIndex = 3;
+            this.pBelowGround.Text = "plot1";
+            this.pBelowGround.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
+            this.pBelowGround.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
+            this.pBelowGround.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
+            // 
+            // pAboveGround
+            // 
+            this.pAboveGround.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pAboveGround.Location = new System.Drawing.Point(0, 0);
+            this.pAboveGround.Margin = new System.Windows.Forms.Padding(4);
+            this.pAboveGround.Name = "pAboveGround";
+            this.pAboveGround.PanCursor = System.Windows.Forms.Cursors.Hand;
+            this.pAboveGround.Size = new System.Drawing.Size(333, 377);
+            this.pAboveGround.TabIndex = 2;
+            this.pAboveGround.Text = "plot1";
+            this.pAboveGround.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
+            this.pAboveGround.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
+            this.pAboveGround.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
+            // 
+            // splitter1
+            // 
+            this.splitter1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.splitter1.Location = new System.Drawing.Point(0, 313);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(703, 3);
+            this.splitter1.TabIndex = 9;
+            this.splitter1.TabStop = false;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(703, 313);
+            this.tabControl1.TabIndex = 8;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.dgvHeights);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(695, 284);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Temporal Data";
+            this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // dgvHeights
             // 
@@ -66,25 +152,61 @@
             this.dgvHeights.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgvHeights.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Date,
-            this.TreeHeight});
-            this.dgvHeights.Location = new System.Drawing.Point(0, 0);
+            this.TreeHeight,
+            this.NDemands,
+            this.CanopyWidths,
+            this.TreeLeafAreas});
+            this.dgvHeights.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvHeights.Location = new System.Drawing.Point(3, 3);
+            this.dgvHeights.Margin = new System.Windows.Forms.Padding(4);
             this.dgvHeights.Name = "dgvHeights";
-            this.dgvHeights.Size = new System.Drawing.Size(154, 272);
+            this.dgvHeights.Size = new System.Drawing.Size(689, 278);
             this.dgvHeights.TabIndex = 7;
             this.dgvHeights.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvHeights_RowsAdded);
             this.dgvHeights.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgvHeights_RowsRemoved);
+            this.dgvHeights.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Grid_KeyUp);
             // 
             // Date
             // 
             this.Date.HeaderText = "Date";
             this.Date.Name = "Date";
-            this.Date.Width = 55;
+            this.Date.Width = 63;
             // 
             // TreeHeight
             // 
             this.TreeHeight.HeaderText = "Height (m)";
             this.TreeHeight.Name = "TreeHeight";
-            this.TreeHeight.Width = 80;
+            this.TreeHeight.Width = 99;
+            // 
+            // NDemands
+            // 
+            this.NDemands.HeaderText = "N Demands (g/m2)";
+            this.NDemands.Name = "NDemands";
+            this.NDemands.Width = 152;
+            // 
+            // Canopy Widths
+            // 
+            this.CanopyWidths.HeaderText = "Canopy Width (m)";
+            this.CanopyWidths.Name = "CanopyWidth";
+            this.CanopyWidths.Width = 152;
+            // 
+            // 
+            // Tree Leaf Areas
+            // 
+            this.TreeLeafAreas.HeaderText = "Tree Leaf Area (m2)";
+            this.TreeLeafAreas.Name = "TreeLeafArea";
+            this.TreeLeafAreas.Width = 200;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.Grid);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(695, 284);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Spatial Data";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // Grid
             // 
@@ -96,10 +218,12 @@
             this.Grid.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.Grid.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
             this.Grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Grid.Location = new System.Drawing.Point(160, 0);
+            this.Grid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Grid.Location = new System.Drawing.Point(3, 3);
+            this.Grid.Margin = new System.Windows.Forms.Padding(4);
             this.Grid.Name = "Grid";
             this.Grid.RowHeadersVisible = false;
-            this.Grid.Size = new System.Drawing.Size(367, 272);
+            this.Grid.Size = new System.Drawing.Size(689, 278);
             this.Grid.TabIndex = 4;
             this.Grid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.Grid_CellEndEdit);
             this.Grid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.Grid_EditingControlShowing);
@@ -108,31 +232,31 @@
             this.Grid.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Grid_KeyUp);
             this.Grid.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.Grid_PreviewKeyDown);
             // 
-            // pBelowGround
+            // tabPage3
             // 
-            this.pBelowGround.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pBelowGround.Location = new System.Drawing.Point(271, 294);
-            this.pBelowGround.Name = "pBelowGround";
-            this.pBelowGround.PanCursor = System.Windows.Forms.Cursors.Hand;
-            this.pBelowGround.Size = new System.Drawing.Size(256, 269);
-            this.pBelowGround.TabIndex = 3;
-            this.pBelowGround.Text = "plot1";
-            this.pBelowGround.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
-            this.pBelowGround.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
-            this.pBelowGround.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
+            this.tabPage3.Controls.Add(this.gridView1);
+            this.tabPage3.Location = new System.Drawing.Point(4, 25);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(695, 284);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Constants";
+            this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // pAboveGround
+            // gridView1
             // 
-            this.pAboveGround.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.pAboveGround.Location = new System.Drawing.Point(0, 275);
-            this.pAboveGround.Name = "pAboveGround";
-            this.pAboveGround.PanCursor = System.Windows.Forms.Cursors.Hand;
-            this.pAboveGround.Size = new System.Drawing.Size(265, 288);
-            this.pAboveGround.TabIndex = 2;
-            this.pAboveGround.Text = "plot1";
-            this.pAboveGround.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
-            this.pAboveGround.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
-            this.pAboveGround.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
+            this.gridView1.AutoFilterOn = false;
+            this.gridView1.DataSource = null;
+            this.gridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridView1.GetCurrentCell = null;
+            this.gridView1.Location = new System.Drawing.Point(0, 0);
+            this.gridView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gridView1.ModelName = null;
+            this.gridView1.Name = "gridView1";
+            this.gridView1.NumericFormat = null;
+            this.gridView1.ReadOnly = false;
+            this.gridView1.RowCount = 0;
+            this.gridView1.Size = new System.Drawing.Size(695, 284);
+            this.gridView1.TabIndex = 0;
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -160,17 +284,23 @@
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             this.dataGridViewTextBoxColumn4.Width = 59;
             // 
-            // StaticForestrySystemView
+            // TreeProxyView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
-            this.Name = "StaticForestrySystemView";
-            this.Size = new System.Drawing.Size(527, 563);
+            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Name = "TreeProxyView";
+            this.Size = new System.Drawing.Size(703, 693);
             this.Resize += new System.EventHandler(this.ForestryView_Resize);
             this.panel1.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvHeights)).EndInit();
+            this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).EndInit();
+            this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -189,5 +319,15 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.DataGridViewTextBoxColumn TreeHeight;
+        private System.Windows.Forms.DataGridViewTextBoxColumn NDemands;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CanopyWidths;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TreeLeafAreas;
+        private System.Windows.Forms.Splitter splitter1;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.TabPage tabPage3;
+        private GridView gridView1;
     }
 }
