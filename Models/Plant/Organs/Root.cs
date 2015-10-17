@@ -741,7 +741,7 @@ namespace Models.PMF.Organs
                 {
                     i += 1;
                     StructuralNDemand[i] = Layer.PotentialDMAllocation * MinNconc *  _NitrogenDemandSwitch;
-                    double NDeficit = Math.Max(0.0, MaxNconc * (Layer.Wt + Layer.PotentialDMAllocation) - Layer.N);
+                    double NDeficit = Math.Max(0.0, MaxNconc * (Layer.Wt + Layer.PotentialDMAllocation) - (Layer.N + StructuralNDemand[i]));
                     NonStructuralNDemand[i] = Math.Max(0, NDeficit - StructuralNDemand[i]) * _NitrogenDemandSwitch;
                 }
                 TotalNonStructuralNDemand = MathUtilities.Sum(NonStructuralNDemand);

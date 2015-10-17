@@ -829,11 +829,8 @@ namespace Models.PMF
             DM.TotalMetabolicAllocation = MathUtilities.Sum(DM.MetabolicAllocation);
             DM.TotalNonStructuralAllocation = MathUtilities.Sum(DM.NonStructuralAllocation);
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
-            //DM.SinkLimitation = Math.Max(0.0, DM.TotalFixationSupply + DM.TotalRetranslocationSupply + DM.TotalReallocationSupply - DM.Allocated);
             
             // Then check it all adds up
-            //DM.BalanceError = Math.Abs((DM.Allocated + DM.SinkLimitation) - (DM.TotalFixationSupply + DM.TotalRetranslocationSupply + DM.TotalReallocationSupply));
-            //if (DM.BalanceError > 0.0000001 & DM.TotalStructuralDemand > 0)
             if (DM.Allocated > DM.TotalPlantSupply) 
                 throw new Exception("Potential DM allocation by " + this.Name + " exceeds DM supply.   Thats not really possible so something has gone a miss");
             if (DM.Allocated > DM.TotalPlantDemand)
