@@ -13526,7 +13526,7 @@ Simulation results for the combined datasets from the various countries are show
           </Operation>
           <Operation>
             <Date>2013-09-25T00:00:00</Date>
-            <Action>[Irrigation].Apply(46.5);</Action>
+            <Action>[Irrigation].Apply(13);</Action>
           </Operation>
           <Operation>
             <Date>2013-10-01T00:00:00</Date>
@@ -13626,6 +13626,14 @@ Simulation results for the combined datasets from the various countries are show
             <Date>2013-12-17T00:00:00</Date>
             <Action>[Irrigation].Apply(47);</Action>
           </Operation>
+          <Operation>
+            <Date>2013-12-24T00:00:00</Date>
+            <Action>[Irrigation].Apply(49);</Action>
+          </Operation>
+          <Operation>
+            <Date>2013-12-31T00:00:00</Date>
+            <Action>[Irrigation].Apply(20.3);</Action>
+          </Operation>
         </Operations>
         <Operations>
           <Name>Early</Name>
@@ -13665,6 +13673,14 @@ Simulation results for the combined datasets from the various countries are show
             <Date>2013-12-31T00:00:00</Date>
             <Action>[Irrigation].Apply(20.3);</Action>
           </Operation>
+          <Operation>
+            <Date>2013-12-24T00:00:00</Date>
+            <Action>[Irrigation].Apply(49);</Action>
+          </Operation>
+          <Operation>
+            <Date>2013-12-31T00:00:00</Date>
+            <Action>[Irrigation].Apply(20.3);</Action>
+          </Operation>
         </Operations>
         <Operations>
           <Name>Middle</Name>
@@ -13686,7 +13702,7 @@ Simulation results for the combined datasets from the various countries are show
           </Operation>
           <Operation>
             <Date>2013-09-25T00:00:00</Date>
-            <Action>[Irrigation].Apply(46.5);</Action>
+            <Action>[Irrigation].Apply(13);</Action>
           </Operation>
           <Operation>
             <Date>2013-10-01T00:00:00</Date>
@@ -13725,7 +13741,7 @@ Simulation results for the combined datasets from the various countries are show
           </Operation>
           <Operation>
             <Date>2013-09-25T00:00:00</Date>
-            <Action>[Irrigation].Apply(46.5);</Action>
+            <Action>[Irrigation].Apply(13);</Action>
           </Operation>
           <Operation>
             <Date>2013-10-01T00:00:00</Date>
@@ -13795,22 +13811,22 @@ Simulation results for the combined datasets from the various countries are show
               <Name>WheatSoil</Name>
               <LL>
                 <double>0.1</double>
+                <double>0.12</double>
                 <double>0.1</double>
-                <double>0.149</double>
-                <double>0.129</double>
-                <double>0.155</double>
-                <double>0.149</double>
-                <double>0.053</double>
-                <double>0.061</double>
+                <double>0.08</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.1</double>
+                <double>0.1</double>
               </LL>
               <KL>
                 <double>0.06</double>
                 <double>0.06</double>
+                <double>0.1</double>
+                <double>0.1</double>
                 <double>0.05</double>
-                <double>0.08</double>
                 <double>0.03</double>
-                <double>0.01</double>
-                <double>0.01</double>
+                <double>0.02</double>
                 <double>0.01</double>
               </KL>
               <XF>
@@ -13846,13 +13862,13 @@ Simulation results for the combined datasets from the various countries are show
             </BD>
             <AirDry>
               <double>0.05</double>
-              <double>0.15</double>
+              <double>0.12</double>
               <double>0.1</double>
               <double>0.08</double>
-              <double>0.08</double>
-              <double>0.08</double>
-              <double>0.1</double>
               <double>0.06</double>
+              <double>0.08</double>
+              <double>0.1</double>
+              <double>0.1</double>
             </AirDry>
             <LL15>
               <double>0.1</double>
@@ -13860,19 +13876,19 @@ Simulation results for the combined datasets from the various countries are show
               <double>0.1</double>
               <double>0.08</double>
               <double>0.07</double>
-              <double>0.08</double>
+              <double>0.06</double>
               <double>0.1</double>
               <double>0.1</double>
             </LL15>
             <DUL>
+              <double>0.32</double>
               <double>0.35</double>
-              <double>0.33</double>
               <double>0.3</double>
               <double>0.3</double>
               <double>0.28</double>
               <double>0.25</double>
               <double>0.23</double>
-              <double>0.27</double>
+              <double>0.24</double>
             </DUL>
             <SAT>
               <double>0.419</double>
@@ -13882,7 +13898,7 @@ Simulation results for the combined datasets from the various countries are show
               <double>0.33</double>
               <double>0.32</double>
               <double>0.3</double>
-              <double>0.35</double>
+              <double>0.31</double>
             </SAT>
           </Water>
           <SoilWater>
@@ -13922,7 +13938,7 @@ Simulation results for the combined datasets from the various countries are show
               <double>0.4</double>
               <double>0.4</double>
               <double>0.9</double>
-              <double>0.01</double>
+              <double>0.9</double>
             </SWCON>
           </SoilWater>
           <SoilNitrogen>
@@ -14046,12 +14062,12 @@ Simulation results for the combined datasets from the various countries are show
             </NH4>
             <SW>
               <double>0.35</double>
-              <double>0.28</double>
+              <double>0.35</double>
               <double>0.25</double>
               <double>0.25</double>
               <double>0.25</double>
-              <double>0.22</double>
               <double>0.2</double>
+              <double>0.18</double>
               <double>0.2</double>
             </SW>
             <NO3Units>kgha</NO3Units>
@@ -14106,7 +14122,7 @@ Simulation results for the combined datasets from the various countries are show
             </Operation>
             <Operation>
               <Date>2013-09-25T00:00:00</Date>
-              <Action>[Irrigation].Apply(46.5);</Action>
+              <Action>[Irrigation].Apply(43);</Action>
             </Operation>
             <Operation>
               <Date>2013-10-01T00:00:00</Date>
@@ -14190,7 +14206,7 @@ Simulation results for the combined datasets from the various countries are show
         <Manager>
           <Name>ClimateControl</Name>
           <Script>
-            <StartDate>2013-01-01</StartDate>
+            <StartDate>2013-04-01</StartDate>
             <EndDate>2014-05-01</EndDate>
           </Script>
           <Code><![CDATA[using System;
@@ -15182,7 +15198,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Grain.NumberFunction.Value</YFieldName>
+          <YFieldName>ProfileWater</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -17886,9 +17902,9 @@ namespace Models
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if ((Clock.Today.DayOfYear == 120) && (TOS == 1) ||
-			    (Clock.Today.DayOfYear == 150) && (TOS == 2) ||
-			    (Clock.Today.DayOfYear == 177) && (TOS == 3))
+			if (((Clock.Today.DayOfYear == 120) && (TOS == 1)) ||
+			    ((Clock.Today.DayOfYear == 150) && (TOS == 2)) ||
+			    ((Clock.Today.DayOfYear == 177) && (TOS == 3)))
 			{
 				Wheat.Sow(population: 100, cultivar: Cultivar, depth: 30, rowSpacing: 250);
 			}
