@@ -22,10 +22,6 @@ namespace Models.PMF.Phen
         [Link]
         Phenology Phenology = null;
 
-        /// <summary>The leaf</summary>
-        [Link]
-        Leaf Leaf = null;
-
         /// <summary>
         /// The Structure class
         /// </summary>
@@ -48,7 +44,7 @@ namespace Models.PMF.Phen
                 else if (Phenology.InPhase("Vegetative") && fracInCurrent <= 0.9)
                 {
                     if (Structure.BranchNumber <= 0.0)
-                        zadok_stage = 10.0f + Leaf.AppearedCohortNo;
+                        zadok_stage = 10.0f + Structure.MainStemNodeNo;
                     else
                         zadok_stage = 20.0f + Structure.BranchNumber;
                 }
