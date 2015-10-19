@@ -769,7 +769,7 @@ namespace Models.PMF
                 DM.UptakeSupply[i] = Supply.Uptake;
                 DM.FixationSupply[i] = Supply.Fixation;
                 DM.RetranslocationSupply[i] = Supply.Retranslocation;
-                DM.Start += Organs[i].TotalDM;
+                DM.Start += Organs[i].Wt;
             }
 
             DM.TotalReallocationSupply = MathUtilities.Sum(DM.ReallocationSupply);
@@ -829,12 +829,12 @@ namespace Models.PMF
             DM.TotalMetabolicAllocation = MathUtilities.Sum(DM.MetabolicAllocation);
             DM.TotalNonStructuralAllocation = MathUtilities.Sum(DM.NonStructuralAllocation);
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
-            DM.SinkLimitation = Math.Max(0.0, DM.TotalFixationSupply + DM.TotalRetranslocationSupply + DM.TotalReallocationSupply - DM.Allocated);
             
             // Then check it all adds up
-            DM.BalanceError = Math.Abs((DM.Allocated + DM.SinkLimitation) - (DM.TotalFixationSupply + DM.TotalRetranslocationSupply + DM.TotalReallocationSupply));
-            if (DM.BalanceError > 0.0000001 & DM.TotalStructuralDemand > 0)
-                throw new Exception("Mass Balance Error in Photosynthesis DM Allocation");
+            if (Math.Round(DM.Allocated,8) > Math.Round(DM.TotalPlantSupply,8)) 
+                throw new Exception("Potential DM allocation by " + this.Name + " exceeds DM supply.   Thats not really possible so something has gone a miss");
+            if (Math.Round(DM.Allocated,8) > Math.Round(DM.TotalPlantDemand,8))
+                throw new Exception("Potential DM allocation by " + this.Name + " exceeds DM Demand.   Thats not really possible so something has gone a miss");
 
             // Send potential DM allocation to organs to set this variable for calculating N demand
             for (int i = 0; i < Organs.Length; i++)
@@ -866,7 +866,7 @@ namespace Models.PMF
                 //BAT.UptakeSupply[i] = Supply.Uptake;             This is done on DoNutrientUptakeCalculations
                 BAT.FixationSupply[i] = Supply.Fixation;
                 BAT.RetranslocationSupply[i] = Supply.Retranslocation;
-                BAT.Start += Organs[i].TotalN;
+                BAT.Start += Organs[i].N;
             }
 
             BAT.TotalReallocationSupply = MathUtilities.Sum(BAT.ReallocationSupply);
@@ -1070,6 +1070,9 @@ namespace Models.PMF
                 if (string.Compare(Option, "RelativeAllocationSinglePass", true) == 0)
                     RelativeAllocationSinglePass(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
 
+                //Set the sink limitation variable.  BAT.NotAllocated changes after each allocation step so it must be caught here and assigned as sink limitation
+                BAT.SinkLimitation = BAT.NotAllocated;
+                
                 // Then calculate how much resource is fixed from each supplying organ based on relative fixation supply
                 if (BiomassFixed > 0)
                 {
@@ -1247,7 +1250,7 @@ namespace Models.PMF
             //Finally Check Mass balance adds up
             N.End = 0;
             for (int i = 0; i < Organs.Length; i++)
-                N.End += Organs[i].TotalN;
+                N.End += Organs[i].N;
             N.BalanceError = (N.End - (N.Start + N.TotalUptakeSupply + N.TotalFixationSupply));
             if (N.BalanceError > 0.000000001)
                 throw new Exception("N Mass balance violated!!!!.  Daily Plant N increment is greater than N supply");
@@ -1256,7 +1259,7 @@ namespace Models.PMF
                 throw new Exception("N Mass balance violated!!!!  Daily Plant N increment is greater than N demand");
             DM.End = 0;
             for (int i = 0; i < Organs.Length; i++)
-                DM.End += Organs[i].TotalDM;
+                DM.End += Organs[i].Wt;
             DM.BalanceError = (DM.End - (DM.Start + DM.TotalFixationSupply));
             if (DM.BalanceError > 0.0001)
                 throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than Photosynthetic DM supply");
@@ -1304,6 +1307,9 @@ namespace Models.PMF
                     TotalAllocated += NonStructuralAllocation;
                 }
             }
+            //Set the amount of biomass not allocated.  Note, that this value is overwritten following by each arbitration step so if it is to be used correctly 
+            //it must be caught in that step.  Currently only using to catch DM not allocated so we can report as sink limitaiton
+            BAT.NotAllocated = NotAllocated;
         }
         /// <summary>Priorities the allocation.</summary>
         /// <param name="Organs">The organs.</param>
