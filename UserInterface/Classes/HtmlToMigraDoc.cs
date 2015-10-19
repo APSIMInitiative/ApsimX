@@ -274,20 +274,17 @@
             bool isFirst = node.ParentNode.Elements("li").First() == node;
             bool isLast = node.ParentNode.Elements("li").Last() == node;
 
-            // if this is the first item add the ListStart paragraph
-            if (isFirst)
-                section.AddParagraph().Style = "ListStart";
-
             Paragraph listItem = section.AddParagraph();
             listItem.Style = listStyle;
 
             // disable continuation if this is the first list item
             listItem.Format.ListInfo.ContinuePreviousList = !isFirst;
 
-            // if the this is the last item add the ListEnd paragraph
             if (isLast)
-                section.AddParagraph().Style = "ListEnd";
-
+            {
+                var listEnd = section.AddParagraph();
+                listEnd.Style = "ListEnd";
+            }
             return listItem;
         }
 
@@ -448,6 +445,12 @@
             var links = doc.Styles["Hyperlink"];
             links.Font.Color = MigraDoc.DocumentObjectModel.Colors.Blue;
 
+            if (doc.Styles["ListEnd"] == null)
+            {
+                var unorderedlist = doc.AddStyle("ListStart", "Normal");
+                unorderedlist.ParagraphFormat.SpaceAfter = 0;
+            }
+
             if (doc.Styles["UnorderedList"] == null)
             {
                 var unorderedlist = doc.AddStyle("UnorderedList", "Normal");
@@ -466,6 +469,12 @@
                 orderedlist.ParagraphFormat.LeftIndent = "1cm";
                 orderedlist.ParagraphFormat.FirstLineIndent = "-0.5cm";
                 orderedlist.ParagraphFormat.SpaceAfter = 0;
+            }
+
+            if (doc.Styles["ListEnd"] == null)
+            {
+                var unorderedlist = doc.AddStyle("ListEnd", "Normal");
+                unorderedlist.ParagraphFormat.SpaceAfter = 0;
             }
 
             if (doc.Styles["HorizontalRule"] == null)
