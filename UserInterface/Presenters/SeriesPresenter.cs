@@ -413,6 +413,7 @@ namespace UserInterface.Presenters
                 if (data != null)
                 {
                     string[] fieldNames = DataTableUtilities.GetColumnNames(data);
+                    Array.Sort(fieldNames);
                     this.seriesView.X.Values = fieldNames;
                     this.seriesView.Y.Values = fieldNames;
                     this.seriesView.X2.Values = fieldNames;
