@@ -15,6 +15,8 @@
 
     class HtmlToMigraDoc
     {
+        private static bool foundCode = false;
+
         /// <summary>
         /// A list of table column names - used when parsing HTML tables.
         /// </summary>
@@ -87,6 +89,7 @@
                 case "tr": return AddTableRow(node, section);
                 case "td": return AddTableColumn(node, section);
                 case "img": return AddImage(node, section, imagePath);
+                case "code": foundCode = true; return null;
             }
 
             return null;
@@ -327,6 +330,13 @@
         /// <returns>The </returns>
         private static DocumentObject AddText(DocumentObject parentObject, string text)
         {
+            if (foundCode)
+            {
+                AddCodeBlock(parentObject as Paragraph, text);
+                foundCode = false;
+                return null;
+            }
+
             // remove line breaks
             var innerText = text.Replace("\r", string.Empty).Replace("\n", string.Empty);
 
@@ -468,6 +478,43 @@
                 hr.ParagraphFormat.LineSpacing = 0;
                 hr.ParagraphFormat.SpaceBefore = 15;
             }
+            if (doc.Styles["TableParagraph"] == null)
+            {
+                var style = doc.Styles.AddStyle("TableParagraph", "Normal");
+                style.Font.Size = 8;
+                style.ParagraphFormat.SpaceAfter = Unit.FromCentimeter(0);
+                style.Font = new MigraDoc.DocumentObjectModel.Font("Courier New");
+            }
         }
+
+        /// <summary>
+        /// Add a text frame.
+        /// </summary>
+        /// <param name="section"></param>
+        private static void AddCodeBlock(Paragraph section, string text)
+        {
+            Table table = section.Section.AddTable();
+            table.Borders.Width = "1pt";
+            table.Borders.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
+            table.LeftPadding = "5mm";
+            table.Rows.LeftIndent = "0cm";
+
+            var column = table.AddColumn();
+            column.Width = Unit.FromMillimeter(160);
+
+            Row row = table.AddRow();
+
+            string[] lines = text.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+
+            foreach (string line in lines)
+            {
+                int numSpaces = StringUtilities.IndexNotOfAny(line, " ".ToCharArray(), 0);
+                Paragraph p = row[0].AddParagraph();
+                p.AddSpace(numSpaces);
+                p.AddText(line);
+                p.Style = "TableParagraph";
+            }
+        }
+
     }
 }
