@@ -233,6 +233,8 @@ namespace Models.PMF.Organs
                     Demand = DMDemandFunction.Value;
                 else
                     Demand = 1;
+                if (Math.Round(Demand,8) < 0)
+                    throw new Exception(this.Name + " organ is returning a negative DM demand.  Check your parameterisation");
                 return new BiomassPoolType { Structural = Demand };
             }
         }
@@ -242,6 +244,8 @@ namespace Models.PMF.Organs
         {
             get
             {
+                if (Math.Round(Photosynthesis.Value,8) < 0)
+                    throw new Exception(this.Name + " organ is returning a negative DM supply.  Check your parameterisation");
                 return new BiomassSupplyType { Fixation = Photosynthesis.Value, Retranslocation = 0, Reallocation = 0 };
             }
         }
@@ -278,7 +282,12 @@ namespace Models.PMF.Organs
                     double DMDemandTot = DMDemand.Structural + DMDemand.NonStructural + DMDemand.Metabolic;
                     StructuralDemand = NConc.Value * DMDemandTot * _StructuralFraction;
                     NDeficit = Math.Max(0.0, NConc.Value * (Live.Wt + DMDemandTot) - Live.N) - StructuralDemand;
-                } return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
+                }
+                if (Math.Round(StructuralDemand,8) < 0)
+                    throw new Exception(this.Name + " organ is returning a negative structural N Demand.  Check your parameterisation");
+                if (Math.Round(NDeficit,8) < 0)
+                    throw new Exception(this.Name + " organ is returning a negative Non structural N Demand.  Check your parameterisation");
+                return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
             }
         }
 

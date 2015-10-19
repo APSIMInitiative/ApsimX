@@ -396,24 +396,44 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
             <XProperty>[Stover].Fw</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
-        <AirTemperatureFunction>
+        <MinimumFunction>
           <Name>FRGRFunction</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>10</double>
-              <double>25</double>
-              <double>40</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-        </AirTemperatureFunction>
+          <AirTemperatureFunction>
+            <Name>FRGRFunctionTemp</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>10</double>
+                <double>25</double>
+                <double>40</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>1</double>
+                <double>1</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+          </AirTemperatureFunction>
+          <LinearInterpolationFunction>
+            <Name>FRGRFunctionN</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>0.8</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Arbitrator].FN</XProperty>
+          </LinearInterpolationFunction>
+        </MinimumFunction>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <Memo>
@@ -978,9 +998,6 @@ The AboveGround composite biomass object includes Stover and Product organs.
       </Summariser>
       <Cultivar>
         <Name>Barley_Spring</Name>
-        <Alias>
-          <Name>Barley_Spring</Name>
-        </Alias>
         <Command>[Root].MaximumRootDepth.Value = 1000</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.2, 0.0</Command>
@@ -1006,9 +1023,6 @@ The AboveGround composite biomass object includes Stover and Product organs.
       </Cultivar>
       <Cultivar>
         <Name>Wheat_Spring</Name>
-        <Alias>
-          <Name>Barley_Spring</Name>
-        </Alias>
         <Command>[Root].MaximumRootDepth.Value = 1000</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.2, 0.0</Command>
@@ -1034,9 +1048,6 @@ The AboveGround composite biomass object includes Stover and Product organs.
       </Cultivar>
       <Cultivar>
         <Name>Wheat_Autumn</Name>
-        <Alias>
-          <Name>Barley_Spring</Name>
-        </Alias>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3</Command>
@@ -1062,9 +1073,6 @@ The AboveGround composite biomass object includes Stover and Product organs.
       </Cultivar>
       <Cultivar>
         <Name>Potatoes_Long</Name>
-        <Alias>
-          <Name>Barley_Spring</Name>
-        </Alias>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.5, 0.1, 0.0</Command>
@@ -1090,9 +1098,6 @@ The AboveGround composite biomass object includes Stover and Product organs.
       </Cultivar>
       <Cultivar>
         <Name>Green_Peas</Name>
-        <Alias>
-          <Name>Barley_Spring</Name>
-        </Alias>
         <Command>[Root].MaximumRootDepth.Value = 800</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.4, 0.2, 0.0</Command>
@@ -1119,12 +1124,9 @@ The AboveGround composite biomass object includes Stover and Product organs.
       </Cultivar>
       <Cultivar>
         <Name>Maize_Short</Name>
-        <Alias>
-          <Name>Barley_Spring</Name>
-        </Alias>
-        <Command>[Root].MaximumRootDepth.Value = 1500</Command>
+        <Command>[Root].MaximumRootDepth.Value = 2500</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.6, 0.3</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.6, 0.1</Command>
         <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 900</Command>
         <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.b.Value = 180</Command>
         <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
@@ -1147,9 +1149,6 @@ The AboveGround composite biomass object includes Stover and Product organs.
       </Cultivar>
       <Cultivar>
         <Name>Spinich</Name>
-        <Alias>
-          <Name>Barley_Spring</Name>
-        </Alias>
         <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.3, 0.1, 0.0</Command>
@@ -1184,9 +1183,6 @@ Kale has 0oCd duration canopy expanding, senescence and maturity targets with a 
 
 ]]></MemoText>
         </Memo>
-        <Alias>
-          <Name>Barley_Spring</Name>
-        </Alias>
         <Command>[Root].MaximumRootDepth.Value = 3000</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.7, 0.3, 0.1</Command>
@@ -1221,9 +1217,6 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
 
 ]]></MemoText>
         </Memo>
-        <Alias>
-          <Name>Barley_Spring</Name>
-        </Alias>
         <Command>[Root].MaximumRootDepth.Value = 2400</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.7, 0.3, 0.0</Command>
@@ -1249,9 +1242,6 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
       </Cultivar>
       <Cultivar>
         <Name>Dried_Peas</Name>
-        <Alias>
-          <Name>Barley_Spring</Name>
-        </Alias>
         <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.4, 0.2, 0.0</Command>
@@ -1278,9 +1268,6 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
       </Cultivar>
       <Cultivar>
         <Name>Potatoes_Short</Name>
-        <Alias>
-          <Name>Barley_Spring</Name>
-        </Alias>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.5, 0.1, 0.0</Command>
@@ -1304,7 +1291,7 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
       </Cultivar>
-      <CropType>SLURP</CropType>
+      <CropType>SCUM</CropType>
     </Plant>
   </Replacements>
   <DataStore>
@@ -4288,7 +4275,7 @@ namespace Models
       <Manager>
         <Name>MCSPSowingRule</Name>
         <Script>
-          <CultivarName>Green_Peas</CultivarName>
+          <CultivarName>Maize_Short</CultivarName>
           <InitialRootDepth>10</InitialRootDepth>
           <SowingDate>1998-10-14</SowingDate>
         </Script>
@@ -4890,6 +4877,7 @@ namespace Models
           <string>[AutomaticIrrigation].Script.EndDate</string>
           <string>[AutomaticIrrigation].Script.TodayYear</string>
           <string>[SCUM].Arbitrator.FN</string>
+          <string>[SCUM].Arbitrator.NSupply</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -6343,11 +6331,11 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
           </Operation>
           <Operation>
             <Date>2012-11-23T00:00:00</Date>
-            <Action>[Irrigation].Apply(20);</Action>
+            <Action>[Irrigation].Apply(25);</Action>
           </Operation>
           <Operation>
             <Date>2012-11-29T00:00:00</Date>
-            <Action>[Irrigation].Apply(20);</Action>
+            <Action>[Irrigation].Apply(25);</Action>
           </Operation>
           <Operation>
             <Date>2012-12-20T00:00:00</Date>
@@ -6508,9 +6496,9 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 <double>0.1</double>
                 <double>0.1</double>
                 <double>0.1</double>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>0.1</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
               </KL>
               <XF>
                 <double>1</double>
@@ -6595,7 +6583,7 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
               <double>300</double>
             </Thickness>
             <NO3>
-              <double>16.230000000000008</double>
+              <double>16.2</double>
               <double>10.759999999999987</double>
               <double>7.8300000000000045</double>
               <double>6.8499999999999792</double>
@@ -7084,7 +7072,7 @@ namespace Models
           <Name>SetSCUMYield</Name>
           <Script>
             <OverRidePath>SCUM.Product.ExpectedYield.Value</OverRidePath>
-            <OverRideInterger>1400</OverRideInterger>
+            <OverRideInterger>1800</OverRideInterger>
             <ChangeDate>2012-10-23</ChangeDate>
           </Script>
           <Code><![CDATA[using System;
@@ -7196,6 +7184,8 @@ namespace Models
             <string>[SCUM].Stover.Live.NConc</string>
             <string>[SCUM].Stover.Live.NConc</string>
             <string>[SCUM].Product.Live.NConc</string>
+            <string>[SCUM].Stover.FRGRFunction.Value</string>
+            <string>[SCUM].Stover.Fw</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -7656,24 +7646,6 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.Live.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Stover</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
             <ColourArgb>-8388608</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
@@ -7706,24 +7678,6 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>Total</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
             <Name>Root</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
@@ -7742,7 +7696,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>Husk</Name>
+            <Name>Total</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -7751,12 +7705,30 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Demand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
             <Line>Dot</Line>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Husk.Live.Wt</YFieldName>
+            <YFieldName>SCUM.Arbitrator.DMDemand</YFieldName>
             <ShowInLegend>true</ShowInLegend>
-            <Cumulative>false</Cumulative>
+            <Cumulative>true</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
@@ -9697,6 +9669,45 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
+        <Graph>
+          <Name>RootDepth</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>SCUM.Root.Depth</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Actual Radiation Use Efficiency (g/MJ)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
       </Folder>
       <Folder>
         <Name>Sensibility</Name>
@@ -9715,7 +9726,7 @@ namespace Models
             <Line>Solid</Line>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Arbitrator.NDemand</YFieldName>
+            <YFieldName>SCUM.Arbitrator.DMNutrientLimitation</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -9755,6 +9766,123 @@ namespace Models
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>SCUM.Arbitrator.NSupply</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Leaf Area Index (m2/m2)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>LeafNConc</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>SCUM.Stover.Live.NConc</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Leaf Area Index (m2/m2)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>FRGR</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>SCUM.Stover.FRGRFunction.Value</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Leaf Area Index (m2/m2)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>FW</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>SCUM.Stover.Fw</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>

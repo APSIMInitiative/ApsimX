@@ -431,13 +431,16 @@ namespace Models.PMF
         {
             get
             {
-                
                 if (Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
-                        if ((Plant.Phenology.Emerged == true) && (N.TotalPlantDemand > 0) && (N.TotalPlantSupply > 0))
-                            return Math.Min(1,N.TotalPlantSupply/N.TotalPlantDemand);
+                        if (N != null)
+                        {
+                            if ((Plant.Phenology.Emerged == true) && (N.TotalPlantDemand > 0) && (N.TotalPlantSupply > 0))
+                                return Math.Min(1, N.TotalPlantSupply / N.TotalPlantDemand);
+                            else return 1;
+                        }
                         else return 1;
                     }
                     else

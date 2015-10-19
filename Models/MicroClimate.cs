@@ -724,6 +724,7 @@ namespace Models
             SetupCropTypes("raphanus_raphanistrum", "Crop");
             SetupCropTypes("ryegrass", "Grass");
             SetupCropTypes("saltbush", "Tree");
+            SetupCropTypes("SCUM", "Maize");
             SetupCropTypes("SimpleTree", "Tree");
             SetupCropTypes("Slurp", "Crop");
             SetupCropTypes("sorghum", "Crop");
