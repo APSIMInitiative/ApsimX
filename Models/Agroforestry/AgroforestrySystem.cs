@@ -90,9 +90,9 @@ namespace Models.Agroforestry
         /// </summary>
         /// <param name="z">The zone.</param>
         /// <returns></returns>
-        public double GetDistanceFromTrees(Zone z)
+        public double[] GetDistanceFromTrees(Zone z)
         {
-            return tree.GetDistanceFromTrees(z);
+            return tree.GetDistanceFromTrees(z, true);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Models.Agroforestry
                         Urel = 1;
                     else
                     {
-                        tree.H = GetDistanceFromTrees(z) / tree.heightToday;
+                        tree.H = GetDistanceFromTrees(z)[1] / tree.heightToday; //use distance at zone midpoint.
                         if (tree.H < 6)
                             Urel = UrelMin + (1 - UrelMin) / 2 - tree.H / 6 * (1 - UrelMin) / 2;
                         else if (tree.H < 6.1)

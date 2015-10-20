@@ -199,17 +199,26 @@ namespace Models.Agroforestry
         /// <summary>
         /// Return the distance from the tree for a given zone. The tree is assumed to be in the first Zone.
         /// </summary>
-        /// <param name="z">Zone</param>
-        /// <returns>Distance from a static tree</returns>
-        public double GetDistanceFromTrees(Zone z)
+        /// <param name="z">The Zone.</param>
+        /// <param name="treeInCentre">I the tree in the centre of the Zone or on the edge?</param>
+        /// <returns>Distance from a static tree for both zone boundaries and the zone midpoint {near, mid, far}.</returns>
+        public double[] GetDistanceFromTrees(Zone z, bool treeInCentre)
         {
             double D = 0;
             foreach (Zone zone in ZoneList)
             {
                 if (zone is RectangularZone)
                 {
-                    if (zone == ZoneList[0])
-                        D += 0; // the tree is at distance 0
+                    if (zone == ZoneList[0]) // the tree is at distance 0
+                    {
+                        if (zone == z)
+                            return new double[] { 0, 0, 0 };
+
+                        if (treeInCentre) //add tree offset
+                            D = (ZoneList[0] as RectangularZone).Width / 2;
+                        else
+                            D = (ZoneList[0] as RectangularZone).Width;
+                    }
                     else
                         D += (zone as RectangularZone).Width; 
                 }
@@ -219,7 +228,12 @@ namespace Models.Agroforestry
                     throw new ApsimXException(this, "Cannot calculate distance for trees for zone of given type.");
 
                 if (zone == z)
-                    return D;
+                {
+                    if(zone is RectangularZone)
+                        return new double[] { D - (zone as RectangularZone).Width, D - (zone as RectangularZone).Width / 2, D };
+                    if (zone is CircularZone)
+                        return new double[] { D - (zone as CircularZone).Width, D - (zone as CircularZone).Width / 2, D };
+                }
             }
         
             throw new ApsimXException(this, "Could not find zone called " + z.Name);
@@ -250,7 +264,7 @@ namespace Models.Agroforestry
         private double ZoneDistanceInTreeHeights(Zone z)
         {
             double treeHeight = GetHeightToday();
-            double distFromTree = GetDistanceFromTrees(z);
+            double distFromTree = GetDistanceFromTrees(z, true)[1]; // use distance at midpoint
 
             return distFromTree / treeHeight;
         }

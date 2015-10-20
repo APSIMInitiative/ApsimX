@@ -26,9 +26,9 @@ namespace Models.Zones
         public double Width { get; set; }
 
         /// <summary>
-        /// Returns the distance from edge of system
+        /// Returns the distance from both edges of a zone and the midpoint.
         /// </summary>
-        public double Distance
+        public double[] Distance
         {
             get
             {
