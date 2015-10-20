@@ -342,7 +342,7 @@ The model consists of:
           </LinearInterpolationFunction>
           <Constant>
             <Name>BasePhyllochron</Name>
-            <Value>120</Value>
+            <Value>100</Value>
           </Constant>
           <Memo>
             <Name>Rational</Name>
@@ -1021,14 +1021,14 @@ The model consists of:
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>9</double>
+                <double>1</double>
               </X>
               <Y>
-                <double>20000</double>
-                <double>20000</double>
+                <double>22000</double>
+                <double>22000</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>SpecificLeafAreaMin</Name>
@@ -1036,14 +1036,16 @@ The model consists of:
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>9</double>
+                <double>0.5</double>
+                <double>1</double>
               </X>
               <Y>
                 <double>10000</double>
-                <double>10000</double>
+                <double>20000</double>
+                <double>20000</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>InitialNConc</Name>
@@ -1078,47 +1080,27 @@ The model consists of:
             </XYPairs>
             <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
           </LinearInterpolationFunction>
-          <MultiplyFunction>
+          <LinearInterpolationFunction>
             <Name>MaxArea</Name>
-            <LinearInterpolationFunction>
-              <Name>Length</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>1</double>
-                  <double>10</double>
-                  <double>15</double>
-                </X>
-                <Y>
-                  <double>100</double>
-                  <double>270</double>
-                  <double>200</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Structure].MainStemNodeNo</XProperty>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>Width</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>1</double>
-                  <double>9</double>
-                  <double>15</double>
-                </X>
-                <Y>
-                  <double>4</double>
-                  <double>14</double>
-                  <double>22</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Structure].MainStemNodeNo</XProperty>
-            </LinearInterpolationFunction>
-            <Constant>
-              <Name>TaperFactor</Name>
-              <Value>0.61</Value>
-            </Constant>
-          </MultiplyFunction>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>0.3</double>
+                <double>0.5</double>
+                <double>0.7</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>300</double>
+                <double>1000</double>
+                <double>1600</double>
+                <double>2600</double>
+                <double>2600</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Structure].RelativeNodeApperance</XProperty>
+          </LinearInterpolationFunction>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -2426,6 +2408,8 @@ namespace Models
         </Manager>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -2466,79 +2450,39 @@ namespace Models
       <Slope>0</Slope>
     </Simulation>
     <Graph>
-      <Name>Grain yield</Name>
+      <Name>Leaf Area Index</Name>
       <Series>
-        <Name>Series 0</Name>
+        <Name>Predicted</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
         <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Wheat.Grain.Wt</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Observed Yield</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Predicted Yield</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>Biomass</Name>
-      <Series>
-        <Name>Series 0</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+        <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Series2</Name>
+        <Name>Observed</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+        <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2564,47 +2508,46 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>LAI</Name>
+      <Name>Biomass</Name>
       <Series>
-        <Name>Series 0</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-1663232</ColourArgb>
-        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Wheat.Leaf.LAI</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-        <Filter />
-      </Series>
-      <Series>
-        <Name>Series2</Name>
+        <Name>Predicted</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
-        <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Summariser.AboveGround.Wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Observed</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Wheat.Leaf.LAI</YFieldName>
+        <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Axis>
         <Type>Bottom</Type>
-        <Title>Observed Yield</Title>
+        <Title>Observed Biomass</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -2612,7 +2555,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Predicted Yield</Title>
+        <Title>Predicted Biomass</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -3164,6 +3107,8 @@ namespace Models
         </MicroClimate>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -3178,6 +3123,7 @@ namespace Models
             <string>Wheat.Grain.Live.N</string>
             <string>Wheat.Leaf.LAI</string>
             <string>Wheat.Leaf.Live.Wt</string>
+            <string>Wheat.Leaf.Dead.Wt</string>
             <string>Wheat.Leaf.Live.N</string>
             <string>Wheat.Spike.Wt</string>
             <string>Wheat.Spike.N</string>
@@ -3188,6 +3134,7 @@ namespace Models
             <string>[Wheat].Leaf.Fw</string>
             <string>[Wheat].Leaf.Fn</string>
             <string>[Wheat].Summariser.Total.Wt</string>
+            <string>Wheat.Structure.TotalStemPopn</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -3203,6 +3150,64 @@ namespace Models
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
+    <Graph>
+      <Name>Leaf Area Index</Name>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Leaf.LAI</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Observed</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>Observed</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Leaf.LAI</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
     <Graph>
       <Name>Biomass</Name>
       <Series>
@@ -3374,6 +3379,238 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>LeafWt</Name>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Observed</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>Observed</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>DeadLeafWt</Name>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Leaf.Dead.Wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Observed</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>Observed</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Leaf.Dead.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>StemWt</Name>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Stem.Live.Wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Observed</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>Observed</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Stem.Live.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>TillerNumber</Name>
+      <Series>
+        <Name>PredictedTLNo</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-2793984</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ObservedTLNo</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-2793984</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>TimeSeries</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Leaf Number</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
@@ -4134,6 +4371,8 @@ private void OnDoManagement(object sender, EventArgs e)
         </Manager>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -5150,6 +5389,8 @@ private void OnDoManagement(object sender, EventArgs e)
         </MicroClimate>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -6158,6 +6399,8 @@ private void OnDoManagement(object sender, EventArgs e)
         </Manager>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -7865,6 +8108,8 @@ namespace Models
         </MicroClimate>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -8017,6 +8262,64 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>LeafWt1</Name>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Observed</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <TableName>Observed</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Experiment>
   <Experiment>
@@ -9017,6 +9320,8 @@ namespace Models
         </Manager>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -10288,6 +10593,8 @@ namespace Models
         </Manager>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -11427,6 +11734,8 @@ private void OnDoManagement(object sender, EventArgs e)
         </Operations>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -13333,6 +13642,8 @@ private void OnDoManagement(object sender, EventArgs e)
         </Manager>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -13436,7 +13747,7 @@ Simulation results for the combined datasets from the various countries are show
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
+      <ColourArgb>-1663232</ColourArgb>
       <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
       <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
       <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -14527,6 +14838,8 @@ namespace Models
         </Manager>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
@@ -18019,6 +18332,8 @@ namespace Models
         </MicroClimate>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -18667,6 +18982,8 @@ namespace Models
         </MicroClimate>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -19361,6 +19678,8 @@ namespace Models
         </MicroClimate>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -20110,6 +20429,8 @@ namespace Models
         </MicroClimate>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
