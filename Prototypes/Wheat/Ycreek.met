@@ -8,8 +8,8 @@ tav =  15.0   ! mean annual air temperature (oC)
 
 !windspeed = 1.5
 
-Year   Day   Radn   maxt   mint   rain   vp   windrun   windspeed   LAI   Biomass   Height
-()   ()   (MJ)   (oC)   (oC)   (mm)   ()   (km/d)   (m/s)   ()   (kg/ha)   (mm)
+Year   Day   Radn    maxt    mint   rain    vp    windrun   Wind   LAI   Biomass   Height
+ ()     ()   (MJ)    (oC)    (oC)   (mm)    ()    (km/d)   (m/s)   ()   (kg/ha)   (mm)
 2001   170   11.34   18.20   3.90   0.00   10.36   136.10   1.50   0.00   0.00   0.00
 2001   171   12.63   16.00   0.90   0.00   9.14   114.60   1.25   0.00   0.00   0.00
 2001   172   4.19   9.80   -2.00   0.00   8.34   99.90   1.10   0.00   0.00   0.00
