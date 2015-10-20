@@ -23,7 +23,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.SummaryView")]
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
-    [ValidParent(typeof(Simulation))]
+    [ValidParent(ParentType=typeof(Simulation))]
     public class Summary : Model, ISummary
     {
         /// <summary>

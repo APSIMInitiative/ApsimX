@@ -11,7 +11,7 @@ namespace Models.PMF.OldPlant
     /// Nitrogen stress model for plant
     /// </summary>
     [Serializable]
-    [ValidParent(typeof(Plant15))]
+    [ValidParent(ParentType = typeof(Plant15))]
     public class NStress : Model
     {
         /// <summary>The leaf</summary>

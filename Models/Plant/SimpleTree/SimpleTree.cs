@@ -17,7 +17,7 @@ namespace Models.PMF
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(typeof(Zone))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class SimpleTree : Model, ICrop, ICanopy, IUptake
     {
         #region Canopy interface

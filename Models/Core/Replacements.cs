@@ -10,7 +10,7 @@ namespace Models.Core
     /// <summary>
     /// A replacements model
     /// </summary>
-    [ValidParent(typeof(Simulations))]
+    [ValidParent(ParentType=typeof(Simulations))]
     [Serializable]
     public class Replacements : Model
     {

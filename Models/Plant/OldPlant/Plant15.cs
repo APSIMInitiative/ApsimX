@@ -109,7 +109,7 @@ namespace Models.PMF.OldPlant
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(typeof(Zone))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class Plant15 : ModelCollectionFromResource, ICrop, IUptake
     {
         /// <summary>The phenology</summary>

@@ -20,7 +20,7 @@ namespace Models.Graph
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(typeof(Series))]
+    [ValidParent(ParentType = typeof(Series))]
     public class Regression : Model, IGraphable
     {
         /// <summary>The stats from the regression</summary>

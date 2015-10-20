@@ -14,7 +14,8 @@ namespace Models.Factorial
     /// This class represents a series of paths and the same number of object values.
     /// Its sole purpose is to apply the object values to the model represented by the paths.
     /// </summary>
-    [ValidParent(ParentModels = new Type[] { typeof(Factor), typeof(FactorValue) })]
+    [ValidParent(ParentType = typeof(Factor))]
+    [ValidParent(ParentType = typeof(FactorValue))]
     public class FactorValue
     {
         /// <summary>

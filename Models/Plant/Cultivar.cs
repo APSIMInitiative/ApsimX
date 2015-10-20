@@ -25,7 +25,8 @@ namespace Models.PMF
     [Serializable]
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.CultivarPresenter")]
-    [ValidParent(ParentModels=new Type[] { typeof(Plant15), typeof(Plant) })]
+    [ValidParent(ParentType = typeof(Plant))]
+    [ValidParent(ParentType = typeof(Plant15))]
     public class Cultivar : Model
     {
         /// <summary>

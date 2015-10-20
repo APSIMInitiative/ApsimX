@@ -67,7 +67,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.TestView")]
     [PresenterName("UserInterface.Presenters.TestPresenter")]
-    [ValidParent(typeof(Simulations))]
+    [ValidParent(ParentType=typeof(Simulations))]
     public class Tests : Model
     {
         /// <summary>Gets or sets all tests.</summary>

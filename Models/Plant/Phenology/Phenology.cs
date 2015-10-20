@@ -105,7 +105,8 @@ namespace Models.PMF.Phen
     /// 
     /// </remarks>
     [Serializable]
-    [ValidParent(ParentModels = new Type[] { typeof(Plant), typeof(Plant15) })]
+    [ValidParent(ParentType = typeof(Plant))]
+    [ValidParent(ParentType = typeof(Plant15))]
     public class Phenology : Model
     {
         #region Links

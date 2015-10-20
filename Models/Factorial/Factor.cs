@@ -21,7 +21,8 @@ namespace Models.Factorial
     [Serializable]
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.FactorPresenter")]
-    [ValidParent(ParentModels = new Type[] { typeof(Factorial.Factors), typeof(Factorial.Factor) })]
+    [ValidParent(ParentType = typeof(Factors))]
+    [ValidParent(ParentType = typeof(Factor))]
     public class Factor : Model
     {
         /// <summary>

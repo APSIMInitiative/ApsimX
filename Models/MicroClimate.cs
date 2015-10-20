@@ -106,7 +106,8 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentModels = new Type[] { typeof(Simulation), typeof(Zone) })]
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
     public partial class MicroClimate : Model
     {
         /// <summary>The clock</summary>
