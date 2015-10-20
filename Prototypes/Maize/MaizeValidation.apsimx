@@ -446,11 +446,6 @@ Though tillering is common in some maize varieties under certain agronomic condi
         </Constant>
         <Constant>
           <Name>MaximumGrainsPerCob</Name>
-          <Constant>
-            <Name>MaximumGrainsPerCob</Name>
-            <Value>410</Value>
-            <Units>number</Units>
-          </Constant>
           <Value>700</Value>
           <Units>number</Units>
         </Constant>
@@ -622,7 +617,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
               </X>
               <Y>
                 <double>0</double>
-                <double>0.5</double>
+                <double>0.6</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
@@ -1201,7 +1196,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>1.95</Value>
+            <Value>2.3</Value>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
@@ -1293,12 +1288,14 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>0</double>
-                <double>0.45</double>
+                <double>0.2</double>
+                <double>0.5</double>
+                <double>1</double>
               </X>
               <Y>
-                <double>0.65</double>
-                <double>0.65</double>
+                <double>0.7</double>
+                <double>0.5</double>
+                <double>0.4</double>
               </Y>
             </XYPairs>
             <XProperty>[Maize].SowingData.RowSpacing</XProperty>
@@ -1627,12 +1624,14 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
                 <Name>XYPairs</Name>
                 <X>
                   <double>0</double>
-                  <double>0.5</double>
+                  <double>0.2</double>
+                  <double>0.8</double>
                   <double>1</double>
                 </X>
                 <Y>
                   <double>0</double>
-                  <double>0</double>
+                  <double>2</double>
+                  <double>16</double>
                   <double>16</double>
                 </Y>
               </XYPairs>
@@ -1826,6 +1825,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].GrainFilling.Target.Value = 530</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
         <Command>[Grain].MaximumGrainsPerCob.Value = 405</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.375</Command>
       </Cultivar>
       <Cultivar>
         <Name>Dekalb_XL82</Name>
@@ -2971,9 +2971,9 @@ namespace Models
         <Slope>0</Slope>
       </Simulation>
       <Graph>
-        <Name>GrainWt N Response</Name>
+        <Name>GrainWt Population Response</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2983,15 +2983,15 @@ namespace Models
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
-          <TableName>HarvestReport</TableName>
-          <XFieldName>Maize.Population</XFieldName>
+          <TableName>HarvestData</TableName>
+          <XFieldName>Population</XFieldName>
           <YFieldName>GrainWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Series2</Name>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3001,8 +3001,8 @@ namespace Models
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
-          <TableName>HarvestData</TableName>
-          <XFieldName>Population</XFieldName>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Maize.Population</XFieldName>
           <YFieldName>GrainWt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -3029,9 +3029,9 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>GrainNo N Response</Name>
+        <Name>GrainNo Population Response</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3041,15 +3041,15 @@ namespace Models
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
-          <TableName>HarvestReport</TableName>
-          <XFieldName>Maize.Population</XFieldName>
+          <TableName>HarvestData</TableName>
+          <XFieldName>Population</XFieldName>
           <YFieldName>GPSM</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Series2</Name>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3059,8 +3059,8 @@ namespace Models
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
-          <TableName>HarvestData</TableName>
-          <XFieldName>Population</XFieldName>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Maize.Population</XFieldName>
           <YFieldName>GPSM</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -3087,9 +3087,9 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>GrainSize N Response</Name>
+        <Name>GrainSize Population Response</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3099,15 +3099,15 @@ namespace Models
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
-          <TableName>HarvestReport</TableName>
-          <XFieldName>Maize.Population</XFieldName>
+          <TableName>HarvestData</TableName>
+          <XFieldName>Population</XFieldName>
           <YFieldName>GrainSize</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Series2</Name>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3117,8 +3117,8 @@ namespace Models
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
-          <TableName>HarvestData</TableName>
-          <XFieldName>Population</XFieldName>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Maize.Population</XFieldName>
           <YFieldName>GrainSize</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -3880,15 +3880,15 @@ namespace Models
                 <double>1.3</double>
               </NO3>
               <NH4>
-                <double>2.7</double>
-                <double>2.4</double>
-                <double>1.7</double>
-                <double>1.5</double>
-                <double>1.3</double>
-                <double>1.3</double>
-                <double>1.3</double>
-                <double>1.1</double>
-                <double>1.2</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
               </NH4>
               <NO3Units>ppm</NO3Units>
               <NH4Units>ppm</NH4Units>
@@ -4043,9 +4043,9 @@ namespace Models
         <Slope>0</Slope>
       </Simulation>
       <Graph>
-        <Name>GrainWt N Response</Name>
+        <Name>GrainWt Population Response</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4055,15 +4055,15 @@ namespace Models
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
-          <TableName>HarvestReport</TableName>
-          <XFieldName>Maize.Population</XFieldName>
+          <TableName>HarvestData</TableName>
+          <XFieldName>Population</XFieldName>
           <YFieldName>GrainWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Series2</Name>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4073,8 +4073,8 @@ namespace Models
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
-          <TableName>HarvestData</TableName>
-          <XFieldName>Population</XFieldName>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Maize.Population</XFieldName>
           <YFieldName>GrainWt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -4101,9 +4101,9 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>GrainNo N Response</Name>
+        <Name>GrainNo Population Response</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4113,15 +4113,15 @@ namespace Models
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
-          <TableName>HarvestReport</TableName>
-          <XFieldName>Maize.Population</XFieldName>
+          <TableName>HarvestData</TableName>
+          <XFieldName>Population</XFieldName>
           <YFieldName>GPSM</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Series2</Name>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4131,8 +4131,8 @@ namespace Models
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
-          <TableName>HarvestData</TableName>
-          <XFieldName>Population</XFieldName>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Maize.Population</XFieldName>
           <YFieldName>GPSM</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -4159,9 +4159,9 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>GrainSize N Response</Name>
+        <Name>GrainSize Population Response</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4171,15 +4171,15 @@ namespace Models
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
-          <TableName>HarvestReport</TableName>
-          <XFieldName>Maize.Population</XFieldName>
+          <TableName>HarvestData</TableName>
+          <XFieldName>Population</XFieldName>
           <YFieldName>GrainSize</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Series2</Name>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4189,9 +4189,67 @@ namespace Models
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <Line>Solid</Line>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Maize.Population</XFieldName>
+          <YFieldName>GrainSize</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>LAImax Population Response</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
           <TableName>HarvestData</TableName>
           <XFieldName>Population</XFieldName>
-          <YFieldName>GrainSize</YFieldName>
+          <YFieldName>LAImax</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Maize.Population</XFieldName>
+          <YFieldName>LAImax</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -15653,9 +15711,27 @@ namespace Models
         <Slope>0</Slope>
       </Simulation>
       <Graph>
-        <Name>GrainWt N Response</Name>
+        <Name>GrainWt Population Response</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>HarvestData</TableName>
+          <XFieldName>Population</XFieldName>
+          <YFieldName>GrainWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -15667,24 +15743,6 @@ namespace Models
           <Line>Solid</Line>
           <TableName>HarvestReport</TableName>
           <XFieldName>Maize.Population</XFieldName>
-          <YFieldName>GrainWt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series2</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>Circle</Marker>
-          <Line>None</Line>
-          <TableName>HarvestData</TableName>
-          <XFieldName>Population</XFieldName>
           <YFieldName>GrainWt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -15711,9 +15769,27 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>GrainNo N Response</Name>
+        <Name>GrainNo Population Response</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>HarvestData</TableName>
+          <XFieldName>Population</XFieldName>
+          <YFieldName>GPSM</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -15726,12 +15802,34 @@ namespace Models
           <TableName>HarvestReport</TableName>
           <XFieldName>Maize.Population</XFieldName>
           <YFieldName>GPSM</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Biomass Population Response</Name>
         <Series>
-          <Name>Series2</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -15739,11 +15837,29 @@ namespace Models
           <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>Circle</Marker>
+          <Marker>FilledCircle</Marker>
           <Line>None</Line>
           <TableName>HarvestData</TableName>
           <XFieldName>Population</XFieldName>
-          <YFieldName>GPSM</YFieldName>
+          <YFieldName>Biomass</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Maize.Population</XFieldName>
+          <YFieldName>Biomass</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -16719,9 +16835,27 @@ namespace Models
         <Slope>0</Slope>
       </Simulation>
       <Graph>
-        <Name>GrainWt N Response</Name>
+        <Name>GrainWt Population Response</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>HarvestData</TableName>
+          <XFieldName>Population</XFieldName>
+          <YFieldName>GrainWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -16733,24 +16867,6 @@ namespace Models
           <Line>Solid</Line>
           <TableName>HarvestReport</TableName>
           <XFieldName>Maize.Population</XFieldName>
-          <YFieldName>GrainWt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series2</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>Circle</Marker>
-          <Line>None</Line>
-          <TableName>HarvestData</TableName>
-          <XFieldName>Population</XFieldName>
           <YFieldName>GrainWt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -16777,38 +16893,38 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>GrainNo N Response</Name>
+        <Name>GrainNo Population Response</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
-          <TableName>HarvestReport</TableName>
-          <XFieldName>Maize.Population</XFieldName>
+          <TableName>HarvestData</TableName>
+          <XFieldName>Population</XFieldName>
           <YFieldName>GPSM</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Series2</Name>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>Circle</Marker>
-          <Line>None</Line>
-          <TableName>HarvestData</TableName>
-          <XFieldName>Population</XFieldName>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Maize.Population</XFieldName>
           <YFieldName>GPSM</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
@@ -16831,6 +16947,122 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Biomass Population Response</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>HarvestData</TableName>
+          <XFieldName>Population</XFieldName>
+          <YFieldName>Biomass</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Maize.Population</XFieldName>
+          <YFieldName>Biomass</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>GrainSize Population Response</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <TableName>HarvestData</TableName>
+          <XFieldName>Population</XFieldName>
+          <YFieldName>GrainSize</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Maize.Population</XFieldName>
+          <YFieldName>GrainSize</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
@@ -26711,7 +26943,7 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
         <Name>Lincoln2012</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Prototypes\Maize\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
