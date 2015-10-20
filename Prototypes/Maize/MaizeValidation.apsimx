@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Memo>
@@ -444,6 +444,16 @@ Though tillering is common in some maize varieties under certain agronomic condi
           <Value>0.3</Value>
           <Units>g</Units>
         </Constant>
+        <Constant>
+          <Name>MaximumGrainsPerCob</Name>
+          <Constant>
+            <Name>MaximumGrainsPerCob</Name>
+            <Value>410</Value>
+            <Units>number</Units>
+          </Constant>
+          <Value>700</Value>
+          <Units>number</Units>
+        </Constant>
         <PhaseLookup>
           <Name>DMDemandFunction</Name>
           <PhaseLookupValue>
@@ -597,40 +607,71 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <MultiplyFunction>
           <Name>NumberFunction</Name>
           <VariableReference>
-            <Name>CobNumber</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
+            <Name>PotentialGrainNumber</Name>
+            <VariableName>[MaximumGrainsPerCob].Value</VariableName>
           </VariableReference>
           <LinearInterpolationFunction>
-            <Name>KernalsPerCob</Name>
-            <Memo>
-              <Name>memo</Name>
-              <MemoText><![CDATA[
-The number of kernals per cob is likely to vary with individual maize cultivars.  Therefore, the relationship shown here is indicative only.  See the descriptions of individual cultivars for more detail on kernal number determination used by the maize model.
-]]></MemoText>
-            </Memo>
+            <Name>GrowthRateFactor</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>0</double>
-                <double>25</double>
+                <double>0.55</double>
+                <double>3.3</double>
+                <double>6.6</double>
+                <double>10</double>
               </X>
               <Y>
                 <double>0</double>
-                <double>550</double>
+                <double>0.5</double>
+                <double>1</double>
+                <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Rachis].CobSize.Value</XProperty>
+            <XProperty>[GrowthRateGrainDevelopment].Value</XProperty>
           </LinearInterpolationFunction>
-          <Constant>
-            <Name>GrainsPerKernal</Name>
-            <Value>1</Value>
-            <Units>/kernal</Units>
-          </Constant>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Maize].Population</VariableName>
+          </VariableReference>
         </MultiplyFunction>
         <ExpressionFunction>
           <Name>YieldBuPerAcre</Name>
           <Expression>[Grain].Live.Wt * 10 * 56 * 0.4536 * 2.471</Expression>
         </ExpressionFunction>
+        <AccumulateFunction>
+          <Name>GrowthGrainDevelopment</Name>
+          <VariableReference>
+            <Name>DailyBiomassProduction</Name>
+            <VariableName>[Arbitrator].DMSupply</VariableName>
+          </VariableReference>
+          <StartStageName>Flag_Leaf</StartStageName>
+          <EndStageName>StartGrainFill</EndStageName>
+        </AccumulateFunction>
+        <AccumulateFunction>
+          <Name>DaysGrainDevelopment</Name>
+          <Constant>
+            <Name>LenthOfADay</Name>
+            <Value>1</Value>
+            <Units>days/day</Units>
+          </Constant>
+          <StartStageName>Flag_Leaf</StartStageName>
+          <EndStageName>StartGrainFill</EndStageName>
+        </AccumulateFunction>
+        <DivideFunction>
+          <Name>GrowthRateGrainDevelopment</Name>
+          <VariableReference>
+            <Name>AccumulatedGrowth</Name>
+            <VariableName>[GrowthGrainDevelopment].Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>GrowthDuration</Name>
+            <VariableName>[DaysGrainDevelopment].Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Maize].Population</VariableName>
+          </VariableReference>
+        </DivideFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
         <RipeStage />
@@ -964,12 +1005,12 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>0</double>
-                <double>0.6</double>
+                <double>0.1</double>
+                <double>0.7</double>
                 <double>1</double>
               </X>
               <Y>
-                <double>0.1</double>
+                <double>0</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
@@ -1260,7 +1301,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
                 <double>0.65</double>
               </Y>
             </XYPairs>
-            <XProperty>[Leaf].LAI</XProperty>
+            <XProperty>[Maize].SowingData.RowSpacing</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>WaterStressImpact</Name>
@@ -1361,7 +1402,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>0</double>
+                <double>0.3</double>
                 <double>0.8</double>
               </X>
               <Y>
@@ -1393,13 +1434,17 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.2</Value>
+          <Value>0.3</Value>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
           <Value>0.01</Value>
           <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <Value>0.1</Value>
         </Constant>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
@@ -1444,7 +1489,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </Constant>
           <Constant>
             <Name>MaximumOrganWt</Name>
-            <Value>25</Value>
+            <Value>23</Value>
           </Constant>
           <VariableReference>
             <Name>OrganPopulation</Name>
@@ -1456,10 +1501,10 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>0.7</double>
+                <double>0.35</double>
               </X>
               <Y>
-                <double>0.4</double>
+                <double>0</double>
                 <double>1</double>
               </Y>
             </XYPairs>
@@ -1500,8 +1545,8 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <XYPairs>
             <Name>XYPairs</Name>
             <X>
-              <double>0</double>
-              <double>0.6</double>
+              <double>0.1</double>
+              <double>0.7</double>
             </X>
             <Y>
               <double>0</double>
@@ -1523,7 +1568,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </Biomass>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.6</Value>
+          <Value>0.3</Value>
         </Constant>
         <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
@@ -1562,7 +1607,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0.5</Value>
+          <Value>0.1</Value>
         </Constant>
         <MinimumFunction>
           <Name>DMDemandFunction</Name>
@@ -1598,7 +1643,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Name>HightLimitedDMAccumulation</Name>
             <Constant>
               <Name>SpecificStemLengthMax</Name>
-              <Value>500</Value>
+              <Constant>
+                <Name>SpecificStemLengthMax</Name>
+                <Value>0.1</Value>
+              </Constant>
+              <Value>0.1</Value>
             </Constant>
             <VariableReference>
               <Name>Branches</Name>
@@ -1756,6 +1805,7 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
       <Cultivar>
         <Name>Pioneer_39G12</Name>
         <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value = 780</Command>
       </Cultivar>
       <Cultivar>
         <Name>Pioneer_3153</Name>
@@ -1775,8 +1825,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 120</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 530</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 14</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 405</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value = 405</Command>
       </Cultivar>
       <Cultivar>
         <Name>Dekalb_XL82</Name>
@@ -1787,8 +1836,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 813</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 550</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value = 550</Command>
       </Cultivar>
       <Cultivar>
         <Name>GH_5009</Name>
@@ -1799,8 +1847,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 713</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 550</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value =  550</Command>
       </Cultivar>
       <Cultivar>
         <Name>Hycorn_40</Name>
@@ -1811,8 +1858,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 713</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 550</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value =  550</Command>
       </Cultivar>
       <Cultivar>
         <Name>GH_5019WX</Name>
@@ -1823,8 +1869,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 694</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 550</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value = 550</Command>
       </Cultivar>
       <Cultivar>
         <Name>Laila</Name>
@@ -1837,8 +1882,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].Maturing.Target.Value = 1</Command>
         <Command>[Phenology].MaturityToHarvestRipe.Target.Value = 1</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 36</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 36</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 720</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value =  720</Command>
       </Cultivar>
       <Cultivar>
         <Name>Pioneer_39V43</Name>
@@ -1887,8 +1931,7 @@ VShort duration variety released in New Zealand by Pioneer
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 520</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 550</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value =  550</Command>
       </Cultivar>
       <CropType>Maize</CropType>
     </Plant>
@@ -1976,6 +2019,7 @@ VShort duration variety released in New Zealand by Pioneer
       </SheetNames>
     </ExcelInput>
     <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Tests>
     <Name>Tests</Name>
@@ -2482,7 +2526,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -2874,7 +2917,6 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>Harvesting</Name>
@@ -3529,7 +3571,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -3948,7 +3989,6 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>Harvesting</Name>
@@ -13926,7 +13966,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -14318,7 +14357,6 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>Harvesting</Name>
@@ -15157,7 +15195,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -15562,7 +15599,6 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>Harvesting</Name>
@@ -16225,7 +16261,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -16630,7 +16665,6 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>Harvesting</Name>
@@ -16999,11 +17033,11 @@ namespace Models
               <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
               <string>[Maize].Structure.MainStemPrimordiaNo</string>
               <string>[Maize].Phenology.Photoperiod.Value</string>
+              <string>[Maize].Grain.GrowthRateGrainDevelopment.Value</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -17369,7 +17403,6 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>Harvesting</Name>
@@ -17657,6 +17690,63 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <Graph>
+        <Name>GrainDevGrowthRate</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Maize.Grain.GrowthRateGrainDevelopment.Value</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Maize.Phenology.Stage</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Growth rate (gd)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
     </Experiment>
     <Experiment>
       <Name>DRK2</Name>
@@ -17860,7 +17950,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -18226,7 +18315,6 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>Harvesting</Name>
@@ -18704,7 +18792,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -19070,7 +19157,6 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>Harvesting</Name>
@@ -19622,7 +19708,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Operations>
             <Name>IrrigSchedule</Name>
@@ -19660,7 +19745,6 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>Soil</Name>
@@ -20926,7 +21010,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Operations>
             <Name>IrrigSchedule</Name>
@@ -20964,7 +21047,6 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>Soil</Name>
@@ -22182,7 +22264,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Operations>
             <Name>IrrigSchedule</Name>
@@ -22220,7 +22301,6 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>Soil</Name>
@@ -24021,7 +24101,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -24400,7 +24479,6 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>Harvesting</Name>
@@ -24815,7 +24893,6 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Soil>
           <Name>soil</Name>
@@ -25235,7 +25312,6 @@ namespace Models
           <EventNames>
             <string>[Maize].Harvesting</string>
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Manager>
           <Name>Harvesting</Name>
@@ -25801,7 +25877,6 @@ namespace Models
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Soil>
           <Name>soil</Name>
@@ -26162,7 +26237,6 @@ namespace Models
           <EventNames>
             <string>[Maize].Harvesting</string>
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Manager>
           <Name>Harvesting</Name>
@@ -26680,10 +26754,10 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 </KL>
                 <XF>
                   <double>1</double>
-                  <double>1</double>
-                  <double>0.5</double>
-                  <double>1</double>
-                  <double>1</double>
+                  <double>0.7</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.7</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -27502,6 +27576,7 @@ namespace Models
               <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
               <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
               <string>[Maize].Arbitrator.NDemand</string>
+              <string>[Maize].Arbitrator.NSupply</string>
               <string>[Maize].Arbitrator.DMSupply</string>
               <string>[Maize].Arbitrator.DMDemand</string>
               <string>[Maize].Arbitrator.DMAllocated</string>
@@ -27533,11 +27608,11 @@ namespace Models
               <string>[Maize].Leaf.Dead.NConc</string>
               <string>[Maize].Leaf.Photosynthesis.RueAct</string>
               <string>[Maize].Stem.Live.StructuralWt</string>
+              <string>[Maize].Grain.GrowthRateGrainDevelopment.Value</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>HarvestReport</Name>
@@ -27569,7 +27644,6 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Graph>
             <Name>Leafappearance</Name>
@@ -29733,7 +29807,7 @@ namespace Models
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
             <Line>None</Line>
@@ -30222,7 +30296,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
-            <Name>SWC1600cm</Name>
+            <Name>SWC160cm</Name>
             <Series>
               <Name>Predicted</Name>
               <Type>Scatter</Type>
@@ -31281,10 +31355,131 @@ namespace Models
             <DisabledSeries />
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
+          <Folder>
+            <Name>Arbitration</Name>
+            <Graph>
+              <Name>DM</Name>
+              <Series>
+                <Name>Supply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <Line>Solid</Line>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Maize.Arbitrator.DMSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <Series>
+                <Name>Demand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-8388608</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <Line>None</Line>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Maize.Arbitrator.DMDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title>DM Supply and Demand (g/MJ)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>N</Name>
+              <Series>
+                <Name>Supply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-8388608</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <Line>Solid</Line>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Maize.Arbitrator.NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <Series>
+                <Name>Demand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-8388608</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <Line>None</Line>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Maize.Arbitrator.NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title>N Supply and Demand (g/MJ)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+          </Folder>
           <Graph>
-            <Name>Arbitrator</Name>
+            <Name>GrainDevGrowthRate</Name>
             <Series>
-              <Name>Supply</Name>
+              <Name>Predicted</Name>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
@@ -31296,14 +31491,13 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.Arbitrator.DMSupply</YFieldName>
+              <YFieldName>Maize.Grain.GrowthRateGrainDevelopment.Value</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
-              <Filter />
             </Series>
             <Series>
-              <Name>Demand</Name>
+              <Name>Predicted1</Name>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
@@ -31315,11 +31509,49 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.Arbitrator.DMDemand</YFieldName>
+              <YFieldName>Maize.Phenology.Stage</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
-              <Filter />
+            </Series>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Growth rate (gd)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>RootDepth</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Maize.Root.Depth</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
             </Series>
             <Axis>
               <Type>Left</Type>
@@ -31337,13 +31569,7 @@ namespace Models
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries>
-              <string>NitrogenNilIrrigationFull</string>
-              <string>NitrogenLowIrrigationFull</string>
-              <string>NitrogenNilIrrigationNil</string>
-              <string>NitrogenLowIrrigationNil</string>
-              <string>NitrogenMedIrrigationNil</string>
-            </DisabledSeries>
+            <DisabledSeries />
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
         </Folder>
@@ -33098,7 +33324,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>HarvestReport</Name>
@@ -33130,7 +33355,6 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>Harvesting</Name>
@@ -35695,7 +35919,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>HarvestReport</Name>
@@ -35727,7 +35950,6 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>ExtraVariables</Name>
@@ -37097,7 +37319,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>HarvestReport</Name>
@@ -37129,7 +37350,6 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>ExtraVariables</Name>

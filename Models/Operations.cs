@@ -42,7 +42,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.OperationsPresenter")]
-    [ValidParent(typeof(Zone))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class Operations : Model
     {
         /// <summary>The clock</summary>

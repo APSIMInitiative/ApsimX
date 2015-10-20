@@ -258,7 +258,6 @@
     <Compile Include="Plant\Functions\Zadok.cs" />
     <Compile Include="Plant\InterpolationSet.cs" />
     <Compile Include="Plant\OilPalm\OilPalm.cs" />
-    <Compile Include="Plant\OilPalm\OilPalmUnderstory.cs" />
     <Compile Include="Plant\OldPlant\BaseOrgan1.cs" />
     <Compile Include="Plant\OldPlant\Conversions.cs" />
     <Compile Include="Plant\OldPlant\Environment.cs" />

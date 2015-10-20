@@ -11,7 +11,7 @@ namespace Models.Factorial
     /// A model representing an experiment's factors
     /// </summary>
     [Serializable]
-    [ValidParent(typeof(Experiment))]
+    [ValidParent(ParentType = typeof(Experiment))]
     public class Factors : Model
     {
         /// <summary>Gets the factors.</summary>

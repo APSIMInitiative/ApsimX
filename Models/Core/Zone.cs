@@ -16,7 +16,8 @@ namespace Models.Core
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
-    [ValidParent(ParentModels = new Type[] { typeof(Simulation), typeof(Agroforestry.AgroforestrySystem) })]
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
     public class Zone : Model
     {
         /// <summary>Area of the zone.</summary>

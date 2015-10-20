@@ -22,7 +22,7 @@ namespace Models.ArbitratorGod
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(typeof(Zone))]
+    [ValidParent(ParentType=typeof(Zone))]
     public class ArbitratorGod : Model
     {
 

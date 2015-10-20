@@ -12,6 +12,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.HTMLView")]
     [PresenterName("UserInterface.Presenters.MemoPresenter")]
+    [ValidParent(DropAnywhere = true)]
     public class Memo : Model
     {
         /// <summary>Gets or sets the memo text.</summary>

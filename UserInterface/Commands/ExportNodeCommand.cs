@@ -397,6 +397,7 @@ namespace UserInterface.Commands
             }
         }
 
+
         /// <summary>Scans for citations.</summary>
         /// <param name="t">The tags to go through looking for citations.</param>
         private void ScanForCitations(List<AutoDocumentation.ITag> tags)

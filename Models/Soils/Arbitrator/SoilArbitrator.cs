@@ -56,7 +56,8 @@ namespace Models.Soils.Arbitrator
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentModels=new Type[] { typeof(Zone), typeof(Simulation) })]
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class SoilArbitrator : Model
     {
         private List<IModel> uptakeModels = null;

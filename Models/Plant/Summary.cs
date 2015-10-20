@@ -11,7 +11,7 @@ namespace Models.PMF
     /// A summeriser model
     /// </summary>
     [Serializable]
-    [ValidParent(typeof(Plant))]
+    [ValidParent(ParentType = typeof(Plant))]
     public class Summariser : Model
     {
         /// <summary>The above ground</summary>
