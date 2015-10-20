@@ -21,7 +21,7 @@ namespace Models.PostSimulationTools
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(typeof(DataStore))]
+    [ValidParent(ParentType=typeof(DataStore))]
     public class PredictedObserved : Model, IPostSimulationTool
     {
         /// <summary>Gets or sets the name of the predicted table.</summary>

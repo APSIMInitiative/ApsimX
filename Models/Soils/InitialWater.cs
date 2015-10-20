@@ -18,7 +18,7 @@ namespace Models.Soils
     /// </summary>
     [ViewName("UserInterface.Views.InitialWaterView")]
     [PresenterName("UserInterface.Presenters.InitialWaterPresenter")]
-    [ValidParent(typeof(Soil))]
+    [ValidParent(ParentType=typeof(Soil))]
     [Serializable]
     public class InitialWater : Model
     {

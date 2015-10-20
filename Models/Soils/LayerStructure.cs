@@ -12,7 +12,7 @@ namespace Models.Soils
     /// A model for holding layer structure information
     /// </summary>
     [Serializable]
-    [ValidParent(typeof(Soil))]
+    [ValidParent(ParentType=typeof(Soil))]
     public class LayerStructure : Model
     {
         /// <summary>Gets or sets the thickness.</summary>

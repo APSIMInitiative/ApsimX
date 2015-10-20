@@ -16,6 +16,7 @@ namespace Models.Core
     using APSIM.Shared.Utilities;
     using PMF.Functions;
     using PMF;
+    using Factorial;
 
     /// <summary>
     /// The API for models to discover other models, get and set variables in
@@ -647,6 +648,54 @@ namespace Models.Core
             foreach (FieldInfo field in model.GetType().UnderlyingSystemType.GetFields(flags))
                 allProperties.Add(new VariableField(model, field));
             return allProperties.ToArray();
+        }
+
+        /// <summary>Return true if the child can be added to the parent.</summary>
+        /// <param name="parent">The parent model.</param>
+        /// <param name="childType">The child type.</param>
+        /// <returns>True if child can be added.</returns>
+        public static bool IsChildAllowable(object parent, Type childType)
+        {
+            if (parent.GetType() == typeof(Folder) ||
+                parent.GetType() == typeof(Factor) ||
+                parent.GetType() == typeof(Replacements))
+                return true;
+
+            // Is allowable if this type (t) is an IFunction and the parent is in the PMF namespace.
+            if (parent.GetType().FullName.Contains("PMF") && childType.GetInterface("IFunction") != null)
+                return true;
+
+            // Is allowable if one of the valid parents of this type (t) matches the parent type.
+            foreach (ValidParentAttribute validParent in ReflectionUtilities.GetAttributes(childType, typeof(ValidParentAttribute), true))
+            {
+                if (validParent != null)
+                {
+                    if (validParent.DropAnywhere)
+                        return true;
+
+                    if (validParent.ParentType.IsAssignableFrom(parent.GetType()))
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>Get a list of allowable child models for the specified parent.</summary>
+        /// <param name="parent">The parent model.</param>
+        /// <returns>A list of allowable child models.</returns>
+        public static List<Type> GetAllowableChildModels(object parent)
+        {
+            List<Type> allowableModels = new List<Type>();
+            foreach (Type t in ReflectionUtilities.GetTypesThatHaveInterface(typeof(IModel)))
+            {
+                bool isAllowable = IsChildAllowable(parent, t);
+                if (isAllowable && allowableModels.Find(m => m.Name == t.Name) == null)
+                    allowableModels.Add(t);
+            }
+
+            allowableModels.Sort(new ReflectionUtilities.TypeComparer());
+            return allowableModels;
         }
 
         /// <summary>

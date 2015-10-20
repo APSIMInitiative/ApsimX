@@ -21,7 +21,8 @@ namespace Models.Factorial
     [Serializable]
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.FactorPresenter")]
-    [ValidParent(ParentModels = new Type[] { typeof(Factorial.Factors), typeof(Factorial.Factor) })]
+    [ValidParent(ParentType = typeof(Factors))]
+    [ValidParent(ParentType = typeof(Factor))]
     public class Factor : Model
     {
         /// <summary>
@@ -83,7 +84,7 @@ namespace Models.Factorial
             if (Specifications.Count > 1)
             {
                 // A compound factor - return 1 factor value
-                factorValues.Add(new FactorValue(Name, paths, values));
+                factorValues.Add(new FactorValue(this, Name, paths, values));
             }
             else
             {
@@ -91,7 +92,7 @@ namespace Models.Factorial
                 // Is there only a single path?
                 if (paths.Count == 1)
                 {
-                    factorValues.Add(new FactorValue(Name, paths[0], values[0]));
+                    factorValues.Add(new FactorValue(this, Name, paths[0], values[0]));
                 }
                 else // if multiple paths, separate factor value for each path and value.
                 {
@@ -105,7 +106,7 @@ namespace Models.Factorial
                         else
                             factorName = Name + values[i].ToString();
 
-                        factorValues.Add(new FactorValue(factorName, paths[i], values[i]));
+                        factorValues.Add(new FactorValue(this, factorName, paths[i], values[i]));
                     }
                 }
             }
