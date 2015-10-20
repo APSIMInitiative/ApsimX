@@ -189,7 +189,6 @@
     <Compile Include="Interfaces\IGridColumn.cs" />
     <Compile Include="Interfaces\IGridView.cs" />
     <Compile Include="Interfaces\ISeriesView.cs" />
-    <Compile Include="Interfaces\IDataStoreView.cs" />
     <Compile Include="Interfaces\IInitialWaterView.cs">
       <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
     </Compile>
@@ -275,12 +274,6 @@
       <DependentUpon>EditorView.cs</DependentUpon>
     </Compile>
     <Compile Include="Utility\Graph.cs" />
-    <Compile Include="Views\CultivarView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\CultivarView.Designer.cs">
-      <DependentUpon>CultivarView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\InitialWaterView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -454,9 +447,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\EditorView.resx">
       <DependentUpon>EditorView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\CultivarView.resx">
-      <DependentUpon>CultivarView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\InitialWaterView.resx">
       <DependentUpon>InitialWaterView.cs</DependentUpon>
@@ -713,6 +703,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Alias.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LocalMicroClimate.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\TreeProxy.png" />
     <None Include="Service References\BuildService\Reference.svcmap">

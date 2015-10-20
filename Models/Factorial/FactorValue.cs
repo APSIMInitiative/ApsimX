@@ -54,6 +54,9 @@ namespace Models.Factorial
             this.values = values;
         }
 
+        /// <summary>Gets all values.</summary>
+        public List<object> Values { get { return values; } }
+
         /// <summary>
         /// Apply this FactorValue to the specified simulation
         /// </summary>

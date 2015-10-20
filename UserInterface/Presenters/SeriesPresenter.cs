@@ -337,6 +337,11 @@ namespace UserInterface.Presenters
             this.seriesView.LineType.Values = values.ToArray();
             if (series.FactorIndexToVaryLines == -1)
                 this.seriesView.LineType.SelectedValue = series.Line.ToString();
+            else if (series.FactorIndexToVaryLines >= FactorNames.Count)
+            {
+                series.FactorIndexToVaryLines = -1;
+                this.seriesView.LineType.SelectedValue = series.Line.ToString();
+            }
             else
                 this.seriesView.LineType.SelectedValue = "Vary by " + FactorNames[series.FactorIndexToVaryLines];
         }
@@ -349,6 +354,11 @@ namespace UserInterface.Presenters
             this.seriesView.MarkerType.Values = values.ToArray();
             if (series.FactorIndexToVaryMarkers == -1)
                 this.seriesView.MarkerType.SelectedValue = series.Marker.ToString();
+            else if (series.FactorIndexToVaryMarkers >= FactorNames.Count)
+            {
+                series.FactorIndexToVaryMarkers = -1;
+                this.seriesView.MarkerType.SelectedValue = series.Marker.ToString();
+            }
             else
                 this.seriesView.MarkerType.SelectedValue = "Vary by " + FactorNames[series.FactorIndexToVaryMarkers];
         }
@@ -364,10 +374,15 @@ namespace UserInterface.Presenters
             colourOptions.AddRange(FactorNames.Select(factorName => "Vary by " + factorName));
 
             this.seriesView.Colour.Values = colourOptions.ToArray();
-            if (series.FactorIndexToVaryColours != -1)
-                this.seriesView.Colour.SelectedValue = "Vary by " + FactorNames[series.FactorIndexToVaryColours];
-            else
+            if (series.FactorIndexToVaryColours == -1)
                 this.seriesView.Colour.SelectedValue = series.Colour;
+            else if (series.FactorIndexToVaryColours >= FactorNames.Count)
+            {
+                series.FactorIndexToVaryColours = -1;
+                this.seriesView.Colour.SelectedValue = series.Colour;
+            }
+            else
+                this.seriesView.Colour.SelectedValue = "Vary by " + FactorNames[series.FactorIndexToVaryColours];
         }
 
         /// <summary>Gets a list of factor names. Never returns null.</summary>
@@ -398,6 +413,7 @@ namespace UserInterface.Presenters
                 if (data != null)
                 {
                     string[] fieldNames = DataTableUtilities.GetColumnNames(data);
+                    Array.Sort(fieldNames);
                     this.seriesView.X.Values = fieldNames;
                     this.seriesView.Y.Values = fieldNames;
                     this.seriesView.X2.Values = fieldNames;

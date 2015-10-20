@@ -134,6 +134,15 @@ namespace UserInterface.Views
             foreach (OxyPlot.Axes.Axis axis in this.plot1.Model.Axes)
                 this.FormatAxisTickLabels(axis);
 
+            this.plot1.Model.LegendFontSize = FontSize;
+
+            foreach (OxyPlot.Annotations.Annotation annotation in this.plot1.Model.Annotations)
+            {
+                TextAnnotation textAnnotation = annotation as TextAnnotation;
+                if (textAnnotation != null)
+                    textAnnotation.FontSize = FontSize;
+            }
+
             this.plot1.Model.InvalidatePlot(true);
         }
 
@@ -440,23 +449,7 @@ namespace UserInterface.Views
             this.plot1.Dock = DockStyle.None;
             this.plot1.Width = bitmap.Width;
             this.plot1.Height = bitmap.Height;
-
-            LegendPosition savedLegendPosition = LegendPosition.RightTop;
-            if (legendOutside)
-            {
-                savedLegendPosition = this.plot1.Model.LegendPosition;
-                this.plot1.Model.LegendPlacement = LegendPlacement.Outside;
-                this.plot1.Model.LegendPosition = LegendPosition.RightTop;
-            }
-
             this.plot1.DrawToBitmap(bitmap, new Rectangle(0, 0, bitmap.Width, bitmap.Height));
-
-            if (legendOutside)
-            {
-                this.plot1.Model.LegendPlacement = LegendPlacement.Inside;
-                this.plot1.Model.LegendPosition = savedLegendPosition;
-            }
-
             this.plot1.Dock = DockStyle.Fill;
         }
 
@@ -498,7 +491,7 @@ namespace UserInterface.Views
         /// <param name="axis">The axis to format</param>
         private void FormatAxisTickLabels(OxyPlot.Axes.Axis axis)
         {
-            axis.IntervalLength = 100;
+            //axis.IntervalLength = 100;
 
             if (axis is DateTimeAxis)
             {
@@ -512,8 +505,16 @@ namespace UserInterface.Views
                     dateAxis.IntervalType = DateTimeIntervalType.Months;
                     dateAxis.StringFormat = "dd-MMM";
                 }
+                else if (numDays <= 720)
+                {
+                    dateAxis.IntervalType = DateTimeIntervalType.Months;
+                    dateAxis.StringFormat = "MMM-yyyy";
+                }
                 else
+                {
                     dateAxis.IntervalType = DateTimeIntervalType.Years;
+                    dateAxis.StringFormat = "yyyy";
+                }
             }
 
             if (axis is LinearAxis && 
