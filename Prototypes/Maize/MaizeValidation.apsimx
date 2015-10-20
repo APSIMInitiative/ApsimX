@@ -1260,7 +1260,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
                 <double>0.65</double>
               </Y>
             </XYPairs>
-            <XProperty>[Leaf].LAI</XProperty>
+            <XProperty>[Maize].SowingData.RowSpacing</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>WaterStressImpact</Name>

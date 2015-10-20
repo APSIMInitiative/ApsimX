@@ -114,13 +114,25 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover));
+                if (Plant.IsAlive)
+                    return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover));
+                else
+                    return 0;
             }
         }
 
         /// <summary>Gets the cover total.</summary>
         [Units("0-1")]
-        public double CoverTotal { get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); } }
+        public double CoverTotal 
+        { 
+            get 
+            {
+                if (Plant.IsAlive)
+                    return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
+                else
+                    return 0;
+            } 
+        }
 
         /// <summary>Gets the height.</summary>
         [Units("mm")]
