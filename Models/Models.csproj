@@ -177,6 +177,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
     <Compile Include="Soils\Arbitrator\CropUptakes.cs" />
     <Compile Include="Soils\Arbitrator\Estimate.cs" />
