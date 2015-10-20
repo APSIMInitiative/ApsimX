@@ -1928,7 +1928,6 @@ VShort duration variety released in New Zealand by Pioneer
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 18</Command>
         <Command>[Structure].HeightModel.PotentialHeight.XYPairs.X = 3, 4, 5, 6</Command>
         <Command>[Structure].HeightModel.PotentialHeight.XYPairs.Y = 20, 40, 50, 1300</Command>
-        <Command>[Stem].DMDemandFunction.PotentialDMAccumulation.PotentialInternodeWt.XYPairs.Y = 0, 0.15, 10</Command>
       </Cultivar>
       <Cultivar>
         <Name>Pioneer_34K77</Name>
