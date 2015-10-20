@@ -18,10 +18,16 @@ namespace Models.Factorial
     [ValidParent(ParentType = typeof(FactorValue))]
     public class FactorValue
     {
+        /// <summary>Parent factor.</summary>
+        private Factor factor;
+
         /// <summary>
         /// Name of factor value
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>Gets the parent factor.</summary>
+        public Factor Factor { get { return factor; } }
 
         /// <summary>
         /// The paths to the models.
@@ -36,20 +42,23 @@ namespace Models.Factorial
         /// <summary>
         /// Constructor
         /// </summary>
-        public FactorValue(string name, string path, object value)
+        public FactorValue(Factor factor, string name, string path, object value)
         {
+            this.factor = factor;
             this.Name = name;
             this.paths = new List<string>();
             paths.Add(path);
             values = new List<object>();
             this.values.Add(value);
+
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public FactorValue(string name, List<string> paths, List<object> values)
+        public FactorValue(Factor factor, string name, List<string> paths, List<object> values)
         {
+            this.factor = factor;
             this.Name = name;
             this.paths = paths;
             this.values = values;
