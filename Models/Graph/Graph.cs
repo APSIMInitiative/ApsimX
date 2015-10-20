@@ -17,6 +17,10 @@ namespace Models.Graph
     [ViewName("UserInterface.Views.GraphView")]
     [PresenterName("UserInterface.Presenters.GraphPresenter")]
     [Serializable]
+    [ValidParent(ParentType = typeof(Simulations))]
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
+    [ValidParent(ParentType = typeof(Factorial.Experiment))]
     public class Graph : Model, AutoDocumentation.ITag
     {
         /// <summary>

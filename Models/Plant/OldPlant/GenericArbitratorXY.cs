@@ -14,7 +14,7 @@ namespace Models.PMF.OldPlant
     /// A generic arbitrator
     /// </summary>
     [Serializable]
-    [ValidParent(typeof(Plant15))]
+    [ValidParent(ParentType = typeof(Plant15))]
     public class GenericArbitratorXY : Model
     {
         /// <summary>Gets or sets the partition organs.</summary>

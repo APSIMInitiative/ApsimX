@@ -23,7 +23,7 @@ namespace Models.PMF.OilPalm
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(typeof(Zone))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class OilPalm : ModelCollectionFromResource, ICrop, ICanopy, IUptake
     {
         #region Canopy interface

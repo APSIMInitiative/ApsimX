@@ -15,7 +15,7 @@ namespace Models.PMF.Organs
     /// This class represents a base organ
     /// </summary>
     [Serializable]
-    [ValidParent(typeof(Plant))]
+    [ValidParent(ParentType = typeof(Plant))]
     public class BaseOrgan : Model, IOrgan, IArbitration
     {
         #region Links to other models or compontnets

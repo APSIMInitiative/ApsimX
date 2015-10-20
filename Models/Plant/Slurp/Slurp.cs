@@ -23,7 +23,7 @@ namespace Models.PMF.Slurp
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(typeof(Zone))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class Slurp : Model, ICrop2
     {
         /// <summary>
