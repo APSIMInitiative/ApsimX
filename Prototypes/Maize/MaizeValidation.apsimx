@@ -444,6 +444,16 @@ Though tillering is common in some maize varieties under certain agronomic condi
           <Value>0.3</Value>
           <Units>g</Units>
         </Constant>
+        <Constant>
+          <Name>MaximumGrainsPerCob</Name>
+          <Constant>
+            <Name>MaximumGrainsPerCob</Name>
+            <Value>410</Value>
+            <Units>number</Units>
+          </Constant>
+          <Value>700</Value>
+          <Units>number</Units>
+        </Constant>
         <PhaseLookup>
           <Name>DMDemandFunction</Name>
           <PhaseLookupValue>
@@ -597,40 +607,71 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <MultiplyFunction>
           <Name>NumberFunction</Name>
           <VariableReference>
-            <Name>CobNumber</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
+            <Name>PotentialGrainNumber</Name>
+            <VariableName>[MaximumGrainsPerCob].Value</VariableName>
           </VariableReference>
           <LinearInterpolationFunction>
-            <Name>KernalsPerCob</Name>
-            <Memo>
-              <Name>memo</Name>
-              <MemoText><![CDATA[
-The number of kernals per cob is likely to vary with individual maize cultivars.  Therefore, the relationship shown here is indicative only.  See the descriptions of individual cultivars for more detail on kernal number determination used by the maize model.
-]]></MemoText>
-            </Memo>
+            <Name>GrowthRateFactor</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>0</double>
-                <double>25</double>
+                <double>0.55</double>
+                <double>3.3</double>
+                <double>6.6</double>
+                <double>10</double>
               </X>
               <Y>
                 <double>0</double>
-                <double>500</double>
+                <double>0.5</double>
+                <double>1</double>
+                <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Rachis].CobSize.Value</XProperty>
+            <XProperty>[GrowthRateGrainDevelopment].Value</XProperty>
           </LinearInterpolationFunction>
-          <Constant>
-            <Name>GrainsPerKernal</Name>
-            <Value>1</Value>
-            <Units>/kernal</Units>
-          </Constant>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Maize].Population</VariableName>
+          </VariableReference>
         </MultiplyFunction>
         <ExpressionFunction>
           <Name>YieldBuPerAcre</Name>
           <Expression>[Grain].Live.Wt * 10 * 56 * 0.4536 * 2.471</Expression>
         </ExpressionFunction>
+        <AccumulateFunction>
+          <Name>GrowthGrainDevelopment</Name>
+          <VariableReference>
+            <Name>DailyBiomassProduction</Name>
+            <VariableName>[Arbitrator].DMSupply</VariableName>
+          </VariableReference>
+          <StartStageName>Flag_Leaf</StartStageName>
+          <EndStageName>StartGrainFill</EndStageName>
+        </AccumulateFunction>
+        <AccumulateFunction>
+          <Name>DaysGrainDevelopment</Name>
+          <Constant>
+            <Name>LenthOfADay</Name>
+            <Value>1</Value>
+            <Units>days/day</Units>
+          </Constant>
+          <StartStageName>Flag_Leaf</StartStageName>
+          <EndStageName>StartGrainFill</EndStageName>
+        </AccumulateFunction>
+        <DivideFunction>
+          <Name>GrowthRateGrainDevelopment</Name>
+          <VariableReference>
+            <Name>AccumulatedGrowth</Name>
+            <VariableName>[GrowthGrainDevelopment].Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>GrowthDuration</Name>
+            <VariableName>[DaysGrainDevelopment].Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Maize].Population</VariableName>
+          </VariableReference>
+        </DivideFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
         <RipeStage />
@@ -1764,6 +1805,7 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
       <Cultivar>
         <Name>Pioneer_39G12</Name>
         <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value = 780</Command>
       </Cultivar>
       <Cultivar>
         <Name>Pioneer_3153</Name>
@@ -1783,8 +1825,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 120</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 530</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 14</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 405</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value = 405</Command>
       </Cultivar>
       <Cultivar>
         <Name>Dekalb_XL82</Name>
@@ -1795,8 +1836,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 813</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 550</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value = 550</Command>
       </Cultivar>
       <Cultivar>
         <Name>GH_5009</Name>
@@ -1807,8 +1847,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 713</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 550</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value =  550</Command>
       </Cultivar>
       <Cultivar>
         <Name>Hycorn_40</Name>
@@ -1819,8 +1858,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 713</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 550</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value =  550</Command>
       </Cultivar>
       <Cultivar>
         <Name>GH_5019WX</Name>
@@ -1831,8 +1869,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 694</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 550</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value = 550</Command>
       </Cultivar>
       <Cultivar>
         <Name>Laila</Name>
@@ -1845,8 +1882,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].Maturing.Target.Value = 1</Command>
         <Command>[Phenology].MaturityToHarvestRipe.Target.Value = 1</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 36</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 36</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 720</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value =  720</Command>
       </Cultivar>
       <Cultivar>
         <Name>Pioneer_39V43</Name>
@@ -1895,8 +1931,7 @@ VShort duration variety released in New Zealand by Pioneer
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 520</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 25</Command>
-        <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 550</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value =  550</Command>
       </Cultivar>
       <CropType>Maize</CropType>
     </Plant>
@@ -16998,6 +17033,7 @@ namespace Models
               <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
               <string>[Maize].Structure.MainStemPrimordiaNo</string>
               <string>[Maize].Phenology.Photoperiod.Value</string>
+              <string>[Maize].Grain.GrowthRateGrainDevelopment.Value</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -17645,6 +17681,63 @@ namespace Models
         <Axis>
           <Type>Left</Type>
           <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>GrainDevGrowthRate</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Maize.Grain.GrowthRateGrainDevelopment.Value</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Maize.Phenology.Stage</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Growth rate (gd)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -26661,10 +26754,10 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 </KL>
                 <XF>
                   <double>1</double>
-                  <double>1</double>
-                  <double>0.5</double>
-                  <double>1</double>
-                  <double>1</double>
+                  <double>0.7</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.7</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -27515,6 +27608,7 @@ namespace Models
               <string>[Maize].Leaf.Dead.NConc</string>
               <string>[Maize].Leaf.Photosynthesis.RueAct</string>
               <string>[Maize].Stem.Live.StructuralWt</string>
+              <string>[Maize].Grain.GrowthRateGrainDevelopment.Value</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -29713,7 +29807,7 @@ namespace Models
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
             <Line>None</Line>
@@ -30202,7 +30296,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
-            <Name>SWC1600cm</Name>
+            <Name>SWC160cm</Name>
             <Series>
               <Name>Predicted</Name>
               <Type>Scatter</Type>
@@ -31264,7 +31358,7 @@ namespace Models
           <Folder>
             <Name>Arbitration</Name>
             <Graph>
-              <Name>DM Irrigated</Name>
+              <Name>DM</Name>
               <Series>
                 <Name>Supply</Name>
                 <Type>Scatter</Type>
@@ -31273,7 +31367,7 @@ namespace Models
                 <ColourArgb>-1663232</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <Line>Solid</Line>
                 <TableName>Report</TableName>
@@ -31282,7 +31376,7 @@ namespace Models
                 <ShowInLegend>true</ShowInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
-                <Filter>Irrigation = Full</Filter>
+                <Filter />
               </Series>
               <Series>
                 <Name>Demand</Name>
@@ -31291,10 +31385,10 @@ namespace Models
                 <YAxis>Left</YAxis>
                 <ColourArgb>-8388608</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
-                <Line>Dash</Line>
+                <Line>None</Line>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Maize.Arbitrator.DMDemand</YFieldName>
@@ -31323,125 +31417,7 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
             <Graph>
-              <Name>DM Dryland</Name>
-              <Series>
-                <Name>Supply</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <Line>Solid</Line>
-                <TableName>Report</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.DMSupply</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-                <Filter />
-              </Series>
-              <Series>
-                <Name>Demand</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <Line>Dash</Line>
-                <TableName>Report</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.DMDemand</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-                <Filter />
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>DM Supply and Demand (g/MJ)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-            </Graph>
-            <Graph>
-              <Name>N Irrigated</Name>
-              <Series>
-                <Name>Supply</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <Line>Solid</Line>
-                <TableName>Report</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.NSupply</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-                <Filter />
-              </Series>
-              <Series>
-                <Name>Demand</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <Line>Dash</Line>
-                <TableName>Report</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.NDemand</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-                <Filter />
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>N Supply and Demand (g/MJ)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-            </Graph>
-            <Graph>
-              <Name>N Dryland</Name>
+              <Name>N</Name>
               <Series>
                 <Name>Supply</Name>
                 <Type>Scatter</Type>
@@ -31468,10 +31444,10 @@ namespace Models
                 <YAxis>Left</YAxis>
                 <ColourArgb>-8388608</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
-                <Line>Solid</Line>
+                <Line>None</Line>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Maize.Arbitrator.NDemand</YFieldName>
@@ -31500,6 +31476,102 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
           </Folder>
+          <Graph>
+            <Name>GrainDevGrowthRate</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Maize.Grain.GrowthRateGrainDevelopment.Value</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Predicted1</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Maize.Phenology.Stage</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Growth rate (gd)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>RootDepth</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Maize.Root.Depth</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Actual Radiation Use Efficiency (g/MJ)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Graph>
         </Folder>
         <Folder>
           <Name>Canopy</Name>
