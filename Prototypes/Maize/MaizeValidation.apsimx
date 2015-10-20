@@ -1196,7 +1196,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>2.3</Value>
+            <Value>2.5</Value>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
@@ -1658,31 +1658,34 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </VariableReference>
           </MultiplyFunction>
         </MinimumFunction>
-        <PhaseLookup>
+        <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
-          <PhaseLookupValue>
-            <Name>PreStemElongation</Name>
-            <Constant>
-              <Name>StemFraction</Name>
-              <Value>0.42</Value>
-            </Constant>
-            <Start>Emergence</Start>
-            <End>Floral_Initiation</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>StemElongation</Name>
-            <Constant>
-              <Name>StemFraction</Name>
-              <Value>0.49</Value>
-            </Constant>
-            <Start>Floral_Initiation</Start>
-            <End>Maturity</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <Memo>
+              <Name>memo</Name>
+              <MemoText><![CDATA[]]></MemoText>
+            </Memo>
+            <PhaseLookupValue>
+              <Name>PreStemElongation</Name>
+              <Constant>
+                <Name>StemFraction</Name>
+                <Value>0.6</Value>
+              </Constant>
+              <Start>Emergence</Start>
+              <End>Floral_Initiation</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>StemElongation</Name>
+              <Constant>
+                <Name>StemFraction</Name>
+                <Value>0.82</Value>
+              </Constant>
+              <Start>Floral_Initiation</Start>
+              <End>Flowering</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
+        </PartitionFractionDemandFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
@@ -2462,6 +2465,8 @@ namespace Models
           </Arbitrator>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[ExtraVariables].Script.AccumPlantN</string>
@@ -2912,6 +2917,8 @@ namespace Models
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -3514,6 +3521,8 @@ namespace Models
           </Arbitrator>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[ExtraVariables].Script.AccumPlantN</string>
@@ -3984,6 +3993,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -13967,6 +13978,8 @@ namespace Models
           </Arbitrator>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[ExtraVariables].Script.AccumPlantN</string>
@@ -14410,6 +14423,8 @@ namespace Models
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -15196,6 +15211,8 @@ namespace Models
           </Arbitrator>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[ExtraVariables].Script.AccumPlantN</string>
@@ -15652,6 +15669,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -16320,6 +16339,8 @@ namespace Models
           </Arbitrator>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[ExtraVariables].Script.AccumPlantN</string>
@@ -16776,6 +16797,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -17249,6 +17272,8 @@ namespace Models
           </Arbitrator>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.Drainage</string>
@@ -17629,6 +17654,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -18162,6 +18189,8 @@ namespace Models
           </Arbitrator>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.Drainage</string>
@@ -18541,6 +18570,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -19004,6 +19035,8 @@ namespace Models
           </Arbitrator>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.Drainage</string>
@@ -19383,6 +19416,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -19917,6 +19952,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.Drainage</string>
@@ -19961,6 +19998,8 @@ namespace Models
               <string>[Maize].Structure.MainStemPrimordiaNo</string>
               <string>[Maize].Phenology.Photoperiod.Value</string>
               <string>[Maize].Phenology.ThermalTime.Value</string>
+              <string>[Maize].Rachis.Live.Wt</string>
+              <string>[Maize].Husk.Live.Wt</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -19971,6 +20010,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -21083,6 +21124,46 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <Graph>
+        <Name>Rachis</Name>
+        <Series>
+          <Name>PredictedLeaf</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Maize.Rachis.Live.Wt</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
     </Experiment>
     <Experiment>
       <Name>Angelo99</Name>
@@ -21220,6 +21301,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.Drainage</string>
@@ -21273,6 +21356,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -22474,6 +22559,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.Drainage</string>
@@ -22527,6 +22614,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -24276,6 +24365,8 @@ namespace Models
           </Arbitrator>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[ExtraVariables].Script.AccumPlantN</string>
@@ -24708,6 +24799,8 @@ namespace Models
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -25068,6 +25161,8 @@ namespace Models
         </Arbitrator>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
@@ -25541,6 +25636,8 @@ namespace Models
         </Soil>
         <Report>
           <Name>HarvestReport</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -26052,6 +26149,8 @@ namespace Models
         </Arbitrator>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
@@ -26466,6 +26565,8 @@ namespace Models
         </Soil>
         <Report>
           <Name>HarvestReport</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -27744,6 +27845,8 @@ namespace Models
           </Manager>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[ExtraVariables].Script.AccumPlantN</string>
@@ -27873,6 +27976,8 @@ namespace Models
           </Report>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -33499,6 +33604,8 @@ namespace Models
           </Manager>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[ExtraVariables].Script.AccumPlantN</string>
@@ -33584,6 +33691,8 @@ namespace Models
           </Report>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -36053,6 +36162,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[ExtraVariables].Script.AccumPlantN</string>
@@ -36179,6 +36290,8 @@ namespace Models
           </Report>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
@@ -37453,6 +37566,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[ExtraVariables].Script.AccumPlantN</string>
@@ -37579,6 +37694,8 @@ namespace Models
           </Report>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
