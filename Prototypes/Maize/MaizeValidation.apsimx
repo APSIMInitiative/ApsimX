@@ -1565,7 +1565,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </Biomass>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.3</Value>
+          <Value>0.7</Value>
         </Constant>
         <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
@@ -1607,7 +1607,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Value>0.1</Value>
         </Constant>
         <MinimumFunction>
-          <Name>DMDemandFunction</Name>
+          <Name>DMDemandFunctionX</Name>
           <MultiplyFunction>
             <Name>PotentialDMAccumulation</Name>
             <VariableReference>
@@ -1658,6 +1658,31 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </VariableReference>
           </MultiplyFunction>
         </MinimumFunction>
+        <PhaseLookup>
+          <Name>DMDemandFunction</Name>
+          <Memo>
+            <Name>memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <PhaseLookupValue>
+            <Name>PreStemElongation</Name>
+            <Constant>
+              <Name>StemFraction</Name>
+              <Value>0.42</Value>
+            </Constant>
+            <Start>Emergence</Start>
+            <End>Floral_Initiation</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>StemElongation</Name>
+            <Constant>
+              <Name>StemFraction</Name>
+              <Value>0.49</Value>
+            </Constant>
+            <Start>Floral_Initiation</Start>
+            <End>Maturity</End>
+          </PhaseLookupValue>
+        </PhaseLookup>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
