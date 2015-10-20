@@ -656,6 +656,9 @@ namespace Models.Core
         /// <returns>True if child can be added.</returns>
         public static bool IsChildAllowable(object parent, Type childType)
         {
+            if (childType == typeof(Simulations))
+                return false;
+
             if (parent.GetType() == typeof(Folder) ||
                 parent.GetType() == typeof(Factor) ||
                 parent.GetType() == typeof(Replacements))
