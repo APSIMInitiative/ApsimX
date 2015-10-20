@@ -794,10 +794,10 @@ namespace Models
             }
             else if (Type.Equals("Maize"))
             {
-                CropType.Albedo = 0.15;
+                CropType.Albedo = 0.175;  // from SEASONAL CHANGES IN THE ALBEDO OF A MAIZE CROP DURING TWO SEASONS A.F.G. JACOBS and W.A.J. VAN PUL 
                 CropType.Gsmax = 0.009;
                 CropType.Emissivity = 0.96;
-                CropType.R50 = 80;
+                CropType.R50 = 160;
             }
             ComponentDataDefinitions.Add(CropType);
         }
