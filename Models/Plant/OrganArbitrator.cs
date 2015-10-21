@@ -32,12 +32,35 @@ namespace Models.PMF
         [Link]
         public Clock Clock = null;
 
+        /// <summary>
+        /// The list of posible methods that can be used for arbitrating biomass allocation
+        /// </summary>
+        public enum ArbitrationType
+        {
+            /// <summary>
+            /// Arbitration is performed in two passes for for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their demand relative to the demand from all organs.  On the second pass any remaining biomass is allocated to non-structural demands based on the organ's relative demand.
+            /// </summary>
+            RelativeAllocation,
+            /// <summary>
+            /// Arbitration is performed in two passes for for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand first. On the second pass any remaining biomass is allocated to non-structural demands based on the relative demand from all organs.
+            /// </summary>
+            PriorityAllocation,
+            /// <summary>
+            /// Arbitration is performed in two passes for for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand first.  On the second pass any remaining biomass is allocated to non-structural demands based on the same order of priority.
+            /// </summary>
+            PrioritythenRelativeAllocation,
+            /// <summary>
+            /// Partitions biomass between organs based on their relative demand in a single pass so non-structural always gets some if there is a non-structural demand
+            /// </summary>
+            RelativeAllocationSinglePass,
+        }
+
         /// <summary>The method used to arbitrate N allocations</summary>
-        [Description("Select method used for Arbitration")]
-        public string NArbitrationOption { get; set; }
+        [Description("Select method used for Nitrogen Arbitration")]
+        public ArbitrationType NArbitrationOption { get; set; }
         /// <summary>The mentod used to arbitrate DM allocations </summary>
-        [Description("Select method used for DMArbitration")]
-        public string DMArbitrationOption { get; set; }
+        [Description("Select method used for Dry Matter Arbitration")]
+        public ArbitrationType DMArbitrationOption { get; set; }
         /// <summary>The nutrient drivers</summary>
         [Description("List of nutrients that the arbitrator will consider")]
         public string[] NutrientDrivers = null;
@@ -916,19 +939,19 @@ namespace Models.PMF
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
         /// <param name="Option">The option.</param>
-        virtual public void DoReAllocation(IArbitration[] Organs, BiomassArbitrationType BAT, string Option)
+        virtual public void DoReAllocation(IArbitration[] Organs, BiomassArbitrationType BAT, ArbitrationType Option)
         {
             double BiomassReallocated = 0;
             if (BAT.TotalReallocationSupply > 0.00000000001)
             {
                 //Calculate how much reallocated N (and associated biomass) each demanding organ is allocated based on relative demands
-                if (string.Compare(Option, "RelativeAllocation", true) == 0)
+                if (Option == ArbitrationType.RelativeAllocation)
                     RelativeAllocation(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
-                if (string.Compare(Option, "PriorityAllocation", true) == 0)
+                if (Option == ArbitrationType.PriorityAllocation)
                     PriorityAllocation(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
-                if (string.Compare(Option, "PrioritythenRelativeAllocation", true) == 0)
+                if (Option == ArbitrationType.PrioritythenRelativeAllocation)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
-                if (string.Compare(Option, "RelativeAllocationSinglePass", true) == 0)
+                if (Option == ArbitrationType.RelativeAllocationSinglePass)
                     RelativeAllocationSinglePass(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
 
                 //Then calculate how much biomass is realloced from each supplying organ based on relative reallocation supply
@@ -994,19 +1017,19 @@ namespace Models.PMF
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
         /// <param name="Option">The option.</param>
-        virtual public void DoUptake(IArbitration[] Organs, BiomassArbitrationType BAT, string Option)
+        virtual public void DoUptake(IArbitration[] Organs, BiomassArbitrationType BAT,  ArbitrationType Option)
         {
             double BiomassTakenUp = 0;
             if (BAT.TotalUptakeSupply > 0.00000000001)
             {
                 // Calculate how much uptake N each demanding organ is allocated based on relative demands
-                if (string.Compare(Option, "RelativeAllocation", true) == 0)
+                if (Option == ArbitrationType.RelativeAllocation)
                     RelativeAllocation(Organs, BAT.TotalUptakeSupply, ref BiomassTakenUp, BAT);
-                if (string.Compare(Option, "PriorityAllocation", true) == 0)
+                if (Option == ArbitrationType.PriorityAllocation)
                     PriorityAllocation(Organs, BAT.TotalUptakeSupply, ref BiomassTakenUp, BAT);
-                if (string.Compare(Option, "PrioritythenRelativeAllocation", true) == 0)
+                if (Option == ArbitrationType.PrioritythenRelativeAllocation)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalUptakeSupply, ref BiomassTakenUp, BAT);
-                if (string.Compare(Option, "RelativeAllocationSinglePass", true) == 0)
+                if (Option == ArbitrationType.RelativeAllocationSinglePass)
                     RelativeAllocationSinglePass(Organs, BAT.TotalUptakeSupply, ref BiomassTakenUp, BAT);
 
                 // Then calculate how much N is taken up by each supplying organ based on relative uptake supply
@@ -1024,19 +1047,19 @@ namespace Models.PMF
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
         /// <param name="Option">The option.</param>
-        virtual public void DoRetranslocation(IArbitration[] Organs, BiomassArbitrationType BAT, string Option)
+        virtual public void DoRetranslocation(IArbitration[] Organs, BiomassArbitrationType BAT, ArbitrationType Option)
         {
             double BiomassRetranslocated = 0;
             if (BAT.TotalRetranslocationSupply > 0.00000000001)
             {
                 // Calculate how much retranslocation N (and associated biomass) each demanding organ is allocated based on relative demands
-                if (string.Compare(Option, "RelativeAllocation", true) == 0)
+                if (Option == ArbitrationType.RelativeAllocation)
                     RelativeAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
-                if (string.Compare(Option, "PriorityAllocation", true) == 0)
+                if (Option == ArbitrationType.PriorityAllocation)
                     PriorityAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
-                if (string.Compare(Option, "PrioritythenRelativeAllocation", true) == 0)
+                if (Option == ArbitrationType.PrioritythenRelativeAllocation)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
-                if (string.Compare(Option, "RelativeAllocationSinglePass", true) == 0)
+                if (Option == ArbitrationType.RelativeAllocationSinglePass)
                     RelativeAllocationSinglePass(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
 
                 // Then calculate how much N (and associated biomass) is retranslocated from each supplying organ based on relative retranslocation supply
@@ -1055,19 +1078,19 @@ namespace Models.PMF
         /// <param name="BAT">The bat.</param>
         /// <param name="Option">The option.</param>
         /// <exception cref="System.Exception">Crop is trying to Fix excessive amounts of BAT.  Check partitioning coefficients are giving realistic nodule size and that FixationRatePotential is realistic</exception>
-        virtual public void DoFixation(IArbitration[] Organs, BiomassArbitrationType BAT, string Option)
+        virtual public void DoFixation(IArbitration[] Organs, BiomassArbitrationType BAT, ArbitrationType Option)
         {
             double BiomassFixed = 0;
             if (BAT.TotalFixationSupply > 0.00000000001)
             {
                 // Calculate how much fixed resource each demanding organ is allocated based on relative demands
-                if (string.Compare(Option, "RelativeAllocation", true) == 0)
+                if (Option == ArbitrationType.RelativeAllocation)
                     RelativeAllocation(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
-                if (string.Compare(Option, "PriorityAllocation", true) == 0)
+                if (Option == ArbitrationType.PriorityAllocation)
                     PriorityAllocation(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
-                if (string.Compare(Option, "PrioritythenRelativeAllocation", true) == 0)
+                if (Option == ArbitrationType.PrioritythenRelativeAllocation)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
-                if (string.Compare(Option, "RelativeAllocationSinglePass", true) == 0)
+                if (Option == ArbitrationType.RelativeAllocationSinglePass)
                     RelativeAllocationSinglePass(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
 
                 //Set the sink limitation variable.  BAT.NotAllocated changes after each allocation step so it must be caught here and assigned as sink limitation
@@ -1435,15 +1458,18 @@ namespace Models.PMF
             // write description of this class.
             AutoDocumentation.GetClassDescription(this, tags, indent);
 
-            string RelativeDocString = "Arbitration is performed in two passes for for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their demand relative to the demand from all organs.  On the second pass any remaining biomass is allocated to non-structural demands based on the organ's relative demand.";
-            string RelativeThenPriorityDocStirng = "Arbitration is performed in two passes for for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand first. On the second pass any remaining biomass is allocated to non-structural demands based on the relative demand from all organs.";
-            string PriorityDocString = "Arbitration is performed in two passes for for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand first.  On the second pass any remaining biomass is allocated to non-structural demands based on the same order of priority.";
-            if (string.Compare(NArbitrationOption, "RelativeAllocation", true) == 0)
+            string RelativeDocString = "Arbitration is performed in two passes for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their demand relative to the demand from all organs.  On the second pass any remaining biomass is allocated to non-structural demands based on the organ's relative demand.";
+            string RelativeThenPriorityDocStirng = "Arbitration is performed in two passes for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand first. On the second pass any remaining biomass is allocated to non-structural demands based on the relative demand from all organs.";
+            string PriorityDocString = "Arbitration is performed in two passes for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand first.  On the second pass any remaining biomass is allocated to non-structural demands based on the same order of priority.";
+            string SinglePassDocString = "Arbitration is performed in a single pass for each of the biomass supply sources.  Biomass is partitioned between organs based on their relative demand in a single pass so non-structural demands compete dirrectly with structural demands.";
+            if (NArbitrationOption == ArbitrationType.RelativeAllocation)
                 tags.Add(new AutoDocumentation.Paragraph(RelativeDocString, indent));
-            if (string.Compare(NArbitrationOption, "PriorityAllocation", true) == 0)
+            if (NArbitrationOption == ArbitrationType.PriorityAllocation)
                 tags.Add(new AutoDocumentation.Paragraph(PriorityDocString, indent));
-            if (string.Compare(NArbitrationOption, "PrioritythenRelativeAllocation", true) == 0)
+            if (NArbitrationOption == ArbitrationType.PrioritythenRelativeAllocation)
                 tags.Add(new AutoDocumentation.Paragraph(RelativeThenPriorityDocStirng, indent));
+            if (NArbitrationOption == ArbitrationType.RelativeAllocationSinglePass)
+                tags.Add(new AutoDocumentation.Paragraph(SinglePassDocString, indent));
         }
     }
 }
