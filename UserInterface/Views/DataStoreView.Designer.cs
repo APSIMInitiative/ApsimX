@@ -50,7 +50,9 @@ namespace UserInterface.Views
             this.gridView = new GridView();
             this.label3 = new System.Windows.Forms.Label();
             this.editView2 = new EditView();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -62,7 +64,7 @@ namespace UserInterface.Views
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(622, 79);
+            this.panel1.Size = new System.Drawing.Size(603, 79);
             this.panel1.TabIndex = 6;
             // 
             // label2
@@ -91,7 +93,7 @@ namespace UserInterface.Views
             this.editView1.IsVisible = true;
             this.editView1.Location = new System.Drawing.Point(99, 41);
             this.editView1.Name = "editView1";
-            this.editView1.Size = new System.Drawing.Size(508, 24);
+            this.editView1.Size = new System.Drawing.Size(489, 24);
             this.editView1.TabIndex = 3;
             this.editView1.Value = "";
             // 
@@ -105,17 +107,15 @@ namespace UserInterface.Views
             this.dropDownView1.Location = new System.Drawing.Point(99, 11);
             this.dropDownView1.Name = "dropDownView1";
             this.dropDownView1.SelectedValue = null;
-            this.dropDownView1.Size = new System.Drawing.Size(508, 24);
+            this.dropDownView1.Size = new System.Drawing.Size(489, 24);
             this.dropDownView1.TabIndex = 2;
             this.dropDownView1.Values = new string[0];
             // 
             // gridView
             // 
-            this.gridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.gridView.AutoFilterOn = false;
             this.gridView.DataSource = null;
+            this.gridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridView.GetCurrentCell = null;
             this.gridView.Location = new System.Drawing.Point(0, 79);
             this.gridView.Margin = new System.Windows.Forms.Padding(5);
@@ -124,14 +124,14 @@ namespace UserInterface.Views
             this.gridView.NumericFormat = null;
             this.gridView.ReadOnly = false;
             this.gridView.RowCount = 0;
-            this.gridView.Size = new System.Drawing.Size(607, 491);
+            this.gridView.Size = new System.Drawing.Size(603, 526);
             this.gridView.TabIndex = 5;
             // 
             // label3
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 578);
+            this.label3.Location = new System.Drawing.Point(7, 15);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(161, 17);
             this.label3.TabIndex = 9;
@@ -142,27 +142,37 @@ namespace UserInterface.Views
             this.editView2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.editView2.AutoSize = true;
             this.editView2.IsVisible = true;
-            this.editView2.Location = new System.Drawing.Point(170, 578);
+            this.editView2.Location = new System.Drawing.Point(174, 15);
             this.editView2.Name = "editView2";
             this.editView2.Size = new System.Drawing.Size(73, 24);
             this.editView2.TabIndex = 10;
             this.editView2.Value = "";
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.editView2);
+            this.panel2.Controls.Add(this.label3);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 553);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(603, 52);
+            this.panel2.TabIndex = 11;
+            // 
             // DataStoreView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.gridView);
-            this.Controls.Add(this.editView2);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.panel1);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "DataStoreView";
-            this.Size = new System.Drawing.Size(622, 607);
+            this.Size = new System.Drawing.Size(603, 605);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
         #endregion
@@ -174,5 +184,6 @@ namespace UserInterface.Views
         private DropDownView dropDownView1;
         private System.Windows.Forms.Label label3;
         private EditView editView2;
+        private System.Windows.Forms.Panel panel2;
     }
 }
