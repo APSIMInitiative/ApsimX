@@ -130,7 +130,7 @@ namespace Models
         /// <summary>The emissivity</summary>
         private double Emissivity = 0.96;
         
-        /// <summary>Gets or sets the component data.</summary>R
+        /// <summary>Gets or sets the component data.</summary>
         private List<CanopyType> Canopies = new List<CanopyType>();
 
 
@@ -719,6 +719,7 @@ namespace Models
 
 
         /// <summary>Wraps a canopy object.</summary>
+        [Serializable]
         private class CanopyType
         {
             /// <summary>The canopy.</summary>
