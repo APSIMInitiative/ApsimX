@@ -248,9 +248,9 @@ namespace Models
             {
                 Rint = Rin * (1.0 - Math.Exp(-layerKtot[i] * layerLAIsum[i]));
 
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
+                for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    ComponentData[j].Rs[i] = Rint * MathUtilities.Divide(ComponentData[j].Ftot[i] * ComponentData[j].Ktot, layerKtot[i], 0.0);
+                    Canopies[j].Rs[i] = Rint * MathUtilities.Divide(Canopies[j].Ftot[i] * Canopies[j].Ktot, layerKtot[i], 0.0);
                 }
                 Rin -= Rint;
             }
@@ -267,11 +267,11 @@ namespace Models
 
             for (int i = numLayers - 1; i >= 0; i += -1)
             {
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
+                for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    _albedo += MathUtilities.Divide(ComponentData[j].Rs[i], weather.Radn, 0.0) * ComponentData[j].Albedo;
-                    emissivity += MathUtilities.Divide(ComponentData[j].Rs[i], weather.Radn, 0.0) * ComponentData[j].Emissivity;
-                    sumRs += ComponentData[j].Rs[i];
+                    _albedo += MathUtilities.Divide(Canopies[j].Rs[i], weather.Radn, 0.0) * Canopies[j].Canopy.Albedo;
+                    emissivity += MathUtilities.Divide(Canopies[j].Rs[i], weather.Radn, 0.0) * Emissivity;
+                    sumRs += Canopies[j].Rs[i];
                 }
             }
 
@@ -290,9 +290,9 @@ namespace Models
             // ====================================================
             for (int i = numLayers - 1; i >= 0; i += -1)
             {
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
+                for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    ComponentData[j].Rl[i] = MathUtilities.Divide(ComponentData[j].Rs[i], weather.Radn, 0.0) * netLongWave;
+                    Canopies[j].Rl[i] = MathUtilities.Divide(Canopies[j].Rs[i], weather.Radn, 0.0) * netLongWave;
                 }
             }
         }
@@ -354,9 +354,9 @@ namespace Models
             // ====================================================
             for (int i = numLayers - 1; i >= 0; i += -1)
             {
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
+                for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    ComponentData[j].Rsoil[i] = MathUtilities.Divide(ComponentData[j].Rs[i], weather.Radn, 0.0) * soil_heat;
+                    Canopies[j].Rsoil[i] = MathUtilities.Divide(Canopies[j].Rs[i], weather.Radn, 0.0) * soil_heat;
                 }
             }
         }
@@ -377,12 +377,9 @@ namespace Models
         /// </summary>
         private double RadnGreenFraction(int j)
         {
-            double klGreen = -Math.Log(1.0 - ComponentData[j].CoverGreen);
-            double klTot = -Math.Log(1.0 - ComponentData[j].CoverTot);
+            double klGreen = -Math.Log(1.0 - Canopies[j].Canopy.CoverGreen);
+            double klTot = -Math.Log(1.0 - Canopies[j].Canopy.CoverTotal);
             return MathUtilities.Divide(klGreen, klTot, 0.0);
         }
-
     }
-
-
 }

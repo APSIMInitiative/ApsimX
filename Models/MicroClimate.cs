@@ -15,34 +15,9 @@ using APSIM.Shared.Utilities;
 namespace Models
 {
     /// <summary>
-    /// A more-or-less direct port of the Fortran MicroMet model
-    /// Ported by Eric Zurcher Jun 2011, first to C#, then automatically
-    /// to VB via the converter in SharpDevelop.
-    /// Ported back to C# by Dean Holzworth
+    /// The module MICROMET, described here, has been developed to allow the calculation of 
+    /// potential transpiration for multiple competing canopies that can be either layered or intermingled.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// I have generally followed the original division of interface code and "science" code
-    /// into different units (formerly MicroMet.for and MicroScience.for)
-    /// </para>
-    /// <para>
-    /// Function routines were changed slightly as part of the conversion process. The "micromet_"
-    /// prefixes were dropped, as the functions are now members of a MicroMet class, and that class
-    /// membership keeps them distinguishable from other functions. A prefix of "Calc" was added to
-    /// some function names (e.g., CalcAverageT) if, after dropping the old "micromet_" prefix, there
-    /// was potential confusion between the function name and a variable name.
-    /// </para>
-    /// <para> The following Fortran routines, originally in MicroScience.for, were NOT converted,
-    /// because they were not actively being used:</para>
-    /// <para>    micromet_PenmanMonteith (the converted routine below was originally micromet_Penman_Monteith from MicroMet.for)</para>
-    /// <para>    micromet_ActualCanopyCond (the routine below was originally micromet_CanopyConductance)</para>
-    /// <para>    micromet_FrictionVelocity</para>
-    /// <para>    micromet_ZeroPlaneDispl</para>
-    /// <para>    micromet_RoughnessLength</para>
-    /// <para>    micromet_Radn2SolRad</para>
-    /// <para>    micromet_FreeEvapRate</para>
-    /// <para>    micromet_AerodynamicConductance (the routine below was originally micromet_AerodynamicConductanceFAO)</para>
-    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -50,6 +25,58 @@ namespace Models
     [ValidParent(ParentType = typeof(Zone))]
     public partial class MicroClimate : Model
     {
+
+        #region "Useful constants"
+        // Teten coefficients
+        /// <summary>The SVP_ a</summary>
+        private const double svp_A = 6.106;
+        // Teten coefficients
+        /// <summary>The SVP_ b</summary>
+        private const double svp_B = 17.27;
+        // Teten coefficients
+        /// <summary>The SVP_ c</summary>
+        private const double svp_C = 237.3;
+        // 0 C in Kelvin (g_k)
+        /// <summary>The abs_temp</summary>
+        private const double abs_temp = 273.16;
+        // universal gas constant (J/mol/K)
+        /// <summary>The r_gas</summary>
+        private const double r_gas = 8.3143;
+        // molecular weight water (kg/mol)
+        /// <summary>The mwh2o</summary>
+        private const double mwh2o = 0.018016;
+        // molecular weight air (kg/mol)
+        /// <summary>The mwair</summary>
+        private const double mwair = 0.02897;
+        // molecular fraction of water to air ()
+        /// <summary>The molef</summary>
+        private const double molef = mwh2o / mwair;
+        // Specific heat of air at constant pressure (J/kg/K)
+        /// <summary>The cp</summary>
+        private const double Cp = 1010.0;
+        // Stefan-Boltzman constant
+        /// <summary>The stef_boltz</summary>
+        private const double stef_boltz = 5.67E-08;
+        // constant for cloud effect on longwave radiation
+        /// <summary>The c_cloud</summary>
+        private const double c_cloud = 0.1;
+        // convert degrees to radians
+        /// <summary>The deg2 RAD</summary>
+        private const double Deg2Rad = Math.PI / 180.0;
+        // kg/m3
+        /// <summary>The rho w</summary>
+        private const double RhoW = 998.0;
+        // weights vpd towards vpd at maximum temperature
+        /// <summary>The svp_fract</summary>
+        private const double svp_fract = 0.66;
+        /// <summary>The sun set angle</summary>
+        private const double SunSetAngle = 0.0;
+        // hours to seconds
+        /// <summary>The HR2S</summary>
+        private const double hr2s = 60.0 * 60.0;
+        #endregion
+
+
         /// <summary>The clock</summary>
         [Link]
         private Clock Clock = null;
@@ -100,31 +127,19 @@ namespace Models
         /// <summary>The dryleaffraction</summary>
         private double dryleaffraction = 0;
 
+        /// <summary>The emissivity</summary>
+        private double Emissivity = 0.96;
+        
+        /// <summary>Gets or sets the component data.</summary>R
+        private List<CanopyType> Canopies = new List<CanopyType>();
+
 
         /// <summary>Constructor</summary>
         public MicroClimate()
         {
-            a_interception = 0.0;
-            b_interception = 1.0;
-            c_interception = 0.0;
-            d_interception = 0.0;
-            soil_albedo = 0.23;
-            air_pressure = 1010;
-            soil_emissivity = 0.96;
-            sun_angle = 15.0;
-
-            soil_heat_flux_fraction = 0.4;
-            night_interception_fraction = 0.5;
-            windspeed_default = 3.0;
-            refheight = 2.0;
-            albedo = 0.15;
-            emissivity = 0.96;
-            gsmax = 0.01;
-            r50 = 200;
-            soil_heat = 0.0;
-            dryleaffraction = 0.0;
+            Reset();
         }
-
+        
         /// <summary>Gets or sets the a_interception.</summary>
         [Description("a_interception")]
         [Bounds(Lower = 0.0, Upper = 10.0)]
@@ -220,9 +235,9 @@ namespace Models
                 double totalInterception = 0.0;
                 for (int i = 0; i <= numLayers - 1; i++)
                 {
-                    for (int j = 0; j <= ComponentData.Count - 1; j++)
+                    for (int j = 0; j <= Canopies.Count - 1; j++)
                     {
-                        totalInterception += ComponentData[j].interception[i];
+                        totalInterception += Canopies[j].interception[i];
                     }
                 }
                 return totalInterception;
@@ -233,14 +248,14 @@ namespace Models
         public double gc
         {
             // Should this be returning a sum or an array instead of just the first value???
-            get { return ((ComponentData.Count > 0) && (numLayers > 0)) ? ComponentData[0].Gc[0] : 0.0; }
+            get { return ((Canopies.Count > 0) && (numLayers > 0)) ? Canopies[0].Gc[0] : 0.0; }
         }
 
         /// <summary>Gets the ga.</summary>
         public double ga
         {
             // Should this be returning a sum or an array instead of just the first value???
-            get { return ((ComponentData.Count > 0) && (numLayers > 0)) ? ComponentData[0].Ga[0] : 0.0; }
+            get { return ((Canopies.Count > 0) && (numLayers > 0)) ? Canopies[0].Ga[0] : 0.0; }
         }
 
         /// <summary>Gets the petr.</summary>
@@ -251,9 +266,9 @@ namespace Models
                 double totalPetr = 0.0;
                 for (int i = 0; i <= numLayers - 1; i++)
                 {
-                    for (int j = 0; j <= ComponentData.Count - 1; j++)
+                    for (int j = 0; j <= Canopies.Count - 1; j++)
                     {
-                        totalPetr += ComponentData[j].PETr[i];
+                        totalPetr += Canopies[j].PETr[i];
                     }
                 }
                 return totalPetr;
@@ -268,9 +283,9 @@ namespace Models
                 double totalPeta = 0.0;
                 for (int i = 0; i <= numLayers - 1; i++)
                 {
-                    for (int j = 0; j <= ComponentData.Count - 1; j++)
+                    for (int j = 0; j <= Canopies.Count - 1; j++)
                     {
-                        totalPeta += ComponentData[j].PETa[i];
+                        totalPeta += Canopies[j].PETa[i];
                     }
                 }
                 return totalPeta;
@@ -295,26 +310,27 @@ namespace Models
             get { return netLongWave; }
         }
 
+
+        /// <summary>Called when simulation commences.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            // Create all canopy objects.
+            foreach (ICanopy canopy in Apsim.FindAll(this.Parent, typeof(ICanopy)))
+                Canopies.Add(new CanopyType(canopy));
+        }
+
         /// <summary>Called when the canopy energy balance needs to be calculated.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoEnergyArbitration")]
         private void DoEnergyArbitration(object sender, EventArgs e)
         {
-            GetAllCanopies();
-            
             MetVariables();
             CanopyCompartments();
             BalanceCanopyEnergy();
-
-            // Loop through all crops and get their potential growth for today.
-            foreach (ComponentDataStruct componentData in ComponentData)
-            {
-                if (componentData.Canopy != null)
-                    componentData.Frgr = componentData.Canopy.FRGR;
-                else if (componentData.Crop2 != null)
-                    componentData.Frgr = componentData.Crop2.CanopyProperties.Frgr;
-            }
 
             CalculateGc();
             CalculateGa();
@@ -325,51 +341,28 @@ namespace Models
             SendEnergyBalanceEvent();
         }
 
-        /// <summary>Clears the specified componentdata</summary>
-        /// <param name="c">The c.</param>
-        private void Clear(ComponentDataStruct c)
+        /// <summary>Reset the MicroClimate model back to its original state.</summary>
+        private void Reset()
         {
-            c.CoverGreen = 0;
-            c.CoverTot = 0;
-            c.Depth = 0;
-            c.Frgr = 0;
-            c.Height = 0;
-            c.K = 0;
-            c.Ktot = 0;
-            c.LAI = 0;
-            c.LAItot = 0;
-            Util.ZeroArray(c.layerLAI);
-            Util.ZeroArray(c.layerLAItot);
-            Util.ZeroArray(c.Ftot);
-            Util.ZeroArray(c.Fgreen);
-            Util.ZeroArray(c.Rs);
-            Util.ZeroArray(c.Rl);
-            Util.ZeroArray(c.Rsoil);
-            Util.ZeroArray(c.Gc);
-            Util.ZeroArray(c.Ga);
-            Util.ZeroArray(c.PET);
-            Util.ZeroArray(c.PETr);
-            Util.ZeroArray(c.PETa);
-            Util.ZeroArray(c.Omega);
-            Util.ZeroArray(c.interception);
-        }
+            a_interception = 0.0;
+            b_interception = 1.0;
+            c_interception = 0.0;
+            d_interception = 0.0;
+            soil_albedo = 0.23;
+            air_pressure = 1010;
+            soil_emissivity = 0.96;
+            sun_angle = 15.0;
 
-        /// <summary>Called when [loaded].</summary>
-        [EventSubscribe("Loaded")]
-        private void OnLoaded()
-        {
-            ComponentData = new List<ComponentDataStruct>();
-            foreach (ComponentDataStruct c in ComponentData)
-                Clear(c);
-            AddCropTypes();
-        }
-
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
+            soil_heat_flux_fraction = 0.4;
+            night_interception_fraction = 0.5;
+            windspeed_default = 3.0;
+            refheight = 2.0;
+            albedo = 0.15;
+            emissivity = 0.96;
+            gsmax = 0.01;
+            r50 = 200;
+            soil_heat = 0.0;
+            dryleaffraction = 0.0;
             _albedo = albedo;
             netLongWave = 0;
             sumRs = 0;
@@ -382,415 +375,7 @@ namespace Models
             DeltaZ = new double[-1 + 1];
             layerKtot = new double[-1 + 1];
             layerLAIsum = new double[-1 + 1];
-            foreach (ICanopy canopy in Apsim.FindAll(this.Parent, typeof(ICanopy)))
-            {
-                ComponentDataStruct componentData = componentData = CreateNewComonentData(canopy.CanopyType);
-                componentData.Canopy = canopy;
-                Clear(componentData);
-            }
         }
-
-
-        #region "Useful constants"
-        // Teten coefficients
-        /// <summary>The SVP_ a</summary>
-        private const double svp_A = 6.106;
-        // Teten coefficients
-        /// <summary>The SVP_ b</summary>
-        private const double svp_B = 17.27;
-        // Teten coefficients
-        /// <summary>The SVP_ c</summary>
-        private const double svp_C = 237.3;
-        // 0 C in Kelvin (g_k)
-        /// <summary>The abs_temp</summary>
-        private const double abs_temp = 273.16;
-        // universal gas constant (J/mol/K)
-        /// <summary>The r_gas</summary>
-        private const double r_gas = 8.3143;
-        // molecular weight water (kg/mol)
-        /// <summary>The mwh2o</summary>
-        private const double mwh2o = 0.018016;
-        // molecular weight air (kg/mol)
-        /// <summary>The mwair</summary>
-        private const double mwair = 0.02897;
-        // molecular fraction of water to air ()
-        /// <summary>The molef</summary>
-        private const double molef = mwh2o / mwair;
-        // Specific heat of air at constant pressure (J/kg/K)
-        /// <summary>The cp</summary>
-        private const double Cp = 1010.0;
-        // Stefan-Boltzman constant
-        /// <summary>The stef_boltz</summary>
-        private const double stef_boltz = 5.67E-08;
-        // constant for cloud effect on longwave radiation
-        /// <summary>The c_cloud</summary>
-        private const double c_cloud = 0.1;
-        // convert degrees to radians
-        /// <summary>The deg2 RAD</summary>
-        private const double Deg2Rad = Math.PI / 180.0;
-        // kg/m3
-        /// <summary>The rho w</summary>
-        private const double RhoW = 998.0;
-        // weights vpd towards vpd at maximum temperature
-        /// <summary>The svp_fract</summary>
-        private const double svp_fract = 0.66;
-        /// <summary>The sun set angle</summary>
-        private const double SunSetAngle = 0.0;
-        // hours to seconds
-        /// <summary>The HR2S</summary>
-        private const double hr2s = 60.0 * 60.0;
-        #endregion
-        #region "Various class variables"
-
-        /// <summary></summary>
-        [Serializable]
-        public class ComponentDataStruct
-        {
-            /// <summary>The name</summary>
-            public string Name;
-            /// <summary>The type</summary>
-            public string Type;
-            /// <summary>The crop</summary>
-            public ICrop Crop;
-            /// <summary>The crop2</summary>
-            public ICrop2 Crop2;
-
-            /// <summary>
-            /// The canopy
-            /// </summary>
-            public ICanopy Canopy;
-
-            /// <summary>The lai</summary>
-            [XmlIgnore]
-            public double LAI;
-            /// <summary>The la itot</summary>
-            [XmlIgnore]
-            public double LAItot;
-            /// <summary>The cover green</summary>
-            [XmlIgnore]
-            public double CoverGreen;
-            /// <summary>The cover tot</summary>
-            [XmlIgnore]
-            public double CoverTot;
-            /// <summary>The ktot</summary>
-            [XmlIgnore]
-            public double Ktot;
-            /// <summary>The k</summary>
-            [XmlIgnore]
-            public double K;
-            /// <summary>The height</summary>
-            [XmlIgnore]
-            public double Height;
-            /// <summary>The depth</summary>
-            [XmlIgnore]
-            public double Depth;
-            /// <summary>Gets or sets the albedo.</summary>
-            /// <value>The albedo.</value>
-            [XmlIgnore]
-            public double Albedo {get; set;}
-            /// <summary>Gets or sets the emissivity.</summary>
-            /// <value>The emissivity.</value>
-            [XmlIgnore]
-            public double Emissivity {get; set;}
-            /// <summary>Gets or sets the gsmax.</summary>
-            /// <value>The gsmax.</value>
-            [XmlIgnore]
-            public double Gsmax {get; set;}
-            /// <summary>Gets or sets the R50.</summary>
-            /// <value>The R50.</value>
-            [XmlIgnore]
-            public double R50 {get; set;}
-            /// <summary>The FRGR</summary>
-            [XmlIgnore]
-            public double Frgr;
-            /// <summary>The layer lai</summary>
-            [XmlIgnore]
-            public double[] layerLAI;
-            /// <summary>The layer la itot</summary>
-            [XmlIgnore]
-            public double[] layerLAItot;
-            /// <summary>The ftot</summary>
-            [XmlIgnore]
-            public double[] Ftot;
-            /// <summary>The fgreen</summary>
-            [XmlIgnore]
-            public double[] Fgreen;
-            /// <summary>The rs</summary>
-            [XmlIgnore]
-            public double[] Rs;
-            /// <summary>The rl</summary>
-            [XmlIgnore]
-            public double[] Rl;
-            /// <summary>The rsoil</summary>
-            [XmlIgnore]
-            public double[] Rsoil;
-            /// <summary>The gc</summary>
-            [XmlIgnore]
-            public double[] Gc;
-            /// <summary>The ga</summary>
-            [XmlIgnore]
-            public double[] Ga;
-            /// <summary>The pet</summary>
-            [XmlIgnore]
-            public double[] PET;
-            /// <summary>The pe tr</summary>
-            [XmlIgnore]
-            public double[] PETr;
-            /// <summary>The pe ta</summary>
-            [XmlIgnore]
-            public double[] PETa;
-            /// <summary>The omega</summary>
-            [XmlIgnore]
-            public double[] Omega;
-            /// <summary>The interception</summary>
-            [XmlIgnore]
-            public double[] interception;
-        }
-
-        /// <summary>Adds the crop types.</summary>
-        private void AddCropTypes()
-        {
-            // Could we keep this list in alphabetical order, please
-            ComponentDataDefinitions.Clear();
-            SetupCropTypes("AgPasture", "Crop");
-            SetupCropTypes("bambatsi", "C4grass");
-            SetupCropTypes("banksia", "Tree");
-            SetupCropTypes("barley", "Crop");
-            SetupCropTypes("broccoli", "Crop");
-            SetupCropTypes("Browntop", "Grass");
-            SetupCropTypes("camaldulensis", "Tree");
-            SetupCropTypes("canola", "Crop");
-            SetupCropTypes("Carrots4", "Crop");
-            SetupCropTypes("chickpea", "Crop");
-            SetupCropTypes("Chicory", "Forage");
-            SetupCropTypes("Cocksfoot", "Grass");
-            SetupCropTypes("crop", "Crop");
-            SetupCropTypes("danthonia", "Grass");
-            SetupCropTypes("eucalyptus", "Tree");
-            SetupCropTypes("fieldpea", "Crop");
-            SetupCropTypes("frenchbean", "Crop");
-            SetupCropTypes("globulus", "Tree");
-            SetupCropTypes("grass", "Grass");
-            SetupCropTypes("kale2", "Crop");
-            SetupCropTypes("lolium_rigidum", "Crop");
-            SetupCropTypes("lucerne", "Crop");
-            SetupCropTypes("Maize", "Maize");
-            SetupCropTypes("MCSP", "Crop");
-            SetupCropTypes("nativepasture", "C4Grass");
-            SetupCropTypes("oats", "Crop");
-            SetupCropTypes("oilmallee", "Tree");
-            SetupCropTypes("oilpalm", "Tree");
-            SetupCropTypes("Paspalum", "Grass");
-            SetupCropTypes("Plantain", "Forage");
-            SetupCropTypes("PMFSlurp", "Crop");
-            SetupCropTypes("potato", "Potato");
-            SetupCropTypes("Kikuyu", "Grass");
-            SetupCropTypes("raphanus_raphanistrum", "Crop");
-            SetupCropTypes("ryegrass", "Grass");
-            SetupCropTypes("saltbush", "Tree");
-            SetupCropTypes("SimpleTree", "Tree");
-            SetupCropTypes("Slurp", "Crop");
-            SetupCropTypes("sorghum", "Crop");
-            SetupCropTypes("sugar", "Crop");
-            SetupCropTypes("Sward", "Pasture");
-            SetupCropTypes("tree", "Tree");
-            SetupCropTypes("TallFescue", "Grass");
-            SetupCropTypes("understorey", "Crop");
-            SetupCropTypes("vine", "Crop");
-            SetupCropTypes("weed", "Crop");
-            SetupCropTypes("wheat", "Crop");
-            SetupCropTypes("Teff", "Crop");
-            SetupCropTypes("WheatPMFPrototype", "Crop");
-            SetupCropTypes("WhiteClover", "Legume");
-            SetupCropTypes("FodderBeet", "Crop");
-        }
-
-        /// <summary>Setups the crop types.</summary>
-        /// <param name="Name">The name.</param>
-        /// <param name="Type">The type.</param>
-        private void SetupCropTypes(string Name, string Type)
-        {
-            ComponentDataStruct CropType = new ComponentDataStruct();
-            CropType.Name = Name;
-
-            //Set defalst
-            CropType.Albedo = 0.15;
-            CropType.Gsmax = 0.01;
-            CropType.Emissivity = 0.96;
-            CropType.R50 = 200;
-
-            //Override type specific values
-            if (Type.Equals("Crop"))
-            {
-                CropType.Albedo = 0.18;
-                CropType.Gsmax=0.011;
-            }
-            if (Type.Equals("Potato"))
-            {
-                CropType.Albedo = 0.26;
-                CropType.Gsmax = 0.03;
-            }
-            else if (Type.Equals("Grass"))
-            {
-                CropType.Albedo = 0.23;
-            }
-            else if (Type.Equals("C4grass"))
-            {
-                CropType.Albedo = 0.23;
-                CropType.Gsmax = 0.015;
-                CropType.R50 = 150;
-            }
-            else if (Type.Equals("Tree"))
-            {
-                CropType.Albedo = 0.15;
-                CropType.Gsmax = 0.005;
-            }
-            else if (Type.Equals("Tree2"))
-            {
-                CropType.Albedo = 0.15;
-                CropType.R50 = 100;
-            }
-            else if (Type.Equals("Pasture") || Type.Equals("Legume") || Type.Equals("Forage"))
-            { // added by rcichota when spliting species in agpasture, still setting all parameters the same, will change in the future
-                CropType.Albedo = 0.26;
-                CropType.Gsmax = 0.011;
-            }
-            else if (Type.Equals("Maize"))
-            {
-                CropType.Albedo = 0.175;  // from SEASONAL CHANGES IN THE ALBEDO OF A MAIZE CROP DURING TWO SEASONS A.F.G. JACOBS and W.A.J. VAN PUL 
-                CropType.Gsmax = 0.009;
-                CropType.Emissivity = 0.96;
-                CropType.R50 = 160;
-            }
-            ComponentDataDefinitions.Add(CropType);
-        }
-
-
-        private List<ComponentDataStruct> ComponentDataDefinitions = new List<ComponentDataStruct>();
-
-        /// <summary>Gets or sets the component data.</summary>
-        /// <value>The component data.</value>
-        [XmlElement("ComponentData")]
-        [XmlIgnore]
-        public List<ComponentDataStruct> ComponentData { get; set; }
-
-        #endregion
-
-        /// <summary>Gets all canopies in simulation</summary>
-        private void GetAllCanopies()
-        {
-
-            foreach (ComponentDataStruct componentData in ComponentData)
-            {
-                componentData.Name = componentData.Canopy.CanopyType;
-                componentData.Type = componentData.Canopy.CanopyType;
-                componentData.LAI = componentData.Canopy.LAI;
-                componentData.LAItot = componentData.Canopy.LAITotal;
-                componentData.CoverGreen = componentData.Canopy.CoverGreen;
-                componentData.CoverTot = componentData.Canopy.CoverTotal;
-                componentData.Height = Math.Round(componentData.Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m
-                componentData.Depth = Math.Round(componentData.Canopy.Depth, 5) / 1000.0;   // Round off a bit and convert mm to m
-            }
-        }
-
-        /// <summary>Fetches the table value.</summary>
-        /// <param name="field">The field.</param>
-        /// <param name="compNo">The comp no.</param>
-        /// <param name="layerNo">The layer no.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Unknown table element:  + field</exception>
-        private double FetchTableValue(string field, int compNo, int layerNo)
-        {
-            if (field == "LAI")
-            {
-                return ComponentData[compNo].layerLAI[layerNo];
-            }
-            else if (field == "Ftot")
-            {
-                return ComponentData[compNo].Ftot[layerNo];
-            }
-            else if (field == "Fgreen")
-            {
-                return ComponentData[compNo].Fgreen[layerNo];
-            }
-            else if (field == "Rs")
-            {
-                return ComponentData[compNo].Rs[layerNo];
-            }
-            else if (field == "Rl")
-            {
-                return ComponentData[compNo].Rl[layerNo];
-            }
-            else if (field == "Gc")
-            {
-                return ComponentData[compNo].Gc[layerNo];
-            }
-            else if (field == "Ga")
-            {
-                return ComponentData[compNo].Ga[layerNo];
-            }
-            else if (field == "PET")
-            {
-                return ComponentData[compNo].PET[layerNo];
-            }
-            else if (field == "PETr")
-            {
-                return ComponentData[compNo].PETr[layerNo];
-            }
-            else if (field == "PETa")
-            {
-                return ComponentData[compNo].PETa[layerNo];
-            }
-            else if (field == "Omega")
-            {
-                return ComponentData[compNo].Omega[layerNo];
-            }
-            else
-            {
-                throw new Exception("Unknown table element: " + field);
-            }
-        }
-
-        /// <summary>Finds the index of the component.</summary>
-        /// <param name="name">The name.</param>
-        /// <returns></returns>
-        private int FindComponentIndex(string name)
-        {
-            for (int i = 0; i <= ComponentData.Count - 1; i++)
-            {
-                if (ComponentData[i].Name.Equals(name, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    return i;
-                }
-            }
-            // Couldn't find - see if the name is in the ComponentDataDefinitions. If it
-            // is then add it as a componentdata that we need to handle.
-            for (int i = 0; i <= ComponentDataDefinitions.Count - 1; i++)
-            {
-                if (ComponentDataDefinitions[i].Name.Equals(name, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    // found
-                    ComponentData.Add(ComponentDataDefinitions[i]);
-                    return ComponentData.Count - 1;
-                }
-            }
-            return -1;
-        }
-
-        private ComponentDataStruct CreateNewComonentData(string name)
-        {
-            for (int i = 0; i <= ComponentDataDefinitions.Count - 1; i++)
-            {
-                if (ComponentDataDefinitions[i].Name.Equals(name, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    // found
-                    ComponentData.Add(ReflectionUtilities.Clone(ComponentDataDefinitions[i]) as ComponentDataStruct);
-                    return ComponentData[ComponentData.Count - 1];
-                }
-            }
-            throw new Exception("Cannot find a MicroClimate definition for " + name);
-        }
-
 
         /// <summary>Canopies the compartments.</summary>
         private void CanopyCompartments()
@@ -822,12 +407,12 @@ namespace Models
         /// <summary>Break the combined Canopy into layers</summary>
         private void DefineLayers()
         {
-            double[] nodes = new double[2 * ComponentData.Count];
+            double[] nodes = new double[2 * Canopies.Count];
             int numNodes = 1;
-            for (int compNo = 0; compNo <= ComponentData.Count - 1; compNo++)
+            for (int compNo = 0; compNo <= Canopies.Count - 1; compNo++)
             {
-                double height = ComponentData[compNo].Height;
-                double canopyBase = height - ComponentData[compNo].Depth;
+                double height = Canopies[compNo].HeightMetres;
+                double canopyBase = height - Canopies[compNo].DepthMetres;
                 if (Array.IndexOf(nodes, height) == -1)
                 {
                     nodes[numNodes] = height;
@@ -849,20 +434,20 @@ namespace Models
                 Array.Resize<double>(ref layerKtot, numLayers);
                 Array.Resize<double>(ref layerLAIsum, numLayers);
 
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
+                for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    Array.Resize<double>(ref ComponentData[j].Ftot, numLayers);
-                    Array.Resize<double>(ref ComponentData[j].Fgreen, numLayers);
-                    Array.Resize<double>(ref ComponentData[j].Rs, numLayers);
-                    Array.Resize<double>(ref ComponentData[j].Rl, numLayers);
-                    Array.Resize<double>(ref ComponentData[j].Rsoil, numLayers);
-                    Array.Resize<double>(ref ComponentData[j].Gc, numLayers);
-                    Array.Resize<double>(ref ComponentData[j].Ga, numLayers);
-                    Array.Resize<double>(ref ComponentData[j].PET, numLayers);
-                    Array.Resize<double>(ref ComponentData[j].PETr, numLayers);
-                    Array.Resize<double>(ref ComponentData[j].PETa, numLayers);
-                    Array.Resize<double>(ref ComponentData[j].Omega, numLayers);
-                    Array.Resize<double>(ref ComponentData[j].interception, numLayers);
+                    Array.Resize<double>(ref Canopies[j].Ftot, numLayers);
+                    Array.Resize<double>(ref Canopies[j].Fgreen, numLayers);
+                    Array.Resize<double>(ref Canopies[j].Rs, numLayers);
+                    Array.Resize<double>(ref Canopies[j].Rl, numLayers);
+                    Array.Resize<double>(ref Canopies[j].Rsoil, numLayers);
+                    Array.Resize<double>(ref Canopies[j].Gc, numLayers);
+                    Array.Resize<double>(ref Canopies[j].Ga, numLayers);
+                    Array.Resize<double>(ref Canopies[j].PET, numLayers);
+                    Array.Resize<double>(ref Canopies[j].PETr, numLayers);
+                    Array.Resize<double>(ref Canopies[j].PETa, numLayers);
+                    Array.Resize<double>(ref Canopies[j].Omega, numLayers);
+                    Array.Resize<double>(ref Canopies[j].interception, numLayers);
                 }
             }
             for (int i = 0; i <= numNodes - 2; i++)
@@ -874,14 +459,14 @@ namespace Models
         /// <summary>Break the components into layers</summary>
         private void DivideComponents()
         {
-            double[] Ld = new double[ComponentData.Count];
-            for (int j = 0; j <= ComponentData.Count - 1; j++)
+            double[] Ld = new double[Canopies.Count];
+            for (int j = 0; j <= Canopies.Count - 1; j++)
             {
-                ComponentDataStruct componentData = ComponentData[j];
+                CanopyType componentData = Canopies[j];
 
                 componentData.layerLAI = new double[numLayers];
                 componentData.layerLAItot = new double[numLayers];
-                Ld[j] = MathUtilities.Divide(componentData.LAItot, componentData.Depth, 0.0);
+                Ld[j] = MathUtilities.Divide(componentData.Canopy.LAITotal, componentData.DepthMetres, 0.0);
             }
             double top = 0.0;
             double bottom = 0.0;
@@ -894,23 +479,23 @@ namespace Models
 
                 // Calculate LAI for layer i and component j
                 // ===========================================
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
+                for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    ComponentDataStruct componentData = ComponentData[j];
+                    CanopyType componentData = Canopies[j];
 
-                    if ((componentData.Height > bottom) && (componentData.Height - componentData.Depth < top))
+                    if ((componentData.HeightMetres > bottom) && (componentData.HeightMetres - componentData.DepthMetres < top))
                     {
                         componentData.layerLAItot[i] = Ld[j] * DeltaZ[i];
-                        componentData.layerLAI[i] = componentData.layerLAItot[i] * MathUtilities.Divide(componentData.LAI, componentData.LAItot, 0.0);
+                        componentData.layerLAI[i] = componentData.layerLAItot[i] * MathUtilities.Divide(componentData.Canopy.LAI, componentData.Canopy.LAITotal, 0.0);
                         layerLAIsum[i] += componentData.layerLAItot[i];
                     }
                 }
 
                 // Calculate fractional contribution for layer i and component j
                 // ====================================================================
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
+                for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    ComponentDataStruct componentData = ComponentData[j];
+                    CanopyType componentData = Canopies[j];
 
                     componentData.Ftot[i] = MathUtilities.Divide(componentData.layerLAItot[i], layerLAIsum[i], 0.0);
                     // Note: Sum of Fgreen will be < 1 as it is green over total
@@ -920,22 +505,21 @@ namespace Models
         }
 
         /// <summary>Calculate light extinction parameters</summary>
-        /// <exception cref="System.Exception">Unrealistically high cover value in MicroMet i.e. > -.9999</exception>
         private void LightExtinction()
         {
             // Calculate effective K from LAI and cover
             // =========================================
-            for (int j = 0; j <= ComponentData.Count - 1; j++)
+            for (int j = 0; j <= Canopies.Count - 1; j++)
             {
-                ComponentDataStruct componentData = ComponentData[j];
+                CanopyType componentData = Canopies[j];
 
-                if (MathUtilities.FloatsAreEqual(ComponentData[j].CoverGreen, 1.0, 1E-05))
+                if (MathUtilities.FloatsAreEqual(Canopies[j].Canopy.CoverGreen, 1.0, 1E-05))
                 {
                     throw new Exception("Unrealistically high cover value in MicroMet i.e. > -.9999");
                 }
 
-                componentData.K = MathUtilities.Divide(-Math.Log(1.0 - componentData.CoverGreen), componentData.LAI, 0.0);
-                componentData.Ktot = MathUtilities.Divide(-Math.Log(1.0 - componentData.CoverTot), componentData.LAItot, 0.0);
+                componentData.K = MathUtilities.Divide(-Math.Log(1.0 - componentData.Canopy.CoverGreen), componentData.Canopy.LAI, 0.0);
+                componentData.Ktot = MathUtilities.Divide(-Math.Log(1.0 - componentData.Canopy.CoverTotal), componentData.Canopy.LAITotal, 0.0);
             }
 
             // Calculate extinction for individual layers
@@ -943,9 +527,9 @@ namespace Models
             for (int i = 0; i <= numLayers - 1; i++)
             {
                 layerKtot[i] = 0.0;
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
+                for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    ComponentDataStruct componentData = ComponentData[j];
+                    CanopyType componentData = Canopies[j];
 
                     layerKtot[i] += componentData.Ftot[i] * componentData.Ktot;
 
@@ -972,11 +556,11 @@ namespace Models
                 double Rflux = Rin * 1000000.0 / (dayLength * hr2s) * (1.0 - _albedo);
                 double Rint = 0.0;
 
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
+                for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    ComponentDataStruct componentData = ComponentData[j];
+                    CanopyType componentData = Canopies[j];
 
-                    componentData.Gc[i] = CanopyConductance(componentData.Gsmax, componentData.R50, componentData.Frgr, componentData.Fgreen[i], layerKtot[i], layerLAIsum[i], Rflux);
+                    componentData.Gc[i] = CanopyConductance(componentData.Canopy.Gsmax, componentData.Canopy.R50, componentData.Canopy.FRGR, componentData.Fgreen[i], layerKtot[i], layerLAIsum[i], Rflux);
 
                     Rint += componentData.Rs[i];
                 }
@@ -984,6 +568,7 @@ namespace Models
                 Rin -= Rint;
             }
         }
+
         /// <summary>Calculate the aerodynamic conductance for system compartments</summary>
         private void CalculateGa()
         {
@@ -1002,9 +587,9 @@ namespace Models
 
             for (int i = 0; i <= numLayers - 1; i++)
             {
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
+                for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    ComponentData[j].Ga[i] = totalGa * MathUtilities.Divide(ComponentData[j].Rs[i], sumRs, 0.0);
+                    Canopies[j].Ga[i] = totalGa * MathUtilities.Divide(Canopies[j].Rs[i], sumRs, 0.0);
                 }
             }
         }
@@ -1016,10 +601,10 @@ namespace Models
             double sumLAItot = 0.0;
             for (int i = 0; i <= numLayers - 1; i++)
             {
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
+                for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    sumLAI += ComponentData[j].layerLAI[i];
-                    sumLAItot += ComponentData[j].layerLAItot[i];
+                    sumLAI += Canopies[j].layerLAI[i];
+                    sumLAItot += Canopies[j].layerLAItot[i];
                 }
             }
 
@@ -1029,9 +614,9 @@ namespace Models
 
             for (int i = 0; i <= numLayers - 1; i++)
             {
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
+                for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    ComponentData[j].interception[i] = MathUtilities.Divide(ComponentData[j].layerLAI[i], sumLAI, 0.0) * totalInterception;
+                    Canopies[j].interception[i] = MathUtilities.Divide(Canopies[j].layerLAI[i], sumLAI, 0.0) * totalInterception;
                 }
             }
         }
@@ -1046,9 +631,9 @@ namespace Models
             double freeEvapGa = 0.0;
             for (int i = 0; i <= numLayers - 1; i++)
             {
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
+                for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    ComponentDataStruct componentData = ComponentData[j];
+                    CanopyType componentData = Canopies[j];
                     componentData.PET[i] = 0.0;
                     componentData.PETr[i] = 0.0;
                     componentData.PETa[i] = 0.0;
@@ -1071,9 +656,9 @@ namespace Models
 
             for (int i = 0; i <= numLayers - 1; i++)
             {
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
+                for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    ComponentDataStruct componentData = ComponentData[j];
+                    CanopyType componentData = Canopies[j];
 
                     netRadiation = 1000000.0 * ((1.0 - _albedo) * componentData.Rs[i] + componentData.Rl[i] + componentData.Rsoil[i]);
                     // MJ/J
@@ -1095,9 +680,9 @@ namespace Models
         {
             for (int i = 0; i <= numLayers - 1; i++)
             {
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
+                for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    ComponentDataStruct componentData = ComponentData[j];
+                    CanopyType componentData = Canopies[j];
 
                     componentData.Omega[i] = CalcOmega(weather.MinT, weather.MaxT, air_pressure, componentData.Ga[i], componentData.Gc[i]);
                 }
@@ -1107,9 +692,9 @@ namespace Models
         /// <summary>Send an energy balance event</summary>
         private void SendEnergyBalanceEvent()
         {
-            for (int j = 0; j <= ComponentData.Count - 1; j++)
+            for (int j = 0; j <= Canopies.Count - 1; j++)
             {
-                ComponentDataStruct componentData = ComponentData[j];
+                CanopyType componentData = Canopies[j];
 
                 if (componentData.Canopy != null)
                 {
@@ -1128,28 +713,89 @@ namespace Models
                     componentData.Canopy.PotentialEP = totalPotentialEp;
                     componentData.Canopy.LightProfile = lightProfile;
                 }
-                
-                else if (componentData.Crop2 != null)
-                {
-                    CanopyEnergyBalanceInterceptionlayerType[] lightProfile = new CanopyEnergyBalanceInterceptionlayerType[numLayers];
-                    double totalPotentialEp = 0;
-                    double totalInterception = 0.0;
-                    for (int i = 0; i <= numLayers - 1; i++)
-                    {
-                        lightProfile[i] = new CanopyEnergyBalanceInterceptionlayerType();
-                        lightProfile[i].thickness = Convert.ToSingle(DeltaZ[i]);
-                        lightProfile[i].amount = Convert.ToSingle(componentData.Rs[i] * RadnGreenFraction(j));
-                        totalPotentialEp += componentData.PET[i];
-                        totalInterception += componentData.interception[i];
-                    }
-
-                    componentData.Crop2.demandWater = totalPotentialEp;
-                    componentData.Crop2.LightProfile = lightProfile;
-                }
             }
         }
 
+
+
+        /// <summary>Wraps a canopy object.</summary>
+        private class CanopyType
+        {
+            /// <summary>The canopy.</summary>
+            public ICanopy Canopy;
+
+            /// <summary>The ktot</summary>
+            public double Ktot;
+
+            /// <summary>The k</summary>
+            public double K;
+
+            /// <summary>The height</summary>
+            public double HeightMetres
+            {
+                get
+                {
+                    return Math.Round(Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m } }
+                }
+            }
+
+            /// <summary>The depth</summary>
+            public double DepthMetres
+            {
+                get
+                {
+                    return Math.Round(Canopy.Depth, 5) / 1000.0; // Round off a bit and convert mm to m } }
+                }
+            }
+                        
+            /// <summary>The layer lai</summary>
+            public double[] layerLAI;
+
+            /// <summary>The layer la itot</summary>
+            public double[] layerLAItot;
+
+            /// <summary>The ftot</summary>
+            public double[] Ftot;
+
+            /// <summary>The fgreen</summary>
+            public double[] Fgreen;
+
+            /// <summary>The rs</summary>
+            public double[] Rs;
+
+            /// <summary>The rl</summary>
+            public double[] Rl;
+
+            /// <summary>The rsoil</summary>
+            public double[] Rsoil;
+
+            /// <summary>The gc</summary>
+            public double[] Gc;
+
+            /// <summary>The ga</summary>
+            public double[] Ga;
+
+            /// <summary>The pet</summary>
+            public double[] PET;
+
+            /// <summary>The pe tr</summary>
+            public double[] PETr;
+
+            /// <summary>The pe ta</summary>
+            public double[] PETa;
+
+            /// <summary>The omega</summary>
+            public double[] Omega;
+
+            /// <summary>The interception</summary>
+            public double[] interception;
+
+            /// <summary>Constructor</summary>
+            /// <param name="canopy">The canopy to wrap.</param>
+            public CanopyType(ICanopy canopy)
+            {
+                Canopy = canopy;
+            }
+        }
     }
-
-
 }

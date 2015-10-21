@@ -66,6 +66,15 @@ namespace Models.PMF
         /// </summary>
         public string CropType { get; set; }
 
+        /// <summary>Albedo.</summary>
+        public double Albedo { get { return 0.15; } }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        public double Gsmax { get { return 0.01; } }
+
+        /// <summary>Gets or sets the R50.</summary>
+        public double R50 { get { return 200; } }
+
         /// <summary>The soil</summary>
         [Link]
         Soils.Soil Soil = null;
