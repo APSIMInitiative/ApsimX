@@ -120,7 +120,7 @@ namespace UserInterface.Presenters
                         data.Rows[r][0] = rowDate.ToShortDateString();      // store in Date col
                     }
                     data.Columns.RemoveAt(yrCol);       // remove unwanted columns
-                    data.Columns.RemoveAt(--dayCol);
+                    data.Columns.RemoveAt(dayCol);
                 }
                 this.weatherDataView.PopulateData(data);
             }
