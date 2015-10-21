@@ -46,22 +46,10 @@ The model consists of:
             <Name>Memo</Name>
             <MemoText><![CDATA[This phase is currenttly set with a very short duration and is a place holder until we have a suitalbe method for modelling tuber dormancy]]></MemoText>
           </Memo>
-          <AirTemperatureFunction>
+          <VariableReference>
             <Name>ThermalTime</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>2</double>
-                <double>20</double>
-                <double>35</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>18</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
-          </AirTemperatureFunction>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
           <Constant>
             <Name>Target</Name>
             <Value>1</Value>
@@ -75,22 +63,10 @@ The model consists of:
             <Name>Memo</Name>
             <MemoText><![CDATA[The sprouting phase controls when the crop emerges.  In potato this is influenced by the physiological stage of the seed tuber when it is planted.  This is difficult to model as the seed tubers physiological status begins when it is still on the mother plant and is influenced by the treatment of the mother plant, the storage conditions of the tuber, conditions when the seed is being prepared for planting and the variety of potato.  There is currently no good way of modelling this as it would require environmental information from beyond the field where the crop is to be grown which is currently beyond the scope of APSIM.  In the absence of something more elegent, we recommend that the user adjusts sowing depth to achieve a realistic emergence date and let the model deal with phenological develpment there after.]]></MemoText>
           </Memo>
-          <AirTemperatureFunction>
+          <VariableReference>
             <Name>ThermalTime</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>2</double>
-                <double>20</double>
-                <double>35</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>18</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
-          </AirTemperatureFunction>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
           <Start>Peeping</Start>
           <End>Emergence</End>
           <ShootLag>72</ShootLag>
@@ -98,22 +74,6 @@ The model consists of:
         </EmergingPhase>
         <GenericPhase>
           <Name>Vegetative</Name>
-          <AirTemperatureFunction>
-            <Name>ThermalTime</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>2</double>
-                <double>20</double>
-                <double>35</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>18</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
-          </AirTemperatureFunction>
           <Constant>
             <Name>Target</Name>
             <Value>300</Value>
@@ -122,6 +82,10 @@ The model consists of:
             <Name>Memo</Name>
             <MemoText><![CDATA[During the vegetative phase the crop is only growing stem, root and leaf.  Tuber initiation usually occurs soon after emergence and the duration of this phase can be influenced by the physiological status of the seed tuber at planting.  As discussed above, we do not have a suitable method for modelling this yet so we have treated the time from emergence to tuber initiation as a thermal time constant.]]></MemoText>
           </Memo>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
           <Start>Emergence</Start>
           <End>TuberInitiation</End>
         </GenericPhase>
@@ -131,57 +95,41 @@ The model consists of:
             <Name>Memo</Name>
             <MemoText><![CDATA[During the vegetative phase the crop is only growing stem, root and leaf.  Tuber initiation usually occurs soon after emergence and the duration of this phase can be influenced by the physiological status of the seed tuber at planting.  As discussed above, we do not have a suitable method for modelling this yet so we have treated the time from emergence to tuber initiation as a thermal time constant.]]></MemoText>
           </Memo>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
           <Start>TuberInitiation</Start>
           <End>FinalLeaf</End>
         </LeafAppearancePhase>
         <LeafDeathPhase>
           <Name>LateTuber</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
           <Start>FinalLeaf</Start>
           <End>FullSenescence</End>
         </LeafDeathPhase>
         <GenericPhase>
           <Name>Senesced</Name>
-          <AirTemperatureFunction>
-            <Name>ThermalTime</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>2</double>
-                <double>20</double>
-                <double>35</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>18</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
-          </AirTemperatureFunction>
           <Constant>
             <Name>Target</Name>
             <Value>200</Value>
           </Constant>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
           <Start>FullSenescence</Start>
           <End>Maturity</End>
         </GenericPhase>
         <EndPhase>
           <Name>Maturity</Name>
-          <AirTemperatureFunction>
+          <VariableReference>
             <Name>ThermalTime</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>2</double>
-                <double>20</double>
-                <double>35</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>18</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
-          </AirTemperatureFunction>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
           <Start>Maturity</Start>
           <End>Unused</End>
         </EndPhase>
@@ -193,22 +141,6 @@ The model consists of:
       </OrganArbitrator>
       <Structure>
         <Name>Structure</Name>
-        <AirTemperatureFunction>
-          <Name>ThermalTime</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>2</double>
-              <double>20</double>
-              <double>35</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>18</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-        </AirTemperatureFunction>
         <PhaseLookupValue>
           <Name>MainStemPrimordiaInitiationRate</Name>
           <DivideFunction>
@@ -327,6 +259,10 @@ The model consists of:
           <Name>DroughtInducedBranchMortality</Name>
           <Value>0</Value>
         </Constant>
+        <VariableReference>
+          <Name>ThermalTime</Name>
+          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+        </VariableReference>
         <InitialiseStage>Emergence</InitialiseStage>
         <PrimaryBudNo>2.2</PrimaryBudNo>
       </Structure>
@@ -633,18 +569,25 @@ The model consists of:
       </Root>
       <Leaf>
         <Name>Leaf</Name>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <Propertys>
-            <string>[Leaf].CohortLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <Propertys>
-            <string>[Leaf].CohortDead</string>
-          </Propertys>
-        </CompositeBiomass>
+        <VariableReference>
+          <Name>ThermalTime</Name>
+          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+        </VariableReference>
+        <LeafCohort>
+          <Name>InitialLeaf1</Name>
+          <Rank>1</Rank>
+          <Area>900</Area>
+        </LeafCohort>
+        <LeafCohort>
+          <Name>InitialLeaf2</Name>
+          <Rank>2</Rank>
+          <Area>600</Area>
+        </LeafCohort>
+        <LeafCohort>
+          <Name>InitialLeaf3</Name>
+          <Rank>3</Rank>
+          <Area>300</Area>
+        </LeafCohort>
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
           <LinearInterpolationFunction>
@@ -936,22 +879,6 @@ The model consists of:
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
-        <AirTemperatureFunction>
-          <Name>ThermalTime</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>2</double>
-              <double>20</double>
-              <double>35</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>18</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-        </AirTemperatureFunction>
         <MultiplyFunction>
           <Name>ExtinctionCoeff</Name>
           <Constant>
@@ -990,6 +917,18 @@ The model consists of:
           <XProperty>[Weather].MinT</XProperty>
         </LinearInterpolationFunction>
         <CompositeBiomass>
+          <Name>Live</Name>
+          <Propertys>
+            <string>[Leaf].CohortLive</string>
+          </Propertys>
+        </CompositeBiomass>
+        <CompositeBiomass>
+          <Name>Dead</Name>
+          <Propertys>
+            <string>[Leaf].CohortDead</string>
+          </Propertys>
+        </CompositeBiomass>
+        <CompositeBiomass>
           <Name>Total</Name>
           <Propertys>
             <string>[Leaf].Live</string>
@@ -1010,21 +949,6 @@ The model consists of:
           </Propertys>
           <ArraySize>[Leaf].MaxNodeNo</ArraySize>
         </ArrayBiomass>
-        <LeafCohort>
-          <Name>InitialLeaf1</Name>
-          <Rank>1</Rank>
-          <Area>900</Area>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaf2</Name>
-          <Rank>2</Rank>
-          <Area>600</Area>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaf3</Name>
-          <Rank>3</Rank>
-          <Area>300</Area>
-        </LeafCohort>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
         <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
