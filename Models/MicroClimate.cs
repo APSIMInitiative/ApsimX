@@ -317,6 +317,8 @@ namespace Models
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            Reset();
+
             // Create all canopy objects.
             foreach (ICanopy canopy in Apsim.FindAll(this.Parent, typeof(ICanopy)))
                 Canopies.Add(new CanopyType(canopy));
@@ -375,6 +377,7 @@ namespace Models
             DeltaZ = new double[-1 + 1];
             layerKtot = new double[-1 + 1];
             layerLAIsum = new double[-1 + 1];
+            Canopies.Clear();
         }
 
         /// <summary>Canopies the compartments.</summary>
