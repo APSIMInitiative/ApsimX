@@ -1799,7 +1799,9 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
       <Cultivar>
         <Name>Pioneer_39G12</Name>
         <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 650</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value = 550</Command>
+        <Command>[Grain].NumberFunction.GrowthRateFactor.XYPairs.X = 0.2,2,4,10</Command>
+        <Command>[Grain].NumberFunction.GrowthRateFactor.XYPairs.Y = 0,0.6,1,1</Command>
       </Cultivar>
       <Cultivar>
         <Name>Pioneer_3153</Name>
@@ -2080,6 +2082,8 @@ VShort duration variety released in New Zealand by Pioneer
       <Name>memo</Name>
       <MemoText><![CDATA[
 A selection of data from Kenya has been included from the work of Keating et al (1992).  These include the trial originally labelled JMW2 by the original authors and was labelled Experiment 6 in Keating et al (1992).  This trial includes maize (cultivar Katumani Composite B) sown at 5 populations (1.1, 2.2, 4.4, 6.6 and 8.8 plants/m2) under low (0 kg N/ha applied) and high (120 kgN/ha) fertiliser conditions during the Long Rains of 1988.  This same experimental design was conducted at two locations, Katumani (1o 35' S, 37o 14' E) and Kiboko (2o 13' S, 37o 43' E). The trial was rainfed at Katumani but fully irrigated at Kiboko.  Yields ranged from 2000 to 5400 kg/ha at Katumani and 1000 to 6000 kg/ha at Kiboko.  There were strong population x nitrogen interactions at both sites.  A second trial refered to as BMW1 or Experiment 1 in Keating et al(1992).  A range of populations (2.0-6.5 plants/m2) and irrigation treatments (6-176 mm) where planted under high (80 kgN/ha) and low (0kgN/ha) fertiliser conditions at Katumani. Individual replicates are modelled separately due to variability in soil (depth to rock), establishment and irrigation application.  Grain yields varied from 1600 to 8000 kg/ha.
+
+Note.  The BMW1 trail consists of data from unreplicated plots.
 ]]></MemoText>
     </Memo>
     <Experiment>
@@ -26014,7 +26018,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Biomass</Name>
@@ -26754,13 +26758,13 @@ namespace Models
               <double>380</double>
             </Thickness>
             <NO3>
+              <double>50</double>
               <double>20</double>
               <double>20</double>
               <double>20</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
+              <double>10</double>
+              <double>10</double>
+              <double>10</double>
             </NO3>
             <NH4>
               <double>10</double>
@@ -30647,7 +30651,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>GrainBiomass</Name>
@@ -30708,7 +30712,7 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
         <Folder>
           <Name>SWCLayers</Name>
