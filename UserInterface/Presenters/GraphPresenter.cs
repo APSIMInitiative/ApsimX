@@ -128,7 +128,8 @@ namespace UserInterface.Presenters
                 else if (definition.type == SeriesType.Scatter)
                     graphView.DrawLineAndMarkers(definition.title, definition.x, definition.y, 
                                                  definition.xAxis, definition.yAxis, definition.colour,
-                                                 definition.line, definition.marker, definition.showInLegend);
+                                                 definition.line, definition.marker, 
+                                                 definition.lineThickness, definition.markerSize, definition.showInLegend);
                 
                 else if (definition.type == SeriesType.Area)
                     graphView.DrawArea(definition.title, definition.x, definition.y, definition.x2, definition.y2,
