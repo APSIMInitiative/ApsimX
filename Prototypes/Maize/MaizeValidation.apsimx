@@ -1295,20 +1295,17 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <MinimumFunction>
           <Name>FRGRFunction</Name>
           <VariableReference>
-            <Name>RUE_FT</Name>
+            <Name>FT</Name>
             <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
           </VariableReference>
-          <MinimumFunction>
-            <Name>Others</Name>
-            <VariableReference>
-              <Name>RUE_FN</Name>
-              <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>RUE_FVPD</Name>
-              <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
-            </VariableReference>
-          </MinimumFunction>
+          <VariableReference>
+            <Name>FN</Name>
+            <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>FVPD</Name>
+            <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+          </VariableReference>
         </MinimumFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
