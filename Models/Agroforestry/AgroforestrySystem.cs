@@ -92,7 +92,14 @@ namespace Models.Agroforestry
         /// <returns></returns>
         public double[] GetDistanceFromTrees(Zone z)
         {
-            return tree.GetDistanceFromTrees(z, true);
+            for (int i=0;i < ZoneList.Count; i++)
+            {
+                if (ZoneList[i] == z)
+                {
+                    return new double[] { tree.DistFromTreeNear[i], tree.DistFromTreeMid[i], tree.DistFromTreeFar[i] };
+                }
+            }
+            throw new ApsimXException(this, "Could not find zone " + z.Name + " in ZoneList. Is it part of the agroforestry system?");
         }
 
         /// <summary>
