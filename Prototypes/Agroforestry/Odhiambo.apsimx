@@ -85,7 +85,7 @@ The APSIM maize model has been developed using the Plant Modelling Framework (PM
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>PrioritythenRelativeAllocation</NArbitrationOption>
+        <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
         <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
       </OrganArbitrator>
       <Phenology>
