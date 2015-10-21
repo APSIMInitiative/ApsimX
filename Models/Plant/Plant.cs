@@ -432,6 +432,7 @@ namespace Models.PMF
 
             // now write all cultivars in a list.
             tags.Add(new AutoDocumentation.Heading("Cultivars", headingLevel));
+            tags.Add(new AutoDocumentation.Paragraph("The section below lists each of the cultivars currently included in the model and each of the parameters that they differ from the base model", indent));
             foreach (IModel child in Apsim.Children(this, typeof(Cultivar)))
                 child.Document(tags, headingLevel, indent);
         }

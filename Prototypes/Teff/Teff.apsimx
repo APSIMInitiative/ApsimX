@@ -24,7 +24,7 @@ The APSIM Teff model includes components to simulate the following plant parts a
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>PrioritythenRelativeAllocation</NArbitrationOption>
+        <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
         <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
       </OrganArbitrator>
       <Phenology>
