@@ -309,7 +309,6 @@
     <Compile Include="Plant\Phenology\VernalisationCW.cs" />
     <Compile Include="Plant\Plant.cs" />
     <Compile Include="Plant\Structure.cs" />
-    <Compile Include="Plant\Summary.cs" />
     <Compile Include="Plant\Utility.cs" />
     <Compile Include="Soils\IrrigationApplicationType.cs" />
     <Compile Include="Soils\RunoffEventType.cs" />
