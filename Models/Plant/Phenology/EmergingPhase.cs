@@ -77,11 +77,11 @@ namespace Models.PMF.Phen
 
             tags.Add(new AutoDocumentation.Paragraph("This phase simulates time to emergence as a function of sowing depth."
                 + " The thermal time target from sowing to emergence is given by:<br>"
-                + "&nbsp;&nbsp;&nbsp;&nbsp;***Target = SowingDepth x ShootRate + ShootLag***<br>"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;*Target = SowingDepth x ShootRate + ShootLag*<br>"
                 + "Where:<br>"
-                + "&nbsp;&nbsp;&nbsp;&nbsp;***ShootRate*** = " + ShootRate + " (deg day/mm),<br>"
-                + "&nbsp;&nbsp;&nbsp;&nbsp;***ShootLag*** = " + ShootLag + " (deg day), <br>"
-                + "and ***SowingDepth*** (mm) is sent with the sowing event.", indent));
+                + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootRate* = " + ShootRate + " (deg day/mm),<br>"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootLag* = " + ShootLag + " (deg day), <br>"
+                + "and *SowingDepth* (mm) is sent with the sowing event.", indent));
 
             // write memos.
             foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
