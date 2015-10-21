@@ -75,7 +75,7 @@ namespace Models.Report
         /// <summary>
         /// The values for each report event (e.g. daily)
         /// </summary>
-        private List<object> values = new List<object>();
+        protected List<object> values = new List<object>();
 
         /// <summary>
         /// The values for each report event (e.g. daily)
@@ -162,7 +162,7 @@ namespace Models.Report
         /// <param name="columnName">The column name to write to the output</param>
         /// <param name="frequenciesFromReport">Reporting frequencies</param>
         /// <param name="parentModel">The parent model</param>
-        private ReportColumn(string variableName, string columnName, string[] frequenciesFromReport, IModel parentModel)
+        protected ReportColumn(string variableName, string columnName, string[] frequenciesFromReport, IModel parentModel)
         {
             this.variableName = variableName;
             this.heading = columnName;
@@ -397,7 +397,7 @@ namespace Models.Report
         /// <summary>
         /// Retrieve the current value and store it in our array of values.
         /// </summary>
-        public void StoreValue()
+        public virtual void StoreValue()
         {
             object value = Apsim.Get(this.parentModel.Parent, this.variableName, true);
 
@@ -554,7 +554,7 @@ namespace Models.Report
             if (type == null)
             {
                 // Whole column is null.
-                flattenedValues.Add(new FlattenedValue() { Name = name, Type = typeof(int) });
+                flattenedValues.Add(new FlattenedValue() { Name = name, Type = typeof(double) });
             }
             else if (type.IsArray)
             {

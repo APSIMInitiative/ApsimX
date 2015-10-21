@@ -14,7 +14,7 @@ namespace Models.Factorial
     [Serializable]
     [ViewName("UserInterface.Views.MemoView")]
     [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
-    [ValidParent(typeof(Simulations))]
+    [ValidParent(ParentType = typeof(Simulations))]
     public class Experiment : Model
     {
         /// <summary>
@@ -42,12 +42,38 @@ namespace Models.Factorial
                     Apsim.CallEventHandler(child, "Loaded", null);
 
                 foreach (FactorValue value in combination)
+                {
                     value.ApplyToSimulation(newSimulation);
+                }
+                PushFactorsToReportModels(newSimulation, combination);
 
                 simulations.Add(newSimulation);
             }
 
             return simulations.ToArray();
+        }
+
+        /// <summary>Find all report models and give them the factor values.</summary>
+        /// <param name="factorValues">The factor values to send to each report model.</param>
+        /// <param name="simulation">The simulation to search for report models.</param>
+        private void PushFactorsToReportModels(Simulation simulation, List<FactorValue> factorValues)
+        {
+            List<string> names = new List<string>();
+            List<string> values = new List<string>();
+
+            foreach (FactorValue factorValue in factorValues)
+            {
+                string name = factorValue.Factor.Name;
+                string value = factorValue.Name.Replace(factorValue.Factor.Name, "");
+                names.Add(name);
+                values.Add(value);
+            }
+
+            foreach (Report.Report report in Apsim.ChildrenRecursively(simulation, typeof(Report.Report)))
+            {
+                report.ExperimentFactorNames = names;
+                report.ExperimentFactorValues = values;
+            }
         }
 
         /// <summary>
@@ -88,6 +114,8 @@ namespace Models.Factorial
 
                     foreach (FactorValue value in combination)
                         value.ApplyToSimulation(newSimulation);
+
+                    PushFactorsToReportModels(newSimulation, combination);
 
                     return newSimulation;
                 }

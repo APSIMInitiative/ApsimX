@@ -74,6 +74,8 @@ namespace UserInterface.Presenters
             this.seriesView.SeriesType.Changed += OnSeriesTypeChanged;
             this.seriesView.LineType.Changed += OnLineTypeChanged;
             this.seriesView.MarkerType.Changed += OnMarkerTypeChanged;
+            this.seriesView.LineThickness.Changed += OnLineThicknessChanged;
+            this.seriesView.MarkerSize.Changed += OnMarkerSizeChanged;
             this.seriesView.Colour.Changed += OnColourChanged;
             this.seriesView.XOnTop.Changed += OnXOnTopChanged;
             this.seriesView.YOnRight.Changed += OnYOnRightChanged;
@@ -84,6 +86,7 @@ namespace UserInterface.Presenters
             this.seriesView.ShowInLegend.Changed += OnShowInLegendChanged;
             this.seriesView.YCumulative.Changed += OnCumulativeYChanged;
             this.seriesView.XCumulative.Changed += OnCumulativeXChanged;
+            this.seriesView.Filter.Changed += OnFilterChanged;
         }
 
         /// <summary>Disconnect all view events.</summary>
@@ -93,6 +96,8 @@ namespace UserInterface.Presenters
             this.seriesView.SeriesType.Changed -= OnSeriesTypeChanged;
             this.seriesView.LineType.Changed -= OnLineTypeChanged;
             this.seriesView.MarkerType.Changed -= OnMarkerTypeChanged;
+            this.seriesView.LineThickness.Changed += OnLineThicknessChanged;
+            this.seriesView.MarkerSize.Changed += OnMarkerSizeChanged;
             this.seriesView.Colour.Changed -= OnColourChanged;
             this.seriesView.XOnTop.Changed -= OnXOnTopChanged;
             this.seriesView.YOnRight.Changed -= OnYOnRightChanged;
@@ -103,6 +108,7 @@ namespace UserInterface.Presenters
             this.seriesView.ShowInLegend.Changed -= OnShowInLegendChanged;
             this.seriesView.YCumulative.Changed -= OnCumulativeYChanged;
             this.seriesView.XCumulative.Changed -= OnCumulativeXChanged;
+            this.seriesView.Filter.Changed -= OnFilterChanged;
         }
 
         /// <summary>Set the value of the graph models property</summary>
@@ -165,6 +171,27 @@ namespace UserInterface.Presenters
                 this.SetModelProperty("FactorIndexToVaryMarkers", factorIndex);
             }
         }
+
+        /// <summary>Series line thickness has been changed by the user.</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnLineThicknessChanged(object sender, EventArgs e)
+        {
+            LineThicknessType lineThickness;
+            if (Enum.TryParse<LineThicknessType>(this.seriesView.LineThickness.SelectedValue, out lineThickness))
+                this.SetModelProperty("LineThickness", lineThickness);
+        }
+
+        /// <summary>Series marker size has been changed by the user.</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnMarkerSizeChanged(object sender, EventArgs e)
+        {
+            MarkerSizeType markerSize;
+            if (Enum.TryParse<MarkerSizeType>(this.seriesView.MarkerSize.SelectedValue, out markerSize))
+                this.SetModelProperty("MarkerSize", markerSize);
+        }
+
 
         /// <summary>Series color has been changed by the user.</summary>
         /// <param name="sender">Event sender</param>
@@ -278,6 +305,14 @@ namespace UserInterface.Presenters
             this.SetModelProperty("ShowInLegend", this.seriesView.ShowInLegend.IsChecked);
         }
 
+        /// <summary>User has changed the filter</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnFilterChanged(object sender, EventArgs e)
+        {
+            this.SetModelProperty("Filter", this.seriesView.Filter.Value);
+        }
+
         #endregion
 
         /// <summary>Populate the views series editor with the current selected series.</summary>
@@ -298,6 +333,16 @@ namespace UserInterface.Presenters
             PopulateLineDropDown();
             PopulateColourDropDown();
 
+            // Populate line thickness drop down.
+            List<string> thicknesses = new List<string>(Enum.GetNames(typeof(LineThicknessType)));
+            seriesView.LineThickness.Values = thicknesses.ToArray();
+            seriesView.LineThickness.SelectedValue = series.LineThickness.ToString();
+
+            // Populate marker size drop down.
+            List<string> sizes = new List<string>(Enum.GetNames(typeof(MarkerSizeType)));
+            seriesView.MarkerSize.Values = sizes.ToArray();
+            seriesView.MarkerSize.SelectedValue = series.MarkerSize.ToString();
+
             // Populate other controls.
             this.seriesView.SeriesType.SelectedValue = series.Type.ToString();
             this.seriesView.XOnTop.IsChecked = series.XAxis == Axis.AxisType.Top;
@@ -306,6 +351,7 @@ namespace UserInterface.Presenters
             this.seriesView.XCumulative.IsChecked = series.CumulativeX;
             this.seriesView.YCumulative.IsChecked = series.Cumulative;
             this.seriesView.DataSource.SelectedValue = series.TableName;
+            this.seriesView.Filter.Value = series.Filter;
 
             PopulateFieldNames(dataStore);
             dataStore.Disconnect();
@@ -326,6 +372,11 @@ namespace UserInterface.Presenters
             this.seriesView.LineType.Values = values.ToArray();
             if (series.FactorIndexToVaryLines == -1)
                 this.seriesView.LineType.SelectedValue = series.Line.ToString();
+            else if (series.FactorIndexToVaryLines >= FactorNames.Count)
+            {
+                series.FactorIndexToVaryLines = -1;
+                this.seriesView.LineType.SelectedValue = series.Line.ToString();
+            }
             else
                 this.seriesView.LineType.SelectedValue = "Vary by " + FactorNames[series.FactorIndexToVaryLines];
         }
@@ -338,6 +389,11 @@ namespace UserInterface.Presenters
             this.seriesView.MarkerType.Values = values.ToArray();
             if (series.FactorIndexToVaryMarkers == -1)
                 this.seriesView.MarkerType.SelectedValue = series.Marker.ToString();
+            else if (series.FactorIndexToVaryMarkers >= FactorNames.Count)
+            {
+                series.FactorIndexToVaryMarkers = -1;
+                this.seriesView.MarkerType.SelectedValue = series.Marker.ToString();
+            }
             else
                 this.seriesView.MarkerType.SelectedValue = "Vary by " + FactorNames[series.FactorIndexToVaryMarkers];
         }
@@ -353,10 +409,15 @@ namespace UserInterface.Presenters
             colourOptions.AddRange(FactorNames.Select(factorName => "Vary by " + factorName));
 
             this.seriesView.Colour.Values = colourOptions.ToArray();
-            if (series.FactorIndexToVaryColours != -1)
-                this.seriesView.Colour.SelectedValue = "Vary by " + FactorNames[series.FactorIndexToVaryColours];
-            else
+            if (series.FactorIndexToVaryColours == -1)
                 this.seriesView.Colour.SelectedValue = series.Colour;
+            else if (series.FactorIndexToVaryColours >= FactorNames.Count)
+            {
+                series.FactorIndexToVaryColours = -1;
+                this.seriesView.Colour.SelectedValue = series.Colour;
+            }
+            else
+                this.seriesView.Colour.SelectedValue = "Vary by " + FactorNames[series.FactorIndexToVaryColours];
         }
 
         /// <summary>Gets a list of factor names. Never returns null.</summary>
@@ -387,6 +448,7 @@ namespace UserInterface.Presenters
                 if (data != null)
                 {
                     string[] fieldNames = DataTableUtilities.GetColumnNames(data);
+                    Array.Sort(fieldNames);
                     this.seriesView.X.Values = fieldNames;
                     this.seriesView.Y.Values = fieldNames;
                     this.seriesView.X2.Values = fieldNames;

@@ -13,7 +13,7 @@ namespace Models.PMF.OldPlant
     /// Population model for old plant
     /// </summary>
     [Serializable]
-    [ValidParent(typeof(Plant15))]
+    [ValidParent(ParentType = typeof(Plant15))]
     public class Population1 : Model
     {
         /// <summary>The plant</summary>

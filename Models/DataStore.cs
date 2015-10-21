@@ -19,7 +19,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.DataStoreView")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
-    [ValidParent(typeof(Simulations))]
+    [ValidParent(ParentType = typeof(Simulations))]
     public class DataStore : Model
     {
         /// <summary>A SQLite connection shared between all instances of this DataStore.</summary>
@@ -37,6 +37,9 @@ namespace Models
         /// </summary>
         /// <value><c>true</c> if [automatic export]; otherwise, <c>false</c>.</value>
         public bool AutoExport { get; set; }
+
+        /// <summary>The maximum number of results to display per page.</summary>
+        public int MaximumResultsPerPage { get; set; }
 
         /// <summary>A flag that when true indicates that the DataStore is in post processing model.</summary>
         private bool DoingPostProcessing = false;
@@ -445,10 +448,12 @@ namespace Models
         /// </summary>
         /// <param name="tableName">Name of the table.</param>
         /// <param name="filter">The filter.</param>
+        /// <param name="from">Only used when 'count' specified. The record number to offset.</param>
+        /// <param name="count">The number of records to return or all if 0.</param>
         /// <returns></returns>
-        public DataTable GetFilteredData(string tableName, string filter)
+        public DataTable GetFilteredData(string tableName, string filter, int from = 0, int count = 0)
         {
-            return GetFilteredData(tableName, new string[] { "*" }, filter);
+            return GetFilteredData(tableName, new string[] { "*" }, filter, from, count);
         }
 
         /// <summary>

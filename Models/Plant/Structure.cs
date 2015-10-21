@@ -182,7 +182,7 @@ namespace Models.PMF
     /// and population.
     /// </remarks>
     [Serializable]
-    [ValidParent(typeof(Plant))]
+    [ValidParent(ParentType = typeof(Plant))]
     public class Structure : Model
     {
         private double _MainStemFinalNodeNo;
@@ -293,6 +293,10 @@ namespace Models.PMF
         /// <value>The delta node number.</value>
         [XmlIgnore]
         public double DeltaNodeNumber { get; set; }
+        /// <summary>The number of branches, used by zadoc class for calcualting zadoc score in the 20's</summary>
+        /// <value>number of tillers.</value>
+        [XmlIgnore]
+        public double BranchNumber { get; set; }
 
         /// <summary>Clears this instance.</summary>
         public void Clear()
@@ -396,6 +400,7 @@ namespace Models.PMF
             if ((MainStemNodeNo - StartOfDayMainStemNodeNo) >= 1.0)
             {
                 TotalStemPopn += BranchingRate.Value * MainStemPopn;
+                BranchNumber += BranchingRate.Value;
             }
 
             //Reduce plant population incase of mortality

@@ -23,9 +23,10 @@ namespace Models.PMF
     /// e.g. [Phenology].Vernalisation.PhotopSens = 3.5.
     /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.CultivarView")]
+    [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.CultivarPresenter")]
-    [ValidParent(ParentModels=new Type[] { typeof(Plant15), typeof(Plant) })]
+    [ValidParent(ParentType = typeof(Plant))]
+    [ValidParent(ParentType = typeof(Plant15))]
     public class Cultivar : Model
     {
         /// <summary>
@@ -42,7 +43,15 @@ namespace Models.PMF
         /// Gets or sets a collection of names this cultivar is known as.
         /// </summary>
         [XmlElement("Alias")]
-        public string[] Aliases { get; set; }
+        public string[] Aliases
+        {
+            get
+            {
+                List<string> names = new List<string>();
+                Apsim.Children(this, typeof(Alias)).ForEach(a => names.Add(a.Name));
+                return names.ToArray();
+            }
+        }
 
         /// <summary>
         /// Gets or sets a collection of commands that must be executed when applying this cultivar.

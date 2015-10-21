@@ -14,9 +14,9 @@ using Models.Zones;
 namespace Models.Agroforestry
 {
     /// <summary>
-    /// A simple proxy for a full tree model is provided for use in agroforestry simulations.  It allows the user to directly specify the size and structural data for trees within the simulation rather than having to simulate complex tree situations (e.g. trees under specific pruning regimes).
+    /// A simple proxy for a full tree model is provided for use in agroforestry simulations.  It allows the user to directly specify the size and structural data for trees within the simulation rather than having to simulate complex tree development (e.g. tree canopy structure under specific pruning regimes).
     /// 
-    /// Several parameters are required of the user to specify the state of the trees within the simulation.  These include:
+    /// Several parameters are required of the user to specify the state of trees within the simulation.  These include:
     /// 
     /// * Tree height (m)
     /// * Tree canopy width (m)
@@ -26,14 +26,15 @@ namespace Models.Agroforestry
     /// * Tree root length density at various depths and distances from the trees (cm/cm<sup>3</sup>)
     /// * Tree daily nitrogen demand (g/tree/day)
     /// 
-    /// The model calculates N uptake using the equations of [DeWilligen1994] as formulated in the model WANULCAS [WANULCAS2011].
+    /// The model calculates diffusive nutrient uptake using the equations of [DeWilligen1994] as formulated in the model WANULCAS [WANULCAS2011] and modified to better represent nutrient buffering [smethurst1997paste;smethurst1999phase;van1990defining].
     /// Water uptake is calculated using an adaptation of the approach of [Meinkeetal1993] where the extraction coefficient is assumed to be proportional to root length density [Peakeetal2013].  The user specifies a value of the uptake coefficient at a base root length density of 1 cm/cm<sup>3</sup> and spatial water uptake is scales using this value and the user-input of tree root length density.
     /// 
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.TreeProxyView")]
     [PresenterName("UserInterface.Presenters.TreeProxyPresenter")]
-    [ValidParent(ParentModels = new Type[] { typeof(Simulation), typeof(Zone) })]
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class TreeProxy : Model, IUptake
     {
         [Link]
@@ -46,11 +47,9 @@ namespace Models.Agroforestry
         public List<List<string>> Table { get; set; }
 
         /// <summary>
-        /// The reduction in wind as a fraction.
+        /// Reference to the parent agroforestry system.
         /// </summary>
-        [Units("0-1")]
-        [XmlIgnore]
-        public double Urel { get; set; }
+        public AgroforestrySystem AFsystem = null;
 
         /// <summary>
         /// Distance from zone in tree heights
@@ -109,6 +108,12 @@ namespace Models.Agroforestry
         [Summary]
         [Description("Root Radius (cm)")]
         public double RootRadius { get; set; }
+
+        /// <summary>Number of Trees in the System</summary>
+        /// <value>The number of trees</value>
+        [Summary]
+        [Description("Number of Trees in the System ")]
+        public double NumberOfTrees { get; set; }
 
         /// <summary>Adsoption Cofficient for NO3</summary>
         /// <value>Adsoption Cofficient for NO3</value>
@@ -338,34 +343,6 @@ namespace Models.Agroforestry
                 OADates[i] = dates[i].ToOADate();
             return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, TreeLeafAreas, out didInterp);
         }
-        /// <summary>
-        /// Return the %Wind Reduction for a given zone
-        /// </summary>
-        /// <param name="z">Zone</param>
-        /// <returns>%Wind Reduction</returns>
-        public double GetWindReduction(Zone z)
-        {
-            foreach (Zone zone in ZoneList)
-                if (zone == z)
-                {
-                    double UrelMin = Math.Max(0.0, 1.14 * 0.5 - 0.16); // 0.5 is porosity, will be dynamic in the future
-
-                    if (heightToday < 1)
-                        Urel = 1;
-                    else
-                    {
-                        H = GetDistanceFromTrees(z) / heightToday;
-                        if (H < 6)
-                            Urel = UrelMin + (1 - UrelMin) / 2 - H / 6 * (1 - UrelMin) / 2;
-                        else if (H < 6.1)
-                            Urel = UrelMin;
-                        else
-                            Urel = UrelMin + (1 - UrelMin) / (1 + 0.000928 * Math.Exp(12.9372 * Math.Pow((H - 6), -0.26953)));
-                    }
-                    return Urel;
-                }
-            throw new ApsimXException(this, "Could not find zone called " + z.Name);
-        }
 
         /// <summary>
         /// Calculate the total intercepted radiation by the tree canopy (MJ)
@@ -381,6 +358,43 @@ namespace Models.Agroforestry
             }
         }
 
+        /// <summary>
+        /// Calculate water use from each zone (mm)
+        /// </summary>
+        [Units("mm")]
+        [XmlIgnore]
+        public double[] TreeWaterUptake { get; private set; }
+
+        /// <summary>
+        /// Calculate water use on a per tree basis (L)
+        /// </summary>
+        [Units("L")]
+        public double IndividualTreeWaterUptake { 
+            get
+            {
+                double TWU = 0;
+                int i=0;
+
+                foreach (Zone zone in ZoneList)
+                {
+                    TWU += TreeWaterUptake[i] * zone.Area * 10000.0/NumberOfTrees;
+                    i++;
+                }
+                return TWU;
+            }
+        }
+
+        /// <summary>
+        /// Calculate water use on a per tree basis (L)
+        /// </summary>
+        [Units("L")]
+        [XmlIgnore]
+        public double IndividualTreeWaterDemand
+        {
+            get;
+            private set;
+        }
+        
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -394,6 +408,9 @@ namespace Models.Agroforestry
             forestryZones = Apsim.ChildrenRecursively(Parent, typeof(Zone));
             treeZone = ZoneList[0] as Zone;
             treeZoneWater = Apsim.Find(treeZone, typeof(Soils.SoilWater)) as Soils.SoilWater;
+
+            TreeWaterUptake = new double[ZoneList.Count];
+
         }
 
         /// <summary>
@@ -408,7 +425,8 @@ namespace Models.Agroforestry
             SWDemand = 0;
             foreach (Zone ZI in ZoneList)
                 SWDemand += Etz*GetShade(ZI) / 100 * ZI.Area * 10000;
-            
+
+            IndividualTreeWaterDemand = SWDemand / NumberOfTrees;
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
             double PotSWSupply = 0; // Total water supply (L)
@@ -440,7 +458,7 @@ namespace Models.Agroforestry
 
                         for (int i = 0; i <= SW.Length - 1; i++)
                         {
-                            Uptake.Water[i] = (SW[i] - LL15mm[i]) * BaseKL*RLD[i]; 
+                            Uptake.Water[i] = Math.Max(SW[i] - LL15mm[i],0.0) * BaseKL*RLD[i]; 
                             PotSWSupply += Uptake.Water[i] * ZI.Area * 10000;
                         }
                         Uptakes.Add(Uptake);
@@ -575,18 +593,24 @@ namespace Models.Agroforestry
         /// <param name="info"></param>
         public void SetSWUptake(List<Soils.Arbitrator.ZoneWaterAndN> info)
         {
-            foreach (ZoneWaterAndN ZI in info)
+            int i = 0;
+            foreach (Zone SearchZ in forestryZones)
             {
-                foreach (Zone SearchZ in forestryZones)
+                foreach (ZoneWaterAndN ZI in info)
                 {
                     Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Name)
                     {
                         ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
                         ThisSoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(ZI.Water, -1); ;
+                        TreeWaterUptake[i] = MathUtilities.Sum(ZI.Water);
+                        if (TreeWaterUptake[i] < 0)
+                        { }
+                        i++;
                     }
                 }
             }
+            
         }
 
         /// <summary>

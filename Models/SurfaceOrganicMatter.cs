@@ -22,7 +22,7 @@
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(typeof(Zone))]
+    [ValidParent(ParentType=typeof(Zone))]
     public class SurfaceOrganicMatter : Model, ISurfaceOrganicMatter
     {
         #region links to other components

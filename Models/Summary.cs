@@ -23,7 +23,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.SummaryView")]
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
-    [ValidParent(typeof(Simulation))]
+    [ValidParent(ParentType=typeof(Simulation))]
     public class Summary : Model, ISummary
     {
         /// <summary>
@@ -67,6 +67,19 @@ namespace Models
             {
                 return Apsim.Parent(this, typeof(Simulation)) as Simulation;
             }
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Summary()
+        {
+            // Create our Messages table.
+            messagesTable = new DataTable("Messages");
+            this.messagesTable.Columns.Add("ComponentName", typeof(string));
+            this.messagesTable.Columns.Add("Date", typeof(DateTime));
+            this.messagesTable.Columns.Add("Message", typeof(string));
+            this.messagesTable.Columns.Add("MessageType", typeof(int));
         }
 
         /// <summary>
@@ -559,8 +572,8 @@ namespace Models
                         bool showTotal = !double.IsNaN(property.Total);
 
                         initialConditionsTable.Rows.Add(new object[]
-                          { 
-                              relativeModelPath, 
+                          {
+                              relativeModelPath,
                               property.Name,
                               property.Description,
                               property.DataType.Name,
@@ -658,7 +671,7 @@ namespace Models
                         value += " (" + units + ")";
                     }
 
-                    propertyDataTable.Rows.Add(new object[] 
+                    propertyDataTable.Rows.Add(new object[]
                     {
                         propertyName + ": ",
                         value
@@ -708,7 +721,7 @@ namespace Models
             }
             else if (dataTypeName != "String[]")
             {
-               // throw new ApsimXException(null, "Invalid property type: " + dataTypeName);
+                // throw new ApsimXException(null, "Invalid property type: " + dataTypeName);
             }
 
             DataTableUtilities.AddColumn(table, heading, stringValues);
@@ -761,13 +774,6 @@ namespace Models
         [EventSubscribe("DoInitialSummary")]
         private void OnDoInitialSummary(object sender, EventArgs e)
         {
-            // Create our Messages table.
-            this.messagesTable = new DataTable("Messages");
-            this.messagesTable.Columns.Add("ComponentName", typeof(string));
-            this.messagesTable.Columns.Add("Date", typeof(DateTime));
-            this.messagesTable.Columns.Add("Message", typeof(string));
-            this.messagesTable.Columns.Add("MessageType", typeof(int));
-
             // Create an initial conditions table in the DataStore.
             CreateInitialConditionsTable(Simulation);
         }

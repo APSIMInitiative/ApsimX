@@ -16,7 +16,7 @@ namespace Models.Graph
     using Models.Factorial;
 
     /// <summary>The class represents a single series on a graph</summary>
-    [ValidParent(typeof(Graph))]
+    [ValidParent(ParentType = typeof(Graph))]
     [ViewName("UserInterface.Views.SeriesView")]
     [PresenterName("UserInterface.Presenters.SeriesPresenter")]
     [Serializable]
@@ -69,11 +69,17 @@ namespace Models.Graph
         /// <summary>The FactorIndex to vary line types.</summary>
         public int FactorIndexToVaryLines { get; set; }
 
-        /// <summary>Gets or sets the marker to show</summary>
+        /// <summary>Gets or sets the marker size</summary>
         public MarkerType Marker { get; set; }
+
+        /// <summary>Marker size.</summary>
+        public MarkerSizeType MarkerSize { get; set; }
 
         /// <summary>Gets or sets the line type to show</summary>
         public LineType Line { get; set; }
+
+        /// <summary>Gets or sets the line thickness</summary>
+        public LineThicknessType LineThickness { get; set; }
 
         /// <summary>Gets or sets the name of the table to get data from.</summary>
         public string TableName { get; set; }
@@ -90,20 +96,17 @@ namespace Models.Graph
         /// <summary>Gets or sets the name of the y2 field</summary>
         public string Y2FieldName { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the series should be shown in the legend
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether the series should be shown in the legend</summary>
         public bool ShowInLegend { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the Y variables should be cumulative.
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether the Y variables should be cumulative.</summary>
         public bool Cumulative { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the X variables should be cumulative.
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether the X variables should be cumulative.</summary>
         public bool CumulativeX { get; set; }
+
+        /// <summary>Optional data filter.</summary>
+        public string Filter { get; set; }
 
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
@@ -121,7 +124,7 @@ namespace Models.Graph
                 Experiment parentExperiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;
 
                 // If the graph is in a zone then just graph the zone.
-                if (parentZone != null)
+                if (parentZone != null && !(parentZone is Simulation))
                 {
                     GraphSimulation(parentZone, ourDefinitions);
                 }
@@ -157,17 +160,19 @@ namespace Models.Graph
                     int colourIndex = Array.IndexOf(ColourUtilities.Colours, Colour);
                     if (colourIndex == -1)
                         colourIndex = 0;
+                    MarkerType marker = Marker;
                     foreach (Experiment experiment in experiments)
                     {
                         string filter = "SimulationName IN " + "(" + StringUtilities.Build(experiment.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
-                        CreateDefinitions(experiment.BaseSimulation, experiment.Name, filter, ref colourIndex, Marker, Line, ourDefinitions);
+                        CreateDefinitions(experiment.BaseSimulation, experiment.Name, filter, ref colourIndex, ref marker, Line, ourDefinitions);
                     }
 
                     // Now create series definitions for each simulation found.
+                    marker = Marker;
                     foreach (Simulation simulation in simulations)
                     {
                         string filter = "SimulationName = '" + simulation.Name + "'";
-                        CreateDefinitions(simulation, simulation.Name, filter, ref colourIndex, Marker, Line, ourDefinitions);
+                        CreateDefinitions(simulation, simulation.Name, filter, ref colourIndex, ref marker, Line, ourDefinitions);
                     }
                 }
             }
@@ -201,7 +206,7 @@ namespace Models.Graph
             }
             else
             {
-                string filter = string.Format("Name='{0}'", model.Name);
+                string filter = string.Format("Name='{0}'", parentSimulation.Name);
                 ourDefinitions.Add(CreateDefinition(Name, filter, Colour, Marker, Line));
             }
         }
@@ -269,7 +274,7 @@ namespace Models.Graph
 
                 List<List<FactorAndIndex>> permutations = MathUtilities.AllCombinationsOf(factorIndexes.ToArray());
 
-                // If not 'vary by' were specified then create a dummy one. All data will be on one series.
+                // If no 'vary by' were specified then create a dummy one. All data will be on one series.
                 if (permutations == null || permutations.Count == 0)
                 {
                     permutations = new List<List<FactorAndIndex>>();
@@ -300,7 +305,7 @@ namespace Models.Graph
                     string filter = GetFilter(parentExperiment, combination);
 
                     CreateDefinitions(parentExperiment.BaseSimulation, seriesName, filter, ref colourIndex,
-                                      marker, line, ourDefinitions);
+                                      ref marker, line, ourDefinitions);
                 }
             }
         }
@@ -333,8 +338,19 @@ namespace Models.Graph
                 FactorAndIndex factorAndIndex = combination.Find(f => factor.Name == f.factorName);
                 if (factorAndIndex == null)
                 {
-                    foreach (IModel child in factor.Children)
-                        names.Add(new KeyValuePair<string, string> (factor.Name, child.Name));
+                    if (factor.Children.Count > 0)
+                    {
+                        foreach (IModel child in factor.Children)
+                            names.Add(new KeyValuePair<string, string>(factor.Name, child.Name));
+                    }
+                    else
+                    {
+                        foreach (FactorValue factorValue in factor.CreateValues())
+                        {
+                            if (factorValue.Values.Count >= 1)
+                                names.Add(new KeyValuePair<string, string>(factor.Name, factorValue.Values[0].ToString()));
+                        }
+                    }
                 }
                 else
                     names.Add(new KeyValuePair<string, string>(factor.Name, factorAndIndex.factorValue));
@@ -364,13 +380,16 @@ namespace Models.Graph
         private void CreateFactorAndIndex(Factor factor, List<List<FactorAndIndex>> factorIndexes, FactorAndIndex.TypeToVary typeToVary)
         {
             List<FactorAndIndex> factorValueIndexes = new List<FactorAndIndex>();
-            for (int j = 0; j < factor.Children.Count; j++)
+            List<FactorValue> factorValues = factor.CreateValues();
+            for (int j = 0; j < factorValues.Count; j++)
+            //for (int j = 0; j < factor.Children.Count; j++)
             {
                 factorValueIndexes.Add(new FactorAndIndex()
                 {
                     factorValueIndex = j,
                     factorName = factor.Name,
-                    factorValue = factor.Children[j].Name,
+                    factorValue = factorValues[j].Name.Replace(factor.Name, ""),
+                    //factorValue = factor.Children[j].Name,
                     typeToVary = typeToVary
                 });
             }
@@ -392,7 +411,7 @@ namespace Models.Graph
             if (index < 0)
                 throw new Exception("Invalid index found while getting " + enumValues[0].GetType().Name);
 
-            while (index > enumValues.Count)
+            while (index >= enumValues.Count)
                 index -= enumValues.Count;
 
             return enumValues[index];
@@ -407,7 +426,7 @@ namespace Models.Graph
         /// <param name="marker">The marker type.</param>
         /// <param name="line">The line type.</param>
         private void CreateDefinitions(Simulation simulation, string baseTitle, string baseFilter, ref int colourIndex, 
-                                       MarkerType marker, LineType line, 
+                                       ref MarkerType marker, LineType line, 
                                        List<SeriesDefinition> definitions)
         {
             List<IModel> zones = Apsim.Children(simulation, typeof(Zone));
@@ -431,7 +450,22 @@ namespace Models.Graph
             }
 
             if (colourIndex >= ColourUtilities.Colours.Length)
+            {
                 colourIndex = 0;
+                marker = IncrementMarker(marker);
+            }
+        }
+
+        /// <summary>Increment marker type.</summary>
+        /// <param name="marker">Marker type</param>
+        private MarkerType IncrementMarker(MarkerType marker)
+        {
+            Array markers = Enum.GetValues(typeof(MarkerType));
+            int markerIndex = Array.IndexOf(markers, marker);
+            markerIndex++;
+            if (markerIndex >= markers.Length)
+                markerIndex = 0;
+            return (MarkerType) markers.GetValue(markerIndex);
         }
 
         /// <summary>Creates a series definition.</summary>
@@ -449,6 +483,8 @@ namespace Models.Graph
             definition.title = title;
             definition.line = line;
             definition.marker = marker;
+            definition.lineThickness = LineThickness;
+            definition.markerSize = MarkerSize;
             definition.showInLegend = ShowInLegend;
             definition.type = Type;
             definition.xAxis = XAxis;
@@ -479,8 +515,13 @@ namespace Models.Graph
                 if (Y2FieldName != null)
                     fieldNames.Add(Y2FieldName);
 
+                string where = "(" + filter;
+                if (Filter != null && Filter != string.Empty)
+                    where += " AND (" + Filter + ")";
+                where += ")";
+
                 DataStore dataStore = new DataStore(this);
-                DataTable data = dataStore.GetFilteredData(TableName, fieldNames.ToArray(), "(" + filter + ")");
+                DataTable data = dataStore.GetFilteredData(TableName, fieldNames.ToArray(), where);
                 
                 dataStore.Disconnect();
 

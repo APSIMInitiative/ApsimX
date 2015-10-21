@@ -52,6 +52,12 @@
             this.checkBoxView5 = new CheckBoxView();
             this.graphView1 = new GraphView();
             this.dropDownView9 = new ColourDropDownView();
+            this.label10 = new System.Windows.Forms.Label();
+            this.editView1 = new EditView();
+            this.dropDownView10 = new DropDownView();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.dropDownView11 = new DropDownView();
             this.SuspendLayout();
             // 
             // label1
@@ -66,10 +72,11 @@
             // dropDownView1
             // 
             this.dropDownView1.AutoSize = true;
+            this.dropDownView1.IsEditable = true;
             this.dropDownView1.IsVisible = true;
             this.dropDownView1.Location = new System.Drawing.Point(120, 9);
             this.dropDownView1.Name = "dropDownView1";
-            this.dropDownView1.SelectedValue = "";
+            this.dropDownView1.SelectedValue = null;
             this.dropDownView1.Size = new System.Drawing.Size(263, 24);
             this.dropDownView1.TabIndex = 1;
             this.dropDownView1.Values = new string[0];
@@ -77,10 +84,11 @@
             // dropDownView2
             // 
             this.dropDownView2.AutoSize = true;
+            this.dropDownView2.IsEditable = true;
             this.dropDownView2.IsVisible = true;
             this.dropDownView2.Location = new System.Drawing.Point(120, 39);
             this.dropDownView2.Name = "dropDownView2";
-            this.dropDownView2.SelectedValue = "";
+            this.dropDownView2.SelectedValue = null;
             this.dropDownView2.Size = new System.Drawing.Size(263, 24);
             this.dropDownView2.TabIndex = 3;
             this.dropDownView2.Values = new string[0];
@@ -97,10 +105,11 @@
             // dropDownView3
             // 
             this.dropDownView3.AutoSize = true;
+            this.dropDownView3.IsEditable = true;
             this.dropDownView3.IsVisible = true;
             this.dropDownView3.Location = new System.Drawing.Point(120, 69);
             this.dropDownView3.Name = "dropDownView3";
-            this.dropDownView3.SelectedValue = "";
+            this.dropDownView3.SelectedValue = null;
             this.dropDownView3.Size = new System.Drawing.Size(263, 24);
             this.dropDownView3.TabIndex = 5;
             this.dropDownView3.Values = new string[0];
@@ -117,10 +126,11 @@
             // dropDownView4
             // 
             this.dropDownView4.AutoSize = true;
+            this.dropDownView4.IsEditable = true;
             this.dropDownView4.IsVisible = true;
             this.dropDownView4.Location = new System.Drawing.Point(120, 129);
             this.dropDownView4.Name = "dropDownView4";
-            this.dropDownView4.SelectedValue = "";
+            this.dropDownView4.SelectedValue = null;
             this.dropDownView4.Size = new System.Drawing.Size(263, 24);
             this.dropDownView4.TabIndex = 9;
             this.dropDownView4.Values = new string[0];
@@ -137,10 +147,11 @@
             // dropDownView5
             // 
             this.dropDownView5.AutoSize = true;
+            this.dropDownView5.IsEditable = true;
             this.dropDownView5.IsVisible = true;
             this.dropDownView5.Location = new System.Drawing.Point(120, 99);
             this.dropDownView5.Name = "dropDownView5";
-            this.dropDownView5.SelectedValue = "";
+            this.dropDownView5.SelectedValue = null;
             this.dropDownView5.Size = new System.Drawing.Size(263, 24);
             this.dropDownView5.TabIndex = 7;
             this.dropDownView5.Values = new string[0];
@@ -157,10 +168,11 @@
             // dropDownView6
             // 
             this.dropDownView6.AutoSize = true;
+            this.dropDownView6.IsEditable = true;
             this.dropDownView6.IsVisible = true;
             this.dropDownView6.Location = new System.Drawing.Point(120, 159);
             this.dropDownView6.Name = "dropDownView6";
-            this.dropDownView6.SelectedValue = "";
+            this.dropDownView6.SelectedValue = null;
             this.dropDownView6.Size = new System.Drawing.Size(263, 24);
             this.dropDownView6.TabIndex = 11;
             this.dropDownView6.Values = new string[0];
@@ -177,10 +189,11 @@
             // dropDownView7
             // 
             this.dropDownView7.AutoSize = true;
+            this.dropDownView7.IsEditable = true;
             this.dropDownView7.IsVisible = true;
             this.dropDownView7.Location = new System.Drawing.Point(120, 189);
             this.dropDownView7.Name = "dropDownView7";
-            this.dropDownView7.SelectedValue = "";
+            this.dropDownView7.SelectedValue = null;
             this.dropDownView7.Size = new System.Drawing.Size(263, 24);
             this.dropDownView7.TabIndex = 13;
             this.dropDownView7.Values = new string[0];
@@ -197,10 +210,11 @@
             // dropDownView8
             // 
             this.dropDownView8.AutoSize = true;
+            this.dropDownView8.IsEditable = true;
             this.dropDownView8.IsVisible = true;
             this.dropDownView8.Location = new System.Drawing.Point(120, 219);
             this.dropDownView8.Name = "dropDownView8";
-            this.dropDownView8.SelectedValue = "";
+            this.dropDownView8.SelectedValue = null;
             this.dropDownView8.Size = new System.Drawing.Size(263, 24);
             this.dropDownView8.TabIndex = 15;
             this.dropDownView8.Values = new string[0];
@@ -274,9 +288,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.graphView1.LeftRightPadding = 40;
-            this.graphView1.Location = new System.Drawing.Point(3, 290);
+            this.graphView1.Location = new System.Drawing.Point(3, 313);
             this.graphView1.Name = "graphView1";
-            this.graphView1.Size = new System.Drawing.Size(606, 300);
+            this.graphView1.Size = new System.Drawing.Size(711, 277);
             this.graphView1.TabIndex = 23;
             // 
             // dropDownView9
@@ -284,13 +298,80 @@
             this.dropDownView9.AutoSize = true;
             this.dropDownView9.Location = new System.Drawing.Point(120, 249);
             this.dropDownView9.Name = "dropDownView9";
-            this.dropDownView9.SelectedValue = "";
+            this.dropDownView9.SelectedValue = null;
             this.dropDownView9.Size = new System.Drawing.Size(263, 26);
             this.dropDownView9.TabIndex = 24;
-            this.dropDownView9.Values = new string[0];
+            this.dropDownView9.Values = new object[0];
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(25, 281);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(43, 17);
+            this.label10.TabIndex = 25;
+            this.label10.Text = "Filter:";
+            // 
+            // editView1
+            // 
+            this.editView1.AutoSize = true;
+            this.editView1.IsVisible = true;
+            this.editView1.Location = new System.Drawing.Point(120, 281);
+            this.editView1.Name = "editView1";
+            this.editView1.Size = new System.Drawing.Size(263, 24);
+            this.editView1.TabIndex = 26;
+            this.editView1.Value = "";
+            // 
+            // dropDownView10
+            // 
+            this.dropDownView10.AutoSize = true;
+            this.dropDownView10.IsEditable = true;
+            this.dropDownView10.IsVisible = true;
+            this.dropDownView10.Location = new System.Drawing.Point(513, 193);
+            this.dropDownView10.Name = "dropDownView10";
+            this.dropDownView10.SelectedValue = null;
+            this.dropDownView10.Size = new System.Drawing.Size(131, 24);
+            this.dropDownView10.TabIndex = 27;
+            this.dropDownView10.Values = new string[0];
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(405, 193);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(102, 17);
+            this.label11.TabIndex = 28;
+            this.label11.Text = "Line thickness:";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(405, 226);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(85, 17);
+            this.label12.TabIndex = 29;
+            this.label12.Text = "Marker size:";
+            // 
+            // dropDownView11
+            // 
+            this.dropDownView11.AutoSize = true;
+            this.dropDownView11.IsEditable = true;
+            this.dropDownView11.IsVisible = true;
+            this.dropDownView11.Location = new System.Drawing.Point(513, 223);
+            this.dropDownView11.Name = "dropDownView11";
+            this.dropDownView11.SelectedValue = null;
+            this.dropDownView11.Size = new System.Drawing.Size(131, 24);
+            this.dropDownView11.TabIndex = 30;
+            this.dropDownView11.Values = new string[0];
             // 
             // SeriesView
             // 
+            this.Controls.Add(this.dropDownView11);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.dropDownView10);
+            this.Controls.Add(this.editView1);
+            this.Controls.Add(this.label10);
             this.Controls.Add(this.dropDownView9);
             this.Controls.Add(this.graphView1);
             this.Controls.Add(this.checkBoxView5);
@@ -316,7 +397,7 @@
             this.Controls.Add(this.dropDownView1);
             this.Controls.Add(this.label1);
             this.Name = "SeriesView";
-            this.Size = new System.Drawing.Size(612, 602);
+            this.Size = new System.Drawing.Size(717, 602);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -349,5 +430,11 @@
         private CheckBoxView checkBoxView5;
         private GraphView graphView1;
         private ColourDropDownView dropDownView9;
+        private System.Windows.Forms.Label label10;
+        private EditView editView1;
+        private DropDownView dropDownView10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private DropDownView dropDownView11;
     }
 }

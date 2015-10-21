@@ -67,12 +67,12 @@ namespace Models.PMF.Organs
         /// <summary>The number</summary>
         [XmlIgnore]
         [Units("/m^2")]
-        public double Number = 0;
+        public double Number { get; set; }
 
         /// <summary>The Maximum potential size of grains</summary>
         [XmlIgnore]
         [Units("/m^2")]
-        public double MaximumSize = 0;
+        public double MaximumSize { get; set; }
 
         /// <summary>Gets the live f wt.</summary>
         /// <value>The live f wt.</value>

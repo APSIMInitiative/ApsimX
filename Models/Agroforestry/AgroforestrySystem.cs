@@ -13,17 +13,32 @@ using Models.Zones;
 namespace Models.Agroforestry
 {
     /// <summary>
-    /// The APSIM AgroforestrySystem model calculates interactions between trees and neighbouring crop or pasture zones.  The model is therefore derived from the Zone class within APSIM and includes child zones to simulate soil can plant processes within the system.  It obtains information from a tree model within its scope (ie a child) and uses information about the tree structure (such as height and canopy dimensions) to calculate microclimate impacts on its child zones.  Below-ground interactions between trees and crops or pastures are calculated by the APSIM SoilArbitrator model.
+    /// The APSIM AgroforestrySystem model calculates interactions between trees and neighbouring crop or pasture zones.  The model is therefore derived from the Zone class within APSIM and includes child zones to simulate soil and plant processes within the system.  It obtains information from a tree model within its scope (ie a child) and uses information about the tree structure (such as height and canopy dimensions) to calculate microclimate impacts on its child zones.  Below-ground interactions between trees and crops or pastures are calculated by the APSIM SoilArbitrator model.
     /// 
-    /// Windbreaks are simulated using the approach used by [Huthetal2002] which calculates windspeeds in the lee of windbreaks as a function distance (described in terms of multiples of tree heights) and windbreak optical porosity.
+    /// Windbreaks are simulated using an approach [Huthetal2002] that calculates windspeeds in the lee of windbreaks as a function distance (described in terms of multiples of tree heights) and windbreak optical porosity.
     /// 
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentModels = new Type[] { typeof(Simulation), typeof(Zone) })]
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class AgroforestrySystem : Zone
     {
+
+        /// <summary>
+        /// The reduction in wind as a fraction.
+        /// </summary>
+        [Units("0-1")]
+        [XmlIgnore]
+        public double Urel { get; set; }
+
+        /// <summary>
+        /// A list containing forestry information for each zone.
+        /// </summary>
+        [XmlIgnore]
+        public List<IModel> ZoneList;
+
         /// <summary>
         /// Fraction of rainfall intercepted by canopy
         /// </summary>
@@ -55,7 +70,7 @@ namespace Models.Agroforestry
         }
 
         /// <summary>
-        /// 
+        /// A pointer to the tree model.
         /// </summary>
         [XmlIgnore]
         public TreeProxy tree = null;
@@ -66,8 +81,8 @@ namespace Models.Agroforestry
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            //find the tree
             tree = Apsim.Child(this, typeof(TreeProxy)) as TreeProxy;
+            ZoneList = Apsim.Children(this, typeof(Zone));
         }
 
         /// <summary>
@@ -81,15 +96,44 @@ namespace Models.Agroforestry
             return tree.GetDistanceFromTrees(z);
         }
 
+        /// <summary>
+        /// Return the %Wind Reduction for a given zone
+        /// </summary>
+        /// <param name="z">Zone</param>
+        /// <returns>%Wind Reduction</returns>
+        public double GetWindReduction(Zone z)
+        {
+            foreach (Zone zone in ZoneList)
+                if (zone == z)
+                {
+                    double UrelMin = Math.Max(0.0, 1.14 * 0.40 - 0.16); // 0.4 is porosity, will be dynamic in the future
+
+                    if (tree.heightToday < 1)
+                        Urel = 1;
+                    else
+                    {
+                        tree.H = GetDistanceFromTrees(z) / tree.heightToday;
+                        if (tree.H < 6)
+                            Urel = UrelMin + (1 - UrelMin) / 2 - tree.H / 6 * (1 - UrelMin) / 2;
+                        else if (tree.H < 6.1)
+                            Urel = UrelMin;
+                        else
+                            Urel = UrelMin + (1 - UrelMin) / (1 + 0.000928 * Math.Exp(12.9372 * Math.Pow((tree.H - 6), -0.26953)));
+                    }
+                    return Urel;
+                }
+            throw new ApsimXException(this, "Could not find zone called " + z.Name);
+        }
+
         /// <summary>Writes documentation for this cultivar by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-// need to put something here
+            // need to put something here
             // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            //tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
             // write description of this class.
             AutoDocumentation.GetClassDescription(this, tags, indent);

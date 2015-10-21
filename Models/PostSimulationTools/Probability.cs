@@ -16,7 +16,7 @@ namespace Models.PostSimulationTools
     /// </summary>
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(typeof(DataStore))]
+    [ValidParent(ParentType=typeof(DataStore))]
     [Serializable]
     public class Probability : Model, IPostSimulationTool
     {
@@ -65,7 +65,7 @@ namespace Models.PostSimulationTools
 
                     // Add in a simulation column.
                     string[] simulationNameColumnValues = StringUtilities.CreateStringArray(simulationName, view.Count);
-                    DataTableUtilities.AddColumn(probabilityData, "SimulationName", simulationNameColumnValues);
+                    DataTableUtilities.AddColumn(probabilityData, "SimulationName", simulationNameColumnValues, startRow, simulationNameColumnValues.Length);
 
                     // Add in the probability column
                     double[] probabilityValues = MathUtilities.ProbabilityDistribution(view.Count, this.Exceedence);

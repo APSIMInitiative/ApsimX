@@ -85,6 +85,9 @@ namespace UserInterface.Interfaces
         /// <param name="colour">The series color</param>
         /// <param name="lineType">The type of series line</param>
         /// <param name="markerType">The type of series markers</param>
+        /// <param name="lineThickness">The line thickness</param>
+        /// <param name="markerSize">The size of the marker</param>
+        /// <param name="showInLegend">Show in legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         void DrawLineAndMarkers(
              string title, 
@@ -95,7 +98,9 @@ namespace UserInterface.Interfaces
              Color colour,
              Models.Graph.LineType lineType,
              Models.Graph.MarkerType markerType,
-            bool showInLegend);
+             Models.Graph.LineThicknessType lineThickness,
+             Models.Graph.MarkerSizeType markerSize,
+             bool showInLegend);
 
         /// <summary>
         /// Draw a bar series with the specified arguments.

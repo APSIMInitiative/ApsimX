@@ -36,6 +36,12 @@ namespace UserInterface.Interfaces
         /// <summary>MarkerType</summary>
         IDropDownView MarkerType { get; }
 
+        /// <summary>Line thickness</summary>
+        IDropDownView LineThickness { get; }
+
+        /// <summary>Marker size</summary>
+        IDropDownView MarkerSize { get; }
+
         /// <summary>Colour</summary>
         IColourDropDownView Colour { get; }
 
@@ -56,6 +62,9 @@ namespace UserInterface.Interfaces
 
         /// <summary>Graph.</summary>
         IGraphView GraphView { get; }
+
+        /// <summary>Filter box.</summary>
+        IEditView Filter { get; }
 
         /// <summary>Show or hide the x2 and y2 drop downs.</summary>
         /// <param name="show"></param>

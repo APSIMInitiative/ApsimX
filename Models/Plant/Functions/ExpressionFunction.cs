@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
 {
 
     /// <summary>
-    /// Evaluate a mathematical expression using the EvaluateExpression dll. Obs: Expression can contain variable names from Plant2"
+    /// A mathematical expression is evaluated using variables exposed within the Plant Modelling Framework.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -95,7 +95,7 @@ namespace Models.PMF.Functions
             fn.EvaluatePostfix();
             if (fn.Error)
             {
-                throw new Exception(fn.ErrorDescription);
+               // throw new Exception(fn.ErrorDescription);
             }
         }
 
@@ -128,6 +128,22 @@ namespace Models.PMF.Functions
                 return fn.Results;
             else
                 return fn.Result;
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write description of this class.
+            AutoDocumentation.GetClassDescription(this, tags, indent);
+
+            tags.Add(new AutoDocumentation.Paragraph("Value = "+Expression,indent));
+
         }
 
     }

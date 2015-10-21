@@ -7,10 +7,11 @@ using Models.Core;
 namespace Models.PMF.Functions.StructureFunctions
 {
     /// <summary>
-    /// Main stem final node number function
+    /// This Function determines final leaf number for a crop.  If no childern are present final leaf number will be the same as primordia number, increasing at the same rate and reaching a fixed value when primordia initiation stops or when maximum leaf number is reached.  However, if a child function called 'FinalLeafNumber' is present that function will determine the increase and fixing of final leaf number
     /// </summary>
     [Serializable]
-    [Description("This Function determines final leaf number for a crop.  If no childern are present final leaf number will be the same as primordia number, increasing at the same rate and reaching a fixed value when primordia initiation stops or when maximum leaf number is reached.  However, if a child function called 'FinalLeafNumber' is present that function will determine the increase and fixing of final leaf number")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class MainStemFinalNodeNumberFunction : Model, IFunction
     {
         /// <summary>The structure</summary>
@@ -22,7 +23,8 @@ namespace Models.PMF.Functions.StructureFunctions
         IFunction FinalLeafNumber = null;
 
         /// <summary>The maximum main stem node number</summary>
-        public double MaximumMainStemNodeNumber = 0;
+        [Description("Maximum Main Stem Node Number")]
+        public double MaximumMainStemNodeNumber { get; set; }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>

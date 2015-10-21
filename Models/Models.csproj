@@ -110,6 +110,7 @@
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
     <Compile Include="Core\AutoDocumentation.cs" />
     <Compile Include="Core\Converter.cs" />
+    <Compile Include="Core\Alias.cs" />
     <Compile Include="Graph\IGraphable.cs" />
     <Compile Include="Core\ITestable.cs" />
     <Compile Include="Core\Replacements.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Interfaces\IUptake.cs" />
     <Compile Include="Plant\Phenology\NodeNumberPhase.cs" />
     <Compile Include="Plant\Phenology\PhaseSetFunction.cs" />
+    <Compile Include="Plant\Phenology\ZadokPMF.cs" />
     <Compile Include="Plant\PlantTypes.cs" />
     <Compile Include="PostSimulationTools\Probability.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
@@ -175,6 +177,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
     <Compile Include="Soils\Arbitrator\CropUptakes.cs" />
     <Compile Include="Soils\Arbitrator\Estimate.cs" />
@@ -256,7 +259,6 @@
     <Compile Include="Plant\Functions\Zadok.cs" />
     <Compile Include="Plant\InterpolationSet.cs" />
     <Compile Include="Plant\OilPalm\OilPalm.cs" />
-    <Compile Include="Plant\OilPalm\OilPalmUnderstory.cs" />
     <Compile Include="Plant\OldPlant\BaseOrgan1.cs" />
     <Compile Include="Plant\OldPlant\Conversions.cs" />
     <Compile Include="Plant\OldPlant\Environment.cs" />

@@ -121,7 +121,7 @@ namespace Models.PMF.Functions
             }
             else if (child is VariableReference)
             {
-                msg += (child as VariableReference).VariableName;
+                msg += StringUtilities.RemoveTrailingString((child as VariableReference).VariableName, ".Value");
                 return true;
             }
 

@@ -23,6 +23,9 @@ namespace UserInterface.Views
 
         /// <summary>Return true if dropdown is visible.</summary>
         bool IsVisible { get; set; }
+
+        /// <summary>Gets or sets whether the control should be editable.</summary>
+        bool IsEditable { get; set; }
     }
 
     /// <summary>A drop down view.</summary>
@@ -60,6 +63,8 @@ namespace UserInterface.Views
         {
             get
             {
+                if (comboBox1.SelectedItem == null)
+                    return null;
                 return comboBox1.SelectedItem.ToString();
             }
             set
@@ -74,6 +79,22 @@ namespace UserInterface.Views
         {
             get { return comboBox1.Visible; }
             set { comboBox1.Visible = value; }
+        }
+
+        /// <summary>Gets or sets whether the control should be editable.</summary>
+        public bool IsEditable
+        {
+            get
+            {
+                return comboBox1.DropDownStyle == ComboBoxStyle.DropDown; 
+            }
+            set
+            {
+                if (value)
+                    comboBox1.DropDownStyle = ComboBoxStyle.DropDown;
+                else
+                    comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            }
         }
 
         /// <summary>User has changed the selection.</summary>

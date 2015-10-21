@@ -299,6 +299,13 @@ namespace UserInterface.Views
             this.Grid.EndEdit();
         }
 
+        /// <summary>Lock the left most number of columns.</summary>
+        /// <param name="number"></param>
+        public void LockLeftMostColumns(int number)
+        {
+            this.Grid.Columns[number - 1].Frozen = true;
+        }
+
         /// <summary>
         /// Populate the grid from the DataSource.
         /// </summary>
@@ -393,6 +400,15 @@ namespace UserInterface.Views
                         }
                         this.Grid.RowCount = this.DataSource.Rows.Count;
                     }
+
+                    // Format DateTime columns
+                    for (int col = 0; col < this.DataSource.Columns.Count; col++)
+                    {
+                        if (DataSource.Columns[col].DataType == typeof(DateTime))
+                        {
+                            this.Grid.Columns[col].DefaultCellStyle.Format = "yyyy-MM-d";
+                        }
+                    }
                 }
 
                 // ColIndex doesn't matter since we're resizing all of them.
@@ -403,10 +419,10 @@ namespace UserInterface.Views
                 {
                     col.Width = Convert.ToInt32(col.GetPreferredWidth(DataGridViewAutoSizeColumnMode.DisplayedCells, true) * 1.2);
 
-                    //col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-                    //int newWidth = Convert.ToInt32(col.Width * 1.0);
-                    //col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                    //col.Width = newWidth;
+                    col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+                    int newWidth = Convert.ToInt32(col.Width * 1.0);
+                    col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    col.Width = newWidth;
                 }
 
                 // Reinstate Grid.CellValueChanged event.
@@ -462,7 +478,13 @@ namespace UserInterface.Views
                 // Put the new value into the table on the correct row.
                 if (this.DataSource != null)
                 {
-                    this.DataSource.Rows[e.RowIndex][e.ColumnIndex] = newValue;
+                    try
+                    {
+                        this.DataSource.Rows[e.RowIndex][e.ColumnIndex] = newValue;
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
 
                 if (this.valueBeforeEdit != null && this.valueBeforeEdit.GetType() == typeof(string) && newValue == null)
