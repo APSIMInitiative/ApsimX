@@ -1418,8 +1418,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Value>0.7</Value>
         </Constant>
       </GenericAboveGroundOrgan>
-      <Summariser>
-        <Name>Summariser</Name>
         <CompositeBiomass>
           <Name>AboveGround</Name>
           <Propertys>
@@ -1490,7 +1488,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <string>[Grain].Dead</string>
           </Propertys>
         </CompositeBiomass>
-      </Summariser>
       <Cultivar>
         <Name>Primo</Name>
       </Cultivar>
@@ -2248,8 +2245,8 @@ namespace Models
             <string>[FieldPea].Leaf.Fn</string>
             <string>[FieldPea].Phenology.CurrentPhaseName</string>
             <string>[FieldPea].Phenology.Stage</string>
-            <string>[FieldPea].Summariser.Pod.Wt</string>
-            <string>[FieldPea].Summariser.Pod.N</string>
+            <string>[FieldPea].Pod.Wt</string>
+            <string>[FieldPea].Pod.N</string>
             <string>[FieldPea].Structure.MainStemNodeNo</string>
             <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
             <string>[FieldPea].Leaf.CohortArea[1]</string>
@@ -2269,7 +2266,7 @@ namespace Models
             <string>[FieldPea].Leaf.CohortArea[15]</string>
             <string>[FieldPea].Leaf.AppearedCohortNo</string>
             <string>[FieldPea].Leaf.DeadCohortNo</string>
-            <string>[FieldPea].Summariser.AboveGround.Wt</string>
+            <string>[FieldPea].AboveGround.Wt</string>
             <string>[FieldPea].Phenology.Stage</string>
             <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
             <string>[FieldPea].Phenology.NFF.Value</string>
@@ -2598,7 +2595,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>FieldPea.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -2613,7 +2610,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.BelowGround.Wt</YFieldName>
+          <YFieldName>FieldPea.BelowGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -2628,7 +2625,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.Total.Wt</YFieldName>
+          <YFieldName>FieldPea.Total.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -3112,7 +3109,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.AboveGround.N</YFieldName>
+          <YFieldName>FieldPea.AboveGround.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -3127,7 +3124,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.BelowGround.N</YFieldName>
+          <YFieldName>FieldPea.BelowGround.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -3142,7 +3139,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.Total.N</YFieldName>
+          <YFieldName>FieldPea.Total.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -3157,7 +3154,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.TotalLive.N</YFieldName>
+          <YFieldName>FieldPea.TotalLive.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4200,7 +4197,7 @@ namespace Models
           <Line>None</Line>
           <TableName>ObservedBiomass</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>FieldPea.AboveGround.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4215,7 +4212,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>FieldPea.AboveGround.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5431,7 +5428,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>FieldPea.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5446,7 +5443,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.BelowGround.Wt</YFieldName>
+          <YFieldName>FieldPea.BelowGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5461,7 +5458,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.Total.Wt</YFieldName>
+          <YFieldName>FieldPea.Total.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5945,7 +5942,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.AboveGround.N</YFieldName>
+          <YFieldName>FieldPea.AboveGround.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5960,7 +5957,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.BelowGround.N</YFieldName>
+          <YFieldName>FieldPea.BelowGround.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5975,7 +5972,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.Total.N</YFieldName>
+          <YFieldName>FieldPea.Total.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5990,7 +5987,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.TotalLive.N</YFieldName>
+          <YFieldName>FieldPea.TotalLive.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -7556,8 +7553,8 @@ namespace Models
             <string>[FieldPea].Leaf.Fn</string>
             <string>[FieldPea].Phenology.CurrentPhaseName</string>
             <string>[FieldPea].Phenology.Stage</string>
-            <string>[FieldPea].Summariser.Pod.Wt</string>
-            <string>[FieldPea].Summariser.Pod.N</string>
+            <string>[FieldPea].Pod.Wt</string>
+            <string>[FieldPea].Pod.N</string>
             <string>[FieldPea].Structure.MainStemNodeNo</string>
             <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
             <string>[FieldPea].Leaf.CohortArea[1]</string>
@@ -7577,7 +7574,7 @@ namespace Models
             <string>[FieldPea].Leaf.CohortArea[15]</string>
             <string>[FieldPea].Leaf.AppearedCohortNo</string>
             <string>[FieldPea].Leaf.DeadCohortNo</string>
-            <string>[FieldPea].Summariser.AboveGround.Wt</string>
+            <string>[FieldPea].AboveGround.Wt</string>
             <string>[FieldPea].Phenology.Stage</string>
             <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
             <string>[FieldPea].Phenology.NFF.Value</string>
@@ -7845,7 +7842,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>FieldPea.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -7860,7 +7857,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.BelowGround.Wt</YFieldName>
+          <YFieldName>FieldPea.BelowGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -7875,7 +7872,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.Total.Wt</YFieldName>
+          <YFieldName>FieldPea.Total.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -8359,7 +8356,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.AboveGround.N</YFieldName>
+          <YFieldName>FieldPea.AboveGround.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -8374,7 +8371,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.BelowGround.N</YFieldName>
+          <YFieldName>FieldPea.BelowGround.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -8389,7 +8386,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.Total.N</YFieldName>
+          <YFieldName>FieldPea.Total.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -8404,7 +8401,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.TotalLive.N</YFieldName>
+          <YFieldName>FieldPea.TotalLive.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -9447,7 +9444,7 @@ namespace Models
           <Line>None</Line>
           <TableName>ObservedBiomass</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>FieldPea.AboveGround.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -9462,7 +9459,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>FieldPea.AboveGround.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -10357,16 +10354,16 @@ namespace Models
             <string>[FieldPea].Structure.PlantTotalNodeNo</string>
             <string>[FieldPea].Structure.PrimaryBudTotalNodeNo</string>
             <string>[FieldPea].Structure.TotalStemPopn</string>
-            <string>[FieldPea].Summariser.AboveGround.N</string>
-            <string>[FieldPea].Summariser.BelowGround.N</string>
-            <string>[FieldPea].Summariser.BelowGround.Wt</string>
-            <string>[FieldPea].Summariser.AboveGround.Wt</string>
-            <string>[FieldPea].Summariser.Total.N</string>
-            <string>[FieldPea].Summariser.Total.Wt</string>
-            <string>[FieldPea].Summariser.TotalDead.N</string>
-            <string>[FieldPea].Summariser.TotalDead.Wt</string>
-            <string>[FieldPea].Summariser.TotalLive.N</string>
-            <string>[FieldPea].Summariser.TotalLive.Wt</string>
+            <string>[FieldPea].AboveGround.N</string>
+            <string>[FieldPea].BelowGround.N</string>
+            <string>[FieldPea].BelowGround.Wt</string>
+            <string>[FieldPea].AboveGround.Wt</string>
+            <string>[FieldPea].Total.N</string>
+            <string>[FieldPea].Total.Wt</string>
+            <string>[FieldPea].TotalDead.N</string>
+            <string>[FieldPea].TotalDead.Wt</string>
+            <string>[FieldPea].TotalLive.N</string>
+            <string>[FieldPea].TotalLive.Wt</string>
             <string>[FieldPea].Grain.Dead.N</string>
             <string>[FieldPea].Grain.Dead.NConc</string>
             <string>[FieldPea].Grain.Dead.Wt</string>
@@ -11161,7 +11158,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Summariser.AboveGround.Wt</YFieldName>
+              <YFieldName>FieldPea.AboveGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -11176,7 +11173,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Summariser.BelowGround.Wt</YFieldName>
+              <YFieldName>FieldPea.BelowGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -11191,7 +11188,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Summariser.Total.Wt</YFieldName>
+              <YFieldName>FieldPea.Total.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -11407,7 +11404,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Summariser.AboveGround.N</YFieldName>
+              <YFieldName>FieldPea.AboveGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -11422,7 +11419,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Summariser.BelowGround.N</YFieldName>
+              <YFieldName>FieldPea.BelowGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -11437,7 +11434,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Summariser.Total.N</YFieldName>
+              <YFieldName>FieldPea.Total.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -11452,7 +11449,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Summariser.TotalLive.N</YFieldName>
+              <YFieldName>FieldPea.TotalLive.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -12974,7 +12971,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.Total.N</YFieldName>
+          <YFieldName>FieldPea.Total.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -13041,7 +13038,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>FieldPea.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>

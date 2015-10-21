@@ -1056,8 +1056,6 @@
           </PhaseLookup>
         </PartitionFractionDemandFunction>
       </GenericAboveGroundOrgan>
-      <Summariser>
-        <Name>Summariser</Name>
         <CompositeBiomass>
           <Name>AboveGround</Name>
           <Propertys>
@@ -1107,7 +1105,6 @@
             <string>[Root].Dead</string>
           </Propertys>
         </CompositeBiomass>
-      </Summariser>
       <CropType>FodderBeet</CropType>
     </Plant>
   </Replacements>
@@ -1493,7 +1490,7 @@
           <string>[FodderBeet].Phenology.ThermalTime.Value</string>
           <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value</string>
           <string>[FodderBeet].Leaf.Live.Wt</string>
-          <string>[FodderBeet].Summariser.Total.Wt</string>
+          <string>[FodderBeet].Total.Wt</string>
           <string>[FodderBeet].Petiole.Live.Wt</string>
           <string>[FodderBeet].Bulb.Live.Wt</string>
           <string>[FodderBeet].Leaf.LAI</string>
@@ -1902,7 +1899,7 @@
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>FodderBeet.Summariser.Total.Wt</YFieldName>
+        <YFieldName>FodderBeet.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2596,7 +2593,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
             <string>[FodderBeet].Phenology.ThermalTime.Value</string>
             <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value</string>
             <string>[FodderBeet].Leaf.Live.Wt</string>
-            <string>[FodderBeet].Summariser.Total.Wt</string>
+            <string>[FodderBeet].Total.Wt</string>
             <string>[FodderBeet].Petiole.Live.Wt</string>
             <string>[FodderBeet].Bulb.Live.Wt</string>
             <string>[FodderBeet].Leaf.LAI</string>
@@ -2944,7 +2941,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Summariser.Total.Wt</YFieldName>
+          <YFieldName>FodderBeet.Total.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
