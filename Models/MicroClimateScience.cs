@@ -38,7 +38,7 @@ namespace Models
 
             // finally calculate the sunshine hours as the ratio of
             // maximum possible radiation
-            return Math.Min(maxSunHrs * radn / maxRadn, maxSunHrs);
+            return Math.Min(maxSunHrs * weather.Radn / maxRadn, maxSunHrs);
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace Models
         {
             // Perform Top-Down Light Balance
             // ==============================
-            double Rin = radn;
+            double Rin = weather.Radn;
             double Rint = 0;
             for (int i = numLayers - 1; i >= 0; i += -1)
             {
@@ -269,14 +269,14 @@ namespace Models
             {
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    _albedo += MathUtilities.Divide(ComponentData[j].Rs[i], radn, 0.0) * ComponentData[j].Albedo;
-                    emissivity += MathUtilities.Divide(ComponentData[j].Rs[i], radn, 0.0) * ComponentData[j].Emissivity;
+                    _albedo += MathUtilities.Divide(ComponentData[j].Rs[i], weather.Radn, 0.0) * ComponentData[j].Albedo;
+                    emissivity += MathUtilities.Divide(ComponentData[j].Rs[i], weather.Radn, 0.0) * ComponentData[j].Emissivity;
                     sumRs += ComponentData[j].Rs[i];
                 }
             }
 
-            _albedo += (1.0 - MathUtilities.Divide(sumRs, radn, 0.0)) * soil_albedo;
-            emissivity += (1.0 - MathUtilities.Divide(sumRs, radn, 0.0)) * soil_emissivity;
+            _albedo += (1.0 - MathUtilities.Divide(sumRs, weather.Radn, 0.0)) * soil_albedo;
+            emissivity += (1.0 - MathUtilities.Divide(sumRs, weather.Radn, 0.0)) * soil_emissivity;
         }
 
         /// <summary>
@@ -292,7 +292,7 @@ namespace Models
             {
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    ComponentData[j].Rl[i] = MathUtilities.Divide(ComponentData[j].Rs[i], radn, 0.0) * netLongWave;
+                    ComponentData[j].Rl[i] = MathUtilities.Divide(ComponentData[j].Rs[i], weather.Radn, 0.0) * netLongWave;
                 }
             }
         }
@@ -346,7 +346,7 @@ namespace Models
             double radnint = 0;
             // Intercepted SW radiation
             radnint = sumRs;
-            soil_heat = SoilHeatFlux(radn, radnint, soil_heat_flux_fraction);
+            soil_heat = SoilHeatFlux(weather.Radn, radnint, soil_heat_flux_fraction);
 
             // soil_heat = -0.1 * ((1.0 - albedo) * radn * netLongWave;
 
@@ -356,7 +356,7 @@ namespace Models
             {
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    ComponentData[j].Rsoil[i] = MathUtilities.Divide(ComponentData[j].Rs[i], radn, 0.0) * soil_heat;
+                    ComponentData[j].Rsoil[i] = MathUtilities.Divide(ComponentData[j].Rs[i], weather.Radn, 0.0) * soil_heat;
                 }
             }
         }

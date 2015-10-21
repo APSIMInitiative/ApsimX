@@ -50,10 +50,6 @@ namespace Models.AgPasture1
 		/// <summary>Event to be invoked when sowing or at initialisation (tell models about existence of this plant).</summary>
 		public event EventHandler Sowing;
 
-		/// <summary>Reference to a NewCanopy event</summary>
-		/// <param name="Data">The data about this plant's canopy.</param>
-		public delegate void NewCanopyDelegate(NewCanopyType Data);
-
 		/// <summary>Reference to a FOM incorporation event</summary>
 		/// <param name="Data">The data with soil FOM to be added.</param>
 		public delegate void FOMLayerDelegate(Soils.FOMLayerType Data);

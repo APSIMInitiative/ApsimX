@@ -15,66 +15,6 @@ using APSIM.Shared.Utilities;
 namespace Models
 {
     /// <summary>
-    /// A new canopy type
-    /// </summary>
-    [Serializable]
-    public class NewCanopyType
-    {
-        /// <summary>The sender</summary>
-        public string sender = "";
-        /// <summary>The height</summary>
-        public double height;
-        /// <summary>The depth</summary>
-        public double depth;
-        /// <summary>The lai</summary>
-        public double lai;
-        /// <summary>The lai_tot</summary>
-        public double lai_tot;
-        /// <summary>The cover</summary>
-        public double cover;
-        /// <summary>The cover_tot</summary>
-        public double cover_tot;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class KeyValueArraypair_listType
-    {
-        /// <summary>The key</summary>
-        public string key = "";
-        /// <summary>The value</summary>
-        public double value;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class ChangeGSMaxType
-    {
-        /// <summary>The component</summary>
-        public string component = "";
-        /// <summary>The DLT</summary>
-        public double dlt;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    public class KeyValueArrayType
-    {
-        /// <summary>The pair_list</summary>
-        public KeyValueArraypair_listType[] pair_list;
-    }
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Data">The data.</param>
-    public delegate void KeyValueArraypair_listDelegate(KeyValueArraypair_listType Data);
-
-
-    /// <summary>
     /// A more-or-less direct port of the Fortran MicroMet model
     /// Ported by Eric Zurcher Jun 2011, first to C#, then automatically
     /// to VB via the converter in SharpDevelop.
@@ -112,14 +52,54 @@ namespace Models
     {
         /// <summary>The clock</summary>
         [Link]
-        Clock Clock = null;
+        private Clock Clock = null;
 
         /// <summary>The weather</summary>
         [Link]
-        IWeather LocalWeather = null;
+        private IWeather weather = null;
 
         /// <summary>The _albedo</summary>
         private double _albedo = 0;
+
+        /// <summary>The net long wave</summary>
+        private double netLongWave;
+
+        /// <summary>The sum rs</summary>
+        private double sumRs;
+        
+        /// <summary>The average t</summary>
+        private double averageT;
+        
+        /// <summary>The sunshine hours</summary>
+        private double sunshineHours;
+        
+        /// <summary>The fraction clear sky</summary>
+        private double fractionClearSky;
+        
+        /// <summary>The day length</summary>
+        private double dayLength;
+        
+        /// <summary>The day length light</summary>
+        private double dayLengthLight;
+        
+        /// <summary>The delta z</summary>
+        private double[] DeltaZ = new double[-1 + 1];
+        
+        /// <summary>The layer ktot</summary>
+        private double[] layerKtot = new double[-1 + 1];
+        
+        /// <summary>The layer la isum</summary>
+        private double[] layerLAIsum = new double[-1 + 1];
+        
+        /// <summary>The number layers</summary>
+        private int numLayers;
+
+        /// <summary>The soil_heat</summary>
+        private double soil_heat = 0;
+
+        /// <summary>The dryleaffraction</summary>
+        private double dryleaffraction = 0;
+
 
         /// <summary>Constructor</summary>
         public MicroClimate()
@@ -129,122 +109,109 @@ namespace Models
             c_interception = 0.0;
             d_interception = 0.0;
             soil_albedo = 0.23;
+            air_pressure = 1010;
+            soil_emissivity = 0.96;
+            sun_angle = 15.0;
+
+            soil_heat_flux_fraction = 0.4;
+            night_interception_fraction = 0.5;
+            windspeed_default = 3.0;
+            refheight = 2.0;
+            albedo = 0.15;
+            emissivity = 0.96;
+            gsmax = 0.01;
+            r50 = 200;
+            soil_heat = 0.0;
+            dryleaffraction = 0.0;
         }
 
-
-        #region "Parameters used to initialise the model"
-        #region "Parameters set in the GUI by the user"
         /// <summary>Gets or sets the a_interception.</summary>
-        /// <value>The a_interception.</value>
         [Description("a_interception")]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm/mm")]
         public double a_interception { get; set; }
 
         /// <summary>Gets or sets the b_interception.</summary>
-        /// <value>The b_interception.</value>
         [Description("b_interception")]
         [Bounds(Lower = 0.0, Upper = 5.0)]
-        public double b_interception {get; set;}
+        public double b_interception { get; set;}
 
         /// <summary>Gets or sets the c_interception.</summary>
-        /// <value>The c_interception.</value>
         [Description("c_interception")]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm")]
         public double c_interception { get; set; }
 
         /// <summary>Gets or sets the d_interception.</summary>
-        /// <value>The d_interception.</value>
         [Description("d_interception")]
         [Bounds(Lower = 0.0, Upper = 20.0)]
         [Units("mm")]
         public double d_interception { get; set; }
 
         /// <summary>Gets or sets the soil_albedo.</summary>
-        /// <value>The soil_albedo.</value>
         [Description("soil albedo")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         public double soil_albedo { get; set; }
-
-        #endregion
-
-        #region "Parameters not normally settable from the GUI by the user"
+        
         /// <summary>The air_pressure</summary>
         [Bounds(Lower = 900.0, Upper = 1100.0)]
         [Units("hPa")]
         [Description("")]
+        public double air_pressure { get; set; }
 
-        public double air_pressure = 1010;
         /// <summary>The soil_emissivity</summary>
         [Bounds(Lower = 0.9, Upper = 1.0)]
         [Units("")]
         [Description("")]
-
-        public double soil_emissivity = 0.96;
+        public double soil_emissivity { get; set; }
 
         /// <summary>The sun_angle</summary>
         [Bounds(Lower = -20.0, Upper = 20.0)]
         [Units("deg")]
         [Description("")]
+        public double sun_angle { get; set; }
 
-        public double sun_angle = 15.0;
         /// <summary>The soil_heat_flux_fraction</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [Description("")]
+        public double soil_heat_flux_fraction { get; set; }
 
-        public double soil_heat_flux_fraction = 0.4;
         /// <summary>The night_interception_fraction</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [Description("")]
+        public double night_interception_fraction { get; set; }
 
-        public double night_interception_fraction = 0.5;
         /// <summary>The windspeed_default</summary>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("m/s")]
-        [Description("")]
+        public double windspeed_default { get; set; }
 
-        public double windspeed_default = 3.0;
         /// <summary>The refheight</summary>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("m")]
-        [Description("")]
+        public double refheight { get; set; }
 
-        public double refheight = 2.0;
         /// <summary>The albedo</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        [Description("")]
+        public double albedo { get; set; }
 
-        public double albedo = 0.15;
         /// <summary>The emissivity</summary>
         [Bounds(Lower = 0.9, Upper = 1.0)]
         [Units("0-1")]
-        [Description("")]
+        public double emissivity { get; set; }
 
-        public double emissivity = 0.96;
         /// <summary>The gsmax</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("m/s")]
-        [Description("")]
+        public double gsmax { get; set; }
 
-        public double gsmax = 0.01;
         /// <summary>The R50</summary>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("W/m^2")]
-        [Description("")]
-
-        public double r50 = 200;
-        #endregion
-
-        #endregion
-
-        #region "Outputs we make available"
+        public double r50 { get; set; }
 
         /// <summary>Gets the interception.</summary>
-        /// <value>The interception.</value>
         [Units("mm")]
         public double interception
         {
@@ -263,7 +230,6 @@ namespace Models
         }
 
         /// <summary>Gets the gc.</summary>
-        /// <value>The gc.</value>
         public double gc
         {
             // Should this be returning a sum or an array instead of just the first value???
@@ -271,7 +237,6 @@ namespace Models
         }
 
         /// <summary>Gets the ga.</summary>
-        /// <value>The ga.</value>
         public double ga
         {
             // Should this be returning a sum or an array instead of just the first value???
@@ -279,7 +244,6 @@ namespace Models
         }
 
         /// <summary>Gets the petr.</summary>
-        /// <value>The petr.</value>
         public double petr
         {
             get
@@ -297,7 +261,6 @@ namespace Models
         }
 
         /// <summary>Gets the peta.</summary>
-        /// <value>The peta.</value>
         public double peta
         {
             get
@@ -315,102 +278,24 @@ namespace Models
         }
 
         /// <summary>Gets the net_radn.</summary>
-        /// <value>The net_radn.</value>
         public double net_radn
         {
-            get { return radn * (1.0 - _albedo) + netLongWave; }
+            get { return weather.Radn * (1.0 - _albedo) + netLongWave; }
         }
 
         /// <summary>Gets the net_rs.</summary>
-        /// <value>The net_rs.</value>
         public double net_rs
         {
-            get { return radn * (1.0 - _albedo); }
+            get { return weather.Radn * (1.0 - _albedo); }
         }
 
         /// <summary>Gets the net_rl.</summary>
-        /// <value>The net_rl.</value>
         public double net_rl
         {
             get { return netLongWave; }
         }
 
-        /// <summary>The soil_heat</summary>
-        [XmlIgnore]
-        public double soil_heat = 0.0;
-
-        /// <summary>The dryleaffraction</summary>
-        [XmlIgnore]
-        public double dryleaffraction = 0.0;
-
-        /// <summary>Gets the gsmax_array.</summary>
-        /// <value>The gsmax_array.</value>
-        public KeyValueArrayType gsmax_array
-        {
-            get
-            {
-                KeyValueArrayType _gsmax_array = new KeyValueArrayType();
-                Array.Resize<KeyValueArraypair_listType>(ref _gsmax_array.pair_list, ComponentData.Count);
-                for (int j = 0; j <= ComponentData.Count - 1; j++)
-                {
-                    _gsmax_array.pair_list[j] = new KeyValueArraypair_listType();
-                    _gsmax_array.pair_list[j].key = ComponentData[j].Name;
-                    _gsmax_array.pair_list[j].value = ComponentData[j].Gsmax;
-                }
-                return _gsmax_array;
-            }
-        }
-        #endregion
-
-        #region "Events to which we subscribe, and their handlers"
-
-        /// <summary>Called when [do daily initialisation].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation(object sender, EventArgs e)
-        {
-            day = Clock.Today.DayOfYear;
-            year = Clock.Today.Year;
-            radn = LocalWeather.Radn;
-            maxt = LocalWeather.MaxT;
-            mint = LocalWeather.MinT;
-            rain = LocalWeather.Rain;
-            vp = LocalWeather.VP;
-        }
-
-        /// <summary>Called when [change gs maximum].</summary>
-        /// <param name="ChangeGSMax">The change gs maximum.</param>
-        /// <exception cref="System.Exception">Unknown Canopy Component:  + Convert.ToString(ChangeGSMax.component)</exception>
-        [EventSubscribe("ChangeGSMax")]
-        private void OnChangeGSMax(ChangeGSMaxType ChangeGSMax)
-        {
-            int senderIdx = FindComponentIndex(ChangeGSMax.component);
-            if (senderIdx < 0)
-            {
-                throw new Exception("Unknown Canopy Component: " + Convert.ToString(ChangeGSMax.component));
-            }
-            ComponentData[senderIdx].Gsmax += ChangeGSMax.dlt;
-        }
-
-        /// <summary>Gets all canopies in simulation</summary>
-        private void GetAllCanopies()
-        {
-
-            foreach (ComponentDataStruct componentData in ComponentData)
-            { 
-                componentData.Name = componentData.Canopy.CanopyType;
-                componentData.Type = componentData.Canopy.CanopyType;
-                componentData.LAI = componentData.Canopy.LAI;
-                componentData.LAItot = componentData.Canopy.LAITotal;
-                componentData.CoverGreen = componentData.Canopy.CoverGreen;
-                componentData.CoverTot = componentData.Canopy.CoverTotal;
-                componentData.Height = Math.Round(componentData.Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m
-                componentData.Depth = Math.Round(componentData.Canopy.Depth, 5) / 1000.0;   // Round off a bit and convert mm to m
-            }
-        }
-
-        /// <summary>Called when [do canopy energy balance].</summary>
+        /// <summary>Called when the canopy energy balance needs to be calculated.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoEnergyArbitration")]
@@ -439,24 +324,6 @@ namespace Models
 
             SendEnergyBalanceEvent();
         }
-
-        /*/// <summary>
-        /// Register presence of slurp
-        /// </summary>
-        [EventSubscribe("StartSlurp")]
-        private void OnStartSlurp(object sender, EventArgs e)
-        {
-            Slurp newSlurp = sender as Slurp;
-
-            int senderIdx = FindComponentIndex(newSlurp.Name);
-
-            // If sender is unknown, add it to the list
-            if (senderIdx == -1)
-                throw new ApsimXException(FullPath, "Cannot find MicroClimate definition for Slurp");
-            ComponentData[senderIdx].Name = newSlurp.Name;
-            ComponentData[senderIdx].Type = newSlurp.CropType;
-            Clear(ComponentData[senderIdx]);
-        } */
 
         /// <summary>Clears the specified componentdata</summary>
         /// <param name="c">The c.</param>
@@ -524,8 +391,6 @@ namespace Models
         }
 
 
-        #endregion
-
         #region "Useful constants"
         // Teten coefficients
         /// <summary>The SVP_ a</summary>
@@ -577,9 +442,7 @@ namespace Models
         #endregion
         #region "Various class variables"
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary></summary>
         [Serializable]
         public class ComponentDataStruct
         {
@@ -802,43 +665,6 @@ namespace Models
             ComponentDataDefinitions.Add(CropType);
         }
 
-        /// <summary>The maxt</summary>
-        private double maxt;
-        /// <summary>The mint</summary>
-        private double mint;
-        /// <summary>The radn</summary>
-        private double radn;
-        /// <summary>The rain</summary>
-        private double rain;
-        /// <summary>The vp</summary>
-        private double vp;
-        /// <summary>The day</summary>
-        private int day;
-
-        /// <summary>The year</summary>
-        private int year;
-        /// <summary>The net long wave</summary>
-        private double netLongWave;
-        /// <summary>The sum rs</summary>
-        private double sumRs;
-        /// <summary>The average t</summary>
-        private double averageT;
-        /// <summary>The sunshine hours</summary>
-        private double sunshineHours;
-        /// <summary>The fraction clear sky</summary>
-        private double fractionClearSky;
-        /// <summary>The day length</summary>
-        private double dayLength;
-        /// <summary>The day length light</summary>
-        private double dayLengthLight;
-        /// <summary>The delta z</summary>
-        private double[] DeltaZ = new double[-1 + 1];
-        /// <summary>The layer ktot</summary>
-        private double[] layerKtot = new double[-1 + 1];
-        /// <summary>The layer la isum</summary>
-        private double[] layerLAIsum = new double[-1 + 1];
-        /// <summary>The number layers</summary>
-        private int numLayers;
 
         private List<ComponentDataStruct> ComponentDataDefinitions = new List<ComponentDataStruct>();
 
@@ -849,6 +675,23 @@ namespace Models
         public List<ComponentDataStruct> ComponentData { get; set; }
 
         #endregion
+
+        /// <summary>Gets all canopies in simulation</summary>
+        private void GetAllCanopies()
+        {
+
+            foreach (ComponentDataStruct componentData in ComponentData)
+            {
+                componentData.Name = componentData.Canopy.CanopyType;
+                componentData.Type = componentData.Canopy.CanopyType;
+                componentData.LAI = componentData.Canopy.LAI;
+                componentData.LAItot = componentData.Canopy.LAITotal;
+                componentData.CoverGreen = componentData.Canopy.CoverGreen;
+                componentData.CoverTot = componentData.Canopy.CoverTotal;
+                componentData.Height = Math.Round(componentData.Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m
+                componentData.Depth = Math.Round(componentData.Canopy.Depth, 5) / 1000.0;   // Round off a bit and convert mm to m
+            }
+        }
 
         /// <summary>Fetches the table value.</summary>
         /// <param name="field">The field.</param>
@@ -961,17 +804,17 @@ namespace Models
         private void MetVariables()
         {
             // averageT = (maxt + mint) / 2.0;
-            averageT = CalcAverageT(mint, maxt);
+            averageT = CalcAverageT(weather.MinT, weather.MaxT);
 
             // This is the length of time within the day during which
             //  Evaporation will take place
-            dayLength = CalcDayLength(LocalWeather.Latitude, day, sun_angle);
+            dayLength = CalcDayLength(weather.Latitude, Clock.Today.Day, sun_angle);
 
             // This is the length of time within the day during which
             // the sun is above the horizon
-            dayLengthLight = CalcDayLength(LocalWeather.Latitude, day, SunSetAngle);
+            dayLengthLight = CalcDayLength(weather.Latitude, Clock.Today.Day, SunSetAngle);
 
-            sunshineHours = CalcSunshineHours(radn, dayLengthLight, LocalWeather.Latitude, day);
+            sunshineHours = CalcSunshineHours(weather.Radn, dayLengthLight, weather.Latitude, Clock.Today.Day);
 
             fractionClearSky = MathUtilities.Divide(sunshineHours, dayLengthLight, 0.0);
         }
@@ -1122,7 +965,7 @@ namespace Models
         /// <summary>Calculate the canopy conductance for system compartments</summary>
         private void CalculateGc()
         {
-            double Rin = radn;
+            double Rin = weather.Radn;
 
             for (int i = numLayers - 1; i >= 0; i += -1)
             {
@@ -1144,7 +987,7 @@ namespace Models
         /// <summary>Calculate the aerodynamic conductance for system compartments</summary>
         private void CalculateGa()
         {
-            double windspeed = LocalWeather.Wind;
+            double windspeed = weather.Wind;
             double sumDeltaZ = 0.0;
             double sumLAI = 0.0;
             for (int i = 0; i <= numLayers - 1; i++)
@@ -1180,9 +1023,9 @@ namespace Models
                 }
             }
 
-            double totalInterception = a_interception * Math.Pow(rain, b_interception) + c_interception * sumLAItot + d_interception;
+            double totalInterception = a_interception * Math.Pow(weather.Rain, b_interception) + c_interception * sumLAItot + d_interception;
 
-            totalInterception = Math.Max(0.0, Math.Min(0.99 * rain, totalInterception));
+            totalInterception = Math.Max(0.0, Math.Min(0.99 * weather.Rain, totalInterception));
 
             for (int i = 0; i <= numLayers - 1; i++)
             {
@@ -1221,7 +1064,7 @@ namespace Models
             netRadiation = Math.Max(0.0, netRadiation);
             double freeEvapGc = freeEvapGa * 1000000.0;
             // =infinite surface conductance
-            double freeEvap = CalcPenmanMonteith(netRadiation, mint, maxt, vp, air_pressure, dayLength, freeEvapGa, freeEvapGc);
+            double freeEvap = CalcPenmanMonteith(netRadiation, weather.MinT, weather.MaxT, weather.VP, air_pressure, dayLength, freeEvapGa, freeEvapGc);
 
             dryleaffraction = 1.0 - MathUtilities.Divide(sumInterception * (1.0 - night_interception_fraction), freeEvap, 0.0);
             dryleaffraction = Math.Max(0.0, dryleaffraction);
@@ -1238,9 +1081,9 @@ namespace Models
 
                     if (j == 39) 
                         netRadiation += 0.0;
-                    componentData.PETr[i] = CalcPETr(netRadiation * dryleaffraction, mint, maxt, air_pressure, componentData.Ga[i], componentData.Gc[i]);
+                    componentData.PETr[i] = CalcPETr(netRadiation * dryleaffraction, weather.MinT, weather.MaxT, air_pressure, componentData.Ga[i], componentData.Gc[i]);
 
-                    componentData.PETa[i] = CalcPETa(mint, maxt, vp, air_pressure, dayLength * dryleaffraction, componentData.Ga[i], componentData.Gc[i]);
+                    componentData.PETa[i] = CalcPETa(weather.MinT, weather.MaxT, weather.VP, air_pressure, dayLength * dryleaffraction, componentData.Ga[i], componentData.Gc[i]);
 
                     componentData.PET[i] = componentData.PETr[i] + componentData.PETa[i];
                 }
@@ -1256,7 +1099,7 @@ namespace Models
                 {
                     ComponentDataStruct componentData = ComponentData[j];
 
-                    componentData.Omega[i] = CalcOmega(mint, maxt, air_pressure, componentData.Ga[i], componentData.Gc[i]);
+                    componentData.Omega[i] = CalcOmega(weather.MinT, weather.MaxT, air_pressure, componentData.Ga[i], componentData.Gc[i]);
                 }
             }
         }

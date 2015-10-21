@@ -11641,29 +11641,6 @@ namespace Models
 
         #region Implement the ICrop Interface
 
-
-        /// <summary>
-        /// Provides canopy data to SoilWater.
-        /// </summary>
-        /// <value>
-        /// The canopy data.
-        /// </value>
-        [XmlIgnore]
-        public NewCanopyType CanopyData 
-            {
-            get
-                {
-                NewCanopyType data = new NewCanopyType();
-                data.cover = cover_green;
-                data.cover_tot = cover_tot;
-                data.height = height;
-                data.depth = height;   //sv- all the other crop modules tend to set the depth to the height of the crop.
-                data.lai = lai;
-                data.lai_tot = tlai;
-                return data; 
-                }
-            }
-
         /// <summary>
         /// MicroClimate will get 'CropType' and use it to look up
         /// canopy properties for this crop.
