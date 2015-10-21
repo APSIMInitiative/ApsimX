@@ -31,7 +31,7 @@ The model consists of:
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>PrioritythenRelativeAllocation</NArbitrationOption>
+        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
         <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
       </OrganArbitrator>
       <Phenology>
@@ -1196,7 +1196,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>2.5</Value>
+            <Value>2</Value>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
@@ -1832,7 +1832,7 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
       <Cultivar>
         <Name>Pioneer_39G12</Name>
         <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 780</Command>
+        <Command>[Grain].MaximumGrainsPerCob.Value = 650</Command>
       </Cultivar>
       <Cultivar>
         <Name>Pioneer_3153</Name>
