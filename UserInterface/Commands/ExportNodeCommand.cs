@@ -271,7 +271,8 @@ namespace UserInterface.Commands
             // Create a line series.
             graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y,
                                      Models.Graph.Axis.AxisType.Bottom, Models.Graph.Axis.AxisType.Left,
-                                     System.Drawing.Color.Blue, Models.Graph.LineType.Solid, Models.Graph.MarkerType.None, true);
+                                     System.Drawing.Color.Blue, Models.Graph.LineType.Solid, Models.Graph.MarkerType.None,
+                                     Models.Graph.LineThicknessType.Normal, Models.Graph.MarkerSizeType.Normal, true);
 
             // Format the axes.
             graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN);

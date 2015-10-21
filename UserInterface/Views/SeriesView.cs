@@ -41,6 +41,12 @@ namespace UserInterface.Views
         /// <summary>MarkerType</summary>
         public IDropDownView MarkerType { get { return dropDownView8; } }
 
+        /// <summary>Line thickness</summary>
+        public IDropDownView LineThickness { get { return dropDownView10; } }
+
+        /// <summary>Marker size</summary>
+        public IDropDownView MarkerSize{ get { return dropDownView11; } }
+
         /// <summary>Colour</summary>
         public IColourDropDownView Colour { get { return dropDownView9; } }
 

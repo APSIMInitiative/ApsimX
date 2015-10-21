@@ -121,6 +121,9 @@ namespace UserInterface.Views
         /// <param name="colour"></param>
         /// <param name="lineType"></param>
         /// <param name="markerType"></param>
+        /// <param name="lineThickness">The line thickness</param>
+        /// <param name="markerSize">The size of the marker</param>
+        /// <param name="showInLegend">Show in legend?</param>
         /// <param name="showOnLegend"></param>
         public void DrawLineAndMarkers(
      string title,
@@ -131,6 +134,8 @@ namespace UserInterface.Views
      Color colour,
      Models.Graph.LineType lineType,
      Models.Graph.MarkerType markerType,
+     Models.Graph.LineThicknessType lineThickness,
+     Models.Graph.MarkerSizeType markerSize,
      bool showOnLegend)
         {
         }
