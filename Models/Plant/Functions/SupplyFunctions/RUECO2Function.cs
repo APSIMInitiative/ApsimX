@@ -8,7 +8,7 @@ using Models.Interfaces;
 namespace Models.PMF.Functions.SupplyFunctions
 {
     /// <summary>
-    /// This model calculates CO2 Impact on RUE using the approach of Reyenga, Howden, Meinke, Mckeon (1999) Modelling global change impact on wheat cropping in south-east Queensland, Australia. Environmental Modelling and Software 14:297-306
+    /// This model calculates CO2 Impact on RUE using the approach of [Reyenga1999].
     /// </summary>
     [Serializable]
     [Description("This model calculates CO2 Impact on RUE using the approach of <br>Reyenga, Howden, Meinke, Mckeon (1999) <br>Modelling global change impact on wheat cropping in south-east Queensland, Australia. <br>Enivironmental Modelling & Software 14:297-306")]
