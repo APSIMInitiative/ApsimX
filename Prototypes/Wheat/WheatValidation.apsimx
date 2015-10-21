@@ -8685,7 +8685,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+        <YFieldName>Wheat.Summariser.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -11113,7 +11113,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+        <YFieldName>Wheat.Summariser.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -19425,7 +19425,7 @@ namespace Models
 			if ((Clock.Today.DayOfYear == 150) && (TOS == 1) ||
 			    (Clock.Today.DayOfYear == 211) && (TOS == 2))
 			{
-				Wheat.Sow(population: 100, cultivar: Cultivar, depth: 30, rowSpacing: 250);
+				Wheat.Sow(population: 100, cultivar: "Hartog", depth: 30, rowSpacing: 250);
 			}
 		}
 
@@ -22559,7 +22559,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Leaf Number</Title>
+        <Title />
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
