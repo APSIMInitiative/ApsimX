@@ -329,7 +329,7 @@ The proxy tree component of this model is intended also to be a guide for develo
       <Name>Maize</Name>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>PrioritythenRelativeAllocation</NArbitrationOption>
+        <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
         <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
       </OrganArbitrator>
       <Phenology>

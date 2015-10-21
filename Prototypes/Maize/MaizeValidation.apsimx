@@ -87,7 +87,7 @@ The model consists of:
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
           <Start>Emergence</Start>
-          <End>End_Juvenile</End>
+          <End>EndJuvenile</End>
         </GenericPhase>
         <GenericPhase>
           <Name>Photosensitive</Name>
@@ -118,8 +118,8 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
             </XYPairs>
             <XProperty>[Phenology].Photoperiod.Value</XProperty>
           </LinearInterpolationFunction>
-          <Start>End_Juvenile</Start>
-          <End>Floral_Initiation</End>
+          <Start>EndJuvenile</Start>
+          <End>FloralInitiation</End>
         </GenericPhase>
         <LeafAppearancePhase>
           <Name>LeafAppearance</Name>
@@ -127,8 +127,8 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Start>Floral_Initiation</Start>
-          <End>Flag_Leaf</End>
+          <Start>FloralInitiation</Start>
+          <End>FlagLeaf</End>
         </LeafAppearancePhase>
         <GenericPhase>
           <Name>FlagLeafToFlowering</Name>
@@ -141,7 +141,7 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Start>Flag_Leaf</Start>
+          <Start>FlagLeaf</Start>
           <End>Flowering</End>
         </GenericPhase>
         <GenericPhase>
@@ -279,7 +279,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
               </Constant>
             </MultiplyFunction>
             <Start>Emergence</Start>
-            <End>Floral_Initiation</End>
+            <End>FloralInitiation</End>
           </PhaseLookupValue>
         </PhaseLookup>
         <PhaseLookup>
@@ -304,7 +304,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
               <XProperty>[Structure].MainStemNodeNo</XProperty>
             </LinearInterpolationFunction>
             <Start>Emergence</Start>
-            <End>Flag_Leaf</End>
+            <End>FlagLeaf</End>
           </PhaseLookupValue>
         </PhaseLookup>
         <MainStemFinalNodeNumberFunction>
@@ -333,7 +333,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
               <Name>PostEventValue</Name>
               <VariableName>[Structure].MainStemPrimordiaNo</VariableName>
             </VariableReference>
-            <SetEvent>Floral_Initiation</SetEvent>
+            <SetEvent>FloralInitiation</SetEvent>
             <ReSetEvent />
           </OnEventFunction>
           <MaximumMainStemNodeNumber>30</MaximumMainStemNodeNumber>
@@ -352,8 +352,8 @@ Though tillering is common in some maize varieties under certain agronomic condi
               </X>
               <Y>
                 <double>20</double>
-                <double>50</double>
-                <double>60</double>
+                <double>100</double>
+                <double>500</double>
                 <double>1700</double>
               </Y>
             </XYPairs>
@@ -596,7 +596,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <Name>DailyBiomassProduction</Name>
             <VariableName>[Arbitrator].DMSupply</VariableName>
           </VariableReference>
-          <StartStageName>Flag_Leaf</StartStageName>
+          <StartStageName>FlagLeaf</StartStageName>
           <EndStageName>StartGrainFill</EndStageName>
         </AccumulateFunction>
         <AccumulateFunction>
@@ -606,7 +606,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <Value>1</Value>
             <Units>days/day</Units>
           </Constant>
-          <StartStageName>Flag_Leaf</StartStageName>
+          <StartStageName>FlagLeaf</StartStageName>
           <EndStageName>StartGrainFill</EndStageName>
         </AccumulateFunction>
         <DivideFunction>
@@ -1630,7 +1630,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
                 <Value>0.6</Value>
               </Constant>
               <Start>Emergence</Start>
-              <End>Floral_Initiation</End>
+              <End>FloralInitiation</End>
             </PhaseLookupValue>
             <PhaseLookupValue>
               <Name>StemElongation</Name>
@@ -1638,7 +1638,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
                 <Name>StemFraction</Name>
                 <Value>0.82</Value>
               </Constant>
-              <Start>Floral_Initiation</Start>
+              <Start>FloralInitiation</Start>
               <End>Flowering</End>
             </PhaseLookupValue>
           </PhaseLookup>

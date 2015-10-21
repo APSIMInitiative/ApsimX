@@ -48,7 +48,7 @@ namespace Models.PMF
             /// <summary>
             /// Arbitration is performed in two passes for for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand first.  On the second pass any remaining biomass is allocated to non-structural demands based on the same order of priority.
             /// </summary>
-            PrioritythenRelativeAllocation,
+            PriorityThenRelativeAllocation,
             /// <summary>
             /// Partitions biomass between organs based on their relative demand in a single pass so non-structural always gets some if there is a non-structural demand
             /// </summary>
@@ -949,7 +949,7 @@ namespace Models.PMF
                     RelativeAllocation(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
                 if (Option == ArbitrationType.PriorityAllocation)
                     PriorityAllocation(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
-                if (Option == ArbitrationType.PrioritythenRelativeAllocation)
+                if (Option == ArbitrationType.PriorityThenRelativeAllocation)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
                 if (Option == ArbitrationType.RelativeAllocationSinglePass)
                     RelativeAllocationSinglePass(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
@@ -1027,7 +1027,7 @@ namespace Models.PMF
                     RelativeAllocation(Organs, BAT.TotalUptakeSupply, ref BiomassTakenUp, BAT);
                 if (Option == ArbitrationType.PriorityAllocation)
                     PriorityAllocation(Organs, BAT.TotalUptakeSupply, ref BiomassTakenUp, BAT);
-                if (Option == ArbitrationType.PrioritythenRelativeAllocation)
+                if (Option == ArbitrationType.PriorityThenRelativeAllocation)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalUptakeSupply, ref BiomassTakenUp, BAT);
                 if (Option == ArbitrationType.RelativeAllocationSinglePass)
                     RelativeAllocationSinglePass(Organs, BAT.TotalUptakeSupply, ref BiomassTakenUp, BAT);
@@ -1057,7 +1057,7 @@ namespace Models.PMF
                     RelativeAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
                 if (Option == ArbitrationType.PriorityAllocation)
                     PriorityAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
-                if (Option == ArbitrationType.PrioritythenRelativeAllocation)
+                if (Option == ArbitrationType.PriorityThenRelativeAllocation)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
                 if (Option == ArbitrationType.RelativeAllocationSinglePass)
                     RelativeAllocationSinglePass(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
@@ -1088,7 +1088,7 @@ namespace Models.PMF
                     RelativeAllocation(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
                 if (Option == ArbitrationType.PriorityAllocation)
                     PriorityAllocation(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
-                if (Option == ArbitrationType.PrioritythenRelativeAllocation)
+                if (Option == ArbitrationType.PriorityThenRelativeAllocation)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
                 if (Option == ArbitrationType.RelativeAllocationSinglePass)
                     RelativeAllocationSinglePass(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
@@ -1466,7 +1466,7 @@ namespace Models.PMF
                 tags.Add(new AutoDocumentation.Paragraph(RelativeDocString, indent));
             if (NArbitrationOption == ArbitrationType.PriorityAllocation)
                 tags.Add(new AutoDocumentation.Paragraph(PriorityDocString, indent));
-            if (NArbitrationOption == ArbitrationType.PrioritythenRelativeAllocation)
+            if (NArbitrationOption == ArbitrationType.PriorityThenRelativeAllocation)
                 tags.Add(new AutoDocumentation.Paragraph(RelativeThenPriorityDocStirng, indent));
             if (NArbitrationOption == ArbitrationType.RelativeAllocationSinglePass)
                 tags.Add(new AutoDocumentation.Paragraph(SinglePassDocString, indent));
