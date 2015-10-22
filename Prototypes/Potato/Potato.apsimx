@@ -1581,12 +1581,48 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
       </Soil>
-      <Irrigation>
-        <Name>Irrigation</Name>
-      </Irrigation>
-      <Fertiliser>
-        <Name>Fertiliser</Name>
-      </Fertiliser>
+      <SurfaceOrganicMatter>
+        <Name>SurfaceOrganicMatter</Name>
+        <PondActive>no</PondActive>
+        <ReportAdditions>no</ReportAdditions>
+        <ReportRemovals>no</ReportRemovals>
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
+        <TillageTypes>
+          <Name>TillageTypesList</Name>
+          <TillageType />
+        </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>Wheat</PoolName>
+            <ResidueType>Wheat</ResidueType>
+            <Mass>2000</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
+        <PoolName>Wheat</PoolName>
+        <type>Wheat</type>
+        <mass>2000</mass>
+        <standing_fraction>0</standing_fraction>
+        <cpr />
+        <cnr>80</cnr>
+        <CriticalResidueWeight>2000</CriticalResidueWeight>
+        <OptimumDecompTemp>20</OptimumDecompTemp>
+        <MaxCumulativeEOS>20</MaxCumulativeEOS>
+        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+        <TotalLeachRain>25</TotalLeachRain>
+        <MinRainToLeach>10</MinRainToLeach>
+        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+        <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
+        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+        <FractionFaecesAdded>0.5</FractionFaecesAdded>
+      </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
         <air_pressure>1010</air_pressure>
@@ -1606,26 +1642,82 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
+      <Irrigation>
+        <Name>Irrigation</Name>
+      </Irrigation>
+      <Fertiliser>
+        <Name>Fertiliser</Name>
+      </Fertiliser>
       <Plant>
         <Name>Potato</Name>
         <ResourceName>Potato</ResourceName>
         <CropType>Potato</CropType>
       </Plant>
+      <Operations>
+        <Name>Operations</Name>
+        <Operation>
+          <Date>2003-10-20T00:00:00</Date>
+          <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 0);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-11-25T00:00:00</Date>
+          <Action>[Fertiliser].Apply(69, Fertiliser.Types.UreaN,0);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-11-26T00:00:00</Date>
+          <Action>[Irrigation].Apply(15);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-12-04T00:00:00</Date>
+          <Action>[Irrigation].Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-12-16T00:00:00</Date>
+          <Action>[Irrigation].Apply(15);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-12-22T00:00:00</Date>
+          <Action>[Irrigation].Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2003-12-30T00:00:00</Date>
+          <Action>[Irrigation].Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2004-01-08T00:00:00</Date>
+          <Action>[Irrigation].Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2004-01-21T00:00:00</Date>
+          <Action>[Irrigation].Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2004-01-31T00:00:00</Date>
+          <Action>[Irrigation].Apply(50);</Action>
+        </Operation>
+        <Operation>
+          <Date>2004-02-27T00:00:00</Date>
+          <Action>[Irrigation].Apply(25);</Action>
+        </Operation>
+      </Operations>
       <Manager>
-        <Name>PotatoSowingRule</Name>
+        <Name>PotatoPlantAndHarvest</Name>
         <Script>
+          <PlantingDate>2003-10-22</PlantingDate>
+          <CultivarName>RussetBurbank</CultivarName>
           <RowSpace>280</RowSpace>
           <RowWidth>770</RowWidth>
           <PlantingDepth>120</PlantingDepth>
           <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
-          <CultivarName>RussetBurbank</CultivarName>
-          <SowingDate>2003-10-20</SowingDate>
+          <SetFinalLeafNumber>40</SetFinalLeafNumber>
+          <HarvestDate>2004-05-01</HarvestDate>
         </Script>
         <Code><![CDATA[
 using System;
 using Models.Core;
 using Models.PMF;
 using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
         
 namespace Models
 {
@@ -1635,7 +1727,12 @@ namespace Models
 	{
 		[Link] Plant Potato;
 		[Link] Clock Clock;
-
+		[Link] Zone zone;
+		[Link] Summary Summary;
+		[Description("Planting Date")]
+		public DateTime PlantingDate { get; set; }
+		[Description("Cultivar")]
+		public string CultivarName { get; set; }
 		[Description("Spacing (mm) between plants within rows")]
 		public double RowSpace { get; set; }
 		[Description("Spacing (mm) between rows")]
@@ -1644,235 +1741,31 @@ namespace Models
 		public double PlantingDepth { get; set; }
 		[Description("Number of stems per seed tuber")]
 		public double StemNumberPerSeedTuber { get; set; }
-		[Description("Cultivar")]
-		public string CultivarName { get; set; }
-		[Description("Sowing Date")]
-		public DateTime SowingDate { get; set; }
-
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));
-
-			if (Clock.Today.Date == SowingDate)
-				Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);
-			//Potato.Sow(... Contains the following arguements:
-			//Population  double  Required  Seeds sowing/m2
-			//Cultivar    string  Required  "NameOfCultivar"
-			//Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
-			//MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0
-			//BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
-			//RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
-			//CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
-		}
-	}
-}
-				]]></Code>
-      </Manager>
-      <Manager>
-        <Name>PotatoHarvestRule</Name>
-        <Script>
-          <HarvestDate>2004-06-01</HarvestDate>
-        </Script>
-        <Code><![CDATA[
-using System;
-using Models.Core;
-using Models.PMF;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-        
-namespace Models
-{
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Plant Potato;
-		[Link] Clock Clock;
-		[Link] Summary Summary;
+		[Description("Final leaf number.  Leave at 0 if not known")]
+		public double SetFinalLeafNumber { get; set; }
 		[Description("HarvestDate Date")]
 		public DateTime HarvestDate { get; set; }
 		[XmlIgnore] public string FinalTag { get; set; }
 		[XmlIgnore] public bool Harvested { get; set; }
 		[XmlIgnore] public bool ReadyForHarvest { get; set; }
-               
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			FinalTag = "";
-			Harvested = false;
-			ReadyForHarvest = false;
-		}
-               
+		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (ReadyForHarvest == true)
-			{
+			double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));
+
+			if (Clock.Today.Date == PlantingDate)
+				Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);
+			if (Clock.Today.Date == HarvestDate)
 				Potato.Harvest();
-				ReadyForHarvest = false;
-				Harvested = true;
-			}
-			FinalTag = "";    
-		}
-               
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			if ((Clock.Today == HarvestDate) && (Harvested == false))
-			{
-				FinalTag = "yield";
-				ReadyForHarvest = true;
-			}
+			if (SetFinalLeafNumber > 0)
+				zone.Set("Potato.Structure.MainStemFinalNodeNumber.Value", SetFinalLeafNumber);
+			if (SetFinalLeafNumber > 46)
+				throw new Exception("The model will fail with leaf numbers > 46.  Reduce Final leaf number.");
 		}
 	}
 }
 				]]></Code>
-      </Manager>
-      <Manager>
-        <Name>ExtraVariables</Name>
-        <Script />
-        <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{      
-		[Link] Clock Clock;
-		[Link] Soils.Soil Soil;
-		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;   
-		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;  
-		[Link] Plant Potato;
-        [Link] Zone zone;
-					
-		[XmlIgnore] public bool InitialDay { get; set; }
-		
-		[XmlIgnore] public double AccumPlantN { get; set; }
-		[XmlIgnore] public double AccumMineralisation { get; set; }
-		[XmlIgnore] public double AccumDenit { get; set; }
-		[XmlIgnore] public double AccumFert { get; set; }
-		[XmlIgnore] public double AccumLeach { get; set; }
-		[XmlIgnore] public double AccumDetach { get; set; }
-		[XmlIgnore] public double DeltaSoilOMN { get; set; }
-		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
-		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
-		[XmlIgnore] public double SoilNitrogenContent { get; set; }
-		
-		[XmlIgnore] public double AccumEO { get; set; }
-		[XmlIgnore] public double AccumEP { get; set; }
-		[XmlIgnore] public double AccumES { get; set; }
-		[XmlIgnore] public double AccumDrainage { get; set; }
-		[XmlIgnore] public double AccumRunoff { get; set; }
-		[XmlIgnore] public double AccumOutflowLat { get; set; }
-		[XmlIgnore] public double AccumIrrigation { get; set; }
-		[XmlIgnore] public double AccumRainfall { get; set; }
-		[XmlIgnore] public double SoilWaterDeficit { get; set; }
-		
-		[XmlIgnore] public double AccumTtemerg { get; set; }
-		
-		[XmlIgnore] public double  InitialSoilOMN { get; set; }
-		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
-		[XmlIgnore] public double  InitialMineralN { get; set; }
-		
-		[XmlIgnore] public double SWC { get; set; }
-		[XmlIgnore] public double DUL { get; set; }
-		[XmlIgnore] public double OutFlowLat { get; set; }
-
-		[XmlIgnore] public double FomN { get; set; }
-		[XmlIgnore] public double BiomN { get; set; }
-		[XmlIgnore] public double HumN { get; set; }
-		[XmlIgnore] public double OrganicN { get; set; }
-		[XmlIgnore] public double NO3N { get; set; }
-		[XmlIgnore] public double NH4N { get; set; }
-		[XmlIgnore] public double UreaN { get; set; }
-		[XmlIgnore] public double MineralN { get; set; }
-		[XmlIgnore] public double DltNMinRes { get; set; }
-		[XmlIgnore] public double DltNMinTot { get; set; }
-		
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-			InitialDay = true;
-		}	   
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			//!!!!!! Nitrogen balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			OrganicN = FomN + HumN + BiomN;
-			NO3N = MathUtilities.Sum(Soil.NO3N);
-			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
-			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            int layers = Soil.Thickness.Length;
-			if (InitialDay == true)
-			{
-				InitialSurfaceOMN = SOM.N;
-				InitialSoilOMN = OrganicN;
-				InitialMineralN = MineralN;
-				InitialDay = false;
-			}
-			AccumFert += Fert.NitrogenApplied;
-			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
-			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
-			DeltaSoilOMN = OrganicN - InitialSoilOMN;
-			DeltaSoilMineralN = MineralN - InitialMineralN;
-			SoilNitrogenContent = MineralN;
-			
-			//!!!!!! Water balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-
-			AccumIrrigation += Irrig.IrrigationApplied;
-			AccumRainfall += Met.Rain;
-			AccumEP -= (double)zone.Get("Potato.Leaf.Transpiration");
-			SoilWaterDeficit =  (SWC - DUL);
-			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
-			AccumOutflowLat -= OutFlowLat;
-			
-			//!!!!!! Thermal time calculation !!!!!!
-			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
-			if (Potato.Phenology.Stage >= 3)
-			AccumTtemerg += Potato.Phenology.ThermalTime.Value;
-		}
-		
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			
-			
-			AccumEO -= Soil.SoilWater.Eo;
-			AccumES -= Soil.SoilWater.Es; 
-			AccumDrainage -= Soil.SoilWater.Drainage;
-			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
-		}
-	}
-}
-	   ]]></Code>
       </Manager>
       <Folder>
         <Name>Graphs</Name>
@@ -4088,6 +3981,87 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
+        <Graph>
+          <Name>N Allocation</Name>
+          <Series>
+            <Name>N Supply</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Potato.Arbitrator.NSupply</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>N Demand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Potato.Arbitrator.NDemand</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>N Allocated</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Potato.Arbitrator.NAllocated</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>DM (g/m2/d)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
       </Folder>
       <Report>
         <Name>Report</Name>
@@ -4141,6 +4115,8 @@ namespace Models
           <string>Potato.Arbitrator.NDemand</string>
           <string>Potato.Arbitrator.NH4NSupply</string>
           <string>Potato.Arbitrator.NO3NSupply</string>
+          <string>Potato.Arbitrator.NSupply</string>
+          <string>Potato.Arbitrator.NAllocated</string>
           <string>Potato.HarvestRule.Script.FinalTag</string>
           <string>Potato.Leaf.AppearedCohortNo</string>
           <string>Potato.Leaf.CohortParameters.MaximumNConc.Value</string>
@@ -4224,95 +4200,151 @@ namespace Models
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
-      <SurfaceOrganicMatter>
-        <Name>SurfaceOrganicMatter</Name>
-        <PondActive>no</PondActive>
-        <ReportAdditions>no</ReportAdditions>
-        <ReportRemovals>no</ReportRemovals>
-        <ResidueTypes>
-          <Name>ResidueTypes</Name>
-          <LoadFromResource>ResidueTypes</LoadFromResource>
-        </ResidueTypes>
-        <TillageTypes>
-          <Name>TillageTypesList</Name>
-          <TillageType />
-        </TillageTypes>
-        <Pools>
-          <Pool>
-            <PoolName>Wheat</PoolName>
-            <ResidueType>Wheat</ResidueType>
-            <Mass>2000</Mass>
-            <CNRatio>80</CNRatio>
-            <CPRatio>NaN</CPRatio>
-            <StandingFraction>0</StandingFraction>
-          </Pool>
-        </Pools>
-        <PoolName>Wheat</PoolName>
-        <type>Wheat</type>
-        <mass>2000</mass>
-        <standing_fraction>0</standing_fraction>
-        <cpr />
-        <cnr>80</cnr>
-        <CriticalResidueWeight>2000</CriticalResidueWeight>
-        <OptimumDecompTemp>20</OptimumDecompTemp>
-        <MaxCumulativeEOS>20</MaxCumulativeEOS>
-        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-        <TotalLeachRain>25</TotalLeachRain>
-        <MinRainToLeach>10</MinRainToLeach>
-        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-        <DefaultCPRatio>0</DefaultCPRatio>
-        <DefaultStandingFraction>0</DefaultStandingFraction>
-        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-        <FractionFaecesAdded>0.5</FractionFaecesAdded>
-      </SurfaceOrganicMatter>
-      <Operations>
-        <Name>Operations</Name>
-        <Operation>
-          <Date>2003-10-20T00:00:00</Date>
-          <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 0);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-11-25T00:00:00</Date>
-          <Action>[Fertiliser].Apply(69, Fertiliser.Types.UreaN,0);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-11-26T00:00:00</Date>
-          <Action>[Irrigation].Apply(15);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-12-04T00:00:00</Date>
-          <Action>[Irrigation].Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-12-16T00:00:00</Date>
-          <Action>[Irrigation].Apply(15);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-12-22T00:00:00</Date>
-          <Action>[Irrigation].Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-12-30T00:00:00</Date>
-          <Action>[Irrigation].Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2004-01-08T00:00:00</Date>
-          <Action>[Irrigation].Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2004-01-21T00:00:00</Date>
-          <Action>[Irrigation].Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2004-01-31T00:00:00</Date>
-          <Action>[Irrigation].Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2004-02-27T00:00:00</Date>
-          <Action>[Irrigation].Apply(25);</Action>
-        </Operation>
-      </Operations>
+      <Manager>
+        <Name>ExtraVariables</Name>
+        <Script />
+        <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soils.Soil Soil;
+		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
+		[Link] Weather Met;
+		[Link] Fertiliser Fert;
+		[Link] Irrigation Irrig;
+		[Link] Plant Potato;
+		[Link] Zone zone;
+					
+		[XmlIgnore] public bool InitialDay { get; set; }
+		
+		[XmlIgnore] public double AccumPlantN { get; set; }
+		[XmlIgnore] public double AccumMineralisation { get; set; }
+		[XmlIgnore] public double AccumDenit { get; set; }
+		[XmlIgnore] public double AccumFert { get; set; }
+		[XmlIgnore] public double AccumLeach { get; set; }
+		[XmlIgnore] public double AccumDetach { get; set; }
+		[XmlIgnore] public double DeltaSoilOMN { get; set; }
+		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
+		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
+		[XmlIgnore] public double SoilNitrogenContent { get; set; }
+		
+		[XmlIgnore] public double AccumEO { get; set; }
+		[XmlIgnore] public double AccumEP { get; set; }
+		[XmlIgnore] public double AccumES { get; set; }
+		[XmlIgnore] public double AccumDrainage { get; set; }
+		[XmlIgnore] public double AccumRunoff { get; set; }
+		[XmlIgnore] public double AccumOutflowLat { get; set; }
+		[XmlIgnore] public double AccumIrrigation { get; set; }
+		[XmlIgnore] public double AccumRainfall { get; set; }
+		[XmlIgnore] public double SoilWaterDeficit { get; set; }
+		
+		[XmlIgnore] public double AccumTtemerg { get; set; }
+		
+		[XmlIgnore] public double  InitialSoilOMN { get; set; }
+		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
+		[XmlIgnore] public double  InitialMineralN { get; set; }
+		
+		[XmlIgnore] public double SWC { get; set; }
+		[XmlIgnore] public double DUL { get; set; }
+		[XmlIgnore] public double OutFlowLat { get; set; }
+
+		[XmlIgnore] public double FomN { get; set; }
+		[XmlIgnore] public double BiomN { get; set; }
+		[XmlIgnore] public double HumN { get; set; }
+		[XmlIgnore] public double OrganicN { get; set; }
+		[XmlIgnore] public double NO3N { get; set; }
+		[XmlIgnore] public double NH4N { get; set; }
+		[XmlIgnore] public double UreaN { get; set; }
+		[XmlIgnore] public double MineralN { get; set; }
+		[XmlIgnore] public double DltNMinRes { get; set; }
+		[XmlIgnore] public double DltNMinTot { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			InitialDay = true;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			//!!!!!! Nitrogen balance components !!!!!!
+			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			OrganicN = FomN + HumN + BiomN;
+			NO3N = MathUtilities.Sum(Soil.NO3N);
+			NH4N = MathUtilities.Sum(Soil.NH4N);
+			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			MineralN = NO3N + NH4N + UreaN; 
+			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
+			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			int layers = Soil.Thickness.Length;
+			if (InitialDay == true)
+			{
+				InitialSurfaceOMN = SOM.N;
+				InitialSoilOMN = OrganicN;
+				InitialMineralN = MineralN;
+				InitialDay = false;
+			}
+			AccumFert += Fert.NitrogenApplied;
+			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
+			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
+			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
+			DeltaSoilOMN = OrganicN - InitialSoilOMN;
+			DeltaSoilMineralN = MineralN - InitialMineralN;
+			SoilNitrogenContent = MineralN;
+			
+			//!!!!!! Water balance components !!!!!!
+			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+
+			AccumIrrigation += Irrig.IrrigationApplied;
+			AccumRainfall += Met.Rain;
+			AccumEP -= (double)zone.Get("Potato.Leaf.Transpiration");
+			SoilWaterDeficit = (SWC - DUL);
+			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
+			AccumOutflowLat -= OutFlowLat;
+			
+			//!!!!!! Thermal time calculation !!!!!!
+			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
+			if (Potato.Phenology.Stage >= 3)
+				AccumTtemerg += Potato.Phenology.ThermalTime.Value;
+		}
+		
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
+			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			
+			
+			AccumEO -= Soil.SoilWater.Eo;
+			AccumES -= Soil.SoilWater.Es; 
+			AccumDrainage -= Soil.SoilWater.Drainage;
+			AccumRunoff -= Soil.SoilWater.Runoff;
+			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
+			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+		}
+	}
+}
+	   ]]></Code>
+      </Manager>
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
