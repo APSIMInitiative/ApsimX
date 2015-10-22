@@ -124,7 +124,7 @@ namespace UserInterface.Views
             this.gridView.NumericFormat = null;
             this.gridView.ReadOnly = false;
             this.gridView.RowCount = 0;
-            this.gridView.Size = new System.Drawing.Size(603, 526);
+            this.gridView.Size = new System.Drawing.Size(603, 474);
             this.gridView.TabIndex = 5;
             // 
             // label3
@@ -162,8 +162,8 @@ namespace UserInterface.Views
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.panel2);
             this.Controls.Add(this.gridView);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "DataStoreView";
