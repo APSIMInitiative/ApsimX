@@ -38,6 +38,15 @@ namespace Models
         [Link]
         private IWeather MetData = null;
 
+        /// <summary>Albedo.</summary>
+        public double Albedo { get { return 0.26; } }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        public double Gsmax { get { return 0.011; } }
+
+        /// <summary>Gets or sets the R50.</summary>
+        public double R50 { get { return 200; } }
+
         //Events
         /// <summary>
         /// 

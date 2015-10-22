@@ -24,6 +24,15 @@ namespace Models.PMF.OldPlant
         /// <summary>Canopy type</summary>
         public string CanopyType { get { return Plant.CropType; } }
 
+        /// <summary>Albedo.</summary>
+        public double Albedo { get { return 0.15; } }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        public double Gsmax { get { return 0.01; } }
+
+        /// <summary>Gets or sets the R50.</summary>
+        public double R50 { get { return 200; } }
+
         /// <summary>Gets the lai.</summary>
         /// <value>The lai.</value>
         [Units("m^2/m^2")]

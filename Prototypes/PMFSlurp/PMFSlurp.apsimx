@@ -3799,7 +3799,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Slurp.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>Slurp.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -3814,7 +3814,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Slurp.Summariser.BelowGround.Wt</YFieldName>
+          <YFieldName>Slurp.BelowGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -3829,7 +3829,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Slurp.Summariser.Total.Wt</YFieldName>
+          <YFieldName>Slurp.Total.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -3985,7 +3985,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Slurp.Summariser.AboveGround.N</YFieldName>
+          <YFieldName>Slurp.AboveGround.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4000,7 +4000,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Slurp.Summariser.BelowGround.N</YFieldName>
+          <YFieldName>Slurp.BelowGround.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4015,7 +4015,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Slurp.Summariser.Total.N</YFieldName>
+          <YFieldName>Slurp.Total.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4030,7 +4030,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Slurp.Summariser.TotalLive.N</YFieldName>
+          <YFieldName>Slurp.TotalLive.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>

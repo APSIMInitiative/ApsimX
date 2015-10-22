@@ -75,6 +75,8 @@ namespace Models.PMF
         /// <summary>The root</summary>
         [Link(IsOptional = true)]
         public Root Root = null;
+        [Link(IsOptional = true)]
+        Biomass AboveGround = null;
 
         #endregion
 
@@ -208,6 +210,23 @@ namespace Models.PMF
             BiomassRemovalData = new RemovalFractions(Organs);
             
             Clear();
+        }
+
+        /// <summary>Called when [phase changed].</summary>
+        /// <param name="PhaseChange">The phase change.</param>
+        [EventSubscribe("PhaseChanged")]
+        private void OnPhaseChanged(PhaseChangedType PhaseChange)
+        {
+            if (Phenology != null && Leaf != null && AboveGround != null)
+            {
+                string message = Phenology.CurrentPhase.Start + "\r\n";
+                if (Leaf != null)
+                {
+                    message += "  LAI = " + Leaf.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
+                    message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
+                }
+                Summary.WriteMessage(this, message);
+            }
         }
 
         /// <summary>Sow the crop with the specified parameters.</summary>
