@@ -53,7 +53,7 @@ namespace UserInterface.Views
                     numRows = (int)Math.Ceiling((double)numControls / numCols);
                 }
 
-                int width = Size.Width / numCols;
+                int width = (Size.Width - 50) / numCols;
                 int height = Size.Height / numRows - 1;
                 if (height < Size.Height / 2)
                 {
@@ -70,7 +70,9 @@ namespace UserInterface.Views
                     if (graphView != null)
                     {
                         graphView.FontSize = 10;
-                        graphView.Refresh(); 
+                        graphView.Refresh();
+                        graphView.SingleClick += OnGraphClick;
+                        graphView.IsLegendVisible = false;
                     }
 
                     control.Location = new Point(col * width, row * height);
@@ -88,6 +90,19 @@ namespace UserInterface.Views
             this.Resize += OnResize;
         }
 
+        /// <summary>User has double clicked a graph.</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnGraphClick(object sender, EventArgs e)
+        {
+            GraphView graphView = sender as GraphView;
+            if (graphView != null)
+            {
+                graphView.IsLegendVisible = !graphView.IsLegendVisible;
+                graphView.Refresh();
+            }
+        }
+
         /// <summary>Called when user resized view.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -95,5 +110,6 @@ namespace UserInterface.Views
         {
             PositionAndRefreshControls();
         }
+
     }
 }
