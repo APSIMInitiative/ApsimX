@@ -161,6 +161,8 @@ namespace UserInterface.Presenters
 
                 // If it gets this far then compiles ok.
                 this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.manager, "Code", code));
+
+                this.explorerPresenter.ShowMessage("Manager script compiled successfully", DataStore.ErrorLevel.Information);
             }
             catch (Models.Core.ApsimXException err)
             {

@@ -60,6 +60,9 @@ namespace UserInterface.Interfaces
         /// <summary>Show in lengend checkbox.</summary>
         ICheckBoxView ShowInLegend { get; }
 
+        /// <summary>Include series name in legend.</summary>
+        ICheckBoxView IncludeSeriesNameInLegend { get; }
+
         /// <summary>Graph.</summary>
         IGraphView GraphView { get; }
 

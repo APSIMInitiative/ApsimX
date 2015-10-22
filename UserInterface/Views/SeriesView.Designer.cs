@@ -58,6 +58,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.dropDownView11 = new DropDownView();
+            this.checkBoxView6 = new CheckBoxView();
             this.SuspendLayout();
             // 
             // label1
@@ -276,9 +277,9 @@
             // checkBoxView5
             // 
             this.checkBoxView5.IsChecked = false;
-            this.checkBoxView5.Location = new System.Drawing.Point(399, 159);
+            this.checkBoxView5.Location = new System.Drawing.Point(408, 255);
             this.checkBoxView5.Name = "checkBoxView5";
-            this.checkBoxView5.Size = new System.Drawing.Size(139, 28);
+            this.checkBoxView5.Size = new System.Drawing.Size(236, 28);
             this.checkBoxView5.TabIndex = 22;
             this.checkBoxView5.TextOfLabel = "Show in legend?";
             // 
@@ -287,6 +288,7 @@
             this.graphView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.graphView1.IsLegendVisible = true;
             this.graphView1.LeftRightPadding = 40;
             this.graphView1.Location = new System.Drawing.Point(3, 313);
             this.graphView1.Name = "graphView1";
@@ -364,8 +366,18 @@
             this.dropDownView11.TabIndex = 30;
             this.dropDownView11.Values = new string[0];
             // 
+            // checkBoxView6
+            // 
+            this.checkBoxView6.IsChecked = false;
+            this.checkBoxView6.Location = new System.Drawing.Point(408, 281);
+            this.checkBoxView6.Name = "checkBoxView6";
+            this.checkBoxView6.Size = new System.Drawing.Size(250, 28);
+            this.checkBoxView6.TabIndex = 31;
+            this.checkBoxView6.TextOfLabel = "Include series name in legend?";
+            // 
             // SeriesView
             // 
+            this.Controls.Add(this.checkBoxView6);
             this.Controls.Add(this.dropDownView11);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label11);
@@ -436,5 +448,6 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
         private DropDownView dropDownView11;
+        private CheckBoxView checkBoxView6;
     }
 }
