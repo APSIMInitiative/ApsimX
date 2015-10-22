@@ -233,11 +233,11 @@ namespace Models.PMF
         [Units("/node")]
         IFunction BranchingRate = null;
         /// <summary>The shade induced branch mortality</summary>
-        [Link]
+        [Link(IsOptional = true)]
         [Units("0-1")]
         IFunction ShadeInducedBranchMortality = null;
         /// <summary>The drought induced branch mortality</summary>
-        [Link]
+        [Link(IsOptional = true)]
         [Units("0-1")]
         IFunction DroughtInducedBranchMortality = null;
         /// <summary>The plant mortality</summary>
