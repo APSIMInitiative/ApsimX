@@ -1809,8 +1809,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
-      <Summariser>
-        <Name>Summariser</Name>
         <CompositeBiomass>
           <Name>AboveGround</Name>
           <Memo>
@@ -1947,7 +1945,6 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
             <string>[Panicle].Dead</string>
           </Propertys>
         </CompositeBiomass>
-      </Summariser>
       <Cultivar>
         <Name>Katumani</Name>
         <Memo>
@@ -3397,8 +3394,6 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
-      <Summariser>
-        <Name>Summariser</Name>
         <CompositeBiomass>
           <Name>AboveGround</Name>
           <Propertys>
@@ -3454,7 +3449,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
             <string>[Grain].Dead</string>
           </Propertys>
         </CompositeBiomass>
-      </Summariser>
+
       <CropType>Wheat</CropType>
     </Plant>
   </Folder>
@@ -4092,7 +4087,7 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.CurrentStageName as Stage</string>
-              <string>[Teff].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Teff].AboveGround.Wt as Biomass</string>
               <string>[Teff].Grain.Yield</string>
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
@@ -4730,7 +4725,7 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.CurrentStageName as Stage</string>
-              <string>[Teff].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Teff].AboveGround.Wt as Biomass</string>
               <string>[Teff].Grain.Yield</string>
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
@@ -5396,7 +5391,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.CurrentStageName as Stage</string>
-              <string>[Teff].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Teff].AboveGround.Wt as Biomass</string>
               <string>[Teff].Grain.Yield</string>
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
@@ -6143,7 +6138,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.CurrentStageName as Stage</string>
-              <string>[Teff].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Teff].AboveGround.Wt as Biomass</string>
               <string>[Teff].Grain.Yield</string>
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
@@ -6486,7 +6481,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
               <string>[Teff].Leaf.LAI</string>
-              <string>[Teff].Summariser.Total.Wt as AboveGroundBiomass</string>
+              <string>[Teff].Total.Wt as AboveGroundBiomass</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Leaf.Transpiration</string>
@@ -6855,7 +6850,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.CurrentStageName as Stage</string>
-              <string>[Teff].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Teff].AboveGround.Wt as Biomass</string>
               <string>[Teff].Grain.Yield</string>
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
@@ -7744,7 +7739,7 @@ Field Crops Research 116 (2010) 196204
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.CurrentStageName as Stage</string>
-              <string>[Teff].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Teff].AboveGround.Wt as Biomass</string>
               <string>[Teff].Grain.Yield</string>
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
@@ -8333,7 +8328,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.CurrentStageName as Stage</string>
-              <string>[Teff].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Teff].AboveGround.Wt as Biomass</string>
               <string>[Teff].Grain.Yield</string>
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
@@ -9026,7 +9021,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.CurrentStageName as Stage</string>
-              <string>[Teff].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Teff].AboveGround.Wt as Biomass</string>
               <string>[Teff].Grain.Yield</string>
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>

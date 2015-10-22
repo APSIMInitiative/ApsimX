@@ -1315,13 +1315,12 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
+        <Albedo>0</Albedo>
+        <Gsmax>0</Gsmax>
+        <R50>1000</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
-        <GsMax>0.15</GsMax>
-        <R50>1000</R50>
-        <Emissivity>0.96</Emissivity>
-        <Albido>0.26</Albido>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -1643,146 +1642,143 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
-      <Summariser>
-        <Name>Summariser</Name>
-        <CompositeBiomass>
-          <Name>AboveGround</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
+      <CompositeBiomass>
+        <Name>AboveGround</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
 The AboveGround composite biomass object includes all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]></MemoText>
-          </Memo>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Live</string>
-            <string>[Stem].Dead</string>
-            <string>[Husk].Live</string>
-            <string>[Husk].Dead</string>
-            <string>[Grain].Live</string>
-            <string>[Grain].Dead</string>
-            <string>[Rachis].Live</string>
-            <string>[Rachis].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>BelowGround</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
+        </Memo>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Live</string>
+          <string>[Stem].Dead</string>
+          <string>[Husk].Live</string>
+          <string>[Husk].Dead</string>
+          <string>[Grain].Live</string>
+          <string>[Grain].Dead</string>
+          <string>[Rachis].Live</string>
+          <string>[Rachis].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>BelowGround</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
 The BelowGround composite biomass object includes all root biomass pools to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]></MemoText>
-          </Memo>
-          <Propertys>
-            <string>[Root].Live</string>
-            <string>[Root].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Total</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
+        </Memo>
+        <Propertys>
+          <string>[Root].Live</string>
+          <string>[Root].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>Total</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
 The Total composite biomass object includes all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]></MemoText>
-          </Memo>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Live</string>
-            <string>[Stem].Dead</string>
-            <string>[Husk].Live</string>
-            <string>[Husk].Dead</string>
-            <string>[Grain].Live</string>
-            <string>[Grain].Dead</string>
-            <string>[Rachis].Live</string>
-            <string>[Rachis].Dead</string>
-            <string>[Root].Live</string>
-            <string>[Root].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>TotalLive</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
+        </Memo>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Live</string>
+          <string>[Stem].Dead</string>
+          <string>[Husk].Live</string>
+          <string>[Husk].Dead</string>
+          <string>[Grain].Live</string>
+          <string>[Grain].Dead</string>
+          <string>[Rachis].Live</string>
+          <string>[Rachis].Dead</string>
+          <string>[Root].Live</string>
+          <string>[Root].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>TotalLive</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
 The TotalLive composite biomass object includes the Live pools of all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]></MemoText>
-          </Memo>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Stem].Live</string>
-            <string>[Husk].Live</string>
-            <string>[Grain].Live</string>
-            <string>[Rachis].Live</string>
-            <string>[Root].Live</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>TotalDead</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
+        </Memo>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Stem].Live</string>
+          <string>[Husk].Live</string>
+          <string>[Grain].Live</string>
+          <string>[Rachis].Live</string>
+          <string>[Root].Live</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>TotalDead</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
 The TotalDead composite biomass object includes the Dead pools of all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]></MemoText>
-          </Memo>
-          <Propertys>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Dead</string>
-            <string>[Husk].Dead</string>
-            <string>[Grain].Dead</string>
-            <string>[Rachis].Dead</string>
-            <string>[Root].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>EarLive</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
+        </Memo>
+        <Propertys>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Dead</string>
+          <string>[Husk].Dead</string>
+          <string>[Grain].Dead</string>
+          <string>[Rachis].Dead</string>
+          <string>[Root].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>EarLive</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
 The EarLive composite biomass object includes the Live pools of all organs within the Ear to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]></MemoText>
-          </Memo>
-          <Propertys>
-            <string>[Husk].Live</string>
-            <string>[Grain].Live</string>
-            <string>[Rachis].Live</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>AboveGroundLive</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
+        </Memo>
+        <Propertys>
+          <string>[Husk].Live</string>
+          <string>[Grain].Live</string>
+          <string>[Rachis].Live</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>AboveGroundLive</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
 The AboveGroundLive composite biomass object includes the Live pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]></MemoText>
-          </Memo>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Stem].Live</string>
-            <string>[Husk].Live</string>
-            <string>[Grain].Live</string>
-            <string>[Rachis].Live</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>AboveGroundDead</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
+        </Memo>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Stem].Live</string>
+          <string>[Husk].Live</string>
+          <string>[Grain].Live</string>
+          <string>[Rachis].Live</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>AboveGroundDead</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
 The AboveGroundDead composite biomass object includes the Dead pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]></MemoText>
-          </Memo>
-          <Propertys>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Dead</string>
-            <string>[Husk].Dead</string>
-            <string>[Grain].Dead</string>
-            <string>[Rachis].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-      </Summariser>
+        </Memo>
+        <Propertys>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Dead</string>
+          <string>[Husk].Dead</string>
+          <string>[Grain].Dead</string>
+          <string>[Rachis].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
       <Memo>
         <Name>Future Development Needs</Name>
         <MemoText><![CDATA[#Future Development requirements
@@ -2187,6 +2183,11 @@ Note.  The BMW1 trail consists of data from unreplicated plots.
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -2198,11 +2199,6 @@ Note.  The BMW1 trail consists of data from unreplicated plots.
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -2484,11 +2480,11 @@ namespace Models
               <string>[Maize].Grain.Live.Wt</string>
               <string>[Maize].Grain.YieldBuPerAcre</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
@@ -2507,10 +2503,10 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGroundLive.N</string>
-              <string>[Maize].Summariser.AboveGroundLive.Wt</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGroundLive.N</string>
+              <string>[Maize].AboveGroundLive.Wt</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -2898,21 +2894,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -3255,6 +3251,11 @@ namespace Models
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -3266,11 +3267,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -3551,11 +3547,11 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Maize].Grain.Live.Wt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
@@ -3574,10 +3570,10 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGroundLive.N</string>
-              <string>[Maize].Summariser.AboveGroundLive.Wt</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGroundLive.N</string>
+              <string>[Maize].AboveGroundLive.Wt</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -3986,21 +3982,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -13739,6 +13735,11 @@ namespace Models
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -13750,11 +13751,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -14024,11 +14020,11 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Maize].Grain.Live.Wt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
@@ -14047,10 +14043,10 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGroundLive.N</string>
-              <string>[Maize].Summariser.AboveGroundLive.Wt</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGroundLive.N</string>
+              <string>[Maize].AboveGroundLive.Wt</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -14432,21 +14428,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -14971,6 +14967,11 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -14982,11 +14983,6 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -15271,11 +15267,11 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Maize].Grain.Live.Wt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
@@ -15294,10 +15290,10 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGroundLive.N</string>
-              <string>[Maize].Summariser.AboveGroundLive.Wt</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGroundLive.N</string>
+              <string>[Maize].AboveGroundLive.Wt</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -15692,21 +15688,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -16111,6 +16107,11 @@ namespace Models
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -16122,11 +16123,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -16411,11 +16407,11 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Maize].Grain.Live.Wt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
@@ -16434,10 +16430,10 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGroundLive.N</string>
-              <string>[Maize].Summariser.AboveGroundLive.Wt</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGroundLive.N</string>
+              <string>[Maize].AboveGroundLive.Wt</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -16832,21 +16828,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -17245,6 +17241,11 @@ namespace Models
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -17256,11 +17257,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -17326,11 +17322,11 @@ namespace Models
               <string>[Soil].NO3N</string>
               <string>[Maize].Grain.Live.Wt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
@@ -17349,10 +17345,10 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGroundLive.N</string>
-              <string>[Maize].Summariser.AboveGroundLive.Wt</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGroundLive.N</string>
+              <string>[Maize].AboveGroundLive.Wt</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -17705,21 +17701,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -18178,6 +18174,11 @@ namespace Models
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -18189,11 +18190,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -18259,11 +18255,11 @@ namespace Models
               <string>[Soil].NO3N</string>
               <string>[Maize].Grain.Live.Wt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
@@ -18282,10 +18278,10 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGroundLive.N</string>
-              <string>[Maize].Summariser.AboveGroundLive.Wt</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGroundLive.N</string>
+              <string>[Maize].AboveGroundLive.Wt</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -18637,21 +18633,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -19034,6 +19030,11 @@ namespace Models
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -19045,11 +19046,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -19115,11 +19111,11 @@ namespace Models
               <string>[Soil].NO3N</string>
               <string>[Maize].Grain.Live.Wt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
@@ -19138,10 +19134,10 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -19493,21 +19489,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -19835,7 +19831,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>Maize.AboveGround.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -19974,6 +19970,11 @@ namespace Models
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -19985,11 +19986,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -20054,12 +20050,12 @@ namespace Models
               <string>[Soil].NO3N</string>
               <string>[Maize].Grain.Live.Wt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Leaf.Dead.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
@@ -20079,10 +20075,10 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -20109,21 +20105,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -20665,7 +20661,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>Maize.AboveGround.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -20767,7 +20763,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Summariser.AboveGround.N</YFieldName>
+          <YFieldName>Maize.AboveGround.N</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -21377,6 +21373,11 @@ namespace Models
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -21388,11 +21389,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -21457,12 +21453,12 @@ namespace Models
               <string>[Soil].NO3N</string>
               <string>[Maize].Grain.Live.Wt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Leaf.Dead.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
@@ -21482,10 +21478,10 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -21509,21 +21505,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -22065,7 +22061,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>Maize.AboveGround.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -22167,7 +22163,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Summariser.AboveGround.N</YFieldName>
+          <YFieldName>Maize.AboveGround.N</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -22681,6 +22677,11 @@ namespace Models
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -22692,11 +22693,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -22761,12 +22757,12 @@ namespace Models
               <string>[Soil].NO3N</string>
               <string>[Maize].Grain.Live.Wt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Leaf.Dead.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
@@ -22786,10 +22782,10 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -22813,21 +22809,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -23369,7 +23365,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>Maize.AboveGround.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -23471,7 +23467,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Summariser.AboveGround.N</YFieldName>
+          <YFieldName>Maize.AboveGround.N</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -24367,6 +24363,11 @@ Testing of APSIM Maize, Soil Water, Soil Nitrogen, Manure, and Soil Temperature 
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -24378,11 +24379,6 @@ Testing of APSIM Maize, Soil Water, Soil Nitrogen, Manure, and Soil Temperature 
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -24663,11 +24659,11 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Maize].Grain.Live.Wt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
@@ -24686,10 +24682,10 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGroundLive.N</string>
-              <string>[Maize].Summariser.AboveGroundLive.Wt</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGroundLive.N</string>
+              <string>[Maize].AboveGroundLive.Wt</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -25060,21 +25056,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -25163,6 +25159,11 @@ namespace Models
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.23</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -25174,11 +25175,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.23</soil_albedo>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -25459,11 +25455,11 @@ namespace Models
             <string>[MicroClimate].petr</string>
             <string>[Maize].Grain.Live.Wt</string>
             <string>[Maize].Stem.Live.Wt</string>
-            <string>[Maize].Summariser.EarLive.Wt</string>
+            <string>[Maize].EarLive.Wt</string>
             <string>[Maize].Leaf.Live.Wt</string>
             <string>[Maize].Root.Live.Wt</string>
             <string>[Maize].Husk.Live.Wt</string>
-            <string>[Maize].Summariser.EarLive.N</string>
+            <string>[Maize].EarLive.N</string>
             <string>[Maize].Grain.Live.N</string>
             <string>[Maize].Stem.Live.N</string>
             <string>[Maize].Leaf.Live.N</string>
@@ -25482,10 +25478,10 @@ namespace Models
             <string>[Maize].Leaf.Fn</string>
             <string>[Maize].Phenology.CurrentPhaseName</string>
             <string>[Maize].Phenology.Stage</string>
-            <string>[Maize].Summariser.AboveGroundLive.N</string>
-            <string>[Maize].Summariser.AboveGroundLive.Wt</string>
-            <string>[Maize].Summariser.Total.N</string>
-            <string>[Maize].Summariser.Total.Wt</string>
+            <string>[Maize].AboveGroundLive.N</string>
+            <string>[Maize].AboveGroundLive.Wt</string>
+            <string>[Maize].Total.N</string>
+            <string>[Maize].Total.Wt</string>
             <string>[Maize].Arbitrator.NDemand</string>
             <string>[Maize].Phenology.Stage</string>
             <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -25897,21 +25893,21 @@ namespace Models
             <string>[Maize].Phenology.CurrentStageName as Stage</string>
             <string>[Maize].Grain.Live.Wt as GrainWt</string>
             <string>[Maize].Stem.Live.Wt</string>
-            <string>[Maize].Summariser.EarLive.Wt</string>
+            <string>[Maize].EarLive.Wt</string>
             <string>[Maize].Leaf.Live.Wt</string>
             <string>[Maize].Root.Live.Wt</string>
             <string>[Maize].Husk.Live.Wt</string>
             <string>[Maize].Rachis.Live.Wt</string>
-            <string>[Maize].Summariser.EarLive.N</string>
+            <string>[Maize].EarLive.N</string>
             <string>[Maize].Grain.Live.N</string>
             <string>[Maize].Stem.Live.N</string>
             <string>[Maize].Leaf.Live.N</string>
             <string>[Maize].Root.Live.N</string>
             <string>[Maize].Root.Depth</string>
-            <string>[Maize].Summariser.AboveGround.N</string>
-            <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-            <string>[Maize].Summariser.Total.N</string>
-            <string>[Maize].Summariser.Total.Wt</string>
+            <string>[Maize].AboveGround.N</string>
+            <string>[Maize].AboveGround.Wt as Biomass</string>
+            <string>[Maize].Total.N</string>
+            <string>[Maize].Total.Wt</string>
             <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
             <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
             <string>[Maize].Grain.Size.Value as GrainSize</string>
@@ -26049,7 +26045,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Summariser.Total.Wt</YFieldName>
+          <YFieldName>Maize.Total.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -26163,6 +26159,11 @@ namespace Models
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.23</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -26174,11 +26175,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.23</soil_albedo>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -26459,11 +26455,11 @@ namespace Models
             <string>[MicroClimate].petr</string>
             <string>[Maize].Grain.Live.Wt</string>
             <string>[Maize].Stem.Live.Wt</string>
-            <string>[Maize].Summariser.EarLive.Wt</string>
+            <string>[Maize].EarLive.Wt</string>
             <string>[Maize].Leaf.Live.Wt</string>
             <string>[Maize].Root.Live.Wt</string>
             <string>[Maize].Husk.Live.Wt</string>
-            <string>[Maize].Summariser.EarLive.N</string>
+            <string>[Maize].EarLive.N</string>
             <string>[Maize].Grain.Live.N</string>
             <string>[Maize].Stem.Live.N</string>
             <string>[Maize].Leaf.Live.N</string>
@@ -26482,10 +26478,10 @@ namespace Models
             <string>[Maize].Leaf.Fn</string>
             <string>[Maize].Phenology.CurrentPhaseName</string>
             <string>[Maize].Phenology.Stage</string>
-            <string>[Maize].Summariser.AboveGroundLive.N</string>
-            <string>[Maize].Summariser.AboveGroundLive.Wt</string>
-            <string>[Maize].Summariser.Total.N</string>
-            <string>[Maize].Summariser.Total.Wt</string>
+            <string>[Maize].AboveGroundLive.N</string>
+            <string>[Maize].AboveGroundLive.Wt</string>
+            <string>[Maize].Total.N</string>
+            <string>[Maize].Total.Wt</string>
             <string>[Maize].Arbitrator.NDemand</string>
             <string>[Maize].Phenology.Stage</string>
             <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -26838,21 +26834,21 @@ namespace Models
             <string>[Maize].Phenology.CurrentStageName as Stage</string>
             <string>[Maize].Grain.Live.Wt as GrainWt</string>
             <string>[Maize].Stem.Live.Wt</string>
-            <string>[Maize].Summariser.EarLive.Wt</string>
+            <string>[Maize].EarLive.Wt</string>
             <string>[Maize].Leaf.Live.Wt</string>
             <string>[Maize].Root.Live.Wt</string>
             <string>[Maize].Husk.Live.Wt</string>
             <string>[Maize].Rachis.Live.Wt</string>
-            <string>[Maize].Summariser.EarLive.N</string>
+            <string>[Maize].EarLive.N</string>
             <string>[Maize].Grain.Live.N</string>
             <string>[Maize].Stem.Live.N</string>
             <string>[Maize].Leaf.Live.N</string>
             <string>[Maize].Root.Live.N</string>
             <string>[Maize].Root.Depth</string>
-            <string>[Maize].Summariser.AboveGround.N</string>
-            <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-            <string>[Maize].Summariser.Total.N</string>
-            <string>[Maize].Summariser.Total.Wt</string>
+            <string>[Maize].AboveGround.N</string>
+            <string>[Maize].AboveGround.Wt as Biomass</string>
+            <string>[Maize].Total.N</string>
+            <string>[Maize].Total.Wt</string>
             <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
             <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
             <string>[Maize].Grain.Size.Value as GrainSize</string>
@@ -26990,7 +26986,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Summariser.Total.Wt</YFieldName>
+          <YFieldName>Maize.Total.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -27665,6 +27661,11 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
           </Soil>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -27676,11 +27677,6 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -28169,13 +28165,13 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Maize].Grain.Live.Wt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
               <string>[Maize].Tastle.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
@@ -28198,10 +28194,10 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGroundLive.N</string>
-              <string>[Maize].Summariser.AboveGroundLive.Wt</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGroundLive.N</string>
+              <string>[Maize].AboveGroundLive.Wt</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -28263,21 +28259,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size.Value as GrainSize</string>
@@ -29492,7 +29488,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.Summariser.Total.Wt</YFieldName>
+              <YFieldName>Maize.Total.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -29673,7 +29669,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.Summariser.Total.N</YFieldName>
+              <YFieldName>Maize.Total.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -30497,7 +30493,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Summariser.AboveGroundLive.Wt</YFieldName>
+            <YFieldName>Maize.AboveGroundLive.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -30518,7 +30514,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Summariser.AboveGround.Wt</YFieldName>
+            <YFieldName>Maize.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -30560,7 +30556,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Summariser.AboveGroundLive.N</YFieldName>
+            <YFieldName>Maize.AboveGroundLive.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -34027,6 +34023,11 @@ TreatNo = 2
           </Manager>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -34038,11 +34039,6 @@ TreatNo = 2
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Plant>
             <Name>Maize</Name>
@@ -34268,11 +34264,11 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Maize].Grain.Live.Wt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
@@ -34291,10 +34287,10 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGroundLive.N</string>
-              <string>[Maize].Summariser.AboveGroundLive.Wt</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGroundLive.N</string>
+              <string>[Maize].AboveGroundLive.Wt</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -34318,21 +34314,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size.Value as GrainSize</string>
@@ -34535,7 +34531,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Summariser.AboveGroundLive.Wt</YFieldName>
+            <YFieldName>Maize.AboveGroundLive.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -34555,7 +34551,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Summariser.AboveGround.Wt</YFieldName>
+            <YFieldName>Maize.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -35365,7 +35361,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Summariser.AboveGroundLive.Wt</YFieldName>
+            <YFieldName>Maize.AboveGroundLive.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -35385,7 +35381,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Summariser.AboveGround.Wt</YFieldName>
+            <YFieldName>Maize.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -36793,6 +36789,11 @@ namespace Models
           </Fertiliser>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -36804,11 +36805,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Plant>
             <Name>Maize</Name>
@@ -36938,13 +36934,13 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Maize].Grain.Live.Wt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
               <string>[Maize].Tastle.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
@@ -36967,10 +36963,10 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGroundLive.N</string>
-              <string>[Maize].Summariser.AboveGroundLive.Wt</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGroundLive.N</string>
+              <string>[Maize].AboveGroundLive.Wt</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -37029,21 +37025,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size.Value as GrainSize</string>
@@ -38197,6 +38193,11 @@ namespace Models
           </Fertiliser>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -38208,11 +38209,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Plant>
             <Name>Maize</Name>
@@ -38342,13 +38338,13 @@ namespace Models
               <string>[MicroClimate].petr</string>
               <string>[Maize].Grain.Live.Wt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
               <string>[Maize].Tastle.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
@@ -38371,10 +38367,10 @@ namespace Models
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
               <string>[Maize].Phenology.Stage</string>
-              <string>[Maize].Summariser.AboveGroundLive.N</string>
-              <string>[Maize].Summariser.AboveGroundLive.Wt</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGroundLive.N</string>
+              <string>[Maize].AboveGroundLive.Wt</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>[Maize].Arbitrator.NDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
@@ -38433,21 +38429,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size.Value as GrainSize</string>
@@ -39006,7 +39002,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Summariser.AboveGroundLive.Wt</YFieldName>
+            <YFieldName>Maize.AboveGroundLive.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -39026,7 +39022,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Summariser.AboveGround.Wt</YFieldName>
+            <YFieldName>Maize.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
