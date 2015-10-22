@@ -153,11 +153,11 @@ namespace UserInterface.Commands
             private string Get(string keyword)
             {
                 string stringToFind = keyword + " = {";
-                int posKeyWord = contents.IndexOf(stringToFind);
+                int posKeyWord = contents.IndexOf(stringToFind, StringComparison.InvariantCultureIgnoreCase);
                 if (posKeyWord == -1)
                 {
                     stringToFind = keyword + "={";
-                    posKeyWord = contents.IndexOf(stringToFind);
+                    posKeyWord = contents.IndexOf(stringToFind, StringComparison.InvariantCultureIgnoreCase);
                 }                
                 if (posKeyWord != -1)
                 {
@@ -186,59 +186,70 @@ namespace UserInterface.Commands
 
                     string authors = StringUtilities.BuildString(Authors, ", ");
 
-                    if (Get("series") != string.Empty)
-                    {
-                        text = string.Format("{0}, {1}. {2}, in: {3}. {4}, {5}",
+                    text = string.Format("{0}, {1}. {2}.",
                                              new object[] {
                                              authors,
                                              Year,
-                                             Get("title"),
-                                             Get("series"),
-                                             Get("publisher"),
-                                             Get("address") });
-                        string pages = Get("pages");
-                        if (pages == string.Empty)
-                            text += ".";
-                        else
-                            text += ", " + pages + ".";
-                    }
+                                             Get("title") });
+
+                    if (Get("series") != string.Empty)
+                        text += PrefixString(Get("series"), " ") + PrefixString(Get("publisher"), ", ") +
+                                             PrefixString(Get("address"), ", ") +
+                                             PrefixString(Get("pages"), ", ");
+
                     else if (Get("institution") != string.Empty)
-                    {
-                        text = string.Format("{0}, {1}. {2}. {3}.",
-                                            new object[] {
-                                             authors,
-                                             Year,
-                                             Get("title"),
-                                             Get("institution")});
-                    }
+                        text += " " + Get("institution");
+
                     else if (Get("university") != string.Empty)
-                    {
-                        text = string.Format("{0}, {1}. {2}. {3}. {4}.",
-                                            new object[] {
-                                             authors,
-                                             Year,
-                                             Get("title"),
-                                             Get("type"),
-                                             Get("university") });
-                    }
+                        text = AppendString(Get("type"), ".") + Get("university") ;
+                    
                     else
                     {
-                        text = string.Format("{0}, {1}. {2}. {3}. {4} ({5}), {6}.",
-                                             new object[] {
-                                             authors,
-                                             Year,
-                                             Get("title"),
-                                             Get("journal"),
-                                             Get("volume"),
-                                             Get("number"),
-                                             Get("pages") });
+                        text = text + PrefixString(Get("journal") + Get("Booktitle"), " ") +
+                                      PrefixString(Get("Editor"), ", Eds: ") +
+                                      PrefixString(Get("volume"), " ") +
+                                      PrefixString(WrapInBrackets(Get("number")), " ") +
+                                      PrefixString(Get("pages"), ", ");
                     }
+
+                    text = AppendString(text, ".");
 
                     return text;
                 }
             }
         }
 
+        /// <summary>Append a string if it isn't already there.</summary>
+        /// <param name="st">The original string.</param>
+        /// <param name="stringToAppend">The string to append.</param>
+        /// <returns>The new string.</returns>
+        private static string AppendString(string st, string stringToAppend)
+        {
+            if (st != string.Empty && !st.EndsWith(stringToAppend))
+                return st + stringToAppend;
+            return st;
+        }
+
+        /// <summary>Prefix a string if it isn't already there.</summary>
+        /// <param name="st">The original string.</param>
+        /// <param name="stringToAppend">The string to prefix.</param>
+        /// <returns>The new string.</returns>
+        private static string PrefixString(string st, string stringToPrefix)
+        {
+            if (st != string.Empty && !st.StartsWith(stringToPrefix))
+                return stringToPrefix + st;
+            return st;
+        }
+
+        /// <summary>Wrap a string in brackets</summary>
+        /// <param name="st">The original string.</param>
+        /// <returns>The new string.</returns>
+        private static string WrapInBrackets(string st)
+        {
+            if (st != string.Empty)
+                return "(" + st + ")";
+            return st;
+        }
         /// <summary>
         /// A private property comparer.
         /// </summary>
