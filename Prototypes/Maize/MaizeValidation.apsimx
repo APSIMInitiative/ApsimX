@@ -1315,9 +1315,9 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
-        <Albedo>0</Albedo>
-        <Gsmax>0</Gsmax>
-        <R50>1000</R50>
+        <Albedo>0.18</Albedo>
+        <Gsmax>0.009</Gsmax>
+        <R50>160</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
