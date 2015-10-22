@@ -84,6 +84,7 @@ namespace UserInterface.Presenters
             this.seriesView.X2.Changed += OnX2Changed;
             this.seriesView.Y2.Changed += OnY2Changed;
             this.seriesView.ShowInLegend.Changed += OnShowInLegendChanged;
+            this.seriesView.IncludeSeriesNameInLegend.Changed += OnIncludeSeriesNameInLegendChanged;
             this.seriesView.YCumulative.Changed += OnCumulativeYChanged;
             this.seriesView.XCumulative.Changed += OnCumulativeXChanged;
             this.seriesView.Filter.Changed += OnFilterChanged;
@@ -106,6 +107,7 @@ namespace UserInterface.Presenters
             this.seriesView.X2.Changed -= OnX2Changed;
             this.seriesView.Y2.Changed -= OnY2Changed;
             this.seriesView.ShowInLegend.Changed -= OnShowInLegendChanged;
+            this.seriesView.IncludeSeriesNameInLegend.Changed -= OnIncludeSeriesNameInLegendChanged;
             this.seriesView.YCumulative.Changed -= OnCumulativeYChanged;
             this.seriesView.XCumulative.Changed -= OnCumulativeXChanged;
             this.seriesView.Filter.Changed -= OnFilterChanged;
@@ -305,6 +307,14 @@ namespace UserInterface.Presenters
             this.SetModelProperty("ShowInLegend", this.seriesView.ShowInLegend.IsChecked);
         }
 
+        /// <summary>User has changed the include series name in legend</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnIncludeSeriesNameInLegendChanged(object sender, EventArgs e)
+        {
+            this.SetModelProperty("IncludeSeriesNameInLegend", this.seriesView.IncludeSeriesNameInLegend.IsChecked);
+        }
+
         /// <summary>User has changed the filter</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
@@ -348,6 +358,7 @@ namespace UserInterface.Presenters
             this.seriesView.XOnTop.IsChecked = series.XAxis == Axis.AxisType.Top;
             this.seriesView.YOnRight.IsChecked = series.YAxis == Axis.AxisType.Right;
             this.seriesView.ShowInLegend.IsChecked = series.ShowInLegend;
+            this.seriesView.IncludeSeriesNameInLegend.IsChecked = series.IncludeSeriesNameInLegend;
             this.seriesView.XCumulative.IsChecked = series.CumulativeX;
             this.seriesView.YCumulative.IsChecked = series.Cumulative;
             this.seriesView.DataSource.SelectedValue = series.TableName;
