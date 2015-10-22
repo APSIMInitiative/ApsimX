@@ -182,9 +182,13 @@ namespace UserInterface.Presenters
         /// <param name="e">The arguments</param>
         public void OnEditorLeave(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
+            //this.explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
+            BuildScript();
             if (this.manager.Script != null)
-                this.propertyPresenter.PopulateGrid(this.manager.Script);
+            {
+                this.propertyPresenter.FindAllProperties(manager.Script);
+                this.propertyPresenter.PopulateGrid(manager.Script);
+            }
         }
 
         /// <summary>
