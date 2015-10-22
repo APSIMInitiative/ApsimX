@@ -175,20 +175,6 @@ The model consists of:
             </XYPairs>
             <XProperty>[Vernalisation].CrownTemperature</XProperty>
           </LinearInterpolationFunction>
-          <MultiplyFunction>
-            <Name>Stress</Name>
-            <MinimumFunction>
-              <Name>MinimumFunction</Name>
-              <VariableReference>
-                <Name>VariableReference</Name>
-                <VariableName>[Vernalisation].VernEff</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>Variable1</Name>
-                <VariableName>[Vernalisation].PhotopEff</VariableName>
-              </VariableReference>
-            </MinimumFunction>
-          </MultiplyFunction>
           <Start>TerminalSpikelet</Start>
           <End>Flowering</End>
         </GenericPhase>
@@ -317,6 +303,10 @@ The model consists of:
         </PhaseLookup>
         <MultiplyFunction>
           <Name>MainStemNodeAppearanceRate</Name>
+          <Memo>
+            <Name>Rational</Name>
+            <MemoText><![CDATA[Based on [Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7]]></MemoText>
+          </Memo>
           <LinearInterpolationFunction>
             <Name>LeafStageFactor</Name>
             <XYPairs>
@@ -324,14 +314,14 @@ The model consists of:
               <X>
                 <double>0</double>
                 <double>2</double>
-                <double>3</double>
+                <double>2.1</double>
                 <double>7</double>
-                <double>8</double>
+                <double>7.1</double>
                 <double>14</double>
               </X>
               <Y>
-                <double>0.6</double>
-                <double>0.6</double>
+                <double>0.75</double>
+                <double>0.75</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1.3</double>
@@ -342,12 +332,8 @@ The model consists of:
           </LinearInterpolationFunction>
           <Constant>
             <Name>BasePhyllochron</Name>
-            <Value>100</Value>
+            <Value>90</Value>
           </Constant>
-          <Memo>
-            <Name>Rational</Name>
-            <MemoText><![CDATA[Based on [Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7]]></MemoText>
-          </Memo>
         </MultiplyFunction>
         <HeightFunction>
           <Name>HeightModel</Name>
@@ -958,14 +944,63 @@ The model consists of:
               <XProperty>[Structure].RelativeNodeApperance</XProperty>
             </LinearInterpolationFunction>
           </MultiplyFunction>
-          <Constant>
+          <PhaseLookup>
             <Name>LagDuration</Name>
-            <Value>900</Value>
-          </Constant>
-          <Constant>
+            <PhaseLookupValue>
+              <Name>InitialPhase</Name>
+              <MultiplyFunction>
+                <Name>LagDuration</Name>
+                <VariableReference>
+                  <Name>Phyllochron</Name>
+                  <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value</VariableName>
+                </VariableReference>
+                <Constant>
+                  <Name>PhyllochronMultiplier</Name>
+                  <Value>3</Value>
+                </Constant>
+              </MultiplyFunction>
+              <Start>Germination</Start>
+              <End>TerminalSpikelet</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>LaterPhase</Name>
+              <MultiplyFunction>
+                <Name>LagDuration</Name>
+                <VariableReference>
+                  <Name>Phyllochron</Name>
+                  <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value</VariableName>
+                </VariableReference>
+                <Constant>
+                  <Name>PhyllochronMultiplier</Name>
+                  <Value>9</Value>
+                </Constant>
+              </MultiplyFunction>
+              <Start>TerminalSpikelet</Start>
+              <End>HarvestRipe</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
+          <MultiplyFunction>
             <Name>SenescenceDuration</Name>
-            <Value>200</Value>
-          </Constant>
+            <VariableReference>
+              <Name>Phyllochron</Name>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value</VariableName>
+            </VariableReference>
+            <LinearInterpolationFunction>
+              <Name>NumberOfDyingLeaves</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Structure].RelativeNodeApperance</XProperty>
+            </LinearInterpolationFunction>
+          </MultiplyFunction>
           <Constant>
             <Name>DetachmentLagDuration</Name>
             <Value>1000000</Value>
@@ -1383,22 +1418,42 @@ The model consists of:
               <VariableName>[Structure].TotalStemPopn</VariableName>
             </VariableReference>
           </MultiplyFunction>
-          <MultiplyFunction>
-            <Name>HeightLimitedDemand</Name>
-            <Constant>
-              <Name>SpecificStemLengthMax</Name>
-              <Value>0.022</Value>
-            </Constant>
-            <VariableReference>
-              <Name>DeltaHeight</Name>
-              <VariableName>[Structure].HeightModel.DeltaHeight</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>Stems</Name>
-              <VariableName>[Structure].TotalStemPopn</VariableName>
-            </VariableReference>
-          </MultiplyFunction>
         </MinimumFunction>
+        <PhaseLookup>
+          <Name>LagDuration</Name>
+          <PhaseLookupValue>
+            <Name>InitialPhase</Name>
+            <MultiplyFunction>
+              <Name>LagDuration</Name>
+              <VariableReference>
+                <Name>Phyllochron</Name>
+                <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value</VariableName>
+              </VariableReference>
+              <Constant>
+                <Name>PhyllochronMultiplier</Name>
+                <Value>3</Value>
+              </Constant>
+            </MultiplyFunction>
+            <Start>Germination</Start>
+            <End>TerminalSpikelet</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>LaterPhase</Name>
+            <MultiplyFunction>
+              <Name>LagDuration</Name>
+              <VariableReference>
+                <Name>Phyllochron</Name>
+                <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value</VariableName>
+              </VariableReference>
+              <Constant>
+                <Name>PhyllochronMultiplier</Name>
+                <Value>9</Value>
+              </Constant>
+            </MultiplyFunction>
+            <Start>TerminalSpikelet</Start>
+            <End>HarvestRipe</End>
+          </PhaseLookupValue>
+        </PhaseLookup>
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>0.7</Value>
@@ -4136,7 +4191,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title>Leaf Number</Title>
+          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -13431,6 +13486,8 @@ private void OnDoManagement(object sender, EventArgs e)
               <string>[Wheat].Leaf.AppearedCohortNo</string>
               <string>[Wheat].Leaf.ExpandedCohortNo</string>
               <string>[Wheat].Leaf.SenescingCohortNo</string>
+              <string>[Wheat].Leaf.DeadCohortNo</string>
+              <string>[Wheat].Leaf.CohortSize[1:10]</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -13641,7 +13698,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Leaf.SenescingCohortNo</YFieldName>
+          <YFieldName>Wheat.Leaf.DeadCohortNo</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -13676,7 +13733,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title>Leaf Number</Title>
+          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -13738,7 +13795,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title>Leaf Number</Title>
+          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -13766,6 +13823,88 @@ namespace Models
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Wheat.Leaf.Fn</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Leaf Number</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>LeafSize</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Wheat.Leaf.CohortSize1:10(7)</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Wheat.Leaf.CohortSize1:10(8)</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted11</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Wheat.Leaf.CohortSize1:10(9)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
