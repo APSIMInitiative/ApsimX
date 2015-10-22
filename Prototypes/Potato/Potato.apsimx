@@ -979,13 +979,12 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <_ExpandedNodeNo>34.926640930623194</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
+        <Albedo>0</Albedo>
+        <Gsmax>0</Gsmax>
+        <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
-        <GsMax>0.03</GsMax>
-        <R50>200</R50>
-        <Emissivity>0.96</Emissivity>
-        <Albido>0.26</Albido>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -1048,58 +1047,55 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
-      <Summariser>
-        <Name>Summariser</Name>
-        <CompositeBiomass>
-          <Name>AboveGround</Name>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Live</string>
-            <string>[Stem].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>BelowGround</Name>
-          <Propertys>
-            <string>[Root].Live</string>
-            <string>[Root].Dead</string>
-            <string>[Tuber].Live</string>
-            <string>[Tuber].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Total</Name>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Live</string>
-            <string>[Stem].Dead</string>
-            <string>[Root].Live</string>
-            <string>[Root].Dead</string>
-            <string>[Tuber].Live</string>
-            <string>[Tuber].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>TotalLive</Name>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Stem].Live</string>
-            <string>[Root].Live</string>
-            <string>[Tuber].Live</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>TotalDead</Name>
-          <Propertys>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Dead</string>
-            <string>[Root].Dead</string>
-            <string>[Tuber].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-      </Summariser>
+      <CompositeBiomass>
+        <Name>AboveGround</Name>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Live</string>
+          <string>[Stem].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>BelowGround</Name>
+        <Propertys>
+          <string>[Root].Live</string>
+          <string>[Root].Dead</string>
+          <string>[Tuber].Live</string>
+          <string>[Tuber].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>Total</Name>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Live</string>
+          <string>[Stem].Dead</string>
+          <string>[Root].Live</string>
+          <string>[Root].Dead</string>
+          <string>[Tuber].Live</string>
+          <string>[Tuber].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>TotalLive</Name>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Stem].Live</string>
+          <string>[Root].Live</string>
+          <string>[Tuber].Live</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>TotalDead</Name>
+        <Propertys>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Dead</string>
+          <string>[Root].Dead</string>
+          <string>[Tuber].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
       <Cultivar>
         <Name>JerseyBenny</Name>
         <Alias>
@@ -1625,6 +1621,11 @@ The duration of a potato crop is determined by the number of leaves that the mai
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -1636,11 +1637,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -2329,7 +2325,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Summariser.AboveGround.Wt</YFieldName>
+            <YFieldName>Potato.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -2349,7 +2345,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Summariser.BelowGround.Wt</YFieldName>
+            <YFieldName>Potato.BelowGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -2369,7 +2365,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Summariser.Total.Wt</YFieldName>
+            <YFieldName>Potato.Total.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -2570,7 +2566,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Summariser.AboveGround.N</YFieldName>
+            <YFieldName>Potato.AboveGround.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -2590,7 +2586,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Summariser.BelowGround.N</YFieldName>
+            <YFieldName>Potato.BelowGround.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -2610,7 +2606,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Summariser.Total.N</YFieldName>
+            <YFieldName>Potato.Total.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -2630,7 +2626,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Summariser.TotalLive.N</YFieldName>
+            <YFieldName>Potato.TotalLive.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -4175,16 +4171,16 @@ namespace Models
           <string>Potato.Structure.PlantTotalNodeNo</string>
           <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
           <string>Potato.Structure.TotalStemPopn</string>
-          <string>Potato.Summariser.AboveGround.N</string>
-          <string>Potato.Summariser.AboveGround.Wt</string>
-          <string>Potato.Summariser.BelowGround.N</string>
-          <string>Potato.Summariser.BelowGround.Wt</string>
-          <string>Potato.Summariser.Total.N</string>
-          <string>Potato.Summariser.Total.Wt</string>
-          <string>Potato.Summariser.TotalDead.N</string>
-          <string>Potato.Summariser.TotalDead.Wt</string>
-          <string>Potato.Summariser.TotalLive.N</string>
-          <string>Potato.Summariser.TotalLive.Wt</string>
+          <string>Potato.AboveGround.N</string>
+          <string>Potato.AboveGround.Wt</string>
+          <string>Potato.BelowGround.N</string>
+          <string>Potato.BelowGround.Wt</string>
+          <string>Potato.Total.N</string>
+          <string>Potato.Total.Wt</string>
+          <string>Potato.TotalDead.N</string>
+          <string>Potato.TotalDead.Wt</string>
+          <string>Potato.TotalLive.N</string>
+          <string>Potato.TotalLive.Wt</string>
           <string>Potato.Tuber.Dead.N</string>
           <string>Potato.Tuber.Dead.NConc</string>
           <string>Potato.Tuber.Dead.Wt</string>
