@@ -92,10 +92,20 @@ namespace UserInterface.Views
         /// </summary>
         public event EventHandler<EventArguments.HoverPointArgs> OnHoverOverPoint;
 
+        /// <summary>Invoked when the user single clicks on the graph</summary>
+        public event EventHandler SingleClick;
+
         /// <summary>
         /// Left margin in pixels.
         /// </summary>
         public int LeftRightPadding { get; set; }
+
+        /// <summary>Gets or sets a value indicating if the legend is visible.</summary>
+        public bool IsLegendVisible
+        {
+            get { return this.plot1.Model.IsLegendVisible; }
+            set { this.plot1.Model.IsLegendVisible = value; }
+        }
 
         /// <summary>
         /// Clear the graph of everything.
@@ -872,6 +882,15 @@ namespace UserInterface.Views
         public void SetMargins(int margin)
         {
             this.plot1.Model.Padding = new OxyThickness(margin, margin, margin, margin);
+        }
+
+        /// <summary>Graph has been clicked.</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnClick(object sender, EventArgs e)
+        {
+            if (SingleClick != null)
+                SingleClick.Invoke(this, e);
         }
     }
 }

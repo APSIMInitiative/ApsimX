@@ -30,12 +30,12 @@
         {
             this.SuspendLayout();
             // 
-            // AxisView
+            // FolderView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "AxisView";
+            this.Name = "FolderView";
             this.Size = new System.Drawing.Size(720, 640);
             this.ResumeLayout(false);
 

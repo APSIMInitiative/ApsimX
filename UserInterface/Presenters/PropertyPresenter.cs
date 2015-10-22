@@ -349,6 +349,10 @@ namespace UserInterface.Presenters
             {
                 value = Apsim.Find(this.model, value.ToString()) as ICrop;
             }
+            else if (property.DataType.IsEnum)
+            {
+                value = Enum.Parse(property.DataType, value.ToString());
+            }
 
             Commands.ChangeProperty cmd = new Commands.ChangeProperty(this.model, property.Name, value);
             this.explorerPresenter.CommandHistory.Add(cmd, true);
