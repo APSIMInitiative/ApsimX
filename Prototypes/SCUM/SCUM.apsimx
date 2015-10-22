@@ -945,8 +945,6 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <FractionToResidue>0</FractionToResidue>
         <NFixationOption>None</NFixationOption>
       </Nodule>
-      <Summariser>
-        <Name>Summariser</Name>
         <CompositeBiomass>
           <Name>Total</Name>
           <Propertys>
@@ -975,7 +973,6 @@ The AboveGround composite biomass object includes Stover and Product organs.
             <string>[Root].Dead</string>
           </Propertys>
         </CompositeBiomass>
-      </Summariser>
       <Cultivar>
         <Name>Barley_Spring</Name>
         <Alias>
@@ -1353,7 +1350,7 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
       <SimulationName>MCSPTestBase</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>MCSP.Summariser.Total.Wt</ColumnNames>
+      <ColumnNames>MCSP.Total.Wt</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
   </Tests>
@@ -2074,13 +2071,13 @@ namespace Models
             <string>[SCUM].Arbitrator.NSupply</string>
             <string>[SCUM].Stover.Fw</string>
             <string>[SCUM].Stover.Fn</string>
-            <string>[SCUM].Summariser.Total.Wt</string>
+            <string>[SCUM].Total.Wt</string>
             <string>[SCUM].ExpectedYield.Value</string>
             <string>[SCUM].DryYield.Value</string>
             <string>[SCUM].TotalBiomassAtStartReproductive.Value</string>
             <string>[SCUM].TotalBiomassAtStartSenescence.Value</string>
             <string>[SCUM].Ymax.Value</string>
-            <string>[SCUM].Summariser.Total.N</string>
+            <string>[SCUM].Total.N</string>
             <string>[SCUM].Arbitrator.DMSupply</string>
             <string>[SCUM].Arbitrator.DMDemand</string>
             <string>[SCUM].Phenology.AccumulatedEmergedTT</string>
@@ -2958,7 +2955,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
+          <YFieldName>SCUM.Total.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -3166,7 +3163,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Summariser.Total.N</YFieldName>
+          <YFieldName>SCUM.Total.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -3733,7 +3730,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
+        <YFieldName>SCUM.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -3772,7 +3769,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Summariser.Total.N</YFieldName>
+        <YFieldName>SCUM.Total.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -4863,13 +4860,13 @@ namespace Models
           <string>[SCUM].Arbitrator.NSupply</string>
           <string>[SCUM].Stover.Fw</string>
           <string>[SCUM].Stover.Fn</string>
-          <string>[SCUM].Summariser.Total.Wt</string>
+          <string>[SCUM].Total.Wt</string>
           <string>[SCUM].ExpectedYield.Value</string>
           <string>[SCUM].DryYield.Value</string>
           <string>[SCUM].TotalBiomassAtStartReproductive.Value</string>
           <string>[SCUM].TotalBiomassAtStartSenescence.Value</string>
           <string>[SCUM].Ymax.Value</string>
-          <string>[SCUM].Summariser.Total.N</string>
+          <string>[SCUM].Total.N</string>
           <string>[SCUM].Arbitrator.DMSupply</string>
           <string>[SCUM].Arbitrator.DMDemand</string>
           <string>[SCUM].Phenology.AccumulatedEmergedTT</string>
@@ -5325,7 +5322,7 @@ This model has been built to simulate a range of different crops in simulations 
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
+        <YFieldName>SCUM.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -5533,7 +5530,7 @@ This model has been built to simulate a range of different crops in simulations 
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Summariser.Total.N</YFieldName>
+        <YFieldName>SCUM.Total.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -7180,10 +7177,10 @@ namespace Models
             <string>[SCUM].Stover.LAI </string>
             <string>[SCUM].Stover.Height</string>
             <string>[SCUM].Phenology.Stage</string>
-            <string>[SCUM].Summariser.AboveGround.N</string>
-            <string>[SCUM].Summariser.AboveGround.Wt </string>
-            <string>[SCUM].Summariser.Total.N</string>
-            <string>[SCUM].Summariser.Total.Wt</string>
+            <string>[SCUM].AboveGround.N</string>
+            <string>[SCUM].AboveGround.Wt </string>
+            <string>[SCUM].Total.N</string>
+            <string>[SCUM].Total.Wt</string>
             <string>[SCUM].Arbitrator.NDemand</string>
             <string>[SCUM].Arbitrator.NDemand</string>
             <string>[SCUM].Arbitrator.DMSupply</string>
@@ -7718,7 +7715,7 @@ namespace Models
             <Line>Solid</Line>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
+            <YFieldName>SCUM.Total.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -7883,7 +7880,7 @@ namespace Models
             <Line>Solid</Line>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Summariser.Total.N</YFieldName>
+            <YFieldName>SCUM.Total.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -8696,7 +8693,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>SCUM.AboveGround.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -8714,7 +8711,7 @@ namespace Models
           <Line>None</Line>
           <TableName>observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>Maize.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -8753,7 +8750,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Summariser.AboveGround.N</YFieldName>
+          <YFieldName>SCUM.AboveGround.N</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -8771,7 +8768,7 @@ namespace Models
           <Line>None</Line>
           <TableName>RainShelterNitrogen</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Sumariser.AboveGroundLive.N</YFieldName>
+          <YFieldName>Maize.AboveGroundLive.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -10509,13 +10506,13 @@ namespace Models
           <string>[SCUM].Arbitrator.NSupply</string>
           <string>[SCUM].Stover.Fw</string>
           <string>[SCUM].Stover.Fn</string>
-          <string>[SCUM].Summariser.Total.Wt</string>
+          <string>[SCUM].Total.Wt</string>
           <string>[SCUM].ExpectedYield.Value</string>
           <string>[SCUM].DryYield.Value</string>
           <string>[SCUM].TotalBiomassAtStartReproductive.Value</string>
           <string>[SCUM].TotalBiomassAtStartSenescence.Value</string>
           <string>[SCUM].Ymax.Value</string>
-          <string>[SCUM].Summariser.Total.N</string>
+          <string>[SCUM].Total.N</string>
           <string>[SCUM].Arbitrator.DMSupply</string>
           <string>[SCUM].Arbitrator.DMDemand</string>
           <string>[SCUM].Phenology.AccumulatedThermalTime.Value</string>
@@ -10966,7 +10963,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
+        <YFieldName>SCUM.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -11131,7 +11128,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Summariser.Total.N</YFieldName>
+        <YFieldName>SCUM.Total.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>

@@ -420,8 +420,6 @@
         <InitialiseStage>Emergence</InitialiseStage>
         <PrimaryBudNo>2.2</PrimaryBudNo>
       </Structure>
-      <Summariser>
-        <Name>Summariser</Name>
         <CompositeBiomass>
           <Name>AboveGround</Name>
           <Propertys>
@@ -471,7 +469,6 @@
             <string>[Tuber].Dead</string>
           </Propertys>
         </CompositeBiomass>
-      </Summariser>
       <GenericAboveGroundOrgan>
         <Name>Tuber</Name>
         <LinearInterpolationFunction>
@@ -2447,7 +2444,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.AboveGround.Wt</YFieldName>
+              <YFieldName>Potato.AboveGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -2462,7 +2459,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.BelowGround.Wt</YFieldName>
+              <YFieldName>Potato.BelowGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -2477,7 +2474,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.Total.Wt</YFieldName>
+              <YFieldName>Potato.Total.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -2633,7 +2630,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.AboveGround.N</YFieldName>
+              <YFieldName>Potato.AboveGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -2648,7 +2645,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.BelowGround.N</YFieldName>
+              <YFieldName>Potato.BelowGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -2663,7 +2660,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.Total.N</YFieldName>
+              <YFieldName>Potato.Total.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -2678,7 +2675,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.TotalLive.N</YFieldName>
+              <YFieldName>Potato.TotalLive.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -3795,11 +3792,11 @@ namespace Models
             <string>[ExtraVariables].Script.AccumIrrigation</string>
             <string>[ExtraVariables].Script.AccumOutflowLat</string>
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>Potato.Summariser.AboveGround.Wt</string>
-            <string>Potato.Summariser.BelowGround.Wt</string>
-            <string>Potato.Summariser.Total.Wt</string>
-            <string>Potato.Summariser.TotalDead.Wt</string>
-            <string>Potato.Summariser.TotalLive.Wt</string>
+            <string>Potato.AboveGround.Wt</string>
+            <string>Potato.BelowGround.Wt</string>
+            <string>Potato.Total.Wt</string>
+            <string>Potato.TotalDead.Wt</string>
+            <string>Potato.TotalLive.Wt</string>
             <string>Potato.Leaf.Dead.Wt</string>
             <string>Potato.Leaf.Live.Wt</string>
             <string>Potato.Stem.Dead.Wt</string>
@@ -3808,11 +3805,11 @@ namespace Models
             <string>Potato.Tuber.Live.Wt</string>
             <string>Potato.Root.Dead.Wt</string>
             <string>Potato.Root.Live.Wt</string>
-            <string>Potato.Summariser.AboveGround.N</string>
-            <string>Potato.Summariser.BelowGround.N</string>
-            <string>Potato.Summariser.Total.N</string>
-            <string>Potato.Summariser.TotalLive.N</string>
-            <string>Potato.Summariser.TotalDead.N</string>
+            <string>Potato.AboveGround.N</string>
+            <string>Potato.BelowGround.N</string>
+            <string>Potato.Total.N</string>
+            <string>Potato.TotalLive.N</string>
+            <string>Potato.TotalDead.N</string>
             <string>Potato.Leaf.Dead.N</string>
             <string>Potato.Leaf.Live.N</string>
             <string>Potato.Stem.Dead.N</string>
@@ -4205,7 +4202,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Summariser.TotalLive.Wt</YFieldName>
+          <YFieldName>Potato.TotalLive.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4220,7 +4217,7 @@ namespace Models
           <Line>None</Line>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Summariser.Total.Live.Wt</YFieldName>
+          <YFieldName>Potato.Total.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5876,7 +5873,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.AboveGround.Wt</YFieldName>
+              <YFieldName>Potato.AboveGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -5891,7 +5888,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.BelowGround.Wt</YFieldName>
+              <YFieldName>Potato.BelowGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -5906,7 +5903,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.Total.Wt</YFieldName>
+              <YFieldName>Potato.Total.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -6062,7 +6059,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.AboveGround.N</YFieldName>
+              <YFieldName>Potato.AboveGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -6077,7 +6074,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.BelowGround.N</YFieldName>
+              <YFieldName>Potato.BelowGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -6092,7 +6089,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.Total.N</YFieldName>
+              <YFieldName>Potato.Total.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -6107,7 +6104,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.TotalLive.N</YFieldName>
+              <YFieldName>Potato.TotalLive.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -7016,11 +7013,11 @@ namespace Models
             <string>[ExtraVariables].Script.AccumIrrigation</string>
             <string>[ExtraVariables].Script.AccumOutflowLat</string>
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>Potato.Summariser.AboveGround.Wt</string>
-            <string>Potato.Summariser.BelowGround.Wt</string>
-            <string>Potato.Summariser.Total.Wt</string>
-            <string>Potato.Summariser.TotalDead.Wt</string>
-            <string>Potato.Summariser.TotalLive.Wt</string>
+            <string>Potato.AboveGround.Wt</string>
+            <string>Potato.BelowGround.Wt</string>
+            <string>Potato.Total.Wt</string>
+            <string>Potato.TotalDead.Wt</string>
+            <string>Potato.TotalLive.Wt</string>
             <string>Potato.Leaf.Dead.Wt</string>
             <string>Potato.Leaf.Live.Wt</string>
             <string>Potato.Stem.Dead.Wt</string>
@@ -7029,11 +7026,11 @@ namespace Models
             <string>Potato.Tuber.Live.Wt</string>
             <string>Potato.Root.Dead.Wt</string>
             <string>Potato.Root.Live.Wt</string>
-            <string>Potato.Summariser.AboveGround.N</string>
-            <string>Potato.Summariser.BelowGround.N</string>
-            <string>Potato.Summariser.Total.N</string>
-            <string>Potato.Summariser.TotalLive.N</string>
-            <string>Potato.Summariser.TotalDead.N</string>
+            <string>Potato.AboveGround.N</string>
+            <string>Potato.BelowGround.N</string>
+            <string>Potato.Total.N</string>
+            <string>Potato.TotalLive.N</string>
+            <string>Potato.TotalDead.N</string>
             <string>Potato.Leaf.Dead.N</string>
             <string>Potato.Leaf.Live.N</string>
             <string>Potato.Stem.Dead.N</string>
@@ -7520,7 +7517,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Summariser.TotalLive.Wt</YFieldName>
+          <YFieldName>Potato.TotalLive.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -7535,7 +7532,7 @@ namespace Models
           <Line>None</Line>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Summariser.Total.Live.Wt</YFieldName>
+          <YFieldName>Potato.Total.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -9254,7 +9251,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.AboveGround.Wt</YFieldName>
+              <YFieldName>Potato.AboveGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -9269,7 +9266,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.BelowGround.Wt</YFieldName>
+              <YFieldName>Potato.BelowGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -9284,7 +9281,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.Total.Wt</YFieldName>
+              <YFieldName>Potato.Total.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -9440,7 +9437,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.AboveGround.N</YFieldName>
+              <YFieldName>Potato.AboveGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -9455,7 +9452,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.BelowGround.N</YFieldName>
+              <YFieldName>Potato.BelowGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -9470,7 +9467,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.Total.N</YFieldName>
+              <YFieldName>Potato.Total.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -9485,7 +9482,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.TotalLive.N</YFieldName>
+              <YFieldName>Potato.TotalLive.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -10394,11 +10391,11 @@ namespace Models
             <string>[ExtraVariables].Script.AccumIrrigation</string>
             <string>[ExtraVariables].Script.AccumOutflowLat</string>
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>Potato.Summariser.AboveGround.Wt</string>
-            <string>Potato.Summariser.BelowGround.Wt</string>
-            <string>Potato.Summariser.Total.Wt</string>
-            <string>Potato.Summariser.TotalDead.Wt</string>
-            <string>Potato.Summariser.TotalLive.Wt</string>
+            <string>Potato.AboveGround.Wt</string>
+            <string>Potato.BelowGround.Wt</string>
+            <string>Potato.Total.Wt</string>
+            <string>Potato.TotalDead.Wt</string>
+            <string>Potato.TotalLive.Wt</string>
             <string>Potato.Leaf.Dead.Wt</string>
             <string>Potato.Leaf.Live.Wt</string>
             <string>Potato.Stem.Dead.Wt</string>
@@ -10407,11 +10404,11 @@ namespace Models
             <string>Potato.Tuber.Live.Wt</string>
             <string>Potato.Root.Dead.Wt</string>
             <string>Potato.Root.Live.Wt</string>
-            <string>Potato.Summariser.AboveGround.N</string>
-            <string>Potato.Summariser.BelowGround.N</string>
-            <string>Potato.Summariser.Total.N</string>
-            <string>Potato.Summariser.TotalLive.N</string>
-            <string>Potato.Summariser.TotalDead.N</string>
+            <string>Potato.AboveGround.N</string>
+            <string>Potato.BelowGround.N</string>
+            <string>Potato.Total.N</string>
+            <string>Potato.TotalLive.N</string>
+            <string>Potato.TotalDead.N</string>
             <string>Potato.Leaf.Dead.N</string>
             <string>Potato.Leaf.Live.N</string>
             <string>Potato.Stem.Dead.N</string>
@@ -10823,7 +10820,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Summariser.TotalLive.Wt</YFieldName>
+          <YFieldName>Potato.TotalLive.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -10838,7 +10835,7 @@ namespace Models
           <Line>None</Line>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Summariser.Total.Live.Wt</YFieldName>
+          <YFieldName>Potato.Total.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -12212,11 +12209,11 @@ namespace Models
             <string>[ExtraVariables].Script.AccumIrrigation</string>
             <string>[ExtraVariables].Script.AccumOutflowLat</string>
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>Potato.Summariser.AboveGround.Wt</string>
-            <string>Potato.Summariser.BelowGround.Wt</string>
-            <string>Potato.Summariser.Total.Wt</string>
-            <string>Potato.Summariser.TotalDead.Wt</string>
-            <string>Potato.Summariser.TotalLive.Wt</string>
+            <string>Potato.AboveGround.Wt</string>
+            <string>Potato.BelowGround.Wt</string>
+            <string>Potato.Total.Wt</string>
+            <string>Potato.TotalDead.Wt</string>
+            <string>Potato.TotalLive.Wt</string>
             <string>Potato.Leaf.Dead.Wt</string>
             <string>Potato.Leaf.Live.Wt</string>
             <string>Potato.Stem.Dead.Wt</string>
@@ -12225,11 +12222,11 @@ namespace Models
             <string>Potato.Tuber.Live.Wt</string>
             <string>Potato.Root.Dead.Wt</string>
             <string>Potato.Root.Live.Wt</string>
-            <string>Potato.Summariser.AboveGround.N</string>
-            <string>Potato.Summariser.BelowGround.N</string>
-            <string>Potato.Summariser.Total.N</string>
-            <string>Potato.Summariser.TotalLive.N</string>
-            <string>Potato.Summariser.TotalDead.N</string>
+            <string>Potato.AboveGround.N</string>
+            <string>Potato.BelowGround.N</string>
+            <string>Potato.Total.N</string>
+            <string>Potato.TotalLive.N</string>
+            <string>Potato.TotalDead.N</string>
             <string>Potato.Leaf.Dead.N</string>
             <string>Potato.Leaf.Live.N</string>
             <string>Potato.Stem.Dead.N</string>
@@ -12809,7 +12806,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.AboveGround.Wt</YFieldName>
+              <YFieldName>Potato.AboveGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -12824,7 +12821,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.BelowGround.Wt</YFieldName>
+              <YFieldName>Potato.BelowGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -12839,7 +12836,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.Total.Wt</YFieldName>
+              <YFieldName>Potato.Total.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -12995,7 +12992,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.AboveGround.N</YFieldName>
+              <YFieldName>Potato.AboveGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -13010,7 +13007,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.BelowGround.N</YFieldName>
+              <YFieldName>Potato.BelowGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -13025,7 +13022,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.Total.N</YFieldName>
+              <YFieldName>Potato.Total.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -13040,7 +13037,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.TotalLive.N</YFieldName>
+              <YFieldName>Potato.TotalLive.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -14180,7 +14177,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Summariser.TotalLive.Wt</YFieldName>
+          <YFieldName>Potato.TotalLive.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -14195,7 +14192,7 @@ namespace Models
           <Line>None</Line>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Summariser.Total.Live.Wt</YFieldName>
+          <YFieldName>Potato.Total.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -15662,11 +15659,11 @@ namespace Models
             <string>[ExtraVariables].Script.AccumIrrigation</string>
             <string>[ExtraVariables].Script.AccumOutflowLat</string>
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>Potato.Summariser.AboveGround.Wt</string>
-            <string>Potato.Summariser.BelowGround.Wt</string>
-            <string>Potato.Summariser.Total.Wt</string>
-            <string>Potato.Summariser.TotalDead.Wt</string>
-            <string>Potato.Summariser.TotalLive.Wt</string>
+            <string>Potato.AboveGround.Wt</string>
+            <string>Potato.BelowGround.Wt</string>
+            <string>Potato.Total.Wt</string>
+            <string>Potato.TotalDead.Wt</string>
+            <string>Potato.TotalLive.Wt</string>
             <string>Potato.Leaf.Dead.Wt</string>
             <string>Potato.Leaf.Live.Wt</string>
             <string>Potato.Stem.Dead.Wt</string>
@@ -15675,11 +15672,11 @@ namespace Models
             <string>Potato.Tuber.Live.Wt</string>
             <string>Potato.Root.Dead.Wt</string>
             <string>Potato.Root.Live.Wt</string>
-            <string>Potato.Summariser.AboveGround.N</string>
-            <string>Potato.Summariser.BelowGround.N</string>
-            <string>Potato.Summariser.Total.N</string>
-            <string>Potato.Summariser.TotalLive.N</string>
-            <string>Potato.Summariser.TotalDead.N</string>
+            <string>Potato.AboveGround.N</string>
+            <string>Potato.BelowGround.N</string>
+            <string>Potato.Total.N</string>
+            <string>Potato.TotalLive.N</string>
+            <string>Potato.TotalDead.N</string>
             <string>Potato.Leaf.Dead.N</string>
             <string>Potato.Leaf.Live.N</string>
             <string>Potato.Stem.Dead.N</string>
@@ -16199,7 +16196,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.AboveGround.Wt</YFieldName>
+              <YFieldName>Potato.AboveGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -16214,7 +16211,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.BelowGround.Wt</YFieldName>
+              <YFieldName>Potato.BelowGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -16229,7 +16226,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.Total.Wt</YFieldName>
+              <YFieldName>Potato.Total.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -16385,7 +16382,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.AboveGround.N</YFieldName>
+              <YFieldName>Potato.AboveGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -16400,7 +16397,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.BelowGround.N</YFieldName>
+              <YFieldName>Potato.BelowGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -16415,7 +16412,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.Total.N</YFieldName>
+              <YFieldName>Potato.Total.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -16430,7 +16427,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.TotalLive.N</YFieldName>
+              <YFieldName>Potato.TotalLive.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -17636,7 +17633,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Summariser.TotalLive.Wt</YFieldName>
+          <YFieldName>Potato.TotalLive.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -17651,7 +17648,7 @@ namespace Models
           <Line>None</Line>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Summariser.Total.Live.Wt</YFieldName>
+          <YFieldName>Potato.Total.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -19780,11 +19777,11 @@ namespace Models
             <string>[ExtraVariables].Script.AccumIrrigation</string>
             <string>[ExtraVariables].Script.AccumOutflowLat</string>
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>Potato.Summariser.AboveGround.Wt</string>
-            <string>Potato.Summariser.BelowGround.Wt</string>
-            <string>Potato.Summariser.Total.Wt</string>
-            <string>Potato.Summariser.TotalDead.Wt</string>
-            <string>Potato.Summariser.TotalLive.Wt</string>
+            <string>Potato.AboveGround.Wt</string>
+            <string>Potato.BelowGround.Wt</string>
+            <string>Potato.Total.Wt</string>
+            <string>Potato.TotalDead.Wt</string>
+            <string>Potato.TotalLive.Wt</string>
             <string>Potato.Leaf.Dead.Wt</string>
             <string>Potato.Leaf.Live.Wt</string>
             <string>Potato.Stem.Dead.Wt</string>
@@ -19793,11 +19790,11 @@ namespace Models
             <string>Potato.Tuber.Live.Wt</string>
             <string>Potato.Root.Dead.Wt</string>
             <string>Potato.Root.Live.Wt</string>
-            <string>Potato.Summariser.AboveGround.N</string>
-            <string>Potato.Summariser.BelowGround.N</string>
-            <string>Potato.Summariser.Total.N</string>
-            <string>Potato.Summariser.TotalLive.N</string>
-            <string>Potato.Summariser.TotalDead.N</string>
+            <string>Potato.AboveGround.N</string>
+            <string>Potato.BelowGround.N</string>
+            <string>Potato.Total.N</string>
+            <string>Potato.TotalLive.N</string>
+            <string>Potato.TotalDead.N</string>
             <string>Potato.Leaf.Dead.N</string>
             <string>Potato.Leaf.Live.N</string>
             <string>Potato.Stem.Dead.N</string>
@@ -20317,7 +20314,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.AboveGround.Wt</YFieldName>
+              <YFieldName>Potato.AboveGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -20332,7 +20329,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.BelowGround.Wt</YFieldName>
+              <YFieldName>Potato.BelowGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -20347,7 +20344,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.Total.Wt</YFieldName>
+              <YFieldName>Potato.Total.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -20503,7 +20500,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.AboveGround.N</YFieldName>
+              <YFieldName>Potato.AboveGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -20518,7 +20515,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.BelowGround.N</YFieldName>
+              <YFieldName>Potato.BelowGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -20533,7 +20530,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.Total.N</YFieldName>
+              <YFieldName>Potato.Total.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -20548,7 +20545,7 @@ namespace Models
               <Line>Solid</Line>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Summariser.TotalLive.N</YFieldName>
+              <YFieldName>Potato.TotalLive.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -21689,7 +21686,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Summariser.TotalLive.Wt</YFieldName>
+          <YFieldName>Potato.TotalLive.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -21704,7 +21701,7 @@ namespace Models
           <Line>None</Line>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Summariser.Total.Live.Wt</YFieldName>
+          <YFieldName>Potato.Total.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>

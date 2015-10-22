@@ -14,6 +14,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Folder))]
+    [ValidParent(ParentType = typeof(Simulations))]
     public class Folder : Model
     {
 
