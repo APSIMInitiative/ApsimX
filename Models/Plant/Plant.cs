@@ -75,7 +75,7 @@ namespace Models.PMF
         /// <summary>The root</summary>
         [Link(IsOptional = true)]
         public Root Root = null;
-        [Link]
+        [Link(IsOptional = true)]
         Biomass AboveGround = null;
 
         #endregion
@@ -217,7 +217,7 @@ namespace Models.PMF
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(PhaseChangedType PhaseChange)
         {
-            if (Phenology != null && Leaf != null)
+            if (Phenology != null && Leaf != null && AboveGround != null)
             {
                 string message = Phenology.CurrentPhase.Start + "\r\n";
                 if (Leaf != null)
