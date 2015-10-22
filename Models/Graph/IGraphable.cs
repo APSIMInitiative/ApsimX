@@ -123,6 +123,12 @@ namespace Models.Graph
     /// </summary>
     public class SeriesDefinition
     {
+        /// <summary>A list of simulation names.</summary>
+        public string[] SimulationNames = null;
+
+        /// <summary>Series definition filter.</summary>
+        public string Filter = null;
+
         /// <summary>Gets the series type</summary>
         public SeriesType type;
 
