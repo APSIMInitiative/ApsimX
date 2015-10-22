@@ -99,6 +99,9 @@ namespace Models.Graph
         /// <summary>Gets or sets a value indicating whether the series should be shown in the legend</summary>
         public bool ShowInLegend { get; set; }
 
+        /// <summary>Gets or sets a value indicating whether the series name should be shown in the legend</summary>
+        public bool IncludeSeriesNameInLegend { get; set; }
+
         /// <summary>Gets or sets a value indicating whether the Y variables should be cumulative.</summary>
         public bool Cumulative { get; set; }
 
@@ -481,6 +484,8 @@ namespace Models.Graph
             GetData(filter, definition);
             definition.colour = colour;
             definition.title = title;
+            if (IncludeSeriesNameInLegend)
+                definition.title += ": " + Name;
             definition.line = line;
             definition.marker = marker;
             definition.lineThickness = LineThickness;

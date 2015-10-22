@@ -65,6 +65,9 @@ namespace UserInterface.Views
         /// <summary>Show in lengend checkbox.</summary>
         public ICheckBoxView ShowInLegend { get { return checkBoxView5; } }
 
+        /// <summary>Include series name in legend.</summary>
+        public ICheckBoxView IncludeSeriesNameInLegend { get { return checkBoxView6; } }
+
         /// <summary>Graph.</summary>
         public IGraphView GraphView { get { return graphView1; } }
 
