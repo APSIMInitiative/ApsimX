@@ -542,6 +542,8 @@ namespace UserInterface.Views
                 Grid.Height = 0;
                 Grid.Visible = false;
             }
+            else
+                Grid.Visible = true;
 
             //resize PictureBox
             pictureBox1.Location = new Point(Grid.Width, 0);
