@@ -367,6 +367,9 @@ namespace Models.PMF
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
+            //Fixme.  I have added the line below so If this value is set from a manager it updates.  Need to review if MaximumNodeNumber and MainStemFinalNodeNumber are both needed to fix this
+            MaximumNodeNumber = (int)_MainStemFinalNodeNo;
+
             if (Phenology.OnDayOf(InitialiseStage) == false) // We have no leaves set up and nodes have just started appearing - Need to initialise Leaf cohorts
                 if (MainStemPrimordiaInitiationRate.Value > 0.0)
                 {
