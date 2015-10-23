@@ -216,7 +216,7 @@ namespace UserInterface.Presenters
                     ICrop crop = GetCrop(properties);
                     if (crop != null)
                     {
-                        cell.DropDownStrings = crop.CultivarNames;
+                        cell.DropDownStrings = GetCultivarNames(crop);
                     }
                     
                 }
@@ -275,6 +275,28 @@ namespace UserInterface.Presenters
 
             IGridColumn valueColumn = this.grid.GetColumn(1);
             valueColumn.Width = -1;
+        }
+
+        /// <summary>Get a list of cultivars for crop.</summary>
+        /// <param name="crop">The crop.</param>
+        /// <returns>A list of cultivars.</returns>
+        private string[] GetCultivarNames(ICrop crop)
+        {
+            if (crop.CultivarNames.Length == 0)
+            {
+                Simulations simulations = Apsim.Parent(crop as IModel, typeof(Simulations)) as Simulations;
+                Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
+                if (replacements != null)
+                {
+                    ICrop replacementCrop = Apsim.Child(replacements, (crop as IModel).Name) as ICrop;
+                    if (replacementCrop != null)
+                        return replacementCrop.CultivarNames;
+                }
+            }
+            else
+                return crop.CultivarNames;
+
+            return new string[0];
         }
 
         /// <summary>
