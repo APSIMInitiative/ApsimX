@@ -44,7 +44,7 @@ namespace UserInterface.Commands
                     throw new Exception("Bad format in .bib file around pos " + posAmpersand);
 
                 int posCloseBracket = StringUtilities.FindMatchingClosingBracket(contents, posOpenBracket, '{', '}');
-                if (posOpenBracket == -1)
+                if (posOpenBracket == -1 || posCloseBracket == -1)
                     throw new Exception("Bad format in .bib file around pos " + posAmpersand);
 
                 string articleName = contents.Substring(posOpenBracket + 1, posComma - posOpenBracket - 1);
