@@ -122,8 +122,8 @@ namespace SWIMFrame
 
             // Store Sd and lnh in sp.
             sp.lnh[1] = lhd;
-            for (j = 2; j <= nli1; j++)
-                sp.lnh[j] = lhd - dlh * j;
+            for (j = 2; j <= nld; j++)
+                sp.lnh[j] = lhd - dlh * (j-1);
 
             if (Kgiven)
             {

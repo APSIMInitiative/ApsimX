@@ -65,12 +65,12 @@ namespace SWIMFrame
             for (i = 1; i <= nu - 1; i++)
             {
                 x = 0.5 * (sp.phic[i + 1] - sp.phic[i]);
-                hpK[i] = sp.Kc[i] + x * (sp.Kco[1, i] + x * (sp.Kco[2, i] + x * sp.Kco[3, i]));
+                hpK[i] = sp.Kc[i] + x * (sp.Kco[0, i] + x * (sp.Kco[1, i] + x * sp.Kco[2, i]));
             }
 
             // Get fluxes aq(1,:) for values aphi[i] at bottom (wet), aphi(1) at top (dry).
             // These are used to select suitable phi values for flux table.
-            // Note that due to the complexity of array indexing in the FORATRAN,
+            // Note that due to the complexity of array indexing in the FORTRAN,
             // we're keeping aq 1 indexed.
             nit = 0;
             aq[1, 1] = sp.Kc[1]; // q=K here because dphi/dz=0
@@ -100,7 +100,7 @@ namespace SWIMFrame
             // rerr and cfac determine spacings of phif.
             Matrix<double> aqM = Matrix<double>.Build.DenseOfArray(aq);
             i = nonlin(nu, sp.phic.Slice(1, nu), aqM.Row(1).ToArray().Slice(1, nu), rerr);
-            re = curv(nu, sp.phic.Slice(1, nu), aqM.Row(1).ToArray().Slice(1, nu));// for unsat phi
+             re = curv(nu, sp.phic.Slice(1, nu), aqM.Row(1).ToArray().Slice(1, nu));// for unsat phi
             indices(nu - 2, re.Slice(1,nu-2).Reverse().ToArray(), 1 + nu - i, cfac, out nphif, out iphif);
             int[] iphifReverse = iphif.Take(nphif).Reverse().ToArray();
             for (int idx = 0; idx < nphif; idx++)
@@ -198,15 +198,19 @@ namespace SWIMFrame
                     ii = ii - 1;
                 } while (true);
                 x = phii[ip] - sp.phic[ii];
-                qi5[j, j] = sp.Kc[ii] + x * (sp.Kco[1, ii] + x * (sp.Kco[2, ii] + x * sp.Kco[3, ii]));
+                qi5[j, j] = sp.Kc[ii] + x * (sp.Kco[0, ii] + x * (sp.Kco[1, ii] + x * sp.Kco[2, ii]));
             }
 
             double[] phii51 = phif.Slice(1, nphif);
             double[] phii52 = phii.Slice(1, ni);
-            for (int i = 0;i <phii51.Length;i++)
+            for (int i = 1;i <= nphif;i++)
             {
-                phii5[1 + i * 2] = phii51[i]; //TODO: test this
-                phii5[2 + i * 2] = phii52[i];
+                phii5[i * 2] = phii51[i];
+            }
+
+            for (int i = 1; i <= ni; i++)
+            {
+                phii5[1 + i * 2] = phii52[i];
             }
 
             // diags - end timer here
@@ -214,7 +218,7 @@ namespace SWIMFrame
 
             // Assemble flux table
             j = 2 * nfu - 1;
-            for (ie = 1; ie <= 2; ie++)
+            for (ie = 0; ie < 2; ie++)
             {
                 pe = ft.fend[ie];
                 pe.phif = new double[phif.Length];
@@ -299,7 +303,7 @@ namespace SWIMFrame
             {
                 return sp.Kc[i-1];
             }
-            ha = sp.hc[i-1]; hb = sp.hc[j-1]; Ka = sp.Kc[i]; Kb = sp.Kc[j-1];
+            ha = sp.hc[i]; hb = sp.hc[j]; Ka = sp.Kc[i]; Kb = sp.Kc[j];
             if (i >= n && j >= n) // saturated flow
                 return Ka * ((ha - hb) / dz + 1.0);
 
@@ -414,12 +418,19 @@ namespace SWIMFrame
             double[] c = new double[n - 1];
             double[] s = new double[n - 1];
             double[] yl = new double[n - 1];
-            s = MathUtilities.Divide(MathUtilities.Subtract(y.Slice(3,n), y.Slice(1, n-2)), MathUtilities.Subtract(x.Slice(3, n), x.Slice(1, n-2)));
+
+            double[] ySub = MathUtilities.Subtract(y.Slice(3, n), y.Slice(1, n - 2));
+            double[] xSub = MathUtilities.Subtract(x.Slice(3, n), x.Slice(1, n - 2));
+
+            s = MathUtilities.Divide(ySub, xSub);
             yl = MathUtilities.Add(y.Slice(1, n-2), 
                                   MathUtilities.Multiply(MathUtilities.Subtract(x.Slice(2, n-1),
                                                                                 x.Slice(1, n-2)),
                                                               s));
-            return MathUtilities.Subtract_Value(MathUtilities.Divide(y.Slice(2, n-1), yl), 1);
+            double[] ySlice = y.Slice(2, n - 1);
+            double[] div = MathUtilities.Divide(ySlice, yl);
+            double[] re = MathUtilities.Subtract_Value(div, 1);
+            return MathUtilities.Subtract_Value(MathUtilities.Divide(ySlice, yl), 1);
         }
 
         // get last point where (x,y) deviates from linearity by < re
@@ -528,7 +539,7 @@ namespace SWIMFrame
         // Return v(1:n-1) corresponding to u(1:n-1) using quadratic interpolation.
         private static double[] quadinterp(double[] x, double[] y, int n, double[] u)
         {
-            double[] v = new double[4];
+            double[] v = new double[100];
             int i, j, k;
             double z;
             double[] co = new double[4];
@@ -538,7 +549,7 @@ namespace SWIMFrame
                 if (k + 2 > n)
                     i = n - 2;
                 co = quadco(x.Slice(i, i+2), y.Slice(i, i+2));
-                for (j = k; j <= i+1; j++)
+                for (j = k; j < i+1; j++)
                 {
                     z = u[j] - x[i];
                     v[j] = co[1] + z * (co[2] + z * co[3]);

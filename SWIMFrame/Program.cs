@@ -11,7 +11,14 @@ namespace SWIMFrame
     {
         static void Main(string[] args)
         {
-            string output = string.Empty;
+
+            MVG.TestParams(103, 9.0, 0.99670220130280185, 9.99999999999998460E-003);
+            SoilProps sp = Soil.gensptbl(1.0, new SoilParam(10, 103, 0.4, 2.0, -2.0, -10.0, 1.0 / 3.0, 1.0), true);
+            Fluxes.FluxTable(5.0, sp);
+            FluxTable ft = Fluxes.ft;
+
+
+        string output = string.Empty;
             //define test soils
             SoilParam[] soils = new SoilParam[2];
             soils[0] = new SoilParam(10, 103, 0.4, 2.0, -2.0, -10.0, 1.0 / 3.0, 1.0);
