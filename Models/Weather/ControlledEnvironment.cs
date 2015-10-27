@@ -25,7 +25,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(typeof(Simulation))]
+    [ValidParent(ParentType=typeof(Simulation))]
     public class ControlledEnvironment : Model, IWeather
     {
         /// <summary>

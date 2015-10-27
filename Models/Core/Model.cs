@@ -104,7 +104,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.Grazplan.Supplement))]
         [XmlElement(typeof(Models.PMF.OrganArbitrator))]
         [XmlElement(typeof(Models.PMF.Structure))]
-        [XmlElement(typeof(Models.PMF.Summariser))]
         [XmlElement(typeof(Models.PMF.Biomass))]
         [XmlElement(typeof(Models.PMF.CompositeBiomass))]
         [XmlElement(typeof(Models.PMF.ArrayBiomass))]

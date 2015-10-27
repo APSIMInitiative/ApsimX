@@ -25,7 +25,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(typeof(Zone))]
+    [ValidParent(ParentType=typeof(Zone))]
     public class SugarCane : Model, ICrop, ICanopy, IUptake
     {
 
@@ -35,6 +35,15 @@ namespace Models
         /// Canopy type
         /// </summary>
         public string CanopyType { get { return CropType; } }
+
+        /// <summary>Albedo.</summary>
+        public double Albedo { get { return 0.23; } }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        public double Gsmax { get { return 0.01; } }
+
+        /// <summary>Gets or sets the R50.</summary>
+        public double R50 { get { return 200; } }
 
         /// <summary>
         /// Gets the LAI (m^2/m^2)
@@ -11640,29 +11649,6 @@ namespace Models
 
 
         #region Implement the ICrop Interface
-
-
-        /// <summary>
-        /// Provides canopy data to SoilWater.
-        /// </summary>
-        /// <value>
-        /// The canopy data.
-        /// </value>
-        [XmlIgnore]
-        public NewCanopyType CanopyData 
-            {
-            get
-                {
-                NewCanopyType data = new NewCanopyType();
-                data.cover = cover_green;
-                data.cover_tot = cover_tot;
-                data.height = height;
-                data.depth = height;   //sv- all the other crop modules tend to set the depth to the height of the crop.
-                data.lai = lai;
-                data.lai_tot = tlai;
-                return data; 
-                }
-            }
 
         /// <summary>
         /// MicroClimate will get 'CropType' and use it to look up

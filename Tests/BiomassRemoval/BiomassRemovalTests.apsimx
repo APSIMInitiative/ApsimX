@@ -929,8 +929,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <FractionToResidue>0</FractionToResidue>
         <NFixationOption>None</NFixationOption>
       </Nodule>
-      <Summariser>
-        <Name>Summariser</Name>
+
         <CompositeBiomass>
           <Name>Total</Name>
           <Propertys>
@@ -951,7 +950,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
             <string>[Product].Dead</string>
           </Propertys>
         </CompositeBiomass>
-      </Summariser>
+
       <Cultivar>
         <Name>Barley_Spring</Name>
         <Alias>Barley_Spring</Alias>
@@ -1238,7 +1237,7 @@ Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 201
       <SimulationName>BiomassRemoveHarvestTest</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>MCSP.Summariser.Total.Wt</ColumnNames>
+      <ColumnNames>MCSP.Total.Wt</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
@@ -1259,7 +1258,7 @@ Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 201
       <SimulationName>BiomassRemoveCutTest</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>MCSP.Summariser.Total.Wt</ColumnNames>
+      <ColumnNames>MCSP.Total.Wt</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
@@ -1280,7 +1279,7 @@ Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 201
       <SimulationName>BiomassRemovePruneTest</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>MCSP.Summariser.Total.Wt</ColumnNames>
+      <ColumnNames>MCSP.Total.Wt</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
@@ -1301,7 +1300,7 @@ Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 201
       <SimulationName>BiomassRemoveGrazeTest</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>MCSP.Summariser.Total.Wt</ColumnNames>
+      <ColumnNames>MCSP.Total.Wt</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
   </Tests>
@@ -2039,13 +2038,13 @@ namespace Models
           <string>[SCUM].Arbitrator.NSupply</string>
           <string>[SCUM].Stover.Fw</string>
           <string>[SCUM].Stover.Fn</string>
-          <string>[SCUM].Summariser.Total.Wt</string>
+          <string>[SCUM].Total.Wt</string>
           <string>[SCUM].ExpectedYield.Value</string>
           <string>[SCUM].DryYield.Value</string>
           <string>[SCUM].TotalBiomassAtStartReproductive.Value</string>
           <string>[SCUM].TotalBiomassAtStartSenescence.Value</string>
           <string>[SCUM].Ymax.Value</string>
-          <string>[SCUM].Summariser.Total.N</string>
+          <string>[SCUM].Total.N</string>
           <string>[SCUM].Arbitrator.DMSupply</string>
           <string>[SCUM].Arbitrator.DMDemand</string>
           <string>[SCUM].Phenology.AccumulatedThermalTime.Value</string>
@@ -2495,7 +2494,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
+        <YFieldName>SCUM.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -2660,7 +2659,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Summariser.Total.N</YFieldName>
+        <YFieldName>SCUM.Total.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -4012,13 +4011,13 @@ namespace Models
           <string>[SCUM].Arbitrator.NSupply</string>
           <string>[SCUM].Stover.Fw</string>
           <string>[SCUM].Stover.Fn</string>
-          <string>[SCUM].Summariser.Total.Wt</string>
+          <string>[SCUM].Total.Wt</string>
           <string>[SCUM].ExpectedYield.Value</string>
           <string>[SCUM].DryYield.Value</string>
           <string>[SCUM].TotalBiomassAtStartReproductive.Value</string>
           <string>[SCUM].TotalBiomassAtStartSenescence.Value</string>
           <string>[SCUM].Ymax.Value</string>
-          <string>[SCUM].Summariser.Total.N</string>
+          <string>[SCUM].Total.N</string>
           <string>[SCUM].Arbitrator.DMSupply</string>
           <string>[SCUM].Arbitrator.DMDemand</string>
           <string>[SCUM].Phenology.AccumulatedThermalTime.Value</string>
@@ -4468,7 +4467,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
+        <YFieldName>SCUM.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -4633,7 +4632,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Summariser.Total.N</YFieldName>
+        <YFieldName>SCUM.Total.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -5985,13 +5984,13 @@ namespace Models
           <string>[SCUM].Arbitrator.NSupply</string>
           <string>[SCUM].Stover.Fw</string>
           <string>[SCUM].Stover.Fn</string>
-          <string>[SCUM].Summariser.Total.Wt</string>
+          <string>[SCUM].Total.Wt</string>
           <string>[SCUM].ExpectedYield.Value</string>
           <string>[SCUM].DryYield.Value</string>
           <string>[SCUM].TotalBiomassAtStartReproductive.Value</string>
           <string>[SCUM].TotalBiomassAtStartSenescence.Value</string>
           <string>[SCUM].Ymax.Value</string>
-          <string>[SCUM].Summariser.Total.N</string>
+          <string>[SCUM].Total.N</string>
           <string>[SCUM].Arbitrator.DMSupply</string>
           <string>[SCUM].Arbitrator.DMDemand</string>
           <string>[SCUM].Phenology.AccumulatedThermalTime.Value</string>
@@ -6441,7 +6440,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
+        <YFieldName>SCUM.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -6606,7 +6605,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Summariser.Total.N</YFieldName>
+        <YFieldName>SCUM.Total.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -7958,13 +7957,13 @@ namespace Models
           <string>[SCUM].Arbitrator.NSupply</string>
           <string>[SCUM].Stover.Fw</string>
           <string>[SCUM].Stover.Fn</string>
-          <string>[SCUM].Summariser.Total.Wt</string>
+          <string>[SCUM].Total.Wt</string>
           <string>[SCUM].ExpectedYield.Value</string>
           <string>[SCUM].DryYield.Value</string>
           <string>[SCUM].TotalBiomassAtStartReproductive.Value</string>
           <string>[SCUM].TotalBiomassAtStartSenescence.Value</string>
           <string>[SCUM].Ymax.Value</string>
-          <string>[SCUM].Summariser.Total.N</string>
+          <string>[SCUM].Total.N</string>
           <string>[SCUM].Arbitrator.DMSupply</string>
           <string>[SCUM].Arbitrator.DMDemand</string>
           <string>[SCUM].Phenology.AccumulatedThermalTime.Value</string>
@@ -8414,7 +8413,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Summariser.Total.Wt</YFieldName>
+        <YFieldName>SCUM.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -8579,7 +8578,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Summariser.Total.N</YFieldName>
+        <YFieldName>SCUM.Total.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>

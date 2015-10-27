@@ -34,7 +34,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.TabbedMetDataView")]
     [PresenterName("UserInterface.Presenters.MetDataPresenter")]
-    [ValidParent(typeof(Simulation))]
+    [ValidParent(ParentType=typeof(Simulation))]
     public class Weather : Model, IWeather
     {
         /// <summary>

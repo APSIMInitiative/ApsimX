@@ -33,7 +33,8 @@ namespace Models.Agroforestry
     [Serializable]
     [ViewName("UserInterface.Views.TreeProxyView")]
     [PresenterName("UserInterface.Presenters.TreeProxyPresenter")]
-    [ValidParent(ParentModels = new Type[] { typeof(Simulation), typeof(Zone) })]
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class TreeProxy : Model, IUptake
     {
         [Link]

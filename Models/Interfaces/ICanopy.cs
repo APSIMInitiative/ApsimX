@@ -10,8 +10,14 @@ namespace Models.Interfaces
     /// <summary>This interface describes MicroClimate / canopy comms.</summary>
     public interface ICanopy
     {
-        /// <summary>Canopy type</summary>
-        string CanopyType { get; }
+        /// <summary>Albedo.</summary>
+        double Albedo { get; }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        double Gsmax { get; }
+
+        /// <summary>Gets or sets the R50.</summary>
+        double R50 { get; }
 
         /// <summary>Gets the LAI (m^2/m^2)</summary>
         double LAI { get; }

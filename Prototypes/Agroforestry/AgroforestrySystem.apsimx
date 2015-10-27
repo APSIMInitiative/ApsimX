@@ -329,7 +329,7 @@ The proxy tree component of this model is intended also to be a guide for develo
       <Name>Maize</Name>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>PrioritythenRelativeAllocation</NArbitrationOption>
+        <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
         <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
       </OrganArbitrator>
       <Phenology>
@@ -1815,8 +1815,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
-      <Summariser>
-        <Name>Summariser</Name>
         <CompositeBiomass>
           <Name>AboveGround</Name>
           <Memo>
@@ -1954,7 +1952,6 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
             <string>[Rachis].Dead</string>
           </Propertys>
         </CompositeBiomass>
-      </Summariser>
       <Cultivar>
         <Name>Pioneer_39G12</Name>
         <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
@@ -11787,21 +11784,21 @@ NOTE: Germination failure was an important factor in determining yield impacts o
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -12306,21 +12303,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -12825,21 +12822,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -13344,21 +13341,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -13863,21 +13860,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -14382,21 +14379,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -14901,21 +14898,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -15420,21 +15417,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -15479,21 +15476,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -17100,21 +17097,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -17614,21 +17611,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -18128,21 +18125,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -18642,21 +18639,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -19156,21 +19153,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -19670,21 +19667,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -20184,21 +20181,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
@@ -20698,21 +20695,21 @@ namespace Models
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.Wt</string>
+              <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
               <string>[Maize].Husk.Live.Wt</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Summariser.EarLive.N</string>
+              <string>[Maize].EarLive.N</string>
               <string>[Maize].Grain.Live.N</string>
               <string>[Maize].Stem.Live.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
-              <string>[Maize].Summariser.AboveGround.N</string>
-              <string>[Maize].Summariser.AboveGround.Wt as Biomass</string>
-              <string>[Maize].Summariser.Total.N</string>
-              <string>[Maize].Summariser.Total.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].Total.N</string>
+              <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
               <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>

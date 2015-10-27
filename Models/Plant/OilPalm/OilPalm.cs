@@ -23,12 +23,21 @@ namespace Models.PMF.OilPalm
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(typeof(Zone))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class OilPalm : ModelCollectionFromResource, ICrop, ICanopy, IUptake
     {
         #region Canopy interface
         /// <summary>Canopy type</summary>
         public string CanopyType { get { return "OilPalm"; } }
+
+        /// <summary>Albedo.</summary>
+        public double Albedo { get { return 0.15; } }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        public double Gsmax { get { return 0.01; } }
+
+        /// <summary>Gets or sets the R50.</summary>
+        public double R50 { get { return 200; } }
 
         /// <summary>Gets the lai.</summary>
         /// <value>The lai.</value>

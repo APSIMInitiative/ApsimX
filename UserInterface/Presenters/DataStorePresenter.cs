@@ -82,12 +82,22 @@ namespace UserInterface.Presenters
         /// <summary>Populate the grid control with data.</summary>
         public void PopulateGrid()
         {
-            int numFrozenColumns = 3;
             DataTable data  = GetData();
 
             // Strip out unwanted columns.
             if (data != null)
             {
+                int numFrozenColumns = 1;
+                for (int i = 0; i < data.Columns.Count; i++)
+                {
+                    if (data.Columns[i].ColumnName.Contains("Date") || data.Columns[i].ColumnName.Contains("Today"))
+                    {
+                        numFrozenColumns = i;
+                        break;
+                    }
+                }
+
+
                 for (int i = 0; i < data.Columns.Count; i++)
                 {
 

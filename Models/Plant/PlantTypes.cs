@@ -68,11 +68,7 @@
         /// <summary>The kill fraction</summary>
         public Single KillFraction;
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="NewCanopyData">The new canopy data.</param>
-    public delegate void NewCanopyDelegate(NewCanopyType NewCanopyData);
+
     /// <summary>
     /// 
     /// </summary>

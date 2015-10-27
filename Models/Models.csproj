@@ -177,6 +177,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
     <Compile Include="Soils\Arbitrator\CropUptakes.cs" />
     <Compile Include="Soils\Arbitrator\Estimate.cs" />
@@ -258,7 +259,6 @@
     <Compile Include="Plant\Functions\Zadok.cs" />
     <Compile Include="Plant\InterpolationSet.cs" />
     <Compile Include="Plant\OilPalm\OilPalm.cs" />
-    <Compile Include="Plant\OilPalm\OilPalmUnderstory.cs" />
     <Compile Include="Plant\OldPlant\BaseOrgan1.cs" />
     <Compile Include="Plant\OldPlant\Conversions.cs" />
     <Compile Include="Plant\OldPlant\Environment.cs" />
@@ -309,7 +309,6 @@
     <Compile Include="Plant\Phenology\VernalisationCW.cs" />
     <Compile Include="Plant\Plant.cs" />
     <Compile Include="Plant\Structure.cs" />
-    <Compile Include="Plant\Summary.cs" />
     <Compile Include="Plant\Utility.cs" />
     <Compile Include="Soils\IrrigationApplicationType.cs" />
     <Compile Include="Soils\RunoffEventType.cs" />

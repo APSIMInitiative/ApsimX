@@ -74,6 +74,8 @@ namespace UserInterface.Presenters
             this.seriesView.SeriesType.Changed += OnSeriesTypeChanged;
             this.seriesView.LineType.Changed += OnLineTypeChanged;
             this.seriesView.MarkerType.Changed += OnMarkerTypeChanged;
+            this.seriesView.LineThickness.Changed += OnLineThicknessChanged;
+            this.seriesView.MarkerSize.Changed += OnMarkerSizeChanged;
             this.seriesView.Colour.Changed += OnColourChanged;
             this.seriesView.XOnTop.Changed += OnXOnTopChanged;
             this.seriesView.YOnRight.Changed += OnYOnRightChanged;
@@ -82,6 +84,7 @@ namespace UserInterface.Presenters
             this.seriesView.X2.Changed += OnX2Changed;
             this.seriesView.Y2.Changed += OnY2Changed;
             this.seriesView.ShowInLegend.Changed += OnShowInLegendChanged;
+            this.seriesView.IncludeSeriesNameInLegend.Changed += OnIncludeSeriesNameInLegendChanged;
             this.seriesView.YCumulative.Changed += OnCumulativeYChanged;
             this.seriesView.XCumulative.Changed += OnCumulativeXChanged;
             this.seriesView.Filter.Changed += OnFilterChanged;
@@ -94,6 +97,8 @@ namespace UserInterface.Presenters
             this.seriesView.SeriesType.Changed -= OnSeriesTypeChanged;
             this.seriesView.LineType.Changed -= OnLineTypeChanged;
             this.seriesView.MarkerType.Changed -= OnMarkerTypeChanged;
+            this.seriesView.LineThickness.Changed += OnLineThicknessChanged;
+            this.seriesView.MarkerSize.Changed += OnMarkerSizeChanged;
             this.seriesView.Colour.Changed -= OnColourChanged;
             this.seriesView.XOnTop.Changed -= OnXOnTopChanged;
             this.seriesView.YOnRight.Changed -= OnYOnRightChanged;
@@ -102,6 +107,7 @@ namespace UserInterface.Presenters
             this.seriesView.X2.Changed -= OnX2Changed;
             this.seriesView.Y2.Changed -= OnY2Changed;
             this.seriesView.ShowInLegend.Changed -= OnShowInLegendChanged;
+            this.seriesView.IncludeSeriesNameInLegend.Changed -= OnIncludeSeriesNameInLegendChanged;
             this.seriesView.YCumulative.Changed -= OnCumulativeYChanged;
             this.seriesView.XCumulative.Changed -= OnCumulativeXChanged;
             this.seriesView.Filter.Changed -= OnFilterChanged;
@@ -167,6 +173,27 @@ namespace UserInterface.Presenters
                 this.SetModelProperty("FactorIndexToVaryMarkers", factorIndex);
             }
         }
+
+        /// <summary>Series line thickness has been changed by the user.</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnLineThicknessChanged(object sender, EventArgs e)
+        {
+            LineThicknessType lineThickness;
+            if (Enum.TryParse<LineThicknessType>(this.seriesView.LineThickness.SelectedValue, out lineThickness))
+                this.SetModelProperty("LineThickness", lineThickness);
+        }
+
+        /// <summary>Series marker size has been changed by the user.</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnMarkerSizeChanged(object sender, EventArgs e)
+        {
+            MarkerSizeType markerSize;
+            if (Enum.TryParse<MarkerSizeType>(this.seriesView.MarkerSize.SelectedValue, out markerSize))
+                this.SetModelProperty("MarkerSize", markerSize);
+        }
+
 
         /// <summary>Series color has been changed by the user.</summary>
         /// <param name="sender">Event sender</param>
@@ -280,6 +307,14 @@ namespace UserInterface.Presenters
             this.SetModelProperty("ShowInLegend", this.seriesView.ShowInLegend.IsChecked);
         }
 
+        /// <summary>User has changed the include series name in legend</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnIncludeSeriesNameInLegendChanged(object sender, EventArgs e)
+        {
+            this.SetModelProperty("IncludeSeriesNameInLegend", this.seriesView.IncludeSeriesNameInLegend.IsChecked);
+        }
+
         /// <summary>User has changed the filter</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
@@ -308,11 +343,22 @@ namespace UserInterface.Presenters
             PopulateLineDropDown();
             PopulateColourDropDown();
 
+            // Populate line thickness drop down.
+            List<string> thicknesses = new List<string>(Enum.GetNames(typeof(LineThicknessType)));
+            seriesView.LineThickness.Values = thicknesses.ToArray();
+            seriesView.LineThickness.SelectedValue = series.LineThickness.ToString();
+
+            // Populate marker size drop down.
+            List<string> sizes = new List<string>(Enum.GetNames(typeof(MarkerSizeType)));
+            seriesView.MarkerSize.Values = sizes.ToArray();
+            seriesView.MarkerSize.SelectedValue = series.MarkerSize.ToString();
+
             // Populate other controls.
             this.seriesView.SeriesType.SelectedValue = series.Type.ToString();
             this.seriesView.XOnTop.IsChecked = series.XAxis == Axis.AxisType.Top;
             this.seriesView.YOnRight.IsChecked = series.YAxis == Axis.AxisType.Right;
             this.seriesView.ShowInLegend.IsChecked = series.ShowInLegend;
+            this.seriesView.IncludeSeriesNameInLegend.IsChecked = series.IncludeSeriesNameInLegend;
             this.seriesView.XCumulative.IsChecked = series.CumulativeX;
             this.seriesView.YCumulative.IsChecked = series.Cumulative;
             this.seriesView.DataSource.SelectedValue = series.TableName;

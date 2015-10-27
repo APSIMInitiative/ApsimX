@@ -519,8 +519,6 @@
             <NArbitrationOption>RelativeAllocation</NArbitrationOption>
             <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
           </OrganArbitrator>
-          <Summariser>
-            <Name>Summariser</Name>
             <CompositeBiomass>
               <Name>AboveGround</Name>
               <Propertys>
@@ -560,7 +558,7 @@
               <Name>IndividualTreeLiveWt</Name>
               <VariableReference>
                 <Name>Population</Name>
-                <VariableName>[Eucalyptus].Summariser.TotalLive.Wt</VariableName>
+                <VariableName>[Eucalyptus].TotalLive.Wt</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>Population</Name>
@@ -575,7 +573,6 @@
                 <string>[Root].Dead</string>
               </Propertys>
             </CompositeBiomass>
-          </Summariser>
           <TreeCanopy>
             <Name>Leaf</Name>
             <Biomass>
@@ -676,7 +673,7 @@
                     <double>0.16</double>
                   </Y>
                 </XYPairs>
-                <XProperty>[Summariser].IndividualTreeLiveWt.Value</XProperty>
+                <XProperty>[Eucalyptus].IndividualTreeLiveWt.Value</XProperty>
               </LinearInterpolationFunction>
             </PartitionFractionDemandFunction>
             <RUEModel>
@@ -1006,20 +1003,20 @@
             <string>[Soil].SoilWater.Drainage</string>
             <string>[Soil].SoilWater.Runoff</string>
             <string>[Soil].SoilWater.pond</string>
-            <string>Eucalyptus.Summariser.AboveGround.Wt</string>
-            <string>Eucalyptus.Summariser.BelowGround.Wt</string>
-            <string>Eucalyptus.Summariser.Total.Wt</string>
+            <string>Eucalyptus.AboveGround.Wt</string>
+            <string>Eucalyptus.BelowGround.Wt</string>
+            <string>Eucalyptus.Total.Wt</string>
             <string>Eucalyptus.Leaf.Dead.Wt</string>
             <string>Eucalyptus.Leaf.Live.Wt</string>
             <string>Eucalyptus.Stem.Dead.Wt</string>
             <string>Eucalyptus.Stem.Live.Wt</string>
             <string>Eucalyptus.Root.Dead.Wt</string>
             <string>Eucalyptus.Root.Live.Wt</string>
-            <string>Eucalyptus.Summariser.AboveGround.N</string>
-            <string>Eucalyptus.Summariser.BelowGround.N</string>
-            <string>Eucalyptus.Summariser.Total.N</string>
-            <string>Eucalyptus.Summariser.TotalLive.N</string>
-            <string>Eucalyptus.Summariser.TotalDead.N</string>
+            <string>Eucalyptus.AboveGround.N</string>
+            <string>Eucalyptus.BelowGround.N</string>
+            <string>Eucalyptus.Total.N</string>
+            <string>Eucalyptus.TotalLive.N</string>
+            <string>Eucalyptus.TotalDead.N</string>
             <string>Eucalyptus.Leaf.Dead.N</string>
             <string>Eucalyptus.Leaf.Live.N</string>
             <string>Eucalyptus.Stem.Dead.N</string>
@@ -1048,16 +1045,16 @@
             <string>Eucalyptus.Root.MinimumNConc.Value</string>
             <string>Eucalyptus.Stem.MaximumNConc.Value</string>
             <string>Eucalyptus.Root.MaximumNConc.Value</string>
-            <string>Eucalyptus.Summariser.TotalLive.Wt</string>
+            <string>Eucalyptus.TotalLive.Wt</string>
             <string>Eucalyptus.Stem.Live.StructuralWt</string>
             <string>Eucalyptus.Stem.Live.NonStructuralWt</string>
             <string>Eucalyptus.Leaf.SpecificArea</string>
-            <string>Eucalyptus.Summariser.TotalDead.Wt</string>
+            <string>Eucalyptus.TotalDead.Wt</string>
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
             <string>Eucalyptus.Arbitrator.NDemand</string>
             <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>
-            <string>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</string>
+            <string>Eucalyptus.IndividualTreeLiveWt.Value</string>
             <string>Eucalyptus.Age.Value</string>
           </VariableNames>
           <EventNames>
@@ -1507,7 +1504,7 @@
             <Line>Solid</Line>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</YFieldName>
+            <YFieldName>Eucalyptus.IndividualTreeLiveWt.Value</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -1544,7 +1541,7 @@
             <Line>Solid</Line>
             <TableName>Report</TableName>
             <XFieldName>Eucalyptus.Age.Value</XFieldName>
-            <YFieldName>Eucalyptus.Summariser.AboveGround.Wt</YFieldName>
+            <YFieldName>Eucalyptus.AboveGround.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -1559,7 +1556,7 @@
             <Line>None</Line>
             <TableName>Input</TableName>
             <XFieldName>Age</XFieldName>
-            <YFieldName>Summariser.AboveGround.Wt</YFieldName>
+            <YFieldName>Eucalyptus.AboveGround.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -2104,8 +2101,6 @@
             <NArbitrationOption>RelativeAllocation</NArbitrationOption>
             <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
           </OrganArbitrator>
-          <Summariser>
-            <Name>Summariser</Name>
             <CompositeBiomass>
               <Name>AboveGround</Name>
               <Propertys>
@@ -2145,7 +2140,7 @@
               <Name>IndividualTreeLiveWt</Name>
               <VariableReference>
                 <Name>Population</Name>
-                <VariableName>[Eucalyptus].Summariser.TotalLive.Wt</VariableName>
+                <VariableName>[Eucalyptus].TotalLive.Wt</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>Population</Name>
@@ -2160,7 +2155,6 @@
                 <string>[Root].Dead</string>
               </Propertys>
             </CompositeBiomass>
-          </Summariser>
           <TreeCanopy>
             <Name>Leaf</Name>
             <Biomass>
@@ -2261,7 +2255,7 @@
                     <double>0.16</double>
                   </Y>
                 </XYPairs>
-                <XProperty>[Summariser].IndividualTreeLiveWt.Value</XProperty>
+                <XProperty>[Eucalyptus].IndividualTreeLiveWt.Value</XProperty>
               </LinearInterpolationFunction>
             </PartitionFractionDemandFunction>
             <RUEModel>
@@ -4009,20 +4003,20 @@
             <string>[Soil].SoilWater.Drainage</string>
             <string>[Soil].SoilWater.Runoff</string>
             <string>[Soil].SoilWater.pond</string>
-            <string>Eucalyptus.Summariser.AboveGround.Wt</string>
-            <string>Eucalyptus.Summariser.BelowGround.Wt</string>
-            <string>Eucalyptus.Summariser.Total.Wt</string>
+            <string>Eucalyptus.AboveGround.Wt</string>
+            <string>Eucalyptus.BelowGround.Wt</string>
+            <string>Eucalyptus.Total.Wt</string>
             <string>Eucalyptus.Leaf.Dead.Wt</string>
             <string>Eucalyptus.Leaf.Live.Wt</string>
             <string>Eucalyptus.Stem.Dead.Wt</string>
             <string>Eucalyptus.Stem.Live.Wt</string>
             <string>Eucalyptus.Root.Dead.Wt</string>
             <string>Eucalyptus.Root.Live.Wt</string>
-            <string>Eucalyptus.Summariser.AboveGround.N</string>
-            <string>Eucalyptus.Summariser.BelowGround.N</string>
-            <string>Eucalyptus.Summariser.Total.N</string>
-            <string>Eucalyptus.Summariser.TotalLive.N</string>
-            <string>Eucalyptus.Summariser.TotalDead.N</string>
+            <string>Eucalyptus.AboveGround.N</string>
+            <string>Eucalyptus.BelowGround.N</string>
+            <string>Eucalyptus.Total.N</string>
+            <string>Eucalyptus.TotalLive.N</string>
+            <string>Eucalyptus.TotalDead.N</string>
             <string>Eucalyptus.Leaf.Dead.N</string>
             <string>Eucalyptus.Leaf.Live.N</string>
             <string>Eucalyptus.Stem.Dead.N</string>
@@ -4051,16 +4045,16 @@
             <string>Eucalyptus.Root.MinimumNConc.Value</string>
             <string>Eucalyptus.Stem.MaximumNConc.Value</string>
             <string>Eucalyptus.Root.MaximumNConc.Value</string>
-            <string>Eucalyptus.Summariser.TotalLive.Wt</string>
+            <string>Eucalyptus.TotalLive.Wt</string>
             <string>Eucalyptus.Stem.Live.StructuralWt</string>
             <string>Eucalyptus.Stem.Live.NonStructuralWt</string>
             <string>Eucalyptus.Leaf.SpecificArea</string>
-            <string>Eucalyptus.Summariser.TotalDead.Wt</string>
+            <string>Eucalyptus.TotalDead.Wt</string>
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
             <string>Eucalyptus.Arbitrator.NDemand</string>
             <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>
-            <string>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</string>
+            <string>Eucalyptus.IndividualTreeLiveWt.Value</string>
             <string>Eucalyptus.Age.Value</string>
           </VariableNames>
           <EventNames>
@@ -4510,7 +4504,7 @@
             <Line>Solid</Line>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</YFieldName>
+            <YFieldName>Eucalyptus.IndividualTreeLiveWt.Value</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -4547,7 +4541,7 @@
             <Line>Solid</Line>
             <TableName>Report</TableName>
             <XFieldName>Eucalyptus.Age.Value</XFieldName>
-            <YFieldName>Eucalyptus.Summariser.AboveGround.Wt</YFieldName>
+            <YFieldName>Eucalyptus.AboveGround.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -4562,7 +4556,7 @@
             <Line>None</Line>
             <TableName>Input</TableName>
             <XFieldName>Age</XFieldName>
-            <YFieldName>Summariser.AboveGround.Wt</YFieldName>
+            <YFieldName>Eucalyptus.AboveGround.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -5107,8 +5101,6 @@
             <NArbitrationOption>RelativeAllocation</NArbitrationOption>
             <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
           </OrganArbitrator>
-          <Summariser>
-            <Name>Summariser</Name>
             <CompositeBiomass>
               <Name>AboveGround</Name>
               <Propertys>
@@ -5148,7 +5140,7 @@
               <Name>IndividualTreeLiveWt</Name>
               <VariableReference>
                 <Name>Population</Name>
-                <VariableName>[Eucalyptus].Summariser.TotalLive.Wt</VariableName>
+                <VariableName>[Eucalyptus].TotalLive.Wt</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>Population</Name>
@@ -5163,7 +5155,6 @@
                 <string>[Root].Dead</string>
               </Propertys>
             </CompositeBiomass>
-          </Summariser>
           <TreeCanopy>
             <Name>Leaf</Name>
             <Biomass>
@@ -5264,7 +5255,7 @@
                     <double>0.16</double>
                   </Y>
                 </XYPairs>
-                <XProperty>[Summariser].IndividualTreeLiveWt.Value</XProperty>
+                <XProperty>[Eucalyptus].IndividualTreeLiveWt.Value</XProperty>
               </LinearInterpolationFunction>
             </PartitionFractionDemandFunction>
             <RUEModel>
@@ -7012,20 +7003,20 @@
             <string>[Soil].SoilWater.Drainage</string>
             <string>[Soil].SoilWater.Runoff</string>
             <string>[Soil].SoilWater.pond</string>
-            <string>Eucalyptus.Summariser.AboveGround.Wt</string>
-            <string>Eucalyptus.Summariser.BelowGround.Wt</string>
-            <string>Eucalyptus.Summariser.Total.Wt</string>
+            <string>Eucalyptus.AboveGround.Wt</string>
+            <string>Eucalyptus.BelowGround.Wt</string>
+            <string>Eucalyptus.Total.Wt</string>
             <string>Eucalyptus.Leaf.Dead.Wt</string>
             <string>Eucalyptus.Leaf.Live.Wt</string>
             <string>Eucalyptus.Stem.Dead.Wt</string>
             <string>Eucalyptus.Stem.Live.Wt</string>
             <string>Eucalyptus.Root.Dead.Wt</string>
             <string>Eucalyptus.Root.Live.Wt</string>
-            <string>Eucalyptus.Summariser.AboveGround.N</string>
-            <string>Eucalyptus.Summariser.BelowGround.N</string>
-            <string>Eucalyptus.Summariser.Total.N</string>
-            <string>Eucalyptus.Summariser.TotalLive.N</string>
-            <string>Eucalyptus.Summariser.TotalDead.N</string>
+            <string>Eucalyptus.AboveGround.N</string>
+            <string>Eucalyptus.BelowGround.N</string>
+            <string>Eucalyptus.Total.N</string>
+            <string>Eucalyptus.TotalLive.N</string>
+            <string>Eucalyptus.TotalDead.N</string>
             <string>Eucalyptus.Leaf.Dead.N</string>
             <string>Eucalyptus.Leaf.Live.N</string>
             <string>Eucalyptus.Stem.Dead.N</string>
@@ -7054,16 +7045,16 @@
             <string>Eucalyptus.Root.MinimumNConc.Value</string>
             <string>Eucalyptus.Stem.MaximumNConc.Value</string>
             <string>Eucalyptus.Root.MaximumNConc.Value</string>
-            <string>Eucalyptus.Summariser.TotalLive.Wt</string>
+            <string>Eucalyptus.TotalLive.Wt</string>
             <string>Eucalyptus.Stem.Live.StructuralWt</string>
             <string>Eucalyptus.Stem.Live.NonStructuralWt</string>
             <string>Eucalyptus.Leaf.SpecificArea</string>
-            <string>Eucalyptus.Summariser.TotalDead.Wt</string>
+            <string>Eucalyptus.TotalDead.Wt</string>
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
             <string>Eucalyptus.Arbitrator.NDemand</string>
             <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>
-            <string>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</string>
+            <string>Eucalyptus.IndividualTreeLiveWt.Value</string>
             <string>Eucalyptus.Age.Value</string>
           </VariableNames>
           <EventNames>
@@ -7513,7 +7504,7 @@
             <Line>Solid</Line>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</YFieldName>
+            <YFieldName>Eucalyptus.IndividualTreeLiveWt.Value</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -7550,7 +7541,7 @@
             <Line>Solid</Line>
             <TableName>Report</TableName>
             <XFieldName>Eucalyptus.Age.Value</XFieldName>
-            <YFieldName>Eucalyptus.Summariser.AboveGround.Wt</YFieldName>
+            <YFieldName>Eucalyptus.AboveGround.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -7565,7 +7556,7 @@
             <Line>None</Line>
             <TableName>Input</TableName>
             <XFieldName>Age</XFieldName>
-            <YFieldName>Summariser.AboveGround.Wt</YFieldName>
+            <YFieldName>Eucalyptus.AboveGround.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>

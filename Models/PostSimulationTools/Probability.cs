@@ -16,7 +16,7 @@ namespace Models.PostSimulationTools
     /// </summary>
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(typeof(DataStore))]
+    [ValidParent(ParentType=typeof(DataStore))]
     [Serializable]
     public class Probability : Model, IPostSimulationTool
     {

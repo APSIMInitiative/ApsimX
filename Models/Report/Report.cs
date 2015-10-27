@@ -10,6 +10,8 @@ namespace Models.Report
     using System.Data;
     using Models.Core;
     using APSIM.Shared.Utilities;
+    using Factorial;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// A report class for writing output to the data store.
@@ -17,7 +19,9 @@ namespace Models.Report
     [Serializable]
     [ViewName("UserInterface.Views.ReportView")]
     [PresenterName("UserInterface.Presenters.ReportPresenter")]
-    [ValidParent(ParentModels = new Type[] { typeof(Zone), typeof(Zones.CircularZone), typeof(Zones.RectangularZone) })]
+    [ValidParent(ParentType = typeof(Zone))]
+    [ValidParent(ParentType = typeof(Zones.CircularZone))]
+    [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     public class Report : Model
     {
         /// <summary>
@@ -30,6 +34,12 @@ namespace Models.Report
         /// </summary>
         [Link]
         private Simulation simulation = null;
+
+        /// <summary>Experiment factor names</summary>
+        public List<string> ExperimentFactorNames { get; set; }
+
+        /// <summary>Experiment factor values</summary>
+        public List<string> ExperimentFactorValues { get; set; }
 
         /// <summary>
         /// Gets or sets variable names for outputting
@@ -45,9 +55,7 @@ namespace Models.Report
         [Description("Output frequency")]
         public string[] EventNames { get; set; }
 
-        /// <summary>
-        /// An event handler to allow us to initialize ourselves.
-        /// </summary>
+        /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         [EventSubscribe("Commencing")]
@@ -89,10 +97,22 @@ namespace Models.Report
         {
             this.columns = new List<ReportColumn>();
 
+            AddExperimentFactorLevels();
+
             foreach (string fullVariableName in this.VariableNames)
             {
                 if (fullVariableName != string.Empty)
                     this.columns.Add(ReportColumn.Create(fullVariableName, this, this.EventNames));
+            }
+        }
+
+        /// <summary>Add the experiment factor levels as columns.</summary>
+        private void AddExperimentFactorLevels()
+        {
+            if (ExperimentFactorValues != null)
+            {
+                for (int i = 0; i < ExperimentFactorNames.Count; i++)
+                    this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorNames[i], this.EventNames, this, ExperimentFactorValues[i]));
             }
         }
 

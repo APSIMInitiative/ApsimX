@@ -50,10 +50,6 @@ namespace Models.AgPasture1
 		/// <summary>Event to be invoked when sowing or at initialisation (tell models about existence of this plant).</summary>
 		public event EventHandler Sowing;
 
-		/// <summary>Reference to a NewCanopy event</summary>
-		/// <param name="Data">The data about this plant's canopy.</param>
-		public delegate void NewCanopyDelegate(NewCanopyType Data);
-
 		/// <summary>Reference to a FOM incorporation event</summary>
 		/// <param name="Data">The data with soil FOM to be added.</param>
 		public delegate void FOMLayerDelegate(Soils.FOMLayerType Data);
@@ -91,6 +87,15 @@ namespace Models.AgPasture1
         {
             get { return Name; }
         }
+
+        /// <summary>Albedo.</summary>
+        public double Albedo { get { return 0.26; } }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        public double Gsmax { get { return 0.011; } }
+
+        /// <summary>Gets or sets the R50.</summary>
+        public double R50 { get { return 200; } }
 
         /// <summary>Gets the LAI (m^2/m^2)</summary>
         public double LAI { get { return GreenLAI; } }

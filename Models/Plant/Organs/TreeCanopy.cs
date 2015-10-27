@@ -18,7 +18,16 @@ namespace Models.PMF.Organs
         #region Canopy interface
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.CropType; } }
-        
+
+        /// <summary>Albedo.</summary>
+        public double Albedo { get { return 0.29366217672824863; } }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        public double Gsmax { get { return 0.01; } }
+
+        /// <summary>Gets or sets the R50.</summary>
+        public double R50 { get { return 200; } }
+
         /// <summary>Gets or sets the lai.</summary>
         public double LAI
         {

@@ -91,6 +91,18 @@ namespace Models.PMF.Organs
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.CropType; } }
 
+        /// <summary>Albedo.</summary>
+        [Description("Albedo")]
+        public double Albedo { get; set; }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        [Description("GSMAX")]
+        public double Gsmax { get; set; }
+
+        /// <summary>Gets or sets the R50.</summary>
+        [Description("R50")]
+        public double R50 { get; set; }
+
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
         public double LAI
@@ -114,13 +126,25 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover));
+                if (Plant.IsAlive)
+                    return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover));
+                else
+                    return 0;
             }
         }
 
         /// <summary>Gets the cover total.</summary>
         [Units("0-1")]
-        public double CoverTotal { get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); } }
+        public double CoverTotal 
+        { 
+            get 
+            {
+                if (Plant.IsAlive)
+                    return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
+                else
+                    return 0;
+            } 
+        }
 
         /// <summary>Gets the height.</summary>
         [Units("mm")]
@@ -278,22 +302,6 @@ namespace Models.PMF.Organs
         /// <value>The k dead.</value>
         [Description("Extinction Coefficient (Dead)")]
         public double KDead { get; set; }
-        /// <summary>Gets or sets the gs maximum.</summary>
-        /// <value>The gs maximum.</value>
-        [Description("GsMax")]
-        public double GsMax { get; set; }
-        /// <summary>Gets or sets the R50.</summary>
-        /// <value>The R50.</value>
-        [Description("R50")]
-        public double R50 { get; set; }
-        /// <summary>Gets or sets the emissivity.</summary>
-        /// <value>The emissivity.</value>
-        [Description("Emissivity")]
-        public double Emissivity { get; set; }
-        /// <summary>Gets or sets the albido.</summary>
-        /// <value>The albido.</value>
-        [Description("Albido")]
-        public double Albido { get; set; }
         
         #endregion
 
