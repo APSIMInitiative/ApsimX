@@ -1143,7 +1143,7 @@
     <Clock>
       <Name>clock</Name>
       <StartDate>2014-10-15T00:00:00</StartDate>
-      <EndDate>2015-05-10T00:00:00</EndDate>
+      <EndDate>2015-10-28T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
@@ -2630,7 +2630,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <Clock>
         <Name>clock</Name>
         <StartDate>2014-09-01T00:00:00</StartDate>
-        <EndDate>2015-05-10T00:00:00</EndDate>
+        <EndDate>2015-10-28T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>summaryfile</Name>
