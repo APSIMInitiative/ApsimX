@@ -14,7 +14,7 @@ namespace Models.Core
     /// <summary>
     /// A simulation model
     /// </summary>
-    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Experiment))]
     [Serializable]
     public class Simulation : Zone, JobManager.IRunnable

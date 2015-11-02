@@ -446,7 +446,29 @@ namespace Models.PMF
                     return 0.0;
             }
         }
-
+        
+        /// <summary>Gets the N allocations</summary>
+        /// <value>Allocation of N to each organ</value>
+        [XmlIgnore]
+        public double NAllocated
+        {
+            get
+            {
+                if (Plant.IsAlive)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                            return N.Allocated;
+                        else return 0;
+                    }
+                    else
+                        return N.Allocated;
+                }
+                else
+                    return 0.0;
+            }
+        }
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [XmlIgnore]
@@ -1178,6 +1200,8 @@ namespace Models.PMF
             double PreNStressDMAllocation = DM.Allocated;
             for (int i = 0; i < Organs.Length; i++)
                 N.TotalAllocation[i] = N.StructuralAllocation[i] + N.MetabolicAllocation[i] + N.NonStructuralAllocation[i];
+
+            N.Allocated = MathUtilities.Sum(N.TotalAllocation);
 
             //To introduce functionality for other nutrients we need to repeat this for loop for each new nutrient type
             // Calculate posible growth based on Minimum N requirement of organs

@@ -145,6 +145,9 @@ namespace UserInterface.Views
             menuItem2.Visible = turnOn;
             if (textBox1.Visible)
                 textBox1.Focus();
+
+            if (!turnOn)
+                PopulateView(textBox1.Text, true);
         }
 
         /// <summary>

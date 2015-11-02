@@ -76,11 +76,10 @@ namespace UserInterface.Presenters
             this.model = model as Model;
             this.explorerPresenter = explorerPresenter;
 
-            this.FindAllProperties();
+            this.FindAllProperties(this.model);
             this.PopulateGrid(this.model);
             this.grid.CellsChanged += this.OnCellValueChanged;
             this.grid.ButtonClick += OnFileBrowseClick;
-            this.grid.ResizeControls();
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
             if (model != null)
             {
@@ -114,12 +113,12 @@ namespace UserInterface.Presenters
             table.Columns.Add("Value", typeof(object));
 
             this.FillTable(table);
-            this.grid.DataSource = table;
-            this.FormatGrid();
+             this.FormatGrid();
             if (selectedCell != null)
                 this.grid.GetCurrentCell = selectedCell;
+            this.grid.ResizeControls();
         }
-        
+
         /// <summary>
         /// Remove the specified properties from the grid.
         /// </summary>
@@ -144,8 +143,9 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Find all properties from the model and fill this.properties.
         /// </summary>
-        private void FindAllProperties()
+        public void FindAllProperties(Model model)
         {
+            this.model = model;
             this.properties.Clear();
             if (this.model != null)
             {
@@ -182,9 +182,9 @@ namespace UserInterface.Presenters
         private void FillTable(DataTable table)
         {
             foreach (VariableProperty property in this.properties)
-            {
                 table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
-            }
+
+            this.grid.DataSource = table;
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace UserInterface.Presenters
                     ICrop crop = GetCrop(properties);
                     if (crop != null)
                     {
-                        cell.DropDownStrings = crop.CultivarNames;
+                        cell.DropDownStrings = GetCultivarNames(crop);
                     }
                     
                 }
@@ -275,6 +275,28 @@ namespace UserInterface.Presenters
 
             IGridColumn valueColumn = this.grid.GetColumn(1);
             valueColumn.Width = -1;
+        }
+
+        /// <summary>Get a list of cultivars for crop.</summary>
+        /// <param name="crop">The crop.</param>
+        /// <returns>A list of cultivars.</returns>
+        private string[] GetCultivarNames(ICrop crop)
+        {
+            if (crop.CultivarNames.Length == 0)
+            {
+                Simulations simulations = Apsim.Parent(crop as IModel, typeof(Simulations)) as Simulations;
+                Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
+                if (replacements != null)
+                {
+                    ICrop replacementCrop = Apsim.Child(replacements, (crop as IModel).Name) as ICrop;
+                    if (replacementCrop != null)
+                        return replacementCrop.CultivarNames;
+                }
+            }
+            else
+                return crop.CultivarNames;
+
+            return new string[0];
         }
 
         /// <summary>
