@@ -1150,7 +1150,7 @@
     </Summary>
     <Weather>
       <Name>Weather</Name>
-      <FileName>%root%\Prototypes\FodderBeet\Weather\lincoln from 2014.met</FileName>
+      <FileName>Weather\lincoln from 2014.met</FileName>
     </Weather>
     <Zone>
       <Name>paddock</Name>
