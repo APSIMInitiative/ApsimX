@@ -1500,6 +1500,11 @@
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
+  <Type name="ZadokPMF">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
   <Type name="AccumulateFunction">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>

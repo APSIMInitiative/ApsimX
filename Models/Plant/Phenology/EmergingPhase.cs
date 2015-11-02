@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
+using Models.PMF.Functions;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This phase simulates time to emergence as a function of sowing depth.  Thermal time to emergence = Sowing Depth x Shoot Rate + Shoot Lag.
+    /// This phase simulates time to emergence as a function of sowing depth.  A thermal time target from sowing to emergence = SowingDepth (set with sow()
+    /// method called from the manager)  x ShootRate + ShootLag.
     /// </summary>
     /// \pre A \ref Models.PMF.Plant "Plant" function has to exist to 
     /// provide the sowing depth (\f$D_{seed}\f$).
@@ -53,11 +55,43 @@ namespace Models.PMF.Phen
 
         /// <summary>Return the target to caller. Can be overridden by derived classes.</summary>
         /// <returns></returns>
-        protected override double CalcTarget()
+        public override double CalcTarget()
         {
-            return ShootLag + Plant.SowingData.Depth * ShootRate;
+            double retVAl = 0;
+            if (Plant != null)
+                retVAl = ShootLag + Plant.SowingData.Depth * ShootRate;
+            return retVAl;
         }
+        
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
 
+            // Describe the start and end stages
+            tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
+
+            tags.Add(new AutoDocumentation.Paragraph("This phase simulates time to emergence as a function of sowing depth."
+                + " The thermal time target from sowing to emergence is given by:<br>"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;*Target = SowingDepth x ShootRate + ShootLag*<br>"
+                + "Where:<br>"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootRate* = " + ShootRate + " (deg day/mm),<br>"
+                + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootLag* = " + ShootLag + " (deg day), <br>"
+                + "and *SowingDepth* (mm) is sent with the sowing event.", indent));
+
+            // write memos.
+            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                memo.Document(tags, -1, indent);
+
+            tags.Add(new AutoDocumentation.Paragraph("Progress toward emergence is driven by Thermal time accumulation where thermal time is calculated as:", indent));
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                child.Document(tags, -1, indent);
+        }
     }
 
     /// <summary>
@@ -79,7 +113,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Return the target to caller. Can be overridden by derived classes.</summary>
         /// <returns></returns>
-        protected override double CalcTarget()
+        public override double CalcTarget()
         {
             return ShootLag + Plant.SowingData.Depth * ShootRate;
         }

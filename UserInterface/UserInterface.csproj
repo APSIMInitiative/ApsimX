@@ -153,8 +153,9 @@
       <DependentUpon>UpgradeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ISupplementView.cs" />
+    <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\FolderPresenter.cs" />
-    <Compile Include="Presenters\StaticForestrySystemPresenter.cs" />
+    <Compile Include="Presenters\TreeProxyPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -174,18 +175,11 @@
     <Compile Include="Utility\FindAndReplaceForm.designer.cs">
       <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormInsertHyperlink.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormInsertHyperlink.designer.cs">
-      <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
-    </Compile>
     <Compile Include="Interfaces\ICultivarView.cs" />
     <Compile Include="Interfaces\IGridCell.cs" />
     <Compile Include="Interfaces\IGridColumn.cs" />
     <Compile Include="Interfaces\IGridView.cs" />
     <Compile Include="Interfaces\ISeriesView.cs" />
-    <Compile Include="Interfaces\IDataStoreView.cs" />
     <Compile Include="Interfaces\IInitialWaterView.cs">
       <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
     </Compile>
@@ -222,17 +216,59 @@
     <Compile Include="Utility\DataGridViewAutoFilterTextBoxColumn.cs" />
     <Compile Include="Utility\Excel.cs" />
     <Compile Include="Utility\LineSeriesWithTracker.cs" />
+    <Compile Include="Views\ButtonView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\ButtonView.Designer.cs">
+      <DependentUpon>ButtonView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CheckBoxView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\CheckBoxView.Designer.cs">
+      <DependentUpon>CheckBoxView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ColourDropDownView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\ColourDropDownView.Designer.cs">
+      <DependentUpon>ColourDropDownView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ListBoxView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\ListBoxView.Designer.cs">
+      <DependentUpon>ListBoxView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditBoxView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\EditBoxView.Designer.cs">
+      <DependentUpon>EditBoxView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DropDownView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\DropDownView.Designer.cs">
+      <DependentUpon>DropDownView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\FolderView.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\FolderView.Designer.cs">
       <DependentUpon>FolderView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\StaticForestrySystemView.cs">
+    <Compile Include="Views\ListButtonView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\StaticForestrySystemView.Designer.cs">
-      <DependentUpon>StaticForestrySystemView.cs</DependentUpon>
+    <Compile Include="Views\ListButtonView.Designer.cs">
+      <DependentUpon>ListButtonView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TreeProxyView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\TreeProxyView.Designer.cs">
+      <DependentUpon>TreeProxyView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\XYPairsView.cs">
       <SubType>UserControl</SubType>
@@ -247,12 +283,6 @@
       <DependentUpon>EditorView.cs</DependentUpon>
     </Compile>
     <Compile Include="Utility\Graph.cs" />
-    <Compile Include="Views\CultivarView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\CultivarView.Designer.cs">
-      <DependentUpon>CultivarView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\InitialWaterView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -399,24 +429,38 @@
     <EmbeddedResource Include="Utility\FindAndReplaceForm.resx">
       <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormInsertHyperlink.resx">
-      <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="Views\ButtonView.resx">
+      <DependentUpon>ButtonView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\CheckBoxView.resx">
+      <DependentUpon>CheckBoxView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ColourDropDownView.resx">
+      <DependentUpon>ColourDropDownView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ListBoxView.resx">
+      <DependentUpon>ListBoxView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\EditBoxView.resx">
+      <DependentUpon>EditBoxView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\DropDownView.resx">
+      <DependentUpon>DropDownView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FolderView.resx">
       <DependentUpon>FolderView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\StaticForestrySystemView.resx">
-      <DependentUpon>StaticForestrySystemView.cs</DependentUpon>
+    <EmbeddedResource Include="Views\ListButtonView.resx">
+      <DependentUpon>ListButtonView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\TreeProxyView.resx">
+      <DependentUpon>TreeProxyView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\XYPairsView.resx">
       <DependentUpon>XYPairsView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\EditorView.resx">
       <DependentUpon>EditorView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\CultivarView.resx">
-      <DependentUpon>CultivarView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\InitialWaterView.resx">
       <DependentUpon>InitialWaterView.cs</DependentUpon>
@@ -673,6 +717,9 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Alias.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LocalMicroClimate.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\TreeProxy.png" />
     <None Include="Service References\BuildService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -683,7 +730,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Regression.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CircularZone.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\RectangularZone.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\StaticForestrySystem.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AgroforestrySystem.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\FieldPea.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\NodeNumberPhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilArbitrator.png" />

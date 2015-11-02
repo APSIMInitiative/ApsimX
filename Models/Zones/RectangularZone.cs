@@ -12,7 +12,9 @@ namespace Models.Zones
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentModels = new Type[] { typeof(Zone), typeof(Simulation) })]
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
+    [ValidParent(ParentType = typeof(AgroforestrySystem))]
     public class RectangularZone : Zone
     {
         /// <summary>Length of the zone.</summary>
@@ -32,8 +34,8 @@ namespace Models.Zones
         {
             get
             {
-                if (Parent is StaticForestrySystem)
-                    return (Parent as StaticForestrySystem).GetDistanceFromTrees(this);
+                if (Parent is AgroforestrySystem)
+                    return (Parent as AgroforestrySystem).GetDistanceFromTrees(this);
                 throw new ApsimXException(this, "Not implemented for this system");
             }
         }

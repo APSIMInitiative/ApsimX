@@ -59,13 +59,13 @@ namespace Models.PMF.Functions
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
             tags.Add(new AutoDocumentation.Paragraph(" a sigmoid function of the form " +
-                                                      "y = Xmax * 1 / 1 + exp<sup>-(XValue - Xo) / b</sup>", indent));
+                                                      "y = Xmax * 1 / 1 + e<sup>-(XValue - Xo) / b</sup>", indent));
 
 
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
             {
-                    child.Document(tags, headingLevel + 1, indent+1);
+                    child.Document(tags, 0, indent+1);
             }
         }
     }

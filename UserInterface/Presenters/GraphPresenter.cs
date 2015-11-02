@@ -128,7 +128,8 @@ namespace UserInterface.Presenters
                 else if (definition.type == SeriesType.Scatter)
                     graphView.DrawLineAndMarkers(definition.title, definition.x, definition.y, 
                                                  definition.xAxis, definition.yAxis, definition.colour,
-                                                 definition.line, definition.marker, definition.showInLegend);
+                                                 definition.line, definition.marker, 
+                                                 definition.lineThickness, definition.markerSize, definition.showInLegend);
                 
                 else if (definition.type == SeriesType.Area)
                     graphView.DrawArea(definition.title, definition.x, definition.y, definition.x2, definition.y2,
@@ -212,7 +213,8 @@ namespace UserInterface.Presenters
 
             graphView.Export(img, true);
 
-            string fileName = Path.Combine(folder, graph.Name + ".png");
+            string path = Apsim.FullPath(graph).Replace(".Simulations.", "");
+            string fileName = Path.Combine(folder, path + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 
             return fileName;
@@ -301,6 +303,8 @@ namespace UserInterface.Presenters
                 if (definition.title == e.SeriesName)
                 {
                     e.HoverText = GetSimulationNameForPoint(e.X, e.Y);
+                    if (e.HoverText == null)
+                        e.HoverText = e.SeriesName;
                     return;
                 }
             }

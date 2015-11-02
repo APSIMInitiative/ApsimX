@@ -10,16 +10,17 @@ namespace Models.Agroforestry
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentModels = new Type[] { typeof(Simulation), typeof(Zone) })]
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class LocalMicroClimate : Model, IWeather
     {
 
         [Link]
         Weather weather = null; // parent weather.
         [Link]
-        StaticForestrySystem ParentSystem = null;
+        AgroforestrySystem ParentSystem = null;
         [Link]
-        Clock clock = null;
+        TreeProxy Tree = null;
 
         /// <summary>Gets the start date of the weather file</summary>
         public DateTime StartDate { get { return weather.StartDate; } }
@@ -37,7 +38,7 @@ namespace Models.Agroforestry
         public double Rain { get { return weather.Rain; } }
 
         /// <summary>Gets or sets the solar radiation. MJ/m2/day</summary>
-        public double Radn { get { return weather.Radn * (1-ParentSystem.GetShade(Parent as Zone) / 100); ; } }
+        public double Radn { get { return weather.Radn * (1-Tree.GetShade(Parent as Zone) / 100); ; } }
 
         /// <summary>Gets or sets the vapor pressure</summary>
         public double VP { get { return weather.VP; } }
@@ -45,7 +46,7 @@ namespace Models.Agroforestry
         /// <summary>
         /// Gets or sets the wind value found in weather file or zero if not specified.
         /// </summary>
-        public double Wind { get { return weather.Wind * ParentSystem.GetWindReduction(Parent as Zone, clock.Today); } }
+        public double Wind { get { return weather.Wind * ParentSystem.GetWindReduction(Parent as Zone); } }
 
         /// <summary>
         /// Gets or sets the CO2 level. If not specified in the weather file the default is 350.
@@ -62,7 +63,7 @@ namespace Models.Agroforestry
         public double Amp { get { return weather.Amp; } }
 
         /// <summary>Gets the duration of the day in hours.</summary>
-        public double DayLength { get { return weather.DayLength; } }
+        public double CalculateDayLength(double Twilight) { return weather.CalculateDayLength(Twilight); }
 
     }
 }

@@ -60,10 +60,6 @@ namespace Models.PMF.Organs
     public class Root : BaseOrgan, BelowGround
     {
         #region Links
-        /// <summary>The plant</summary>
-        [Link]
-        Plant Plant = null;
-
         /// <summary>The arbitrator</summary>
         [Link]
         OrganArbitrator Arbitrator = null;
@@ -72,7 +68,7 @@ namespace Models.PMF.Organs
         [Link]
         Soils.Soil Soil = null;
         #endregion
-        
+
         #region Parameters
         /// <summary>Gets or sets the initial dm.</summary>
         /// <value>The initial dm.</value>
@@ -97,7 +93,7 @@ namespace Models.PMF.Organs
         [Units("/d")]
         IFunction SenescenceRate = null;
         /// <summary>The temperature effect</summary>
-        [Link]
+        [Link(IsOptional = true)]
         [Units("0-1")]
         IFunction TemperatureEffect = null;
         /// <summary>The root front velocity</summary>
@@ -105,11 +101,11 @@ namespace Models.PMF.Organs
         [Units("mm/d")]
         IFunction RootFrontVelocity = null;
         /// <summary>The partition fraction</summary>
-        [Link]
+        [Link(IsOptional = true)]
         [Units("0-1")]
         IFunction PartitionFraction = null;
         /// <summary>The maximum n conc</summary>
-        [Link]
+        [Link(IsOptional = true)]
         [Units("g/g")]
         IFunction MaximumNConc = null;
         /// <summary>The maximum daily n uptake</summary>
@@ -117,13 +113,17 @@ namespace Models.PMF.Organs
         [Units("kg N/ha")]
         IFunction MaxDailyNUptake = null;
         /// <summary>The minimum n conc</summary>
-        [Link]
+        [Link(IsOptional = true)]
         [Units("g/g")]
         IFunction MinimumNConc = null;
         /// <summary>The kl modifier</summary>
         [Link]
         [Units("0-1")]
         IFunction KLModifier = null;
+        /// <summary>The Maximum Root Depth</summary>
+        [Link(IsOptional = true)]
+        [Units("0-1")]
+        IFunction MaximumRootDepth = null;
 
         #endregion
 
@@ -189,6 +189,7 @@ namespace Models.PMF.Organs
         {
             base.Clear();
             Uptake = null;
+            NitUptake = null;
             DeltaNH4 = null;
             DeltaNO3 = null;
             _SenescenceRate = 0;
@@ -319,7 +320,7 @@ namespace Models.PMF.Organs
                 _SenescenceRate = 0;
                 if (SenescenceRate != null) //Default of zero means no senescence
                     _SenescenceRate = SenescenceRate.Value;
-
+           
                 /*  if (Live.Wt == 0)
                   {
                       //determine how many layers to put initial DM into.
@@ -364,10 +365,15 @@ namespace Models.PMF.Organs
                 double TEM = (TemperatureEffect == null) ? 1 : TemperatureEffect.Value;
 
                 Depth = Depth + RootFrontVelocity.Value * soilCrop.XF[RootLayer] * TEM;
+
+                //Limit root depth for impeded layers
                 double MaxDepth = 0;
                 for (int i = 0; i < Soil.Thickness.Length; i++)
                     if (soilCrop.XF[i] > 0)
                         MaxDepth += Soil.Thickness[i];
+                //Limit root depth for the crop specific maximum depth
+                if (MaximumRootDepth != null)
+                    MaxDepth = Math.Min(MaximumRootDepth.Value, MaxDepth);
 
                 Depth = Math.Min(Depth, MaxDepth);
 
@@ -511,13 +517,9 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, EventArgs e)
+        public override void DoPlantEnding()
         {
-            if (sender == Plant)
-            {
+            
                 FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.Thickness.Length];
 
                 for (int layer = 0; layer < Soil.Thickness.Length; layer++)
@@ -545,9 +547,7 @@ namespace Models.PMF.Organs
                 IncorpFOM.Invoke(FomLayer);
 
                 Clear();
-            }
-        }
-
+       }
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
@@ -564,7 +564,7 @@ namespace Models.PMF.Organs
                 {
                     if (AccumulatedDepth < Depth)
                         InitialLayers += 1;
-                    AccumulatedDepth += Soil.SoilWater.Thickness[layer];
+                    AccumulatedDepth += Soil.Thickness[layer];
                 }
                 for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
@@ -587,7 +587,7 @@ namespace Models.PMF.Organs
             get
             {
                 double Demand = 0;
-                if (isGrowing)
+                if ((isGrowing)&&(PartitionFraction != null))
                     Demand = Arbitrator.DMSupply * PartitionFraction.Value;
                 TotalDMDemand = Demand;//  The is not really necessary as total demand is always not calculated on a layer basis so doesn't need summing.  However it may some day
                 return new BiomassPoolType { Structural = Demand };
@@ -740,8 +740,8 @@ namespace Models.PMF.Organs
                 foreach (Biomass Layer in LayerLive)
                 {
                     i += 1;
-                    StructuralNDemand[i] = Layer.PotentialDMAllocation * MinimumNConc.Value *  _NitrogenDemandSwitch;
-                    double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Layer.Wt + Layer.PotentialDMAllocation) - Layer.N);
+                    StructuralNDemand[i] = Layer.PotentialDMAllocation * MinNconc *  _NitrogenDemandSwitch;
+                    double NDeficit = Math.Max(0.0, MaxNconc * (Layer.Wt + Layer.PotentialDMAllocation) - (Layer.N + StructuralNDemand[i]));
                     NonStructuralNDemand[i] = Math.Max(0, NDeficit - StructuralNDemand[i]) * _NitrogenDemandSwitch;
                 }
                 TotalNonStructuralNDemand = MathUtilities.Sum(NonStructuralNDemand);
@@ -776,10 +776,16 @@ namespace Models.PMF.Organs
         /// <value>The water supply.</value>
         public override double[] NO3NSupply(List<ZoneWaterAndN> zones)
         {
-            if (zones.Count != 1)
-                throw new Exception("PMF can only deal with one soil arbitrator zone at the moment");
+             
+            // Model can only handle one root zone at present
+            ZoneWaterAndN MyZone = new ZoneWaterAndN();
+            Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+            foreach (ZoneWaterAndN Z in zones)
+                if (Z.Name == ParentZone.Name)
+                    MyZone = Z;
 
-            double[] NO3 = zones[0].NO3N;
+
+            double[] NO3 = MyZone.NO3N;
 
             double[] NO3Supply = new double[Soil.Thickness.Length];
 
@@ -812,10 +818,14 @@ namespace Models.PMF.Organs
         /// <value>The water supply.</value>
         public override double[] NH4NSupply(List<ZoneWaterAndN> zones)
         {
-            if (zones.Count != 1)
-                throw new Exception("PMF can only deal with one soil arbitrator zone at the moment");
+            // Model can only handle one root zone at present
+            ZoneWaterAndN MyZone = new ZoneWaterAndN();
+            Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+            foreach (ZoneWaterAndN Z in zones)
+                if (Z.Name == ParentZone.Name)
+                    MyZone = Z;
 
-            double[] NH4 = zones[0].NH4N;
+            double[] NH4 = MyZone.NH4N;
 
             double[] NH4Supply = new double[Soil.Thickness.Length];
 
@@ -888,21 +898,27 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
-        /// <value>The maximum nconc.</value>
+        /// <value>The maximum nconc.  Has a default of 0.01</value>
         public override double MaxNconc
         {
             get
             {
-                return MaximumNConc.Value;
+                if (MaximumNConc != null)
+                    return MaximumNConc.Value;
+                else
+                    return 0.01; 
             }
         }
         /// <summary>Gets or sets the minimum nconc.</summary>
-        /// <value>The minimum nconc.</value>
+        /// <value>The minimum nconc. Has a default of 0.01</value>
         public override double MinNconc
         {
             get
             {
-                return MinimumNConc.Value;
+                if (MinimumNConc != null)
+                    return MinimumNConc.Value;
+                else
+                    return 0.01;
             }
         }
 
@@ -911,10 +927,14 @@ namespace Models.PMF.Organs
         /// <value>The water supply.</value>
         public override double[] WaterSupply(List<ZoneWaterAndN> zones)
         {
-            if (zones.Count != 1)
-                throw new Exception("PMF can only deal with one soil arbitrator zone at the moment");
+            // Model can only handle one root zone at present
+            ZoneWaterAndN MyZone = new ZoneWaterAndN();
+            Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+            foreach (ZoneWaterAndN Z in zones)
+                if (Z.Name == ParentZone.Name)
+                    MyZone = Z;
 
-            double[] SW = zones[0].Water;
+            double[] SW = MyZone.Water;
             double[] supply = new double[Soil.Thickness.Length];
 
             double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
@@ -946,7 +966,7 @@ namespace Models.PMF.Organs
         
         /// <summary>Gets or sets the water uptake.</summary>
         /// <value>The water uptake.</value>
-        [Units("mm")]
+        [Units("kg/ha")]
         public override double NUptake
         {
             get {return NitUptake == null ? 0.0 : -MathUtilities.Sum(NitUptake);}
@@ -990,6 +1010,250 @@ namespace Models.PMF.Organs
         public event WaterChangedDelegate WaterChanged;
         #endregion
 
+        #region Biomass Removal
+        /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
+        [XmlIgnore]
+        public override OrganBiomassRemovalType RemoveBiomass
+        {
+            set
+            {
+                double RemainFrac = 1 - (value.FractionToResidue + value.FractionRemoved);
+                if (RemainFrac < 0)
+                    throw new Exception("The sum of FractionToResidue and FractionRemoved sent with your " + "Place holder for event sender" + " is greater than 1.  Had this execption not triggered you would be removing more biomass from " + Name + " than there is to remove");
+                if (RemainFrac < 1)
+                {
+                    FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.Thickness.Length];
 
+                    for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+                    {
+
+                        double DM = (LayerLive[layer].Wt + LayerDead[layer].Wt) * 10.0;
+                        double N = (LayerLive[layer].N + LayerDead[layer].N) * 10.0;
+
+                        FOMType fom = new FOMType();
+                        fom.amount = (float)DM;
+                        fom.N = (float)N;
+                        fom.C = (float)(0.40 * DM);
+                        fom.P = 0;
+                        fom.AshAlk = 0;
+
+                        FOMLayerLayerType Layer = new FOMLayerLayerType();
+                        Layer.FOM = fom;
+                        Layer.CNR = 0;
+                        Layer.LabileP = 0;
+
+                        FOMLayers[layer] = Layer;
+
+                        if (LayerLive[layer].StructuralWt > 0)
+                            LayerLive[layer].StructuralWt *= RemainFrac;
+                        if (LayerLive[layer].NonStructuralWt > 0)
+                            LayerLive[layer].NonStructuralWt *= RemainFrac;
+                        if (LayerLive[layer].StructuralN > 0)
+                            LayerLive[layer].StructuralN *= RemainFrac;
+                        if (LayerLive[layer].NonStructuralN > 0)
+                            LayerLive[layer].NonStructuralN *= RemainFrac;
+
+                    }
+                    Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name + " removing " + FractionRemoved * 100 + "% and returning " + FractionToResidue * 100 + "% to the soil organic matter");
+                    FOMLayerType FomLayer = new FOMLayerType();
+                    FomLayer.Type = Plant.CropType;
+                    FomLayer.Layer = FOMLayers;
+                    IncorpFOM.Invoke(FomLayer);
+                }
+            }
+        }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on harvest.
+        /// </summary>
+        public override OrganBiomassRemovalType HarvestDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0,
+                    FractionToResidue = 0.2
+                };
+            }
+        }
+
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        public override OrganBiomassRemovalType CutDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0,
+                    FractionToResidue = 0.3
+                };
+            }
+        }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        public override OrganBiomassRemovalType PruneDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0,
+                    FractionToResidue = 0.1
+                };
+            }
+        }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        public override OrganBiomassRemovalType GrazeDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0,
+                    FractionToResidue = 0.15
+                };
+            }
+        }
+        #endregion
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            Name = this.Name;
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            tags.Add(new AutoDocumentation.Paragraph(Name + " is parameterised using the PMF Root class which provides the core functions of taking up water and nutrients from the soil.  It is parameterised as follows.", indent));
+
+            // write memos.
+            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                memo.Document(tags, -1, indent);
+
+            //Describe root growth
+            tags.Add(new AutoDocumentation.Heading("Root Growth", headingLevel+1));
+            tags.Add(new AutoDocumentation.Paragraph("Roots grow downward through the soil profile and rate is determined by:",indent));
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                if (child.Name == "RootFrontVelocity")
+                    child.Document(tags, headingLevel + 5, indent + 1);
+            }
+
+            if (TemperatureEffect.GetType() == typeof(Constant))
+            {
+                //Temp having no effect so no need to document
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The RootFrontVelocity described above is influenced by temperature as:", indent));
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                {
+                    if (child.Name == "TemperatureEffect")
+                        child.Document(tags, headingLevel + 5, indent + 1);
+                }
+            }
+
+            tags.Add(new AutoDocumentation.Paragraph("The RootFrontVelocity is also influenced by the extension resistance posed by the soil, paramterised using the soil XF value", indent));
+
+            tags.Add(new AutoDocumentation.Heading("Drymatter Demands", headingLevel + 1));
+            // Describe biomass Demand
+            tags.Add(new AutoDocumentation.Paragraph("100% of the DM demanded from the root is structural", indent));
+
+            tags.Add(new AutoDocumentation.Paragraph("The daily DM demand from root is calculated as a proportion of total DM supply using:", indent));
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                if (child.Name == "PartitionFraction")
+                    child.Document(tags, headingLevel + 5, indent + 1);
+            }
+            
+            tags.Add(new AutoDocumentation.Heading("Nitrogen Demands", headingLevel + 1));
+            tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand from " + this.Name + " is the product of Total DM demand and a Nitrogen concentration of " + MinNconc * 100 + "%", indent));
+            if (NitrogenDemandSwitch != null)
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The Nitrogen demand swith is a multiplier applied to nitrogen demand so it can be turned off at certain phases.  For the " + Name + " Organ it is set as:", indent));
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                {
+                    if (child.Name == "NitrogenDemandSwitch")
+                        child.Document(tags, headingLevel + 5, indent);
+                }
+            }
+
+            tags.Add(new AutoDocumentation.Heading("Nitrogen Uptake", headingLevel + 1));
+            tags.Add(new AutoDocumentation.Paragraph("potential N uptake by the root system is calculated for each soil layer that the roots have extended into.", indent));
+            tags.Add(new AutoDocumentation.Paragraph("In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controllint the rate of extraction (kNO<sub>3</sub> and kNH<sub>4</sub>), the concentration of of N (ppm) and a soil moisture factor which decreases as the soil dries.", indent));
+            tags.Add(new AutoDocumentation.Paragraph("The KNO<sub>3</sub> and kNH<sub>4</sub> are calculated in relation to root length density in each layer as :", indent));
+            tags.Add(new AutoDocumentation.Paragraph("Need to produce a table of k fractors", indent));
+            tags.Add(new AutoDocumentation.Paragraph("Nitrogen uptake demand is limited to the maximum of potential uptake and the plants N demand.  Uptake N demand is then passed to the soil arbitrator which determines how much of their Nitrogen uptake demand each plant instance will be allowed to take up:", indent));
+
+            tags.Add(new AutoDocumentation.Heading("Water Uptake", headingLevel + 1));
+            tags.Add(new AutoDocumentation.Paragraph("Potential water uptake by the root system is calculated for each soil layer that the roots have extended into.", indent));
+            tags.Add(new AutoDocumentation.Paragraph("In each layer potential uptake is calculated as the product of the available Water in the layer, and a factor controllint the rate of extraction (kl)", indent));
+            tags.Add(new AutoDocumentation.Paragraph("The kl values are set in the soil and may be further modified by the crop.  are calculated in relation to root length density in each layer as :", indent));
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                {
+                    if (child.Name == "KLModifier")
+                        child.Document(tags, headingLevel + 5, indent + 1);
+                }
+                
+            // write Other functions.
+            bool NonStandardFunctions = false;
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                if  ((child.GetType() != typeof(Memo))
+                    | (child.GetType() != typeof(Biomass))
+                    | (child.Name != "MaximumNConc")
+                    | (child.Name != "MinimumNConc")
+                    | (child.Name != "NitrogenDemandSwitch")
+                    | (child.Name != "KLModifier")
+                    | (child.Name != "SoilWaterEffect")
+                    | (child.Name != "MaximumDailyUptake")
+                    | (child.Name != "SenescenceRate") | (child.Name != "MaximumNConc")
+                    | (child.Name != "TemperatureEffect")
+                    | (child.Name != "MaximumRootDepth")
+                    | (child.Name != "KLModifier")
+                    | (child.Name != "RootFrontVelocity")
+                    | (child.Name != "PartitionFraction"))
+                    {
+                        NonStandardFunctions = true;
+                    }
+            }
+
+            if (NonStandardFunctions)
+            {
+                tags.Add(new AutoDocumentation.Heading("Other functionality", headingLevel + 1));
+                tags.Add(new AutoDocumentation.Paragraph("In addition to the core functionality and parameterisation described above, the " + this.Name + " organ has additional functions used to provide paramters for core functions and create additional functionality", indent));
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                {
+                    if ((child.GetType() == typeof(Memo))
+                    | (child is Biomass)
+                    | (child.Name != "MaximumNConc")
+                    | (child.Name != "MinimumNConc")
+                    | (child.Name != "NitrogenDemandSwitch")
+                    | (child.Name != "KLModifier")
+                    | (child.Name != "SoilWaterEffect")
+                    | (child.Name != "MaximumDailyUptake")
+                    | (child.Name != "SenescenceRate") | (child.Name != "MaximumNConc")
+                    | (child.Name != "TemperatureEffect")
+                    | (child.Name != "MaximumRootDepth")
+                    | (child.Name != "KLModifier")
+                    | (child.Name != "RootFrontVelocity")
+                    | (child.Name != "PartitionFraction"))
+                    {//Already documented 
+                    }
+                    else
+                    {
+                        //tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel + 2));
+                        child.Document(tags, headingLevel + 2, indent + 1);
+                    }
+                }
+            }
+        }
     }
 }

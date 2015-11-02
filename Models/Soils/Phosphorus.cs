@@ -13,7 +13,7 @@ namespace Models.Soils
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    [ValidParent(typeof(Soil))]
+    [ValidParent(ParentType=typeof(Soil))]
     public class Phosphorus :Model
     {
         /// <summary>Gets or sets the root cp.</summary>

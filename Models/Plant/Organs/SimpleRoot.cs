@@ -17,10 +17,6 @@ namespace Models.PMF.Organs
     [Serializable]
     public class SimpleRoot : BaseOrgan // FIXME HEB This was inheriting from organ but changed to base organ to fix bug. Need to check collatoral impacts
     {
-        /// <summary>The plant</summary>
-        [Link]
-        Plant Plant = null;
-
         /// <summary>The dm demand function</summary>
         [Link]
         IFunction DMDemandFunction = null;
@@ -119,16 +115,6 @@ namespace Models.PMF.Organs
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
             if (data.Plant == Plant)
-                Clear();
-        }
-
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, EventArgs e)
-        {
-            if (sender == Plant)
                 Clear();
         }
 

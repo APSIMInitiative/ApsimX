@@ -18,9 +18,11 @@ namespace Models.PMF.Functions
         private double _Value = 0;
 
         /// <summary>The set event</summary>
+        [Description("The event that triggers change from pre to post event value")]
         public string SetEvent { get; set; }
 
         /// <summary>The re set event</summary>
+        [Description("(optional) The event resets to pre event value")]
         public string ReSetEvent {get; set;}
 
 
@@ -89,7 +91,7 @@ namespace Models.PMF.Functions
             tags.Add(new AutoDocumentation.Paragraph("Before " + SetEvent, indent));
             (PreEventValue as IModel).Document(tags, -1, indent + 1);
 
-            tags.Add(new AutoDocumentation.Paragraph("After " + SetEvent, indent));
+            tags.Add(new AutoDocumentation.Paragraph("On " + SetEvent + " the value is set to:", indent));
             (PostEventValue as IModel).Document(tags, -1, indent + 1);
         }
 

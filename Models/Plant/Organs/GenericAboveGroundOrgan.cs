@@ -12,11 +12,6 @@ namespace Models.PMF.Organs
     [Serializable]
     public class GenericAboveGroundOrgan : GenericOrgan, AboveGround
     {
-        /// <summary>The summary</summary>
-        [Link]
-        ISummary Summary = null;
-
-        #region Event handlers
         /// <summary>Called when [prune].</summary>
         /// <param name="Prune">The prune.</param>
         [EventSubscribe("Prune")]
@@ -27,18 +22,63 @@ namespace Models.PMF.Organs
             Live.Clear();
             Dead.Clear();
         }
-        /// <summary>Called when crop is being cut.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Cutting")]
-        private void OnCutting(object sender, EventArgs e)
-        {
-            if (sender == Plant)
-            {
-                Summary.WriteMessage(this, "Cutting");
 
-                Live.Clear();
-                Dead.Clear();
+        #region Biomass Removal
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on harvest.
+        /// </summary>
+        public override OrganBiomassRemovalType HarvestDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0.5,
+                    FractionToResidue = 0.1
+                };
+            }
+        }
+
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Cutting
+        /// </summary>
+        public override OrganBiomassRemovalType CutDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0.8,
+                    FractionToResidue = 0
+                };
+            }
+        }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Pruning
+        /// </summary>
+        public override OrganBiomassRemovalType PruneDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0,
+                    FractionToResidue = 0.6
+                };
+            }
+        }
+        /// <summary>
+        /// The default proportions biomass to removeed from each organ on Grazing
+        /// </summary>
+        public override OrganBiomassRemovalType GrazeDefault
+        {
+            get
+            {
+                return new OrganBiomassRemovalType
+                {
+                    FractionRemoved = 0.6,
+                    FractionToResidue = 0.2
+                };
             }
         }
         #endregion

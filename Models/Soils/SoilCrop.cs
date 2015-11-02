@@ -16,7 +16,7 @@ namespace Models.Soils
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    [ValidParent(typeof(Water))]
+    [ValidParent(ParentType=typeof(Water))]
     public class SoilCrop : Model, ISoilCrop
     {
         /// <summary>

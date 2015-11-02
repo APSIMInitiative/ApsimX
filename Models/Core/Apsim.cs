@@ -14,6 +14,9 @@ namespace Models.Core
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Xml;
     using APSIM.Shared.Utilities;
+    using PMF.Functions;
+    using PMF;
+    using Factorial;
 
     /// <summary>
     /// The API for models to discover other models, get and set variables in
@@ -82,7 +85,7 @@ namespace Models.Core
         public static IModel Parent(IModel model, Type typeFilter)
         {
             IModel obj = model;
-            while (obj.Parent != null && obj.GetType() != typeFilter)
+            while (obj.Parent != null && !typeFilter.IsAssignableFrom(obj.GetType()))
             {
                 obj = obj.Parent as IModel;
             }
@@ -427,48 +430,74 @@ namespace Models.Core
                     object linkedObject = null;
 
                     List<IModel> allMatches = FindAll(model, field.FieldType);
-                    if (allMatches.Count == 1)
-                    {
-                        linkedObject = allMatches[0];
-                    }
-                    else
-                    {
-                        // more that one match so use name to match
-                        foreach (IModel matchingModel in allMatches)
-                        {
-                            if (matchingModel.Name == field.Name)
-                            {
-                                linkedObject = matchingModel;
-                                break;
-                            }
-                        }
 
-                        // If the link isn't optional then choose the closest match.
-                        if (linkedObject == null && !link.IsOptional && allMatches.Count > 1)
-                        {
-                            // Return the first (closest) match.
-                            linkedObject = allMatches[0];
-                        }
-
-                        if ((linkedObject == null) && (!link.IsOptional))
-                        {
-                            errorMsg = string.Format(": Found {0} matches for {1} {2} !", allMatches.Count, field.FieldType.FullName, field.Name);
-                        }
+                    // Special cases: 
+                    //   if the type is an IFunction then must match on name and type.
+                    //   PMF organs have Live and Dead Biomass types. Need to link to correct one.
+                    //   Root1 has 'object NUptake3'. Need to use name to do link.
+                    if (typeof(IFunction).IsAssignableFrom(field.FieldType) ||
+                        typeof(IFunctionArray).IsAssignableFrom(field.FieldType) ||
+                        typeof(Biomass).IsAssignableFrom(field.FieldType) ||
+                        field.FieldType.Name == "Object")
+                    {
+                        linkedObject = allMatches.Find(m => m.Name == field.Name);
+                        if (linkedObject == null)
+                            allMatches.Clear();
                     }
+
+                    else if (allMatches.Count >= 1)
+                        linkedObject = allMatches[0];     // choose closest match.
+
+                    if ((linkedObject == null) && (!link.IsOptional))
+                        errorMsg = string.Format(": Found {0} matches for {1} {2} !", allMatches.Count, field.FieldType.FullName, field.Name);
 
                     if (linkedObject != null)
-                    {
                         field.SetValue(model, linkedObject);
-                    }
+
                     else if (!link.IsOptional)
-                    {
                         throw new ApsimXException(
                                     model,
                                     "Cannot resolve [Link] '" + field.ToString() + errorMsg);
-                    }
+
                 }
             }
         }
+
+        /// <summary>
+        /// Get all links. Useful for debugging.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetAllLinks(IModel model)
+        {
+            string st = string.Empty;
+
+            st += "\r\n******" + Apsim.FullPath(model) + "******\r\n";
+
+            // Go looking for [Link]s
+            foreach (FieldInfo field in ReflectionUtilities.GetAllFields(
+                                                            model.GetType(),
+                                                            BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
+            {
+                var link = ReflectionUtilities.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
+                if (link != null)
+                {
+                    st += field.Name + " = ";
+                    object value = field.GetValue(model);
+                    if (value == null)
+                        st += "null\r\n";
+                    else if (value is IModel)
+                        st += Apsim.FullPath(value as IModel) + "\r\n";
+                    else
+                        st += "??\r\n";
+                }
+            }
+
+            foreach (IModel child in model.Children)
+                st += GetAllLinks(child);
+
+            return st;
+        }
+
 
         /// <summary>
         /// Set to null all link fields in the specified model.
@@ -619,6 +648,57 @@ namespace Models.Core
             foreach (FieldInfo field in model.GetType().UnderlyingSystemType.GetFields(flags))
                 allProperties.Add(new VariableField(model, field));
             return allProperties.ToArray();
+        }
+
+        /// <summary>Return true if the child can be added to the parent.</summary>
+        /// <param name="parent">The parent model.</param>
+        /// <param name="childType">The child type.</param>
+        /// <returns>True if child can be added.</returns>
+        public static bool IsChildAllowable(object parent, Type childType)
+        {
+            if (childType == typeof(Simulations))
+                return false;
+
+            if (parent.GetType() == typeof(Folder) ||
+                parent.GetType() == typeof(Factor) ||
+                parent.GetType() == typeof(Replacements))
+                return true;
+
+            // Is allowable if this type (t) is an IFunction and the parent is in the PMF namespace.
+            if (parent.GetType().FullName.Contains("PMF") && childType.GetInterface("IFunction") != null)
+                return true;
+
+            // Is allowable if one of the valid parents of this type (t) matches the parent type.
+            foreach (ValidParentAttribute validParent in ReflectionUtilities.GetAttributes(childType, typeof(ValidParentAttribute), true))
+            {
+                if (validParent != null)
+                {
+                    if (validParent.DropAnywhere)
+                        return true;
+
+                    if (validParent.ParentType.IsAssignableFrom(parent.GetType()))
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>Get a list of allowable child models for the specified parent.</summary>
+        /// <param name="parent">The parent model.</param>
+        /// <returns>A list of allowable child models.</returns>
+        public static List<Type> GetAllowableChildModels(object parent)
+        {
+            List<Type> allowableModels = new List<Type>();
+            foreach (Type t in ReflectionUtilities.GetTypesThatHaveInterface(typeof(IModel)))
+            {
+                bool isAllowable = IsChildAllowable(parent, t);
+                if (isAllowable && allowableModels.Find(m => m.Name == t.Name) == null)
+                    allowableModels.Add(t);
+            }
+
+            allowableModels.Sort(new ReflectionUtilities.TypeComparer());
+            return allowableModels;
         }
 
         /// <summary>

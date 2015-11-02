@@ -18,6 +18,8 @@ using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.DocumentObjectModel.Shapes;
 using UserInterface.Classes;
 using MigraDoc.DocumentObjectModel.Fields;
+using Models.Agroforestry;
+using Models.Zones;
 
 namespace UserInterface.Commands
 {
@@ -36,7 +38,11 @@ namespace UserInterface.Commands
         private static Type[] modelTypesToRecurseDown = new Type[] {typeof(Folder),
                                                                     typeof(Simulations),
                                                                     typeof(Simulation),
-                                                                    typeof(Experiment)};
+                                                                    typeof(Experiment),
+                                                                    typeof(Zone),
+                                                                    typeof(AgroforestrySystem),
+                                                                    typeof(CircularZone),
+                                                                    typeof(RectangularZone)};
 
         /// <summary>A .bib file instance.</summary>
         private BibTeX bibTeX;
@@ -123,8 +129,7 @@ namespace UserInterface.Commands
         /// <returns>True if something was written to index.</returns>
         private void AddValidationTags(List<AutoDocumentation.ITag> tags, IModel modelToExport, int headingLevel, string workingDirectory)
         {
-            if (modelToExport.Name != "Simulations")
-                tags.Add(new AutoDocumentation.Heading(modelToExport.Name, headingLevel));
+            int savedIndex = tags.Count;
 
             // Look for child models that are a folder or simulation etc
             // that we need to recurse down through.
@@ -143,6 +148,10 @@ namespace UserInterface.Commands
                         child.Document(tags, headingLevel, 0);
                 }
             }
+
+            bool somethingAdded = savedIndex != tags.Count;
+            if (somethingAdded && modelToExport.Name != "Simulations")
+                tags.Insert(savedIndex, new AutoDocumentation.Heading(modelToExport.Name, headingLevel));
         }
 
         #region PDF
@@ -190,6 +199,8 @@ namespace UserInterface.Commands
             // Document model validation.
             tags.Add(new AutoDocumentation.Heading("Validation", 1));
             AddValidationTags(tags, ExplorerPresenter.ApsimXFile, 1, workingDirectory);
+
+
 
             // Scan for citations.
             ScanForCitations(tags);
@@ -260,7 +271,8 @@ namespace UserInterface.Commands
             // Create a line series.
             graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y,
                                      Models.Graph.Axis.AxisType.Bottom, Models.Graph.Axis.AxisType.Left,
-                                     System.Drawing.Color.Blue, Models.Graph.LineType.Solid, Models.Graph.MarkerType.None, true);
+                                     System.Drawing.Color.Blue, Models.Graph.LineType.Solid, Models.Graph.MarkerType.None,
+                                     Models.Graph.LineThicknessType.Normal, Models.Graph.MarkerSizeType.Normal, true);
 
             // Format the axes.
             graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN);
@@ -321,7 +333,7 @@ namespace UserInterface.Commands
                 if (tag is AutoDocumentation.Heading)
                 {
                     AutoDocumentation.Heading heading = tag as AutoDocumentation.Heading;
-                    if (heading.headingLevel > 0 && heading.headingLevel < 4)
+                    if (heading.headingLevel > 0 && heading.headingLevel <= 6)
                     {
                         Paragraph para = section.AddParagraph(heading.text, "Heading" + heading.headingLevel);
                         if (heading.headingLevel == 1)
@@ -332,6 +344,10 @@ namespace UserInterface.Commands
                             para.Format.OutlineLevel = OutlineLevel.Level3;
                         else if (heading.headingLevel == 4)
                             para.Format.OutlineLevel = OutlineLevel.Level4;
+                        else if (heading.headingLevel == 5)
+                            para.Format.OutlineLevel = OutlineLevel.Level5;
+                        else if (heading.headingLevel == 6)
+                            para.Format.OutlineLevel = OutlineLevel.Level6;
                     }
                 }
                 else if (tag is AutoDocumentation.Paragraph)
@@ -347,6 +363,7 @@ namespace UserInterface.Commands
                     GraphPresenter graphPresenter = new GraphPresenter();
                     GraphView graphView = new GraphView();
                     graphView.BackColor = System.Drawing.Color.White;
+                    graphView.FontSize = 12;
                     graphPresenter.Attach(tag, graphView, ExplorerPresenter);
                     string PNGFileName = graphPresenter.ExportToPDF(workingDirectory);
                     section.AddImage(PNGFileName);
@@ -381,6 +398,7 @@ namespace UserInterface.Commands
             }
         }
 
+
         /// <summary>Scans for citations.</summary>
         /// <param name="t">The tags to go through looking for citations.</param>
         private void ScanForCitations(List<AutoDocumentation.ITag> tags)
@@ -413,13 +431,14 @@ namespace UserInterface.Commands
 
                                 // If we haven't encountered it, look it up in the .bib file.
                                 if (citation == null)
+                                {
                                     citation = bibTeX.Lookup(inTextCitation);
+                                    if (citation != null)
+                                        citations.Add(citation);
+                                }
 
                                 if (citation != null)
                                 {
-                                    // Add it to our list of citations.
-                                    citations.Add(citation);
-
                                     // Replace the in-text citation with (author et al., year)
                                     if (replacementText != string.Empty)
                                         replacementText += "; ";
@@ -454,8 +473,7 @@ namespace UserInterface.Commands
             citations.Sort(new BibTeX.CitationComparer());
             foreach (BibTeX.Citation citation in citations)
             {
-                string url = citation.URL.Replace("=", "EQUALS");
-                url = url.Replace("&", "AND");
+                string url = citation.URL;
                 string text;
                 if (url != string.Empty)
                     text = string.Format("<a href=\"{0}\">{1}</a>", url, citation.BibliographyText);

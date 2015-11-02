@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using Models.PMF.Organs;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This phase extends from the end of the previous phase until the end of leaf appearance.  The duration of this phase is determined by leaf appearance and the final main stem leaf number.
+    /// This phase extends from the end of the previous phase until the end of leaf appearance.  The duration of this phase is determined by leaf appearance and the final main stem leaf number.  
+    /// As such, the model parameterisation of leaf appearance and final leaf number (set in the Structure object) are important for predicting the duration of the crop correctly.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -85,6 +87,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Return a fraction of phase complete.</summary>
         /// <value>The fraction complete.</value>
+        [XmlIgnore]
         public override double FractionComplete
         {
             get
@@ -94,10 +97,12 @@ namespace Models.PMF.Phen
                 if (F > 1) F = 1;
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
             }
+            set
+            {
+                throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
+            }
         }
-
-
-    }
+     }
 }
 
       

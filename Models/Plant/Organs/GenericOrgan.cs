@@ -40,14 +40,6 @@ namespace Models.PMF.Organs
     [Serializable]
     public class GenericOrgan : BaseOrgan, IArbitration
     {
-        #region Class Dependency Links and Structures
-        /// <summary>The plant</summary>
-        [Link]
-        protected Plant Plant = null;
-
-        [Link]
-        ISurfaceOrganicMatter SurfaceOrganicMatter = null;
-        #endregion
 
         #region Class Structures
         /// <summary>The start live</summary>
@@ -68,10 +60,6 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         [Units("/d")]
         IFunction NReallocationFactor = null;
-        /// <summary>The n retranslocation factor</summary>
-        [Link(IsOptional = true)]
-        [Units("/d")]
-        IFunction DMReallocationFactor = null;
         /// <summary>The n retranslocation factor</summary>
         [Link(IsOptional = true)]
         [Units("/d")]
@@ -164,13 +152,6 @@ namespace Models.PMF.Organs
         [Units("g/m^2")]
         public double LiveFWt { get; set; }
 
-        /// <summary>Gets  the potentail amount reallocated yeasterday</summary>
-        /// <value>The reallocated wt.</value>
-        [XmlIgnore]
-        [Units("g/m^2")]
-        public double DailyReallocationPot { get { return PotentialDMAllocation; } private set { } }
-
-
         #endregion
 
         #region Organ functions
@@ -221,36 +202,11 @@ namespace Models.PMF.Organs
                 double _DMRetranslocationFactor = 0;
                 if (DMRetranslocationFactor != null) //Default of 0 means retranslocation is always truned off!!!!
                     _DMRetranslocationFactor = DMRetranslocationFactor.Value;
-                double _DMReallocationFactor = 0;
-                double _DMReallocated = 0;
-                //if ((DMReallocationFactor != null) && (SenescenceRateFunction != null))
-                //    _DMReallocationFactor = 0* DMReallocationFactor.Value;
-                    /* RFZ we need reallocation however we also need to conserve biomass
-                    /** TO Do
-                 */   
-                if ((DMReallocationFactor != null) && (SenescenceRateFunction != null)) 
-                    {
-
-                        // DM to reallocate.
-                        _DMReallocationFactor = DMReallocationFactor.Value;
-                        double SenescedFrac = SenescenceRateFunction.Value;
-                        double _DMMetabolicDMReallocationSupply = StartLive.MetabolicWt * SenescedFrac * _DMReallocationFactor;
-                        double _DMNonStructuralDMReallocationSupply = StartLive.NonStructuralWt * SenescedFrac * _DMReallocationFactor;
-
-                        _DMReallocated = _DMMetabolicDMReallocationSupply + _DMNonStructuralDMReallocationSupply;
-
-                    }
-                    else
-                    {
-                        _DMReallocated = 0;
-
-                    }
-                   
-                    return new BiomassSupplyType
+                return new BiomassSupplyType
                 {
                     Fixation = 0,
                     Retranslocation = StartLive.NonStructuralWt * _DMRetranslocationFactor,
-                    Reallocation = _DMReallocated
+                    Reallocation = 0
                 };
             }
         }
@@ -313,7 +269,7 @@ namespace Models.PMF.Organs
                 if (value.NonStructural < -0.0000000001)
                     throw new Exception("-ve NonStructuralDM Allocation to " + Name);
                 if ((value.NonStructural - DMDemand.NonStructural) > 0.0000000001)
-                    throw new Exception("StructuralDM Allocation to " + Name + " is in excess of its Capacity");
+                    throw new Exception("Non StructuralDM Allocation to " + Name + " is in excess of its Capacity");
                 if (DMDemand.NonStructural > 0)
                     Live.NonStructuralWt += value.NonStructural;
 
@@ -386,6 +342,8 @@ namespace Models.PMF.Organs
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// 
+
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -398,6 +356,8 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
+            FractionRemoved = 0;
+            FractionToResidue = 0;
             if (data.Plant == Plant)
                 Clear();
         }
@@ -486,19 +446,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        protected void OnPlantEnding(object sender, EventArgs e)
-        {
-            if (sender == Plant)
-            {
-                if (TotalDM > 0)
-                    SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
-                Clear();
-            }
-        }
         #endregion
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
@@ -518,13 +465,13 @@ namespace Models.PMF.Organs
 
             tags.Add(new AutoDocumentation.Heading("Dry Matter Demands", headingLevel + 1));
             if (StructuralFraction != null)
-                tags.Add(new AutoDocumentation.Paragraph("Of the organs total DM demand " + StructuralFraction.Value * 100 + "% is structural demand and " + (100 - StructuralFraction.Value * 100) + "is non-structural demand", indent));
+                tags.Add(new AutoDocumentation.Paragraph("Of the organs total DM demand " + StructuralFraction.Value * 100 + "% is structural demand and " + (100 - StructuralFraction.Value * 100) + "is non-structural demand.", indent));
             else
-                tags.Add(new AutoDocumentation.Paragraph("100% of the DM demanded from this organ is structural", indent));
+                tags.Add(new AutoDocumentation.Paragraph("100% of the DM demanded from this organ is structural.", indent));
 
             if (DMDemandFunction != null)
             {
-                tags.Add(new AutoDocumentation.Paragraph("The daily DM demand from this organ is calculated using", indent));
+                tags.Add(new AutoDocumentation.Paragraph("The daily DM demand from this organ is calculated using.", indent));
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 {
                     if (child.Name == "DMDemandFunction")
@@ -535,38 +482,39 @@ namespace Models.PMF.Organs
             tags.Add(new AutoDocumentation.Heading("Nitrogen Demands", headingLevel + 1));
             if (MaximumNConc != null)
             {
-                tags.Add(new AutoDocumentation.Paragraph("The daily non-structural N demand from this organ is the product of Total DM demand and a Maximum N concentration of " + MaximumNConc.Value * 100 + "% less the structural N demand", indent));
+                tags.Add(new AutoDocumentation.Paragraph("The daily non-structural N demand from " + this.Name + " is the product of Total DM demand and a Maximum N concentration of " + MaximumNConc.Value * 100 + "% less the structural N demand.", indent));
             }
             if (MinimumNConc != null)
             {
-                tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand from this organ is the product of Total DM demand and a Minimum N concentration of " + MinimumNConc.Value * 100 + "%", indent));
+                tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand from " + this.Name + " is the product of Total DM demand and a Minimum N concentration of " + MinimumNConc.Value * 100 + "%", indent));
             }
             if (NitrogenDemandSwitch != null)
             {
                 tags.Add(new AutoDocumentation.Paragraph("The Nitrogen demand swith is a multiplier applied to nitrogen demand so it can be turned off at certain phases.  For the " + Name + " Organ it is set as:", indent));
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 {
-                    child.Document(tags, headingLevel + 1, indent + 1);
+                    if (child.Name == "NitrogenDemandSwitch")
+                        child.Document(tags, headingLevel + 1, indent + 1);
                 }
             }
             
             tags.Add(new AutoDocumentation.Heading("Nitrogen Supplies", headingLevel + 1));
             if (NReallocationFactor != null)
-                tags.Add(new AutoDocumentation.Paragraph("As the organ senesces " +NReallocationFactor.Value * 100 + "% of senesced N is made available to the arbitrator as NReallocationSupply", indent));
+                tags.Add(new AutoDocumentation.Paragraph("As the organ senesces " +NReallocationFactor.Value * 100 + "% of senesced N is made available to the arbitrator as NReallocationSupply.", indent));
             else
-                tags.Add(new AutoDocumentation.Paragraph("N is not reallocated from this oragn", indent));
+                tags.Add(new AutoDocumentation.Paragraph("N is not reallocated from " + this.Name + ". ", indent));
 
             if (NRetranslocationFactor != null)
-                tags.Add(new AutoDocumentation.Paragraph(NRetranslocationFactor.Value * 100 + "% of non-structural N is made available to the arbitrator as NRetranslocationSupply", indent));
+                tags.Add(new AutoDocumentation.Paragraph(NRetranslocationFactor.Value * 100 + "% of non-structural N is made available to the arbitrator as NRetranslocationSupply.", indent));
             else
-                tags.Add(new AutoDocumentation.Paragraph("Non-structural N in this organ is not available for re-translocation to other organs", indent));
+                tags.Add(new AutoDocumentation.Paragraph("Non-structural N in " + this.Name + "  is not available for re-translocation to other organs.", indent));
 
             tags.Add(new AutoDocumentation.Heading("Dry Matter Supplies", headingLevel + 1));
             if (DMRetranslocationFactor != null)
-                tags.Add(new AutoDocumentation.Paragraph(DMRetranslocationFactor.Value * 100 + "% of NonStructural DM is made available to the arbitrator as DMReTranslocationSupply", indent));
+                tags.Add(new AutoDocumentation.Paragraph(DMRetranslocationFactor.Value * 100 + "% of NonStructural DM is made available to the arbitrator as DMReTranslocationSupply.", indent));
             else
-                tags.Add(new AutoDocumentation.Paragraph("DM is not retranslocated out of this organ", indent));
-            
+                tags.Add(new AutoDocumentation.Paragraph("DM is not retranslocated out of " + this.Name + ". ", indent));
+
             tags.Add(new AutoDocumentation.Heading("Biomass Senescece and Detachment", headingLevel + 1));
             if (SenescenceRateFunction != null)
             {
@@ -594,15 +542,52 @@ namespace Models.PMF.Organs
 
 
             // write children.
-            tags.Add(new AutoDocumentation.Heading("Other functionality", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("In addition to the core functionality and parameterisation described above, this organ has additional functions used to provide paramters for core functions or to build additional functionality onto the core base organ " + Name, indent));
+            bool NonStandardFunctions = false;
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
             {
-                if ((child.Name == "StructuralFraction") | (child.Name == "DMDemandFunction") | (child.Name == "MaximumNConc") | (child.Name == "MinimumNConc") | (child.Name == "NitrogenDemandSwitch") | (child.Name == "NReallocationFactor") | (child.Name == "NRetranslocationFactor") | (child.Name == "DMRetranslocationFactor") | (child.Name == "SenescenceRateFunction") | (child.Name == "DetachmentRateFunctionFunction") | (child is Biomass))
-                {//Already documented 
+                if (((child.Name != "StructuralFraction") 
+                    | (child.Name != "DMDemandFunction")
+                    | (child.Name != "MaximumNConc")
+                    | (child.Name != "MinimumNConc")
+                    | (child.Name != "NitrogenDemandSwitch") 
+                    | (child.Name != "NReallocationFactor") 
+                    | (child.Name != "NRetranslocationFactor")
+                    | (child.Name != "DMRetranslocationFactor")
+                    | (child.Name != "SenescenceRateFunction") 
+                    | (child.Name != "DetachmentRateFunctionFunction") 
+                    | (child is Biomass))
+                    && (child.GetType() != typeof(Memo)))
+                {
+                    NonStandardFunctions = true;
                 }
-                else
-                    child.Document(tags, headingLevel + 2, indent + 2);
+            }
+
+            if (NonStandardFunctions)
+            {
+                tags.Add(new AutoDocumentation.Heading("Other functionality", headingLevel + 1));
+                tags.Add(new AutoDocumentation.Paragraph("In addition to the core processes and parameterisation described above, the " + this.Name + " organ has extra functions which may be referenced by core parameterisation and create additional functionality", indent));
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                {
+                    if ((child.Name == "StructuralFraction") 
+                        | (child.Name == "DMDemandFunction") 
+                        | (child.Name == "MaximumNConc") 
+                        | (child.Name == "MinimumNConc") 
+                        | (child.Name == "NitrogenDemandSwitch") 
+                        | (child.Name == "NReallocationFactor") 
+                        | (child.Name == "NRetranslocationFactor") 
+                        | (child.Name == "DMRetranslocationFactor") 
+                        | (child.Name == "SenescenceRateFunction") 
+                        | (child.Name == "DetachmentRateFunctionFunction") 
+                        | (child is Biomass) 
+                        | (child.GetType() == typeof(Memo)))
+                    {//Already documented 
+                    }
+                    else
+                    {
+                        //tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel + 2));
+                        child.Document(tags, headingLevel + 2, indent + 1);
+                    }
+                }
             }
         }
     }

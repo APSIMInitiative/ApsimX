@@ -12,7 +12,7 @@ namespace Models
     /// TODO: Update summary.
     /// </summary>
     [Serializable]
-    [ValidParent(typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Simulation))]
     public class NullSummary : Model, ISummary
     {
         /// <summary>

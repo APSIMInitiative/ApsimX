@@ -8,6 +8,7 @@ namespace Models.Soils.Arbitrator
     using System;
     using System.Collections.Generic;
     using Models.Core;
+    using Interfaces;
 
     /// <summary>
     /// The APSIM farming systems model has a long history of use for simulating mixed or intercropped systems.  Doing this requires methods for simulating the competition of above and below ground resources.  Above ground competition for light has been calculated within APSIM assuming a mixed turbid medium using the Beer-Lambert analogue as described by [Keating1993Intercropping].  The MicroClimate [Snow2004Micromet] model now used within APSIM builds upon this by also calculating the impact of mutual shading on canopy conductance and partitions aerodynamic conductance to individual species in applying the Penman-Monteith model for calculating potential crop water use.  The arbitration of below ground resources of water and nitrogen is calculated by this model.
@@ -55,9 +56,22 @@ namespace Models.Soils.Arbitrator
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentModels=new Type[] { typeof(Zone), typeof(Simulation) })]
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class SoilArbitrator : Model
     {
+        private List<IModel> uptakeModels = null;
+
+
+        /// <summary>Called at the start of the simulation.</summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">Dummy event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            uptakeModels = Apsim.ChildrenRecursively(Parent, typeof(IUptake));
+        }
+
         /// <summary>Called by clock to do water arbitration</summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="e">Dummy event data.</param>
@@ -85,10 +99,10 @@ namespace Models.Soils.Arbitrator
             SoilState InitialSoilState = new SoilState(this.Parent);
             InitialSoilState.Initialise();
 
-            Estimate UptakeEstimate1 = new Estimate(this.Parent, arbitrationType, InitialSoilState);
-            Estimate UptakeEstimate2 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate1 * 0.5);
-            Estimate UptakeEstimate3 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate2 * 0.5);
-            Estimate UptakeEstimate4 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate3);
+            Estimate UptakeEstimate1 = new Estimate(this.Parent, arbitrationType, InitialSoilState, uptakeModels);
+            Estimate UptakeEstimate2 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate1 * 0.5, uptakeModels);
+            Estimate UptakeEstimate3 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate2 * 0.5, uptakeModels);
+            Estimate UptakeEstimate4 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate3, uptakeModels);
 
             List<CropUptakes> UptakesFinal = new List<CropUptakes>();
             foreach (CropUptakes U in UptakeEstimate1.Values)

@@ -9,10 +9,14 @@ using Models.Interfaces;
 namespace Models.PMF.Functions.SupplyFunctions
 {
     /// <summary>
-    /// An RUE model
+    /// Biomass accumulation is the product of the amount of intercepted radiation and its 
+    /// conversion efficiency, the radiation use efficiency (RUE) [Monteith1977].  
+    /// This approach simulates net photosynthesis rather than providing separate estimates 
+    /// of growth and respiration.  RUE is calculated from a potential value which is discounted 
+    /// using stress factors that account for plant nutrition (Fn), air temperature(Ft), vapour pressure deficit (Fvpd), water supply (Fw) and atmospheric CO2 concentration (Fco2).
     /// </summary>
     [Serializable]
-    public class RUEModel : Model
+    public class RUEModel : Model, IFunction
     {
         /// <summary>The rue</summary>
         [Link]
@@ -41,8 +45,11 @@ namespace Models.PMF.Functions.SupplyFunctions
         /// <summary>The met data</summary>
         [Link]
         IWeather MetData = null;
-
-
+        
+        /// <summary>The radiation interception data</summary>
+        [Link]
+        public IFunction RadnInt = null;
+        
         #region Class Data Members
         //[Input]
         //public NewMetType MetData;
@@ -69,8 +76,6 @@ namespace Models.PMF.Functions.SupplyFunctions
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Total plant "actual" radiation use efficiency (for the day) corrected by reducing factors (g biomass/MJ global solar radiation) CHCK-EIT
         /// </summary>
@@ -85,21 +90,14 @@ namespace Models.PMF.Functions.SupplyFunctions
             }
         }
         /// <summary>Daily growth increment of total plant biomass</summary>
-        /// <param name="RadnInt">intercepted radiation</param>
         /// <returns>g dry matter/m2 soil/day</returns>
-        public double Growth(double RadnInt)
-        {
-            return RadnInt * RueAct;
-        }
-
-        /// <summary>Gets the FRGR.</summary>
-        /// <value>The FRGR.</value>
-        public double FRGR
+        public double Value
         {
             get
             {
-                return Math.Min(FT.Value, Math.Min(FN.Value, FVPD.Value));
+                return RadnInt.Value * RueAct;
             }
         }
+        #endregion
     }
 }

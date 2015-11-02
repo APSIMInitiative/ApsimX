@@ -7,13 +7,15 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.IO;
 using APSIM.Shared.Utilities;
+using Models.Factorial;
 
 namespace Models.Core 
 {
     /// <summary>
     /// A simulation model
     /// </summary>
-    [ValidParent(typeof(Simulations))]
+    [ValidParent(ParentType = typeof(Simulations))]
+    [ValidParent(ParentType = typeof(Experiment))]
     [Serializable]
     public class Simulation : Zone, JobManager.IRunnable
     {
@@ -60,9 +62,6 @@ namespace Models.Core
             }
         }
 
-        /// <summary>Get a reference to the clock model.</summary>
-        [Link] private Clock Clock = null;
-
         /// <summary>To commence the simulation, this event will be invoked.</summary>
         public event EventHandler DoCommence;
 
@@ -95,50 +94,31 @@ namespace Models.Core
             {
                 StartRun();
                 DoRun(sender);
-                CleanupRun(null);
+                CleanupRun();
             }
             catch (ApsimXException err)
             {
-                DateTime errorDate = Clock.Today;
-                
-                string Msg = "ERROR in file: " + FileName + "\r\n" +
-                             "Simulation name: " + Name + "\r\n";
-                Msg += err.Message;
-                if (err.InnerException != null)
-                    Msg += "\r\n" + err.InnerException.Message + "\r\n" + err.InnerException.StackTrace;
-                else
-                    Msg += "\r\n" + err.StackTrace;
+                ErrorMessage = "ERROR in file: " + FileName + "\r\n" +
+                               "Simulation name: " + Name + "\r\n" +
+                               err.ToString();
 
-                string modelFullPath = string.Empty;
-                if (err.model != null)
-                {
-                    modelFullPath = Apsim.FullPath(err.model);
-                }
-
-                ErrorMessage = Msg;
                 ISummary summary = Apsim.Find(this, typeof(Summary)) as ISummary;
-                summary.WriteMessage(this, Msg);
-                CleanupRun(Msg);
+                summary.WriteMessage(this, ErrorMessage);
+                CleanupRun();
 
-                throw new Exception(Msg);
+                throw new Exception(ErrorMessage);
             }
             catch (Exception err)
             {
-                DateTime errorDate = Clock.Today;
-                string Msg = "ERROR in file: " + FileName + "\r\n" +
-                             "Simulation name: " + Name + "\r\n"; 
-                Msg += err.Message;
-                if (err.InnerException != null)
-                    Msg += "\r\n" + err.InnerException.Message + "\r\n" + err.InnerException.StackTrace;
-                else
-                    Msg += "\r\n" + err.StackTrace;
+                ErrorMessage = "ERROR in file: " + FileName + "\r\n" +
+                               "Simulation name: " + Name + "\r\n" + 
+                               err.ToString();
 
-                ErrorMessage = Msg; 
                 ISummary summary = Apsim.Find(this, typeof(Summary)) as ISummary;
-                summary.WriteMessage(this, Msg);
-                CleanupRun(Msg);
+                summary.WriteMessage(this, ErrorMessage);
+                CleanupRun();
 
-                throw new Exception(Msg);
+                throw new Exception(ErrorMessage);
             }
             if (e != null)
                 e.Result = this;
@@ -161,7 +141,6 @@ namespace Models.Core
             _IsRunning = true;
             
             Locater.Clear();
-            Console.WriteLine("Running: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name);
             if (Commencing != null)
                 Commencing.Invoke(this, new EventArgs());
         }
@@ -178,7 +157,7 @@ namespace Models.Core
         }
 
         /// <summary>Cleanup after the run.</summary>
-        public void CleanupRun(string errorMessage)
+        public void CleanupRun()
         {
             _IsRunning = false;
 
@@ -194,13 +173,6 @@ namespace Models.Core
             }
 
             timer.Stop();
-            if (errorMessage == null)
-                Console.WriteLine("Completed: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name + " [" + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]");
-            else
-            {
-                Console.WriteLine("Completed with errors: " + Path.GetFileNameWithoutExtension(FileName));
-                Console.WriteLine(errorMessage);
-            }
         }
 
 
