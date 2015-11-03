@@ -11,7 +11,8 @@
       </Cultivar>
       <Cultivar>
         <Name>Brigadier</Name>
-        <Command />
+        <Command>[Leaf].CohortParameters.MaxArea.XYPairs.X = 1, 6, 12, 16, 20, 25, 60</Command>
+        <Command>[Leaf].CohortParameters.MaxArea.XYPairs.Y = 600, 12000, 54000, 48000, 42000, 600, 240</Command>
       </Cultivar>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
