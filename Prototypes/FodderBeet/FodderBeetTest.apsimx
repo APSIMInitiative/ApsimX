@@ -252,10 +252,23 @@
         </PhaseLookupValue>
         <PhaseLookupValue>
           <Name>MainStemNodeAppearanceRate</Name>
-          <Constant>
+          <LinearInterpolationFunction>
             <Name>Phyllochron</Name>
-            <Value>50</Value>
-          </Constant>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>1</double>
+                <double>4</double>
+                <double>4.1</double>
+              </X>
+              <Y>
+                <double>100</double>
+                <double>100</double>
+                <double>48</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[FodderBeet].Structure.MainStemNodeNo</XProperty>
+          </LinearInterpolationFunction>
           <Start>PreEmerge</Start>
           <End>Maturity</End>
         </PhaseLookupValue>
@@ -417,7 +430,7 @@
           <Name>ExtinctionCoeff</Name>
           <Constant>
             <Name>PotentialExtinctionCoeff</Name>
-            <Value>0.9</Value>
+            <Value>0.75</Value>
           </Constant>
           <LinearInterpolationFunction>
             <Name>WaterStress</Name>
