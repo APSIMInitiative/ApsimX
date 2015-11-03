@@ -11,8 +11,7 @@
       </Cultivar>
       <Cultivar>
         <Name>Brigadier</Name>
-        <Command>[Leaf].CohortParameters.MaxArea.XYPairs.X = 1, 6, 12, 18, 21</Command>
-        <Command>[Leaf].CohortParameters.MaxArea.XYPairs.Y = 6000,	12000,	60000,	12000,	6000</Command>
+        <Command />
       </Cultivar>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
@@ -497,15 +496,19 @@
                 <double>1</double>
                 <double>6</double>
                 <double>12</double>
-                <double>18</double>
-                <double>21</double>
+                <double>16</double>
+                <double>20</double>
+                <double>25</double>
+                <double>60</double>
               </X>
               <Y>
-                <double>5000</double>
+                <double>500</double>
                 <double>10000</double>
-                <double>50000</double>
-                <double>10000</double>
-                <double>5000</double>
+                <double>45000</double>
+                <double>40000</double>
+                <double>35000</double>
+                <double>500</double>
+                <double>200</double>
               </Y>
             </XYPairs>
             <XProperty>[Structure].MainStemNodeNo</XProperty>
@@ -3158,7 +3161,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Crop Biomass (g/m2)</Title>
+          <Title>Leaves per plant (n)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
