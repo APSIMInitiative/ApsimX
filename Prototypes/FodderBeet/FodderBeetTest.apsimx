@@ -35,13 +35,15 @@
                   <Name>XYPairs</Name>
                   <X>
                     <double>0</double>
-                    <double>20</double>
-                    <double>35</double>
+                    <double>25</double>
+                    <double>30</double>
+                    <double>45</double>
                   </X>
                   <Y>
                     <double>0</double>
-                    <double>20</double>
-                    <double>35</double>
+                    <double>25</double>
+                    <double>25</double>
+                    <double>0</double>
                   </Y>
                 </XYPairs>
                 <maxt_soil_surface>20</maxt_soil_surface>
@@ -58,13 +60,15 @@
                   <Name>XYPairs</Name>
                   <X>
                     <double>0</double>
-                    <double>20</double>
-                    <double>35</double>
+                    <double>25</double>
+                    <double>30</double>
+                    <double>45</double>
                   </X>
                   <Y>
                     <double>0</double>
-                    <double>20</double>
-                    <double>35</double>
+                    <double>25</double>
+                    <double>25</double>
+                    <double>0</double>
                   </Y>
                 </XYPairs>
               </AirTemperatureFunction>
@@ -115,8 +119,8 @@
           </VariableReference>
           <Start>Germination</Start>
           <End>PreEmerge</End>
-          <ShootLag>15</ShootLag>
-          <ShootRate>30</ShootRate>
+          <ShootLag>1</ShootLag>
+          <ShootRate>15</ShootRate>
         </EmergingPhase>
         <GenericPhase>
           <Name>Emerging</Name>
