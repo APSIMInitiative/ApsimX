@@ -1718,13 +1718,6 @@
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1788,13 +1781,6 @@
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1853,13 +1839,6 @@
       </Axis>
       <Axis>
         <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -2551,6 +2530,11 @@
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
       <FileName>%root%\Prototypes\FodderBeet\Observations\Lincoln2014Observed_Interception.txt</FileName>
     </Input>
+    <Input>
+      <Name>BoltObserved</Name>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
+      <FileName>Observations\BoltingObserved.txt</FileName>
+    </Input>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
@@ -3134,7 +3118,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Crop Biomass (g/m2)</Title>
+          <Title>Thermal-time (oCd)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -3197,7 +3181,70 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Crop Biomass (g/m2)</Title>
+          <Title>Stage</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Bolting</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FodderBeet.Phenology.Stage</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>Diamond</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>BoltObserved</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Phenology.StageCode.Value</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Phenological stage</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -3279,6 +3326,48 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>MaxLeafArea</Name>
+        <Series>
+          <Name>MaxLeafArea</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16711936</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>FodderBeet.Structure.MainStemNodeNo</XFieldName>
+          <YFieldName>FodderBeet.Leaf.CohortParameters.MaxArea.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Individual leaf size (mm2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
