@@ -995,7 +995,7 @@
     </Plant>
   </Replacements>
   <Simulation>
-    <Name>FRNLRivageSD2</Name>
+    <Name>Lincoln2014CvRiv_Oct</Name>
     <Clock>
       <Name>clock</Name>
       <StartDate>2014-10-15T00:00:00</StartDate>
@@ -2095,14 +2095,6 @@
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Title>Length (mm)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -2138,7 +2130,7 @@
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
