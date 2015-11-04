@@ -2373,11 +2373,6 @@
       <FileName>%root%\Prototypes\FodderBeet\Observations\FRNLObservedData.txt</FileName>
     </Input>
     <Input>
-      <Name>ObservedData</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>%root%\Prototypes\FodderBeet\Observations\FodderBeetObservedData.txt</FileName>
-    </Input>
-    <Input>
       <Name>Lincoln2014_Interc</Name>
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
       <FileName>%root%\Prototypes\FodderBeet\Observations\Lincoln2014Observed_Interception.txt</FileName>
@@ -2386,6 +2381,11 @@
       <Name>BoltObserved</Name>
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
       <FileName>Observations\BoltingObserved.txt</FileName>
+    </Input>
+    <Input>
+      <Name>ObservedData_NotUsed</Name>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
+      <FileName>%root%\Prototypes\FodderBeet\Observations\FodderBeetObservedData.txt</FileName>
     </Input>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
@@ -3119,7 +3119,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <Graph>
         <Name>LeafNo</Name>
         <Series>
-          <Name>EmergedLeaves</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3140,7 +3140,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>NodeNumber</Name>
+          <Name>Simulated</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3182,7 +3182,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <Graph>
         <Name>MaxLeafArea</Name>
         <Series>
-          <Name>MaxLeafArea</Name>
+          <Name>Simulated</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3224,7 +3224,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <Graph>
         <Name>LAI</Name>
         <Series>
-          <Name>LAI</Name>
+          <Name>Simulated</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3245,7 +3245,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>ObsLAI</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3267,7 +3267,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Crop Biomass (g/m2)</Title>
+          <Title>LAI (m2/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -3287,7 +3287,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <Graph>
         <Name>LightInterception</Name>
         <Series>
-          <Name>Cover</Name>
+          <Name>Simulated</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3308,7 +3308,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Obs_Cover</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3331,7 +3331,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Crop Biomass (g/m2)</Title>
+          <Title>Intercepted solar radiation (MJ/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -3354,7 +3354,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <Graph>
         <Name>Total</Name>
         <Series>
-          <Name>BulbWt</Name>
+          <Name>Simulated</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3375,7 +3375,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Obs_Tot</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3417,7 +3417,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <Graph>
         <Name>Bulb</Name>
         <Series>
-          <Name>BulbWt</Name>
+          <Name>Simulated</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3438,7 +3438,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Obs_Bulb</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3460,7 +3460,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Crop Biomass (g/m2)</Title>
+          <Title>Bulb Biomass (g/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -3480,7 +3480,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <Graph>
         <Name>Leaf</Name>
         <Series>
-          <Name>LeafWt</Name>
+          <Name>Simulated</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3501,7 +3501,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Obs_Leaf</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3523,7 +3523,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Crop Biomass (g/m2)</Title>
+          <Title>Leaf Biomass (g/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -3543,7 +3543,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <Graph>
         <Name>Petiole</Name>
         <Series>
-          <Name>PetioleWt</Name>
+          <Name>Simulated</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3564,7 +3564,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Obs_Petiole</Name>
+          <Name>Observed</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3586,7 +3586,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Crop Biomass (g/m2)</Title>
+          <Title>Petiole Biomass (g/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
