@@ -11,8 +11,8 @@
       </Cultivar>
       <Cultivar>
         <Name>Brigadier</Name>
-        <Command>[Leaf].CohortParameters.MaxArea.XYPairs.X = 1, 6, 12, 16, 20, 25, 60</Command>
-        <Command>[Leaf].CohortParameters.MaxArea.XYPairs.Y = 600, 12000, 54000, 48000, 42000, 600, 240</Command>
+        <Command>[Leaf].CohortParameters.MaxArea.XYPairs.X = 1,	6,	11,	15,	21,	35,	45,	50</Command>
+        <Command>[Leaf].CohortParameters.MaxArea.XYPairs.Y = 9600,	12000,	48000,	60000,	48000,	36000,	30000,	24000</Command>
       </Cultivar>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
@@ -123,7 +123,7 @@
           <Start>Germination</Start>
           <End>PreEmerge</End>
           <ShootLag>1</ShootLag>
-          <ShootRate>15</ShootRate>
+          <ShootRate>20</ShootRate>
         </EmergingPhase>
         <GenericPhase>
           <Name>Emerging</Name>
@@ -457,22 +457,29 @@
               <X>
                 <double>1</double>
                 <double>6</double>
-                <double>12</double>
-                <double>16</double>
-                <double>20</double>
-                <double>25</double>
-                <double>60</double>
+                <double>11</double>
+                <double>15</double>
+                <double>21</double>
+                <double>35</double>
+                <double>45</double>
+                <double>50</double>
               </X>
               <Y>
-                <double>500</double>
+                <double>8000</double>
                 <double>10000</double>
-                <double>45000</double>
                 <double>40000</double>
-                <double>35000</double>
-                <double>500</double>
-                <double>200</double>
+                <double>50000</double>
+                <double>40000</double>
+                <double>30000</double>
+                <double>25000</double>
+                <double>20000</double>
               </Y>
             </XYPairs>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Pattern of max leaf area assumed from sugar beet: Milford et al. 1985
+Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoText>
+            </Memo>
             <XProperty>[Structure].MainStemNodeNo</XProperty>
           </LinearInterpolationFunction>
           <PhaseLookup>
@@ -1327,7 +1334,7 @@
         <Name>OperationsSchedule</Name>
         <Operation>
           <Date>2014-10-17T00:00:00</Date>
-          <Action>[FodderBeet].Sow(population:12, cultivar:"Rivage", depth:10, rowSpacing:720);</Action>
+          <Action>[FodderBeet].Sow(population:9, cultivar:"Rivage", depth:10, rowSpacing:500);</Action>
         </Operation>
       </Operations>
       <SurfaceOrganicMatter>
@@ -1585,10 +1592,10 @@
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
+        <Marker>Circle</Marker>
+        <MarkerSize>Small</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Thin</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>FodderBeet.Leaf.LAI</YFieldName>
@@ -2109,12 +2116,12 @@
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65281</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
+          <Marker>Cross</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
@@ -2392,56 +2399,56 @@
           <Name>Riv_Sep</Name>
           <Operation>
             <Date>2014-09-19T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:12, cultivar:"Rivage", depth:10, rowSpacing:720);</Action>
+            <Action>[FodderBeet].Sow(population:9, cultivar:"Rivage", depth:10, rowSpacing:500);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>Riv_Oct</Name>
           <Operation>
             <Date>2014-10-17T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:12, cultivar:"Rivage", depth:10, rowSpacing:720);</Action>
+            <Action>[FodderBeet].Sow(population:9, cultivar:"Rivage", depth:10, rowSpacing:500);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>Riv_Nov</Name>
           <Operation>
             <Date>2014-11-17T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:12, cultivar:"Rivage", depth:10, rowSpacing:720);</Action>
+            <Action>[FodderBeet].Sow(population:9, cultivar:"Rivage", depth:5, rowSpacing:500);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>Riv_Dec</Name>
           <Operation>
             <Date>2014-12-15T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:12, cultivar:"Rivage", depth:10, rowSpacing:720);</Action>
+            <Action>[FodderBeet].Sow(population:9, cultivar:"Rivage", depth:10, rowSpacing:500);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>Bri_Sep</Name>
           <Operation>
             <Date>2014-09-20T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:12, cultivar:"Brigadier", depth:10, rowSpacing:720);</Action>
+            <Action>[FodderBeet].Sow(population:9, cultivar:"Brigadier", depth:10, rowSpacing:500);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>Bri_Oct</Name>
           <Operation>
             <Date>2014-10-19T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:12, cultivar:"Brigadier", depth:10, rowSpacing:720);</Action>
+            <Action>[FodderBeet].Sow(population:9, cultivar:"Brigadier", depth:10, rowSpacing:500);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>Bri_Nov</Name>
           <Operation>
             <Date>2014-11-18T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:12, cultivar:"Brigadier", depth:10, rowSpacing:720);</Action>
+            <Action>[FodderBeet].Sow(population:9, cultivar:"Brigadier", depth:5, rowSpacing:500);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>Bri_Dec</Name>
           <Operation>
             <Date>2014-12-16T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:12, cultivar:"Brigadier", depth:10, rowSpacing:720);</Action>
+            <Action>[FodderBeet].Sow(population:9, cultivar:"Brigadier", depth:10, rowSpacing:500);</Action>
           </Operation>
         </Operations>
         <Specifications>
@@ -2790,7 +2797,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Name>SowDateCv</Name>
           <Operation>
             <Date>2014-10-17T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:12, cultivar:"Rivage", depth:10, rowSpacing:720);</Action>
+            <Action>[FodderBeet].Sow(population:9, cultivar:"Rivage", depth:10, rowSpacing:500);</Action>
           </Operation>
         </Operations>
         <SurfaceOrganicMatter>
