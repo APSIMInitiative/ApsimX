@@ -894,8 +894,33 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
-          <PhaseLookup>
+          <LinearInterpolationFunction>
             <Name>PartitionFraction</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>1</double>
+                <double>6</double>
+                <double>15</double>
+                <double>30</double>
+                <double>51</double>
+              </X>
+              <Y>
+                <double>0.1</double>
+                <double>0.35</double>
+                <double>0.7</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </Y>
+            </XYPairs>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Allocation determined by Node number]]></MemoText>
+            </Memo>
+            <XProperty>[Structure].MainStemNodeNo</XProperty>
+          </LinearInterpolationFunction>
+          <PhaseLookup>
+            <Name>PartitionFractionX</Name>
             <PhaseLookupValue>
               <Name>Early</Name>
               <Constant>
@@ -972,13 +997,38 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         </Biomass>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
-          <PhaseLookup>
+          <LinearInterpolationFunction>
             <Name>PartitionFraction</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>1</double>
+                <double>6</double>
+                <double>15</double>
+                <double>30</double>
+                <double>51</double>
+              </X>
+              <Y>
+                <double>0.1</double>
+                <double>0.15</double>
+                <double>0.2</double>
+                <double>0.15</double>
+                <double>0.1</double>
+              </Y>
+            </XYPairs>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Allocation determined by Node number]]></MemoText>
+            </Memo>
+            <XProperty>[Structure].MainStemNodeNo</XProperty>
+          </LinearInterpolationFunction>
+          <PhaseLookup>
+            <Name>PartitionFractionX</Name>
             <PhaseLookupValue>
               <Name>Early</Name>
               <Constant>
                 <Name>Target</Name>
-                <Value>0.1</Value>
+                <Value>0.2</Value>
               </Constant>
               <Start>PreEmerge</Start>
               <End>BulbGrowth</End>
@@ -987,7 +1037,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
               <Name>Middle</Name>
               <Constant>
                 <Name>Target</Name>
-                <Value>0.1</Value>
+                <Value>0.2</Value>
               </Constant>
               <Start>BulbGrowth</Start>
               <End>EndLinear</End>
@@ -1016,6 +1066,14 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>SenescenceRateFunction</Name>
           <VariableName>[Leaf].FractionDied</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <Value>0.95</Value>
+        </Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0.95</Value>
+        </Constant>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
@@ -1464,7 +1522,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
           <string>[FodderBeet].Leaf.CoverGreen</string>
           <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
-          <string>[FodderBeet].Leaf.Photosynthesis.RadnInt</string>
+          <string>[FodderBeet].Leaf.IntRadn</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -1827,13 +1885,13 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16736653</ColourArgb>
+        <ColourArgb>-16776961</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Small</MarkerSize>
-        <Line>None</Line>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
@@ -1864,27 +1922,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
-      <Series>
-        <Name>RadInt</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Right</YAxis>
-        <ColourArgb>-2793984</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>FodderBeet.Leaf.Photosynthesis.RadnInt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
       <Axis>
         <Type>Left</Type>
         <Title>Crop Biomass (g/m2)</Title>
@@ -1895,13 +1932,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
       </Axis>
       <Axis>
         <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -1922,9 +1952,9 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>Star</Marker>
-        <MarkerSize>Small</MarkerSize>
-        <Line>None</Line>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
@@ -1933,7 +1963,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
-        <Filter />
       </Series>
       <Series>
         <Name>LeafWT</Name>
@@ -1944,9 +1973,9 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Small</MarkerSize>
-        <Line>None</Line>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
@@ -1986,9 +2015,9 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledSquare</Marker>
-        <MarkerSize>Small</MarkerSize>
-        <Line>None</Line>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
