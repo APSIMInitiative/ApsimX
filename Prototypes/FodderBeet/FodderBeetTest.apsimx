@@ -531,13 +531,45 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <XProperty>[Structure].MainStemNodeNo</XProperty>
           </LinearInterpolationFunction>
           <Constant>
-            <Name>LagDuration</Name>
+            <Name>LagDurationx</Name>
             <Memo>
               <Name>Memo</Name>
               <MemoText><![CDATA[Assumed constant for simplicity and lack of better data. Based on average value for leaves 12, 16 and 20 in FRNL ABlock 2014-15]]></MemoText>
             </Memo>
             <Value>300</Value>
           </Constant>
+          <LinearInterpolationFunction>
+            <Name>LagDuration</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>1</double>
+                <double>6</double>
+                <double>11</double>
+                <double>15</double>
+                <double>21</double>
+                <double>35</double>
+                <double>45</double>
+                <double>50</double>
+              </X>
+              <Y>
+                <double>100</double>
+                <double>200</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>200</double>
+                <double>100</double>
+                <double>80</double>
+              </Y>
+            </XYPairs>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Assumed shape as maize data (Teixeira et al 2011). 
+]]></MemoText>
+            </Memo>
+            <XProperty>[Structure].MainStemNodeNo</XProperty>
+          </LinearInterpolationFunction>
           <Constant>
             <Name>SenescenceDuration</Name>
             <Memo>
