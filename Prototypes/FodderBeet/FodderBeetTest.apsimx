@@ -52,6 +52,10 @@
                 <maxt_soil_surface>20</maxt_soil_surface>
                 <mint_soil_surface>10</mint_soil_surface>
               </SoilTemperatureFunction>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[Soil temperature may be extended beyond germination (e.g. based on leaf numbers) - need data to back up]]></MemoText>
+              </Memo>
               <Start>Sowing</Start>
               <End>Germination</End>
             </PhaseLookupValue>
@@ -120,6 +124,10 @@
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Turned off the lag and used only the Tt per mm to empirically fit simulations to FRNL data of emergence.]]></MemoText>
+          </Memo>
           <Start>Germination</Start>
           <End>PreEmerge</End>
           <ShootLag>1</ShootLag>
@@ -264,9 +272,17 @@
               <Y>
                 <double>100</double>
                 <double>100</double>
-                <double>48</double>
+                <double>47</double>
               </Y>
             </XYPairs>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Measured value of 45-53oCd/leaf from Emmanuel's data and FRNL data too.
+
+Two stage phyllochron (100oCd to 50oCd) is an empirical fix to get first leaves right. May be in fact response to soil temperature at later stages. To check.
+
+There seems to be a seasonal difference in leaf appearance rates across sowing dates. So we should check thermal-time model.]]></MemoText>
+            </Memo>
             <XProperty>[FodderBeet].Structure.MainStemNodeNo</XProperty>
           </LinearInterpolationFunction>
           <Start>PreEmerge</Start>
@@ -482,52 +498,45 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             </Memo>
             <XProperty>[Structure].MainStemNodeNo</XProperty>
           </LinearInterpolationFunction>
-          <PhaseLookup>
+          <LinearInterpolationFunction>
             <Name>GrowthDuration</Name>
-            <PhaseLookupValue>
-              <Name>Pre</Name>
-              <Constant>
-                <Name>Function</Name>
-                <Value>500</Value>
-              </Constant>
-              <Start>Sowing</Start>
-              <End>Established</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Early</Name>
-              <Constant>
-                <Name>Function</Name>
-                <Value>500</Value>
-              </Constant>
-              <Start>Established</Start>
-              <End>EndLinear</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Middle</Name>
-              <Constant>
-                <Name>Function</Name>
-                <Value>500</Value>
-              </Constant>
-              <Start>EndLinear</Start>
-              <End>StartSenescence</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Maturity</Name>
-              <Constant>
-                <Name>Function</Name>
-                <Value>500</Value>
-              </Constant>
-              <Start>StartSenescence</Start>
-              <End>Maturity</End>
-            </PhaseLookupValue>
-          </PhaseLookup>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>1</double>
+                <double>6</double>
+                <double>11</double>
+                <double>15</double>
+                <double>21</double>
+                <double>35</double>
+                <double>45</double>
+                <double>50</double>
+              </X>
+              <Y>
+                <double>200</double>
+                <double>300</double>
+                <double>500</double>
+                <double>500</double>
+                <double>500</double>
+                <double>400</double>
+                <double>300</double>
+                <double>200</double>
+              </Y>
+            </XYPairs>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Assumed shape as maize data (Teixeira et al 2011). 
+]]></MemoText>
+            </Memo>
+            <XProperty>[Structure].MainStemNodeNo</XProperty>
+          </LinearInterpolationFunction>
           <Constant>
             <Name>LagDuration</Name>
             <Value>300</Value>
           </Constant>
           <Constant>
             <Name>SenescenceDuration</Name>
-            <Value>0</Value>
+            <Value>600</Value>
           </Constant>
           <Constant>
             <Name>DetachmentLagDuration</Name>
@@ -1582,13 +1591,118 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
+      <Name>LeafNo</Name>
+      <Series>
+        <Name>TotalLeaves_Obs</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>FRNLObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.PlantAppearedLeafNo</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>TotalLeaves_Sim</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Small</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Structure.MainStemNodeNo</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>GreenLeaves_Sim</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-2793984</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Small</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>GreenLeaves_Obs</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-11094807</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Small</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>FRNLObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Crop Biomass (g/m2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
       <Name>LAI</Name>
       <Series>
         <Name>LAI</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
+        <ColourArgb>-2793984</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1620,69 +1734,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <TableName>FRNLObserved</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>FoddeBeet.LeafLAI</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Crop Biomass (g/m2)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>LeafNo</Name>
-      <Series>
-        <Name>EmergedLeaves</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>FRNLObserved</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>FodderBeet.Leaf.PlantAppearedLeafNo</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>NodeNumber</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>FodderBeet.Structure.MainStemNodeNo</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3331,6 +3382,69 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <Axis>
           <Type>Left</Type>
           <Title>Intercepted solar radiation (MJ/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>GreenLeafNo</Name>
+        <Series>
+          <Name>GreenLeaves_Sim</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>GreenLeaves_Obs</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>FRNLObserved</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Green leaves per plant (n)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
