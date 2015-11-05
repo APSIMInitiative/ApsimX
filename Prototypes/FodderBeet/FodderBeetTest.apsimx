@@ -541,11 +541,11 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
                 <Name>XYPairs</Name>
                 <X>
                   <double>1</double>
-                  <double>14</double>
+                  <double>15</double>
                   <double>24</double>
                 </X>
                 <Y>
-                  <double>1</double>
+                  <double>0</double>
                   <double>1</double>
                   <double>1</double>
                 </Y>
