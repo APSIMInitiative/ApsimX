@@ -995,6 +995,10 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
+        <VariableReference>
+          <Name>SenescenceRateFunction</Name>
+          <VariableName>[Leaf].FractionDied</VariableName>
+        </VariableReference>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
