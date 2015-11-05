@@ -79,7 +79,7 @@
                 </XYPairs>
               </AirTemperatureFunction>
               <Start>Germination</Start>
-              <End>EndSenescence</End>
+              <End>Maturity</End>
             </PhaseLookupValue>
           </PhaseLookup>
           <AddFunction>
@@ -146,20 +146,20 @@
           <End>Established</End>
         </GenericPhase>
         <GenericPhase>
-          <Name>BeginBulb</Name>
+          <Name>Vegetative</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>600</Value>
+            <Value>2500</Value>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
           <Start>Established</Start>
-          <End>BulbGrowth</End>
+          <End>InitRepro</End>
         </GenericPhase>
         <GenericPhase>
-          <Name>LinearGrowth</Name>
+          <Name>Reproductive</Name>
           <Constant>
             <Name>Target</Name>
             <Value>1000</Value>
@@ -168,11 +168,11 @@
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Start>BulbGrowth</Start>
-          <End>EndLinear</End>
+          <Start>InitRepro</Start>
+          <End>StartBolt</End>
         </GenericPhase>
         <GenericPhase>
-          <Name>StableGrowth</Name>
+          <Name>Bolt</Name>
           <Constant>
             <Name>Target</Name>
             <Value>800</Value>
@@ -181,21 +181,8 @@
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Start>EndLinear</Start>
-          <End>StartSenescence</End>
-        </GenericPhase>
-        <GenericPhase>
-          <Name>Senescing</Name>
-          <Constant>
-            <Name>Target</Name>
-            <Value>3500</Value>
-          </Constant>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Start>StartSenescence</Start>
-          <End>EndSenescence</End>
+          <Start>StartBolt</Start>
+          <End>Bolting</End>
         </GenericPhase>
         <EndPhase>
           <Name>Maturity</Name>
@@ -207,7 +194,7 @@
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Start>EndSenescence</Start>
+          <Start>Bolting</Start>
           <End>Maturity</End>
         </EndPhase>
         <AccumulateFunction>
