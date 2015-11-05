@@ -1415,6 +1415,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
           <string>[FodderBeet].Leaf.CoverGreen</string>
           <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
+          <string>[FodderBeet].Leaf.IntRadn</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
