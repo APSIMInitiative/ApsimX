@@ -532,10 +532,18 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           </LinearInterpolationFunction>
           <Constant>
             <Name>LagDuration</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Assumed constant for simplicity and lack of better data. Based on average value for leaves 12, 16 and 20 in FRNL ABlock 2014-15]]></MemoText>
+            </Memo>
             <Value>300</Value>
           </Constant>
           <Constant>
             <Name>SenescenceDuration</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Assumed constant for simplicity and lack of better data. Based on average value for leaves 12, 16 and 20 in FRNL ABlock 2014-15]]></MemoText>
+            </Memo>
             <Value>600</Value>
           </Constant>
           <Constant>
