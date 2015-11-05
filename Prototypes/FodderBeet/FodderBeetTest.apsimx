@@ -11,8 +11,7 @@
       </Cultivar>
       <Cultivar>
         <Name>Brigadier</Name>
-        <Command>[Leaf].CohortParameters.MaxArea.XYPairs.X = 1,	6,	11,	15,	21,	35,	45,	50</Command>
-        <Command>[Leaf].CohortParameters.MaxArea.XYPairs.Y = 9600,	12000,	48000,	60000,	48000,	36000,	30000,	24000</Command>
+        <Command />
       </Cultivar>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
@@ -745,6 +744,10 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>SoilWaterEffect</Name>
           <Value>1</Value>
         </Constant>
+        <Constant>
+          <Name>PartitionFraction</Name>
+          <Value>0.05</Value>
+        </Constant>
         <AirTemperatureFunction>
           <Name>TemperatureEffect</Name>
           <XYPairs>
@@ -770,18 +773,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
               <Value>10</Value>
             </Constant>
             <Start>Germination</Start>
-            <End>Maturity</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <PhaseLookupValue>
-            <Name>PhaseLookUp</Name>
-            <Constant>
-              <Name>Function</Name>
-              <Value>0.05</Value>
-            </Constant>
-            <Start>PreEmerge</Start>
             <End>Maturity</End>
           </PhaseLookupValue>
         </PhaseLookup>
@@ -894,45 +885,31 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
-          <PhaseLookup>
+          <LinearInterpolationFunction>
             <Name>PartitionFraction</Name>
-            <PhaseLookupValue>
-              <Name>Early</Name>
-              <Constant>
-                <Name>Target</Name>
-                <Value>0.1</Value>
-              </Constant>
-              <Start>PreEmerge</Start>
-              <End>BulbGrowth</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Middle</Name>
-              <Constant>
-                <Name>Target</Name>
-                <Value>0.7</Value>
-              </Constant>
-              <Start>BulbGrowth</Start>
-              <End>EndLinear</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Maturity</Name>
-              <Constant>
-                <Name>Function</Name>
-                <Value>0.8</Value>
-              </Constant>
-              <Start>EndLinear</Start>
-              <End>EndSenescence</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>PostMaturity</Name>
-              <Constant>
-                <Name>Function</Name>
-                <Value>0.8</Value>
-              </Constant>
-              <Start>EndSenescence</Start>
-              <End>Maturity</End>
-            </PhaseLookupValue>
-          </PhaseLookup>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>1</double>
+                <double>6</double>
+                <double>15</double>
+                <double>30</double>
+                <double>51</double>
+              </X>
+              <Y>
+                <double>0.1</double>
+                <double>0.35</double>
+                <double>0.7</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </Y>
+            </XYPairs>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Allocation determined by Node number]]></MemoText>
+            </Memo>
+            <XProperty>[Structure].MainStemNodeNo</XProperty>
+          </LinearInterpolationFunction>
         </PartitionFractionDemandFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
@@ -972,50 +949,44 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         </Biomass>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
-          <PhaseLookup>
+          <LinearInterpolationFunction>
             <Name>PartitionFraction</Name>
-            <PhaseLookupValue>
-              <Name>Early</Name>
-              <Constant>
-                <Name>Target</Name>
-                <Value>0.1</Value>
-              </Constant>
-              <Start>PreEmerge</Start>
-              <End>BulbGrowth</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Middle</Name>
-              <Constant>
-                <Name>Target</Name>
-                <Value>0.1</Value>
-              </Constant>
-              <Start>BulbGrowth</Start>
-              <End>EndLinear</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Maturity</Name>
-              <Constant>
-                <Name>Function</Name>
-                <Value>0.1</Value>
-              </Constant>
-              <Start>EndLinear</Start>
-              <End>EndSenescence</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>PostMaturity</Name>
-              <Constant>
-                <Name>Function</Name>
-                <Value>0</Value>
-              </Constant>
-              <Start>EndSenescence</Start>
-              <End>Maturity</End>
-            </PhaseLookupValue>
-          </PhaseLookup>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>1</double>
+                <double>6</double>
+                <double>15</double>
+                <double>30</double>
+                <double>51</double>
+              </X>
+              <Y>
+                <double>0.1</double>
+                <double>0.15</double>
+                <double>0.2</double>
+                <double>0.15</double>
+                <double>0.1</double>
+              </Y>
+            </XYPairs>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Allocation determined by Node number]]></MemoText>
+            </Memo>
+            <XProperty>[Structure].MainStemNodeNo</XProperty>
+          </LinearInterpolationFunction>
         </PartitionFractionDemandFunction>
         <VariableReference>
           <Name>SenescenceRateFunction</Name>
           <VariableName>[Leaf].FractionDied</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <Value>0.95</Value>
+        </Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0.95</Value>
+        </Constant>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
@@ -1464,6 +1435,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
           <string>[FodderBeet].Leaf.CoverGreen</string>
           <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
+          <string>[FodderBeet].Leaf.Photosynthesis.RadnInt</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -1863,6 +1835,27 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <Series>
+        <Name>RadInt</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-1663232</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.Photosynthesis.RadnInt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Left</Type>
         <Title>Crop Biomass (g/m2)</Title>
@@ -1873,6 +1866,13 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
       </Axis>
       <Axis>
         <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -2473,69 +2473,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
     </Folder>
-    <Graph>
-      <Name>LightInterception1</Name>
-      <Series>
-        <Name>Cover</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>FodderBeet.Leaf.CoverGreen</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Obs_Cover</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>FRNLObserved</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>FodderBeet.Leaf.CoverGreen</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Crop Biomass (g/m2)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
