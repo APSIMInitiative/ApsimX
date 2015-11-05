@@ -11,8 +11,7 @@
       </Cultivar>
       <Cultivar>
         <Name>Brigadier</Name>
-        <Command>[Leaf].CohortParameters.MaxArea.XYPairs.X = 1,	6,	11,	15,	21,	35,	45,	50</Command>
-        <Command>[Leaf].CohortParameters.MaxArea.XYPairs.Y = 9600,	12000,	48000,	60000,	48000,	36000,	30000,	24000</Command>
+        <Command />
       </Cultivar>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
@@ -745,6 +744,10 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>SoilWaterEffect</Name>
           <Value>1</Value>
         </Constant>
+        <Constant>
+          <Name>PartitionFraction</Name>
+          <Value>0.05</Value>
+        </Constant>
         <AirTemperatureFunction>
           <Name>TemperatureEffect</Name>
           <XYPairs>
@@ -770,18 +773,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
               <Value>10</Value>
             </Constant>
             <Start>Germination</Start>
-            <End>Maturity</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <PhaseLookupValue>
-            <Name>PhaseLookUp</Name>
-            <Constant>
-              <Name>Function</Name>
-              <Value>0.05</Value>
-            </Constant>
-            <Start>PreEmerge</Start>
             <End>Maturity</End>
           </PhaseLookupValue>
         </PhaseLookup>
@@ -919,45 +910,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             </Memo>
             <XProperty>[Structure].MainStemNodeNo</XProperty>
           </LinearInterpolationFunction>
-          <PhaseLookup>
-            <Name>PartitionFractionX</Name>
-            <PhaseLookupValue>
-              <Name>Early</Name>
-              <Constant>
-                <Name>Target</Name>
-                <Value>0.1</Value>
-              </Constant>
-              <Start>PreEmerge</Start>
-              <End>BulbGrowth</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Middle</Name>
-              <Constant>
-                <Name>Target</Name>
-                <Value>0.7</Value>
-              </Constant>
-              <Start>BulbGrowth</Start>
-              <End>EndLinear</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Maturity</Name>
-              <Constant>
-                <Name>Function</Name>
-                <Value>0.8</Value>
-              </Constant>
-              <Start>EndLinear</Start>
-              <End>EndSenescence</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>PostMaturity</Name>
-              <Constant>
-                <Name>Function</Name>
-                <Value>0.8</Value>
-              </Constant>
-              <Start>EndSenescence</Start>
-              <End>Maturity</End>
-            </PhaseLookupValue>
-          </PhaseLookup>
         </PartitionFractionDemandFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
@@ -1022,45 +974,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             </Memo>
             <XProperty>[Structure].MainStemNodeNo</XProperty>
           </LinearInterpolationFunction>
-          <PhaseLookup>
-            <Name>PartitionFractionX</Name>
-            <PhaseLookupValue>
-              <Name>Early</Name>
-              <Constant>
-                <Name>Target</Name>
-                <Value>0.2</Value>
-              </Constant>
-              <Start>PreEmerge</Start>
-              <End>BulbGrowth</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Middle</Name>
-              <Constant>
-                <Name>Target</Name>
-                <Value>0.2</Value>
-              </Constant>
-              <Start>BulbGrowth</Start>
-              <End>EndLinear</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Maturity</Name>
-              <Constant>
-                <Name>Function</Name>
-                <Value>0.1</Value>
-              </Constant>
-              <Start>EndLinear</Start>
-              <End>EndSenescence</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>PostMaturity</Name>
-              <Constant>
-                <Name>Function</Name>
-                <Value>0</Value>
-              </Constant>
-              <Start>EndSenescence</Start>
-              <End>Maturity</End>
-            </PhaseLookupValue>
-          </PhaseLookup>
         </PartitionFractionDemandFunction>
         <VariableReference>
           <Name>SenescenceRateFunction</Name>
