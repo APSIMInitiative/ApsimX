@@ -79,7 +79,7 @@
                 </XYPairs>
               </AirTemperatureFunction>
               <Start>Germination</Start>
-              <End>Maturity</End>
+              <End>EndSenescence</End>
             </PhaseLookupValue>
           </PhaseLookup>
           <AddFunction>
@@ -146,20 +146,20 @@
           <End>Established</End>
         </GenericPhase>
         <GenericPhase>
-          <Name>Vegetative</Name>
+          <Name>BeginBulb</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>2500</Value>
+            <Value>600</Value>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
           <Start>Established</Start>
-          <End>InitRepro</End>
+          <End>BulbGrowth</End>
         </GenericPhase>
         <GenericPhase>
-          <Name>Reproductive</Name>
+          <Name>LinearGrowth</Name>
           <Constant>
             <Name>Target</Name>
             <Value>1000</Value>
@@ -168,11 +168,11 @@
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Start>InitRepro</Start>
-          <End>StartBolt</End>
+          <Start>BulbGrowth</Start>
+          <End>EndLinear</End>
         </GenericPhase>
         <GenericPhase>
-          <Name>Bolt</Name>
+          <Name>StableGrowth</Name>
           <Constant>
             <Name>Target</Name>
             <Value>800</Value>
@@ -181,8 +181,21 @@
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Start>StartBolt</Start>
-          <End>Bolting</End>
+          <Start>EndLinear</Start>
+          <End>StartSenescence</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>Senescing</Name>
+          <Constant>
+            <Name>Target</Name>
+            <Value>3500</Value>
+          </Constant>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <Start>StartSenescence</Start>
+          <End>EndSenescence</End>
         </GenericPhase>
         <EndPhase>
           <Name>Maturity</Name>
@@ -194,7 +207,7 @@
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Start>Bolting</Start>
+          <Start>EndSenescence</Start>
           <End>Maturity</End>
         </EndPhase>
         <AccumulateFunction>
@@ -14193,5 +14206,5 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Experiment>
-  <ExplorerWidth>528</ExplorerWidth>
+  <ExplorerWidth>575</ExplorerWidth>
 </Simulations>
