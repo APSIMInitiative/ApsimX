@@ -79,7 +79,7 @@
                 </XYPairs>
               </AirTemperatureFunction>
               <Start>Germination</Start>
-              <End>EndSenescence</End>
+              <End>Maturity</End>
             </PhaseLookupValue>
           </PhaseLookup>
           <AddFunction>
@@ -146,20 +146,20 @@
           <End>Established</End>
         </GenericPhase>
         <GenericPhase>
-          <Name>BeginBulb</Name>
+          <Name>Vegetative</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>600</Value>
+            <Value>2500</Value>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
           <Start>Established</Start>
-          <End>BulbGrowth</End>
+          <End>InitRepro</End>
         </GenericPhase>
         <GenericPhase>
-          <Name>LinearGrowth</Name>
+          <Name>Reproductive</Name>
           <Constant>
             <Name>Target</Name>
             <Value>1000</Value>
@@ -168,11 +168,11 @@
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Start>BulbGrowth</Start>
-          <End>EndLinear</End>
+          <Start>InitRepro</Start>
+          <End>StartBolt</End>
         </GenericPhase>
         <GenericPhase>
-          <Name>StableGrowth</Name>
+          <Name>Bolt</Name>
           <Constant>
             <Name>Target</Name>
             <Value>800</Value>
@@ -181,21 +181,8 @@
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Start>EndLinear</Start>
-          <End>StartSenescence</End>
-        </GenericPhase>
-        <GenericPhase>
-          <Name>Senescing</Name>
-          <Constant>
-            <Name>Target</Name>
-            <Value>3500</Value>
-          </Constant>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Start>StartSenescence</Start>
-          <End>EndSenescence</End>
+          <Start>StartBolt</Start>
+          <End>Bolting</End>
         </GenericPhase>
         <EndPhase>
           <Name>Maturity</Name>
@@ -207,7 +194,7 @@
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Start>EndSenescence</Start>
+          <Start>Bolting</Start>
           <End>Maturity</End>
         </EndPhase>
         <AccumulateFunction>
@@ -541,13 +528,13 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
                 <Name>XYPairs</Name>
                 <X>
                   <double>1</double>
-                  <double>14</double>
+                  <double>15</double>
                   <double>24</double>
                 </X>
                 <Y>
                   <double>0</double>
                   <double>0</double>
-                  <double>1</double>
+                  <double>0</double>
                 </Y>
               </XYPairs>
               <Memo>
@@ -13063,7 +13050,6 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
             <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
             <string>[FodderBeet].Leaf.CoverGreen</string>
             <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
-            <string>[Phenology].Photoperiod.Value</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -14133,78 +14119,6 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
-    <Graph>
-      <Name>Photoperiod</Name>
-      <Series>
-        <Name>Simulated</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Phenology.Photoperiod.Value</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-        <Filter />
-      </Series>
-      <Series>
-        <Name>LAI</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Right</YAxis>
-        <ColourArgb>-16747854</ColourArgb>
-        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>FodderBeet.Leaf.LAI</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-        <Filter />
-      </Series>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Leaf Biomass (g/m2)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
   </Experiment>
-  <ExplorerWidth>575</ExplorerWidth>
+  <ExplorerWidth>528</ExplorerWidth>
 </Simulations>
