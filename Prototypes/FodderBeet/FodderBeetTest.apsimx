@@ -360,7 +360,7 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>1.6</Value>
+            <Value>1.2</Value>
           </Constant>
           <Constant>
             <Name>FN</Name>
@@ -376,17 +376,15 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>10</double>
                 <double>18</double>
                 <double>26</double>
-                <double>38</double>
+                <double>45</double>
               </X>
               <Y>
-                <double>0.2</double>
+                <double>0.1</double>
                 <double>1</double>
                 <double>1</double>
-                <double>1</double>
-                <double>0</double>
+                <double>0.1</double>
               </Y>
             </XYPairs>
             <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
@@ -528,13 +526,15 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
                 <Name>XYPairs</Name>
                 <X>
                   <double>1</double>
-                  <double>15</double>
+                  <double>10</double>
+                  <double>13</double>
                   <double>24</double>
                 </X>
                 <Y>
                   <double>0</double>
                   <double>0</double>
-                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
                 </Y>
               </XYPairs>
               <Memo>
@@ -1024,7 +1024,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         </VariableReference>
         <Constant>
           <Name>DMReallocationFactor</Name>
-          <Value>0.95</Value>
+          <Value>0</Value>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
@@ -7215,6 +7215,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <string>[FodderBeet].Leaf.CoverGreen</string>
           <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
           <string>[FodderBeet].Leaf.Photosynthesis.RadnInt</string>
+          <string>[FodderBeet].AboveGroundLive.Wt</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -13050,6 +13051,9 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
             <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
             <string>[FodderBeet].Leaf.CoverGreen</string>
             <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
+            <string>[Phenology].Photoperiod.Value</string>
+            <string>[FodderBeet].AboveGround.Wt</string>
+            <string>[FodderBeet].Leaf.Photosynthesis.RadnInt.Value</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -13625,7 +13629,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Total.Wt</YFieldName>
+          <YFieldName>FodderBeet.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -13668,7 +13672,14 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
+        <DisabledSeries>
+          <string>CvRiv_Sep</string>
+          <string>CvRiv_Oct</string>
+          <string>CvRiv_Nov</string>
+          <string>CvBri_Sep</string>
+          <string>CvBri_Oct</string>
+          <string>CvBri_Nov</string>
+        </DisabledSeries>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
@@ -13731,7 +13742,14 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
+        <DisabledSeries>
+          <string>CvRiv_Oct</string>
+          <string>CvRiv_Nov</string>
+          <string>CvRiv_Dec</string>
+          <string>CvBri_Oct</string>
+          <string>CvBri_Nov</string>
+          <string>CvBri_Dec</string>
+        </DisabledSeries>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
@@ -13794,7 +13812,14 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
+        <DisabledSeries>
+          <string>CvRiv_Sep</string>
+          <string>CvRiv_Oct</string>
+          <string>CvRiv_Nov</string>
+          <string>CvBri_Sep</string>
+          <string>CvBri_Oct</string>
+          <string>CvBri_Nov</string>
+        </DisabledSeries>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
@@ -14119,6 +14144,164 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
+    <Graph>
+      <Name>Photo</Name>
+      <Series>
+        <Name>Simulated</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711936</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Phenology.Photoperiod.Value</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter />
+      </Series>
+      <Series>
+        <Name>Observed</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>FRNLObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FoddeBeet.LeafLAI</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter />
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Leaf Biomass (g/m2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>RadInt</Name>
+      <Series>
+        <Name>Simulated</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711936</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>FodderBeet.Leaf.Photosynthesis.RadnInt.Value</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>true</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter />
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Leaf Biomass (g/m2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
   </Experiment>
+  <Graph>
+    <Name>RadInt</Name>
+    <Series>
+      <Name>Simulated</Name>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16711936</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+      <Marker>None</Marker>
+      <MarkerSize>Normal</MarkerSize>
+      <Line>Solid</Line>
+      <LineThickness>Normal</LineThickness>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>FodderBeet.Leaf.Photosynthesis.RadnInt.Value</YFieldName>
+      <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+      <Filter />
+    </Series>
+    <Axis>
+      <Type>Left</Type>
+      <Title>Leaf Biomass (g/m2)</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Bottom</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>TopLeft</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Graph>
   <ExplorerWidth>528</ExplorerWidth>
 </Simulations>
