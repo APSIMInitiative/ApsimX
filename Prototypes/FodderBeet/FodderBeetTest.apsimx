@@ -576,78 +576,33 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
               <XProperty>[Structure].MainStemNodeNo</XProperty>
             </LinearInterpolationFunction>
           </MultiplyFunction>
-          <LinearInterpolationFunction>
-            <Name>LagDurationX</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>1</double>
-                <double>6</double>
-                <double>11</double>
-                <double>15</double>
-                <double>21</double>
-                <double>35</double>
-                <double>45</double>
-                <double>50</double>
-              </X>
-              <Y>
-                <double>100</double>
-                <double>200</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>200</double>
-                <double>100</double>
-                <double>80</double>
-              </Y>
-            </XYPairs>
-            <Memo>
-              <Name>Memo</Name>
-              <MemoText><![CDATA[Assumed shape as maize data (Teixeira et al 2011). 
-]]></MemoText>
-            </Memo>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
+          <MultiplyFunction>
             <Name>SenescenceDuration</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>1</double>
-                <double>6</double>
-                <double>11</double>
-                <double>15</double>
-                <double>21</double>
-                <double>35</double>
-                <double>45</double>
-                <double>50</double>
-              </X>
-              <Y>
-                <double>600</double>
-                <double>600</double>
-                <double>600</double>
-                <double>600</double>
-                <double>600</double>
-                <double>600</double>
-                <double>600</double>
-                <double>600</double>
-              </Y>
-            </XYPairs>
-            <Memo>
-              <Name>Memo</Name>
-              <MemoText><![CDATA[Assumed shape as maize data (Teixeira et al 2011). 
-]]></MemoText>
-            </Memo>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
-          </LinearInterpolationFunction>
-          <Constant>
-            <Name>SenescenceDurationx</Name>
-            <Memo>
-              <Name>Memo</Name>
-              <MemoText><![CDATA[Assumed constant for simplicity and lack of better data. Based on average value for leaves 12, 16 and 20 in FRNL ABlock 2014-15]]></MemoText>
-            </Memo>
-            <Value>600</Value>
-          </Constant>
+            <LinearInterpolationFunction>
+              <Name>PhotoperiodMultiplier</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>1</double>
+                  <double>10</double>
+                  <double>13</double>
+                  <double>24</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Phenology].Photoperiod.Value</XProperty>
+            </LinearInterpolationFunction>
+            <Constant>
+              <Name>BaseValue</Name>
+              <Value>600</Value>
+              <Units>oCd</Units>
+            </Constant>
+          </MultiplyFunction>
           <Constant>
             <Name>DetachmentLagDuration</Name>
             <Value>1000000</Value>
@@ -1903,23 +1858,44 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>MaxLeafArea</Name>
+        <Name>GreenLeafNo</Name>
         <Series>
-          <Name>Simulated</Name>
+          <Name>GreenLeaves_Sim</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16711936</ColourArgb>
+          <ColourArgb>-2793984</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
+          <MarkerSize>Small</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>FodderBeet.Structure.MainStemNodeNo</XFieldName>
-          <YFieldName>FodderBeet.Leaf.CohortParameters.MaxArea.Value</YFieldName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>GreenLeaves_Obs</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>FRNLObserved</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -1927,7 +1903,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Individual leaf size (mm2)</Title>
+          <Title>Green leaves per plant (n)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -1942,7 +1918,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -2073,69 +2049,6 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Graph>
-        <Name>GreenLeafNo</Name>
-        <Series>
-          <Name>GreenLeaves_Sim</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-2793984</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Small</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>GreenLeaves_Obs</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-11094807</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Small</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>FRNLObserved</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Green leaves per plant (n)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </Graph>
     </Folder>
     <Folder>
       <Name>BiomassGraphs</Name>
@@ -2199,14 +2112,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries>
-          <string>CvRiv_Sep</string>
-          <string>CvRiv_Oct</string>
-          <string>CvRiv_Nov</string>
-          <string>CvBri_Sep</string>
-          <string>CvBri_Oct</string>
-          <string>CvBri_Nov</string>
-        </DisabledSeries>
+        <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
