@@ -36,6 +36,8 @@ namespace Models.PMF.Organs
     /// <remarks>
     /// </remarks>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SimpleLeaf : BaseOrgan, AboveGround, ICanopy
     {
         #region Canopy interface
