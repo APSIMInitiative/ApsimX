@@ -3945,8 +3945,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
-      <Summariser>
-        <Name>Summariser</Name>
         <CompositeBiomass>
           <Name>AboveGround</Name>
           <Propertys>
@@ -4017,7 +4015,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <string>[Grain].Dead</string>
           </Propertys>
         </CompositeBiomass>
-      </Summariser>
       <Cultivar>
         <Name>Amethyst</Name>
       </Cultivar>
@@ -4926,7 +4923,7 @@ namespace Models
               <string>[Chickpea].Structure.PlantTotalNodeNo</string>
               <string>[Chickpea].Leaf.DeadCohortNo</string>
               <string>[Chickpea].Structure.TotalStemPopn</string>
-              <string>[Chickpea].Summariser.AboveGround.Wt</string>
+              <string>[Chickpea].AboveGround.Wt</string>
               <string>[Chickpea].Leaf.Live.Wt</string>
               <string>[Chickpea].Stem.Live.Wt</string>
             </VariableNames>
@@ -5608,7 +5605,7 @@ namespace Models
           <Line>Solid</Line>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chickpea.Summariser.AboveGround.Wt</YFieldName>
+          <YFieldName>Chickpea.AboveGround.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>

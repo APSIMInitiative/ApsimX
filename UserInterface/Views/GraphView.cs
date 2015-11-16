@@ -92,10 +92,20 @@ namespace UserInterface.Views
         /// </summary>
         public event EventHandler<EventArguments.HoverPointArgs> OnHoverOverPoint;
 
+        /// <summary>Invoked when the user single clicks on the graph</summary>
+        public event EventHandler SingleClick;
+
         /// <summary>
         /// Left margin in pixels.
         /// </summary>
         public int LeftRightPadding { get; set; }
+
+        /// <summary>Gets or sets a value indicating if the legend is visible.</summary>
+        public bool IsLegendVisible
+        {
+            get { return this.plot1.Model.IsLegendVisible; }
+            set { this.plot1.Model.IsLegendVisible = value; }
+        }
 
         /// <summary>
         /// Clear the graph of everything.
@@ -157,6 +167,9 @@ namespace UserInterface.Views
         /// <param name="colour">The series color</param>
         /// <param name="lineType">The type of series line</param>
         /// <param name="markerType">The type of series markers</param>
+        /// <param name="lineThickness">The line thickness</param>
+        /// <param name="markerSize">The size of the marker</param>
+        /// <param name="showInLegend">Show in legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawLineAndMarkers(
              string title,
@@ -167,6 +180,8 @@ namespace UserInterface.Views
              Color colour,
              Models.Graph.LineType lineType,
              Models.Graph.MarkerType markerType,
+             Models.Graph.LineThicknessType lineThickness,
+             Models.Graph.MarkerSizeType markerSize,
              bool showOnLegend)
         {
             if (x != null && y != null)
@@ -199,6 +214,10 @@ namespace UserInterface.Views
                     if (series.LineStyle == LineStyle.None)
                         series.Color = OxyColors.Transparent;
                 }
+
+                // Line thickness
+                if (lineThickness == LineThicknessType.Thin)
+                    series.StrokeThickness = 0.5;
                 
                 // Marker type.
                 OxyPlot.MarkerType type;
@@ -207,7 +226,11 @@ namespace UserInterface.Views
                     series.MarkerType = type;
                 }
 
-                series.MarkerSize = 7.0;
+                if (markerSize == MarkerSizeType.Normal)
+                    series.MarkerSize = 7.0;
+                else
+                    series.MarkerSize = 5.0;
+
                 series.MarkerStroke = ConverterExtensions.ToOxyColor(colour);
                 if (filled)
                 {
@@ -859,6 +882,15 @@ namespace UserInterface.Views
         public void SetMargins(int margin)
         {
             this.plot1.Model.Padding = new OxyThickness(margin, margin, margin, margin);
+        }
+
+        /// <summary>Graph has been clicked.</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnClick(object sender, EventArgs e)
+        {
+            if (SingleClick != null)
+                SingleClick.Invoke(this, e);
         }
     }
 }

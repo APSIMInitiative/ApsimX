@@ -22,6 +22,9 @@ namespace Models.Graph
     [Serializable]
     public class Series : Model, IGraphable
     {
+        [NonSerialized]
+        private DataTable data = null;
+
         /// <summary>Constructor for a series</summary>
         public Series()
         {
@@ -69,11 +72,17 @@ namespace Models.Graph
         /// <summary>The FactorIndex to vary line types.</summary>
         public int FactorIndexToVaryLines { get; set; }
 
-        /// <summary>Gets or sets the marker to show</summary>
+        /// <summary>Gets or sets the marker size</summary>
         public MarkerType Marker { get; set; }
+
+        /// <summary>Marker size.</summary>
+        public MarkerSizeType MarkerSize { get; set; }
 
         /// <summary>Gets or sets the line type to show</summary>
         public LineType Line { get; set; }
+
+        /// <summary>Gets or sets the line thickness</summary>
+        public LineThicknessType LineThickness { get; set; }
 
         /// <summary>Gets or sets the name of the table to get data from.</summary>
         public string TableName { get; set; }
@@ -93,6 +102,9 @@ namespace Models.Graph
         /// <summary>Gets or sets a value indicating whether the series should be shown in the legend</summary>
         public bool ShowInLegend { get; set; }
 
+        /// <summary>Gets or sets a value indicating whether the series name should be shown in the legend</summary>
+        public bool IncludeSeriesNameInLegend { get; set; }
+
         /// <summary>Gets or sets a value indicating whether the Y variables should be cumulative.</summary>
         public bool Cumulative { get; set; }
 
@@ -110,7 +122,7 @@ namespace Models.Graph
 
             // If this series doesn't have a table name then it must be getting its data from other models.
             if (TableName == null)
-                ourDefinitions.Add(CreateDefinition(Name, null, Colour, Marker, Line));
+                ourDefinitions.Add(CreateDefinition(Name, null, Colour, Marker, Line, null));
             else
             {
                 Simulation parentSimulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
@@ -154,20 +166,25 @@ namespace Models.Graph
                     int colourIndex = Array.IndexOf(ColourUtilities.Colours, Colour);
                     if (colourIndex == -1)
                         colourIndex = 0;
+                    MarkerType marker = Marker;
                     foreach (Experiment experiment in experiments)
                     {
                         string filter = "SimulationName IN " + "(" + StringUtilities.Build(experiment.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
-                        CreateDefinitions(experiment.BaseSimulation, experiment.Name, filter, ref colourIndex, Marker, Line, ourDefinitions);
+                        CreateDefinitions(experiment.BaseSimulation, experiment.Name, filter, ref colourIndex, ref marker, Line, ourDefinitions, experiment.Names());
                     }
 
                     // Now create series definitions for each simulation found.
+                    marker = Marker;
                     foreach (Simulation simulation in simulations)
                     {
                         string filter = "SimulationName = '" + simulation.Name + "'";
-                        CreateDefinitions(simulation, simulation.Name, filter, ref colourIndex, Marker, Line, ourDefinitions);
+                        CreateDefinitions(simulation, simulation.Name, filter, ref colourIndex, ref marker, Line, ourDefinitions, new string[] { simulation.Name });
                     }
                 }
             }
+
+            // Get all data.
+            StoreDataInSeriesDefinitions(ourDefinitions);
 
             // We might have child models that wan't to add to our series definitions e.g. regression.
             foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
@@ -191,15 +208,17 @@ namespace Models.Graph
                 int colourIndex = 0;
                 foreach (Zone zone in zones)
                 {
-                    string filter = string.Format("Name='{0}' and ZoneName='{1}'", parentSimulation.Name, zone.Name);
-                    ourDefinitions.Add(CreateDefinition(zone.Name, filter, ColourUtilities.ChooseColour(colourIndex), Marker, Line));
+                    string filter = string.Format("SimulationName='{0}' and ZoneName='{1}'", parentSimulation.Name, zone.Name);
+                    ourDefinitions.Add(CreateDefinition(zone.Name, filter, ColourUtilities.ChooseColour(colourIndex), Marker, Line, 
+                                                        new string[] { parentSimulation.Name }));
                     colourIndex++;
                 }
             }
             else
             {
-                string filter = string.Format("Name='{0}'", parentSimulation.Name);
-                ourDefinitions.Add(CreateDefinition(Name, filter, Colour, Marker, Line));
+                string filter = string.Format("SimulationName='{0}'", parentSimulation.Name);
+                ourDefinitions.Add(CreateDefinition(Name, filter, Colour, Marker, Line,
+                                                    new string[] { parentSimulation.Name }));
             }
         }
 
@@ -297,7 +316,7 @@ namespace Models.Graph
                     string filter = GetFilter(parentExperiment, combination);
 
                     CreateDefinitions(parentExperiment.BaseSimulation, seriesName, filter, ref colourIndex,
-                                      marker, line, ourDefinitions);
+                                      ref marker, line, ourDefinitions, parentExperiment.Names());
                 }
             }
         }
@@ -417,9 +436,11 @@ namespace Models.Graph
         /// <param name="definitions">The definitions to add to.</param>
         /// <param name="marker">The marker type.</param>
         /// <param name="line">The line type.</param>
+        /// <param name="simulationNames">Simulation names to include in data.</param>
         private void CreateDefinitions(Simulation simulation, string baseTitle, string baseFilter, ref int colourIndex, 
-                                       MarkerType marker, LineType line, 
-                                       List<SeriesDefinition> definitions)
+                                       ref MarkerType marker, LineType line, 
+                                       List<SeriesDefinition> definitions,
+                                       string[] simulationNames)
         {
             List<IModel> zones = Apsim.Children(simulation, typeof(Zone));
             if (zones.Count > 1)
@@ -429,7 +450,8 @@ namespace Models.Graph
                     string zoneFilter = baseFilter + " AND ZoneName = '" + zone.Name + "'";
                     definitions.Add(CreateDefinition(baseTitle + " " + zone.Name, zoneFilter,
                                                      ColourUtilities.ChooseColour(colourIndex),
-                                                     marker, line));
+                                                     marker, line,
+                                                     simulationNames));
                     colourIndex++;
                 }
             }
@@ -437,12 +459,28 @@ namespace Models.Graph
             {
                 definitions.Add(CreateDefinition(baseTitle, baseFilter,
                                                  ColourUtilities.ChooseColour(colourIndex),
-                                                 marker, line));
+                                                 marker, line,
+                                                 simulationNames));
                 colourIndex++;
             }
 
             if (colourIndex >= ColourUtilities.Colours.Length)
+            {
                 colourIndex = 0;
+                marker = IncrementMarker(marker);
+            }
+        }
+
+        /// <summary>Increment marker type.</summary>
+        /// <param name="marker">Marker type</param>
+        private MarkerType IncrementMarker(MarkerType marker)
+        {
+            Array markers = Enum.GetValues(typeof(MarkerType));
+            int markerIndex = Array.IndexOf(markers, marker);
+            markerIndex++;
+            if (markerIndex >= markers.Length)
+                markerIndex = 0;
+            return (MarkerType) markers.GetValue(markerIndex);
         }
 
         /// <summary>Creates a series definition.</summary>
@@ -451,15 +489,21 @@ namespace Models.Graph
         /// <param name="colour">The colour.</param>
         /// <param name="line">The line type.</param>
         /// <param name="marker">The marker type.</param>
+        /// <param name="simulationNames">A list of simulations to include in data.</param>
         /// <returns>The newly created definition.</returns>
-        private SeriesDefinition CreateDefinition(string title, string filter, Color colour, MarkerType marker, LineType line)
+        private SeriesDefinition CreateDefinition(string title, string filter, Color colour, MarkerType marker, LineType line, string[] simulationNames)
         {
             SeriesDefinition definition = new SeriesDefinition();
-            GetData(filter, definition);
+            definition.SimulationNames = simulationNames;
+            definition.Filter = filter;
             definition.colour = colour;
             definition.title = title;
+            if (IncludeSeriesNameInLegend)
+                definition.title += ": " + Name;
             definition.line = line;
             definition.marker = marker;
+            definition.lineThickness = LineThickness;
+            definition.markerSize = MarkerSize;
             definition.showInLegend = ShowInLegend;
             definition.type = Type;
             definition.xAxis = XAxis;
@@ -469,10 +513,50 @@ namespace Models.Graph
             return definition;
         }
 
+        /// <summary>Give data to all series definitions.</summary>
+        /// <param name="definitions">The definitions to satisfy.</param>
+        private void StoreDataInSeriesDefinitions(List<SeriesDefinition> definitions)
+        {
+            // Get a list of all simulation names.
+            SortedSet<string> simulationNames = new SortedSet<string>();
+            foreach (SeriesDefinition definition in definitions)
+            {
+                if (definition.SimulationNames != null)
+                    foreach (string simulationName in definition.SimulationNames)
+                        simulationNames.Add(simulationName);
+            }
+
+            // Create a filter.
+            string filter = string.Empty;
+            foreach (string simulationName in simulationNames)
+            {
+                if (filter != string.Empty)
+                    filter += ",";
+                filter += "'" + simulationName + "'";
+            }
+            filter = "SimulationName IN (" + filter + ")";
+
+            List<string> fieldNames = new List<string>();
+            fieldNames.Add(XFieldName);
+            fieldNames.Add(YFieldName);
+            if (X2FieldName != null)
+                fieldNames.Add(X2FieldName);
+            if (Y2FieldName != null)
+                fieldNames.Add(Y2FieldName);
+
+            // Get all data.
+            DataStore dataStore = new DataStore(this);
+            data = dataStore.GetFilteredData(TableName, fieldNames.ToArray(), filter);
+            dataStore.Disconnect();
+
+            // filter data for each definition.
+            foreach (SeriesDefinition definition in definitions)
+                GetData(definition);
+        }
+
         /// <summary>Gets all series data and stores in the specified definition.</summary>
-        /// <param name="filter">The data filter to use.</param>
         /// <param name="definition">The definition to store the data in.</param>
-        private void GetData(string filter, SeriesDefinition definition)
+        private void GetData(SeriesDefinition definition)
         {
             // If the table name is null then use reflection to get data from other models.
             if (TableName == null)
@@ -482,29 +566,20 @@ namespace Models.Graph
             }
             else
             {
-                List<string> fieldNames = new List<string>();
-                fieldNames.Add(XFieldName);
-                fieldNames.Add(YFieldName);
-                if (X2FieldName != null)
-                    fieldNames.Add(X2FieldName);
-                if (Y2FieldName != null)
-                    fieldNames.Add(Y2FieldName);
-
-                string where = "(" + filter;
+                string where = "(" + definition.Filter;
                 if (Filter != null && Filter != string.Empty)
                     where += " AND (" + Filter + ")";
                 where += ")";
 
-                DataStore dataStore = new DataStore(this);
-                DataTable data = dataStore.GetFilteredData(TableName, fieldNames.ToArray(), where);
-                
-                dataStore.Disconnect();
+                DataView dataView = new DataView(data);
+                if (where != "()")
+                    dataView.RowFilter = where;
 
                 // If the field exists in our data table then return it.
-                if (data != null && data.Columns.Contains(XFieldName) && data.Columns.Contains(YFieldName))
+                if (data != null && data.Columns.Contains(XFieldName) && data.Columns.Contains(YFieldName) && dataView.Count > 0)
                 {
-                    definition.x = GetDataFromTable(data, XFieldName);
-                    definition.y = GetDataFromTable(data, YFieldName);
+                    definition.x = GetDataFromTable(dataView, XFieldName);
+                    definition.y = GetDataFromTable(dataView, YFieldName);
                     if (Cumulative)
                         definition.y = MathUtilities.Cumulative(definition.y as IEnumerable<double>);
                     if (CumulativeX)
@@ -513,10 +588,10 @@ namespace Models.Graph
                     if (X2FieldName != null && Y2FieldName != null &&
                         data.Columns.Contains(X2FieldName) && data.Columns.Contains(Y2FieldName))
                     {
-                        definition.x2 = GetDataFromTable(data, X2FieldName);
-                        definition.y2 = GetDataFromTable(data, Y2FieldName);
+                        definition.x2 = GetDataFromTable(dataView, X2FieldName);
+                        definition.y2 = GetDataFromTable(dataView, Y2FieldName);
                     }
-                    definition.simulationNamesForEachPoint = (IEnumerable<string>) GetDataFromTable(data, "SimulationName");
+                    definition.simulationNamesForEachPoint = (IEnumerable<string>) GetDataFromTable(dataView, "SimulationName");
                 }
             }
         }
@@ -525,11 +600,11 @@ namespace Models.Graph
         /// <param name="data">The table</param>
         /// <param name="fieldName">Name of the field.</param>
         /// <returns>The column of data.</returns>
-        private IEnumerable GetDataFromTable(DataTable data, string fieldName)
+        private IEnumerable GetDataFromTable(DataView data, string fieldName)
         {
-            if (data.Columns[fieldName].DataType == typeof(DateTime))
+            if (data.Table.Columns[fieldName].DataType == typeof(DateTime))
                 return DataTableUtilities.GetColumnAsDates(data, fieldName);
-            else if (data.Columns[fieldName].DataType == typeof(string))
+            else if (data.Table.Columns[fieldName].DataType == typeof(string))
                 return DataTableUtilities.GetColumnAsStrings(data, fieldName);
             else
                 return DataTableUtilities.GetColumnAsDoubles(data, fieldName);

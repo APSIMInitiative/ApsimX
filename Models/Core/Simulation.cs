@@ -14,7 +14,7 @@ namespace Models.Core
     /// <summary>
     /// A simulation model
     /// </summary>
-    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Experiment))]
     [Serializable]
     public class Simulation : Zone, JobManager.IRunnable
@@ -150,6 +150,7 @@ namespace Models.Core
         /// <exception cref="ApsimXException">Cannot invoke Commenced</exception>
         public void DoRun(object sender)
         {
+            Console.WriteLine("File: " + Path.GetFileNameWithoutExtension(this.FileName) + ", Simulation " + this.Name + " has commenced.");
             if (DoCommence != null)
                 DoCommence.Invoke(sender, new EventArgs());
             else
@@ -173,10 +174,7 @@ namespace Models.Core
             }
 
             timer.Stop();
+            Console.WriteLine("File: " + Path.GetFileNameWithoutExtension(this.FileName) + ", Simulation " + this.Name + " complete. Time: " + timer.Elapsed.TotalSeconds.ToString("0.00 sec"));
         }
-
-
     }
-
-
 }

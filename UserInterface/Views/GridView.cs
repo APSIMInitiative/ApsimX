@@ -478,7 +478,13 @@ namespace UserInterface.Views
                 // Put the new value into the table on the correct row.
                 if (this.DataSource != null)
                 {
-                    this.DataSource.Rows[e.RowIndex][e.ColumnIndex] = newValue;
+                    try
+                    {
+                        this.DataSource.Rows[e.RowIndex][e.ColumnIndex] = newValue;
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
 
                 if (this.valueBeforeEdit != null && this.valueBeforeEdit.GetType() == typeof(string) && newValue == null)
@@ -536,6 +542,8 @@ namespace UserInterface.Views
                 Grid.Height = 0;
                 Grid.Visible = false;
             }
+            else
+                Grid.Visible = true;
 
             //resize PictureBox
             pictureBox1.Location = new Point(Grid.Width, 0);

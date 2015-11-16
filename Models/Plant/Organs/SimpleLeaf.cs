@@ -36,12 +36,26 @@ namespace Models.PMF.Organs
     /// <remarks>
     /// </remarks>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SimpleLeaf : BaseOrgan, AboveGround, ICanopy
     {
         #region Canopy interface
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.CropType; } }
+
+        /// <summary>Albedo.</summary>
+        [Description("Albedo")]
+        public double Albedo { get; set; }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        [Description("GSMAX")]
+        public double Gsmax { get; set; }
+
+        /// <summary>Gets or sets the R50.</summary>
+        [Description("R50")]
+        public double R50 { get; set; }
 
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]

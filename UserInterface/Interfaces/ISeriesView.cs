@@ -36,6 +36,12 @@ namespace UserInterface.Interfaces
         /// <summary>MarkerType</summary>
         IDropDownView MarkerType { get; }
 
+        /// <summary>Line thickness</summary>
+        IDropDownView LineThickness { get; }
+
+        /// <summary>Marker size</summary>
+        IDropDownView MarkerSize { get; }
+
         /// <summary>Colour</summary>
         IColourDropDownView Colour { get; }
 
@@ -53,6 +59,9 @@ namespace UserInterface.Interfaces
 
         /// <summary>Show in lengend checkbox.</summary>
         ICheckBoxView ShowInLegend { get; }
+
+        /// <summary>Include series name in legend.</summary>
+        ICheckBoxView IncludeSeriesNameInLegend { get; }
 
         /// <summary>Graph.</summary>
         IGraphView GraphView { get; }
