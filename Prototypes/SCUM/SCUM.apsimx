@@ -3571,14 +3571,6 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Title>Length (mm)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -9218,7 +9210,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>RainShelterNitrogen</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Sumariser.AboveGroundLive.N</YFieldName>
+          <YFieldName>Maize.AboveGroundLive.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
