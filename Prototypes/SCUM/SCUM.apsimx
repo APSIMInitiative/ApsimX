@@ -1317,64 +1317,68 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
     </Test>
   </Tests>
   <Experiment>
-    <Name>TestCrop</Name>
+    <Name>Test</Name>
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>SpringWheat</Name>
-        <Specifications>
-          <string>[SCUMSowingRule].Script.CultivarName = Wheat_Spring</string>
-          <string>[SCUMSowingRule].Script.SowingDate = 1998-09-15</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>AutumnWheat</Name>
-        <Specifications>
-          <string>[SCUMSowingRule].Script.CultivarName = Wheat_Autumn</string>
-          <string>[SCUMSowingRule].Script.SowingDate = 1998-05-15</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>Potatoes</Name>
-        <Specifications>
-          <string>[SCUMSowingRule].Script.CultivarName = Potatoes_Long</string>
-          <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>Peas</Name>
-        <Specifications>
-          <string>[SCUMSowingRule].Script.CultivarName = Green_Peas</string>
-          <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>Maize</Name>
-        <Specifications>
-          <string>[SCUMSowingRule].Script.CultivarName = Maize_Short</string>
-          <string>[SCUMSowingRule].Script.SowingDate = 1998-11-15</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>Spinich</Name>
-        <Specifications>
-          <string>[SCUMSowingRule].Script.CultivarName = Spinich</string>
-          <string>[SCUMSowingRule].Script.SowingDate = 1998-05-15</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>Kale</Name>
-        <Specifications>
-          <string>[SCUMSowingRule].Script.CultivarName = Kale</string>
-          <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>Rape</Name>
-        <Specifications>
-          <string>[SCUMSowingRule].Script.CultivarName = Rape</string>
-          <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
-        </Specifications>
+        <Name>Crop</Name>
+        <Factor>
+          <Name>SpringWheat</Name>
+          <Specifications>
+            <string>[SCUMSowingRule].Script.CultivarName = Wheat_Spring</string>
+            <string>[SCUMSowingRule].Script.SowingDate = 1998-09-15</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>AutumnWheat</Name>
+          <Specifications>
+            <string>[SCUMSowingRule].Script.CultivarName = Wheat_Autumn</string>
+            <string>[SCUMSowingRule].Script.SowingDate = 1998-05-15</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Potatoes</Name>
+          <Specifications>
+            <string>[SCUMSowingRule].Script.CultivarName = Potatoes_Long</string>
+            <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Peas</Name>
+          <Specifications>
+            <string>[SCUMSowingRule].Script.CultivarName = Green_Peas</string>
+            <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Maize</Name>
+          <Specifications>
+            <string>[SCUMSowingRule].Script.CultivarName = Maize_Short</string>
+            <string>[SCUMSowingRule].Script.SowingDate = 1998-11-15</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Spinich</Name>
+          <Specifications>
+            <string>[SCUMSowingRule].Script.CultivarName = Spinich</string>
+            <string>[SCUMSowingRule].Script.SowingDate = 1998-05-15</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Kale</Name>
+          <Specifications>
+            <string>[SCUMSowingRule].Script.CultivarName = Kale</string>
+            <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Rape</Name>
+          <Specifications>
+            <string>[SCUMSowingRule].Script.CultivarName = Rape</string>
+            <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
       </Factor>
     </Factors>
     <Simulation>
