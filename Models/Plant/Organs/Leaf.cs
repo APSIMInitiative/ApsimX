@@ -191,18 +191,23 @@ namespace Models.PMF.Organs
             public IFunction MaxArea = null;
             /// <summary>The growth duration</summary>
             [Link]
+            [Units("deg day")]
             public IFunction GrowthDuration = null;
             /// <summary>The lag duration</summary>
             [Link]
+            [Units("deg day")]
             public IFunction LagDuration = null;
             /// <summary>The senescence duration</summary>
             [Link]
+            [Units("deg day")]
             public IFunction SenescenceDuration = null;
             /// <summary>The detachment lag duration</summary>
             [Link]
+            [Units("deg day")]
             public IFunction DetachmentLagDuration = null;
             /// <summary>The detachment duration</summary>
             [Link]
+            [Units("deg day")]
             public IFunction DetachmentDuration = null;
             /// <summary>The specific leaf area maximum</summary>
             [Link]
