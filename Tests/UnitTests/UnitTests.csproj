@@ -23,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -92,6 +93,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MockSoil.cs" />
+    <Compile Include="MockSurfaceOrganicMatter.cs" />
+    <Compile Include="MockIrrigation.cs" />
+    <Compile Include="MockClock.cs" />
+    <Compile Include="MockWeather.cs" />
     <Compile Include="TestConverter.cs" />
     <Compile Include="APITest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
