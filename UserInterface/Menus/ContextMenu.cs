@@ -186,58 +186,8 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Run Tests", AppliesTo = new Type[] { typeof(Tests) })]
         public void RunTests(object sender, EventArgs e)
         {
-            RegistryKey registryKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"Software\R-core\R", false);
-            if (registryKey != null)
-            {
-                // Will need to make this work on 32bit machines
-                string pathToR = (string)registryKey.GetValue("InstallPath", string.Empty);
-                pathToR += "\\Bin\\x64\\rscript.exe";
-
-                string binFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string scriptFileName = Path.Combine(new string[] 
-                    {
-                        binFolder, 
-                        "..", 
-                        "Tests", 
-                        "RTestSuite",
-                        "RunTest.R"
-                    });
-
-                string workingFolder = Path.Combine(new string[] { binFolder, ".." });
-
-                string arguments = "\"" + scriptFileName + "\" " + "\"" + this.explorerPresenter.ApsimXFile.FileName + "\"";
-                Process process = ProcessUtilities.RunProcess(pathToR, arguments, workingFolder);
-                try
-                {
-                    string message = ProcessUtilities.CheckProcessExitedProperly(process);
-                    this.explorerPresenter.ShowMessage(message, DataStore.ErrorLevel.Information);
-                }
-                catch (Exception err)
-                {
-                    this.explorerPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
-                }
-                
-            }
-            else
-            {
-                this.explorerPresenter.ShowMessage("Could not find R installation.", DataStore.ErrorLevel.Warning);
-            }
-
-            {
-            string binFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string apsimxFolder = Path.Combine(binFolder, "..");
-            string scriptFileName = Path.Combine(new string[] 
-            {
-                binFolder, 
-                "..", 
-                "Tests", 
-                "RTestSuite",
-                "RunTest.Bat"
-            });
-            string workingFolder = apsimxFolder;
-            Process process = ProcessUtilities.RunProcess(scriptFileName, this.explorerPresenter.ApsimXFile.FileName, workingFolder);
-            string errorMessages = ProcessUtilities.CheckProcessExitedProperly(process);
-            }
+            Tests test = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Tests;
+            test.Test();
         }
 
         /// <summary>
