@@ -543,10 +543,16 @@ namespace Models.Graph
                 fieldNames.Add(X2FieldName);
             if (Y2FieldName != null)
                 fieldNames.Add(Y2FieldName);
+            fieldNames.Add("ZoneName");
 
             // Get all data.
             DataStore dataStore = new DataStore(this);
             data = dataStore.GetFilteredData(TableName, fieldNames.ToArray(), filter);
+            if (data == null)
+            {
+                fieldNames.Remove("ZoneName");
+                data = dataStore.GetFilteredData(TableName, fieldNames.ToArray(), filter);
+            }
             dataStore.Disconnect();
 
             // filter data for each definition.
