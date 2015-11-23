@@ -19,8 +19,6 @@ namespace Models.Agroforestry
         Weather weather = null; // parent weather.
         [Link]
         AgroforestrySystem ParentSystem = null;
-        [Link]
-        TreeProxy Tree = null;
 
         /// <summary>Gets the start date of the weather file</summary>
         public DateTime StartDate { get { return weather.StartDate; } }
@@ -38,7 +36,7 @@ namespace Models.Agroforestry
         public double Rain { get { return weather.Rain; } }
 
         /// <summary>Gets or sets the solar radiation. MJ/m2/day</summary>
-        public double Radn { get { return weather.Radn * (1-Tree.GetShade(Parent as Zone) / 100); ; } }
+        public double Radn { get { return weather.Radn * ParentSystem.GetRadiationReduction(Parent as Zone) ; } }
 
         /// <summary>Gets or sets the vapor pressure</summary>
         public double VP { get { return weather.VP; } }
