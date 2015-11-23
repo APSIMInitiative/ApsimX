@@ -171,6 +171,12 @@ namespace UserInterface.Presenters
                         Attribute descriptionAttribute = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), true);
                         this.properties.Add(new VariableProperty(this.model, property));
                     }
+
+                    if(property.PropertyType == typeof(DataTable))
+                    {
+                        DataTable dt = property.GetValue(property, null) as DataTable;
+                        this.grid.DataSource = dt;
+                    }
                 }
             }
         }
