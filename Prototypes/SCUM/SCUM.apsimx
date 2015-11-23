@@ -16438,7 +16438,7 @@ namespace Models
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
-          <Filter>[SimulationName] = 'PP_W1_N0'</Filter>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
         </Series>
         <Axis>
           <Type>Left</Type>
