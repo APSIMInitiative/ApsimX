@@ -209,7 +209,7 @@ namespace Models.Graph
                 foreach (Zone zone in zones)
                 {
                     string filter = string.Format("SimulationName='{0}' and ZoneName='{1}'", parentSimulation.Name, zone.Name);
-                    ourDefinitions.Add(CreateDefinition(zone.Name, filter, ColourUtilities.ChooseColour(colourIndex), Marker, Line, 
+                    ourDefinitions.Add(CreateDefinition(zone.Name, filter, ColourUtilities.ChooseColour(colourIndex), Marker, Line,
                                                         new string[] { parentSimulation.Name }));
                     colourIndex++;
                 }
@@ -437,8 +437,8 @@ namespace Models.Graph
         /// <param name="marker">The marker type.</param>
         /// <param name="line">The line type.</param>
         /// <param name="simulationNames">Simulation names to include in data.</param>
-        private void CreateDefinitions(Simulation simulation, string baseTitle, string baseFilter, ref int colourIndex, 
-                                       ref MarkerType marker, LineType line, 
+        private void CreateDefinitions(Simulation simulation, string baseTitle, string baseFilter, ref int colourIndex,
+                                       ref MarkerType marker, LineType line,
                                        List<SeriesDefinition> definitions,
                                        string[] simulationNames)
         {
@@ -480,7 +480,7 @@ namespace Models.Graph
             markerIndex++;
             if (markerIndex >= markers.Length)
                 markerIndex = 0;
-            return (MarkerType) markers.GetValue(markerIndex);
+            return (MarkerType)markers.GetValue(markerIndex);
         }
 
         /// <summary>Creates a series definition.</summary>
@@ -543,7 +543,18 @@ namespace Models.Graph
                 fieldNames.Add(X2FieldName);
             if (Y2FieldName != null)
                 fieldNames.Add(Y2FieldName);
-            fieldNames.Add("ZoneName");
+            if ((Filter != null) && Filter.StartsWith("["))
+            {
+               string FilterName = "";
+               int posCloseBracket = Filter.IndexOf(']');
+               if (posCloseBracket == -1)
+                       throw new Exception("Invalid filter column name: " + Filter);
+               FilterName = Filter.Substring(1, posCloseBracket - 1);
+               fieldNames.Add(FilterName);
+            }
+            else
+              throw new Exception("Column name to filter on must be within square brackets.  e.g [ColumToFilter]");
+            
 
             // Get all data.
             DataStore dataStore = new DataStore(this);
@@ -572,9 +583,11 @@ namespace Models.Graph
             }
             else
             {
-                string where = "(" + definition.Filter;
+                string FilterExpression = Filter.Replace("[", "");
+                FilterExpression = FilterExpression.Replace("]", "");
+                string where = "((" + definition.Filter;
                 if (Filter != null && Filter != string.Empty)
-                    where += " AND (" + Filter + ")";
+                    where += ") AND (" + FilterExpression + ")";
                 where += ")";
 
                 DataView dataView = new DataView(data);
