@@ -1049,7 +1049,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.46</Command>
         <Command>[Product].MaximumNConc.Value = 0.012</Command>
         <Command>[Product].MinimumNConc.Value = 0.0084</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 1000</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -1072,7 +1072,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.95</Command>
         <Command>[Product].MaximumNConc.Value = 0.013</Command>
         <Command>[Product].MinimumNConc.Value = 0.0091</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1,0.091,0.082,0.074,0.067,0.061,0.055</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -1095,7 +1095,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.815</Command>
         <Command>[Product].MaximumNConc.Value = 0.015</Command>
         <Command>[Product].MinimumNConc.Value = 0.0105</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -1118,7 +1118,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.0</Command>
         <Command>[Product].MaximumNConc.Value = 0.03</Command>
         <Command>[Product].MinimumNConc.Value = 0.021</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -1141,7 +1141,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.2</Command>
         <Command>[Product].MaximumNConc.Value = 0.035</Command>
         <Command>[Product].MinimumNConc.Value = 0.0245</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -1164,7 +1164,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.13</Command>
         <Command>[Product].MaximumNConc.Value = 0.035</Command>
         <Command>[Product].MinimumNConc.Value = 0.0245</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -1187,7 +1187,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.4</Command>
         <Command>[Product].MaximumNConc.Value = 0.035</Command>
         <Command>[Product].MinimumNConc.Value = 0.0245</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -1210,7 +1210,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.75</Command>
         <Command>[Product].MaximumNConc.Value = 0.026</Command>
         <Command>[Product].MinimumNConc.Value = 0.0182</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -1233,7 +1233,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.6</Command>
         <Command>[Product].MaximumNConc.Value = 0.026</Command>
         <Command>[Product].MinimumNConc.Value = 0.0182</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -1256,7 +1256,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.9</Command>
         <Command>[Product].MaximumNConc.Value = 0.01</Command>
         <Command>[Product].MinimumNConc.Value = 0.007</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -1279,7 +1279,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.45</Command>
         <Command>[Product].MaximumNConc.Value = 0.035</Command>
         <Command>[Product].MinimumNConc.Value = 0.0245</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -1302,7 +1302,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.3</Command>
         <Command>[Product].MaximumNConc.Value = 0.035</Command>
         <Command>[Product].MinimumNConc.Value = 0.0245</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -1325,7 +1325,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.09</Command>
         <Command>[Product].MaximumNConc.Value = 0.035</Command>
         <Command>[Product].MinimumNConc.Value = 0.0245</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 900</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -1348,7 +1348,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.09</Command>
         <Command>[Product].MaximumNConc.Value = 0.035</Command>
         <Command>[Product].MinimumNConc.Value = 0.0245</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 900</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -1361,7 +1361,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Stover].bBiomass.Value = 210.0</Command>
       </Cultivar>
       <Cultivar>
-        <Name>DriedBeans</Name>
+        <Name>Dried_Beans</Name>
         <Command>[Nodule].NFixationOption = Majic</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 755.0</Command>
         <Command>[Phenology].Senescing.Target.Value = 300</Command>
@@ -1371,7 +1371,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.5</Command>
         <Command>[Product].MaximumNConc.Value = 0.035</Command>
         <Command>[Product].MinimumNConc.Value = 0.0245</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.015</Command>
         <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].MinimumNConc.Value = 0.015</Command>
@@ -1394,7 +1394,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.5</Command>
         <Command>[Product].MaximumNConc.Value = 0.035</Command>
         <Command>[Product].MinimumNConc.Value = 0.0245</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.015</Command>
         <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].MinimumNConc.Value = 0.015</Command>
@@ -1407,7 +1407,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Stover].bBiomass.Value = 165.0</Command>
       </Cultivar>
       <Cultivar>
-        <Name>GreenBeans</Name>
+        <Name>Green_Beans</Name>
         <Command>[Nodule].NFixationOption = Majic</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 782.0</Command>
         <Command>[Phenology].Senescing.Target.Value = 300</Command>
@@ -1417,7 +1417,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.45</Command>
         <Command>[Product].MaximumNConc.Value = 0.035</Command>
         <Command>[Product].MinimumNConc.Value = 0.0245</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.015</Command>
         <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].MinimumNConc.Value = 0.015</Command>
@@ -1430,7 +1430,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Stover].bBiomass.Value = 165.0</Command>
       </Cultivar>
       <Cultivar>
-        <Name>GreenPeas</Name>
+        <Name>Green_Peas</Name>
         <Command>[Nodule].NFixationOption = Majic</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 782.0</Command>
         <Command>[Phenology].Senescing.Target.Value = 300</Command>
@@ -1440,7 +1440,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.45</Command>
         <Command>[Product].MaximumNConc.Value = 0.035</Command>
         <Command>[Product].MinimumNConc.Value = 0.0245</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.015</Command>
         <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].MinimumNConc.Value = 0.015</Command>
@@ -1463,7 +1463,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.7</Command>
         <Command>[Product].MaximumNConc.Value = 0.03</Command>
         <Command>[Product].MinimumNConc.Value = 0.02</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0</Command>
         <Command>[Root].MaximumNConc.Value = 0.008</Command>
         <Command>[Root].MaximumRootDepth.Value = 3000</Command>
         <Command>[Root].MinimumNConc.Value = 0.008</Command>
@@ -1486,7 +1486,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.89</Command>
         <Command>[Product].MaximumNConc.Value = 0.018</Command>
         <Command>[Product].MinimumNConc.Value = 0.0126</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -1509,7 +1509,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.5</Command>
         <Command>[Product].MaximumNConc.Value = 0.035</Command>
         <Command>[Product].MinimumNConc.Value = 0.0245</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.015</Command>
         <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].MinimumNConc.Value = 0.015</Command>
@@ -1532,7 +1532,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.8</Command>
         <Command>[Product].MaximumNConc.Value = 0.026</Command>
         <Command>[Product].MinimumNConc.Value = 0.0182</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -1555,7 +1555,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.0</Command>
         <Command>[Product].MaximumNConc.Value = 0.03</Command>
         <Command>[Product].MinimumNConc.Value = 0.021</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.015</Command>
         <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].MinimumNConc.Value = 0.015</Command>
@@ -1578,7 +1578,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.5</Command>
         <Command>[Product].MaximumNConc.Value = 0.014</Command>
         <Command>[Product].MinimumNConc.Value = 0.0098</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1,0.091,0.082,0.074,0.067,0.061,0.055</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1</Command>
         <Command>[Root].MaximumNConc.Value = 0.007</Command>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].MinimumNConc.Value = 0.007</Command>
@@ -1601,7 +1601,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.5</Command>
         <Command>[Product].MaximumNConc.Value = 0.014</Command>
         <Command>[Product].MinimumNConc.Value = 0.0098</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1,0.091,0.082,0.074,0.067,0.061,0.055</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1</Command>
         <Command>[Root].MaximumNConc.Value = 0.007</Command>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].MinimumNConc.Value = 0.007</Command>
@@ -1624,7 +1624,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.5</Command>
         <Command>[Product].MaximumNConc.Value = 0.014</Command>
         <Command>[Product].MinimumNConc.Value = 0.0098</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1,0.091,0.082,0.074,0.067,0.061,0.055</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1</Command>
         <Command>[Root].MaximumNConc.Value = 0.007</Command>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].MinimumNConc.Value = 0.007</Command>
@@ -1647,7 +1647,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.95</Command>
         <Command>[Product].MaximumNConc.Value = 0.014</Command>
         <Command>[Product].MinimumNConc.Value = 0.0098</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1,0.091,0.082,0.074,0.067,0.061,0.055</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1</Command>
         <Command>[Root].MaximumNConc.Value = 0.007</Command>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].MinimumNConc.Value = 0.007</Command>
@@ -1670,7 +1670,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.0</Command>
         <Command>[Product].MaximumNConc.Value = 0.03</Command>
         <Command>[Product].MinimumNConc.Value = 0.021</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -1693,7 +1693,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.0</Command>
         <Command>[Product].MaximumNConc.Value = 0.012</Command>
         <Command>[Product].MinimumNConc.Value = 0.0084</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 1000</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -1716,7 +1716,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.32</Command>
         <Command>[Product].MaximumNConc.Value = 0.013</Command>
         <Command>[Product].MinimumNConc.Value = 0.0091</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1,0.091,0.082,0.074,0.067,0.061,0.055</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -1739,7 +1739,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.95</Command>
         <Command>[Product].MaximumNConc.Value = 0.013</Command>
         <Command>[Product].MinimumNConc.Value = 0.0091</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1,0.091,0.082,0.074,0.067,0.061,0.055</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -1762,7 +1762,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.3</Command>
         <Command>[Product].MaximumNConc.Value = 0.012</Command>
         <Command>[Product].MinimumNConc.Value = 0.0084</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 1000</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -1785,7 +1785,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.95</Command>
         <Command>[Product].MaximumNConc.Value = 0.013</Command>
         <Command>[Product].MinimumNConc.Value = 0.0091</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1,0.091,0.082,0.074,0.067,0.061,0.055</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -1808,7 +1808,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.8</Command>
         <Command>[Product].MaximumNConc.Value = 0.014</Command>
         <Command>[Product].MinimumNConc.Value = 0.0098</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.223,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 400</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -1831,7 +1831,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.95</Command>
         <Command>[Product].MaximumNConc.Value = 0.014</Command>
         <Command>[Product].MinimumNConc.Value = 0.0098</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -1854,7 +1854,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.0</Command>
         <Command>[Product].MaximumNConc.Value = 0.03</Command>
         <Command>[Product].MinimumNConc.Value = 0.021</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -1867,7 +1867,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Stover].bBiomass.Value = 165.0</Command>
       </Cultivar>
       <Cultivar>
-        <Name>Potato_Long</Name>
+        <Name>Potatoes_Long</Name>
         <Command>[Nodule].NFixationOption = None</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 690.0</Command>
         <Command>[Phenology].Senescing.Target.Value = 600</Command>
@@ -1877,7 +1877,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.911</Command>
         <Command>[Product].MaximumNConc.Value = 0.018</Command>
         <Command>[Product].MinimumNConc.Value = 0.0126</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -1890,7 +1890,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Stover].bBiomass.Value = 285.0</Command>
       </Cultivar>
       <Cultivar>
-        <Name>Potato_Medium</Name>
+        <Name>Potatoes_Medium</Name>
         <Command>[Nodule].NFixationOption = None</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 638.0</Command>
         <Command>[Phenology].Senescing.Target.Value = 600</Command>
@@ -1900,7 +1900,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.904</Command>
         <Command>[Product].MaximumNConc.Value = 0.018</Command>
         <Command>[Product].MinimumNConc.Value = 0.0126</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -1923,7 +1923,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.893</Command>
         <Command>[Product].MaximumNConc.Value = 0.018</Command>
         <Command>[Product].MinimumNConc.Value = 0.0126</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -1946,7 +1946,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.8</Command>
         <Command>[Product].MaximumNConc.Value = 0.03</Command>
         <Command>[Product].MinimumNConc.Value = 0.02</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0</Command>
         <Command>[Root].MaximumNConc.Value = 0.008</Command>
         <Command>[Root].MaximumRootDepth.Value = 2400</Command>
         <Command>[Root].MinimumNConc.Value = 0.008</Command>
@@ -1969,7 +1969,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.95</Command>
         <Command>[Product].MaximumNConc.Value = 0.013</Command>
         <Command>[Product].MinimumNConc.Value = 0.0091</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1,0.091,0.082,0.074,0.067,0.061,0.055</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -1992,7 +1992,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.95</Command>
         <Command>[Product].MaximumNConc.Value = 0.013</Command>
         <Command>[Product].MinimumNConc.Value = 0.0091</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1,0.091,0.082,0.074,0.067,0.061,0.055</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -2015,7 +2015,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.105</Command>
         <Command>[Product].MaximumNConc.Value = 0.015</Command>
         <Command>[Product].MinimumNConc.Value = 0.0105</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -2038,7 +2038,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.105</Command>
         <Command>[Product].MaximumNConc.Value = 0.015</Command>
         <Command>[Product].MinimumNConc.Value = 0.0105</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -2061,7 +2061,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.7</Command>
         <Command>[Product].MaximumNConc.Value = 0.03</Command>
         <Command>[Product].MinimumNConc.Value = 0.021</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -2084,7 +2084,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.8</Command>
         <Command>[Product].MaximumNConc.Value = 0.02</Command>
         <Command>[Product].MinimumNConc.Value = 0.014</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -2107,7 +2107,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.55</Command>
         <Command>[Product].MaximumNConc.Value = 0.014</Command>
         <Command>[Product].MinimumNConc.Value = 0.0098</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.007</Command>
         <Command>[Root].MaximumRootDepth.Value = 1000</Command>
         <Command>[Root].MinimumNConc.Value = 0.007</Command>
@@ -2130,7 +2130,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.5</Command>
         <Command>[Product].MaximumNConc.Value = 0.02</Command>
         <Command>[Product].MinimumNConc.Value = 0.014</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0.091,0.067,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
@@ -2153,7 +2153,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.95</Command>
         <Command>[Product].MaximumNConc.Value = 0.013</Command>
         <Command>[Product].MinimumNConc.Value = 0.0091</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1,0.091,0.082,0.074,0.067,0.061,0.055</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -2176,7 +2176,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.95</Command>
         <Command>[Product].MaximumNConc.Value = 0.013</Command>
         <Command>[Product].MinimumNConc.Value = 0.0091</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1,0.091,0.082,0.074,0.067,0.061,0.055</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -2199,7 +2199,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.41</Command>
         <Command>[Product].MaximumNConc.Value = 0.013</Command>
         <Command>[Product].MinimumNConc.Value = 0.0091</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1,0.091,0.082,0.074,0.067,0.061,0.055</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0.135,0.122,0.111,0.1</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -2222,7 +2222,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.46</Command>
         <Command>[Product].MaximumNConc.Value = 0.013</Command>
         <Command>[Product].MinimumNConc.Value = 0.0091</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1.0,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0.165,0.15,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumRootDepth.Value = 1000</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
@@ -2260,8 +2260,23 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <string>SoilWater</string>
       </SheetNames>
     </ExcelInput>
+    <Input>
+      <Name>ABlockYields</Name>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
+      <FileName>Yields2.csv</FileName>
+    </Input>
+    <Input>
+      <Name>ABlockObserved</Name>
+      <ErrorMessage>Please select a file to use.</ErrorMessage>
+      <FileName>AblockObserved.txt</FileName>
+    </Input>
+    <Input>
+      <Name>ABlockSWC</Name>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
+      <FileName>AblockSWC.txt</FileName>
+    </Input>
     <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
+    <MaximumResultsPerPage>100</MaximumResultsPerPage>
   </DataStore>
   <Tests>
     <Name>TestsBinary</Name>
@@ -14307,7 +14322,7 @@ namespace Models
           <Manager>
             <Name>Sowing_Yield</Name>
             <Script>
-              <YieldFile>C:\APSIMX\Prototypes\SCUM\Yields.csv</YieldFile>
+              <YieldFile>C:\APSIMX\Prototypes\SCUM\YieldsToSet.csv</YieldFile>
               <InitialRootDepth>10</InitialRootDepth>
               <Crop1>Potatoes_Short</Crop1>
               <SowingDate1>2004-10-15</SowingDate1>
@@ -14537,6 +14552,7 @@ namespace Models
           <Manager>
             <Name>NConcReps</Name>
             <Script>
+              <NConcFile>C:\APSIMX\Prototypes\SCUM\NO3.csv</NConcFile>
               <TotalLeach>0</TotalLeach>
               <Leach_60>0</Leach_60>
               <ObservedLeach1>0</ObservedLeach1>
@@ -14547,7 +14563,6 @@ namespace Models
               <NConc3>0</NConc3>
               <NConc4>0</NConc4>
               <NConc5>0</NConc5>
-              <NConcFile>C:\APSIMX\Prototypes\SCUM\NO3.csv</NConcFile>
               <Treat_Rep1>
               </Treat_Rep1>
               <Treat_Rep2>
@@ -15220,13 +15235,13 @@ namespace Models
             <string>[SCUM].Arbitrator.NSupply</string>
             <string>[SCUM].Stover.Fw</string>
             <string>[SCUM].Stover.Fn</string>
-            <string>[SCUM].Summariser.Total.Wt</string>
+            <string>[SCUM].Total.Wt</string>
             <string>[SCUM].ExpectedYield.Value</string>
             <string>[SCUM].DryYield.Value</string>
             <string>[SCUM].TotalBiomassAtStartReproductive.Value</string>
             <string>[SCUM].TotalBiomassAtStartSenescence.Value</string>
             <string>[SCUM].Ymax.Value</string>
-            <string>[SCUM].Summariser.Total.N</string>
+            <string>[SCUM].Total.N</string>
             <string>[SCUM].Arbitrator.DMSupply</string>
             <string>[SCUM].Arbitrator.DMDemand</string>
             <string>[SCUM].Phenology.AccumulatedThermalTime.Value</string>
@@ -15255,14 +15270,8 @@ namespace Models
             <string>[Soil].SoilWater.solute_flux_eff</string>
             <string>[SCUM].Total.N</string>
             <string>[Soil].SoilWater.flow_no3</string>
-            <string>[CalcNLeach].Script.Test1</string>
-            <string>[CalcNLeach].Script.Test2</string>
-            <string>[CalcNLeach].Script.Test3</string>
-            <string>[TreatmentID].Script.TreatmentName</string>
-            <string>[TreatmentID].Script.TestID</string>
-            <string>[Test].Script.Treatment</string>
-            <string>[Test2].Script.Treatment</string>
-            <string>[Sowing_Yield].Script.Treatment</string>
+            <string>[TreatmentID].Script.TreatmentName as Treat </string>
+            <string>[Sowing_Yield].Script.Treatment </string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -15292,7 +15301,29 @@ namespace Models
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SCUM.Product.LiveFWt</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter />
+      </Series>
+      <Series>
+        <Name>FWT1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>ABlockObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Product.LiveFWt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -15303,8 +15334,8 @@ namespace Models
         <Title>fwt</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
-        <Maximum>6000</Maximum>
-        <Interval>1000</Interval>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Bottom</Type>
@@ -15313,14 +15344,14 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
+      <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>NLeach1</Name>
+      <Name>ProductWt</Name>
       <Series>
-        <Name>NLeach</Name>
+        <Name>Predicted</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -15334,7 +15365,159 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Product.Live.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter />
+      </Series>
+      <Series>
+        <Name>Observed</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>ABlockObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Product.Live.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter />
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>fwt</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>ProductN</Name>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Product.Live.N</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter />
+      </Series>
+      <Series>
+        <Name>Observed</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>ABlockObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCUM.Product.Live.N</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter />
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>fwt</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>NLeach</Name>
+      <Series>
+        <Name>NLeach</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
         <YFieldName>NConcReps.Script.ObservedLeach1</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter />
+      </Series>
+      <Series>
+        <Name>NLeach1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>ABlockObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumLeach</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -15360,6 +15543,923 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
+    <Graph>
+      <Name>SWC</Name>
+      <Series>
+        <Name>FWT</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SWC</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter />
+      </Series>
+      <Series>
+        <Name>FWT1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>ABlockObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.SWC</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter />
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>fwt</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>SoilN</Name>
+      <Series>
+        <Name>FWT</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>TotalSoilN</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter />
+      </Series>
+      <Series>
+        <Name>FWT1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>ABlockObserved</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Mean_MineralN</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter />
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>fwt</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Folder>
+      <Name>CheckGraphs</Name>
+      <Graph>
+        <Name>Cover</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SCUM.Stover.CoverTotal</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>NStress</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SCUM.Arbitrator.FN</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>YieldDryWeight</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SCUM.Product.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>CropBiomass</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SCUM.Total.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+    </Folder>
+    <Folder>
+      <Name>NBalance</Name>
+      <Graph>
+        <Name>Mineralisation</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.AccumMineralisation</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Fertiliser</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.AccumFert</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>DeNit</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.AccumDenit</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>NLeach</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach1</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PlantN</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.AccumPlantN</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>DeltaSoilOrganicN</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.DeltaSoilOMN</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SurfaceResidueN</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SOM_N</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+    </Folder>
+    <Folder>
+      <Name>WaterBalance</Name>
+      <Graph>
+        <Name>Rainfall</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.AccumRainfall</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Irrigation</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.AccumIrrigation</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>EvapoTranspiration</Name>
+        <Series>
+          <Name>EP</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.AccumEP</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Series>
+          <Name>EO</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Thin</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.AccumEO</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Evaporation</Name>
+        <Series>
+          <Name>ES</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.AccumES</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Series>
+          <Name>EO</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Thin</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.AccumEO</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Drainage</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Drainage</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+    </Folder>
+    <Folder>
+      <Name>Leaching</Name>
+      <Graph>
+        <Name>NLeach</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach1</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[SimulationName] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+    </Folder>
   </Experiment>
   <ExplorerWidth>224</ExplorerWidth>
 </Simulations>
