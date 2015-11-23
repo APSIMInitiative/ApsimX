@@ -13550,8 +13550,8 @@ namespace Models
             <string>[InF].Script.NFert = 0</string>
             <string>[InF].Script.Irr1 = 55</string>
             <string>[InF].Script.Irr2 = 0</string>
-            <string>[InF].Script.IrrFact3 = 38</string>
-            <string>[InF].Script.IrrFact4 = 40</string>
+            <string>[InF].Script.Irr3 = 38</string>
+            <string>[InF].Script.Irr4 = 40</string>
           </Specifications>
         </Factor>
         <Factor>
@@ -13564,8 +13564,8 @@ namespace Models
             <string>[InF].Script.NFert = 100</string>
             <string>[InF].Script.Irr1 = 94</string>
             <string>[InF].Script.Irr2 = 34</string>
-            <string>[InF].Script.IrrFact3 = 61</string>
-            <string>[InF].Script.IrrFact4 = 0</string>
+            <string>[InF].Script.Irr3 = 61</string>
+            <string>[InF].Script.Irr4 = 0</string>
           </Specifications>
         </Factor>
         <Specifications />
@@ -14191,16 +14191,6 @@ namespace Models
               <double>0.1</double>
               <double>0.1</double>
             </NH4>
-            <SW>
-              <double>0.32</double>
-              <double>0.3</double>
-              <double>0.29</double>
-              <double>0.33</double>
-              <double>0.31</double>
-              <double>0.3</double>
-              <double>0.3</double>
-              <double>0.23</double>
-            </SW>
             <NO3Units>kgha</NO3Units>
             <NH4Units>kgha</NH4Units>
             <SWUnits>Volumetric</SWUnits>
@@ -14435,7 +14425,6 @@ namespace Models
 		{
 			if (Clock.Today.Date == SowingDate1)
 			{
-				//object ResetValue = 1;//Convert.ToDouble(Yields.Rows[0][1]);
 				SCUM.Sow(cultivar: Crop1, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 				object ResetValue = Convert.ToDouble(Yields.Rows[0][Treatment]);
 				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
@@ -14640,7 +14629,6 @@ namespace Models
 				ObservedLeach4 = ObservedLeach4 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc4) / 100;
 				ObservedLeach5 = ObservedLeach5 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc5) / 100;
 				TotalLeach = TotalLeach + (Soil.SoilWater.flow_no3[3]);
-				
 			}
 			else if (Clock.Today.Date > Potato1End)
 			{	
@@ -14651,7 +14639,6 @@ namespace Models
 				ObservedLeach4 = ObservedLeach4 + (Soil.SoilWater.Drainage * NConc4) / 100;
 				ObservedLeach5 = ObservedLeach5 + (Soil.SoilWater.Drainage * NConc5) / 100;
 				TotalLeach = TotalLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea;
-				
 			}
 		}
 		
