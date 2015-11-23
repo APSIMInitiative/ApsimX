@@ -69,7 +69,7 @@ namespace Models
             for(int i = 0; i < columnNames.Count; i++)
                 for(int j = 0;  j< statNames.Count;j++)
                 {
-                    table.Rows.Add(columnNames[i], statNames[j], 0, stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]), '!');
+                    table.Rows.Add(columnNames[i].Replace("Observed.",""), statNames[j], 0, stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]), '!');
                 }
         }
     }

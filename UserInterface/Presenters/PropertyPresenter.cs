@@ -77,7 +77,10 @@ namespace UserInterface.Presenters
             this.explorerPresenter = explorerPresenter;
 
             this.FindAllProperties(this.model);
-            this.PopulateGrid(this.model);
+            if (this.grid == null)
+                this.PopulateGrid(this.model);
+            else
+                this.grid.ResizeControls();
             this.grid.CellsChanged += this.OnCellValueChanged;
             this.grid.ButtonClick += OnFileBrowseClick;
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
@@ -174,7 +177,8 @@ namespace UserInterface.Presenters
 
                     if(property.PropertyType == typeof(DataTable))
                     {
-                        DataTable dt = property.GetValue(property, null) as DataTable;
+                        VariableProperty vp = new VariableProperty(this.model, property);
+                        DataTable dt = vp.Value as DataTable;
                         this.grid.DataSource = dt;
                     }
                 }
