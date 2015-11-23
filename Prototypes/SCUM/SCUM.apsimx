@@ -14483,73 +14483,6 @@ namespace Models
 				]]></Code>
           </Manager>
           <Manager>
-            <Name>CalcNLeach</Name>
-            <Script>
-              <NConcFile>C:\APSIMX\Prototypes\SCUM\NConc.csv</NConcFile>
-            </Script>
-            <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-using System.IO;
-using System.Data;
-	  
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		
-		[Link] Clock Clock;
-		
-		[Description("File of Nconcs")]
-		public string NConcFile { get; set; }
-		
-		[XmlIgnore] public double Test1 { get; set; }
-		[XmlIgnore] public double Test2 { get; set; }
-		[XmlIgnore] public double Test3 { get; set; }
-		
-		[XmlIgnore] private DataTable Data { get; set; }
-		
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-			ApsimTextFile textFile = new ApsimTextFile();
-			textFile.Open(NConcFile);
-			Data = textFile.ToTable();
-			textFile.Close();
-		}
-      
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-			try
-			{
-				foreach (DataRow row in Data.Rows)
-				{
-					DateTime TodayDate = Convert.ToDateTime(row["Date"]);
-					if (TodayDate.Date == Clock.Today.Date)
-					{
-						Test1 = Convert.ToDouble(row["Test1"]);
-						Test2 = Convert.ToDouble(row["Test2"]);
-						Test3 = Convert.ToDouble(row["Test3"]);
-					}
-				}
-			}
-			finally
-			{
-			}
-		}
-	}
-}
-       ]]></Code>
-          </Manager>
-          <Manager>
             <Name>NConcReps</Name>
             <Script>
               <NConcFile>C:\APSIMX\Prototypes\SCUM\NO3.csv</NConcFile>
@@ -14569,6 +14502,12 @@ namespace Models
               </Treat_Rep2>
               <Treat_Rep3>
               </Treat_Rep3>
+              <ObservedLeach4>0</ObservedLeach4>
+              <ObservedLeach5>0</ObservedLeach5>
+              <Treat_Rep4>
+              </Treat_Rep4>
+              <Treat_Rep5>
+              </Treat_Rep5>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -14604,6 +14543,8 @@ namespace Models
 		public double ObservedLeach1 { get; set; }
 		public double ObservedLeach2 { get; set; }
 		public double ObservedLeach3 { get; set; }
+		public double ObservedLeach4 { get; set; }
+		public double ObservedLeach5 { get; set; }
 		public double NConc1 { get; set; }
 		public double NConc2 { get; set; }
 		public double NConc3 { get; set; }
@@ -14613,6 +14554,8 @@ namespace Models
 		public string Treat_Rep1 { get; set; }
 		public string Treat_Rep2 { get; set; }
 		public string Treat_Rep3 { get; set; }
+		public string Treat_Rep4 { get; set; }
+		public string Treat_Rep5 { get; set; }
 	    
 		[XmlIgnore] private DataTable NConcs { get; set; }
 	
@@ -14629,6 +14572,8 @@ namespace Models
 			Treat_Rep1 = (string)Apsim.Get(Simulation, "TreatmentID.Script.TreatmentName") + "_1";
 			Treat_Rep2 = (string)Apsim.Get(Simulation, "TreatmentID.Script.TreatmentName") + "_2";
 			Treat_Rep3 = (string)Apsim.Get(Simulation, "TreatmentID.Script.TreatmentName") + "_3";
+			Treat_Rep4 = (string)Apsim.Get(Simulation, "TreatmentID.Script.TreatmentName") + "_4";
+			Treat_Rep5 = (string)Apsim.Get(Simulation, "TreatmentID.Script.TreatmentName") + "_5";
 		}
 		
 		[EventSubscribe("DoInitialSummary")]
@@ -14639,9 +14584,13 @@ namespace Models
 			NConc1 = 0;
 			NConc2 = 0;
 			NConc3 = 0;
+			NConc4 = 0;
+			NConc5 = 0;
 			ObservedLeach1 = 0;
 			ObservedLeach2 = 0;
 			ObservedLeach3 = 0;
+			ObservedLeach4 = 0;
+			ObservedLeach5 = 0;
 		}
 		
 		[EventSubscribe("StartOfDay")]
@@ -14657,6 +14606,8 @@ namespace Models
 						NConc1 = Convert.ToDouble(row[Treat_Rep1]);
 						NConc2 = Convert.ToDouble(row[Treat_Rep2]);
 						NConc3 = Convert.ToDouble(row[Treat_Rep3]);
+						NConc4 = Convert.ToDouble(row[Treat_Rep4]);
+						NConc5 = Convert.ToDouble(row[Treat_Rep5]);
 					}
 				}
 			}
@@ -14668,174 +14619,17 @@ namespace Models
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			/*DateTime Date1 = new DateTime(2004, 12, 9);
-			DateTime Date2 = new DateTime(2004, 12, 23);
-			DateTime Date3 = new DateTime(2005, 1, 6);
-			DateTime Date4 = new DateTime(2005, 1, 20);
-			DateTime Date5 = new DateTime(2005, 1, 27);
-			DateTime Date6 = new DateTime(2005, 2, 3);
-			DateTime Date7 = new DateTime(2005, 2, 10);
-			DateTime Date8 = new DateTime(2005, 2, 24);
-			DateTime Date9 = new DateTime(2005, 3, 3);
-			DateTime Date10 = new DateTime(2005, 7, 5);
-			DateTime Date11 = new DateTime(2006, 5, 19);
-			DateTime Date12 = new DateTime(2006, 6, 9);
-			DateTime Date13 = new DateTime(2006, 6, 15);
-			DateTime Date14 = new DateTime(2006, 6, 27);
-			DateTime Date15 = new DateTime(2006, 7, 10);
-			DateTime Date16 = new DateTime(2006, 7, 25);
-			DateTime Date17 = new DateTime(2006, 8, 16);
-			DateTime Date18 = new DateTime(2006, 8, 25);
-			DateTime Date19 = new DateTime(2006, 12, 28);
-			DateTime Date20 = new DateTime(2006, 1, 11);
-			*/
 			DateTime Potato1Start = new DateTime(2004, 12, 9);
 			DateTime Potato1End = new DateTime(2005, 3, 14);
-			
-			/*						
-			if (Clock.Today.Date == Date1.Date)
-			{
-				NConc1 = 40.2;				
-				NConc2 = 25.7;
-				NConc3 = 10.4;
-								
-			}
-			else if (Clock.Today.Date == Date2.Date)
-			{
-				NConc1 = 21.1;
-				NConc2 = 24.6;
-				NConc3 = 26.8;				
-				
-			}
-			else if (Clock.Today.Date == Date3.Date)
-			{
-				NConc1 = 23.6;				
-				NConc2 = 5.8;				
-				NConc3 = 4.2;			
-				
-			}
-			else if (Clock.Today.Date == Date4.Date)
-			{
-				NConc1 = 15.9;				
-				NConc2 = 9.0;				
-				NConc3 = 3.6;				
-				
-			}
-			else if (Clock.Today.Date == Date5.Date)
-			{
-				NConc1 = 7.9;				
-				NConc2 = 9.8;				
-				NConc3 = 3.0;				
-				
-			}
-			else if (Clock.Today.Date == Date6.Date)
-			{
-				NConc1 = 3.1;				
-				NConc2 = 9.8;				
-				NConc3 = 3.1;				
-				
-			}
-			else if (Clock.Today.Date == Date7.Date)
-			{
-				NConc1 = 1.7;				
-				NConc2 = 3.7;				
-				NConc3 = 3.0;				
-				
-			}
-			else if (Clock.Today.Date == Date8.Date)
-			{
-				NConc1 = 9.8;				
-				NConc2 = 9.8;				
-				NConc3 = 3.5;				
-				
-			}
-			else if (Clock.Today.Date == Date9.Date)
-			{
-				NConc1 = 10.7;				
-				NConc2 = 6.0;				
-				NConc3 = 5.1;				
-				
-			}
-			else if (Clock.Today.Date == Date10.Date)
-			{
-				NConc1 = 4.4;				
-				NConc2 = 5.7;				
-				NConc3 = 15.3;				
-				
-			}
-			else if (Clock.Today.Date == Date11.Date)
-			{
-				NConc1 = 16.3;
-				NConc2 = 5.6;				
-				NConc3 = 19.2;				
-			
-			}
-			else if (Clock.Today.Date == Date12.Date)
-			{
-				NConc1 = 18.1;				
-				NConc2 = 15.4;				
-				NConc3 = 24.6;				
-				
-			}
-			else if (Clock.Today.Date == Date13.Date)
-			{
-				NConc1 = 19.4;				
-				NConc2 = 38.7;				
-				NConc3 = 27.3;				
-				
-			}
-			else if (Clock.Today.Date == Date14.Date)
-			{
-				NConc1 = 19.8;				
-				NConc2 = 11.1;				
-				NConc3 = 26.4;				
-				
-			}
-			else if (Clock.Today.Date == Date15.Date)
-			{
-				NConc1 = 18.6;				
-				NConc2 = 28.8;				
-				NConc3 = 28.3;				
-			}
-			else if (Clock.Today.Date == Date16.Date)
-			{
-				NConc1 = 13.0;				
-				NConc2 = 24.8;				
-				NConc3 = 10.1;				
-				
-			}
-			else if (Clock.Today.Date == Date17.Date)
-			{
-				NConc1 = 17.6; 
-				NConc2 = 22.0;
-				NConc3 = 37.7;				
-			}
-			else if (Clock.Today.Date == Date18.Date)
-			{
-				NConc1 = 19.5;				
-				NConc2 = 20.7;				
-				NConc3 = 42.3;				
-				
-			}
-			else if (Clock.Today.Date == Date19.Date)
-			{
-				NConc1 = 23.9;				
-				NConc2 = 24.6;				
-				NConc3 = 25.7;				
-			}
-			else if (Clock.Today.Date == Date20.Date)
-			{
-				NConc1 = 20.4;				
-				NConc2 = 23.2;				
-				NConc3 = 18.8;
-			}
-			*/
+		
 			if ((Clock.Today.Date >= Potato1Start) && (Clock.Today.Date <= Potato1End))
 			{
 				Leach_60 = Leach_60 + (Soil.SoilWater.flow_no3[3]);
 				ObservedLeach1 = ObservedLeach1 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc1) / 100;
 				ObservedLeach2 = ObservedLeach2 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc2) / 100;
 				ObservedLeach3 = ObservedLeach3 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc3) / 100;
+				ObservedLeach4 = ObservedLeach4 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc4) / 100;
+				ObservedLeach5 = ObservedLeach5 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc5) / 100;
 				TotalLeach = TotalLeach + (Soil.SoilWater.flow_no3[3]);
 				
 			}
@@ -14845,7 +14639,9 @@ namespace Models
 				ObservedLeach1 = ObservedLeach1 + (Soil.SoilWater.Drainage * NConc1) / 100;
 				ObservedLeach2 = ObservedLeach2 + (Soil.SoilWater.Drainage * NConc2) / 100;
 				ObservedLeach3 = ObservedLeach3 + (Soil.SoilWater.Drainage * NConc3) / 100;
-				TotalLeach = TotalLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea;		
+				ObservedLeach4 = ObservedLeach4 + (Soil.SoilWater.Drainage * NConc4) / 100;
+				ObservedLeach5 = ObservedLeach5 + (Soil.SoilWater.Drainage * NConc5) / 100;
+				TotalLeach = TotalLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea;
 				
 			}
 		}
@@ -14857,6 +14653,8 @@ namespace Models
 			ObservedLeach1 = 0;
 			ObservedLeach2 = 0;
 			ObservedLeach3 = 0;
+			ObservedLeach4 = 0;
+			ObservedLeach5 = 0;
 			TotalLeach = 0;
 			
 			
@@ -15265,6 +15063,8 @@ namespace Models
             <string>[NConcReps].Script.ObservedLeach1</string>
             <string>[NConcReps].Script.ObservedLeach2</string>
             <string>[NConcReps].Script.ObservedLeach3</string>
+            <string>[NConcReps].Script.ObservedLeach4</string>
+            <string>[NConcReps].Script.ObservedLeach5</string>
             <string>[NConcReps].Script.Leach_60</string>
             <string>[Soil].SoilWater.solute_flow_eff</string>
             <string>[Soil].SoilWater.solute_flux_eff</string>
@@ -16417,9 +16217,119 @@ namespace Models
     <Folder>
       <Name>Leaching</Name>
       <Graph>
-        <Name>NLeach</Name>
+        <Name>PP_W1_N0</Name>
         <Series>
-          <Name>NLeach</Name>
+          <Name>Rep1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach1</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach2</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep3</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach3</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep4</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach4</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep5</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach5</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -16427,13 +16337,778 @@ namespace Models
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.TotalLeach</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PP_W2_N0</Name>
+        <Series>
+          <Name>Rep1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
+          <MarkerSize>Small</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>NConcReps.Script.ObservedLeach1</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach2</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep3</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach3</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep4</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach4</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep5</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach5</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.TotalLeach</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PP_W1_N1</Name>
+        <Series>
+          <Name>Rep1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach1</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach2</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep3</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach3</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep4</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach4</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep5</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach5</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.TotalLeach</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PP_W2_N1</Name>
+        <Series>
+          <Name>Rep1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach1</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach2</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep3</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach3</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep4</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach4</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep5</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach5</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.TotalLeach</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PP_W1_N3</Name>
+        <Series>
+          <Name>Rep1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach1</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach2</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep3</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach3</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep4</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach4</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep5</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach5</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.TotalLeach</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PP_W2_N3</Name>
+        <Series>
+          <Name>Rep1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach1</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach2</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep3</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach3</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep4</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach4</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Rep5</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.ObservedLeach5</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Treat] = 'PP_W1_N0'</Filter>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>NConcReps.Script.TotalLeach</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
