@@ -552,7 +552,7 @@ namespace Models.Graph
                FilterName = Filter.Substring(1, posCloseBracket - 1);
                fieldNames.Add(FilterName);
             }
-            else
+            else if (Filter != "")
               throw new Exception("Column name to filter on must be within square brackets.  e.g [ColumToFilter]");
             
 
@@ -585,7 +585,10 @@ namespace Models.Graph
             {
                 string FilterExpression = Filter.Replace("[", "");
                 FilterExpression = FilterExpression.Replace("]", "");
-                string where = "((" + definition.Filter;
+                string where = "(";
+                if (Filter != null && Filter != string.Empty)
+                    where += "(";
+                where += definition.Filter;
                 if (Filter != null && Filter != string.Empty)
                     where += ") AND (" + FilterExpression + ")";
                 where += ")";
