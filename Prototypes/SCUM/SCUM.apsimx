@@ -2261,19 +2261,14 @@ The AboveGround composite biomass object includes Stover and Product organs.
       </SheetNames>
     </ExcelInput>
     <Input>
-      <Name>ABlockYields</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>Yields2.csv</FileName>
-    </Input>
-    <Input>
       <Name>ABlockObserved</Name>
       <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\SCUM\AblockObserved.txt' because it is being used by another process.</ErrorMessage>
-      <FileName>AblockObserved.txt</FileName>
+      <FileName>%root%\Prototypes\SCUM\AblockObserved.txt</FileName>
     </Input>
     <Input>
       <Name>ABlockSWC</Name>
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>AblockSWC.txt</FileName>
+      <FileName>%root%\Prototypes\SCUM\AblockSWC.txt</FileName>
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
@@ -14329,7 +14324,7 @@ namespace Models
           <Manager>
             <Name>Sowing_Yield</Name>
             <Script>
-              <YieldFile>C:\APSIMX\Prototypes\SCUM\YieldsToSet.csv</YieldFile>
+              <YieldFile>%root%\Prototypes\SCUM\YieldsToSet.csv</YieldFile>
               <InitialRootDepth>10</InitialRootDepth>
               <Crop1>Potatoes_Short</Crop1>
               <SowingDate1>2004-10-15</SowingDate1>
@@ -14344,11 +14339,6 @@ namespace Models
               <SowingDate3>2006-10-11</SowingDate3>
               <HarvestDate3>2007-03-12</HarvestDate3>
               <Yield3>2200</Yield3>
-              <Crop4>
-              </Crop4>
-              <SowingDate4>0001-01-01</SowingDate4>
-              <HarvestDate4>0001-01-01</HarvestDate4>
-              <Yield4>0</Yield4>
               <Treatment>
               </Treatment>
             </Script>
@@ -14376,6 +14366,15 @@ namespace Models
 		
 		[Description("File of Yields")]
 		public string YieldFile { get; set; }
+		
+		public string FullFileName
+		{
+			get
+			{
+				return PathUtilities.GetAbsolutePath(YieldFile, Simulation.FileName);
+			}
+		}
+		
 		[XmlIgnore] private DataTable Yields { get; set; }
 		
 		[Description("Initial Root Depth")]
@@ -14409,18 +14408,12 @@ namespace Models
 		[Description("Third Crop Yield (g/m2 fresh wt)")]
 		public int Yield3 { get; set; }
 		
-		[Description("Fourth Crop")]
-		public string Crop4 { get; set; }
-		[Description("Fourth Sowing Date")]
-		public DateTime SowingDate4 { get; set; }
-		[Description("Fourth Harvest Date")]
-		public DateTime HarvestDate4 { get; set; }
-		[Description("Fourth Crop Yield (g/m2 fresh wt)")]
-		public int Yield4 { get; set; }
-		
 		public string Treatment { get; set; }
 		
 		[XmlIgnore] private RemovalFractions Remove { get; set; }
+		
+		
+		
 		
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
@@ -14434,7 +14427,7 @@ namespace Models
 			Treatment = (string)Apsim.Get(Simulation, "TreatmentID.Script.TreatmentName");
 			
 			ApsimTextFile textFile = new ApsimTextFile();
-			textFile.Open(YieldFile);
+			textFile.Open(FullFileName);
 			Yields = textFile.ToTable();
 			textFile.Close();
 			
@@ -14489,17 +14482,6 @@ namespace Models
 				SCUM.Harvest(Remove);
 				SCUM.EndCrop();
 			}
-			else if (Clock.Today.Date == SowingDate4)
-			{
-				SCUM.Sow(cultivar: Crop4, population: 1, depth: InitialRootDepth, rowSpacing: 150);
-				object ResetValue = Yield4;
-				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
-			}
-			else if (Clock.Today.Date == HarvestDate4)
-			{
-				SCUM.Harvest();
-				SCUM.EndCrop();
-			} 
 			//PMFCrop.Sow(... Contains the following arguements:
 			//Population  double  Optional  Seeds sowing/m2.  Default is zero
 			//Cultivar    string  Required  "NameOfCultivar"
@@ -14516,14 +14498,14 @@ namespace Models
           <Manager>
             <Name>NConcReps</Name>
             <Script>
+              <NConcFile>%root%\Prototypes\SCUM\NO3.csv</NConcFile>
               <TotalLeach>0</TotalLeach>
+              <Leach_60>0</Leach_60>
               <ObservedLeach1>0</ObservedLeach1>
               <ObservedLeach2>0</ObservedLeach2>
               <ObservedLeach3>0</ObservedLeach3>
               <ObservedLeach4>0</ObservedLeach4>
               <ObservedLeach5>0</ObservedLeach5>
-              <Leach_60>0</Leach_60>
-              <NConcFile>C:\APSIMX\Prototypes\SCUM\NO3.csv</NConcFile>
               <NConc1>0</NConc1>
               <NConc2>0</NConc2>
               <NConc3>0</NConc3>
@@ -14570,6 +14552,14 @@ namespace Models
 		[Description("File of Nconcs")]
 		public string NConcFile { get; set; }
 		
+		public string FullFileName
+		{
+			get
+			{
+				return PathUtilities.GetAbsolutePath(NConcFile, Simulation.FileName);
+			}
+		}
+		
 		public double TotalLeach { get; set; }
 		public double Leach_60 { get; set; }
 		public double ObservedLeach1 { get; set; }
@@ -14599,7 +14589,7 @@ namespace Models
 		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
 			ApsimTextFile textFile = new ApsimTextFile();
-			textFile.Open(NConcFile);
+			textFile.Open(FullFileName);
 			NConcs = textFile.ToTable();
 			textFile.Close();
 			
