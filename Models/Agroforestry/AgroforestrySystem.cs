@@ -125,6 +125,22 @@ namespace Models.Agroforestry
             throw new ApsimXException(this, "Could not find zone called " + z.Name);
         }
 
+
+        /// <summary>
+        /// Return the %Radiation Reduction for a given zone
+        /// </summary>
+        /// <param name="z">Zone</param>
+        /// <returns>%Radiation Reduction</returns>
+        public double GetRadiationReduction(Zone z)
+        {
+
+            if (GetDistanceFromTrees(z) > 0.0)
+                    return 1.0-tree.GetShade(z)/100.0;
+            else
+                    return 1.0;
+
+        }
+
         /// <summary>Writes documentation for this cultivar by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
