@@ -2331,14 +2331,14 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Factor>
           <Name>Potatoes</Name>
           <Specifications>
-            <string>[SCUMSowingRule].Script.CultivarName = Potato_Long</string>
+            <string>[SCUMSowingRule].Script.CultivarName = Potatoes_Long</string>
             <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>Peas</Name>
           <Specifications>
-            <string>[SCUMSowingRule].Script.CultivarName = GreenPeas</string>
+            <string>[SCUMSowingRule].Script.CultivarName = Green_Peas</string>
             <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
           </Specifications>
         </Factor>
@@ -11898,7 +11898,7 @@ namespace Models
       <Manager>
         <Name>SowingAndCutting</Name>
         <Script>
-          <CultivarName>GreenPeas</CultivarName>
+          <CultivarName>Green_Peas</CultivarName>
           <InitialRootDepth>10</InitialRootDepth>
           <SowingDate>2010-10-14</SowingDate>
           <CutDate>2010-12-14</CutDate>
@@ -14339,6 +14339,7 @@ namespace Models
               <SowingDate2>2005-09-28</SowingDate2>
               <HarvestDate2>2006-02-24</HarvestDate2>
               <Yield2>958</Yield2>
+              <CropNConc>0</CropNConc>
               <Crop3>Potatoes_Short</Crop3>
               <SowingDate3>2006-10-11</SowingDate3>
               <HarvestDate3>2007-03-12</HarvestDate3>
@@ -14350,7 +14351,6 @@ namespace Models
               <Yield4>0</Yield4>
               <Treatment>
               </Treatment>
-              <CropNConc>0</CropNConc>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -14459,7 +14459,7 @@ namespace Models
 			}
 			else if (Clock.Today.Date == HarvestDate1)
 			{
-				SCUM.Harvest();
+				SCUM.Harvest(Remove);
 				SCUM.EndCrop();
 			}
 			else if (Clock.Today.Date == SowingDate2)
@@ -14472,7 +14472,7 @@ namespace Models
 			}
 			else if (Clock.Today.Date == HarvestDate2)
 			{
-				SCUM.Harvest();
+				SCUM.Harvest(Remove);
 				SCUM.EndCrop();
 			}
 			else if (Clock.Today.Date == SowingDate3)
@@ -14486,7 +14486,7 @@ namespace Models
 			}
 			else if (Clock.Today.Date == HarvestDate3)
 			{
-				SCUM.Harvest();
+				SCUM.Harvest(Remove);
 				SCUM.EndCrop();
 			}
 			else if (Clock.Today.Date == SowingDate4)
@@ -14516,14 +14516,14 @@ namespace Models
           <Manager>
             <Name>NConcReps</Name>
             <Script>
-              <NConcFile>C:\APSIMX\Prototypes\SCUM\NO3.csv</NConcFile>
               <TotalLeach>0</TotalLeach>
-              <Leach_60>0</Leach_60>
               <ObservedLeach1>0</ObservedLeach1>
               <ObservedLeach2>0</ObservedLeach2>
               <ObservedLeach3>0</ObservedLeach3>
               <ObservedLeach4>0</ObservedLeach4>
               <ObservedLeach5>0</ObservedLeach5>
+              <Leach_60>0</Leach_60>
+              <NConcFile>C:\APSIMX\Prototypes\SCUM\NO3.csv</NConcFile>
               <NConc1>0</NConc1>
               <NConc2>0</NConc2>
               <NConc3>0</NConc3>
@@ -18599,7 +18599,7 @@ namespace Models
     <Folder>
       <Name>LeachingObsPre</Name>
       <Graph>
-        <Name>LeachingAll</Name>
+        <Name>AllCrops</Name>
         <Series>
           <Name>Predicted</Name>
           <Regression>
@@ -18647,7 +18647,7 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>Potato 1</Name>
+        <Name>FirstPotato</Name>
         <Series>
           <Name>Predicted</Name>
           <Regression>
@@ -18695,7 +18695,7 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>PeasAndWheat</Name>
+        <Name>PeasOrWheat</Name>
         <Series>
           <Name>Predicted</Name>
           <Regression>
@@ -18743,7 +18743,7 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>Potato2</Name>
+        <Name>SecondPotato</Name>
         <Series>
           <Name>Predicted</Name>
           <Regression>
@@ -18792,5 +18792,5 @@ namespace Models
       </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>284</ExplorerWidth>
+  <ExplorerWidth>272</ExplorerWidth>
 </Simulations>
