@@ -2275,6 +2275,12 @@ The AboveGround composite biomass object includes Stover and Product organs.
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
       <FileName>AblockSWC.txt</FileName>
     </Input>
+    <PredictedObserved>
+      <Name>PredictedObserved</Name>
+      <PredictedTableName>PredictedLeach</PredictedTableName>
+      <ObservedTableName>ObservedLeach</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>1000</MaximumResultsPerPage>
   </DataStore>
@@ -14506,6 +14512,7 @@ namespace Models
               </Treat_Rep4>
               <Treat_Rep5>
               </Treat_Rep5>
+              <NLeachMean>0</NLeachMean>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -14554,6 +14561,8 @@ namespace Models
 		public string Treat_Rep3 { get; set; }
 		public string Treat_Rep4 { get; set; }
 		public string Treat_Rep5 { get; set; }
+		
+		public double NLeachMean { get; set; }
 	    
 		[XmlIgnore] private DataTable NConcs { get; set; }
 	
@@ -14628,6 +14637,11 @@ namespace Models
 				ObservedLeach3 = ObservedLeach3 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc3) / 100;
 				ObservedLeach4 = ObservedLeach4 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc4) / 100;
 				ObservedLeach5 = ObservedLeach5 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc5) / 100;
+				if (ObservedLeach5 > 0)
+					NLeachMean = (ObservedLeach1 + ObservedLeach2 + ObservedLeach3 + ObservedLeach4 + ObservedLeach5) / 5;
+				else
+					NLeachMean = (ObservedLeach1 + ObservedLeach2 + ObservedLeach3) / 3;
+					
 				TotalLeach = TotalLeach + (Soil.SoilWater.flow_no3[3]);
 			}
 			else if (Clock.Today.Date > Potato1End)
@@ -14638,6 +14652,10 @@ namespace Models
 				ObservedLeach3 = ObservedLeach3 + (Soil.SoilWater.Drainage * NConc3) / 100;
 				ObservedLeach4 = ObservedLeach4 + (Soil.SoilWater.Drainage * NConc4) / 100;
 				ObservedLeach5 = ObservedLeach5 + (Soil.SoilWater.Drainage * NConc5) / 100;
+				if (ObservedLeach5 > 0)
+					NLeachMean = (ObservedLeach1 + ObservedLeach2 + ObservedLeach3 + ObservedLeach4 + ObservedLeach5) / 5;
+				else
+					NLeachMean = (ObservedLeach1 + ObservedLeach2 + ObservedLeach3) / 3;
 				TotalLeach = TotalLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea;
 			}
 		}
@@ -14963,7 +14981,7 @@ namespace Models
           <Manager>
             <Name>InF</Name>
             <Script>
-              <FertDate>2005-11-24</FertDate>
+              <FertDate>2005-11-25</FertDate>
               <NFert>0</NFert>
               <TreatFact>0</TreatFact>
               <IrrDate1>2005-11-18</IrrDate1>
@@ -15169,6 +15187,30 @@ namespace Models
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>PredictedLeach</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[NConcReps].Script.TotalLeach as NLeaching</string>
+          </VariableNames>
+          <EventNames>
+            <string>[SCUM].Harvesting</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>ObservedLeach</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[NConcReps].Script.NLeachMean as NLeaching</string>
+          </VariableNames>
+          <EventNames>
+            <string>[SCUM].Harvesting</string>
           </EventNames>
         </Report>
         <Area>0</Area>
@@ -15739,7 +15781,7 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <LegendPosition>TopRight</LegendPosition>
+        <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
@@ -15916,7 +15958,7 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>SurfaceResidueN</Name>
+        <Name>DeltaSurfaceResidueN</Name>
         <Series>
           <Name>NLeach</Name>
           <Type>Scatter</Type>
@@ -18326,6 +18368,54 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
     </Folder>
+    <Graph>
+      <Name>ProductWt1</Name>
+      <Series>
+        <Name>Predicted</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.NLeaching</XFieldName>
+        <YFieldName>Predicted.NLeaching</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter />
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted Leaching (kg/ha)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed Leaching (kg/ha)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
   </Experiment>
   <ExplorerWidth>224</ExplorerWidth>
 </Simulations>
