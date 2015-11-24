@@ -1394,9 +1394,9 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.5</Command>
         <Command>[Product].MaximumNConc.Value = 0.035</Command>
         <Command>[Product].MinimumNConc.Value = 0.0245</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.015</Command>
-        <Command>[Root].MaximumRootDepth.Value = 700</Command>
+        <Command>[Root].MaximumRootDepth.Value = 1200</Command>
         <Command>[Root].MinimumNConc.Value = 0.015</Command>
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
@@ -1440,9 +1440,9 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.45</Command>
         <Command>[Product].MaximumNConc.Value = 0.035</Command>
         <Command>[Product].MinimumNConc.Value = 0.0245</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.741,0.549,0.407,0.301,0.223,0.165,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.905,0.819,0.741,0.67,0.607,0.549,0.497,0.449,0.407,0.368,0.333,0.301,0.273,0.247,0.223,0.202,0.183,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.015</Command>
-        <Command>[Root].MaximumRootDepth.Value = 700</Command>
+        <Command>[Root].MaximumRootDepth.Value = 1200</Command>
         <Command>[Root].MinimumNConc.Value = 0.015</Command>
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
@@ -1877,9 +1877,9 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.911</Command>
         <Command>[Product].MaximumNConc.Value = 0.018</Command>
         <Command>[Product].MinimumNConc.Value = 0.0126</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
-        <Command>[Root].MaximumRootDepth.Value = 500</Command>
+        <Command>[Root].MaximumRootDepth.Value = 1000</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
@@ -1900,9 +1900,9 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.904</Command>
         <Command>[Product].MaximumNConc.Value = 0.018</Command>
         <Command>[Product].MinimumNConc.Value = 0.0126</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
-        <Command>[Root].MaximumRootDepth.Value = 500</Command>
+        <Command>[Root].MaximumRootDepth.Value = 1000</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
@@ -1923,9 +1923,9 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Product].HarvestIndex.Value = 0.893</Command>
         <Command>[Product].MaximumNConc.Value = 0.018</Command>
         <Command>[Product].MinimumNConc.Value = 0.0126</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.497,0.247,0.122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.819,0.67,0.549,0.449,0.368,0.301,0.247,0.202,0.165,0.135,0.111,0.091,0.074,0,0,0,0,0,0,0,0,0,0</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
-        <Command>[Root].MaximumRootDepth.Value = 500</Command>
+        <Command>[Root].MaximumRootDepth.Value = 1000</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
         <Command>[Root].RootProportion.Value = 0.1</Command>
         <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
@@ -2267,7 +2267,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
     </Input>
     <Input>
       <Name>ABlockObserved</Name>
-      <ErrorMessage>Please select a file to use.</ErrorMessage>
+      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\SCUM\AblockObserved.txt' because it is being used by another process.</ErrorMessage>
       <FileName>AblockObserved.txt</FileName>
     </Input>
     <Input>
@@ -13558,6 +13558,7 @@ namespace Models
             <string>[InF].Script.Irr2 = 0</string>
             <string>[InF].Script.Irr3 = 38</string>
             <string>[InF].Script.Irr4 = 40</string>
+            <string>[Sowing_Yield].Script.CropNConc = 0.05</string>
           </Specifications>
         </Factor>
         <Factor>
@@ -13572,6 +13573,7 @@ namespace Models
             <string>[InF].Script.Irr2 = 34</string>
             <string>[InF].Script.Irr3 = 61</string>
             <string>[InF].Script.Irr4 = 0</string>
+            <string>[Sowing_Yield].Script.CropNConc = 0.025</string>
           </Specifications>
         </Factor>
         <Specifications />
@@ -14235,20 +14237,20 @@ namespace Models
           </TillageTypes>
           <Pools>
             <Pool>
-              <PoolName>wheat</PoolName>
-              <ResidueType>wheat</ResidueType>
-              <Mass>2000</Mass>
-              <CNRatio>80</CNRatio>
+              <PoolName>grass</PoolName>
+              <ResidueType>grass</ResidueType>
+              <Mass>2500</Mass>
+              <CNRatio>15</CNRatio>
               <CPRatio>NaN</CPRatio>
               <StandingFraction>0</StandingFraction>
             </Pool>
           </Pools>
-          <PoolName>wheat</PoolName>
-          <type>wheat</type>
-          <mass>2000</mass>
+          <PoolName>grass</PoolName>
+          <type>grass</type>
+          <mass>2500</mass>
           <standing_fraction>0</standing_fraction>
           <cpr />
-          <cnr>80</cnr>
+          <cnr>15</cnr>
           <CriticalResidueWeight>2000</CriticalResidueWeight>
           <OptimumDecompTemp>20</OptimumDecompTemp>
           <MaxCumulativeEOS>20</MaxCumulativeEOS>
@@ -14348,6 +14350,7 @@ namespace Models
               <Yield4>0</Yield4>
               <Treatment>
               </Treatment>
+              <CropNConc>0</CropNConc>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -14358,6 +14361,7 @@ using Models;
 using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
 using System.Data;
+using Models.PMF.Interfaces;
 
 namespace Models
 {
@@ -14394,6 +14398,7 @@ namespace Models
 		public DateTime HarvestDate2 { get; set; }
 		[Description("Second Crop Yield (g/m2 fresh wt)")]
 		public int Yield2 { get; set; }
+		public double CropNConc { get; set; }
 
 		[Description("Third Crop")]
 		public string Crop3 { get; set; }
@@ -14415,6 +14420,14 @@ namespace Models
 		
 		public string Treatment { get; set; }
 		
+		[XmlIgnore] private RemovalFractions Remove { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Remove = new RemovalFractions(SCUM.Organs);
+		}
+		
 		[EventSubscribe("StartOfSimulation")]
 		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
@@ -14424,6 +14437,13 @@ namespace Models
 			textFile.Open(YieldFile);
 			Yields = textFile.ToTable();
 			textFile.Close();
+			
+			Remove.SetFractionRemoved("Stover", 0);
+			Remove.SetFractionToResidue("Stover", 1);
+			Remove.SetFractionRemoved("Product", 1);
+			Remove.SetFractionToResidue("Product", 0);
+			Remove.SetFractionRemoved("Root", 0.0);
+			Remove.SetFractionToResidue("Root", 0.2);
 		}
 		
 		[EventSubscribe("DoManagement")]
@@ -14434,6 +14454,8 @@ namespace Models
 				SCUM.Sow(cultivar: Crop1, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 				object ResetValue = Convert.ToDouble(Yields.Rows[0][Treatment]);
 				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
+				ResetValue = 0.025;
+				zone.Set("[SCUM].Product.MaximumNConc.Value", ResetValue);
 			}
 			else if (Clock.Today.Date == HarvestDate1)
 			{
@@ -14445,6 +14467,8 @@ namespace Models
 				SCUM.Sow(cultivar: Crop2, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 				object ResetValue = Convert.ToDouble(Yields.Rows[1][Treatment]);
 				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
+				ResetValue = CropNConc;
+				zone.Set("[SCUM].Product.MaximumNConc.Value", ResetValue);
 			}
 			else if (Clock.Today.Date == HarvestDate2)
 			{
@@ -14456,6 +14480,9 @@ namespace Models
 				SCUM.Sow(cultivar: Crop3, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 				object ResetValue = Convert.ToDouble(Yields.Rows[2][Treatment]);
 				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
+				ResetValue = 0.025;
+				zone.Set("[SCUM].Product.MaximumNConc.Value", ResetValue);
+		
 			}
 			else if (Clock.Today.Date == HarvestDate3)
 			{
@@ -14642,7 +14669,7 @@ namespace Models
 				else
 					NLeachMean = (ObservedLeach1 + ObservedLeach2 + ObservedLeach3) / 3;
 					
-				TotalLeach = TotalLeach + (Soil.SoilWater.flow_no3[3]);
+				TotalLeach = TotalLeach + (Soil.SoilWater.flow_no3[2] + Soil.SoilWater.flow_nh4[2]);
 			}
 			else if (Clock.Today.Date > Potato1End)
 			{	
@@ -14656,7 +14683,8 @@ namespace Models
 					NLeachMean = (ObservedLeach1 + ObservedLeach2 + ObservedLeach3 + ObservedLeach4 + ObservedLeach5) / 5;
 				else
 					NLeachMean = (ObservedLeach1 + ObservedLeach2 + ObservedLeach3) / 3;
-				TotalLeach = TotalLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea;
+				//TotalLeach = TotalLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea;
+				TotalLeach = TotalLeach + (Soil.SoilWater.flow_no3[7] + Soil.SoilWater.flow_nh4[7]);
 			}
 		}
 		
@@ -15696,6 +15724,49 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
+      <Graph>
+        <Name>Stover</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SCUM.Stover.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
     </Folder>
     <Folder>
       <Name>NBalance</Name>
@@ -16150,7 +16221,7 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <LegendPosition>TopRight</LegendPosition>
+        <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
@@ -16215,12 +16286,126 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <LegendPosition>TopRight</LegendPosition>
+        <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>Drainage</Name>
+        <Name>SuppAndDemand</Name>
+        <Series>
+          <Name>WaterDemand</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SCUM.Stover.WaterDemand</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[RotTreat] = 'PP'</Filter>
+        </Series>
+        <Series>
+          <Name>WaterSupply</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Thin</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SCUM.Root.WaterUptake</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[RotTreat] = 'PP'</Filter>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries>
+          <string>W1_N0</string>
+          <string>W2_N0</string>
+          <string>W1_N1</string>
+          <string>W2_N1</string>
+          <string>W1_N2</string>
+        </DisabledSeries>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>RunOff</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.AccumRunoff</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Drainage_PP</Name>
         <Series>
           <Name>NLeach</Name>
           <Type>Scatter</Type>
@@ -16241,7 +16426,50 @@ namespace Models
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
-          <Filter />
+          <Filter>[RotTreat] = 'PP'</Filter>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Drainage_PW</Name>
+        <Series>
+          <Name>NLeach</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Drainage</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[RotTreat] = 'PW'</Filter>
         </Series>
         <Axis>
           <Type>Left</Type>
@@ -18165,7 +18393,7 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
+        <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
@@ -18368,54 +18596,201 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
     </Folder>
-    <Graph>
-      <Name>ProductWt1</Name>
-      <Series>
-        <Name>Predicted</Name>
-        <Regression>
-          <Name>Regression</Name>
-          <ForEachSeries>false</ForEachSeries>
-        </Regression>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16747854</ColourArgb>
-        <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.NLeaching</XFieldName>
-        <YFieldName>Predicted.NLeaching</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-        <Filter />
-      </Series>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Predicted Leaching (kg/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Observed Leaching (kg/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
+    <Folder>
+      <Name>LeachingObsPre</Name>
+      <Graph>
+        <Name>LeachingAll</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.NLeaching</XFieldName>
+          <YFieldName>Predicted.NLeaching</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Predicted Leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>350</Maximum>
+          <Interval>50</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Observed Leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>350</Maximum>
+          <Interval>50</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Potato 1</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.NLeaching</XFieldName>
+          <YFieldName>Predicted.NLeaching</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Clock.Today] = '2005-03-14'</Filter>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Predicted Leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>350</Maximum>
+          <Interval>50</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Observed Leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>350</Maximum>
+          <Interval>50</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PeasAndWheat</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.NLeaching</XFieldName>
+          <YFieldName>Predicted.NLeaching</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Clock.Today] = '2006-02-24'</Filter>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Predicted Leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>350</Maximum>
+          <Interval>50</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Observed Leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>350</Maximum>
+          <Interval>50</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Potato2</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.NLeaching</XFieldName>
+          <YFieldName>Predicted.NLeaching</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Clock.Today] = '2007-03-12'</Filter>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Predicted Leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>350</Maximum>
+          <Interval>50</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Observed Leaching (kg/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>350</Maximum>
+          <Interval>50</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+    </Folder>
   </Experiment>
-  <ExplorerWidth>224</ExplorerWidth>
+  <ExplorerWidth>284</ExplorerWidth>
 </Simulations>
