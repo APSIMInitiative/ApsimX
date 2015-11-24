@@ -55,22 +55,36 @@ namespace Models
                         y.Add(yres);
                     }
                 }
-                    stats[c] = MathUtilities.CalcRegressionStats(x, y);
+                stats[c] = MathUtilities.CalcRegressionStats(x, y);
             }
 
             //turn stats array into a DataTable
-            table = new DataTable("StatTests");
-            table.Columns.Add("Variable", typeof(string));
-            table.Columns.Add("Test", typeof(string));
-            table.Columns.Add("Old", typeof(int));
-            table.Columns.Add("New", typeof(int));
-            table.Columns.Add("Sig.", typeof(char));
+            //create table if it doesn't exist
+            if (table == null)
+            {
+                table = new DataTable("StatTests");
+                table.Columns.Add("Variable", typeof(string));
+                table.Columns.Add("Test", typeof(string));
+                table.Columns.Add("Old", typeof(double));
+                table.Columns.Add("New", typeof(double));
+                table.Columns.Add("Difference", typeof(double));
+                table.Columns.Add("Sig.", typeof(char));
 
-            for(int i = 0; i < columnNames.Count; i++)
-                for(int j = 0;  j< statNames.Count;j++)
-                {
-                    table.Rows.Add(columnNames[i].Replace("Observed.",""), statNames[j], 0, stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]), '!');
-                }
+                for (int i = 0; i < columnNames.Count; i++)
+                    for (int j = 0; j < statNames.Count; j++)
+                        table.Rows.Add(columnNames[i].Replace("Observed.", ""),
+                            statNames[j], stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]), stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]), 0, ' ');
+            }
+            else //update 'new' data and calculate differences
+            {
+                for (int i = 0; i < columnNames.Count; i++)
+                    for (int j = 0; j < statNames.Count; j++)
+                    {
+                        table.Rows[i * statNames.Count + j]["New"] = stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]);
+                        table.Rows[i * statNames.Count + j]["Difference"] = table.Rows[i * statNames.Count + j].Field<double>("New") - table.Rows[i * statNames.Count + j].Field<double>("Old");
+                        table.Rows[i * statNames.Count + j]["Sig."] = table.Rows[i * statNames.Count + j].Field<double>("Difference") < table.Rows[i * statNames.Count + j].Field<double>("Old") * 0.01 ? "!" : " ";
+                    }
+            }
         }
     }
 }
