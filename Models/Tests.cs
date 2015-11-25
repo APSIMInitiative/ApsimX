@@ -10,7 +10,8 @@ using APSIM.Shared.Utilities;
 namespace Models
 {
     /// <summary>
-    /// 
+    /// Test interface. TODO: Ensure it handles addition and removal
+    /// of tests in Apsim.Shared.Utilities.MathUtilities.RegrStats
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -33,9 +34,12 @@ namespace Models
             DataStore DS = PO.Parent as DataStore;
             List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
             DataTable POtable = DS.GetData("*", PO.Name);
-            List<string> columnNames = POtable.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList(); //get list of column names
+            List<string> columnNames; 
             MathUtilities.RegrStats[] stats;
 
+            if (POtable == null)
+                throw new ApsimXException(this, "Could not find PO table. Has the simulation been run?");
+            columnNames= POtable.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList(); //get list of column names;
             columnNames = columnNames.Where(c => c.Contains("Observed")).ToList(); //filter names that are not pred/obs pairs
             stats = new MathUtilities.RegrStats[columnNames.Count];
             List<double> x = new List<double>();
@@ -65,8 +69,8 @@ namespace Models
                 table = new DataTable("StatTests");
                 table.Columns.Add("Variable", typeof(string));
                 table.Columns.Add("Test", typeof(string));
-                table.Columns.Add("Old", typeof(double));
-                table.Columns.Add("New", typeof(double));
+                table.Columns.Add("Accepted", typeof(double));
+                table.Columns.Add("Current", typeof(double));
                 table.Columns.Add("Difference", typeof(double));
                 table.Columns.Add("Sig.", typeof(char));
 
@@ -80,11 +84,13 @@ namespace Models
                 for (int i = 0; i < columnNames.Count; i++)
                     for (int j = 0; j < statNames.Count; j++)
                     {
-                        table.Rows[i * statNames.Count + j]["New"] = stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]);
-                        table.Rows[i * statNames.Count + j]["Difference"] = table.Rows[i * statNames.Count + j].Field<double>("New") - table.Rows[i * statNames.Count + j].Field<double>("Old");
-                        table.Rows[i * statNames.Count + j]["Sig."] = table.Rows[i * statNames.Count + j].Field<double>("Difference") < table.Rows[i * statNames.Count + j].Field<double>("Old") * 0.01 ? "!" : " ";
+                        table.Rows[i * statNames.Count + j]["Current"] = stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]);
+                        table.Rows[i * statNames.Count + j]["Difference"] = table.Rows[i * statNames.Count + j].Field<double>("Current") - table.Rows[i * statNames.Count + j].Field<double>("Accepted");
+                        table.Rows[i * statNames.Count + j]["Sig."] = Math.Abs(table.Rows[i * statNames.Count + j].Field<double>("Difference")) > Math.Abs(table.Rows[i * statNames.Count + j].Field<double>("Accepted")) * 0.01 ? "X" : " ";
                     }
             }
+
+            //TODO: check for sig diffs and handle as required
         }
     }
 }

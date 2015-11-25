@@ -77,7 +77,7 @@ namespace UserInterface.Presenters
             this.explorerPresenter = explorerPresenter;
 
             this.FindAllProperties(this.model);
-            if (this.grid == null)
+            if (this.grid.DataSource == null)
                 this.PopulateGrid(this.model);
             else
                 this.grid.ResizeControls();
