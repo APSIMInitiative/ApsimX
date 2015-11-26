@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Xml.Serialization;
 using System.Data;
 using Models.Core;
 using Models.PostSimulationTools;
@@ -10,8 +10,7 @@ using APSIM.Shared.Utilities;
 namespace Models
 {
     /// <summary>
-    /// Test interface. TODO: Ensure it handles addition and removal
-    /// of tests in Apsim.Shared.Utilities.MathUtilities.RegrStats
+    /// Test interface.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -22,9 +21,15 @@ namespace Models
         /// <summary>
         /// data table
         /// </summary>
-        [Description("A table holding the results of the comparison")]
-        public DataTable table { get; set; }
+        [XmlIgnore]
+        public DataTable Table { get; set; }
 
+        /// <summary>
+        /// A collection of validated stats.
+        /// </summary>
+        [Description("An array of validated regression stats.")]
+        public MathUtilities.RegrStats[] AcceptedStats { get; set; }
+        
         /// <summary>
         /// Run tests
         /// </summary>
@@ -32,65 +37,88 @@ namespace Models
         {
             PredictedObserved PO = Parent as PredictedObserved;
             DataStore DS = PO.Parent as DataStore;
+            MathUtilities.RegrStats[] stats;
             List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
             DataTable POtable = DS.GetData("*", PO.Name);
-            List<string> columnNames; 
-            MathUtilities.RegrStats[] stats;
+            List<string> columnNames;
+            string sigIdent = "X";
 
             if (POtable == null)
                 throw new ApsimXException(this, "Could not find PO table. Has the simulation been run?");
-            columnNames= POtable.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList(); //get list of column names;
+            columnNames = POtable.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList(); //get list of column names;
             columnNames = columnNames.Where(c => c.Contains("Observed")).ToList(); //filter names that are not pred/obs pairs
+            for (int i = 0; i < columnNames.Count; i++)
+                columnNames[i] = columnNames[i].Replace("Observed.", "");
             stats = new MathUtilities.RegrStats[columnNames.Count];
             List<double> x = new List<double>();
             List<double> y = new List<double>();
             string xstr, ystr;
             double xres;
             double yres;
+
             for (int c = 0; c < columnNames.Count; c++) //on each P/O column pair
             {
                 foreach (DataRow row in POtable.Rows)
                 {
-                    xstr = row[columnNames[c]].ToString();
-                    ystr = row[columnNames[c].Replace("Observed", "Predicted")].ToString(); ;
+                    xstr = row["Observed." + columnNames[c]].ToString();
+                    ystr = row["Predicted." + columnNames[c]].ToString();
                     if (Double.TryParse(xstr, out xres) && Double.TryParse(ystr, out yres))
                     {
                         x.Add(xres);
                         y.Add(yres);
                     }
                 }
-                stats[c] = MathUtilities.CalcRegressionStats(x, y);
+                stats[c] = MathUtilities.CalcRegressionStats(columnNames[c], x, y);
             }
 
             //turn stats array into a DataTable
-            //create table if it doesn't exist
-            if (table == null)
-            {
-                table = new DataTable("StatTests");
-                table.Columns.Add("Variable", typeof(string));
-                table.Columns.Add("Test", typeof(string));
-                table.Columns.Add("Accepted", typeof(double));
-                table.Columns.Add("Current", typeof(double));
-                table.Columns.Add("Difference", typeof(double));
-                table.Columns.Add("Sig.", typeof(char));
+            // first, check if there is already an AcceptedStats array, create if not.
+            if (AcceptedStats == null)
+                AcceptedStats = stats;
 
-                for (int i = 0; i < columnNames.Count; i++)
-                    for (int j = 0; j < statNames.Count; j++)
-                        table.Rows.Add(columnNames[i].Replace("Observed.", ""),
-                            statNames[j], stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]), stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]), 0, ' ');
-            }
-            else //update 'new' data and calculate differences
-            {
-                for (int i = 0; i < columnNames.Count; i++)
-                    for (int j = 0; j < statNames.Count; j++)
-                    {
-                        table.Rows[i * statNames.Count + j]["Current"] = stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]);
-                        table.Rows[i * statNames.Count + j]["Difference"] = table.Rows[i * statNames.Count + j].Field<double>("Current") - table.Rows[i * statNames.Count + j].Field<double>("Accepted");
-                        table.Rows[i * statNames.Count + j]["Sig."] = Math.Abs(table.Rows[i * statNames.Count + j].Field<double>("Difference")) > Math.Abs(table.Rows[i * statNames.Count + j].Field<double>("Accepted")) * 0.01 ? "X" : " ";
-                    }
-            }
+            //then make sure the names and order of the accepted stats are the same as the new ones.
+            if (!Enumerable.SequenceEqual(statNames, AcceptedStats[0].GetType().GetFields().Select(f => f.Name).ToList()))
+                throw new ApsimXException(this, "Names, number or order of accepted stats do not match class MathUtilities.RegrStats. The class has probably changed.");
 
-            //TODO: check for sig diffs and handle as required
+            Table = new DataTable("StatTests");
+            Table.Columns.Add("Variable", typeof(string));
+            Table.Columns.Add("Test", typeof(string));
+            Table.Columns.Add("Accepted", typeof(double));
+            Table.Columns.Add("Current", typeof(double));
+            Table.Columns.Add("Difference", typeof(double));
+            Table.Columns.Add("Sig.", typeof(char));
+
+            double accepted;
+            double current;
+            double difference;
+            for (int i = 0; i < columnNames.Count; i++)
+                for (int j = 1; j < statNames.Count; j++) //start at 1; we don't want Name field.
+                {
+                    accepted = Convert.ToDouble(AcceptedStats[i].GetType().GetField(statNames[j]).GetValue(AcceptedStats[i]));
+                    current = Convert.ToDouble(stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]));
+                    difference = current - accepted;
+
+                    Table.Rows.Add(columnNames[i],
+                        statNames[j],
+                        accepted, 
+                        current,
+                        difference,
+                        Math.Abs(difference) > Math.Abs(accepted) * 0.01 ? "X" : " ");
+                }
+            
+
+            foreach (DataRow row in Table.Rows)
+                if (row["Sig."].ToString().Equals(sigIdent))
+                    throw new ApsimXException(this, "Significant differences found during regression testing of " + PO.Name);
+        }
+
+        /// <summary>All simulations have run - write all tables</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("AllCompleted")]
+        private void OnAllSimulationsCompleted(object sender, EventArgs e)
+        {
+            Test();
         }
     }
 }

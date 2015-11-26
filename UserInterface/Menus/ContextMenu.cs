@@ -187,7 +187,19 @@ namespace UserInterface.Presenters
         public void RunTests(object sender, EventArgs e)
         {
             Tests test = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Tests;
-            test.Test();
+            try
+            {
+                test.Test();
+            }
+            catch(ApsimXException ex)
+            {
+                this.explorerPresenter.ShowMessage(ex.Message, DataStore.ErrorLevel.Error);
+            }
+            finally
+            {
+                this.explorerPresenter.HideRightHandPanel();
+                this.explorerPresenter.ShowRightHandPanel();
+            }
         }
 
         /// <summary>

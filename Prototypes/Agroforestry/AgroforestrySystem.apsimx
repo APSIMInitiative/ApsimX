@@ -2100,598 +2100,93 @@ VShort duration variety released in New Zealand by Pioneer
       <Name>PredictedObserved</Name>
       <Tests>
         <Name>Tests</Name>
-        <table>
-          <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-            <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:MainDataTable="StatTests" msdata:UseCurrentLocale="true">
-              <xs:complexType>
-                <xs:choice minOccurs="0" maxOccurs="unbounded">
-                  <xs:element name="StatTests">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="Variable" type="xs:string" minOccurs="0" />
-                        <xs:element name="Test" type="xs:string" minOccurs="0" />
-                        <xs:element name="Old" type="xs:double" minOccurs="0" />
-                        <xs:element name="New" type="xs:double" minOccurs="0" />
-                        <xs:element name="Difference" type="xs:double" minOccurs="0" />
-                        <xs:element name="Sig." minOccurs="0">
-                          <xs:simpleType>
-                            <xs:restriction base="xs:string">
-                              <xs:length value="1" />
-                            </xs:restriction>
-                          </xs:simpleType>
-                        </xs:element>
-                      </xs:sequence>
-                    </xs:complexType>
-                  </xs:element>
-                </xs:choice>
-              </xs:complexType>
-            </xs:element>
-          </xs:schema>
-          <diffgr:diffgram xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:diffgr="urn:schemas-microsoft-com:xml-diffgram-v1">
-            <DocumentElement>
-              <StatTests diffgr:id="StatTests1" msdata:rowOrder="0" diffgr:hasChanges="inserted">
-                <Variable>Distance</Variable>
-                <Test>n</Test>
-                <Old>103</Old>
-                <New>103</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests2" msdata:rowOrder="1" diffgr:hasChanges="inserted">
-                <Variable>Distance</Variable>
-                <Test>m</Test>
-                <Old>0.996536596628954</Old>
-                <New>0.996536596628954</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests3" msdata:rowOrder="2" diffgr:hasChanges="inserted">
-                <Variable>Distance</Variable>
-                <Test>c</Test>
-                <Old>0.70537981990302612</Old>
-                <New>0.70537981990302612</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests4" msdata:rowOrder="3" diffgr:hasChanges="inserted">
-                <Variable>Distance</Variable>
-                <Test>SEslope</Test>
-                <Old>0.010136794536124196</Old>
-                <New>0.010136794536124196</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests5" msdata:rowOrder="4" diffgr:hasChanges="inserted">
-                <Variable>Distance</Variable>
-                <Test>SEcoeff</Test>
-                <Old>0.27307857628750853</Old>
-                <New>0.27307857628750853</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests6" msdata:rowOrder="5" diffgr:hasChanges="inserted">
-                <Variable>Distance</Variable>
-                <Test>R2</Test>
-                <Old>0.98965760493570309</Old>
-                <New>0.98965760493570309</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests7" msdata:rowOrder="6" diffgr:hasChanges="inserted">
-                <Variable>Distance</Variable>
-                <Test>ADJR2</Test>
-                <Old>0.98955520498457139</Old>
-                <New>0.98955520498457139</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests8" msdata:rowOrder="7" diffgr:hasChanges="inserted">
-                <Variable>Distance</Variable>
-                <Test>R2YX</Test>
-                <Old>1</Old>
-                <New>1</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests9" msdata:rowOrder="8" diffgr:hasChanges="inserted">
-                <Variable>Distance</Variable>
-                <Test>VarRatio</Test>
-                <Old>9664.6296604509625</Old>
-                <New>9664.6296604509625</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests10" msdata:rowOrder="9" diffgr:hasChanges="inserted">
-                <Variable>Distance</Variable>
-                <Test>RMSD</Test>
-                <Old>1.6758409624934398</Old>
-                <New>1.6758409624934398</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests11" msdata:rowOrder="10" diffgr:hasChanges="inserted">
-                <Variable>Distance</Variable>
-                <Test>NSE</Test>
-                <Old>0.98810898175940887</Old>
-                <New>0.98810898175940887</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests12" msdata:rowOrder="11" diffgr:hasChanges="inserted">
-                <Variable>Distance</Variable>
-                <Test>ME</Test>
-                <Old>-0.63106796116504849</Old>
-                <New>-0.63106796116504849</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests13" msdata:rowOrder="12" diffgr:hasChanges="inserted">
-                <Variable>Distance</Variable>
-                <Test>MAE</Test>
-                <Old>0.63106796116504849</Old>
-                <New>0.63106796116504849</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests14" msdata:rowOrder="13" diffgr:hasChanges="inserted">
-                <Variable>Distance</Variable>
-                <Test>RSR</Test>
-                <Old>0.00014139631479806989</Old>
-                <New>0.00014139631479806989</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests15" msdata:rowOrder="14" diffgr:hasChanges="inserted">
-                <Variable>SW90cm</Variable>
-                <Test>n</Test>
-                <Old>199</Old>
-                <New>199</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests16" msdata:rowOrder="15" diffgr:hasChanges="inserted">
-                <Variable>SW90cm</Variable>
-                <Test>m</Test>
-                <Old>1.0456838424751906</Old>
-                <New>1.0456838424751906</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests17" msdata:rowOrder="16" diffgr:hasChanges="inserted">
-                <Variable>SW90cm</Variable>
-                <Test>c</Test>
-                <Old>5.2485726450655363</Old>
-                <New>5.2485726450655363</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests18" msdata:rowOrder="17" diffgr:hasChanges="inserted">
-                <Variable>SW90cm</Variable>
-                <Test>SEslope</Test>
-                <Old>0.018599893247809602</Old>
-                <New>0.018599893247809602</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests19" msdata:rowOrder="18" diffgr:hasChanges="inserted">
-                <Variable>SW90cm</Variable>
-                <Test>SEcoeff</Test>
-                <Old>3.3024213907119764</Old>
-                <New>3.3024213907119764</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests20" msdata:rowOrder="19" diffgr:hasChanges="inserted">
-                <Variable>SW90cm</Variable>
-                <Test>R2</Test>
-                <Old>0.94132845541538046</Old>
-                <New>0.94132845541538046</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests21" msdata:rowOrder="20" diffgr:hasChanges="inserted">
-                <Variable>SW90cm</Variable>
-                <Test>ADJR2</Test>
-                <Old>0.94103063031596612</Old>
-                <New>0.94103063031596612</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests22" msdata:rowOrder="21" diffgr:hasChanges="inserted">
-                <Variable>SW90cm</Variable>
-                <Test>R2YX</Test>
-                <Old>1</Old>
-                <New>1</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests23" msdata:rowOrder="22" diffgr:hasChanges="inserted">
-                <Variable>SW90cm</Variable>
-                <Test>VarRatio</Test>
-                <Old>3160.6753670746643</Old>
-                <New>3160.6753670746643</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests24" msdata:rowOrder="23" diffgr:hasChanges="inserted">
-                <Variable>SW90cm</Variable>
-                <Test>RMSD</Test>
-                <Old>31.309628347026845</Old>
-                <New>31.309628347026845</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests25" msdata:rowOrder="24" diffgr:hasChanges="inserted">
-                <Variable>SW90cm</Variable>
-                <Test>NSE</Test>
-                <Old>0.92086373405659316</Old>
-                <New>0.92086373405659316</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests26" msdata:rowOrder="25" diffgr:hasChanges="inserted">
-                <Variable>SW90cm</Variable>
-                <Test>ME</Test>
-                <Old>-11.254759783638582</Old>
-                <New>-11.254759783638582</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests27" msdata:rowOrder="26" diffgr:hasChanges="inserted">
-                <Variable>SW90cm</Variable>
-                <Test>MAE</Test>
-                <Old>15.740169223760198</Old>
-                <New>15.740169223760198</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests28" msdata:rowOrder="27" diffgr:hasChanges="inserted">
-                <Variable>SW90cm</Variable>
-                <Test>RSR</Test>
-                <Old>0.0062625485874656149</Old>
-                <New>0.0062625485874656149</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests29" msdata:rowOrder="28" diffgr:hasChanges="inserted">
-                <Variable>BiomassWt</Variable>
-                <Test>n</Test>
-                <Old>208</Old>
-                <New>208</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests30" msdata:rowOrder="29" diffgr:hasChanges="inserted">
-                <Variable>BiomassWt</Variable>
-                <Test>m</Test>
-                <Old>0.976606342349434</Old>
-                <New>0.976606342349434</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests31" msdata:rowOrder="30" diffgr:hasChanges="inserted">
-                <Variable>BiomassWt</Variable>
-                <Test>c</Test>
-                <Old>26.409424651846479</Old>
-                <New>26.409424651846479</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests32" msdata:rowOrder="31" diffgr:hasChanges="inserted">
-                <Variable>BiomassWt</Variable>
-                <Test>SEslope</Test>
-                <Old>0.044468104774640728</Old>
-                <New>0.044468104774640728</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests33" msdata:rowOrder="32" diffgr:hasChanges="inserted">
-                <Variable>BiomassWt</Variable>
-                <Test>SEcoeff</Test>
-                <Old>8.74921076501447</Old>
-                <New>8.74921076501447</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests34" msdata:rowOrder="33" diffgr:hasChanges="inserted">
-                <Variable>BiomassWt</Variable>
-                <Test>R2</Test>
-                <Old>0.70072376727342456</Old>
-                <New>0.70072376727342456</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests35" msdata:rowOrder="34" diffgr:hasChanges="inserted">
-                <Variable>BiomassWt</Variable>
-                <Test>ADJR2</Test>
-                <Old>0.69927097002717908</Old>
-                <New>0.69927097002717908</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests36" msdata:rowOrder="35" diffgr:hasChanges="inserted">
-                <Variable>BiomassWt</Variable>
-                <Test>R2YX</Test>
-                <Old>1</Old>
-                <New>1</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests37" msdata:rowOrder="36" diffgr:hasChanges="inserted">
-                <Variable>BiomassWt</Variable>
-                <Test>VarRatio</Test>
-                <Old>482.32729590059228</Old>
-                <New>482.32729590059228</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests38" msdata:rowOrder="37" diffgr:hasChanges="inserted">
-                <Variable>BiomassWt</Variable>
-                <Test>RMSD</Test>
-                <Old>89.24213620629591</Old>
-                <New>89.24213620629591</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests39" msdata:rowOrder="38" diffgr:hasChanges="inserted">
-                <Variable>BiomassWt</Variable>
-                <Test>NSE</Test>
-                <Old>0.56441561503577686</Old>
-                <New>0.56441561503577686</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests40" msdata:rowOrder="39" diffgr:hasChanges="inserted">
-                <Variable>BiomassWt</Variable>
-                <Test>ME</Test>
-                <Old>-23.155414162867505</Old>
-                <New>-23.155414162867505</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests41" msdata:rowOrder="40" diffgr:hasChanges="inserted">
-                <Variable>BiomassWt</Variable>
-                <Test>MAE</Test>
-                <Old>28.37458575503539</Old>
-                <New>28.37458575503539</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests42" msdata:rowOrder="41" diffgr:hasChanges="inserted">
-                <Variable>BiomassWt</Variable>
-                <Test>RSR</Test>
-                <Old>0.18973375642466051</Old>
-                <New>0.18973375642466051</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests43" msdata:rowOrder="42" diffgr:hasChanges="inserted">
-                <Variable>GrainWt</Variable>
-                <Test>n</Test>
-                <Old>215</Old>
-                <New>215</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests44" msdata:rowOrder="43" diffgr:hasChanges="inserted">
-                <Variable>GrainWt</Variable>
-                <Test>m</Test>
-                <Old>0.95012548658346874</Old>
-                <New>0.95012548658346874</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests45" msdata:rowOrder="44" diffgr:hasChanges="inserted">
-                <Variable>GrainWt</Variable>
-                <Test>c</Test>
-                <Old>31.737901033930996</Old>
-                <New>31.737901033930996</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests46" msdata:rowOrder="45" diffgr:hasChanges="inserted">
-                <Variable>GrainWt</Variable>
-                <Test>SEslope</Test>
-                <Old>0.044422571036946509</Old>
-                <New>0.044422571036946509</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests47" msdata:rowOrder="46" diffgr:hasChanges="inserted">
-                <Variable>GrainWt</Variable>
-                <Test>SEcoeff</Test>
-                <Old>8.7239981151728543</Old>
-                <New>8.7239981151728543</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests48" msdata:rowOrder="47" diffgr:hasChanges="inserted">
-                <Variable>GrainWt</Variable>
-                <Test>R2</Test>
-                <Old>0.68230838271166694</Old>
-                <New>0.68230838271166694</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests49" msdata:rowOrder="48" diffgr:hasChanges="inserted">
-                <Variable>GrainWt</Variable>
-                <Test>ADJR2</Test>
-                <Old>0.68081687277134617</Old>
-                <New>0.68081687277134617</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests50" msdata:rowOrder="49" diffgr:hasChanges="inserted">
-                <Variable>GrainWt</Variable>
-                <Test>R2YX</Test>
-                <Old>1</Old>
-                <New>1</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests51" msdata:rowOrder="50" diffgr:hasChanges="inserted">
-                <Variable>GrainWt</Variable>
-                <Test>VarRatio</Test>
-                <Old>457.46150546265062</Old>
-                <New>457.46150546265062</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests52" msdata:rowOrder="51" diffgr:hasChanges="inserted">
-                <Variable>GrainWt</Variable>
-                <Test>RMSD</Test>
-                <Old>90.743447566016812</Old>
-                <New>90.743447566016812</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests53" msdata:rowOrder="52" diffgr:hasChanges="inserted">
-                <Variable>GrainWt</Variable>
-                <Test>NSE</Test>
-                <Old>0.54540818103702193</Old>
-                <New>0.54540818103702193</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests54" msdata:rowOrder="53" diffgr:hasChanges="inserted">
-                <Variable>GrainWt</Variable>
-                <Test>ME</Test>
-                <Old>-24.834373831621516</Old>
-                <New>-24.834373831621516</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests55" msdata:rowOrder="54" diffgr:hasChanges="inserted">
-                <Variable>GrainWt</Variable>
-                <Test>MAE</Test>
-                <Old>31.606615427763177</Old>
-                <New>31.606615427763177</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests56" msdata:rowOrder="55" diffgr:hasChanges="inserted">
-                <Variable>GrainWt</Variable>
-                <Test>RSR</Test>
-                <Old>0.20665372186806902</Old>
-                <New>0.20665372186806902</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests57" msdata:rowOrder="56" diffgr:hasChanges="inserted">
-                <Variable>GrainSize</Variable>
-                <Test>n</Test>
-                <Old>215</Old>
-                <New>215</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests58" msdata:rowOrder="57" diffgr:hasChanges="inserted">
-                <Variable>GrainSize</Variable>
-                <Test>m</Test>
-                <Old>0.95012548658346874</Old>
-                <New>0.95012548658346874</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests59" msdata:rowOrder="58" diffgr:hasChanges="inserted">
-                <Variable>GrainSize</Variable>
-                <Test>c</Test>
-                <Old>31.737901033930996</Old>
-                <New>31.737901033930996</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests60" msdata:rowOrder="59" diffgr:hasChanges="inserted">
-                <Variable>GrainSize</Variable>
-                <Test>SEslope</Test>
-                <Old>0.044422571036946509</Old>
-                <New>0.044422571036946509</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests61" msdata:rowOrder="60" diffgr:hasChanges="inserted">
-                <Variable>GrainSize</Variable>
-                <Test>SEcoeff</Test>
-                <Old>8.7239981151728543</Old>
-                <New>8.7239981151728543</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests62" msdata:rowOrder="61" diffgr:hasChanges="inserted">
-                <Variable>GrainSize</Variable>
-                <Test>R2</Test>
-                <Old>0.68230838271166694</Old>
-                <New>0.68230838271166694</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests63" msdata:rowOrder="62" diffgr:hasChanges="inserted">
-                <Variable>GrainSize</Variable>
-                <Test>ADJR2</Test>
-                <Old>0.68081687277134617</Old>
-                <New>0.68081687277134617</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests64" msdata:rowOrder="63" diffgr:hasChanges="inserted">
-                <Variable>GrainSize</Variable>
-                <Test>R2YX</Test>
-                <Old>1</Old>
-                <New>1</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests65" msdata:rowOrder="64" diffgr:hasChanges="inserted">
-                <Variable>GrainSize</Variable>
-                <Test>VarRatio</Test>
-                <Old>457.46150546265062</Old>
-                <New>457.46150546265062</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests66" msdata:rowOrder="65" diffgr:hasChanges="inserted">
-                <Variable>GrainSize</Variable>
-                <Test>RMSD</Test>
-                <Old>90.743447566016812</Old>
-                <New>90.743447566016812</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests67" msdata:rowOrder="66" diffgr:hasChanges="inserted">
-                <Variable>GrainSize</Variable>
-                <Test>NSE</Test>
-                <Old>0.54540818103702193</Old>
-                <New>0.54540818103702193</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests68" msdata:rowOrder="67" diffgr:hasChanges="inserted">
-                <Variable>GrainSize</Variable>
-                <Test>ME</Test>
-                <Old>-24.834373831621516</Old>
-                <New>-24.834373831621516</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests69" msdata:rowOrder="68" diffgr:hasChanges="inserted">
-                <Variable>GrainSize</Variable>
-                <Test>MAE</Test>
-                <Old>31.606615427763177</Old>
-                <New>31.606615427763177</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-              <StatTests diffgr:id="StatTests70" msdata:rowOrder="69" diffgr:hasChanges="inserted">
-                <Variable>GrainSize</Variable>
-                <Test>RSR</Test>
-                <Old>0.20665372186806902</Old>
-                <New>0.20665372186806902</New>
-                <Difference>0</Difference>
-                <Sig. xml:space="preserve"> </Sig.>
-              </StatTests>
-            </DocumentElement>
-          </diffgr:diffgram>
-        </table>
+        <AcceptedStats>
+          <RegrStats>
+            <Name>Distance</Name>
+            <n>103</n>
+            <m>0.996536596628954</m>
+            <c>0.70537981990302612</c>
+            <SEslope>0.010136794536124196</SEslope>
+            <SEcoeff>0.27307857628750853</SEcoeff>
+            <R2D2>0.98965760493570309</R2D2>
+            <ADJR2>0.98955520498457139</ADJR2>
+            <R2YX>1</R2YX>
+            <VarRatio>9664.6296604509625</VarRatio>
+            <RMSD>1.6758409624934398</RMSD>
+            <NSE>0.98810898175940887</NSE>
+            <ME>-0.63106796116504849</ME>
+            <MAE>0.63106796116504849</MAE>
+            <RSR>0.00014139631479806989</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>SW90cm</Name>
+            <n>199</n>
+            <m>1.0456838424751906</m>
+            <c>5.2485726450655363</c>
+            <SEslope>0.018599893247809602</SEslope>
+            <SEcoeff>3.3024213907119764</SEcoeff>
+            <R2D2>0.94132845541538046</R2D2>
+            <ADJR2>0.94103063031596612</ADJR2>
+            <R2YX>1</R2YX>
+            <VarRatio>3160.6753670746643</VarRatio>
+            <RMSD>31.309628347026845</RMSD>
+            <NSE>0.92086373405659316</NSE>
+            <ME>-11.254759783638582</ME>
+            <MAE>15.740169223760198</MAE>
+            <RSR>0.0062625485874656149</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>BiomassWt</Name>
+            <n>208</n>
+            <m>0.976606342349434</m>
+            <c>26.409424651846479</c>
+            <SEslope>0.044468104774640728</SEslope>
+            <SEcoeff>8.74921076501447</SEcoeff>
+            <R2D2>0.70072376727342456</R2D2>
+            <ADJR2>0.69927097002717908</ADJR2>
+            <R2YX>1</R2YX>
+            <VarRatio>482.32729590059228</VarRatio>
+            <RMSD>89.24213620629591</RMSD>
+            <NSE>0.56441561503577686</NSE>
+            <ME>-23.155414162867505</ME>
+            <MAE>28.37458575503539</MAE>
+            <RSR>0.18973375642466051</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>GrainWt</Name>
+            <n>215</n>
+            <m>0.95012548658346874</m>
+            <c>31.737901033930996</c>
+            <SEslope>0.044422571036946509</SEslope>
+            <SEcoeff>8.7239981151728543</SEcoeff>
+            <R2D2>0.68230838271166694</R2D2>
+            <ADJR2>0.68081687277134617</ADJR2>
+            <R2YX>1</R2YX>
+            <VarRatio>457.46150546265062</VarRatio>
+            <RMSD>90.743447566016812</RMSD>
+            <NSE>0.54540818103702193</NSE>
+            <ME>-24.834373831621516</ME>
+            <MAE>31.606615427763177</MAE>
+            <RSR>0.20665372186806902</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>GrainSize</Name>
+            <n>215</n>
+            <m>0.95012548658346874</m>
+            <c>31.737901033930996</c>
+            <SEslope>0.044422571036946509</SEslope>
+            <SEcoeff>8.7239981151728543</SEcoeff>
+            <R2D2>0.68230838271166694</R2D2>
+            <ADJR2>0.68081687277134617</ADJR2>
+            <R2YX>1</R2YX>
+            <VarRatio>457.46150546265062</VarRatio>
+            <RMSD>90.743447566016812</RMSD>
+            <NSE>0.54540818103702193</NSE>
+            <ME>-24.834373831621516</ME>
+            <MAE>31.606615427763177</MAE>
+            <RSR>0.20665372186806902</RSR>
+          </RegrStats>
+        </AcceptedStats>
       </Tests>
       <PredictedTableName>DailyReport</PredictedTableName>
       <ObservedTableName>ObservedWarraBlock1</ObservedTableName>
