@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using System.Data;
+using System.Text;
 using Models.Core;
 using Models.PostSimulationTools;
 using APSIM.Shared.Utilities;
@@ -29,11 +30,11 @@ namespace Models
         /// </summary>
         [Description("An array of validated regression stats.")]
         public MathUtilities.RegrStats[] AcceptedStats { get; set; }
-        
+
         /// <summary>
         /// Run tests
         /// </summary>
-        public void Test()
+        public void Test(bool accept = false)
         {
             PredictedObserved PO = Parent as PredictedObserved;
             DataStore DS = PO.Parent as DataStore;
@@ -100,16 +101,20 @@ namespace Models
 
                     Table.Rows.Add(columnNames[i],
                         statNames[j],
-                        accepted, 
+                        accepted,
                         current,
                         difference,
                         Math.Abs(difference) > Math.Abs(accepted) * 0.01 ? "X" : " ");
                 }
-            
+
 
             foreach (DataRow row in Table.Rows)
                 if (row["Sig."].ToString().Equals(sigIdent))
                     throw new ApsimXException(this, "Significant differences found during regression testing of " + PO.Name);
+
+            if (accept)
+                AcceptedStats = stats;
+
         }
 
         /// <summary>All simulations have run - write all tables</summary>
@@ -119,6 +124,70 @@ namespace Models
         private void OnAllSimulationsCompleted(object sender, EventArgs e)
         {
             Test();
+            Console.WriteLine();
+            Console.WriteLine(ConvertDataTableToString(Table));
+        }
+
+        /// <summary>
+        /// Convert a data table to a string.
+        /// http://stackoverflow.com/questions/1104121/how-to-convert-a-datatable-to-a-string-in-c
+        /// Modified for multi-platform line breaks and explicit typing.
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <returns></returns>
+        public static string ConvertDataTableToString(DataTable dataTable)
+        {
+            StringBuilder output = new StringBuilder();
+
+            int[] columnsWidths = new int[dataTable.Columns.Count];
+            int length;
+            string text;
+
+            // Get column widths
+            foreach (DataRow row in dataTable.Rows)
+            {
+                for (int i = 0; i < dataTable.Columns.Count; i++)
+                {
+                    length = row[i].ToString().Length;
+                    if (columnsWidths[i] < length)
+                        columnsWidths[i] = length;
+                }
+            }
+
+            // Get Column Titles
+            for (int i = 0; i < dataTable.Columns.Count; i++)
+            {
+                length = dataTable.Columns[i].ColumnName.Length;
+                if (columnsWidths[i] < length)
+                    columnsWidths[i] = length;
+            }
+
+            // Write Column titles
+            for (int i = 0; i < dataTable.Columns.Count; i++)
+            {
+                text = dataTable.Columns[i].ColumnName;
+                output.Append("|" + PadCenter(text, columnsWidths[i] + 2));
+            }
+            output.Append("|" + Environment.NewLine + new string('=', output.Length) + Environment.NewLine);
+
+            // Write Rows
+            foreach (DataRow row in dataTable.Rows)
+            {
+                for (int i = 0; i < dataTable.Columns.Count; i++)
+                {
+                    text = row[i].ToString();
+                    output.Append("|" + PadCenter(text, columnsWidths[i] + 2));
+                }
+                output.Append("|" + Environment.NewLine);
+            }
+            return output.ToString();
+        }
+
+        private static string PadCenter(string text, int maxLength)
+        {
+            int diff = maxLength - text.Length;
+            return new string(' ', diff / 2) + text + new string(' ', (int)(diff / 2.0 + 0.5));
+
         }
     }
 }

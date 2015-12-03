@@ -17,6 +17,6 @@ namespace Models.Core
     public interface ITestable
     {
         /// <summary>Run tests. Should throw an exception if the test fails.</summary>
-        void Test();
+        void Test(bool accept);
     }
 }

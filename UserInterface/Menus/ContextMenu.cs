@@ -179,7 +179,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Event handler for a User interface "Run APSIM" action
+        /// Run tests.
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
@@ -192,6 +192,30 @@ namespace UserInterface.Presenters
                 test.Test();
             }
             catch(ApsimXException ex)
+            {
+                this.explorerPresenter.ShowMessage(ex.Message, DataStore.ErrorLevel.Error);
+            }
+            finally
+            {
+                this.explorerPresenter.HideRightHandPanel();
+                this.explorerPresenter.ShowRightHandPanel();
+            }
+        }
+
+        /// <summary>
+        /// Accept the current test output as the official baseline for future comparison. 
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Accept Tests", AppliesTo = new Type[] { typeof(Tests) })]
+        public void AcceptTests(object sender, EventArgs e)
+        {
+            Tests test = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Tests;
+            try
+            {
+                test.Test(true);
+            }
+            catch (ApsimXException ex)
             {
                 this.explorerPresenter.ShowMessage(ex.Message, DataStore.ErrorLevel.Error);
             }
