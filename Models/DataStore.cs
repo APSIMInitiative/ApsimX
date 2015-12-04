@@ -752,7 +752,7 @@ namespace Models
                     }
                     else if (table.SimulationName != null)
                         table.SimulationID = GetSimulationID(table.SimulationName);
-                    else
+                    else if (table.Data.Columns.Contains("SimulationName"))
                         AddSimulationIDColumnToTable(table.Data);
 
                     // Go through all columns for this table and add to 'names' and 'types'
