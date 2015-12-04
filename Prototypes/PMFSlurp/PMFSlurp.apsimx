@@ -3439,7 +3439,7 @@ namespace Models
         <Manager>
           <Name>SetCropVariables</Name>
           <Script>
-            <CoverFile>C:\ApsimX\Prototypes\PMFSlurp\ShallowSoilTest\CoverInterpolated.csv</CoverFile>
+            <CoverFile>%root%\Prototypes\PMFSlurp\ShallowSoilTest\CoverInterpolated.csv</CoverFile>
             <Ext_coef>0.8</Ext_coef>
             <MaximumHeight>600</MaximumHeight>
             <Cover>
@@ -3493,8 +3493,10 @@ namespace Models
 			
 			Treatment = Cover + "_" + Irrigation;
 			
+			string fullFileName = PathUtilities.GetAbsolutePath(CoverFile, Simulation.FileName);
+            
 			ApsimTextFile textFile = new ApsimTextFile();
-			textFile.Open(CoverFile);
+			textFile.Open(fullFileName);
 			Covers = textFile.ToTable();
 			textFile.Close();
 		}
