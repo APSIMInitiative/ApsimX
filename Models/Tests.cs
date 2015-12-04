@@ -32,6 +32,11 @@ namespace Models
         public MathUtilities.RegrStats[] AcceptedStats { get; set; }
 
         /// <summary>
+        /// The name of the associated Predicted Observed node.
+        /// </summary>
+        public string POName { get; set; }
+
+        /// <summary>
         /// Run tests
         /// </summary>
         public void Test(bool accept = false)
@@ -73,15 +78,21 @@ namespace Models
             }
 
             //turn stats array into a DataTable
-            // first, check if there is already an AcceptedStats array, create if not.
-            if (AcceptedStats == null)
+            //first, check if there is already an AcceptedStats array, create if not.
+            //If the names don't match, then use current stats as user has dragged
+            //an already existing Test to a new node.
+            if (AcceptedStats == null || POName != PO.Name)
+            {
+                POName = PO.Name;
                 AcceptedStats = stats;
+            }
 
             //then make sure the names and order of the accepted stats are the same as the new ones.
             if (!Enumerable.SequenceEqual(statNames, AcceptedStats[0].GetType().GetFields().Select(f => f.Name).ToList()))
                 throw new ApsimXException(this, "Names, number or order of accepted stats do not match class MathUtilities.RegrStats. The class has probably changed.");
 
             Table = new DataTable("StatTests");
+            Table.Columns.Add("Name", typeof(string));
             Table.Columns.Add("Variable", typeof(string));
             Table.Columns.Add("Test", typeof(string));
             Table.Columns.Add("Accepted", typeof(double));
@@ -99,7 +110,8 @@ namespace Models
                     current = Convert.ToDouble(stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]));
                     difference = current - accepted;
 
-                    Table.Rows.Add(columnNames[i],
+                    Table.Rows.Add(PO.Name,
+                        columnNames[i],
                         statNames[j],
                         accepted,
                         current,
