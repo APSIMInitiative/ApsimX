@@ -2421,8 +2421,8 @@ namespace Models
             </Operation>
           </Operations>
           <Specifications>
-            <string>[SetLAIofCrop].Script.IrrigColumn = 0</string>
             <string>[IrrigationEvents]</string>
+            <string>[SetCropVariables].Script.Irrigation = High</string>
           </Specifications>
         </Factor>
         <Factor>
@@ -2587,8 +2587,8 @@ namespace Models
             </Operation>
           </Operations>
           <Specifications>
-            <string>[SetLAIofCrop].Script.IrrigColumn = 1</string>
             <string>[IrrigationEvents]</string>
+            <string>[SetCropVariables].Script.Irrigation = Med</string>
           </Specifications>
         </Factor>
         <Factor>
@@ -2701,8 +2701,8 @@ namespace Models
             </Operation>
           </Operations>
           <Specifications>
-            <string>[SetLAIofCrop].Script.IrrigColumn = 2</string>
             <string>[IrrigationEvents]</string>
+            <string>[SetCropVariables].Script.Irrigation = Low</string>
           </Specifications>
         </Factor>
         <Factor>
@@ -2715,8 +2715,8 @@ namespace Models
             </Operation>
           </Operations>
           <Specifications>
-            <string>[SetLAIofCrop].Script.IrrigColumn = 3</string>
             <string>[IrrigationEvents]</string>
+            <string>[SetCropVariables].Script.Irrigation = Rain</string>
           </Specifications>
         </Factor>
         <Specifications />
@@ -2728,8 +2728,8 @@ namespace Models
           <Specifications>
             <string>[SlurpSowingRule].Script.SowingDate=2011-03-10</string>
             <string>[SlurpSowingRule].Script.CultivarName=Lucerne</string>
-            <string>[SetLAIofCrop].Script.CoverColumn = 0</string>
-            <string>[SetLAIofCrop].Script.MaximumHeight = 600</string>
+            <string>[SetCropVariables].Script.MaximumHeight = 600</string>
+            <string>[SetCropVariables].Script.Cover = Lucerne</string>
           </Specifications>
         </Factor>
         <Factor>
@@ -2737,8 +2737,8 @@ namespace Models
           <Specifications>
             <string>[SlurpSowingRule].Script.SowingDate=2011-03-24</string>
             <string>[SlurpSowingRule].Script.CultivarName=Pasture</string>
-            <string>[SetLAIofCrop].Script.CoverColumn = 4</string>
-            <string>[SetLAIofCrop].Script.MaximumHeight = 400</string>
+            <string>[SetCropVariables].Script.MaximumHeight = 400</string>
+            <string>[SetCropVariables].Script.Cover = Ryegrass</string>
           </Specifications>
         </Factor>
         <Specifications />
@@ -3392,150 +3392,6 @@ namespace Models
 }
 				]]></Code>
         </Manager>
-        <Manager>
-          <Name>SetLAIofCrop</Name>
-          <Script>
-            <CoverFile>%root%\Prototypes\PMFSlurp\ShallowSoilTest\CoverInterpolated.csv</CoverFile>
-            <CoverColumn>0</CoverColumn>
-            <IrrigColumn>0</IrrigColumn>
-            <Ext_coef>0.8</Ext_coef>
-            <MaximumHeight>600</MaximumHeight>
-            <CoverToday>0</CoverToday>
-            <leaflai>0</leaflai>
-          </Script>
-          <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-using System.IO;
-	  
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Zone zone;
-		[Link] Simulation simulation;
-		[Link] Summary Summary;
-   
-		[Description("File of covers to load")]
-		public string CoverFile { get; set; }
-		[Description("CoverColumn: CoverColumn+IrrigColumn = Column to load for data lookup")]
-		public  int CoverColumn { get; set; }
-		[Description("IrrigColumn: CoverColumn+IrrigColumn = Column to load for data lookup")]
-		public  int IrrigColumn { get; set; }
-		[Description("Extinction coefficient")]
-		public  double Ext_coef { get; set; }
-		[Description("Maximum height of the crop at full cover")]
-		public double MaximumHeight { get; set; }
-		
-		CoverIntcs CoverVals;
-        
-		private int Column { get; set; }
-		public double CoverToday { get; private set; }
-		public double leaflai { get; private set; }
-		int Col;
-		string CF;
-   
-		public class CDateValues
-		{
-			public   DateTime DT = new DateTime();
-			public   double[] Values = new double[8];
-		}
-
-		public class CoverIntcs
-		{
-			public List<CDateValues> CLS = new List<CDateValues>();
-
-			public double GetCover(DateTime dt, int C)
-			{
-				foreach (CDateValues CDV in CLS)
-				{
-					double k = CDV.Values[C];  
-					if (CDV.DT.Date == dt.Date)
-						return k;
-				}
-				return 0;
-			}
-      
-			public void LoadFile(string CF)
-			{
-				StreamReader infile = new StreamReader(CF);
-				string S = infile.ReadToEnd();
-				string[] elements = S.Split('\n');
-				int L = 0;
-				foreach (string line in elements)
-				{
-					L++;
-					if (L < 2)
-						continue; //skip first 1 lines
-
-					string[] StrVals = line.Split(',');
-					CDateValues CL = new CDateValues();
-					try
-					{
-						CL.DT = Convert.ToDateTime(StrVals[0]);
-					}
-					catch (Exception E)
-					{
-						//Probaly extra lines at end lets just 
-						break;
-					}
-
-					for (int l = 1; l < StrVals.Length; l++)
-					{
-						CL.Values[l - 1] = Convert.ToDouble(StrVals[l]);
-					}
-					CLS.Add(CL);
-				}
-			}
-		}
- 
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-			//CoverVals = new CoverIntcs();
-			//CoverVals.LoadFile(CoverFile);
-			CoverVals = new CoverIntcs();
-			string fullPath = PathUtilities.GetAbsolutePath(CoverFile, simulation.FileName);
-			CoverVals.LoadFile(fullPath);
-			Column = CoverColumn + IrrigColumn;
-		}
-      
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-			if ((bool)zone.Get("Slurp.IsAlive") == true)
-			{
-				//Only assign cover valuse if crop is emerged
-				CoverToday = CoverVals.GetCover(Clock.Today.Date, Column);
-      
-				if (CoverToday == 1)
-					leaflai = Math.Log(0.01) / -Ext_coef;
-				else
-				{
-					if (CoverToday > 0)
-						leaflai = Math.Log(1 - CoverToday) / -Ext_coef;
-					else
-						leaflai = 0;
-				}
-				//Summary.WriteMessage(this, "LAI " + leaflai);
-				object LAIResetValue = leaflai;
-				zone.Set("Slurp.Leaf.LAIFunction.Value", LAIResetValue);  
-				object HeightResetValue = CoverToday * MaximumHeight;
-				zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);  
-			}
-		}
-	}
-}
-       ]]></Code>
-        </Manager>
         <Report>
           <Name>Report</Name>
           <ExperimentFactorNames />
@@ -3573,11 +3429,112 @@ namespace Models
             <string>[MicroClimate].petr</string>
             <string>[SetLAIofCrop].Script.leaflai</string>
             <string>sum([Soil].SoilWater.SWmm[1:9]) as PSWC</string>
+            <string>SetCropVariables.Script.Treatment</string>
+            <string>SetCropVariables.Script.CoverRead</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <Manager>
+          <Name>SetCropVariables</Name>
+          <Script>
+            <CoverFile>C:\ApsimX\Prototypes\PMFSlurp\ShallowSoilTest\CoverInterpolated.csv</CoverFile>
+            <Ext_coef>0.8</Ext_coef>
+            <MaximumHeight>600</MaximumHeight>
+            <Cover>
+            </Cover>
+            <Irrigation>
+            </Irrigation>
+            <Treatment>
+            </Treatment>
+            <leaflai>0</leaflai>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using System.Data;
+
+namespace Models
+{
+	[Serializable] 
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant SCUM;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		
+		[Description("File of Yields")]
+		public string CoverFile { get; set; }
+		[Description("Extinction coefficient")]
+		public  double Ext_coef { get; set; }
+		[Description("Maximum height of the crop at full cover")]
+		public double MaximumHeight { get; set; }
+		
+		[XmlIgnore] private DataTable Covers { get; set; }
+
+		public string Cover { get; set; }
+		public string Irrigation { get; set; }
+		public string Treatment { get; set; }
+		
+		private double CoverRead { get; set; }
+		public double leaflai { get; private set; }
+				
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+			
+			Treatment = Cover + "_" + Irrigation;
+			
+			ApsimTextFile textFile = new ApsimTextFile();
+			textFile.Open(CoverFile);
+			Covers = textFile.ToTable();
+			textFile.Close();
+		}
+		
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{
+			foreach (DataRow row in Covers.Rows)
+			{
+				DateTime TodayDate = Convert.ToDateTime(row["Date"]);
+				if (TodayDate.Date == Clock.Today.Date)
+				{
+					CoverRead = Convert.ToDouble(row[Treatment]);
+				}
+			}
+		
+			if ((bool)zone.Get("Slurp.IsAlive") == true)
+			{
+				//Only assign cover valuse if crop is emerged
+				
+				if (CoverRead == 1)
+					leaflai = Math.Log(0.01) / -Ext_coef;
+				else
+				{
+					if (CoverRead > 0)
+						leaflai = Math.Log(1 - CoverRead) / -Ext_coef;
+					else
+						leaflai = 0;
+				}
+				//Summary.WriteMessage(this, "LAI " + leaflai);
+				object LAIResetValue = leaflai;
+				zone.Set("Slurp.Leaf.LAIFunction.Value", LAIResetValue);  
+				object HeightResetValue = CoverRead * MaximumHeight;
+				zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);  
+			}
+		}
+	}
+}
+				]]></Code>
+        </Manager>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
@@ -5003,16 +4960,16 @@ namespace Models
       <Slope>0</Slope>
     </Simulation>
     <Graph>
-      <Name>PastureCover</Name>
+      <Name>Cover</Name>
       <Series>
         <Name>Predicted</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -5031,8 +4988,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -5062,80 +5019,7 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries>
-        <string>LandPIrrigationTwoPerWeekCoverLucerne</string>
-        <string>LandPIrrigationOnePerWeekCoverLucerne</string>
-        <string>LandPIrrigationThreeWeeklyCoverLucerne</string>
-        <string>LandPIrrigationNoneCoverLucerne</string>
-      </DisabledSeries>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>LucerneCover</Name>
-      <Series>
-        <Name>Predicted</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Slurp.Leaf.CoverTotal</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Observed</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Cover</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SLURP.Leaf.CoverTotal</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>SoilWater content</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries>
-        <string>LandPIrrigationTwoPerWeekCoverPasture</string>
-        <string>LandPIrrigationOnePerWeekCoverPasture</string>
-        <string>LandPIrrigationThreeWeeklyCoverPasture</string>
-        <string>LandPIrrigationNoneCoverPasture</string>
-      </DisabledSeries>
+      <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
@@ -5146,9 +5030,9 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -5167,8 +5051,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -5198,12 +5082,7 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries>
-        <string>LandPIrrigationOnePerWeekCoverLucerne</string>
-        <string>LandPIrrigationOnePerWeekCoverPasture</string>
-        <string>LandPIrrigationThreeWeeklyCoverLucerne</string>
-        <string>LandPIrrigationThreeWeeklyCoverPasture</string>
-      </DisabledSeries>
+      <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
@@ -5214,9 +5093,9 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -5235,8 +5114,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>Circle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -5266,12 +5145,7 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries>
-        <string>LandPIrrigationOnePerWeekCoverLucerne</string>
-        <string>LandPIrrigationOnePerWeekCoverPasture</string>
-        <string>LandPIrrigationThreeWeeklyCoverLucerne</string>
-        <string>LandPIrrigationThreeWeeklyCoverPasture</string>
-      </DisabledSeries>
+      <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
@@ -5282,9 +5156,9 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -5303,8 +5177,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>Circle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -5334,12 +5208,7 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries>
-        <string>LandPIrrigationOnePerWeekCoverLucerne</string>
-        <string>LandPIrrigationOnePerWeekCoverPasture</string>
-        <string>LandPIrrigationThreeWeeklyCoverLucerne</string>
-        <string>LandPIrrigationThreeWeeklyCoverPasture</string>
-      </DisabledSeries>
+      <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
@@ -5350,9 +5219,9 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -5371,8 +5240,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -5413,9 +5282,9 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -5434,8 +5303,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -5476,9 +5345,9 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -5497,8 +5366,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -5539,9 +5408,9 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -5560,8 +5429,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -5602,9 +5471,9 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -5623,8 +5492,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -5665,9 +5534,9 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -5686,8 +5555,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -5728,9 +5597,9 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -5749,8 +5618,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -5791,9 +5660,9 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -5833,9 +5702,9 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -8231,6 +8100,150 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <Manager>
+        <Name>SetLAIofCrop</Name>
+        <Script>
+          <CoverFile>%root%\Prototypes\PMFSlurp\ShallowSoilTest\CoverInterpolated.csv</CoverFile>
+          <CoverColumn>0</CoverColumn>
+          <IrrigColumn>0</IrrigColumn>
+          <Ext_coef>0.8</Ext_coef>
+          <MaximumHeight>600</MaximumHeight>
+          <CoverToday>0</CoverToday>
+          <leaflai>0</leaflai>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using System.IO;
+	  
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Zone zone;
+		[Link] Simulation simulation;
+		[Link] Summary Summary;
+   
+		[Description("File of covers to load")]
+		public string CoverFile { get; set; }
+		[Description("CoverColumn: CoverColumn+IrrigColumn = Column to load for data lookup")]
+		public  int CoverColumn { get; set; }
+		[Description("IrrigColumn: CoverColumn+IrrigColumn = Column to load for data lookup")]
+		public  int IrrigColumn { get; set; }
+		[Description("Extinction coefficient")]
+		public  double Ext_coef { get; set; }
+		[Description("Maximum height of the crop at full cover")]
+		public double MaximumHeight { get; set; }
+		
+		CoverIntcs CoverVals;
+        
+		private int Column { get; set; }
+		public double CoverToday { get; private set; }
+		public double leaflai { get; private set; }
+		int Col;
+		string CF;
+   
+		public class CDateValues
+		{
+			public   DateTime DT = new DateTime();
+			public   double[] Values = new double[8];
+		}
+
+		public class CoverIntcs
+		{
+			public List<CDateValues> CLS = new List<CDateValues>();
+
+			public double GetCover(DateTime dt, int C)
+			{
+				foreach (CDateValues CDV in CLS)
+				{
+					double k = CDV.Values[C];  
+					if (CDV.DT.Date == dt.Date)
+						return k;
+				}
+				return 0;
+			}
+      
+			public void LoadFile(string CF)
+			{
+				StreamReader infile = new StreamReader(CF);
+				string S = infile.ReadToEnd();
+				string[] elements = S.Split('\n');
+				int L = 0;
+				foreach (string line in elements)
+				{
+					L++;
+					if (L < 2)
+						continue; //skip first 1 lines
+
+					string[] StrVals = line.Split(',');
+					CDateValues CL = new CDateValues();
+					try
+					{
+						CL.DT = Convert.ToDateTime(StrVals[0]);
+					}
+					catch (Exception E)
+					{
+						//Probaly extra lines at end lets just 
+						break;
+					}
+
+					for (int l = 1; l < StrVals.Length; l++)
+					{
+						CL.Values[l - 1] = Convert.ToDouble(StrVals[l]);
+					}
+					CLS.Add(CL);
+				}
+			}
+		}
+ 
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+			//CoverVals = new CoverIntcs();
+			//CoverVals.LoadFile(CoverFile);
+			CoverVals = new CoverIntcs();
+			string fullPath = PathUtilities.GetAbsolutePath(CoverFile, simulation.FileName);
+			CoverVals.LoadFile(fullPath);
+			Column = CoverColumn + IrrigColumn;
+		}
+      
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{
+			if ((bool)zone.Get("Slurp.IsAlive") == true)
+			{
+				//Only assign cover valuse if crop is emerged
+				CoverToday = CoverVals.GetCover(Clock.Today.Date, Column);
+      
+				if (CoverToday == 1)
+					leaflai = Math.Log(0.01) / -Ext_coef;
+				else
+				{
+					if (CoverToday > 0)
+						leaflai = Math.Log(1 - CoverToday) / -Ext_coef;
+					else
+						leaflai = 0;
+				}
+				//Summary.WriteMessage(this, "LAI " + leaflai);
+				object LAIResetValue = leaflai;
+				zone.Set("Slurp.Leaf.LAIFunction.Value", LAIResetValue);  
+				object HeightResetValue = CoverToday * MaximumHeight;
+				zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);  
+			}
+		}
+	}
+}
+       ]]></Code>
+      </Manager>
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
