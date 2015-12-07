@@ -63,24 +63,24 @@ namespace Models.Agroforestry
         /// </summary>
         [XmlIgnore]
         [Units("m")]
-        public double heightToday { get { return GetHeightToday();}}
+        public double heightToday { get { return GetHeightToday(); } }
 
         /// <summary>
         /// CanopyWidth
         /// </summary>
         [XmlIgnore]
         [Units("m")]
-        public double CanopyWidthToday { 
+        public double CanopyWidthToday {
             get
-            { return GetCanopyWidthToday();}
-            }
+            { return GetCanopyWidthToday(); }
+        }
 
         /// <summary>
         /// Leaf Area
         /// </summary>
         [XmlIgnore]
         [Units("m2")]
-        public double LeafAreaToday { get { return GetTreeLeafAreaToday();} }
+        public double LeafAreaToday { get { return GetTreeLeafAreaToday(); } }
 
         /// <summary>
         /// The trees water uptake per layer in a single zone
@@ -101,7 +101,7 @@ namespace Models.Agroforestry
         /// </summary>
         [XmlIgnore]
         [Units("L")]
-        public double SWDemand {get; set; }  // Tree water demand (L)
+        public double SWDemand { get; set; }  // Tree water demand (L)
 
         /// <summary>The root radius.</summary>
         /// <value>The root radius.</value>
@@ -133,6 +133,12 @@ namespace Models.Agroforestry
         [Description("Extinction Coefficient (-)")]
         public double KValue { get; set; }
 
+        /// <summary>Is the tree centred in the zone?</summary>
+        /// <value>Is the tree centred in the zone?</value>
+        [Summary]
+        [Description("Is the tree in the middle of the Zone?")]
+        public bool IsTreeCentred { get; set; }
+
         /// <summary>
         /// Water stress factor.
         /// </summary>
@@ -153,6 +159,20 @@ namespace Models.Agroforestry
         /// </summary>
         [XmlIgnore]
         public List<IModel> ZoneList;
+        
+        /// <summary>
+        /// The names of the zones.
+        /// </summary>
+        [XmlIgnore]
+        [Summary]
+        public string[] ZoneNames { get; set; }
+
+        /// <summary>
+        /// The widths of the zones.
+        /// </summary>
+        [XmlIgnore]
+        [Summary]
+        public double[] ZoneWidths { get; set; }
 
         /// <summary>
         /// Return an array of shade values.
@@ -191,6 +211,24 @@ namespace Models.Agroforestry
         [Summary]
         public double[] TreeLeafAreas { get; set; }
 
+        /// <summary>
+        /// Distance from tree to near end of zones.
+        /// </summary>
+        [Summary]
+        public double[] DistFromTreeNear { get; set; }
+        
+        /// <summary>
+        /// Distance from tree to midpoint of zones.
+        /// </summary>
+        [Summary]
+        public double[] DistFromTreeMid { get; set; }
+
+        /// <summary>
+        /// Distance from tree to far end of zones.
+        /// </summary>
+        [Summary]
+        public double[] DistFromTreeFar { get; set; }
+
         private Dictionary<double, double> shade = new Dictionary<double, double>();
         private Dictionary<double, double[]> rld = new Dictionary<double, double[]>();
         private List<IModel> forestryZones;
@@ -200,30 +238,60 @@ namespace Models.Agroforestry
         /// <summary>
         /// Return the distance from the tree for a given zone. The tree is assumed to be in the first Zone.
         /// </summary>
-        /// <param name="z">Zone</param>
-        /// <returns>Distance from a static tree</returns>
-        public double GetDistanceFromTrees(Zone z)
+        /// <param name="z">The Zone.</param>
+        /// <returns>Distance from a static tree for both zone boundaries and the zone midpoint {near, mid, far}.</returns>
+        public double[] GetDistanceFromTrees(Zone z)
         {
-            double D = 0;
-            foreach (Zone zone in ZoneList)
+            for (int i = 0; i < ZoneList.Count; i++)
             {
-                if (zone is RectangularZone)
+                if (ZoneList[i] == z)
                 {
-                    if (zone == ZoneList[0])
-                        D += 0; // the tree is at distance 0
-                    else
-                        D += (zone as RectangularZone).Width; 
+                    return new double[] { DistFromTreeNear[i], DistFromTreeMid[i], DistFromTreeFar[i] };
                 }
-                else if (zone is CircularZone)
-                    D += (zone as CircularZone).Width;
-                else
-                    throw new ApsimXException(this, "Cannot calculate distance for trees for zone of given type.");
-
-                if (zone == z)
-                    return D;
             }
-        
-            throw new ApsimXException(this, "Could not find zone called " + z.Name);
+            throw new ApsimXException(this, "Could not find zone " + z.Name + " in ZoneList. Is it part of the agroforestry system?");
+        }
+
+        /// <summary>
+        /// Set up the distance for each zone from the tree.
+        /// </summary>
+        /// <param name="treeInCentre"></param>
+        public void SetDistanceFromTrees(bool treeInCentre)
+        {
+            for (int i = 0; i < ZoneList.Count; i++)
+            {
+                //zone type check
+                if (!(ZoneList[i] is RectangularZone) && !(ZoneList[i] is CircularZone))
+                    throw new ApsimXException(this, "Zone " + ZoneList[i].Name + " is not an Agroforestry zone.");
+
+                if (i == 0 && ZoneList[0] is RectangularZone) // the tree zone
+                {
+                    DistFromTreeNear[0] = treeInCentre ? -(ZoneList[0] as RectangularZone).Width / 2 : 0;
+                    DistFromTreeMid[0] = treeInCentre ? 0 : (ZoneList[0] as RectangularZone).Width / 2;
+                    DistFromTreeFar[0] = treeInCentre ? (ZoneList[0] as RectangularZone).Width / 2 : (ZoneList[0] as RectangularZone).Width;
+                    continue;
+                }
+                else if (i == 0 && ZoneList[0] is CircularZone) // tree is always in the midddle of circular zones.
+                {
+                    DistFromTreeNear[0] = 0;
+                    DistFromTreeMid[0] =  0 ;
+                    DistFromTreeFar[0] = (ZoneList[0] as CircularZone).Width / 2;
+                    continue;
+                }
+
+                if (ZoneList[i] is RectangularZone)
+                {
+                    DistFromTreeNear[i] = DistFromTreeFar[i - 1];
+                    DistFromTreeMid[i] = DistFromTreeFar[i-1] + (ZoneList[i] as RectangularZone).Width / 2;
+                    DistFromTreeFar[i] = DistFromTreeFar[i-1] + (ZoneList[i] as RectangularZone).Width;
+                }
+                if (ZoneList[i] is CircularZone)
+                {
+                    DistFromTreeNear[i] = DistFromTreeFar[i - 1];
+                    DistFromTreeMid[i] = DistFromTreeFar[i - 1] + (ZoneList[i] as CircularZone).Width / 2;
+                    DistFromTreeFar[i] = DistFromTreeFar[i - 1] + (ZoneList[i] as CircularZone).Width;
+                }
+            }
         }
 
         /// <summary>
@@ -244,16 +312,29 @@ namespace Models.Agroforestry
         }
 
         /// <summary>
-        /// 
+        /// Get the distance of a zone from the tree as a multiple of tree heights.
         /// </summary>
         /// <param name="z"></param>
-        /// <returns></returns>
+        /// <returns>The distance of the zone midpoint from the tree.</returns>
         private double ZoneDistanceInTreeHeights(Zone z)
         {
             double treeHeight = GetHeightToday();
-            double distFromTree = GetDistanceFromTrees(z);
+            double distFromTree = GetDistanceFromTrees(z)[1]; // use distance at midpoint
 
             return distFromTree / treeHeight;
+        }
+
+        /// <summary>
+        /// Get the distance of a zone from the tree as a multiple of tree heights.
+        /// </summary>
+        /// <param name="z"></param>
+        /// <returns>The distance of the zone edges and midpoint from the tree.</returns>
+        private double[] ZoneDistanceInTreeHeightsArray(Zone z)
+        {
+            double treeHeight = GetHeightToday();
+            double[] distFromTree = GetDistanceFromTrees(z); // use distance at midpoint
+
+            return MathUtilities.Divide_Value(distFromTree, treeHeight);
         }
 
         /// <summary>
@@ -268,20 +349,21 @@ namespace Models.Agroforestry
         }
 
         /// <summary>
-        /// 
+        /// Get the root length density in a given zone.
         /// </summary>
         /// <param name="z"></param>
         /// <returns></returns>
         public double[] GetRLD(Zone z)
         {
-            double distInTH = ZoneDistanceInTreeHeights(z);
+            double[] distInTH = ZoneDistanceInTreeHeightsArray(z);
             bool didInterp = false;
             DenseMatrix rldM = DenseMatrix.OfColumnArrays(rld.Values);
             double[] rldInterp = new double[rldM.RowCount];
 
             for (int i=0;i< rldM.RowCount;i++)
             {
-                rldInterp[i] = MathUtilities.LinearInterpReal(distInTH, rld.Keys.ToArray(), rldM.Row(i).ToArray(), out didInterp);
+                // weight RLD by 25% near edge,25% far edge and 50% midpoint
+                rldInterp[i] = MathUtilities.LinearInterpReal(distInTH[0] * 0.25 + distInTH[1] * 0.5 + distInTH[2] * 0.25, rld.Keys.ToArray(), rldM.Row(i).ToArray(), out didInterp);
             }
                        
             return rldInterp;
@@ -401,8 +483,30 @@ namespace Models.Agroforestry
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            // run some checks
+            if (NumberOfTrees <= 0)
+                throw new ApsimXException(this, "Number of trees must be greater than one.");
+
             ZoneList = Apsim.Children(this.Parent, typeof(Zone));
             SetupTreeProperties();
+            DistFromTreeNear = new double[ZoneList.Count];
+            DistFromTreeMid = new double[ZoneList.Count];
+            DistFromTreeFar = new double[ZoneList.Count];
+            ZoneNames = new string[ZoneList.Count];
+            ZoneWidths = new double[ZoneList.Count];
+            SetDistanceFromTrees(IsTreeCentred);
+
+            //load information for summary
+            for (int i=0;i<ZoneList.Count;i++)
+            {
+                ZoneNames[i] = ZoneList[i].Name;
+                if (ZoneList[i] is RectangularZone)
+                    ZoneWidths[i] = (ZoneList[i] as RectangularZone).Width;
+                else if (ZoneList[i] is CircularZone)
+                    ZoneWidths[i] = (ZoneList[i] as CircularZone).Width;
+                else
+                    throw new ApsimXException(this, "Zone " + ZoneList[i].Name + " is not a valid agroforestry zone.");
+            }
 
             //pre-fetch static information
             forestryZones = Apsim.ChildrenRecursively(Parent, typeof(Zone));

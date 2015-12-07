@@ -91,9 +91,16 @@ namespace Models.Agroforestry
         /// </summary>
         /// <param name="z">The zone.</param>
         /// <returns></returns>
-        public double GetDistanceFromTrees(Zone z)
+        public double[] GetDistanceFromTrees(Zone z)
         {
-            return tree.GetDistanceFromTrees(z);
+            for (int i=0;i < ZoneList.Count; i++)
+            {
+                if (ZoneList[i] == z)
+                {
+                    return new double[] { tree.DistFromTreeNear[i], tree.DistFromTreeMid[i], tree.DistFromTreeFar[i] };
+                }
+            }
+            throw new ApsimXException(this, "Could not find zone " + z.Name + " in ZoneList. Is it part of the agroforestry system?");
         }
 
         /// <summary>
@@ -112,7 +119,7 @@ namespace Models.Agroforestry
                         Urel = 1;
                     else
                     {
-                        tree.H = GetDistanceFromTrees(z) / tree.heightToday;
+                        tree.H = GetDistanceFromTrees(z)[1] / tree.heightToday; //use distance at zone midpoint.
                         if (tree.H < 6)
                             Urel = UrelMin + (1 - UrelMin) / 2 - tree.H / 6 * (1 - UrelMin) / 2;
                         else if (tree.H < 6.1)

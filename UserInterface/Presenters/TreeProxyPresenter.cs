@@ -85,20 +85,6 @@
             //setup tree heights
             ForestryViewer.SetupHeights(ForestryModel.dates, ForestryModel.heights,ForestryModel.NDemands,ForestryModel.CanopyWidths,ForestryModel.TreeLeafAreas);
 
-      /*      //get the distance of each Zone from Tree.
-            double zoneWidth = 0;
-            double[] ZoneWidths = new double[Zones.Count];
-
-            for (int i = 1; i < Zones.Count; i++) //skip first Zone with tree
-            {
-                if (Zones[i] is RectangularZone)
-                    zoneWidth = (Zones[i] as RectangularZone).Width;
-                else if (Zones[i] is CircularZone)
-                    zoneWidth = (Zones[i] as CircularZone).Width;
-
-                    ZoneWidths[i] = ZoneWidths[i - 1] + zoneWidth;
-            }*/
-
             //get the first soil. For now we're assuming all soils have the same structure.
             Soil = Apsim.Find(Zones[0], typeof(Soil)) as Soil;
 
@@ -157,7 +143,6 @@
                 for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth and RLD rows to empty strings
                 {
                     ForestryModel.Table[i][2] = string.Empty;
-                    //ForestryModel.Table[i][3] = string.Empty;
                 }
 
                 // remove Zones from table that don't exist in simulation
