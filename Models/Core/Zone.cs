@@ -75,7 +75,7 @@ namespace Models.Core
 
         /// <summary>Gets the locater model for the specified model.</summary>
         /// <returns>The an instance of a locater class for the specified model. Never returns null.</returns>
-        private Locater Locator()
+        public Locater Locator()
         {
             var simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
             if (simulation == null)
