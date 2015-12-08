@@ -506,13 +506,13 @@
         private static void AddCodeBlock(Section section, string text)
         {
             Table table = section.AddTable();
-            table.Borders.Width = "1pt";
+            table.Borders.Width = "0.5pt";
             table.Borders.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
             table.LeftPadding = "5mm";
             table.Rows.LeftIndent = "0cm";
 
             var column = table.AddColumn();
-            column.Width = Unit.FromMillimeter(160);
+            column.Width = Unit.FromMillimeter(180);
 
             Row row = table.AddRow();
 
