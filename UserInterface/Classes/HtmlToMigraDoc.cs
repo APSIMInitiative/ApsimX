@@ -329,7 +329,10 @@
         {
             if (foundCode)
             {
-                AddCodeBlock(parentObject as Paragraph, text);
+                if (parentObject is Section)
+                    AddCodeBlock(parentObject as Section, text);
+                else if (parentObject is Paragraph)
+                    AddCodeBlock((parentObject as Paragraph).Section, text);
                 foundCode = false;
                 return null;
             }
@@ -500,9 +503,9 @@
         /// Add a text frame.
         /// </summary>
         /// <param name="section"></param>
-        private static void AddCodeBlock(Paragraph section, string text)
+        private static void AddCodeBlock(Section section, string text)
         {
-            Table table = section.Section.AddTable();
+            Table table = section.AddTable();
             table.Borders.Width = "1pt";
             table.Borders.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
             table.LeftPadding = "5mm";
