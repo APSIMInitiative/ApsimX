@@ -39,7 +39,9 @@ namespace Models
         /// <summary>
         /// Run tests
         /// </summary>
-        public void Test(bool accept = false)
+        /// <param name="accept">If true, the stats from this run will be written to file as the accepted stats.</param>
+        /// <param name="GUIrun">If true, do not raise an exception on test failure.</param>
+        public void Test(bool accept = false, bool GUIrun = false)
         {
             PredictedObserved PO = Parent as PredictedObserved;
             DataStore DS = PO.Parent as DataStore;
@@ -119,13 +121,15 @@ namespace Models
                         Math.Abs(difference) > Math.Abs(accepted) * 0.01 ? "X" : " ");
                 }
 
-
-            foreach (DataRow row in Table.Rows)
-                if (row["Sig."].ToString().Equals(sigIdent))
-                    throw new ApsimXException(this, "Significant differences found during regression testing of " + PO.Name);
-
             if (accept)
                 AcceptedStats = stats;
+            else
+                foreach (DataRow row in Table.Rows)
+                    if (row["Sig."].ToString().Equals(sigIdent))
+                    {
+                        if (!GUIrun)
+                            throw new ApsimXException(this, "Significant differences found during regression testing of " + PO.Name);
+                    }
 
         }
 

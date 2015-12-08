@@ -71,6 +71,11 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
+            //if the model is Testable, run the test method.
+            ITestable testModel = model as ITestable;
+            if (testModel != null)
+                testModel.Test(false, true);
+
             string[] split;
             this.grid = view as IGridView;
             this.model = model as Model;

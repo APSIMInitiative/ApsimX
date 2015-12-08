@@ -179,30 +179,6 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Run tests.
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Run Tests", AppliesTo = new Type[] { typeof(Tests) })]
-        public void RunTests(object sender, EventArgs e)
-        {
-            Tests test = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Tests;
-            try
-            {
-                test.Test();
-            }
-            catch(ApsimXException ex)
-            {
-                this.explorerPresenter.ShowMessage(ex.Message, DataStore.ErrorLevel.Error);
-            }
-            finally
-            {
-                this.explorerPresenter.HideRightHandPanel();
-                this.explorerPresenter.ShowRightHandPanel();
-            }
-        }
-
-        /// <summary>
         /// Accept the current test output as the official baseline for future comparison. 
         /// </summary>
         /// <param name="sender">Sender of the event</param>
@@ -210,6 +186,12 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Accept Tests", AppliesTo = new Type[] { typeof(Tests) })]
         public void AcceptTests(object sender, EventArgs e)
         {
+            DialogResult result = MessageBox.Show("You are about to change the officially accepted stats for this model. Are you sure?", "Replace official stats?", MessageBoxButtons.YesNo);
+            if(result != DialogResult.Yes)
+            {
+                return;
+            }
+
             Tests test = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Tests;
             try
             {

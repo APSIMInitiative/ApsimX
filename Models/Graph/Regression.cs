@@ -108,7 +108,7 @@ namespace Models.Graph
                 regressionDefinition.xAxis = Axis.AxisType.Bottom;
                 regressionDefinition.yAxis = Axis.AxisType.Left;
                 regressionDefinition.x = new double[] { minimumX, maximumX };
-                regressionDefinition.y = new double[] { stat.m * minimumX + stat.c, stat.m * maximumX + stat.c };
+                regressionDefinition.y = new double[] { stat.Slope * minimumX + stat.Intercept, stat.Slope * maximumX + stat.Intercept };
                 definitions.Add(regressionDefinition);
             }
         }
@@ -151,9 +151,9 @@ namespace Models.Graph
                 equation.text = string.Format("y = {0:F2} x + {1:F2}, r2 = {2:F2}, n = {3:F0}\r\n" +
                                                     "NSE = {4:F2}, ME = {5:F2}, MAE = {6:F2}\r\n" +
                                                     "RSR = {7:F2}, RMSD = {8:F2}",
-                                                    new object[] {stats[i].m,   stats[i].c,   stats[i].R2,
+                                                    new object[] {stats[i].Slope,   stats[i].Intercept,   stats[i].R2,
                                                                   stats[i].n,   stats[i].NSE, stats[i].ME,
-                                                                  stats[i].MAE, stats[i].RSR, stats[i].RMSD});
+                                                                  stats[i].MAE, stats[i].RSR, stats[i].RMSE});
                 equation.colour = equationColours[i];
                 annotations.Add(equation);
             }
