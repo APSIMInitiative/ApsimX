@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Simulation>
-    <Name>SugarCane</Name>
+    <Name>Sugarcane</Name>
     <Weather>
       <Name>Weather</Name>
       <FileName>Ingham.met</FileName>
@@ -3319,6 +3319,8 @@ namespace Models
       </Folder>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[SugarCane].crop_status as crop_status</string>
@@ -3356,151 +3358,152 @@ namespace Models
   <DataStore>
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Tests>
     <Name>Tests</Name>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>crop_status</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>biomass</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>cane_wt</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>sucrose_wt</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>height</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>root_depth</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>node_no_detached</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>leaves</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>green_leaves</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>dead_leaves</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>lai</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>tla</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>plant_n_tot</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>swdef_photo</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>swdef_pheno</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>swdef_expan</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>swdef_stalk</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>nfact_photo</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>nfact_expan</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>oxdef_photo</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
-      <SimulationName>SugarCane</SimulationName>
+      <SimulationName>Sugarcane</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>ep</ColumnNames>
