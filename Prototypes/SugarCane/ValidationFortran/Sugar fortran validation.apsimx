@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Memo>
     <Name>Memo</Name>
@@ -3682,6 +3682,8 @@ nb. fertiliser amounts are in (kg/ha) and depths in (mm)
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -6620,6 +6622,8 @@ nb. irrigation amounts and depths are in (mm)
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -9563,6 +9567,8 @@ They are missing the word "tillage". This means these tillage events won't occur
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -12445,6 +12451,8 @@ So removed them from original fortran simulation as well.
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -15323,6 +15331,8 @@ So removed them from original fortran simulation as well.
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -18212,6 +18222,8 @@ So removed it from original fortran simulation as well.
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -21103,6 +21115,8 @@ All operation irrigations are Overhead, high pressure gun
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -23998,6 +24012,8 @@ All operation irrigations are Overhead, high pressure gun
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -26897,6 +26913,8 @@ All operation irrigations are Overhead, high pressure gun
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -29838,6 +29856,8 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -32745,6 +32765,8 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -35553,6 +35575,8 @@ treat=3
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -38442,6 +38466,8 @@ treat=5
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -41427,6 +41453,8 @@ treat=1
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -44396,6 +44424,8 @@ treat=2
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -47373,6 +47403,8 @@ treat=3
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -50302,6 +50334,8 @@ treat=4
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -53400,6 +53434,8 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -56289,6 +56325,8 @@ So removed it from original fortran simulation as well.
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -59474,6 +59512,8 @@ Likewise fertiliser applications are subsurface fertigations except the followin
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -62493,6 +62533,8 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -65469,6 +65511,8 @@ All operation irrigations are subsurface trickle irrigation except for the follo
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -68477,6 +68521,8 @@ All operation irrigations are subsurface trickle irrigation except for the follo
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -71493,6 +71539,8 @@ All operation irrigations are subsurface trickle irrigation except for the follo
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -74576,6 +74624,8 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -77643,6 +77693,8 @@ treat=1
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -80490,22 +80542,19 @@ treat=2
         <MemoText><![CDATA[
 ### Datasets
 
-Something weird happening with the irrigation on the 13 Jan 1995.
+The operations for this simulation had an error. 
 
-It gets reported to the Summary File 3 times even though it is only applied once.
+It had the same irrigation 
 
-The fortran simulation does the exact same thing. 
+1995-01-13 [Irrigation].Apply(amount:59.3);
 
-So fortunately it should not cause a different result between the two versions.
+applied 3 times at various points (not in correct date sequence).
+
+The original fortran simulation has the same mistake.
+
+I removed the 2 other duplications of this irrigation for this simulation. 
 
 
-1995-01-13 paddock.Irrigation
-
-59.3 mm of water added at depth 0
-
-59.3 mm of water added at depth 0
-
-59.3 mm of water added at depth 0
 
 ]]></MemoText>
       </Memo>
@@ -80568,10 +80617,6 @@ So fortunately it should not cause a different result between the two versions.
           <Action>[Irrigation].Apply(amount:60.0);</Action>
         </Operation>
         <Operation>
-          <Date>1995-01-13T00:00:00</Date>
-          <Action>[Irrigation].Apply(amount:59.3);</Action>
-        </Operation>
-        <Operation>
           <Date>1995-03-09T00:00:00</Date>
           <Action>[Irrigation].Apply(amount:60.0);</Action>
         </Operation>
@@ -80604,10 +80649,6 @@ So fortunately it should not cause a different result between the two versions.
           <Action>[Irrigation].Apply(amount:50.4);</Action>
         </Operation>
         <Operation>
-          <Date>1995-01-13T00:00:00</Date>
-          <Action>[Irrigation].Apply(amount:59.3);</Action>
-        </Operation>
-        <Operation>
           <Date>1995-06-15T00:00:00</Date>
           <Action>[Irrigation].Apply(amount:21.0);</Action>
         </Operation>
@@ -80634,6 +80675,8 @@ So fortunately it should not cause a different result between the two versions.
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -83669,6 +83712,8 @@ treat=3
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -86700,6 +86745,8 @@ This will cause this simulation to not be identical to the original validation d
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>site</string>
@@ -86771,7 +86818,7 @@ This will cause this simulation to not be identical to the original validation d
     <Input>
       <Name>Input</Name>
       <ErrorMessage>The number of headings and units doesn't match in file: C:\ApsimX\Prototypes\SugarCane\ValidationFortran\FortranOutputs\19d) Simunye 1994-95 NCo376 1R Irrigation Treatment 4.sum</ErrorMessage>
-      <FileName>FortranOutputs\19a) Simunye 1994-95 NCo376 1R Irrigation Treatment 1.out</FileName>
+      <FileName>FortranOutputs\6) Ayr 1993-94 Q117 1R.out</FileName>
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
@@ -86784,6 +86831,7 @@ This will cause this simulation to not be identical to the original validation d
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
     <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Graph>
     <Name>stage_code</Name>
@@ -86797,12 +86845,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.stage_code</XFieldName>
       <YFieldName>Predicted.stage_code</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -86838,12 +86892,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.lai</XFieldName>
       <YFieldName>Predicted.lai</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -86879,12 +86939,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.leaves</XFieldName>
       <YFieldName>Predicted.leaves</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -86920,12 +86986,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.green_leaves</XFieldName>
       <YFieldName>Predicted.green_leaves</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -86961,12 +87033,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.dead_leaves</XFieldName>
       <YFieldName>Predicted.dead_leaves</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87002,12 +87080,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.biomass</XFieldName>
       <YFieldName>Predicted.biomass</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87043,12 +87127,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.green_biomass</XFieldName>
       <YFieldName>Predicted.green_biomass</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87084,12 +87174,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.leaf_wt</XFieldName>
       <YFieldName>Predicted.leaf_wt</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87125,12 +87221,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.cabbage_wt</XFieldName>
       <YFieldName>Predicted.cabbage_wt</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87166,12 +87268,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.trash_wt</XFieldName>
       <YFieldName>Predicted.trash_wt</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87207,12 +87315,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.canefw</XFieldName>
       <YFieldName>Predicted.canefw</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87248,12 +87362,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.cane_wt</XFieldName>
       <YFieldName>Predicted.cane_wt</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87289,12 +87409,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.sucrose_wt</XFieldName>
       <YFieldName>Predicted.sucrose_wt</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87330,12 +87456,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.scmstf</XFieldName>
       <YFieldName>Predicted.scmstf</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87371,12 +87503,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.cane_dmc</XFieldName>
       <YFieldName>Predicted.cane_dmc</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87412,12 +87550,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.rootgreenwt</XFieldName>
       <YFieldName>Predicted.rootgreenwt</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87453,12 +87597,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.root_depth</XFieldName>
       <YFieldName>Predicted.root_depth</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87494,12 +87644,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.green_biomass_n</XFieldName>
       <YFieldName>Predicted.green_biomass_n</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87535,12 +87691,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.leaf_N</XFieldName>
       <YFieldName>Predicted.leaf_N</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87576,12 +87738,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.cane_N</XFieldName>
       <YFieldName>Predicted.cane_N</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87617,12 +87785,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.dlt_dm</XFieldName>
       <YFieldName>Predicted.dlt_dm</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87658,12 +87832,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.dlt_dm_green</XFieldName>
       <YFieldName>Predicted.dlt_dm_green</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87699,12 +87879,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.partition_xs</XFieldName>
       <YFieldName>Predicted.partition_xs</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87740,12 +87926,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.dlt_dm_detached_root</XFieldName>
       <YFieldName>Predicted.dlt_dm_detached_root</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87781,12 +87973,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.dlt_dm_detached_leaf</XFieldName>
       <YFieldName>Predicted.dlt_dm_detached_leaf</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87822,12 +88020,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.dlt_dm_detached_cab</XFieldName>
       <YFieldName>Predicted.dlt_dm_detached_cab</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -87863,12 +88067,18 @@ This will cause this simulation to not be identical to the original validation d
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.irrigation</XFieldName>
       <YFieldName>Predicted.irrigation</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
