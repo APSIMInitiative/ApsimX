@@ -10671,6 +10671,8 @@ namespace Models
 
         /// <summary>
         /// Gets the sstem_wt.
+        /// Structural Stem Weight
+        /// Just the Stem (without the Sucrose) of green and dead stalks.
         /// </summary>
         /// <value>
         /// The sstem_wt.
@@ -10684,6 +10686,11 @@ namespace Models
 
         /// <summary>
         /// Gets the cane_dmf.
+        /// Cane Dry Matter Fraction.
+        /// The Millable Stalk divided by the Millable Stalk (FRESH). 
+        /// nb. Millable Stalk is only the green "structual stem" and "sucrose".
+        /// nb. Fresh refers to when the Cane has just been cut and still has high water content
+        ///     hence we add some extra water to the weight.
         /// </summary>
         /// <value>
         /// The cane_dmf.
@@ -10705,6 +10712,10 @@ namespace Models
 
         /// <summary>
         /// Gets the canefw.
+        /// Cane Fresh Weight.
+        /// nb. Cane refers to the "structual stem" and "sucrose" in green and dead stalks.
+        /// nb. Fresh refers to when the Cane has just been cut and still has high water content
+        ///     hence we add some extra water to the weight.
         /// </summary>
         /// <value>
         /// The canefw.
@@ -10727,6 +10738,7 @@ namespace Models
 
         /// <summary>
         /// Gets the CCS.
+        /// Commercial Cane Sugar.
         /// </summary>
         /// <value>
         /// The CCS.
@@ -10750,6 +10762,10 @@ namespace Models
 
         /// <summary>
         /// Gets the SCMSTF.
+        /// Sucrose Concentration in Millable Stalk (FRESH)
+        /// nb. Millable Stalk is only the green "structual stem" and "sucrose".
+        /// nb. Fresh refers to when the Cane has just been cut and still has high water content
+        ///     hence we add some extra water to the weight.
         /// </summary>
         /// <value>
         /// The SCMSTF.
@@ -10770,6 +10786,8 @@ namespace Models
 
         /// <summary>
         /// Gets the SCMST.
+        /// Sucrose Concentration in Millable Stalk.
+        /// nb. Millable Stalk is only the green "structual stem" and "sucrose".
         /// </summary>
         /// <value>
         /// The SCMST.
@@ -10790,6 +10808,7 @@ namespace Models
 
         /// <summary>
         /// Gets the sucrose_wt.
+        /// Sucrose in the green and dead stalks.
         /// </summary>
         /// <value>
         /// The sucrose_wt.
@@ -10816,6 +10835,7 @@ namespace Models
 
         /// <summary>
         /// Gets the cane_wt.
+        /// nb. Cane refers to the "structual stem" and "sucrose" in green and dead stalks.
         /// </summary>
         /// <value>
         /// The cane_wt.
@@ -10915,6 +10935,8 @@ namespace Models
 
         /// <summary>
         /// Gets the DLT_DM.
+        /// Delta Dry Matter.
+        /// Todays change in biomass.
         /// </summary>
         /// <value>
         /// The DLT_DM.
@@ -10928,6 +10950,8 @@ namespace Models
 
         /// <summary>
         /// Gets the partition_xs.
+        /// Todays excess biomass. 
+        /// Not needed after partitioning todays biomass to plant organs.
         /// </summary>
         /// <value>
         /// The partition_xs.
@@ -10941,6 +10965,8 @@ namespace Models
 
         /// <summary>
         /// Gets the dlt_dm_green.
+        /// Delta Dry Matter Green.
+        /// Todays change in green biomass.
         /// </summary>
         /// <value>
         /// The dlt_dm_green.
@@ -10954,6 +10980,14 @@ namespace Models
 
         /// <summary>
         /// Gets the dlt_dm_detached.
+        /// Delta Dry Matter Detached.
+        /// Todays dry matter that got detached from each plant part.
+        /// Elements of this array are the plant parts,
+        /// 1 root
+        /// 2 leaf
+        /// 3 structural stem
+        /// 4 cabbage
+        /// 5 sucrose
         /// </summary>
         /// <value>
         /// The dlt_dm_detached.
@@ -11741,7 +11775,7 @@ namespace Models
         /// <param name="budNumber">The bud number.</param>
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
             {
-            Sow(population, depth, cultivar);
+            SowNewPlant(population, depth, cultivar);
             }
        
 
@@ -12897,9 +12931,12 @@ namespace Models
 
             //caluculate the root length
             ZeroArray(ref g_root_length);
-            for (int layer = 0; layer < rlv_init.Length; layer++)      //rlv.Length may be less than num_layers
+            for (int layer = 0; layer < rlv_init.Length; layer++)      //rlv_init.Length may be less than num_layers
                 {
-                g_root_length[layer] = rlv_init[layer] * dlayer[layer];
+                if (layer < num_layers)   //what if rlv_init.Length is greater than num_layers
+                    {
+                    g_root_length[layer] = rlv_init[layer] * dlayer[layer];
+                    }
                 }
             Array.Resize(ref g_root_length, num_layers);  //g_root_length has max_layer number of elements, so now shorten this to num_layer
 
@@ -12959,13 +12996,14 @@ namespace Models
             line = "  -----------------------------------------------------------------------";
             Summary.WriteMessage(this, line);
 
+            //create an rlv_init with a value for every layer in the soil rather than just the layers the user entered.
+            //do this so the loop below here does not crash when it gets past rlv_int[more layers then were user entered]
+            double[] l_rlv_init = new double[100];
+            Array.Copy(rlv_init, l_rlv_init, rlv_init.Length);
+            Array.Resize(ref l_rlv_init, num_layers);
+
             for (int layer = 0; layer < num_layers; layer++)
                 {
-                //create an rlv_int with a value for every layer in the soil rather than just the layers the user entered.
-                //do this so the loop below here does not crash when it gets past rlv_int[more layers then were user entered]
-                double[] l_rlv_init = new double[num_layers];
-                Array.Copy(rlv_init, l_rlv_init, rlv_init.Length);
-
                 Summary.WriteMessage(this, string.Format(" {0,12:F0}{1,12:0.000}{2,12:0.000}{3,12:0.000}{4,12:0.000}{5,12:0.000}",
                     dlayer[layer], l_rlv_init[layer], g_root_length[layer], ll[layer], kl[layer], xf[layer]));
                 }
@@ -13452,15 +13490,15 @@ namespace Models
         /// <param name="PlantingDensity">Plant density (plants/m^2)</param>
         /// <param name="Depth">Sowing Depth (mm)</param>
         /// <param name="CultivarName">Name of the Cultivar.</param>
-        public void Sow(double PlantingDensity, double Depth, string CultivarName)
+        public void SowNewPlant(double PlantingDensity, double Depth, string CultivarName)
             {
             sugar_start_crop(PlantingDensity, 0, Depth, CultivarName);
             }
 
 
         /// <summary>
-        /// Sow a SugarCane Crop. (crop_status is set to "crop_alive")
-        /// Can either sow a Newly Planted Crop, or a Ratoon Crop.
+        /// Sow a SugarCane Crop BUT starting with a Ratoon instead of Newly Planted Crop. (crop_status is set to "crop_alive")
+        /// However can still sow a Newly Planted Crop by setting StartingRatoonNo = 0.
         /// SugarCane will keep ratooning indefinitely until it is stopped by using an EndCrop or KillCrop.
         /// NB. All Ratoons are treated the same. No difference between first ratoon and second, third etc.
         /// </summary>
@@ -13469,7 +13507,7 @@ namespace Models
         /// <param name="CultivarName">Name of the Cultivar.
         /// NB. When sowing a ratoon, you don't need to add "_ratoon" to the cultivar name. It will be added automatically.</param>
         /// <param name="StartingRatoonNo">0 is a Newly Planted Crop, 1 is First Ratoon, 2 is Second Ratoon, etc.</param>
-        public void Sow(double PlantingDensity, double Depth, string CultivarName, int StartingRatoonNo)
+        public void SowRatoon(double PlantingDensity, double Depth, string CultivarName, int StartingRatoonNo)
             {
             sugar_start_crop(PlantingDensity, StartingRatoonNo, Depth, CultivarName);
             }

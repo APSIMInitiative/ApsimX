@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
   <Name>Simulations</Name>
   <Simulation>
     <Name>SugarCane</Name>
     <Weather>
       <Name>Weather</Name>
-      <FileName>%root%\Prototypes\SugarCane\Example\Ingham.met</FileName>
+      <FileName>Ingham.met</FileName>
     </Weather>
     <Clock>
       <Name>clock</Name>
@@ -3155,36 +3155,37 @@ namespace Models
 		[Link] SugarCane SugarCane;
 		
 		[Description("Enter planting date (dd-mmm)")]
-		public string planting_day {get; set;}
+		public string planting_day { get; set; }
 		[Description("Duration of a plant crop (days) (30days/mth x 15mths)")]
-		public int    plantlen {get; set;}
+		public int    plantlen { get; set; }
 		[Description("Stalk density of plant crop (/m2)")]
-		public double plant_stalks {get; set;}
+		public double plant_stalks { get; set; }
 		[Description("Planting variety")]
-		public string variety {get; set;}
+		public string variety { get; set; }
 		[Description("Planting depth (mm)")]
-		public double sowing_depth {get; set;}
+		public double sowing_depth { get; set; }
 		[Description("Number of ratoons before EndCrop")]  
-		public int    NoRatoons {get; set;}
+		public int    NoRatoons { get; set; }
 		[Description("Duration of a ratoon crop (days) (30days/mth x 13mths)")]
-		public int    ratoonlen {get; set;}
+		public int    ratoonlen { get; set; }
 		[Description("Stalk density of ratoon crop (/m2)")]
-		public double ratoon_stalks {get; set;}
+		public double ratoon_stalks { get; set; }
 		
 
-		private int dah;  //Remove this later, I don't think they use it. Days After Harvest.
+		private int dah;
+		//Remove this later, I don't think they use it. Days After Harvest.
 		
 		//two below are used for rotations. Remove this. I don't think ApsimX does rotations like this.
-		private int      nextcrop;
-        private int 	 fallowin;
+		private int nextcrop;
+		private int fallowin;
 
 		
 		[EventSubscribe("StartOfSimulation")]
 		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
 			//Rotation variables. Not sure if these are still needed in ApsimX rotations
-            nextcrop = 0;
-            fallowin = 0;
+			nextcrop = 0;
+			fallowin = 0;
 		}
 
 
@@ -3192,52 +3193,52 @@ namespace Models
 		private void OnStartOfDay(object sender, EventArgs e)
 		{
 
-            //! Initialise and set a time counter for entire run
-            dah = 0;
+			//! Initialise and set a time counter for entire run
+			dah = 0;
 
 
-            if ( SugarCane.crop_status == "alive" ) 
-            	{
-                dah = 0;
+			if (SugarCane.crop_status == "alive")
+			{
+				dah = 0;
 
-                //! Set harvest dates for each crop phase
-                if ( ((SugarCane.DaysAfterSowing == plantlen) && (SugarCane.ratoon_no == 0)) 
-                  || ((SugarCane.DaysAfterSowing == ratoonlen) && (SugarCane.ratoon_no > 0)) )
-					{
+				//! Set harvest dates for each crop phase
+				if (((SugarCane.DaysAfterSowing == plantlen) && (SugarCane.ratoon_no == 0))
+				    || ((SugarCane.DaysAfterSowing == ratoonlen) && (SugarCane.ratoon_no > 0)))
+				{
 					
-                   	SugarCane.HarvestCrop();
-                  	if (SugarCane.ratoon_no == NoRatoons + 1)
-                  		{
-                     	//! plough the crop out
-                     	SugarCane.KillCrop();
-                     	SugarCane.EndCrop();
-						}
-                  	else
-                    	{
-                     	//! Set stalk density
-                     	SugarCane.plants = ratoon_stalks;
-                    	}
-                    }
-                else
-                	{
-                  	//! We have not reached the harvest date for this ratoon.
-               		}
-               	}   
-            else if ( SugarCane.crop_status == "dead" )
-            	{
-                SugarCane.HarvestCrop();
-                SugarCane.EndCrop();
-				}   
-            else if ( (SugarCane.crop_status == "out") && (DateUtilities.DatesEqual(planting_day, Clock.Today)) )
-            	{
-                SugarCane.Sow(PlantingDensity: 10, Depth: sowing_depth, CultivarName: variety);
-                SugarCane.plants = plant_stalks;
-                dah = 0;
-				}	
-            else
-            	{
-                dah = dah + 1;
-            	}
+					SugarCane.HarvestCrop();
+					if (SugarCane.ratoon_no == NoRatoons + 1)
+					{
+						//! plough the crop out
+						SugarCane.KillCrop();
+						SugarCane.EndCrop();
+					}
+					else
+					{
+						//! Set stalk density
+						SugarCane.plants = ratoon_stalks;
+					}
+				}
+				else
+				{
+					//! We have not reached the harvest date for this ratoon.
+				}
+			}
+			else if (SugarCane.crop_status == "dead")
+			{
+				SugarCane.HarvestCrop();
+				SugarCane.EndCrop();
+			}
+			else if ((SugarCane.crop_status == "out") && (DateUtilities.DatesEqual(planting_day, Clock.Today)))
+			{
+				SugarCane.SowNewPlant(PlantingDensity: 10, Depth: sowing_depth, CultivarName: variety);
+				SugarCane.plants = plant_stalks;
+				dah = 0;
+			}
+			else
+			{
+				dah = dah + 1;
+			}
      
 		}
 	}
@@ -3272,21 +3273,21 @@ namespace Models
 		[Link] Summary Summary;
 		
 		[Description("Fertilise on this date (dd-mmm)")]
-		public string fert_date {get; set;}
+		public string fert_date { get; set; }
 		
 		[Description("Don't add fertiliser if N in top 2 layers exceeds (kg/ha)")]
-		public double fert_criteria {get; set;}
+		public double fert_criteria { get; set; }
 		
 		[Description("Amount to apply (kg/ha)")]
-		public double fert_amount {get; set;}
+		public double fert_amount { get; set; }
 		
 		[Description("Type of fertilser to apply")]
-		public string fert_type {get; set;}
+		public string fert_type { get; set; }
 	
 		private double N_topsoil;
 
 
-        /*
+		/*
          if (today = date('[fert_date]') then
             N_topsoil = no3(1) + nh4(1) + no3(2) + nh4(2)
             if (N_topsoil < [fert_criteria]) then
@@ -3300,7 +3301,7 @@ namespace Models
 		private void OnStartOfDay(object sender, EventArgs e)
 		{
 
-        if (DateUtilities.DatesEqual(fert_date, Clock.Today))
+			if (DateUtilities.DatesEqual(fert_date, Clock.Today))
 			{
 				N_topsoil = Soil.SoilNitrogen.NO3[1] + Soil.SoilNitrogen.NH4[1] + Soil.SoilNitrogen.NO3[2] + Soil.SoilNitrogen.NH4[2];					
 				if (N_topsoil < fert_criteria)
