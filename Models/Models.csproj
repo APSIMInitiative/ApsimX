@@ -216,10 +216,10 @@
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSoil.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSurface.cs" />
     <Compile Include="Soils\Variables.cs" />
-    <Compile Include="SugarCane\CropConstants.cs" />
-    <Compile Include="SugarCane\CultivarConstants.cs" />
-    <Compile Include="SugarCane\MathUtil.cs" />
-    <Compile Include="SugarCane\SugarCane.cs" />
+    <Compile Include="Sugarcane\CropConstants.cs" />
+    <Compile Include="Sugarcane\CultivarConstants.cs" />
+    <Compile Include="Sugarcane\MathUtil.cs" />
+    <Compile Include="Sugarcane\Sugarcane.cs" />
     <Compile Include="Core\Variable.cs" />
     <Compile Include="Fertiliser.cs" />
     <Compile Include="PostSimulationTools\Input.cs" />
