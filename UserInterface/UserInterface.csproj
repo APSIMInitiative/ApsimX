@@ -209,8 +209,12 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Utility\ColumnXYSeries.cs" />
-    <Compile Include="Utility\DateTimeCellType.cs" />
-    <Compile Include="Utility\FindAndReplaceForm.cs" />
+    <Compile Include="Utility\DateTimeCellType.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Utility\FindAndReplaceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Utility\FindAndReplaceForm.designer.cs">
       <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
     </Compile>
@@ -832,7 +836,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\ExternalVariable.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\MultiplyFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LinearInterpolationFunction.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SugarCane.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Sugarcane.png" />
     <EmbeddedResource Include="Resources\Toolboxes\Import.png" />
     <EmbeddedResource Include="Resources\Toolboxes\OpenFile.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Probability.png" />

@@ -21526,6 +21526,18 @@ public class Script
        </text>
         </manager2>
       </folder>
+      <memo>
+
+
+The operations for this simulation had an error. 
+
+It had the same irrigation 
+
+13/01/1995	irrigation apply amount =  59.3 (mm)
+
+applied 3 times at various points (not in correct date sequence).
+
+I removed the 2 other duplications of this irrigation for this simulation. </memo>
       <operations>
         <operation condition="start_of_day">
           <date>10/08/1994</date>
@@ -21584,10 +21596,6 @@ public class Script
           <action>irrigation apply amount =  60.0 (mm)</action>
         </operation>
         <operation condition="start_of_day">
-          <date>13/01/1995</date>
-          <action>irrigation apply amount =  59.3 (mm)</action>
-        </operation>
-        <operation condition="start_of_day">
           <date>9/03/1995</date>
           <action>irrigation apply amount =  60.0 (mm)</action>
         </operation>
@@ -21620,10 +21628,6 @@ public class Script
           <action>irrigation apply amount =  50.4 (mm)</action>
         </operation>
         <operation condition="start_of_day">
-          <date>13/01/1995</date>
-          <action>irrigation apply amount =  59.3 (mm)</action>
-        </operation>
-        <operation condition="start_of_day">
           <date>15/06/1995</date>
           <action>irrigation apply amount =  21.0 (mm)</action>
         </operation>
@@ -21638,6 +21642,18 @@ public class Script
         <operation condition="start_of_day">
           <date>18/07/1995</date>
           <action>irrigation apply amount =  56.0 (mm)</action>
+        </operation>
+        <operation condition="start_of_day">
+          <date>
+          </date>
+          <action>
+          </action>
+        </operation>
+        <operation condition="start_of_day">
+          <date>
+          </date>
+          <action>
+          </action>
         </operation>
         <operation condition="end_of_day">
           <date>26/07/1995</date>
