@@ -567,13 +567,13 @@ namespace Models.PMF.Organs
             tags.Add(new AutoDocumentation.Heading("Canopy", headingLevel + 1));
             if (CoverFunction != null)
             {
-                tags.Add(new AutoDocumentation.Paragraph("The cover and LAI estimations are calculated using a CoverFunction as folows"  + " ", indent));
+                tags.Add(new AutoDocumentation.Paragraph("The Green cover (proportion of ground cover comprising green leaf) and Leaf area index (LAI, the area of leaf per unit area of ground) estimations are calculated using a CoverFunction as folows"  + " ", indent));
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 {
                     if (child.Name == "CoverFunction")
                         child.Document(tags, headingLevel + 5, indent + 1);
                 }
-                tags.Add(new AutoDocumentation.Paragraph("Then the Leaf Area Index (LAI) is calculated using an inverted Beer Lamberts equation with the estimated Cover value:"
+                tags.Add(new AutoDocumentation.Paragraph("Then LAI is calculated using an inverted Beer Lamberts equation with the estimated Cover value:"
                     + " <b>LAI = Log(1 - Cover) / (ExtinctionCoefficient * -1));", indent));
                 tags.Add(new AutoDocumentation.Paragraph("Where ExtinctionCoefficient has a value of " + ExtinctionCoefficientFunction.Value, indent+1));
             }
