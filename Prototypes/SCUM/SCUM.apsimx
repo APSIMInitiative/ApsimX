@@ -9401,7 +9401,7 @@ namespace Models
     </Graph>
   </Experiment>
   <Experiment>
-    <Name>LincolnMaize2012</Name>
+    <Name>Lincoln2012</Name>
     <Memo>
       <Name>memo</Name>
       <MemoText><![CDATA[
@@ -14347,8 +14347,6 @@ namespace Models
           <Manager>
             <Name>Sowing_Yield</Name>
             <Script>
-              <Treatment>
-              </Treatment>
               <YieldFile>%root%\Prototypes\SCUM\YieldsToSet.csv</YieldFile>
               <InitialRootDepth>10</InitialRootDepth>
               <Crop1>Potatoes_Short</Crop1>
@@ -14364,6 +14362,8 @@ namespace Models
               <SowingDate3>2006-10-11</SowingDate3>
               <HarvestDate3>2007-03-12</HarvestDate3>
               <Yield3>2200</Yield3>
+              <Treatment>
+              </Treatment>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
