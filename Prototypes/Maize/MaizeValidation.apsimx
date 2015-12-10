@@ -8711,7 +8711,7 @@ namespace Models
               <PHUnits>Water</PHUnits>
             </Sample>
             <Sample>
-              <Name>InitialSW</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -9066,7 +9066,7 @@ namespace Models
               <PHUnits>Water</PHUnits>
             </Sample>
             <Sample>
-              <Name>InitialSW</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -9461,7 +9461,7 @@ namespace Models
               <PHUnits>Water</PHUnits>
             </Sample>
             <Sample>
-              <Name>InitialSW</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -9860,7 +9860,7 @@ namespace Models
               <PHUnits>Water</PHUnits>
             </Sample>
             <Sample>
-              <Name>InitialSW</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -10267,7 +10267,7 @@ namespace Models
               <PHUnits>Water</PHUnits>
             </Sample>
             <Sample>
-              <Name>InitialSW</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -10653,7 +10653,7 @@ namespace Models
               <PHUnits>Water</PHUnits>
             </Sample>
             <Sample>
-              <Name>InitialSW</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -11058,7 +11058,7 @@ namespace Models
               <PHUnits>Water</PHUnits>
             </Sample>
             <Sample>
-              <Name>InitialSW</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -11415,7 +11415,7 @@ namespace Models
               <PHUnits>Water</PHUnits>
             </Sample>
             <Sample>
-              <Name>InitialSW</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -11755,7 +11755,7 @@ namespace Models
               <PHUnits>Water</PHUnits>
             </Sample>
             <Sample>
-              <Name>InitialSW</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -12085,7 +12085,7 @@ namespace Models
               <PHUnits>Water</PHUnits>
             </Sample>
             <Sample>
-              <Name>InitialSW</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -12480,7 +12480,7 @@ namespace Models
               <PHUnits>Water</PHUnits>
             </Sample>
             <Sample>
-              <Name>InitialSW</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -12885,7 +12885,7 @@ namespace Models
               <PHUnits>Water</PHUnits>
             </Sample>
             <Sample>
-              <Name>InitialSW</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -13261,7 +13261,7 @@ namespace Models
               <PHUnits>Water</PHUnits>
             </Sample>
             <Sample>
-              <Name>InitialSW</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -13685,7 +13685,7 @@ namespace Models
               <PHUnits>Water</PHUnits>
             </Sample>
             <Sample>
-              <Name>InitialSW</Name>
+              <Name>Sample</Name>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
