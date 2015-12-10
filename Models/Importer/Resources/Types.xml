@@ -1019,10 +1019,10 @@
       <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
-  <Type name="SugarCane">
+  <Type name="Sugarcane">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
-      <class>SugarCane</class>
+      <class>Sugarcane</class>
       <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>

@@ -78,6 +78,15 @@ namespace UserInterface.Presenters
             this.graph.Parent = this.xyPairs;
             this.graphPresenter = new GraphPresenter();
             this.graphPresenter.Attach(this.graph, this.xyPairsView.Graph, this.explorerPresenter);
+            string xAxisTitle = LookForXAxisTitle();
+            if (xAxisTitle != null)
+                xyPairsView.Graph.FormatAxis(Axis.AxisType.Bottom, xAxisTitle, false, double.NaN, double.NaN, double.NaN);
+
+            string yAxisTitle = LookForYAxisTitle();
+            if (yAxisTitle != null)
+                xyPairsView.Graph.FormatAxis(Axis.AxisType.Left, yAxisTitle, false, double.NaN, double.NaN, double.NaN);
+
+            xyPairsView.Graph.FormatTitle(xyPairs.Parent.Name);
         }
 
         /// <summary>
@@ -102,8 +111,57 @@ namespace UserInterface.Presenters
 
             // Refresh the graph.
             if (this.graph != null)
+            {
                 this.graphPresenter.DrawGraph();
+            }
         }
+
+        /// <summary>
+        /// Look for an x axis title and units.
+        /// </summary>
+        /// <returns>The x axis title or null if not found.</returns>
+        private string LookForXAxisTitle()
+        {
+            // See if parent has an XProperty property
+            PropertyInfo xProperty = xyPairs.Parent.GetType().GetProperty("XProperty");
+            if (xProperty != null)
+            {
+                string propertyName = xProperty.GetValue(xyPairs.Parent, null).ToString();
+                IVariable variable = Apsim.GetVariableObject(xyPairs, propertyName);
+                if (variable.Units != null)
+                    return propertyName + " (" + variable.Units + ")";
+                return propertyName;
+            }
+            else if (xyPairs.Parent is AirTemperatureFunction)
+                return "Mean air temperature (oC)";
+            else if (xyPairs.Parent is SoilTemperatureFunction)
+                return "Mean soil temperature (oC)";
+            else if (xyPairs.Parent is SoilTemperatureWeightedFunction)
+                return "Weighted soil temperature (oC)";
+            else if (xyPairs.Parent is WeightedTemperatureFunction)
+                return "Weighted air temperature (oC)";
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Return the y axis title.
+        /// </summary>
+        /// <returns></returns>
+        private string LookForYAxisTitle()
+        {
+            IModel modelContainingLinkField = xyPairs.Parent.Parent;
+            FieldInfo linkField = modelContainingLinkField.GetType().GetField(xyPairs.Parent.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+            if (linkField != null)
+            {
+                UnitsAttribute units = ReflectionUtilities.GetAttribute(linkField, typeof(UnitsAttribute), true) as UnitsAttribute;
+                if (units != null)
+                    return xyPairs.Parent.Name + " (" + units.ToString() + ")";
+            }
+            return xyPairs.Parent.Name;
+        }
+
+
 
         /// <summary>
         /// Populate the grid with data and formatting.
