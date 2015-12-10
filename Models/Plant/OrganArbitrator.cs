@@ -659,12 +659,13 @@ namespace Models.PMF
                         for (int i = 0; i < UptakeDemands.NH4N.Length; i++) { UptakeDemands.NH4N[i] = 0; }
                     }
                 }
-                else //Uptakes are zero
+                else 
                 {
-                    UptakeDemands.NO3N = new double[MyZone.NO3N.Length];
-                    for (int i = 0; i < UptakeDemands.NO3N.Length; i++) { UptakeDemands.NO3N[i] = 0; }
-                    UptakeDemands.NH4N = new double[MyZone.NH4N.Length];
-                    for (int i = 0; i < UptakeDemands.NH4N.Length; i++) { UptakeDemands.NH4N[i] = 0; }
+                    DoNUptakeDemandCalculations(soilstate);
+
+                    //Pack results into uptake structure
+                    UptakeDemands.NO3N = PotentialNO3NUptake;
+                    UptakeDemands.NH4N = PotentialNH4NUptake;
                 }
 
                 UptakeDemands.Name = MyZone.Name;
