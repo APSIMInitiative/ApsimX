@@ -26,7 +26,7 @@ namespace Models
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Zone))]
-    public class SugarCane : Model, ICrop, ICanopy, IUptake
+    public class Sugarcane : Model, ICrop, ICanopy, IUptake
     {
 
         #region Canopy interface
@@ -79,7 +79,7 @@ namespace Models
         /// Gets  FRGR.
         /// </summary>
         [XmlIgnore]
-        public double FRGR { get { return 1; } }  //TODO: don't know how to implement FRGR in SugarCane. So just return 1.
+        public double FRGR { get { return 1; } }  //TODO: don't know how to implement FRGR in Sugarcane. So just return 1.
 
         /// <summary>
         /// Sets the potential evapotranspiration.
@@ -92,7 +92,7 @@ namespace Models
         /// this property in the crop.
         /// </summary>
         [XmlIgnore]
-        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } //TODO: don't know how to implement LightProfile in SugarCane
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } //TODO: don't know how to implement LightProfile in Sugarcane
 
         #endregion
 
@@ -329,7 +329,7 @@ namespace Models
         /// The crop_type.
         /// </value>
         [Units("()")]
-        public string crop_type { get; set; }    //sv- this will be set to "SugarCane"   //sv- used by Micromet module
+        public string crop_type { get; set; }    //sv- this will be set to "Sugarcane"   //sv- used by Micromet module
 
         //! upper limit
         //[Param(MinVal = 0.0, MaxVal = 10000.0)]
@@ -862,9 +862,9 @@ namespace Models
             //{
             //get
             //    {
-            //    ISoilCrop ISugarCane = Soil.Crop("SugarCane");
-            //    SoilCrop SugarCane = (SoilCrop)ISugarCane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
-            //    return SugarCane.XF; 
+            //    ISoilCrop ISugarcane = Soil.Crop("Sugarcane");
+            //    SoilCrop Sugarcane = (SoilCrop)ISugarcane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
+            //    return Sugarcane.XF; 
             //    }
             //}
 
@@ -881,9 +881,9 @@ namespace Models
             //{
             //get
             //    {
-            //    ISoilCrop ISugarCane = Soil.Crop("SugarCane");
-            //    SoilCrop SugarCane = (SoilCrop)ISugarCane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
-            //    return SugarCane.LL;
+            //    ISoilCrop ISugarcane = Soil.Crop("Sugarcane");
+            //    SoilCrop Sugarcane = (SoilCrop)ISugarcane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
+            //    return Sugarcane.LL;
             //    }
             //}
 
@@ -903,9 +903,9 @@ namespace Models
             //{
             //get
             //    {
-            //    ISoilCrop ISugarCane = Soil.Crop("SugarCane");
-            //    SoilCrop SugarCane = (SoilCrop)ISugarCane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
-            //    return SugarCane.KL;
+            //    ISoilCrop ISugarcane = Soil.Crop("Sugarcane");
+            //    SoilCrop Sugarcane = (SoilCrop)ISugarcane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
+            //    return Sugarcane.KL;
             //    }
             //}
 
@@ -937,9 +937,9 @@ namespace Models
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SugarCane"/> class.
+        /// Initializes a new instance of the <see cref="Sugarcane"/> class.
         /// </summary>
-        public SugarCane()
+        public Sugarcane()
             {
             //Initialise the Optional Params in the XML
 
@@ -9904,7 +9904,7 @@ namespace Models
             ////sv- I added this to mimic what the fortran infrastructure does.
             ////"13 July 1991(Day of year=194), sugar: ");
             ////http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
-            //Summary.WriteMessage(this, string.Format("{0}{1}{2}{3}", Clock.Today.ToString("d MMMM yyy").ToString(), "(Day of year=", g_day_of_year, "), SugarCane: "));
+            //Summary.WriteMessage(this, string.Format("{0}{1}{2}{3}", Clock.Today.ToString("d MMMM yyy").ToString(), "(Day of year=", g_day_of_year, "), Sugarcane: "));
 
 
             l_stage_no = (int)i_current_stage;
@@ -12694,11 +12694,11 @@ namespace Models
         /// <param name="sowing_depth">The sowing_depth.</param>
         /// <param name="Cultivar">The cultivar.</param>
         /// <exception cref="ApsimXException">
-        /// \SugarCane\ was taken out today by \end_crop\ action -
+        /// \Sugarcane\ was taken out today by \end_crop\ action -
         ///                             + \n
         ///                             +  Unable to accept sow action until the next day.
         /// or
-        /// \SugarCane\  is still in the ground - unable to sow until it is taken out by \end_crop\ action.
+        /// \Sugarcane\  is still in the ground - unable to sow until it is taken out by \end_crop\ action.
         /// </exception>
         void sugar_start_crop(double plants, int Ratoon, double sowing_depth, string Cultivar)
             {
@@ -12729,7 +12729,11 @@ namespace Models
                     sugar_get_soil_variables(ref g_no3gsm, ref g_no3gsm_min, ref g_nh4gsm, ref g_nh4gsm_min);
 
                     Summary.WriteMessage(this, "Sowing initiate");
-                    //call Publish_null (id%sowing)
+
+
+                    if (Sowing != null)
+                        Sowing.Invoke(this, new EventArgs());
+
 
                     //g_plants = i_SowData.plants;
                     //g_initial_plant_density = g_plants;
@@ -12800,7 +12804,7 @@ namespace Models
                     }
                 else
                     {
-                    throw new ApsimXException(this, "\"SugarCane\" was taken out today by \"end_crop\" action -"
+                    throw new ApsimXException(this, "\"Sugarcane\" was taken out today by \"end_crop\" action -"
                             + "\n"
                             + " Unable to accept sow action until the next day.");
                     }
@@ -12808,7 +12812,7 @@ namespace Models
                 }
             else
                 {
-                throw new ApsimXException(this, "\"SugarCane\"  is still in the ground - unable to sow until it is taken out by \"end_crop\" action.");
+                throw new ApsimXException(this, "\"Sugarcane\"  is still in the ground - unable to sow until it is taken out by \"end_crop\" action.");
                 }
 
 
@@ -12845,7 +12849,7 @@ namespace Models
         /// </summary>
         /// <param name="Name">The name.</param>
         /// <returns></returns>
-        /// <exception cref="ApsimXException">Could not find in the SugarCane ini file a cultivar called:  + Name</exception>
+        /// <exception cref="ApsimXException">Could not find in the Sugarcane ini file a cultivar called:  + Name</exception>
         CultivarConstants sugar_read_cultivar_params(string Name)
             {
             Summary.WriteMessage(this, "\n" + "    - Reading constants from " + Name);
@@ -12858,7 +12862,7 @@ namespace Models
                     }
                 }
 
-            throw new ApsimXException(this, "Could not find in the SugarCane ini file a cultivar called: " + Name);
+            throw new ApsimXException(this, "Could not find in the Sugarcane ini file a cultivar called: " + Name);
             }
 
 
@@ -12886,17 +12890,17 @@ namespace Models
 
             //!       sugar_sw_supply
 
-            ISoilCrop ISugarCane = Soil.Crop("SugarCane");
-            SoilCrop SugarCane = (SoilCrop)ISugarCane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
+            ISoilCrop ISugarcane = Soil.Crop("Sugarcane");
+            SoilCrop Sugarcane = (SoilCrop)ISugarcane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
 
-            xf = SugarCane.XF;
-            ll = SugarCane.LL;
-            kl = SugarCane.KL;
+            xf = Sugarcane.XF;
+            ll = Sugarcane.LL;
+            kl = Sugarcane.KL;
 
 
             //work out what ll_dep is
 
-            //if ll for SugarCane was specified then use it.
+            //if ll for Sugarcane was specified then use it.
             if (ll.Length < max_layer)
                 {
                 for (int layer = 0; layer < num_layers; layer++)
@@ -13077,7 +13081,10 @@ namespace Models
             //! crop harvested. Report status
             //*******************************
 
-            //call Publish_null (id%harvesting)
+
+            if (Harvesting != null)
+                Harvesting.Invoke(this, new EventArgs());
+
 
             l_biomass_green = (SumArray(g_dm_green, max_part) - g_dm_green[root]) * gm2kg / sm2ha;
 
@@ -13341,6 +13348,11 @@ namespace Models
             //c+!!!!!! fix problem with deltas in update when change from alive to dead ?zero
 
 
+            if (Killing != null)
+                Killing.Invoke(this, new EventArgs());
+
+
+
             if (i_crop_status == crop_alive)
                 {
                 i_crop_status = crop_dead;
@@ -13483,8 +13495,8 @@ namespace Models
 
 
         /// <summary>
-        /// Sow a Newly Planted SugarCane Crop. (crop_status is set to "crop_alive")
-        /// SugarCane will keep ratooning indefinitely until it is stopped by using an EndCrop or KillCrop.
+        /// Sow a Newly Planted Sugarcane Crop. (crop_status is set to "crop_alive")
+        /// Sugarcane will keep ratooning indefinitely until it is stopped by using an EndCrop or KillCrop.
         /// NB. All Ratoons are treated the same. No difference between first ratoon and second, third etc.
         /// </summary>
         /// <param name="PlantingDensity">Plant density (plants/m^2)</param>
@@ -13497,9 +13509,9 @@ namespace Models
 
 
         /// <summary>
-        /// Sow a SugarCane Crop BUT starting with a Ratoon instead of Newly Planted Crop. (crop_status is set to "crop_alive")
+        /// Sow a Sugarcane Crop BUT starting with a Ratoon instead of Newly Planted Crop. (crop_status is set to "crop_alive")
         /// However can still sow a Newly Planted Crop by setting StartingRatoonNo = 0.
-        /// SugarCane will keep ratooning indefinitely until it is stopped by using an EndCrop or KillCrop.
+        /// Sugarcane will keep ratooning indefinitely until it is stopped by using an EndCrop or KillCrop.
         /// NB. All Ratoons are treated the same. No difference between first ratoon and second, third etc.
         /// </summary>
         /// <param name="PlantingDensity">Plant density (plants/m^2)</param>
@@ -13538,7 +13550,7 @@ namespace Models
             //      Killing also prevents another crop from being planted by the Crop Rotations manager. If you want the next crop in the rotation to be planted you then
             //      have to use the EndCrop command. EndCrop specifies the crop_status as "crop_out" which means that there is nothing in the ground and you can plant another crop.
             //      It will also get rid of the biomass.
-            //      Perhaps we need to create a new Event for SugarCane called "KillButRegrowCrop" which will kill the crop but let is start growing again.
+            //      Perhaps we need to create a new Event for Sugarcane called "KillButRegrowCrop" which will kill the crop but let is start growing again.
             //      I guess it will have to detach the dead biomass over time rather than tilling it back into the soil.  
 
             sugar_kill_crop(ref g_crop_status, g_dm_dead, g_dm_green, g_dm_senesced);
@@ -13570,13 +13582,13 @@ namespace Models
 
 
         /// <summary>
-        /// Lodge the SugarCane Today.
-        /// The arguments for how to modify the SugarCane due to lodging are specified in the ini file.
+        /// Lodge the Sugarcane Today.
+        /// The arguments for how to modify the Sugarcane due to lodging are specified in the ini file.
         /// </summary>
         public void LodgeTheCane()
             {
             g_lodge_flag = true;
-            Summary.WriteMessage(this, Clock.Today.ToString("d MMM yyyy") + " - " + "SugarCane crop is lodging");
+            Summary.WriteMessage(this, Clock.Today.ToString("d MMM yyyy") + " - " + "Sugarcane crop is lodging");
             }
 
 
@@ -13590,7 +13602,7 @@ namespace Models
         /// <param name="TopsFr">Fraction of Leaves and Cabbage that is buried</param>
         public void HillUpTheSoil(double CaneFr, double TopsFr)
             {
-            Summary.WriteMessage(this, Clock.Today.ToString("d MMM yyyy") + " - " + "SugarCane module is doing Hill Up");
+            Summary.WriteMessage(this, Clock.Today.ToString("d MMM yyyy") + " - " + "Sugarcane module is doing Hill Up");
             Summary.WriteMessage(this, "CaneFr = " + CaneFr + " , TopsFr = " + TopsFr);
             sugar_hill_up(CaneFr, TopsFr);    //see "Events sent to Change Other Modules" section because hill_up manager event sends an IncorpFOM event to surfaceOM module.
             }
@@ -13746,6 +13758,33 @@ namespace Models
 
         #region Event Declarations (sent by this Module)
 
+
+
+
+        //Sugarcane specific events that it sends out
+
+        /// <summary>
+        /// Occurs when the Sugarcane crop is sown.
+        /// </summary>
+        public event EventHandler Sowing;
+
+
+        /// <summary>
+        /// Occurs when the Sugarcane crop is harvested.
+        /// </summary>
+        public event EventHandler Harvesting;
+
+
+        /// <summary>
+        /// Occurs when the Sugarcane crop is killed.
+        /// </summary>
+        public event EventHandler Killing;
+
+
+
+
+
+
         //these Delegates are declared in Models.PMF Namespace.
 
         /// <summary>
@@ -13838,7 +13877,7 @@ namespace Models
 
 
                 NitrogenChangedType NitrogenChanges = new NitrogenChangedType();
-                NitrogenChanges.Sender = "SugarCane";
+                NitrogenChanges.Sender = "Sugarcane";
                 NitrogenChanges.DeltaNO3 = l_dlt_NO3;
                 NitrogenChanges.DeltaNH4 = l_dlt_NH4;
 
@@ -13869,7 +13908,7 @@ namespace Models
 
 
                 NitrogenChangedType NitrogenChanges = new NitrogenChangedType();
-                NitrogenChanges.Sender = "SugarCane";
+                NitrogenChanges.Sender = "Sugarcane";
                 NitrogenChanges.DeltaNO3 = l_dlt_NO3;
                 NitrogenChanges.DeltaNH4 = l_dlt_NH4;
 

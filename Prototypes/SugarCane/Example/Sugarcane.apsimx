@@ -357,7 +357,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SugarCaneSoil</Name>
+            <Name>SugarcaneSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -808,10 +808,10 @@
       <Fertiliser>
         <Name>fertiliser</Name>
       </Fertiliser>
-      <SugarCane>
-        <Name>SugarCane</Name>
+      <Sugarcane>
+        <Name>Sugarcane</Name>
         <maxt_lb>0</maxt_lb>
-        <crop_type>SugarCane</crop_type>
+        <crop_type>Sugarcane</crop_type>
         <tt_emerg_to_begcane_ub>2000</tt_emerg_to_begcane_ub>
         <tt_begcane_to_flowering_ub>10000</tt_begcane_to_flowering_ub>
         <tt_flowering_to_crop_end_ub>5000</tt_flowering_to_crop_end_ub>
@@ -3124,7 +3124,7 @@
           <double>0</double>
           <double>0</double>
         </rlv_init>
-      </SugarCane>
+      </Sugarcane>
       <Folder>
         <Name>Manager folder</Name>
         <Manager>
@@ -3152,7 +3152,7 @@ namespace Models
 	public class Script : Model
 	{
 		[Link] Clock Clock;
-		[Link] SugarCane SugarCane;
+		[Link] Sugarcane Sugarcane;
 		
 		[Description("Enter planting date (dd-mmm)")]
 		public string planting_day { get; set; }
@@ -3197,26 +3197,26 @@ namespace Models
 			dah = 0;
 
 
-			if (SugarCane.crop_status == "alive")
+			if (Sugarcane.crop_status == "alive")
 			{
 				dah = 0;
 
 				//! Set harvest dates for each crop phase
-				if (((SugarCane.DaysAfterSowing == plantlen) && (SugarCane.ratoon_no == 0))
-				    || ((SugarCane.DaysAfterSowing == ratoonlen) && (SugarCane.ratoon_no > 0)))
+				if (((Sugarcane.DaysAfterSowing == plantlen) && (Sugarcane.ratoon_no == 0))
+				    || ((Sugarcane.DaysAfterSowing == ratoonlen) && (Sugarcane.ratoon_no > 0)))
 				{
 					
-					SugarCane.HarvestCrop();
-					if (SugarCane.ratoon_no == NoRatoons + 1)
+					Sugarcane.HarvestCrop();
+					if (Sugarcane.ratoon_no == NoRatoons + 1)
 					{
 						//! plough the crop out
-						SugarCane.KillCrop();
-						SugarCane.EndCrop();
+						Sugarcane.KillCrop();
+						Sugarcane.EndCrop();
 					}
 					else
 					{
 						//! Set stalk density
-						SugarCane.plants = ratoon_stalks;
+						Sugarcane.plants = ratoon_stalks;
 					}
 				}
 				else
@@ -3224,15 +3224,15 @@ namespace Models
 					//! We have not reached the harvest date for this ratoon.
 				}
 			}
-			else if (SugarCane.crop_status == "dead")
+			else if (Sugarcane.crop_status == "dead")
 			{
-				SugarCane.HarvestCrop();
-				SugarCane.EndCrop();
+				Sugarcane.HarvestCrop();
+				Sugarcane.EndCrop();
 			}
-			else if ((SugarCane.crop_status == "out") && (DateUtilities.DatesEqual(planting_day, Clock.Today)))
+			else if ((Sugarcane.crop_status == "out") && (DateUtilities.DatesEqual(planting_day, Clock.Today)))
 			{
-				SugarCane.SowNewPlant(PlantingDensity: 10, Depth: sowing_depth, CultivarName: variety);
-				SugarCane.plants = plant_stalks;
+				Sugarcane.SowNewPlant(PlantingDensity: 10, Depth: sowing_depth, CultivarName: variety);
+				Sugarcane.plants = plant_stalks;
 				dah = 0;
 			}
 			else
@@ -3323,27 +3323,27 @@ namespace Models
         <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[SugarCane].crop_status as crop_status</string>
-          <string>[SugarCane].biomass as biomass</string>
-          <string>[SugarCane].cane_wt as cane_wt</string>
-          <string>[SugarCane].sucrose_wt as sucrose_wt</string>
-          <string>[SugarCane].height as height</string>
-          <string>[SugarCane].root_depth as root_depth</string>
-          <string>[SugarCane].node_no_detached as node_no_detached</string>
-          <string>[SugarCane].leaves as leaves</string>
-          <string>[SugarCane].green_leaves as green_leaves</string>
-          <string>[SugarCane].dead_leaves as dead_leaves</string>
-          <string>[SugarCane].lai as lai</string>
-          <string>[SugarCane].tla  as tla</string>
-          <string>[SugarCane].plant_n_tot as plant_n_tot</string>
-          <string>[SugarCane].swdef_photo as swdef_photo</string>
-          <string>[SugarCane].swdef_pheno  as swdef_pheno</string>
-          <string>[SugarCane].swdef_expan  as swdef_expan</string>
-          <string>[SugarCane].swdef_stalk  as swdef_stalk</string>
-          <string>[SugarCane].nfact_photo as nfact_photo</string>
-          <string>[SugarCane].nfact_expan  as nfact_expan</string>
-          <string>[SugarCane].oxdef_photo  as oxdef_photo</string>
-          <string>[SugarCane].ep  as ep</string>
+          <string>[Sugarcane].crop_status as crop_status</string>
+          <string>[Sugarcane].biomass as biomass</string>
+          <string>[Sugarcane].cane_wt as cane_wt</string>
+          <string>[Sugarcane].sucrose_wt as sucrose_wt</string>
+          <string>[Sugarcane].height as height</string>
+          <string>[Sugarcane].root_depth as root_depth</string>
+          <string>[Sugarcane].node_no_detached as node_no_detached</string>
+          <string>[Sugarcane].leaves as leaves</string>
+          <string>[Sugarcane].green_leaves as green_leaves</string>
+          <string>[Sugarcane].dead_leaves as dead_leaves</string>
+          <string>[Sugarcane].lai as lai</string>
+          <string>[Sugarcane].tla  as tla</string>
+          <string>[Sugarcane].plant_n_tot as plant_n_tot</string>
+          <string>[Sugarcane].swdef_photo as swdef_photo</string>
+          <string>[Sugarcane].swdef_pheno  as swdef_pheno</string>
+          <string>[Sugarcane].swdef_expan  as swdef_expan</string>
+          <string>[Sugarcane].swdef_stalk  as swdef_stalk</string>
+          <string>[Sugarcane].nfact_photo as nfact_photo</string>
+          <string>[Sugarcane].nfact_expan  as nfact_expan</string>
+          <string>[Sugarcane].oxdef_photo  as oxdef_photo</string>
+          <string>[Sugarcane].ep  as ep</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
