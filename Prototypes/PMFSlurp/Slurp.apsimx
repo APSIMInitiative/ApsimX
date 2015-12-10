@@ -1005,7 +1005,7 @@ namespace Models
         </Operation>
         <Operation>
           <Date>1998-12-29T00:00:00</Date>
-          <Action>[Fertiliser].Apply(150, Fertiliser.Types.UreaN, 10);</Action>
+          <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 10);</Action>
         </Operation>
       </Operations>
       <Report>
@@ -1355,7 +1355,7 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>BottomLeft</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
