@@ -12,13 +12,13 @@
 
 _Hamish Brown and Rob Zyskowski, Plant and Food Research, New Zealand_
 
-This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate a range of different crops in simulations where water and nitrogen balance are of interest but a fully mechanistic plant model is not needed. It is a daily time step implementation of the crop model that is used on the Overseer nutrient balance model [Cichota_etal_2010].  It uses simple sigmoidal functions for estimating daily cover and biomass deltas to give realistic water and nitrogen demands. It does not simulate potential yield, this is specified as an input. Yield will be reduced below the specified potential yield if N or water supplies from the soil are insufficient to meet demand. The model has been paramaterised for simulating water and nitrogen balances of cropping rotations in New Zealand (where over 50 different crop types are grown and it is not feasible to produce full crop models for each of these).  Because of this the model is not as generically applicable as full APSIM crop models.   It may be adapted for other purposes and other crop types may be added but the user will need to keep in mind that because it is a simple the the parameters might need changing for crops from different locations or for crops sown at different times of the year.  Some sensibility testing or validation is recommended before application in different sutuations.  .  
+This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate a range of different crops in simulations where water and nitrogen balance are of interest but a fully mechanistic plant model is not needed or is not available. It is a daily time step implementation of the crop model that is used on the Overseer nutrient balance model [Cichota_etal_2010].  It uses simple sigmoidal functions for estimating daily cover and biomass deltas to give realistic water and nitrogen demands. It does not simulate potential yield, this is specified as an input. Yield will be reduced below the specified potential yield if N or water supplies from the soil are insufficient to meet demand. The model has been paramaterised for simulating water and nitrogen balances of cropping rotations in New Zealand (where over 50 different crop types are grown and it is not feasible to produce full crop models for each of these).  Because of this the model is not as generically applicable as full APSIM crop models.   It may be adapted for other purposes and other crop types may be added but the user will need to keep in mind that because it is a simple model the the parameters might need changing for crops in different locations or for crops sown at different times of the year.  Some sensibility testing or validation is recommended before application in different sutuations.   
 
-SCUM has a simple phenology model which divides the crop growth into three main phases; a vegetative phase when the canopy is expanding, a reproductive phase when product is being formed and a senescing phase when the canopy is contracting.  SCUM consists of 4 organs:  
-   1. Stover which represents the unharvested parts of the plant and is represented with a simple leaf class.  
-   2. Product which represents the plant parts that are harvested and removed from the filed.  It uses a generic organ class  
-   3. Root which extracts water and nitrogen from the soil for plant growth  
-   4. Nodule which is only activated, fixing nitrogen for the legume crops.  
+SCUM has a simple phenology model which divides the crop growth into three main phases; a vegetative phase when the canopy is expanding, a reproductive phase when product is being formed and a senescing phase when the canopy is contracting.  SCUM has 4 organ classes to represent different biomass components and the real biomass components that these classes represent changes from crop to crop:  
+   1. A Simple leaf class called <b>Stover</b> which represents the unharvested parts of the plant.  Generally, this represents the leaf and stem components of the crop but for crops where stem and leaf are part of the harvested product (e.g forages and leafy vegetables) than stover is the residual fraction of leaf and stem that is not harvested.  
+   2. A Generic organ class called <b>Product</b> which represents the plant parts that are harvested and removed from the field.  This could represent grain, fruits, tubers, leaf or stem depending on what sort of crop is being represented.  
+   3. A Root organ which extracts water and nitrogen from the soil for plant growth and returns biomass to the soil on harvest  
+   4. A Nodule organ which is only activated and fixes nitrogen for the legume crops.  
 An Arbitrator is also included which determines the allocation of drymatter and nitrogen biomass between each of these organs.
 
 ##Inclusion in APSIM simulations
@@ -29,11 +29,11 @@ A scum crop is included in a simulation the same as any other APSIM crop
 SCUM.Sow(cultivar: Wheat_Autumn, population: 1, depth: 10, rowSpacing: 150);  
 </code></pre>
   * Note that SCUM has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  
-  * To specify the Expected Yield  
+  * To specify an expected Expected Yield that differs to the defalt value provided, included the following code in a manager script to be executed on the day of sowing.
 <pre><code class='language-cs'>
  zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);  
 </code></pre>
-* It can be Harvested, Cut, Grazed and Pruned like other crops.  Defalt proportions of the biomass in each organ are removed from the sysem and/or added to the fields residue pools.  If specific removal and residue fractions are required they can be specified as follows:  
+* SCUM can be Harvested, Cut, Grazed and Pruned like other crops.  Defalt proportions of the biomass in each organ are removed from the sysem and/or added to the fields residue pools.  Note that defalt removal fraction for product on harvest is 0 (becaue it is represented with a generic organ) so more appropriate removal fractions should be sepcified in a manager script as follows:  
 <pre><code class='language-cs'>
 [EventSubscribe("Commencing")]  
 private void OnSimulationCommencing(object sender, EventArgs e)  
@@ -52,10 +52,10 @@ private void OnDoManagement(object sender, EventArgs e)
     SCUM.EndCrop();  
   }  
 }  
- </code></pre>	  		
-  * A Remove class as shown above can be sent with Harvest, Cut, Graze and Prune events to specificy the proportions of removals
-
-  * Once a crop has been ended the field is open to plant another crop using another APSIM crop model or sowing another SCUM crop.  ]]></MemoText>
+ </code></pre>
+* A Remove class as shown above can be sent with Harvest, Cut, Graze and Prune events to specificy the proportions of removals.
+ * Once a crop has been ended the field is open to plant another crop using another APSIM crop model or sowing another SCUM crop.  
+]]></MemoText>
       </Memo>
       <Phenology>
         <Name>Phenology</Name>
@@ -370,13 +370,13 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>0.1</double>
-                <double>0.7</double>
+                <double>0</double>
+                <double>0.5</double>
                 <double>1</double>
               </X>
               <Y>
                 <double>0</double>
-                <double>1</double>
+                <double>0</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
@@ -410,11 +410,11 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>0.8</double>
+                <double>1</double>
                 <double>1</double>
               </X>
               <Y>
-                <double>0</double>
+                <double>0.2</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
@@ -427,7 +427,7 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
           <Memo>
             <Name>Description</Name>
             <MemoText><![CDATA[
-DM demand is based on a simple partitioning coefficients.  At harvest the biomass partitioned to the stover = (1 - RootProportion) - Harvest index.  However the partitioningFraction is more complicated that this as it partitions more biomass to the stover in the CanopyExpanding Phase and less in the Yield increasing phase to give realistic patterns of accumulation of biomass in the Stover and Product
+DM demand is based on a simple partitioning coefficients.  At harvest the biomass partitioned to the stover = TotalDM * (1 - RootProportion) * (1 - Harvest index).  However the partitioningFraction is more complicated that this as it partitions more biomass to the stover in the CanopyExpanding Phase and less in the Yield increasing phase to give realistic patterns of accumulation of biomass in the Stover and Product over the duration of the crop
 ]]></MemoText>
           </Memo>
           <PhaseLookup>
@@ -865,8 +865,23 @@ The root organ demands and is partitioned N and DM and its depth increases throu
           <Memo>
             <Name>Description</Name>
             <MemoText><![CDATA[
-This is important in SCUM as it is set for each species to represent their differences in rooting patterns between crop species
-]]></MemoText>
+This is important in SCUM as it is set for each species to represent their differences in rooting patterns between crop species.  The values for  each crop type are calculated externally from APSIM using the root depth of the crop and an exponential of the form:  
+
+<pre><code class='language-cs'>
+for (int layer = 0; layer lessthan  Soil.Thickness.Length; layer++)  
+{  
+if (layer.depth lessthan 305)  
+ layer.KLModifier = 1;  
+else if (layer.depth lessthan Crop.RootDepth)  
+ layer.KLModifier = 1*exp(-.002*(1500/(Crop.RootDepth-300)*(layer.depth-300)));  
+else:  
+ layer.KLModifier = 0;  
+}  
+</code></pre>
+
+This gives KLModifiers that decline exponentially from 1 in the top 300mm of soil to 0 at the crops maximum rooting depth.  
+
+It is important to note that these modifiers are applied to the kl value specified in the SCUMSoil node under the soil in your field so the values on the soil node should be set to 0.1 throughout the depth of the profile to produce sensible kl values. ]]></MemoText>
           </Memo>
           <XProperty>[Root].LayerMidPointDepth</XProperty>
         </LinearInterpolationFunction>
@@ -8391,6 +8406,51 @@ namespace Models
 }
 	   ]]></Code>
         </Manager>
+        <Manager>
+          <Name>SetSCUMCoverMax</Name>
+          <Script>
+            <OverRidePath>SCUM.Stover.CoverFunction.Expanding.SigCoverFunction.Ymax.Value</OverRidePath>
+            <OverRideDouble>0.9</OverRideDouble>
+            <ChangeDate>2012-10-23</ChangeDate>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Plant;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+		
+		[Description("Path for coefficient to be Overwritten")]
+		public string OverRidePath { get; set; }
+		[Description("Value for new coefficient Interger")]
+		public double OverRideDouble { get; set; }
+		[Description("Sowing Date")]
+		public DateTime ChangeDate { get; set; }
+        
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == ChangeDate)
+			{
+				object ResetValue = OverRideDouble;
+				zone.Set(OverRidePath, ResetValue);
+			}
+		}
+	}
+}
+	   ]]></Code>
+        </Manager>
         <Report>
           <Name>Report</Name>
           <ExperimentFactorNames />
@@ -8466,6 +8526,7 @@ namespace Models
             <string>[SCUM].Product.Live.NConc</string>
             <string>[SCUM].Stover.FRGRFunction.Value</string>
             <string>[SCUM].Stover.Fw</string>
+            <string>[SCUM].Arbitrator.FN</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -10923,7 +10984,7 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>ProductNitrogen</Name>
@@ -11284,7 +11345,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Arbitrator.DMNutrientLimitation</YFieldName>
+            <YFieldName>SCUM.Arbitrator.NDemand</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11453,6 +11514,48 @@ namespace Models
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>SCUM.Stover.Fw</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Leaf Area Index (m2/m2)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>FN</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>SCUM.Arbitrator.FN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -15300,7 +15403,7 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>ProductWt</Name>
@@ -15365,7 +15468,7 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>ProductN</Name>
@@ -15473,72 +15576,7 @@ namespace Models
       </Axis>
       <LegendPosition>TopRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>NLeach</Name>
-      <Series>
-        <Name>NLeach</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16747854</ColourArgb>
-        <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>NConcReps.Script.ObservedLeach1</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-        <Filter />
-      </Series>
-      <Series>
-        <Name>NLeach1</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16747854</ColourArgb>
-        <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>ABlockObserved</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.AccumLeach</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-        <Filter />
-      </Series>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Accumulated leaching (kg/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Folder>
       <Name>CheckGraphs</Name>
@@ -15583,7 +15621,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>NStress</Name>
@@ -15626,7 +15664,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>YieldDryWeight</Name>
@@ -15669,7 +15707,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>CropBiomass</Name>
@@ -15712,7 +15750,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Stover</Name>
@@ -15755,7 +15793,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Folder>
     <Folder>
@@ -15801,7 +15839,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Fertiliser</Name>
@@ -15844,7 +15882,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DeNit</Name>
@@ -15887,7 +15925,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>NLeach</Name>
@@ -15930,7 +15968,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantN</Name>
@@ -15973,7 +16011,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DeltaSoilOrganicN</Name>
@@ -16016,7 +16054,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DeltaSurfaceResidueN</Name>
@@ -16059,7 +16097,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Folder>
     <Folder>
@@ -16105,7 +16143,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Irrigation</Name>
@@ -16148,7 +16186,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>EvapoTranspiration</Name>
@@ -16213,7 +16251,7 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Evaporation</Name>
@@ -16278,7 +16316,7 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SuppAndDemand</Name>
@@ -16349,7 +16387,7 @@ namespace Models
           <string>W2_N1</string>
           <string>W1_N2</string>
         </DisabledSeries>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>RunOff</Name>
@@ -16392,7 +16430,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Drainage_PP</Name>
@@ -16435,7 +16473,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Drainage_PW</Name>
@@ -16478,7 +16516,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Folder>
     <Folder>
@@ -16634,7 +16672,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PP_W2_N0</Name>
@@ -16787,7 +16825,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PP_W1_N1</Name>
@@ -16940,7 +16978,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PP_W2_N1</Name>
@@ -17093,7 +17131,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PP_W1_N2</Name>
@@ -17246,7 +17284,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PP_W2_N2</Name>
@@ -17399,7 +17437,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PW_W1_N0</Name>
@@ -17552,7 +17590,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PW_W2_N0</Name>
@@ -17705,7 +17743,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PW_W1_N1</Name>
@@ -17858,7 +17896,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PW_W2_N1</Name>
@@ -18011,7 +18049,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PW_W1_N2</Name>
@@ -18164,7 +18202,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PW_W2_N2</Name>
@@ -18317,7 +18355,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Folder>
     <Folder>
@@ -18518,7 +18556,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SoilN_PW</Name>
@@ -18583,7 +18621,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Folder>
     <Folder>
@@ -18682,7 +18720,7 @@ namespace Models
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PeasOrWheat</Name>
@@ -18730,7 +18768,7 @@ namespace Models
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SecondPotato</Name>
@@ -18778,7 +18816,7 @@ namespace Models
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Folder>
   </Experiment>
