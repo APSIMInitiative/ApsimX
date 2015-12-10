@@ -25,16 +25,16 @@ A Slurp crop is included in a simulation the same as any other APSIM crop
 Slurp.Sow(cultivar: StaticCrop, population: 1, depth: 10, rowSpacing: 150);  
 </code></pre>
   * Note that SLURP has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  
-  * depth in the Sow arguement is the depth that the crop is sown at.  While this has no effect on emergence in SLURP it also sets the depth that the root system is initialised at.  For static crops this depth should be set to the rooting depth that is expected as roots will not grow during the simulation
+  * depth in the Sow arguement is the depth that the crop is sown at.  While this has no effect on emergence in SLURP it sets the depth that the root system is initialised at.  For static crops this depth should be set to the rooting depth that is expected as roots will not grow during the simulation
 
 ##Altering Slurp properties during runs
 In some cases users will wish to change properties of Slurp while the simulation is running.  This can be done using a the set method in a manager script.
 
 <pre><code class='language-cs'>
-object LAIResetValue = leaflai;<br>
-zone.Set("Slurp.Leaf.LAIFunction.Value", LAIResetValue);<br>
-object HeightResetValue = CoverToday * MaximumHeight;<br>
-zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);<br>
+object LAIResetValue = leaflai;  
+zone.Set("Slurp.Leaf.LAIFunction.Value", LAIResetValue);  
+object HeightResetValue = CoverToday * MaximumHeight;  
+zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);  
 </code></pre>]]></MemoText>
       </Memo>
       <OrganArbitrator>
@@ -44,11 +44,6 @@ zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);<br>
       </OrganArbitrator>
       <Root>
         <Name>Root</Name>
-        <Memo>
-          <Name>Description</Name>
-          <MemoText><![CDATA[
-Stuff regarding Root]]></MemoText>
-        </Memo>
         <CompositeBiomass>
           <Name>Live</Name>
           <Propertys>
@@ -144,11 +139,6 @@ This is important in SLURP as it is set for each species to represent their diff
       </Root>
       <SimpleLeaf>
         <Name>Leaf</Name>
-        <Memo>
-          <Name>Description</Name>
-          <MemoText><![CDATA[
-Stuff regarding Root]]></MemoText>
-        </Memo>
         <Biomass>
           <Name>Live</Name>
         </Biomass>
