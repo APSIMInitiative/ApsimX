@@ -32,6 +32,12 @@ namespace Models
         public MathUtilities.RegrStats[] AcceptedStats { get; set; }
 
         /// <summary>
+        /// A string containing the names of stats in the accepted values.
+        /// Used for checking if the stats class has changed.
+        /// </summary>
+        public string AcceptedStatsName { get; set; }
+
+        /// <summary>
         /// The name of the associated Predicted Observed node.
         /// </summary>
         public string POName { get; set; }
@@ -87,10 +93,12 @@ namespace Models
             {
                 POName = PO.Name;
                 AcceptedStats = stats;
+                AcceptedStatsName = StringUtilities.Build(statNames, " ");
             }
 
+            IEnumerable<string> acc = AcceptedStats[0].GetType().GetFields().Select(f => f.Name).ToList();
             //then make sure the names and order of the accepted stats are the same as the new ones.
-            if (!Enumerable.SequenceEqual(statNames, AcceptedStats[0].GetType().GetFields().Select(f => f.Name).ToList()))
+            if (StringUtilities.Build(statNames, " ") != AcceptedStatsName)
                 throw new ApsimXException(this, "Names, number or order of accepted stats do not match class MathUtilities.RegrStats. The class has probably changed.");
 
             Table = new DataTable("StatTests");
@@ -100,7 +108,7 @@ namespace Models
             Table.Columns.Add("Accepted", typeof(double));
             Table.Columns.Add("Current", typeof(double));
             Table.Columns.Add("Difference", typeof(double));
-            Table.Columns.Add("Sig.", typeof(char));
+            Table.Columns.Add("Fail?", typeof(char));
 
             double accepted;
             double current;
@@ -125,12 +133,17 @@ namespace Models
                 AcceptedStats = stats;
             else
                 foreach (DataRow row in Table.Rows)
-                    if (row["Sig."].ToString().Equals(sigIdent))
+                    if (row["Fail?"].ToString().Equals(sigIdent))
                     {
                         if (!GUIrun)
-                            throw new ApsimXException(this, "Significant differences found during regression testing of " + PO.Name);
-                    }
+                        {
+                            object sim = PO.Parent;
+                            while (sim as Simulations == null)
+                                sim = ((Model)sim).Parent;
 
+                            throw new ApsimXException(this, "Significant differences found during regression testing of " + PO.Name + " in " + sim != null ? ((Simulations)sim).FileName : "<unknown>");
+                        }
+                    }
         }
 
         /// <summary>All simulations have run - write all tables</summary>
@@ -140,8 +153,6 @@ namespace Models
         private void OnAllSimulationsCompleted(object sender, EventArgs e)
         {
             Test();
-            Console.WriteLine();
-            Console.WriteLine(ConvertDataTableToString(Table));
         }
 
         /// <summary>

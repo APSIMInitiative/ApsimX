@@ -528,7 +528,14 @@ namespace Models.Core
         {
             foreach (EventSubscriber subscriber in FindEventSubscribers(eventName, model))
             {
-                subscriber.MethodInfo.Invoke(model, args);
+                try
+                {
+                    subscriber.MethodInfo.Invoke(model, args);
+                }
+                catch(Exception e)
+                {
+                        Console.WriteLine(e.InnerException);
+                }
             }
         }
 

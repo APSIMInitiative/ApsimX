@@ -83,10 +83,16 @@ namespace UserInterface.Presenters
 
             this.FindAllProperties(this.model);
             if (this.grid.DataSource == null)
+            {
                 this.PopulateGrid(this.model);
+            }
             else
+            {
                 this.grid.ResizeControls();
-            this.grid.CellsChanged += this.OnCellValueChanged;
+                FormatTestGrid();
+            }
+
+                this.grid.CellsChanged += this.OnCellValueChanged;
             this.grid.ButtonClick += OnFileBrowseClick;
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
             if (model != null)
@@ -200,6 +206,17 @@ namespace UserInterface.Presenters
                 table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
 
             this.grid.DataSource = table;
+        }
+
+        /// <summary>
+        /// Format the grid when displaying Tests.
+        /// </summary>
+        private void FormatTestGrid()
+        {
+            int numCols = this.grid.DataSource.Columns.Count;
+
+            for (int i = 0; i < numCols; i++)
+                this.grid.GetColumn(i).Format = "E4";
         }
 
         /// <summary>
