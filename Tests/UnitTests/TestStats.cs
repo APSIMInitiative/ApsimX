@@ -65,7 +65,7 @@ namespace Tests
                 stats.Add(MathUtilities.CalcRegressionStats("Test", X[i], Y[i]));
         }
 
-        [Test]
+      //  [Test]
         public void TestN()
         {
             for (int i = 0; i < X.Count; i++)
@@ -74,7 +74,7 @@ namespace Tests
             }
         }
 
-        [Test]
+      //  [Test]
         public void TestSlope()
         {
             for (int i = 0; i < X.Count; i++)

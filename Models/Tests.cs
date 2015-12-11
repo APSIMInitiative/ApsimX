@@ -132,6 +132,7 @@ namespace Models
             if (accept)
                 AcceptedStats = stats;
             else
+            {
                 foreach (DataRow row in Table.Rows)
                     if (row["Fail?"].ToString().Equals(sigIdent))
                     {
@@ -144,6 +145,7 @@ namespace Models
                             throw new ApsimXException(this, "Significant differences found during regression testing of " + PO.Name + " in " + sim != null ? ((Simulations)sim).FileName : "<unknown>");
                         }
                     }
+            }
         }
 
         /// <summary>All simulations have run - write all tables</summary>
