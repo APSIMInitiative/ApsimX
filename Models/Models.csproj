@@ -193,7 +193,6 @@
     <Compile Include="Memo.cs" />
     <Compile Include="NullSummary.cs" />
     <Compile Include="Plant\SimpleTree\SimpleTree.cs" />
-    <Compile Include="Plant\Slurp\Slurp.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
