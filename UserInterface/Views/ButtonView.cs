@@ -53,8 +53,16 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnButtonClick(object sender, EventArgs e)
         {
+            PerformClick();
+        }
+
+        /// <summary>Click the button.</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void PerformClick()
+        {
             if (Clicked != null)
-                Clicked.Invoke(this, e);
+                Clicked.Invoke(this, new EventArgs());
         }
     }
 }
