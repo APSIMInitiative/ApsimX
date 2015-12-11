@@ -15,6 +15,9 @@ namespace UserInterface.Views
         /// <summary>Invoked when the user changes the selection</summary>
         event EventHandler Changed;
 
+        /// <summary>Invoked when the user double clicks the selection</summary>
+        event EventHandler DoubleClicked;
+
         /// <summary>Get or sets the list of valid values.</summary>
         string[] Values { get; set; }
 
@@ -30,6 +33,9 @@ namespace UserInterface.Views
     {
         /// <summary>Invoked when the user changes the selection</summary>
         public event EventHandler Changed;
+
+        /// <summary>Invoked when the user double clicks the selection</summary>
+        public event EventHandler DoubleClicked;
 
         /// <summary>Constructor</summary>
         public ListBoxView()
@@ -88,5 +94,13 @@ namespace UserInterface.Views
                 Changed.Invoke(this, e);
         }
 
+        /// <summary>User has double clicked the list box.</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDoubleClick(object sender, EventArgs e)
+        {
+            if (DoubleClicked != null)
+                DoubleClicked.Invoke(this, e);
+        }
     }
 }
