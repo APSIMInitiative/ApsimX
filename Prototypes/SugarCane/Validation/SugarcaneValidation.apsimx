@@ -2677,70 +2677,6 @@ Dataset 18 was not included as irrigation records were missing.
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Harwood man</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		
-		int samp;
-		string site;
-		string season;
-		int treat;
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			samp = 0;
-		}
-		
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Set trickle irrigation depth
-				if daysaftersowing=2 then
-				   'Harwood Water' set irrigation_depth=300(mm)
-				endif
-			*/
-			/*
-			int year = Clock.Today.Year;
-			int day = Clock.Today.DayOfYear;
-			
-			//! Observed sampling dates
-			samp = 0;
-			if (((year == 1993) && (day == 336)) ||
-			    ((year == 1994) &&
-			    ((day == 18) || (day == 54) || (day == 87) ||
-			    (day == 123) || (day == 186) || (day == 227) ||
-			    (day == 262) || (day == 298) || (day == 349))))
-			{
-				samp = 1;
-			}
-			
-			//! Simulation info
-			site = "Harwood";
-			season = "1993-94";
-			treat = 5;
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -3689,15 +3625,11 @@ nb. fertiliser amounts are in (kg/ha) and depths in (mm)
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].Today.Year as year</string>
             <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].NitrogenApplied as fertiliser</string>
             <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -6781,72 +6713,6 @@ nb. fertiliser amounts are in (kg/ha) and depths in (mm)
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Macknade man</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		
-		int samp;
-		string site;
-		string season;
-		int treat;
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			samp = 0;
-		}
-		
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Set trickle irrigation depth
-				if daysaftersowing=48 then
-				   ! irrigation_depth=300(mm)
-				   'macknade 923 p water' irrigation_depth=300(mm)
-				endif
-				*/
-			
-			int year = Clock.Today.Year;
-			int day = Clock.Today.DayOfYear;
-			
-			//! Observed sampling dates
-			samp = 0;
-			if (((year == 1992) && ((day == 296) || (day == 316) || (day == 345))) ||
-			    ((year == 1993) &&
-			    ((day == 27) || (day == 61) || (day == 89) ||
-			    (day == 125) || (day == 160) || (day == 228) ||
-			    (day == 257) || (day == 294))))
-			{
-				samp = 1;
-			}
-			
-			//! Simulation info
-			site = "Ingham";
-			season = "1992-93";
-			treat = 1;
-			
-		}
-	}
-}
-
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -6985,15 +6851,11 @@ nb. irrigation amounts and depths are in (mm)
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].Today.Year as year</string>
             <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].NitrogenApplied as fertiliser</string>
             <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -10077,62 +9939,6 @@ nb. irrigation amounts and depths are in (mm)
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Macknade</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Set trickle irrigation depth
-if daysaftersowing=2 then
-   ! irrigation_depth=300(mm)
-   'macknade 923 1R water' irrigation_depth=300(mm)
-endif
-
-! Observed sampling dates
-samp=0
-if (year = 1992 and (day = 296 or day = 316 or day = 345)) or
-   (year = 1993 and (day =  27 or day = 61 or day = 89 or day = 125 or day = 160
-   or day = 228 or day = 257 or day = 294)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Ingham'
-season='1992-93'
-treat=2
-
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -10286,15 +10092,11 @@ They are missing the word "tillage". This means these tillage events won't occur
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -13357,57 +13159,6 @@ They are missing the word "tillage". This means these tillage events won't occur
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Ayr</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Furrow irrigated
-
-! Observed sampling dates
-samp=0
-if ((year = 1991) and (day = 277 or day = 295 or day = 324 or day = 338)) or 
-   ((year = 1992) and (day = 21 or day = 42 or day = 71 or day = 99 or
-   day = 126 or day = 190)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Ayr'
-season='1991-92'
-treat=1
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -13530,15 +13281,11 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -16601,57 +16348,6 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Ayr</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Furrow irrigated
-
-! Observed sampling dates
-samp=0
-if ((year = 1993) and (day = 223 or day = 266 or day = 287 or day = 313
-   or day = 343)) or   ((year = 1994) and (day = 11 or day = 47 or day = 74 or day = 109 or
-   day = 138 or day = 158 or day = 193 or day = 221)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Ayr'
-season='1993-94'
-treat=2
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -16770,15 +16466,11 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -19925,52 +19617,6 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Pongola</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Observed sampling dates
-samp=0
-if ((day = 20 or day = 75 or day = 135 or day = 170 or day = 201)
-   and year = 1987) then
-   samp = 1
-endif
-
-! Simulation info
-site='Pongola'
-season='1986-87'
-treat=1
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -20021,15 +19667,11 @@ However Automatic Irrigations are not possible in ApsimX yet.
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -23133,55 +22775,6 @@ However Automatic Irrigations are not possible in ApsimX yet.
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Bundaberg man</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Observed sampling dates
-samp=0
-if (year = 1992 and (day = 279 or day = 327 or day = 357)) or
-   (year = 1993 and (day = 11 or day = 46 or day = 88 or day = 135 or day = 186)) or
-   (year = 1994 and (day = 17 or day = 73 or day = 150)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Bundaberg'
-season='1992-94'
-treat=1
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -23276,15 +22869,11 @@ All operation irrigations are Overhead, high pressure gun
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -26385,55 +25974,6 @@ All operation irrigations are Overhead, high pressure gun
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Bundaberg man</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Observed sampling dates
-samp=0
-if (year = 1992 and (day = 327 or day = 357)) or
-   (year = 1993 and (day = 11 or day = 46 or day = 88 or day = 135 or day = 186)) or
-   (year = 1994 and (day = 17 or day = 73 or day = 150)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Bundaberg'
-season='1992-94'
-treat=5
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -26532,15 +26072,11 @@ All operation irrigations are Overhead, high pressure gun
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -29641,55 +29177,6 @@ All operation irrigations are Overhead, high pressure gun
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Bundaberg man</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Observed sampling dates
-samp=0
-if (year = 1992 and (day = 327 or day = 357)) or
-   (year = 1993 and (day = 11 or day = 46 or day = 88 or day = 135 or day = 186)) or
-   (year = 1994 and (day = 17 or day = 73 or day = 150)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Bundaberg'
-season='1992-94'
-treat=6
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -29792,15 +29279,11 @@ All operation irrigations are Overhead, high pressure gun
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -32881,60 +32364,6 @@ All operation irrigations are Overhead, high pressure gun
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Bambaroo</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Set trickle irrigation depth
-if daysaftersowing=1 then
-   ! irrigation_depth=300(mm)
-   'pace water' irrigation_depth=300(mm)
-endif
-
-! Observed sampling dates
-samp=0
-if (year = 1995 and (day = 317)) or
-   (year = 1996 and (day = 23 or day = 127 or day = 238)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Bambaroo'
-season='1995-96'
-treat=1
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -33093,15 +32522,11 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -36179,59 +35604,6 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Bambaroo</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Set trickle irrigation depth
-if daysaftersowing=1 then
-   ! irrigation_depth=300(mm)
-   'pace water' irrigation_depth=300(mm)
-endif
-
-! Observed sampling dates
-samp=0
-if (year = 1996 and (day = 127 or day = 238)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Bambaroo'
-season='1995-96'
-treat=2
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -36358,15 +35730,11 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -39444,56 +38812,6 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Bambaroo</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Rainfed
-
-! Observed sampling dates
-samp=0
-if (year = 1995 and (day = 317)) or
-   (year = 1996 and (day = 23 or day = 127 or day = 238)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Bambaroo'
-season='1995-96'
-treat=3
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Operations>
           <Name>operations</Name>
           <Operation>
@@ -39527,15 +38845,11 @@ treat=3
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -42717,53 +42031,6 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>LaMercy</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Observed sampling dates
-samp=0
-if ((year = 1995) and (day = 311)) then
-   samp = 1
-endif
-
-! Simulation info
-site='LaMercy'
-season='1994-95'
-treat=5
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Operations>
           <Name>operations</Name>
           <Operation>
@@ -42789,15 +42056,11 @@ treat=5
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -45596,53 +44859,6 @@ treat=5
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>LaMercy</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Observed sampling dates
-samp=0
-if ((year = 1995) and (day = 311)) then
-   samp = 1
-endif
-
-! Simulation info
-site='LaMercy'
-season='1994-95'
-treat=1
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Operations>
           <Name>operations</Name>
           <Operation>
@@ -45764,15 +44980,11 @@ treat=1
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -48571,53 +47783,6 @@ treat=1
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>LaMercy</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Observed sampling dates
-samp=0
-if ((year = 1995) and (day = 311)) then
-   samp = 1
-endif
-
-! Simulation info
-site='LaMercy'
-season='1994-95'
-treat=2
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Operations>
           <Name>operations</Name>
           <Operation>
@@ -48723,15 +47888,11 @@ treat=2
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -51530,53 +50691,6 @@ treat=2
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>LaMercy</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Observed sampling dates
-samp=0
-if ((year = 1995) and (day = 311)) then
-   samp = 1
-endif
-
-! Simulation info
-site='LaMercy'
-season='1994-95'
-treat=3
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Operations>
           <Name>operations</Name>
           <Operation>
@@ -51690,15 +50804,11 @@ treat=3
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -54497,53 +53607,6 @@ treat=3
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>LaMercy</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Observed sampling dates
-samp=0
-if ((year = 1995) and (day = 311)) then
-   samp = 1
-endif
-
-! Simulation info
-site='LaMercy'
-season='1994-95'
-treat=4
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Operations>
           <Name>operations</Name>
           <Operation>
@@ -54609,15 +53672,11 @@ treat=4
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -57309,57 +56368,6 @@ treat=4
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Grafton man</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Set trickle irrigation depth
-if daysaftersowing=2 then
-   'Grafton Water' set irrigation_depth=300(mm)
-endif
-
-! Observed sampling dates
-samp=0
-if (year = 1994 and day = 336) or
-   (year = 1995 and (day = 18 or day = 52 or day = 87 or day = 129 or day = 157
-    or day = 206 or day = 248)) then
-    samp = 1
-endif
-
-! Simulation info
-site='Grafton'
-season='1994-95'
-treat=1
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -57696,15 +56704,11 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -60851,52 +59855,6 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Pongola</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Observed sampling dates
-samp=0
-if ((day = 20 or day = 75 or day = 135 or day = 170 or day = 201)
-   and year = 1987) then
-   samp = 1
-endif
-
-! Simulation info
-site='Pongola'
-season='1986-87'
-treat=2
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -60947,15 +59905,11 @@ However Automatic Irrigations are not possible in ApsimX yet.
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -64018,57 +62972,6 @@ However Automatic Irrigations are not possible in ApsimX yet.
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Kunia man</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Set trickle irrigation depth
-if daysaftersowing=2 then
-   'Kunia Water' set irrigation_depth=300(mm)
-endif
-
-! Observed sampling dates
-samp=0
-if (year = 1991 and (day = 84 or day = 141 or day = 205 or day = 261)
-   or (year = 1992 and (day = 22 or day = 199)
-   or (year = 1993 and day = 24)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Kunia'
-season='1991-93'
-treat=1
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -64493,15 +63396,11 @@ Likewise fertiliser applications are subsurface fertigations except the followin
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -67564,59 +66463,6 @@ Likewise fertiliser applications are subsurface fertigations except the followin
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Ayr</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Furrow irrigated
-
-! Observed sampling dates
-samp=0
-if ((year = 1992) and (day = 211 or day = 281 or day = 301 or day = 329 or day = 350)) or 
-   ((year = 1993) and (day = 19 or day = 40 or day = 82 or day = 110 or day = 145 or
-    day = 187 or day = 287 or day = 313 or day = 343)) or 
-   ((year = 1994) and (day = 11 or day = 47 or day = 74 or day = 109 or day = 138 or
-   day = 158 or day = 193 or day = 221 or day = 249))  then
-   samp = 1
-endif
-
-! Simulation info
-site='Ayr'
-season='1992-94'
-treat=3
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -67876,15 +66722,11 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -70968,60 +69810,6 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Macknade man</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Set trickle irrigation depth
-if daysaftersowing=73 then ! First 4 irrigations were by overhead portable lines, then changed to trickle
-   ! irrigation_depth=300(mm)
-   'macknade 912 p water' irrigation_depth=300(mm)
-endif
-
-! Observed sampling dates
-samp=0
-if (year = 1991 and (day = 322)) or
-   (year = 1992 and (day = 35 or day = 92 or day = 196) then
-   samp = 1
-endif
-
-! Simulation info
-site='Ingham'
-season='1991-92'
-treat=1
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -71213,15 +70001,11 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -74305,57 +73089,6 @@ All operation irrigations are subsurface trickle irrigation except for the follo
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Macknade man</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Set trickle irrigation depth
-if daysaftersowing=71 then ! First 2 irrigations were by overhead portable lines, then changed to trickle
-   ! irrigation_depth=300(mm)
-   'macknade 924 low N water' irrigation_depth=300(mm)
-endif
-
-! Observed sampling dates
-samp=0
-if (year = 1993 and (day = 229 or day = 280 or day = 301 or day = 315 or day = 348)) or
-   (year = 1994 and (day= 18 or day = 60 or day = 101 or day = 124 or day = 165 or day = 198 or day = 235)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Ingham'
-season='1992-94'
-treat=1
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -74582,15 +73315,11 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -77671,57 +76400,6 @@ All operation irrigations are subsurface trickle irrigation except for the follo
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Macknade man</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Set trickle irrigation depth
-if daysaftersowing=71 then ! First 2 irrigations were by overhead portable lines, then changed to trickle
-   ! irrigation_depth=300(mm)
-   'macknade 924 med N water' irrigation_depth=300(mm)
-endif
-
-! Observed sampling dates
-samp=0
-if (year = 1993 and (day = 229 or day = 280 or day = 301 or day = 315 or day = 348)) or
-   (year = 1994 and (day= 18 or day = 60 or day = 101 or day = 124 or day = 165 or day = 198 or day = 235)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Ingham'
-season='1992-94'
-treat=2
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -77956,15 +76634,11 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -81045,57 +79719,6 @@ All operation irrigations are subsurface trickle irrigation except for the follo
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Macknade man</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Set trickle irrigation depth
-if daysaftersowing=71 then ! First 2 irrigations were by overhead portable lines, then changed to trickle
-   ! irrigation_depth=300(mm)
-   'macknade 924 high N water' irrigation_depth=300(mm)
-endif
-
-! Observed sampling dates
-samp=0
-if (year = 1993 and (day = 229 or day = 280 or day = 301 or day = 315 or day = 348)) or
-   (year = 1994 and (day= 18 or day = 60 or day = 101 or day = 124 or day = 165 or day = 198 or day = 235)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Ingham'
-season='1992-94'
-treat=3
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[
@@ -81396,15 +80019,11 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -84560,53 +83179,6 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Simunye man</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Observed sampling dates
-samp=0
-if ((year = 1995) and (day = 207 or day = 223)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Simunye'
-season='1994-95'
-treat=1
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Operations>
           <Name>operations</Name>
           <Operation>
@@ -84836,15 +83408,11 @@ treat=1
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -87617,53 +86185,6 @@ treat=1
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Simunye man</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Observed sampling dates
-samp=0
-if ((year = 1995) and (day = 207 or day = 223)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Simunye'
-season='1994-95'
-treat=2
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Operations>
           <Name>operations</Name>
           <Operation>
@@ -87793,15 +86314,11 @@ treat=2
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -90574,53 +89091,6 @@ treat=2
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Simunye man</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Observed sampling dates
-samp=0
-if ((year = 1995) and (day = 207 or day = 223)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Simunye'
-season='1994-95'
-treat=3
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Operations>
           <Name>operations</Name>
           <Operation>
@@ -90818,15 +89288,11 @@ treat=3
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
@@ -93599,53 +92065,6 @@ treat=3
             <double>0</double>
           </rlv_init>
         </Sugarcane>
-        <Folder>
-          <Name>Manager folder</Name>
-          <Manager>
-            <Name>Simunye man</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OldPlant;
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			/*
-				samp=0
-			*/
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			/*
-				! Observed sampling dates
-samp=0
-if ((year = 1995) and (day = 207 or day = 223)) then
-   samp = 1
-endif
-
-! Simulation info
-site='Simunye'
-season='1994-95'
-treat=4
-
-
-
-			*/
-		}
-	}
-}
-]]></Code>
-          </Manager>
-        </Folder>
         <Operations>
           <Name>operations</Name>
           <Operation>
@@ -93823,15 +92242,11 @@ treat=4
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>site</string>
-            <string>season</string>
-            <string>treat</string>
             <string>[Clock].year as year</string>
             <string>[Clock].day as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>samp</string>
             <string>[Fertiliser].fertiliser</string>
             <string>[Irrigation].irrigation</string>
             <string>[Weather].rain as rain</string>
