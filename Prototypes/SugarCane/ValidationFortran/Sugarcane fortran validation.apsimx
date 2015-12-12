@@ -88102,5 +88102,30 @@ This will cause this simulation to not be identical to the original validation d
     <DisabledSeries />
     <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
+  <Memo>
+    <Name>Graphs</Name>
+    <MemoText><![CDATA[
+### Graphs
+
+
+The graphs had to be matched on Days After Sowing rather than Date due to the fact that the model zeros the values on the day of harvest.
+
+This causes a problem where the observed data value at harvest date is matched against a zeroed value.
+
+To fix this I matched the predicted vs observed data using the Days After Sowing rather than date.
+
+
+nb. I also had to increment the Days After Sowing column (das) in the observed data by 1. 
+
+Because the sugarcane module considers the Day Of Sowing to have a Days After Sowing value of 1 rather than 0 (legacy issue from old sugar fortran module).
+
+Observed data considers the Day Of Sowing to have a Days After Sowing value of 0.
+
+So I altered the Days After Sowing in the observed data to be consistant with the sugarcane module output.
+ 
+
+
+]]></MemoText>
+  </Memo>
   <ExplorerWidth>0</ExplorerWidth>
 </Simulations>
