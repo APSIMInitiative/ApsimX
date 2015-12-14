@@ -9919,6 +9919,16 @@ namespace Models
               <string>[Slurp].Leaf.CoverTotal as Cover_tot</string>
               <string>[Slurp].Leaf.HeightFunction as Height</string>
               <string>[Slurp].Leaf.LAI as LAI</string>
+              <string>[Soil].SoilWater.dlayer as dlayer</string>
+              <string>[Soil].SoilWater.SATmm as sat_dep</string>
+              <string>[Soil].SoilWater.DULmm as dul_dep</string>
+              <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
+              <string>[Soil].SoilWater.AIRDRYmm as air_dry_dep</string>
+              <string>[Soil].SoilWater.SWmm as sw_dep</string>
+              <string>[Soil].SoilWater.flux as flux</string>
+              <string>[Soil].SoilWater.flow as flow</string>
+              <string>[Soil].SoilWater.Drainage as drain</string>
+              <string>[Soil].SoilWater.Es as es</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -9961,12 +9971,9 @@ namespace Models
 			if (Clock.Today.Date == SowingDate)
 			{
 				Slurp.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
-				object height = 400;
-				zone.Set("Slurp.Leaf.HeightFunction.Value", height);
-				object lai = 7;
-				zone.Set("Slurp.Leaf.LAIFunction.Value", lai);
-				object exeff = 0.6;
-				zone.Set("Slurp.Leaf.ExtinctionCoefficientFunction.Value", exeff);
+				zone.Set("Slurp.Leaf.HeightFunction.Value", 400);
+				zone.Set("Slurp.Leaf.LAIFunction.Value", 7);
+				zone.Set("Slurp.Leaf.ExtinctionCoefficientFunction.Value", 0.6);
 			}
 		}
 	}
@@ -10454,8 +10461,8 @@ namespace Models
               <string>[Weather].Rain as rain</string>
               <string>[Soil].SoilWater.Runoff as runoff</string>
               <string>[Slurp].Leaf.CoverGreen as Cover_green</string>
-              <string>[Slurp].Leaf.CoverTot as Cover_tot</string>
-              <string>[Slurp].Leaf.Height as Height</string>
+              <string>[Slurp].Leaf.CoverTotal as Cover_tot</string>
+              <string>[Slurp].Leaf.HeightFunction as Height</string>
               <string>[Soil].SoilWater.dlayer as dlayer</string>
               <string>[Soil].SoilWater.SATmm as sat_dep</string>
               <string>[Soil].SoilWater.DULmm as dul_dep</string>
@@ -10508,12 +10515,9 @@ namespace Models
 			if (Clock.Today.Date == SowingDate)
 			{
 				Slurp.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
-				object height = 400;
-				zone.Set("Slurp.Leaf.HeightFunction.Value", height);
-				object lai = 7;
-				zone.Set("Slurp.Leaf.LAIFunction.Value", lai);
-				object exeff = 0.6;
-				zone.Set("Slurp.Leaf.ExtinctionCoefficientFunction.Value", exeff);
+				zone.Set("Slurp.Leaf.HeightFunction.Value", 1200);
+				zone.Set("Slurp.Leaf.LAIFunction.Value", 7);
+				zone.Set("Slurp.Leaf.ExtinctionCoefficientFunction.Value", 0.6);
 			}
 		}
 	}
@@ -11001,8 +11005,8 @@ namespace Models
               <string>[Weather].Rain as rain</string>
               <string>[Soil].SoilWater.Runoff as runoff</string>
               <string>[Slurp].Leaf.CoverGreen as Cover_green</string>
-              <string>[Slurp].Leaf.CoverTot as Cover_tot</string>
-              <string>[Slurp].Leaf.Height as Height</string>
+              <string>[Slurp].Leaf.CoverTotal as Cover_tot</string>
+              <string>[Slurp].Leaf.HeightFunction as Height</string>
               <string>[Soil].SoilWater.dlayer as dlayer</string>
               <string>[Soil].SoilWater.SATmm as sat_dep</string>
               <string>[Soil].SoilWater.DULmm as dul_dep</string>
@@ -11018,17 +11022,14 @@ namespace Models
               <string>[Clock].DoReport</string>
             </EventNames>
           </Report>
-          <Area>1</Area>
-          <Slope>0</Slope>
-        </Zone>
-        <Manager>
-          <Name>SlurpSowingRule</Name>
-          <Script>
-            <CultivarName>StaticCrop</CultivarName>
-            <InitialRootDepth>500</InitialRootDepth>
-            <SowingDate>1940-01-01</SowingDate>
-          </Script>
-          <Code><![CDATA[
+          <Manager>
+            <Name>SlurpSowingRule</Name>
+            <Script>
+              <CultivarName>StaticCrop</CultivarName>
+              <InitialRootDepth>500</InitialRootDepth>
+              <SowingDate>1940-01-01</SowingDate>
+            </Script>
+            <Code><![CDATA[
 using System;
 using Models.Core;
 using Models.PMF;
@@ -11058,18 +11059,18 @@ namespace Models
 			if (Clock.Today.Date == SowingDate)
 			{
 				Slurp.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
-				object height = 400;
-				zone.Set("Slurp.Leaf.HeightFunction.Value", height);
-				object lai = 7;
-				zone.Set("Slurp.Leaf.LAIFunction.Value", lai);
-				object exeff = 0.6;
-				zone.Set("Slurp.Leaf.ExtinctionCoefficientFunction.Value", exeff);
+				zone.Set("Slurp.Leaf.HeightFunction.Value", 2400);
+				zone.Set("Slurp.Leaf.LAIFunction.Value", 7);
+				zone.Set("Slurp.Leaf.ExtinctionCoefficientFunction.Value", 0.6);
 			}
 		}
 	}
 }
 				]]></Code>
-        </Manager>
+          </Manager>
+          <Area>1</Area>
+          <Slope>0</Slope>
+        </Zone>
         <Area>0</Area>
         <Slope>0</Slope>
       </Simulation>
@@ -11754,52 +11755,47 @@ namespace Models
         <Area>0</Area>
         <Slope>0</Slope>
       </Simulation>
-      <Manager>
-        <Name>Slurp1SowingRule</Name>
-        <Script>
-          <CultivarName>StaticCrop</CultivarName>
-          <InitialRootDepth>500</InitialRootDepth>
-          <SowingDate>1940-01-01</SowingDate>
-        </Script>
-        <Code><![CDATA[
-using System;
-using Models.Core;
-using Models.PMF;
-using APSIM.Shared.Utilities;
-        
-namespace Models
-{
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Plant Slurp1;
-		[Link] Clock Clock;
-		[Link] Zone zone;
-
-		[Description("Cultivar")]
-		public string CultivarName { get; set; }
-		[Description("Initial Root Depth")]
-		public double InitialRootDepth { get; set; }
-		[Description("Sowing Date")]
-		public DateTime SowingDate { get; set; }
-
-               
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Clock.Today.Date == SowingDate)
-			{
-				Slurp1.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
-				zone.Set("Slurp1.Leaf.HeightFunction.Value", 1200);
-				zone.Set("Slurp1.Leaf.LAIFunction.Value", 7);
-				zone.Set("Slurp1.Leaf.ExtinctionCoefficientFunction.Value", 0.6);
-			}
-		}
-	}
-}
-				]]></Code>
-      </Manager>
+      <Graph>
+        <Name>Graph</Name>
+        <Series>
+          <Name>Series</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>0</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>runoff</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
     </Folder>
   </Folder>
   <DataStore>
@@ -13464,13 +13460,6 @@ namespace Models
       <ColumnNames>runoff</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
-    <Test>
-      <SimulationName>Runoff_with_Intercropping</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>runoff</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
   </Tests>
-  <ExplorerWidth>292</ExplorerWidth>
+  <ExplorerWidth>278</ExplorerWidth>
 </Simulations>
