@@ -343,7 +343,7 @@ namespace UnitTests
                 double res = (double)Extensions.TestMethod("Fluxes", "ssflux", new object[] {ia[i], ib[i], 5.0, qin[i], 0.001 });
              //Getting differences here but not sure if they're compounding floating points. Will need to check actual simulation data
              //to see if they're significant.
-             //   Assert.AreEqual(ssflux[i], res, Math.Abs(ssflux[i] * 0.05));
+                Assert.AreEqual(ssflux[i], res, Math.Abs(ssflux[i] * 1E-6));
             }
         }
     }
