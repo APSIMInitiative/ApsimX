@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Memo>
     <Name>Differences</Name>
@@ -25,6 +25,11 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
       <Name>paddock</Name>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -36,11 +41,6 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -459,6 +459,8 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
       </Soil>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.SATmm as sat_dep</string>
@@ -501,6 +503,11 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
       <Name>paddock</Name>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -512,11 +519,6 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -935,6 +937,8 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
       </Soil>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.SATmm as sat_dep</string>
@@ -977,6 +981,11 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
       <Name>paddock</Name>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -988,11 +997,6 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -1411,6 +1415,8 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
       </Soil>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Weather].Rain as rain</string>
@@ -1455,6 +1461,11 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
       <Name>paddock</Name>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -1466,11 +1477,6 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
       <Manager>
         <Name>AvgTempCalculation</Name>
@@ -1920,6 +1926,8 @@ namespace Models
       </Soil>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.SATmm as sat_dep</string>
@@ -1971,6 +1979,11 @@ namespace Models
       <Name>paddock</Name>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -1982,11 +1995,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -2455,6 +2463,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.SATmm as sat_dep</string>
@@ -2501,6 +2511,11 @@ namespace Models
       <Name>paddock</Name>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -2512,11 +2527,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -2975,6 +2985,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.SATmm as sat_dep</string>
@@ -3022,6 +3034,11 @@ namespace Models
       <Name>paddock</Name>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -3033,11 +3050,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -3466,6 +3478,8 @@ namespace Models
       </Soil>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.SATmm as sat_dep</string>
@@ -3510,6 +3524,11 @@ namespace Models
       <Name>paddock</Name>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -3521,11 +3540,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -3941,6 +3955,8 @@ namespace Models
       </Soil>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.SATmm as sat_dep</string>
@@ -3984,6 +4000,11 @@ namespace Models
       <Name>paddock</Name>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -3995,11 +4016,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
       <SurfaceOrganicMatter>
         <Name>SurfaceOM</Name>
@@ -4446,6 +4462,8 @@ namespace Models
       </Soil>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.SATmm as sat_dep</string>
@@ -4498,6 +4516,11 @@ namespace Models
       <Name>paddock</Name>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -4509,11 +4532,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
       <SurfaceOrganicMatter>
         <Name>SurfaceOM</Name>
@@ -4929,6 +4947,8 @@ namespace Models
       </Soil>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Weather].Rain as rain</string>
@@ -4974,6 +4994,11 @@ namespace Models
       <Name>paddock</Name>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -4985,11 +5010,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -5457,6 +5477,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Weather].Rain as rain</string>
@@ -5500,6 +5522,11 @@ namespace Models
       <Name>paddock</Name>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -5511,11 +5538,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -5972,6 +5994,8 @@ namespace Models
       </Operations>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Irrigation].IrrigationApplied as irrigation</string>
@@ -6015,6 +6039,11 @@ namespace Models
       <Name>paddock</Name>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -6026,11 +6055,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -6658,6 +6682,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Soil].SoilWater.irrigation_layer</string>
@@ -6704,6 +6730,11 @@ namespace Models
         <Name>paddock</Name>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.23</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -6715,11 +6746,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.23</soil_albedo>
         </MicroClimate>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -7200,6 +7226,8 @@ namespace Models
         </Soil>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Soil].SoilWater.dlayer as dlayer</string>
             <string>[Soil].SoilWater.SATmm as sat_dep</string>
@@ -7248,6 +7276,11 @@ namespace Models
         <Name>paddock</Name>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.23</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -7259,11 +7292,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.23</soil_albedo>
         </MicroClimate>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -7744,6 +7772,8 @@ namespace Models
         </Soil>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Soil].SoilWater.dlayer as dlayer</string>
             <string>[Soil].SoilWater.SATmm as sat_dep</string>
@@ -7792,6 +7822,11 @@ namespace Models
         <Name>paddock</Name>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.23</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -7803,11 +7838,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.23</soil_albedo>
         </MicroClimate>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -8241,6 +8271,8 @@ namespace Models
         </Operations>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Weather].Rain as rain</string>
             <string>[Soil].SoilWater.Runoff as runoff</string>
@@ -8291,6 +8323,11 @@ namespace Models
           <Name>paddock</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -8302,11 +8339,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -8758,6 +8790,8 @@ namespace Models
           </Manager>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Soil].SoilWater.dlayer as dlayer</string>
               <string>[Soil].SoilWater.SATmm as sat_dep</string>
@@ -8803,6 +8837,11 @@ namespace Models
           <Name>paddock</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -8814,11 +8853,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -9367,6 +9401,8 @@ namespace Models
           </Manager>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW as sw</string>
@@ -9419,10 +9455,18 @@ namespace Models
         <Summary>
           <Name>summaryfile</Name>
         </Summary>
+        <SoilArbitrator>
+          <Name>Soil Arbitrator</Name>
+        </SoilArbitrator>
         <Zone>
           <Name>paddock</Name>
           <MicroClimate>
             <Name>Micromet</Name>
+            <a_interception>0</a_interception>
+            <b_interception>0</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -9434,11 +9478,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>0</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -9863,52 +9902,77 @@ namespace Models
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
           </Soil>
-          <Slurp>
+          <Plant>
             <Name>Slurp</Name>
+            <ResourceName>Slurp</ResourceName>
             <CropType>Slurp</CropType>
-            <localLAIGreen>7</localLAIGreen>
-            <localLAItot>7.1</localLAItot>
-            <localLightExtinction>0.6</localLightExtinction>
-            <localCanopyHeight>300</localCanopyHeight>
-            <localCanopyDepth>500</localCanopyDepth>
-            <localMaximumStomatalConductance>0</localMaximumStomatalConductance>
-            <localFrgr>0</localFrgr>
-            <localDemandWater>0</localDemandWater>
-            <localDemandNitrogen>0</localDemandNitrogen>
-            <localKNO3>0</localKNO3>
-            <localKNH4>0</localKNH4>
-            <localRootDepth>500</localRootDepth>
-            <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
-          </Slurp>
-          <Arbitrator>
-            <Name>Arbitrator</Name>
-            <ArbitrationMethod>new</ArbitrationMethod>
-            <NutrientUptakeMethod>1</NutrientUptakeMethod>
-          </Arbitrator>
+          </Plant>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Weather].Rain as rain</string>
               <string>[Soil].SoilWater.Runoff as runoff</string>
-              <string>Slurp.CanopyProperties.CoverGreen as Cover_green</string>
-              <string>Slurp.CanopyProperties.CoverTot as Cover_tot</string>
-              <string>Slurp.CanopyProperties.CanopyHeight as Height</string>
-              <string>[Soil].SoilWater.dlayer as dlayer</string>
-              <string>[Soil].SoilWater.SATmm as sat_dep</string>
-              <string>[Soil].SoilWater.DULmm as dul_dep</string>
-              <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
-              <string>[Soil].SoilWater.AIRDRYmm as air_dry_dep</string>
-              <string>[Soil].SoilWater.SWmm as sw_dep</string>
-              <string>[Soil].SoilWater.flux as flux</string>
-              <string>[Soil].SoilWater.flow as flow</string>
-              <string>[Soil].SoilWater.Drainage as drain</string>
-              <string>[Soil].SoilWater.Es as es</string>
+              <string>[Slurp].Leaf.CoverGreen as Cover_green</string>
+              <string>[Slurp].Leaf.CoverTotal as Cover_tot</string>
+              <string>[Slurp].Leaf.HeightFunction as Height</string>
+              <string>[Slurp].Leaf.LAI as LAI</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
           </Report>
+          <Manager>
+            <Name>SlurpSowingRule</Name>
+            <Script>
+              <CultivarName>StaticCrop</CultivarName>
+              <InitialRootDepth>500</InitialRootDepth>
+              <SowingDate>1940-01-01</SowingDate>
+            </Script>
+            <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Slurp;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+
+		[Description("Cultivar")]
+		public string CultivarName { get; set; }
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+
+               
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				Slurp.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				object height = 400;
+				zone.Set("Slurp.Leaf.HeightFunction.Value", height);
+				object lai = 7;
+				zone.Set("Slurp.Leaf.LAIFunction.Value", lai);
+				object exeff = 0.6;
+				zone.Set("Slurp.Leaf.ExtinctionCoefficientFunction.Value", exeff);
+			}
+		}
+	}
+}
+				]]></Code>
+          </Manager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -9929,10 +9993,18 @@ namespace Models
         <Summary>
           <Name>summaryfile</Name>
         </Summary>
+        <SoilArbitrator>
+          <Name>Soil Arbitrator</Name>
+        </SoilArbitrator>
         <Zone>
           <Name>paddock</Name>
           <MicroClimate>
             <Name>Micromet</Name>
+            <a_interception>0</a_interception>
+            <b_interception>0</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -9944,11 +10016,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>0</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -10373,37 +10440,22 @@ namespace Models
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
           </Soil>
-          <Slurp>
+          <Plant>
             <Name>Slurp</Name>
+            <ResourceName>Slurp</ResourceName>
             <CropType>Slurp</CropType>
-            <localLAIGreen>7</localLAIGreen>
-            <localLAItot>7.1</localLAItot>
-            <localLightExtinction>0.6</localLightExtinction>
-            <localCanopyHeight>1200</localCanopyHeight>
-            <localCanopyDepth>500</localCanopyDepth>
-            <localMaximumStomatalConductance>0</localMaximumStomatalConductance>
-            <localFrgr>0</localFrgr>
-            <localDemandWater>0</localDemandWater>
-            <localDemandNitrogen>0</localDemandNitrogen>
-            <localKNO3>0</localKNO3>
-            <localKNH4>0</localKNH4>
-            <localRootDepth>500</localRootDepth>
-            <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
-          </Slurp>
-          <Arbitrator>
-            <Name>Arbitrator</Name>
-            <ArbitrationMethod>new</ArbitrationMethod>
-            <NutrientUptakeMethod>1</NutrientUptakeMethod>
-          </Arbitrator>
+          </Plant>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Weather].Rain as rain</string>
               <string>[Soil].SoilWater.Runoff as runoff</string>
-              <string>Slurp.CanopyProperties.CoverGreen as Cover_green</string>
-              <string>Slurp.CanopyProperties.CoverTot as Cover_tot</string>
-              <string>Slurp.CanopyProperties.CanopyHeight as Height</string>
+              <string>[Slurp].Leaf.CoverGreen as Cover_green</string>
+              <string>[Slurp].Leaf.CoverTot as Cover_tot</string>
+              <string>[Slurp].Leaf.Height as Height</string>
               <string>[Soil].SoilWater.dlayer as dlayer</string>
               <string>[Soil].SoilWater.SATmm as sat_dep</string>
               <string>[Soil].SoilWater.DULmm as dul_dep</string>
@@ -10419,6 +10471,55 @@ namespace Models
               <string>[Clock].DoReport</string>
             </EventNames>
           </Report>
+          <Manager>
+            <Name>SlurpSowingRule</Name>
+            <Script>
+              <CultivarName>StaticCrop</CultivarName>
+              <InitialRootDepth>500</InitialRootDepth>
+              <SowingDate>1940-01-01</SowingDate>
+            </Script>
+            <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Slurp;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+
+		[Description("Cultivar")]
+		public string CultivarName { get; set; }
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+
+               
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				Slurp.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				object height = 400;
+				zone.Set("Slurp.Leaf.HeightFunction.Value", height);
+				object lai = 7;
+				zone.Set("Slurp.Leaf.LAIFunction.Value", lai);
+				object exeff = 0.6;
+				zone.Set("Slurp.Leaf.ExtinctionCoefficientFunction.Value", exeff);
+			}
+		}
+	}
+}
+				]]></Code>
+          </Manager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -10439,10 +10540,18 @@ namespace Models
         <Summary>
           <Name>summaryfile</Name>
         </Summary>
+        <SoilArbitrator>
+          <Name>Soil Arbitrator</Name>
+        </SoilArbitrator>
         <Zone>
           <Name>paddock</Name>
           <MicroClimate>
             <Name>Micromet</Name>
+            <a_interception>0</a_interception>
+            <b_interception>0</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -10454,11 +10563,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>0</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -10883,37 +10987,22 @@ namespace Models
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
           </Soil>
-          <Slurp>
+          <Plant>
             <Name>Slurp</Name>
+            <ResourceName>Slurp</ResourceName>
             <CropType>Slurp</CropType>
-            <localLAIGreen>7</localLAIGreen>
-            <localLAItot>7.1</localLAItot>
-            <localLightExtinction>0.6</localLightExtinction>
-            <localCanopyHeight>2400</localCanopyHeight>
-            <localCanopyDepth>500</localCanopyDepth>
-            <localMaximumStomatalConductance>0</localMaximumStomatalConductance>
-            <localFrgr>0</localFrgr>
-            <localDemandWater>0</localDemandWater>
-            <localDemandNitrogen>0</localDemandNitrogen>
-            <localKNO3>0</localKNO3>
-            <localKNH4>0</localKNH4>
-            <localRootDepth>500</localRootDepth>
-            <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
-          </Slurp>
-          <Arbitrator>
-            <Name>Arbitrator</Name>
-            <ArbitrationMethod>new</ArbitrationMethod>
-            <NutrientUptakeMethod>1</NutrientUptakeMethod>
-          </Arbitrator>
+          </Plant>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Weather].Rain as rain</string>
               <string>[Soil].SoilWater.Runoff as runoff</string>
-              <string>Slurp.CanopyProperties.CoverGreen as Cover_green</string>
-              <string>Slurp.CanopyProperties.CoverTot as Cover_tot</string>
-              <string>Slurp.CanopyProperties.CanopyHeight as Height</string>
+              <string>[Slurp].Leaf.CoverGreen as Cover_green</string>
+              <string>[Slurp].Leaf.CoverTot as Cover_tot</string>
+              <string>[Slurp].Leaf.Height as Height</string>
               <string>[Soil].SoilWater.dlayer as dlayer</string>
               <string>[Soil].SoilWater.SATmm as sat_dep</string>
               <string>[Soil].SoilWater.DULmm as dul_dep</string>
@@ -10932,6 +11021,55 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
+        <Manager>
+          <Name>SlurpSowingRule</Name>
+          <Script>
+            <CultivarName>StaticCrop</CultivarName>
+            <InitialRootDepth>500</InitialRootDepth>
+            <SowingDate>1940-01-01</SowingDate>
+          </Script>
+          <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Slurp;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+
+		[Description("Cultivar")]
+		public string CultivarName { get; set; }
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+
+               
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				Slurp.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				object height = 400;
+				zone.Set("Slurp.Leaf.HeightFunction.Value", height);
+				object lai = 7;
+				zone.Set("Slurp.Leaf.LAIFunction.Value", lai);
+				object exeff = 0.6;
+				zone.Set("Slurp.Leaf.ExtinctionCoefficientFunction.Value", exeff);
+			}
+		}
+	}
+}
+				]]></Code>
+        </Manager>
         <Area>0</Area>
         <Slope>0</Slope>
       </Simulation>
@@ -10949,10 +11087,18 @@ namespace Models
         <Summary>
           <Name>summaryfile</Name>
         </Summary>
+        <SoilArbitrator>
+          <Name>Soil Arbitrator</Name>
+        </SoilArbitrator>
         <Zone>
           <Name>paddock</Name>
           <MicroClimate>
             <Name>Micromet</Name>
+            <a_interception>0</a_interception>
+            <b_interception>0</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -10964,11 +11110,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>0</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -11435,57 +11576,122 @@ namespace Models
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
           </Soil>
-          <Slurp>
+          <Plant>
             <Name>Slurp1</Name>
+            <ResourceName>Slurp</ResourceName>
             <CropType>Slurp</CropType>
-            <localLAIGreen>7</localLAIGreen>
-            <localLAItot>7.1</localLAItot>
-            <localLightExtinction>0.6</localLightExtinction>
-            <localCanopyHeight>1200</localCanopyHeight>
-            <localCanopyDepth>500</localCanopyDepth>
-            <localMaximumStomatalConductance>0</localMaximumStomatalConductance>
-            <localFrgr>0</localFrgr>
-            <localDemandWater>0</localDemandWater>
-            <localDemandNitrogen>0</localDemandNitrogen>
-            <localKNO3>0</localKNO3>
-            <localKNH4>0</localKNH4>
-            <localRootDepth>500</localRootDepth>
-            <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
-          </Slurp>
-          <Slurp>
+          </Plant>
+          <Manager>
+            <Name>Slurp1SowingRule</Name>
+            <Script>
+              <CultivarName>StaticCrop</CultivarName>
+              <InitialRootDepth>500</InitialRootDepth>
+              <SowingDate>1940-01-01</SowingDate>
+            </Script>
+            <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Slurp1;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+
+		[Description("Cultivar")]
+		public string CultivarName { get; set; }
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+
+               
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				Slurp1.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				zone.Set("Slurp1.Leaf.HeightFunction.Value", 1200);
+				zone.Set("Slurp1.Leaf.LAIFunction.Value", 7);
+				zone.Set("Slurp1.Leaf.ExtinctionCoefficientFunction.Value", 0.6);
+			}
+		}
+	}
+}
+				]]></Code>
+          </Manager>
+          <Plant>
             <Name>Slurp2</Name>
+            <ResourceName>Slurp</ResourceName>
             <CropType>Slurp</CropType>
-            <localLAIGreen>7</localLAIGreen>
-            <localLAItot>7.1</localLAItot>
-            <localLightExtinction>0.6</localLightExtinction>
-            <localCanopyHeight>1500</localCanopyHeight>
-            <localCanopyDepth>500</localCanopyDepth>
-            <localMaximumStomatalConductance>0</localMaximumStomatalConductance>
-            <localFrgr>0</localFrgr>
-            <localDemandWater>0</localDemandWater>
-            <localDemandNitrogen>0</localDemandNitrogen>
-            <localKNO3>0</localKNO3>
-            <localKNH4>0</localKNH4>
-            <localRootDepth>500</localRootDepth>
-            <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
-          </Slurp>
-          <Arbitrator>
-            <Name>Arbitrator</Name>
-            <ArbitrationMethod>new</ArbitrationMethod>
-            <NutrientUptakeMethod>1</NutrientUptakeMethod>
-          </Arbitrator>
+          </Plant>
+          <Manager>
+            <Name>Slurp2SowingRule</Name>
+            <Script>
+              <CultivarName>StaticCrop</CultivarName>
+              <InitialRootDepth>500</InitialRootDepth>
+              <SowingDate>1940-01-01</SowingDate>
+            </Script>
+            <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Slurp2;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+
+		[Description("Cultivar")]
+		public string CultivarName { get; set; }
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+
+               
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				Slurp2.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				zone.Set("Slurp2.Leaf.HeightFunction.Value", 1500);
+				zone.Set("Slurp2.Leaf.LAIFunction.Value", 7);
+				zone.Set("Slurp2.Leaf.ExtinctionCoefficientFunction.Value", 0.6);
+			}
+		}
+	}
+}
+				]]></Code>
+          </Manager>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Weather].Rain as rain</string>
               <string>[Soil].SoilWater.Runoff as runoff</string>
-              <string>Slurp1.CanopyProperties.CoverGreen as Cover_green1</string>
-              <string>Slurp2.CanopyProperties.CoverGreen as Cover_green2</string>
-              <string>Slurp1.CanopyProperties.CoverTot as Cover_tot1</string>
-              <string>Slurp2.CanopyProperties.CoverTot as Cover_tot2</string>
-              <string>Slurp1.CanopyProperties.CanopyHeight as Height1</string>
-              <string>Slurp2.CanopyProperties.CanopyHeight as Height2</string>
+              <string>[Slurp1].Leaf.CoverGreen as Cover_green1</string>
+              <string>[Slurp1].Leaf.CoverTotal as Cover_tot1</string>
+              <string>[Slurp1].Leaf.Height as Height1</string>
+              <string>[Slurp2].Leaf.CoverGreen as Cover_green2</string>
+              <string>[Slurp2].Leaf.CoverTotal as Cover_tot2</string>
+              <string>[Slurp2].Leaf.Height as Height2</string>
               <string>[Soil].SoilWater.dlayer as dlayer</string>
               <string>[Soil].SoilWater.SATmm as sat_dep</string>
               <string>[Soil].SoilWater.DULmm as dul_dep</string>
@@ -11504,9 +11710,96 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
+        <Graph>
+          <Name>Graph</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Bar</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>0</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Cover_tot</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
         <Area>0</Area>
         <Slope>0</Slope>
       </Simulation>
+      <Manager>
+        <Name>Slurp1SowingRule</Name>
+        <Script>
+          <CultivarName>StaticCrop</CultivarName>
+          <InitialRootDepth>500</InitialRootDepth>
+          <SowingDate>1940-01-01</SowingDate>
+        </Script>
+        <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Slurp1;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+
+		[Description("Cultivar")]
+		public string CultivarName { get; set; }
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+
+               
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				Slurp1.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				zone.Set("Slurp1.Leaf.HeightFunction.Value", 1200);
+				zone.Set("Slurp1.Leaf.LAIFunction.Value", 7);
+				zone.Set("Slurp1.Leaf.ExtinctionCoefficientFunction.Value", 0.6);
+			}
+		}
+	}
+}
+				]]></Code>
+      </Manager>
     </Folder>
   </Folder>
   <DataStore>
@@ -11528,7 +11821,7 @@ namespace Models
     </Input>
     <Input>
       <Name>old_soil_evap</Name>
-      <ErrorMessage />
+      <ErrorMessage>Specified cast is not valid.</ErrorMessage>
       <FileName>OLD_Outputs\Soil Evaporation Only (OLD).out</FileName>
     </Input>
     <Input>
@@ -11627,6 +11920,7 @@ namespace Models
       <FileName>%root%\Tests\SoilWater\Sensibility\OLD_Outputs\Runoff with Intercropping (OLD).out</FileName>
     </Input>
     <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Tests>
     <Name>Tests</Name>
@@ -13178,5 +13472,5 @@ namespace Models
       <Parameters>1,1</Parameters>
     </Test>
   </Tests>
-  <ExplorerWidth>0</ExplorerWidth>
+  <ExplorerWidth>292</ExplorerWidth>
 </Simulations>
