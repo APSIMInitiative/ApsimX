@@ -9,7 +9,11 @@ using Models.Interfaces;
 namespace Models.PMF.Functions.SupplyFunctions
 {
     /// <summary>
-    /// An RUE model
+    /// Biomass accumulation is the product of the amount of intercepted radiation and its 
+    /// conversion efficiency, the radiation use efficiency (RUE) [Monteith1977].  
+    /// This approach simulates net photosynthesis rather than providing separate estimates 
+    /// of growth and respiration.  RUE is calculated from a potential value which is discounted 
+    /// using stress factors that account for plant nutrition (Fn), air temperature(Ft), vapour pressure deficit (Fvpd), water supply (Fw) and atmospheric CO2 concentration (Fco2).
     /// </summary>
     [Serializable]
     public class RUEModel : Model, IFunction

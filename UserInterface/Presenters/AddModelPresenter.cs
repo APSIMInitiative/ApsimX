@@ -47,6 +47,7 @@ namespace UserInterface.Presenters
 
             // Trap events from the view.
             this.view.Button.Clicked += this.OnAddButtonClicked;
+            this.view.List.DoubleClicked += this.OnAddButtonClicked;
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -54,6 +55,7 @@ namespace UserInterface.Presenters
         {
             // Trap events from the view.
             this.view.Button.Clicked -= this.OnAddButtonClicked;
+            this.view.List.DoubleClicked -= this.OnAddButtonClicked;
         }
 
         /// <summary>The user has clicked the add button.</summary>

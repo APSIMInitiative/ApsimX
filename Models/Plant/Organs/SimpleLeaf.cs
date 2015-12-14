@@ -36,12 +36,26 @@ namespace Models.PMF.Organs
     /// <remarks>
     /// </remarks>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SimpleLeaf : BaseOrgan, AboveGround, ICanopy
     {
         #region Canopy interface
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.CropType; } }
+
+        /// <summary>Albedo.</summary>
+        [Description("Albedo")]
+        public double Albedo { get; set; }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        [Description("GSMAX")]
+        public double Gsmax { get; set; }
+
+        /// <summary>Gets or sets the R50.</summary>
+        [Description("R50")]
+        public double R50 { get; set; }
 
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
@@ -233,6 +247,8 @@ namespace Models.PMF.Organs
                     Demand = DMDemandFunction.Value;
                 else
                     Demand = 1;
+                if (Math.Round(Demand,8) < 0)
+                    throw new Exception(this.Name + " organ is returning a negative DM demand.  Check your parameterisation");
                 return new BiomassPoolType { Structural = Demand };
             }
         }
@@ -242,6 +258,8 @@ namespace Models.PMF.Organs
         {
             get
             {
+                if (Math.Round(Photosynthesis.Value,8) < 0)
+                    throw new Exception(this.Name + " organ is returning a negative DM supply.  Check your parameterisation");
                 return new BiomassSupplyType { Fixation = Photosynthesis.Value, Retranslocation = 0, Reallocation = 0 };
             }
         }
@@ -278,7 +296,12 @@ namespace Models.PMF.Organs
                     double DMDemandTot = DMDemand.Structural + DMDemand.NonStructural + DMDemand.Metabolic;
                     StructuralDemand = NConc.Value * DMDemandTot * _StructuralFraction;
                     NDeficit = Math.Max(0.0, NConc.Value * (Live.Wt + DMDemandTot) - Live.N) - StructuralDemand;
-                } return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
+                }
+                if (Math.Round(StructuralDemand,8) < 0)
+                    throw new Exception(this.Name + " organ is returning a negative structural N Demand.  Check your parameterisation");
+                if (Math.Round(NDeficit,8) < 0)
+                    throw new Exception(this.Name + " organ is returning a negative Non structural N Demand.  Check your parameterisation");
+                return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
             }
         }
 
@@ -544,13 +567,13 @@ namespace Models.PMF.Organs
             tags.Add(new AutoDocumentation.Heading("Canopy", headingLevel + 1));
             if (CoverFunction != null)
             {
-                tags.Add(new AutoDocumentation.Paragraph("The cover and LAI estimations are calculated using a CoverFunction as folows"  + " ", indent));
+                tags.Add(new AutoDocumentation.Paragraph("The Green cover (proportion of ground cover comprising green leaf) and Leaf area index (LAI, the area of leaf per unit area of ground) estimations are calculated using a CoverFunction as folows"  + " ", indent));
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 {
                     if (child.Name == "CoverFunction")
                         child.Document(tags, headingLevel + 5, indent + 1);
                 }
-                tags.Add(new AutoDocumentation.Paragraph("Then the Leaf Area Index (LAI) is calculated using an inverted Beer Lamberts equation with the estimated Cover value:"
+                tags.Add(new AutoDocumentation.Paragraph("Then LAI is calculated using an inverted Beer Lamberts equation with the estimated Cover value:"
                     + " <b>LAI = Log(1 - Cover) / (ExtinctionCoefficient * -1));", indent));
                 tags.Add(new AutoDocumentation.Paragraph("Where ExtinctionCoefficient has a value of " + ExtinctionCoefficientFunction.Value, indent+1));
             }
