@@ -63,9 +63,11 @@ namespace Models.Factorial
 
             foreach (FactorValue factorValue in factorValues)
             {
-                string name = factorValue.Factor.Name;
-                string value = factorValue.Name.Replace(factorValue.Factor.Name, "");
-                names.Add(name);
+                Factor topLevelFactor = factorValue.Factor;
+                if (topLevelFactor.Parent is Factor)
+                    topLevelFactor = topLevelFactor.Parent as Factor;
+                string value = factorValue.Name.Replace(topLevelFactor.Name, "");
+                names.Add(topLevelFactor.Name);
                 values.Add(value);
             }
 
