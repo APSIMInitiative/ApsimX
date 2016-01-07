@@ -1,7 +1,7 @@
 <report version="5">
 <Data>
 <ApsimFileReader Left="-158" Top="24" Width="273" Height="77" name="T1Pred">
-  <FileName>Sorghum_HE5_T1.out</FileName>
+  <FileName>Sorghum_HighWaterHighN.out</FileName>
 </ApsimFileReader>
 <REMS Left="121" Top="24" Width="177" Height="223" name="T1Obs">
   <FileName>HERems.mdb</FileName>

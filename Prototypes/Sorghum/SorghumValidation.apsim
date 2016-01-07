@@ -14,38 +14,8 @@
         <title>Sorghum_HighWaterHighN</title>
         <events name="My Variables Events" />
         <variables name="My Variables">
-          <variable array="?" description="Date (dd/mm/yyyy)">today format dd/mm/yyyy as Date</variable>
-          <variable array="?" description="Days after Sowing">DaysAfterSowing as Das</variable>
-          <variable array="?" description="Plant stage">Stage</variable>
-          <variable array="?" description="Biomass weight">Biomass</variable>
-          <variable>GreenWt</variable>
-          <variable>Biomass units g/m^2 as BiomassWt</variable>
-          <variable array="?" description="Weight of roots">RootGreenWt</variable>
-          <variable array="?" description="Weight of leaf">LeafGreenWt</variable>
-          <variable array="?" description="Weight of stems">StemGreenWt</variable>
-          <variable array="?" description="Weight of heads">RachisGreenWt</variable>
-          <variable array="?" description="Weight of grain">GrainGreenWt</variable>
-          <variable array="?" description="N in total biomass">BiomassN</variable>
-          <variable array="?" description="N in roots">RootGreenN</variable>
-          <variable array="?" description="N in leaves">LeafGreenN</variable>
-          <variable array="?" description="N in stems">StemGreenN</variable>
-          <variable array="?" description="N in heads">RachisGreenN</variable>
-          <variable array="?" description="N in grain">GrainGreenN</variable>
-          <variable>GrainGreenNConc</variable>
-          <variable>GrainNo</variable>
-          <variable array="?" description="number ">GrainSize</variable>
-          <variable array="?" description="Leaf area index">HI</variable>
-          <variable>LeafNo</variable>
-          <variable array="?" description="Extractable Soil Water (mm)">LAI</variable>
-          <variable array="?" description="NO3 - layered (kg/ha)">SLAI</variable>
-          <variable array="?" description="Specific leaf nitrogen">ESW</variable>
-          <variable array="?" description="Water stress">no3() as NO3</variable>
-          <variable>SLN</variable>
-          <variable>WaterSD</variable>
-          <variable>sw</variable>
-          <variable>TPLA</variable>
-          <variable>SPLA</variable>
-          <variable>biomass_n</variable>
+          <variable>dd/mm/yyyy as date</variable>
+          <variable>stage</variable>
         </variables>
       </outputfile>
       <folder name="Manager folder">
@@ -166,7 +136,7 @@
       </operations>
       <Soil name="HRS">
         <RecordNumber>0</RecordNumber>
-        <SoilType>HMM</SoilType>
+        <SoilType description="Soil description">HMM</SoilType>
         <LocalName>HRS</LocalName>
         <Site>HRS</Site>
         <NearestTown>Unknown</NearestTown>
@@ -174,57 +144,19 @@
         <NaturalVegetation>Unknown</NaturalVegetation>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Water>
-          <SoilCrop name="Sorghum">
-            <Thickness>
-              <double>100</double>
-              <double>100</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-            </Thickness>
-            <LL>
-              <double>0.226</double>
-              <double>0.226</double>
-              <double>0.258</double>
-              <double>0.270</double>
-              <double>0.268</double>
-              <double>0.304</double>
-              <double>0.335</double>
-              <double>0.330</double>
-              <double>0.320</double>
-              <double>0.330</double>
-            </LL>
-            <KL>
-              <double>0.070</double>
-              <double>0.070</double>
-              <double>0.070</double>
-              <double>0.070</double>
-              <double>0.060</double>
-              <double>0.060</double>
-              <double>0.060</double>
-              <double>0.050</double>
-              <double>0.050</double>
-              <double>0.040</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
+        <SoilWater>
+          <SummerCona>6.5</SummerCona>
+          <SummerU>1.5</SummerU>
+          <SummerDate>1-Nov</SummerDate>
+          <WinterCona>6.5</WinterCona>
+          <WinterU>1.5</WinterU>
+          <WinterDate>1-Apr</WinterDate>
+          <DiffusConst>40</DiffusConst>
+          <DiffusSlope>16</DiffusSlope>
+          <Salb>0.2</Salb>
+          <CN2Bare>85</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -237,6 +169,20 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
+          <SWCON>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+          </SWCON>
+        </SoilWater>
+        <Water>
           <BD>
             <double>1.340</double>
             <double>1.340</double>
@@ -297,20 +243,56 @@
             <double>0.370</double>
             <double>0.360</double>
           </SAT>
-        </Water>
-        <SoilWater>
-          <SummerCona>6.5</SummerCona>
-          <SummerU>1.5</SummerU>
-          <SummerDate>1-Nov</SummerDate>
-          <WinterCona>6.5</WinterCona>
-          <WinterU>1.5</WinterU>
-          <WinterDate>1-Apr</WinterDate>
-          <DiffusConst>40</DiffusConst>
-          <DiffusSlope>16</DiffusSlope>
-          <Salb>0.2</Salb>
-          <CN2Bare>85</CN2Bare>
-          <CNRed>20</CNRed>
-          <CNCov>0.8</CNCov>
+          <SoilCrop name="Sorghum">
+            <LL>
+              <double>0.226</double>
+              <double>0.226</double>
+              <double>0.258</double>
+              <double>0.270</double>
+              <double>0.268</double>
+              <double>0.304</double>
+              <double>0.335</double>
+              <double>0.330</double>
+              <double>0.320</double>
+              <double>0.330</double>
+            </LL>
+            <KL>
+              <double>0.070</double>
+              <double>0.070</double>
+              <double>0.070</double>
+              <double>0.070</double>
+              <double>0.060</double>
+              <double>0.060</double>
+              <double>0.060</double>
+              <double>0.050</double>
+              <double>0.050</double>
+              <double>0.040</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <Thickness>
+              <double>100</double>
+              <double>100</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+            </Thickness>
+          </SoilCrop>
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -323,37 +305,13 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
-          <SWCON>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-          </SWCON>
-        </SoilWater>
+        </Water>
         <SoilOrganicMatter>
           <RootCN>50</RootCN>
           <RootWt>1000</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
-          <Thickness>
-            <double>100</double>
-            <double>100</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-          </Thickness>
           <OC>
             <double>1.190</double>
             <double>0.590</double>
@@ -390,8 +348,6 @@
             <double>0.900</double>
             <double>0.900</double>
           </FInert>
-        </SoilOrganicMatter>
-        <Analysis>
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -404,6 +360,8 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
+        </SoilOrganicMatter>
+        <Analysis>
           <PH>
             <double>6.300</double>
             <double>6.400</double>
@@ -416,9 +374,6 @@
             <double>6.500</double>
             <double>6.500</double>
           </PH>
-        </Analysis>
-        <Sample name="Initial Water">
-          <Date type="date" description="Sample date:" />
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -431,6 +386,9 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
+        </Analysis>
+        <Sample name="Initial Water">
+          <Date type="date" description="Sample date:" />
           <SW>
             <double>0.217</double>
             <double>0.357</double>
@@ -443,9 +401,6 @@
             <double>0.322</double>
             <double>0.347</double>
           </SW>
-        </Sample>
-        <Sample name="Initial Nitrogen">
-          <Date type="date" description="Sample date:" />
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -458,6 +413,9 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
+        </Sample>
+        <Sample name="Initial Nitrogen">
+          <Date type="date" description="Sample date:" />
           <NO3>
             <double>8.421</double>
             <double>8.054</double>
@@ -482,6 +440,18 @@
             <double>0.100</double>
             <double>0.100</double>
           </NH4>
+          <Thickness>
+            <double>100</double>
+            <double>100</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+          </Thickness>
         </Sample>
       </Soil>
       <sorghum />
@@ -632,38 +602,38 @@
         <title>Sorghum_HighWaterLowN</title>
         <events name="My Variables Events" />
         <variables name="My Variables">
-          <variable array="?" description="Date (dd/mm/yyyy)">today format dd/mm/yyyy as Date</variable>
-          <variable array="?" description="Days after Sowing">DaysAfterSowing as Das</variable>
-          <variable array="?" description="Plant stage">Stage</variable>
-          <variable array="?" description="Biomass weight">Biomass</variable>
-          <variable>GreenWt</variable>
-          <variable>Biomass units g/m^2 as BiomassWt</variable>
-          <variable array="?" description="Weight of roots">RootGreenWt</variable>
-          <variable array="?" description="Weight of leaf">LeafGreenWt</variable>
-          <variable array="?" description="Weight of stems">StemGreenWt</variable>
-          <variable array="?" description="Weight of heads">RachisGreenWt</variable>
-          <variable array="?" description="Weight of grain">GrainGreenWt</variable>
-          <variable array="?" description="N in total biomass">BiomassN</variable>
-          <variable array="?" description="N in roots">RootGreenN</variable>
-          <variable array="?" description="N in leaves">LeafGreenN</variable>
-          <variable array="?" description="N in stems">StemGreenN</variable>
-          <variable array="?" description="N in heads">RachisGreenN</variable>
-          <variable array="?" description="N in grain">GrainGreenN</variable>
-          <variable>GrainGreenNConc</variable>
-          <variable>GrainNo</variable>
-          <variable>GrainSize</variable>
-          <variable array="?" description="number ">LeafNo</variable>
-          <variable array="?" description="Leaf area index">LAI</variable>
-          <variable>SLAI</variable>
-          <variable array="?" description="Extractable Soil Water (mm)">ESW</variable>
-          <variable array="?" description="NO3 - layered (kg/ha)">no3() as NO3</variable>
-          <variable array="?" description="Specific leaf nitrogen">SLN</variable>
-          <variable array="?" description="Water stress">WaterSD</variable>
-          <variable>sw</variable>
-          <variable>HI</variable>
-          <variable>TPLA</variable>
-          <variable>SPLA</variable>
-          <variable>biomass_n</variable>
+          <variable array="?" description="Date (dd/mm/yyyy)">variable</variable>
+          <variable array="?" description="Days after Sowing">variable</variable>
+          <variable array="?" description="Plant stage">variable</variable>
+          <variable array="?" description="Biomass weight">variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable array="?" description="Weight of roots">variable</variable>
+          <variable array="?" description="Weight of leaf">variable</variable>
+          <variable array="?" description="Weight of stems">variable</variable>
+          <variable array="?" description="Weight of heads">variable</variable>
+          <variable array="?" description="Weight of grain">variable</variable>
+          <variable array="?" description="N in total biomass">variable</variable>
+          <variable array="?" description="N in roots">variable</variable>
+          <variable array="?" description="N in leaves">variable</variable>
+          <variable array="?" description="N in stems">variable</variable>
+          <variable array="?" description="N in heads">variable</variable>
+          <variable array="?" description="N in grain">variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable array="?" description="number ">variable</variable>
+          <variable array="?" description="Leaf area index">variable</variable>
+          <variable>variable</variable>
+          <variable array="?" description="Extractable Soil Water (mm)">variable</variable>
+          <variable array="?" description="NO3 - layered (kg/ha)">variable</variable>
+          <variable array="?" description="Specific leaf nitrogen">variable</variable>
+          <variable array="?" description="Water stress">variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
         </variables>
       </outputfile>
       <folder name="Manager folder">
@@ -781,57 +751,19 @@
         <NearestTown description="Nearest town">Unknown</NearestTown>
         <Region>SE Queensland</Region>
         <NaturalVegetation description="Natural vegetation">Unknown</NaturalVegetation>
-        <Water>
-          <SoilCrop name="Sorghum">
-            <Thickness>
-              <double>100</double>
-              <double>100</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-            </Thickness>
-            <LL>
-              <double>0.226</double>
-              <double>0.226</double>
-              <double>0.258</double>
-              <double>0.270</double>
-              <double>0.268</double>
-              <double>0.304</double>
-              <double>0.335</double>
-              <double>0.330</double>
-              <double>0.320</double>
-              <double>0.330</double>
-            </LL>
-            <KL>
-              <double>0.070</double>
-              <double>0.070</double>
-              <double>0.070</double>
-              <double>0.070</double>
-              <double>0.060</double>
-              <double>0.060</double>
-              <double>0.060</double>
-              <double>0.050</double>
-              <double>0.050</double>
-              <double>0.040</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
+        <SoilWater>
+          <SummerCona>6.5</SummerCona>
+          <SummerU>1.5</SummerU>
+          <SummerDate>1-Nov</SummerDate>
+          <WinterCona>6.5</WinterCona>
+          <WinterU>1.5</WinterU>
+          <WinterDate>1-Apr</WinterDate>
+          <DiffusConst>40</DiffusConst>
+          <DiffusSlope>16</DiffusSlope>
+          <Salb>0.2</Salb>
+          <CN2Bare>85</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -844,6 +776,20 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
+          <SWCON>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+          </SWCON>
+        </SoilWater>
+        <Water>
           <BD>
             <double>1.340</double>
             <double>1.340</double>
@@ -904,20 +850,56 @@
             <double>0.370</double>
             <double>0.360</double>
           </SAT>
-        </Water>
-        <SoilWater>
-          <SummerCona>6.5</SummerCona>
-          <SummerU>1.5</SummerU>
-          <SummerDate>1-Nov</SummerDate>
-          <WinterCona>6.5</WinterCona>
-          <WinterU>1.5</WinterU>
-          <WinterDate>1-Apr</WinterDate>
-          <DiffusConst>40</DiffusConst>
-          <DiffusSlope>16</DiffusSlope>
-          <Salb>0.2</Salb>
-          <CN2Bare>85</CN2Bare>
-          <CNRed>20</CNRed>
-          <CNCov>0.8</CNCov>
+          <SoilCrop name="Sorghum">
+            <LL>
+              <double>0.226</double>
+              <double>0.226</double>
+              <double>0.258</double>
+              <double>0.270</double>
+              <double>0.268</double>
+              <double>0.304</double>
+              <double>0.335</double>
+              <double>0.330</double>
+              <double>0.320</double>
+              <double>0.330</double>
+            </LL>
+            <KL>
+              <double>0.070</double>
+              <double>0.070</double>
+              <double>0.070</double>
+              <double>0.070</double>
+              <double>0.060</double>
+              <double>0.060</double>
+              <double>0.060</double>
+              <double>0.050</double>
+              <double>0.050</double>
+              <double>0.040</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <Thickness>
+              <double>100</double>
+              <double>100</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+            </Thickness>
+          </SoilCrop>
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -930,37 +912,13 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
-          <SWCON>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-          </SWCON>
-        </SoilWater>
+        </Water>
         <SoilOrganicMatter>
           <RootCN>50</RootCN>
           <RootWt>1000</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
-          <Thickness>
-            <double>100</double>
-            <double>100</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-          </Thickness>
           <OC>
             <double>1.190</double>
             <double>0.590</double>
@@ -997,8 +955,6 @@
             <double>0.900</double>
             <double>0.900</double>
           </FInert>
-        </SoilOrganicMatter>
-        <Analysis>
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -1011,6 +967,8 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
+        </SoilOrganicMatter>
+        <Analysis>
           <PH>
             <double>6.300</double>
             <double>6.400</double>
@@ -1023,9 +981,6 @@
             <double>6.500</double>
             <double>6.500</double>
           </PH>
-        </Analysis>
-        <Sample name="Initial Water">
-          <Date type="date" description="Sample date:" />
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -1038,6 +993,9 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
+        </Analysis>
+        <Sample name="Initial Water">
+          <Date type="date" description="Sample date:" />
           <SW>
             <double>0.217</double>
             <double>0.357</double>
@@ -1050,9 +1008,6 @@
             <double>0.322</double>
             <double>0.347</double>
           </SW>
-        </Sample>
-        <Sample name="Initial Nitrogen">
-          <Date type="date" description="Sample date:" />
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -1065,6 +1020,9 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
+        </Sample>
+        <Sample name="Initial Nitrogen">
+          <Date type="date" description="Sample date:" />
           <NO3>
             <double>1.493</double>
             <double>1.633</double>
@@ -1089,6 +1047,18 @@
             <double>0.100</double>
             <double>0.100</double>
           </NH4>
+          <Thickness>
+            <double>100</double>
+            <double>100</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+          </Thickness>
         </Sample>
       </Soil>
       <sorghum />
@@ -1239,38 +1209,38 @@
         <title>Sorghum_LowWaterHighN</title>
         <events name="My Variables Events" />
         <variables name="My Variables">
-          <variable array="?" description="Date (dd/mm/yyyy)">today format dd/mm/yyyy as Date</variable>
-          <variable array="?" description="Days after Sowing">DaysAfterSowing as Das</variable>
-          <variable array="?" description="Plant stage">Stage</variable>
-          <variable array="?" description="Biomass weight">Biomass</variable>
-          <variable>GreenWt</variable>
-          <variable>Biomass units g/m^2 as BiomassWt</variable>
-          <variable array="?" description="Weight of roots">RootGreenWt</variable>
-          <variable array="?" description="Weight of leaf">LeafGreenWt</variable>
-          <variable array="?" description="Weight of stems">StemGreenWt</variable>
-          <variable array="?" description="Weight of heads">RachisGreenWt</variable>
-          <variable array="?" description="Weight of grain">GrainGreenWt</variable>
-          <variable array="?" description="N in total biomass">BiomassN</variable>
-          <variable array="?" description="N in roots">RootGreenN</variable>
-          <variable array="?" description="N in leaves">LeafGreenN</variable>
-          <variable array="?" description="N in stems">StemGreenN</variable>
-          <variable array="?" description="N in heads">RachisGreenN</variable>
-          <variable array="?" description="N in grain">GrainGreenN</variable>
-          <variable>GrainGreenNConc</variable>
-          <variable>GrainNo</variable>
-          <variable>GrainSize</variable>
-          <variable array="?" description="number ">LeafNo</variable>
-          <variable array="?" description="Leaf area index">LAI</variable>
-          <variable>SLAI</variable>
-          <variable array="?" description="Extractable Soil Water (mm)">ESW</variable>
-          <variable array="?" description="NO3 - layered (kg/ha)">no3() as NO3</variable>
-          <variable array="?" description="Specific leaf nitrogen">SLN</variable>
-          <variable array="?" description="Water stress">WaterSD</variable>
-          <variable>sw</variable>
-          <variable>HI</variable>
-          <variable>TPLA</variable>
-          <variable>SPLA</variable>
-          <variable>biomass_n</variable>
+          <variable array="?" description="Date (dd/mm/yyyy)">variable</variable>
+          <variable array="?" description="Days after Sowing">variable</variable>
+          <variable array="?" description="Plant stage">variable</variable>
+          <variable array="?" description="Biomass weight">variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable array="?" description="Weight of roots">variable</variable>
+          <variable array="?" description="Weight of leaf">variable</variable>
+          <variable array="?" description="Weight of stems">variable</variable>
+          <variable array="?" description="Weight of heads">variable</variable>
+          <variable array="?" description="Weight of grain">variable</variable>
+          <variable array="?" description="N in total biomass">variable</variable>
+          <variable array="?" description="N in roots">variable</variable>
+          <variable array="?" description="N in leaves">variable</variable>
+          <variable array="?" description="N in stems">variable</variable>
+          <variable array="?" description="N in heads">variable</variable>
+          <variable array="?" description="N in grain">variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable array="?" description="number ">variable</variable>
+          <variable array="?" description="Leaf area index">variable</variable>
+          <variable>variable</variable>
+          <variable array="?" description="Extractable Soil Water (mm)">variable</variable>
+          <variable array="?" description="NO3 - layered (kg/ha)">variable</variable>
+          <variable array="?" description="Specific leaf nitrogen">variable</variable>
+          <variable array="?" description="Water stress">variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
         </variables>
       </outputfile>
       <folder name="Manager folder">
@@ -1352,57 +1322,19 @@
         <NearestTown description="Nearest town">Unknown</NearestTown>
         <Region>SE Queensland</Region>
         <NaturalVegetation description="Natural vegetation">Unknown</NaturalVegetation>
-        <Water>
-          <SoilCrop name="Sorghum">
-            <Thickness>
-              <double>100</double>
-              <double>100</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-            </Thickness>
-            <LL>
-              <double>0.226</double>
-              <double>0.226</double>
-              <double>0.258</double>
-              <double>0.270</double>
-              <double>0.268</double>
-              <double>0.304</double>
-              <double>0.335</double>
-              <double>0.330</double>
-              <double>0.320</double>
-              <double>0.330</double>
-            </LL>
-            <KL>
-              <double>0.070</double>
-              <double>0.070</double>
-              <double>0.070</double>
-              <double>0.070</double>
-              <double>0.060</double>
-              <double>0.060</double>
-              <double>0.060</double>
-              <double>0.050</double>
-              <double>0.050</double>
-              <double>0.040</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
+        <SoilWater>
+          <SummerCona>6.5</SummerCona>
+          <SummerU>1.5</SummerU>
+          <SummerDate>1-Nov</SummerDate>
+          <WinterCona>6.5</WinterCona>
+          <WinterU>1.5</WinterU>
+          <WinterDate>1-Apr</WinterDate>
+          <DiffusConst>40</DiffusConst>
+          <DiffusSlope>16</DiffusSlope>
+          <Salb>0.2</Salb>
+          <CN2Bare>85</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -1415,6 +1347,20 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
+          <SWCON>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+          </SWCON>
+        </SoilWater>
+        <Water>
           <BD>
             <double>1.340</double>
             <double>1.340</double>
@@ -1475,20 +1421,56 @@
             <double>0.370</double>
             <double>0.360</double>
           </SAT>
-        </Water>
-        <SoilWater>
-          <SummerCona>6.5</SummerCona>
-          <SummerU>1.5</SummerU>
-          <SummerDate>1-Nov</SummerDate>
-          <WinterCona>6.5</WinterCona>
-          <WinterU>1.5</WinterU>
-          <WinterDate>1-Apr</WinterDate>
-          <DiffusConst>40</DiffusConst>
-          <DiffusSlope>16</DiffusSlope>
-          <Salb>0.2</Salb>
-          <CN2Bare>85</CN2Bare>
-          <CNRed>20</CNRed>
-          <CNCov>0.8</CNCov>
+          <SoilCrop name="Sorghum">
+            <LL>
+              <double>0.226</double>
+              <double>0.226</double>
+              <double>0.258</double>
+              <double>0.270</double>
+              <double>0.268</double>
+              <double>0.304</double>
+              <double>0.335</double>
+              <double>0.330</double>
+              <double>0.320</double>
+              <double>0.330</double>
+            </LL>
+            <KL>
+              <double>0.070</double>
+              <double>0.070</double>
+              <double>0.070</double>
+              <double>0.070</double>
+              <double>0.060</double>
+              <double>0.060</double>
+              <double>0.060</double>
+              <double>0.050</double>
+              <double>0.050</double>
+              <double>0.040</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <Thickness>
+              <double>100</double>
+              <double>100</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+            </Thickness>
+          </SoilCrop>
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -1501,37 +1483,13 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
-          <SWCON>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-          </SWCON>
-        </SoilWater>
+        </Water>
         <SoilOrganicMatter>
           <RootCN>50</RootCN>
           <RootWt>1000</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
-          <Thickness>
-            <double>100</double>
-            <double>100</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-          </Thickness>
           <OC>
             <double>1.190</double>
             <double>0.590</double>
@@ -1568,8 +1526,6 @@
             <double>0.900</double>
             <double>0.900</double>
           </FInert>
-        </SoilOrganicMatter>
-        <Analysis>
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -1582,6 +1538,8 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
+        </SoilOrganicMatter>
+        <Analysis>
           <PH>
             <double>6.300</double>
             <double>6.400</double>
@@ -1594,9 +1552,6 @@
             <double>6.500</double>
             <double>6.500</double>
           </PH>
-        </Analysis>
-        <Sample name="Initial nitrogen">
-          <Date type="date" description="Sample date:" />
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -1609,6 +1564,9 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
+        </Analysis>
+        <Sample name="Initial nitrogen">
+          <Date type="date" description="Sample date:" />
           <NO3>
             <double>25.798</double>
             <double>6.921</double>
@@ -1633,9 +1591,6 @@
             <double>0.100</double>
             <double>0.100</double>
           </NH4>
-        </Sample>
-        <Sample name="Initial water">
-          <Date type="date" description="Sample date:" />
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -1648,6 +1603,9 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
+        </Sample>
+        <Sample name="Initial water">
+          <Date type="date" description="Sample date:" />
           <SW>
             <double>0.307</double>
             <double>0.326</double>
@@ -1660,6 +1618,18 @@
             <double>0.352</double>
             <double>0.347</double>
           </SW>
+          <Thickness>
+            <double>100</double>
+            <double>100</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+          </Thickness>
         </Sample>
       </Soil>
       <sorghum />
@@ -1810,38 +1780,38 @@
         <title>Sorghum_LowWaterLowN</title>
         <events name="My Variables Events" />
         <variables name="My Variables">
-          <variable array="?" description="Date (dd/mm/yyyy)">today format dd/mm/yyyy as Date</variable>
-          <variable array="?" description="Days after Sowing">DaysAfterSowing as Das</variable>
-          <variable array="?" description="Plant stage">Stage</variable>
-          <variable array="?" description="Biomass weight">Biomass</variable>
-          <variable>GreenWt</variable>
-          <variable>Biomass units g/m^2 as BiomassWt</variable>
-          <variable array="?" description="Weight of roots">RootGreenWt</variable>
-          <variable array="?" description="Weight of leaf">LeafGreenWt</variable>
-          <variable array="?" description="Weight of stems">StemGreenWt</variable>
-          <variable array="?" description="Weight of heads">RachisGreenWt</variable>
-          <variable array="?" description="Weight of grain">GrainGreenWt</variable>
-          <variable array="?" description="N in total biomass">BiomassN</variable>
-          <variable array="?" description="N in roots">RootGreenN</variable>
-          <variable array="?" description="N in leaves">LeafGreenN</variable>
-          <variable array="?" description="N in stems">StemGreenN</variable>
-          <variable array="?" description="N in heads">RachisGreenN</variable>
-          <variable array="?" description="N in grain">GrainGreenN</variable>
-          <variable>GrainGreenNConc</variable>
-          <variable>GrainNo</variable>
-          <variable>GrainSize</variable>
-          <variable array="?" description="number ">LeafNo</variable>
-          <variable array="?" description="Leaf area index">LAI</variable>
-          <variable>SLAI</variable>
-          <variable array="?" description="Extractable Soil Water (mm)">ESW</variable>
-          <variable array="?" description="NO3 - layered (kg/ha)">no3() as NO3</variable>
-          <variable array="?" description="Specific leaf nitrogen">SLN</variable>
-          <variable array="?" description="Water stress">WaterSD</variable>
-          <variable>sw</variable>
-          <variable>HI</variable>
-          <variable>TPLA</variable>
-          <variable>SPLA</variable>
-          <variable>biomass_n</variable>
+          <variable array="?" description="Date (dd/mm/yyyy)">variable</variable>
+          <variable array="?" description="Days after Sowing">variable</variable>
+          <variable array="?" description="Plant stage">variable</variable>
+          <variable array="?" description="Biomass weight">variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable array="?" description="Weight of roots">variable</variable>
+          <variable array="?" description="Weight of leaf">variable</variable>
+          <variable array="?" description="Weight of stems">variable</variable>
+          <variable array="?" description="Weight of heads">variable</variable>
+          <variable array="?" description="Weight of grain">variable</variable>
+          <variable array="?" description="N in total biomass">variable</variable>
+          <variable array="?" description="N in roots">variable</variable>
+          <variable array="?" description="N in leaves">variable</variable>
+          <variable array="?" description="N in stems">variable</variable>
+          <variable array="?" description="N in heads">variable</variable>
+          <variable array="?" description="N in grain">variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable array="?" description="number ">variable</variable>
+          <variable array="?" description="Leaf area index">variable</variable>
+          <variable>variable</variable>
+          <variable array="?" description="Extractable Soil Water (mm)">variable</variable>
+          <variable array="?" description="NO3 - layered (kg/ha)">variable</variable>
+          <variable array="?" description="Specific leaf nitrogen">variable</variable>
+          <variable array="?" description="Water stress">variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
+          <variable>variable</variable>
         </variables>
       </outputfile>
       <folder name="Manager folder">
@@ -1923,57 +1893,19 @@
         <NearestTown description="Nearest town">Unknown</NearestTown>
         <Region>SE Queensland</Region>
         <NaturalVegetation description="Natural vegetation">Unknown</NaturalVegetation>
-        <Water>
-          <SoilCrop name="Sorghum">
-            <Thickness>
-              <double>100</double>
-              <double>100</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-            </Thickness>
-            <LL>
-              <double>0.226</double>
-              <double>0.226</double>
-              <double>0.258</double>
-              <double>0.270</double>
-              <double>0.268</double>
-              <double>0.304</double>
-              <double>0.335</double>
-              <double>0.330</double>
-              <double>0.320</double>
-              <double>0.330</double>
-            </LL>
-            <KL>
-              <double>0.070</double>
-              <double>0.070</double>
-              <double>0.070</double>
-              <double>0.070</double>
-              <double>0.060</double>
-              <double>0.060</double>
-              <double>0.060</double>
-              <double>0.050</double>
-              <double>0.050</double>
-              <double>0.040</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
+        <SoilWater>
+          <SummerCona>6.5</SummerCona>
+          <SummerU>1.5</SummerU>
+          <SummerDate>1-Nov</SummerDate>
+          <WinterCona>6.5</WinterCona>
+          <WinterU>1.5</WinterU>
+          <WinterDate>1-Apr</WinterDate>
+          <DiffusConst>40</DiffusConst>
+          <DiffusSlope>16</DiffusSlope>
+          <Salb>0.2</Salb>
+          <CN2Bare>85</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -1986,6 +1918,20 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
+          <SWCON>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+            <double>0.300</double>
+          </SWCON>
+        </SoilWater>
+        <Water>
           <BD>
             <double>1.340</double>
             <double>1.340</double>
@@ -2046,20 +1992,56 @@
             <double>0.370</double>
             <double>0.360</double>
           </SAT>
-        </Water>
-        <SoilWater>
-          <SummerCona>6.5</SummerCona>
-          <SummerU>1.5</SummerU>
-          <SummerDate>1-Nov</SummerDate>
-          <WinterCona>6.5</WinterCona>
-          <WinterU>1.5</WinterU>
-          <WinterDate>1-Apr</WinterDate>
-          <DiffusConst>40</DiffusConst>
-          <DiffusSlope>16</DiffusSlope>
-          <Salb>0.2</Salb>
-          <CN2Bare>85</CN2Bare>
-          <CNRed>20</CNRed>
-          <CNCov>0.8</CNCov>
+          <SoilCrop name="Sorghum">
+            <LL>
+              <double>0.226</double>
+              <double>0.226</double>
+              <double>0.258</double>
+              <double>0.270</double>
+              <double>0.268</double>
+              <double>0.304</double>
+              <double>0.335</double>
+              <double>0.330</double>
+              <double>0.320</double>
+              <double>0.330</double>
+            </LL>
+            <KL>
+              <double>0.070</double>
+              <double>0.070</double>
+              <double>0.070</double>
+              <double>0.070</double>
+              <double>0.060</double>
+              <double>0.060</double>
+              <double>0.060</double>
+              <double>0.050</double>
+              <double>0.050</double>
+              <double>0.040</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <Thickness>
+              <double>100</double>
+              <double>100</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+            </Thickness>
+          </SoilCrop>
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -2072,37 +2054,13 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
-          <SWCON>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-            <double>0.300</double>
-          </SWCON>
-        </SoilWater>
+        </Water>
         <SoilOrganicMatter>
           <RootCN>50</RootCN>
           <RootWt>1000</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
-          <Thickness>
-            <double>100</double>
-            <double>100</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-          </Thickness>
           <OC>
             <double>1.190</double>
             <double>0.590</double>
@@ -2139,8 +2097,6 @@
             <double>0.900</double>
             <double>0.900</double>
           </FInert>
-        </SoilOrganicMatter>
-        <Analysis>
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -2153,6 +2109,8 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
+        </SoilOrganicMatter>
+        <Analysis>
           <PH>
             <double>6.300</double>
             <double>6.400</double>
@@ -2165,9 +2123,6 @@
             <double>6.500</double>
             <double>6.500</double>
           </PH>
-        </Analysis>
-        <Sample name="Initial nitrogen">
-          <Date type="date" description="Sample date:" />
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -2180,6 +2135,9 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
+        </Analysis>
+        <Sample name="Initial nitrogen">
+          <Date type="date" description="Sample date:" />
           <NO3>
             <double>25.798</double>
             <double>6.921</double>
@@ -2204,9 +2162,6 @@
             <double>0.100</double>
             <double>0.100</double>
           </NH4>
-        </Sample>
-        <Sample name="Initial water">
-          <Date type="date" description="Sample date:" />
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -2219,6 +2174,9 @@
             <double>200</double>
             <double>200</double>
           </Thickness>
+        </Sample>
+        <Sample name="Initial water">
+          <Date type="date" description="Sample date:" />
           <SW>
             <double>0.294</double>
             <double>0.381</double>
@@ -2231,6 +2189,18 @@
             <double>0.337</double>
             <double>0.344</double>
           </SW>
+          <Thickness>
+            <double>100</double>
+            <double>100</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+          </Thickness>
         </Sample>
       </Soil>
       <sorghum />
