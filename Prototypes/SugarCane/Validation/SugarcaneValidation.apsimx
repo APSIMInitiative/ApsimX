@@ -22827,6 +22827,10 @@ All operation irrigations are Overhead, high pressure gun
             <Action>[Irrigation].Apply(amount:55.0);</Action>
           </Operation>
           <Operation>
+            <Date>1993-07-05T00:00:00</Date>
+            <Action>[Sugarcane].HarvestCrop();</Action>
+          </Operation>
+          <Operation>
             <Date>1994-02-04T00:00:00</Date>
             <Action>[Irrigation].Apply(amount:46.9);</Action>
           </Operation>
@@ -22848,11 +22852,7 @@ All operation irrigations are Overhead, high pressure gun
           </Operation>
           <Operation>
             <Date>1994-05-11T00:00:00</Date>
-            <Action>[Irrigation].Apply(amount:36.6);</Action>
-          </Operation>
-          <Operation>
-            <Date>1993-07-05T00:00:00</Date>
-            <Action>[Sugarcane].HarvestCrop(); </Action>
+            <Action>[Irrigation].Apply(amount:36.6); </Action>
           </Operation>
           <Operation>
             <Date>1994-05-30T00:00:00</Date>
@@ -26030,6 +26030,10 @@ All operation irrigations are Overhead, high pressure gun
             <Action>[Irrigation].Apply(amount:55.0);</Action>
           </Operation>
           <Operation>
+            <Date>1993-07-05T00:00:00</Date>
+            <Action>[Sugarcane].HarvestCrop();</Action>
+          </Operation>
+          <Operation>
             <Date>1994-02-04T00:00:00</Date>
             <Action>[Irrigation].Apply(amount:46.9);</Action>
           </Operation>
@@ -26051,11 +26055,7 @@ All operation irrigations are Overhead, high pressure gun
           </Operation>
           <Operation>
             <Date>1994-05-11T00:00:00</Date>
-            <Action>[Irrigation].Apply(amount:36.6);</Action>
-          </Operation>
-          <Operation>
-            <Date>1993-07-05T00:00:00</Date>
-            <Action>[Sugarcane].HarvestCrop(); </Action>
+            <Action>[Irrigation].Apply(amount:36.6); </Action>
           </Operation>
           <Operation>
             <Date>1994-05-30T00:00:00</Date>
@@ -29233,6 +29233,10 @@ All operation irrigations are Overhead, high pressure gun
             <Action>[Irrigation].Apply(amount:55.0);</Action>
           </Operation>
           <Operation>
+            <Date>1993-07-05T00:00:00</Date>
+            <Action>[Sugarcane].HarvestCrop();</Action>
+          </Operation>
+          <Operation>
             <Date>1993-10-12T00:00:00</Date>
             <Action>[Fertiliser].Apply(Amount:170, Type:Fertiliser.Types.UreaN, Depth:50);</Action>
           </Operation>
@@ -29258,11 +29262,7 @@ All operation irrigations are Overhead, high pressure gun
           </Operation>
           <Operation>
             <Date>1994-05-11T00:00:00</Date>
-            <Action>[Irrigation].Apply(amount:36.6);</Action>
-          </Operation>
-          <Operation>
-            <Date>1993-07-05T00:00:00</Date>
-            <Action>[Sugarcane].HarvestCrop(); </Action>
+            <Action>[Irrigation].Apply(amount:36.6); </Action>
           </Operation>
           <Operation>
             <Date>1994-05-30T00:00:00</Date>
@@ -66472,9 +66472,26 @@ All operation irrigations are furrow with 3.46ppm NO3 (10 kg/ha) in irrig water 
 
 Unfortunately solute in irrigations is not possible in ApsimX yet.
 
-1993-09-11 [Sugarcane].SowRatoon(PlantingDensity:10, Depth:150, CultivarName:"Q117_fum", StartingRatoonNo:1); //! plant crop harvested 13/08/93, then stubble shaved 11/09/93
+
+-> nb. the following are included for their comments,
 
 1993-08-13 [Sugarcane].HarvestCrop() // sugar harvest ! plant crop harvested 13/08/93, then stubble shaved 11/09/93
+
+1993-09-11 [Sugarcane].SowRatoon(PlantingDensity:10, Depth:150, CultivarName:"Q117_fum", StartingRatoonNo:1); //! plant crop harvested 13/08/93, then stubble shaved 11/09/93
+
+
+-> nb. Need to make sure the crop is harvested before it is incorporated. 
+
+1993-08-13 [Sugarcane].HarvestCrop();
+
+1993-08-13 [SurfaceOrganicMatter].Incorporate(fraction: 0.9, depth:0); 
+
+
+-> nb. I had to add the following on the last day of the simulation because Apsim Next Generation needs to have an EndCrop done at the end of each simulation.
+
+1994-09-07 [Sugarcane].HarvestCrop();
+
+1994-09-07 [Sugarcane].EndCrop();
 
 
 
@@ -66617,11 +66634,19 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           </Operation>
           <Operation>
             <Date>1993-08-13T00:00:00</Date>
-            <Action>[SurfaceOrganicMatter].Incorporate(fraction: 0.9, depth:0); </Action>
+            <Action>[Sugarcane].HarvestCrop();</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-08-13T00:00:00</Date>
+            <Action>[SurfaceOrganicMatter].Incorporate(fraction: 0.9, depth:0);  </Action>
           </Operation>
           <Operation>
             <Date>1993-08-23T00:00:00</Date>
             <Action>[Irrigation].Apply(amount:228);</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-09-09T00:00:00</Date>
+            <Action>[Sugarcane].EndCrop();</Action>
           </Operation>
           <Operation>
             <Date>1993-09-11T00:00:00</Date>
@@ -66708,11 +66733,11 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
             <Action>[Irrigation].Apply(amount:228);</Action>
           </Operation>
           <Operation>
-            <Date>1993-08-13T00:00:00</Date>
-            <Action>[Sugarcane].HarvestCrop(); </Action>
+            <Date>1994-09-07T00:00:00</Date>
+            <Action>[Sugarcane].HarvestCrop();</Action>
           </Operation>
           <Operation>
-            <Date>1993-09-09T00:00:00</Date>
+            <Date>1994-09-07T00:00:00</Date>
             <Action>[Sugarcane].EndCrop();</Action>
           </Operation>
         </Operations>
@@ -73205,6 +73230,10 @@ All operation irrigations are subsurface trickle irrigation except for the follo
             <Action>[Irrigation].Apply(amount:36, depth:300);</Action>
           </Operation>
           <Operation>
+            <Date>1993-08-18T00:00:00</Date>
+            <Action>[Sugarcane].HarvestCrop();</Action>
+          </Operation>
+          <Operation>
             <Date>1993-10-12T00:00:00</Date>
             <Action>[Irrigation].Apply(amount:30);  </Action>
           </Operation>
@@ -73295,10 +73324,6 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <Operation>
             <Date>1994-08-18T00:00:00</Date>
             <Action>[Irrigation].Apply(amount:40.5, depth:300);</Action>
-          </Operation>
-          <Operation>
-            <Date>1993-08-18T00:00:00</Date>
-            <Action>[Sugarcane].HarvestCrop();</Action>
           </Operation>
           <Operation>
             <Date>1994-08-23T00:00:00</Date>
@@ -76520,6 +76545,10 @@ All operation irrigations are subsurface trickle irrigation except for the follo
             <Action>[Irrigation].Apply(amount:36, depth:300);</Action>
           </Operation>
           <Operation>
+            <Date>1993-08-18T00:00:00</Date>
+            <Action>[Sugarcane].HarvestCrop();</Action>
+          </Operation>
+          <Operation>
             <Date>1993-09-21T00:00:00</Date>
             <Action>[Fertiliser].Apply(Amount:55, Type:Fertiliser.Types.UreaN, Depth:100);</Action>
           </Operation>
@@ -76614,10 +76643,6 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <Operation>
             <Date>1994-08-18T00:00:00</Date>
             <Action>[Irrigation].Apply(amount:40.5, depth:300);</Action>
-          </Operation>
-          <Operation>
-            <Date>1993-08-18T00:00:00</Date>
-            <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
             <Date>1994-08-23T00:00:00</Date>
@@ -79865,6 +79890,10 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
             <Action>[Irrigation].Apply(amount:36, depth:300);</Action>
           </Operation>
           <Operation>
+            <Date>1993-08-18T00:00:00</Date>
+            <Action>[Sugarcane].HarvestCrop(); </Action>
+          </Operation>
+          <Operation>
             <Date>1993-09-20T00:00:00</Date>
             <Action>[Fertiliser].Apply(Amount:55, Type:Fertiliser.Types.UreaN, Depth:250);</Action>
           </Operation>
@@ -79999,10 +80028,6 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
           <Operation>
             <Date>1994-08-18T00:00:00</Date>
             <Action>[Irrigation].Apply(amount:40.5, depth:300);</Action>
-          </Operation>
-          <Operation>
-            <Date>1993-08-18T00:00:00</Date>
-            <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
             <Date>1994-08-23T00:00:00</Date>
