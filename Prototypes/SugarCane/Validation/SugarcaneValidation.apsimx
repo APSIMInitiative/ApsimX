@@ -10092,13 +10092,13 @@ They are missing the word "tillage". This means these tillage events won't occur
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -13281,13 +13281,13 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -16466,13 +16466,13 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -19667,13 +19667,13 @@ However Automatic Irrigations are not possible in ApsimX yet.
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -22869,13 +22869,13 @@ All operation irrigations are Overhead, high pressure gun
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -26072,13 +26072,13 @@ All operation irrigations are Overhead, high pressure gun
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -29279,13 +29279,13 @@ All operation irrigations are Overhead, high pressure gun
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -32522,13 +32522,13 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -35730,13 +35730,13 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -38845,13 +38845,13 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -42056,13 +42056,13 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -44980,13 +44980,13 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -47888,13 +47888,13 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -50804,13 +50804,13 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -53672,13 +53672,13 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -56704,13 +56704,13 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -59905,13 +59905,13 @@ However Automatic Irrigations are not possible in ApsimX yet.
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -63396,13 +63396,13 @@ Likewise fertiliser applications are subsurface fertigations except the followin
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -66722,13 +66722,13 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -70001,13 +70001,13 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -73315,13 +73315,13 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -76634,13 +76634,13 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -80019,13 +80019,13 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -83408,13 +83408,13 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -86314,13 +86314,13 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -89288,13 +89288,13 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -92242,13 +92242,13 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
