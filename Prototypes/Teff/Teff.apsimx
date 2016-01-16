@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -51,11 +51,17 @@ The phenology model used in the APSIM Teff model follows the approach used in ea
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
                 <XFieldName>[XYPairs].X</XFieldName>
                 <YFieldName>[XYPairs].Y</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
@@ -383,11 +389,17 @@ A function is used to provide flowering date as days after sowing(DAS).
                     <XAxis>Bottom</XAxis>
                     <YAxis>Left</YAxis>
                     <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                     <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
                     <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
                     <XFieldName>[XYPairs].X</XFieldName>
                     <YFieldName>[XYPairs].Y</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
                     <CumulativeX>false</CumulativeX>
                   </Series>
@@ -475,11 +487,17 @@ A function is used to provide flowering date as days after sowing(DAS).
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -511,11 +529,17 @@ A function is used to provide flowering date as days after sowing(DAS).
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -566,11 +590,17 @@ A function is used to provide flowering date as days after sowing(DAS).
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1368,11 +1398,17 @@ Potential leaf area is calculated from leaf number using the approach of Keating
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1421,11 +1457,17 @@ Potential leaf area is calculated from leaf number using the approach of Keating
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1472,11 +1514,17 @@ Potential leaf area is calculated from leaf number using the approach of Keating
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1606,13 +1654,12 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
+        <Albedo>0.18</Albedo>
+        <Gsmax>0.012</Gsmax>
+        <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
-        <GsMax>0.03</GsMax>
-        <R50>200</R50>
-        <Emissivity>0.96</Emissivity>
-        <Albido>0.26</Albido>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -1809,142 +1856,142 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
-        <CompositeBiomass>
-          <Name>AboveGround</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
+      <CompositeBiomass>
+        <Name>AboveGround</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
 The AboveGround composite biomass object includes all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 <br/>
 ]]></MemoText>
-          </Memo>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Live</string>
-            <string>[Stem].Dead</string>
-            <string>[Grain].Live</string>
-            <string>[Grain].Dead</string>
-            <string>[Panicle].Live</string>
-            <string>[Panicle].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>BelowGround</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
+        </Memo>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Live</string>
+          <string>[Stem].Dead</string>
+          <string>[Grain].Live</string>
+          <string>[Grain].Dead</string>
+          <string>[Panicle].Live</string>
+          <string>[Panicle].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>BelowGround</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
 The BelowGround composite biomass object includes all root biomass pools to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 <br/>
 ]]></MemoText>
-          </Memo>
-          <Propertys>
-            <string>[Root].Live</string>
-            <string>[Root].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Total</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
+        </Memo>
+        <Propertys>
+          <string>[Root].Live</string>
+          <string>[Root].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>Total</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
 The Total composite biomass object includes all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 <br/>
 ]]></MemoText>
-          </Memo>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Live</string>
-            <string>[Stem].Dead</string>
-            <string>[Grain].Live</string>
-            <string>[Grain].Dead</string>
-            <string>[Panicle].Live</string>
-            <string>[Panicle].Dead</string>
-            <string>[Root].Live</string>
-            <string>[Root].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>TotalLive</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
+        </Memo>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Live</string>
+          <string>[Stem].Dead</string>
+          <string>[Grain].Live</string>
+          <string>[Grain].Dead</string>
+          <string>[Panicle].Live</string>
+          <string>[Panicle].Dead</string>
+          <string>[Root].Live</string>
+          <string>[Root].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>TotalLive</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
 The TotalLive composite biomass object includes the Live pools of all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 <br/>
 ]]></MemoText>
-          </Memo>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Stem].Live</string>
-            <string>[Grain].Live</string>
-            <string>[Panicle].Live</string>
-            <string>[Root].Live</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>TotalDead</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
+        </Memo>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Stem].Live</string>
+          <string>[Grain].Live</string>
+          <string>[Panicle].Live</string>
+          <string>[Root].Live</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>TotalDead</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
 The TotalDead composite biomass object includes the Dead pools of all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 <br/>
 ]]></MemoText>
-          </Memo>
-          <Propertys>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Dead</string>
-            <string>[Grain].Dead</string>
-            <string>[Panicle].Dead</string>
-            <string>[Root].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>EarLive</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
+        </Memo>
+        <Propertys>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Dead</string>
+          <string>[Grain].Dead</string>
+          <string>[Panicle].Dead</string>
+          <string>[Root].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>EarLive</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
 The EarLive composite biomass object includes the Live pools of all organs within the Ear to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 <br/>
 ]]></MemoText>
-          </Memo>
-          <Propertys>
-            <string>[Grain].Live</string>
-            <string>[Panicle].Live</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>AboveGroundLive</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
+        </Memo>
+        <Propertys>
+          <string>[Grain].Live</string>
+          <string>[Panicle].Live</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>AboveGroundLive</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
 The AboveGroundLive composite biomass object includes the Live pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 <br/>
 ]]></MemoText>
-          </Memo>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Stem].Live</string>
-            <string>[Grain].Live</string>
-            <string>[Panicle].Live</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>AboveGroundDead</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
+        </Memo>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Stem].Live</string>
+          <string>[Grain].Live</string>
+          <string>[Panicle].Live</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>AboveGroundDead</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
 The AboveGroundDead composite biomass object includes the Dead pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 <br/>
 ]]></MemoText>
-          </Memo>
-          <Propertys>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Dead</string>
-            <string>[Grain].Dead</string>
-            <string>[Panicle].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
+        </Memo>
+        <Propertys>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Dead</string>
+          <string>[Grain].Dead</string>
+          <string>[Panicle].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
       <Cultivar>
         <Name>Katumani</Name>
         <Memo>
@@ -1973,8 +2020,8 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
 ]]></MemoText>
         </Memo>
         <Command>[Phenology].Juvenile.Target.Value = 65</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 9, 13.5</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 150</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 9,11, 13.5</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 180</Command>
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 100</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
@@ -1991,8 +2038,8 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
 ]]></MemoText>
         </Memo>
         <Command>[Phenology].Juvenile.Target.Value = 120</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 50</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 11, 13.5</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 150</Command>
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 100</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
@@ -2010,10 +2057,10 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         </Memo>
         <Command>[Phenology].Juvenile.Target.Value = 40</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 9, 16.5</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 100</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 110</Command>
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 100</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 50</Command>
+        <Command>[Phenology].GrainFilling.Target.Value = 200</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 14</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 405</Command>
       </Cultivar>
@@ -2027,8 +2074,8 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
 ]]></MemoText>
         </Memo>
         <Command>[Phenology].Juvenile.Target.Value = 120</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 50</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 9, 16.5</Command>
+        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 110</Command>
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 100</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
@@ -2044,7 +2091,9 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
       <Name>WheatPMFPrototype</Name>
       <Cultivar>
         <Name>JerseyBenny</Name>
-        <Alias>JerseyBenny</Alias>
+        <Alias>
+          <Name>JerseyBenny</Name>
+        </Alias>
       </Cultivar>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
@@ -3041,11 +3090,17 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
                     <XAxis>Bottom</XAxis>
                     <YAxis>Left</YAxis>
                     <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                     <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
                     <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
                     <XFieldName>[XYPairs].X</XFieldName>
                     <YFieldName>[XYPairs].Y</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
                     <CumulativeX>false</CumulativeX>
                   </Series>
@@ -3244,13 +3299,12 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
+        <Albedo>0</Albedo>
+        <Gsmax>0</Gsmax>
+        <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
-        <GsMax>0.03</GsMax>
-        <R50>200</R50>
-        <Emissivity>0.96</Emissivity>
-        <Albido>0.26</Albido>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -3394,109 +3448,108 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
-        <CompositeBiomass>
-          <Name>AboveGround</Name>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Live</string>
-            <string>[Stem].Dead</string>
-            <string>[Spike].Live</string>
-            <string>[Spike].Dead</string>
-            <string>[Grain].Live</string>
-            <string>[Grain].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>BelowGround</Name>
-          <Propertys>
-            <string>[Root].Live</string>
-            <string>[Root].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Total</Name>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Live</string>
-            <string>[Stem].Dead</string>
-            <string>[Root].Live</string>
-            <string>[Root].Dead</string>
-            <string>[Spike].Live</string>
-            <string>[Spike].Dead</string>
-            <string>[Grain].Live</string>
-            <string>[Grain].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>TotalLive</Name>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Stem].Live</string>
-            <string>[Root].Live</string>
-            <string>[Spike].Live</string>
-            <string>[Grain].Live</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>TotalDead</Name>
-          <Propertys>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Dead</string>
-            <string>[Root].Dead</string>
-            <string>[Spike].Dead</string>
-            <string>[Grain].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-
+      <CompositeBiomass>
+        <Name>AboveGround</Name>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Live</string>
+          <string>[Stem].Dead</string>
+          <string>[Spike].Live</string>
+          <string>[Spike].Dead</string>
+          <string>[Grain].Live</string>
+          <string>[Grain].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>BelowGround</Name>
+        <Propertys>
+          <string>[Root].Live</string>
+          <string>[Root].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>Total</Name>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Live</string>
+          <string>[Stem].Dead</string>
+          <string>[Root].Live</string>
+          <string>[Root].Dead</string>
+          <string>[Spike].Live</string>
+          <string>[Spike].Dead</string>
+          <string>[Grain].Live</string>
+          <string>[Grain].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>TotalLive</Name>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Stem].Live</string>
+          <string>[Root].Live</string>
+          <string>[Spike].Live</string>
+          <string>[Grain].Live</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>TotalDead</Name>
+        <Propertys>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Dead</string>
+          <string>[Root].Dead</string>
+          <string>[Spike].Dead</string>
+          <string>[Grain].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
       <CropType>Wheat</CropType>
     </Plant>
   </Folder>
   <DataStore>
     <Name>DataStore</Name>
-    <Model xsi:type="ExcelInput">
+    <ExcelInput>
       <Name>Observed</Name>
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>ObservedHarvestData</string>
       </SheetNames>
-    </Model>
-    <Model xsi:type="ExcelInput">
+    </ExcelInput>
+    <ExcelInput>
       <Name>ObservedSW</Name>
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>Mekelle2008SW</string>
       </SheetNames>
-    </Model>
-    <Model xsi:type="ExcelInput">
+    </ExcelInput>
+    <ExcelInput>
       <Name>ObservedMekelle08Biomass</Name>
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>Mekelle2008Crop</string>
       </SheetNames>
-    </Model>
-    <Model xsi:type="ExcelInput">
+    </ExcelInput>
+    <ExcelInput>
       <Name>ObservedVanDelden</Name>
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>VanDelden</string>
       </SheetNames>
-    </Model>
-    <Model xsi:type="ExcelInput">
+    </ExcelInput>
+    <ExcelInput>
       <Name>ObservedLysimeter2</Name>
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>ObservedLysimeter2</string>
       </SheetNames>
-    </Model>
-    <Model xsi:type="ExcelInput">
+    </ExcelInput>
+    <ExcelInput>
       <Name>ObservedLysimeter4</Name>
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>ObservedLysimeter4</string>
       </SheetNames>
-    </Model>
+    </ExcelInput>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
       <PredictedTableName>HarvestReport</PredictedTableName>
@@ -3504,6 +3557,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
       <FieldNameUsedForMatch>Stage</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Folder>
     <Name>Ethiopia</Name>
@@ -3605,6 +3659,11 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -3616,11 +3675,6 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -3679,6 +3733,8 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -3696,7 +3752,6 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -4084,6 +4139,8 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.CurrentStageName as Stage</string>
@@ -4098,7 +4155,6 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -4243,6 +4299,11 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -4254,11 +4315,6 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -4317,6 +4373,8 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -4334,7 +4392,6 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -4722,6 +4779,8 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.CurrentStageName as Stage</string>
@@ -4736,7 +4795,6 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -4965,6 +5023,11 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -4976,11 +5039,6 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -5042,6 +5100,8 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -5060,7 +5120,6 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -5388,6 +5447,8 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.CurrentStageName as Stage</string>
@@ -5402,7 +5463,6 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -5468,12 +5528,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Teff.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -5648,6 +5714,11 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -5659,11 +5730,6 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -5729,6 +5795,8 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -5747,7 +5815,6 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -6135,6 +6202,8 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.CurrentStageName as Stage</string>
@@ -6149,7 +6218,6 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -6215,12 +6283,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Teff.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -6389,6 +6463,11 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -6400,11 +6479,6 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -6451,7 +6525,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <Name>Sowing</Name>
             <Operation>
               <Date>2008-08-02T00:00:00</Date>
-              <Action> [Teff].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
+              <Action> [Teff].Sow(population:100., cultivar:"Ayana", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
           <Operations>
@@ -6466,6 +6540,8 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -6500,7 +6576,6 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -6540,11 +6615,11 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
                   <double>0.22</double>
                 </LL>
                 <KL>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.05</double>
+                  <double>0.1</double>
+                  <double>0.08</double>
+                  <double>0.04</double>
+                  <double>0.02</double>
+                  <double>0.01</double>
                 </KL>
                 <XF>
                   <double>1</double>
@@ -6847,6 +6922,8 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.CurrentStageName as Stage</string>
@@ -6861,7 +6938,6 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -6927,12 +7003,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Teff.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -6964,12 +7046,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>AboveGroundBiomass</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -6979,12 +7067,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Mekelle2008Crop</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>Biomass</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -7016,12 +7110,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>SW30cm</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -7031,12 +7131,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Mekelle2008SW</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>SW30cm</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -7068,12 +7174,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Teff.Leaf.CoverGreen</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -7083,12 +7195,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Mekelle2008Crop</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>CoverGreen</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -7120,12 +7238,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>ProfileNO3</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -7157,12 +7281,61 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>GrainWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>ET</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Teff.Leaf.Fw</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -7298,6 +7471,11 @@ Field Crops Research 116 (2010) 196204
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -7309,11 +7487,6 @@ Field Crops Research 116 (2010) 196204
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -7715,6 +7888,8 @@ Field Crops Research 116 (2010) 196204
           </Soil>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -7732,10 +7907,11 @@ Field Crops Research 116 (2010) 196204
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.CurrentStageName as Stage</string>
@@ -7750,7 +7926,6 @@ Field Crops Research 116 (2010) 196204
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TefHarvesting</Name>
@@ -7832,6 +8007,11 @@ namespace Models
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -7843,11 +8023,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -7977,6 +8152,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -7985,7 +8162,7 @@ namespace Models
               <string>[Soil].SoilWater.Drainage</string>
               <string>[Soil].SoilWater.Runoff</string>
               <string>[Soil].SoilWater.pond</string>
-              <string>sum([Soil].SoilWater.SWmm[1:3]) as SW30cm</string>
+              <string>sum([Soil].SoilWater.SWmm[1:2]) as SW30cm</string>
               <string>[Soil].NO3N</string>
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
@@ -7997,7 +8174,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -8035,8 +8211,8 @@ namespace Models
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.02</double>
                 </KL>
                 <XF>
                   <double>1</double>
@@ -8325,6 +8501,8 @@ namespace Models
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.CurrentStageName as Stage</string>
@@ -8339,7 +8517,6 @@ namespace Models
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>10</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -8402,12 +8579,18 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>ObservedLysimeter2</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>Swbefore</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -8417,12 +8600,18 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>SW30cm</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -8454,12 +8643,18 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>ObservedLysimeter2</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>Etc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -8469,12 +8664,18 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ET</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -8484,12 +8685,18 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.Es</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -8537,6 +8744,11 @@ namespace Models
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -8548,11 +8760,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -8670,6 +8877,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -8678,7 +8887,7 @@ namespace Models
               <string>[Soil].SoilWater.Drainage</string>
               <string>[Soil].SoilWater.Runoff</string>
               <string>[Soil].SoilWater.pond</string>
-              <string>sum([Soil].SoilWater.SWmm[1:3]) as SW30cm</string>
+              <string>sum([Soil].SoilWater.SWmm[1:2]) as SW30cm</string>
               <string>[Soil].NO3N</string>
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
@@ -8690,7 +8899,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -8728,8 +8936,8 @@ namespace Models
                 <KL>
                   <double>0.06</double>
                   <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.02</double>
                 </KL>
                 <XF>
                   <double>1</double>
@@ -9018,6 +9226,8 @@ namespace Models
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.CurrentStageName as Stage</string>
@@ -9032,7 +9242,6 @@ namespace Models
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>10</ResultsPerPage>
           </Report>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -9095,12 +9304,18 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>ObservedLysimeter4</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>Swbefore</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -9110,12 +9325,18 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>SW30cm</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -9147,12 +9368,18 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>ObservedLysimeter4</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>Etc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -9162,12 +9389,18 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ET</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -9177,12 +9410,18 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.Es</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -9223,12 +9462,18 @@ namespace Models
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16776961</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.GrainWt</XFieldName>
       <YFieldName>Predicted.GrainWt</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -9264,12 +9509,18 @@ namespace Models
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16776961</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.Biomass</XFieldName>
       <YFieldName>Predicted.Biomass</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -9457,6 +9708,11 @@ namespace Models
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -9468,11 +9724,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -9531,6 +9782,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Phenology.DaysAfterSowing</string>
@@ -9539,7 +9792,6 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Soil>
             <Name>soil</Name>
@@ -9977,6 +10229,8 @@ namespace Models
           </Plant>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Teff].Structure.MainStemFinalNodeNo</string>
@@ -9989,7 +10243,6 @@ namespace Models
             <EventNames>
               <string>[Teff].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -10005,12 +10258,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
-          <Line>Solid</Line>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>VanDelden</TableName>
           <XFieldName>PP</XFieldName>
           <YFieldName>FinalLeafNo</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -10020,12 +10279,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <Marker>Circle</Marker>
-          <Line>None</Line>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>HarvestReport</TableName>
           <XFieldName>ControlledEnvironment.DayLength</XFieldName>
           <YFieldName>Teff.Leaf.AppearedCohortNo</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -10057,12 +10322,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>VanDelden</TableName>
           <XFieldName>PP</XFieldName>
           <YFieldName>PanicleInitiationDAS</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -10072,12 +10343,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <Marker>Circle</Marker>
-          <Line>None</Line>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>HarvestReport</TableName>
           <XFieldName>ControlledEnvironment.DayLength</XFieldName>
           <YFieldName>PanicleInitiationDAS</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -10109,12 +10386,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Teff.Phenology.DaysAfterSowing</XFieldName>
           <YFieldName>Teff.Leaf.AppearedCohortNo</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -10146,12 +10429,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>VanDelden</TableName>
           <XFieldName>PP</XFieldName>
           <YFieldName>InterNodes</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -10184,12 +10473,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>VanDelden</TableName>
         <XFieldName>PP</XFieldName>
         <YFieldName>FinalLeafNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -10199,12 +10494,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>Circle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Dot</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>HarvestReport</TableName>
         <XFieldName>ControlledEnvironment.DayLength</XFieldName>
         <YFieldName>Teff.Leaf.AppearedCohortNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
