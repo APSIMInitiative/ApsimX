@@ -186,7 +186,7 @@ Data from [vanDelden2012] showed that final leaf number for a selection of teff 
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>150</Value>
+            <Value>100</Value>
             <Units>oC.d</Units>
           </Constant>
           <VariableReference>
@@ -636,10 +636,77 @@ A function is used to provide flowering date as days after sowing(DAS).
             <XProperty>[Teff].WaterSupplyDemandRatio</XProperty>
           </LinearInterpolationFunction>
         </HeightFunction>
-        <Constant>
+        <MultiplyFunction>
           <Name>BranchingRate</Name>
-          <Value>0</Value>
-        </Constant>
+          <PhaseLookup>
+            <Name>PotentialBranchingRate</Name>
+            <PhaseLookupValue>
+              <Name>Vegetative</Name>
+              <LinearInterpolationFunction>
+                <Name>PotentialBranchingRate</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>1</double>
+                    <double>2</double>
+                    <double>5</double>
+                    <double>14</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>2</double>
+                    <double>2</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Leaf].AppearedCohortNo</XProperty>
+              </LinearInterpolationFunction>
+              <Start>Emergence</Start>
+              <End>FloralInitiation</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Reproductive</Name>
+              <Constant>
+                <Name>Zero</Name>
+                <Value>0</Value>
+              </Constant>
+              <Start>FloralInitiation</Start>
+              <End>HarvestRipe</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
+          <LinearInterpolationFunction>
+            <Name>WaterStress</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Teff].WaterSupplyDemandRatio</XProperty>
+          </LinearInterpolationFunction>
+          <LinearInterpolationFunction>
+            <Name>Shading</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>0.6</double>
+                <double>0.7</double>
+              </X>
+              <Y>
+                <double>1</double>
+                <double>1</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Leaf].CoverGreen</XProperty>
+          </LinearInterpolationFunction>
+        </MultiplyFunction>
         <Constant>
           <Name>ShadeInducedBranchMortality</Name>
           <Value>0</Value>
@@ -1069,82 +1136,17 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </ArrayBiomass>
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
-          <BellCurveFunction>
-            <Name>MaxArea</Name>
-            <Memo>
-              <Name>Memo</Name>
-              <MemoText><![CDATA[
-Potential leaf area is calculated from leaf number using the approach of Keating and Wafula (1992).Individual leaf size is described using a bell-shaped curve, the parameters of which are derived from final leaf number.<br/>
-
-]]></MemoText>
-            </Memo>
-            <MultiplyFunction>
-              <Name>LargestLeafPosition</Name>
-              <VariableReference>
-                <Name>FinalLeafNumber</Name>
-                <VariableName>[Structure].MainStemFinalNodeNumber.Value</VariableName>
-              </VariableReference>
-              <Constant>
-                <Name>RelativePositionOfLargestLeaf</Name>
-                <Value>0.67</Value>
-              </Constant>
-            </MultiplyFunction>
-            <LinearInterpolationFunction>
-              <Name>AreaMax</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>1</double>
-                  <double>5</double>
-                  <double>10</double>
-                  <double>15</double>
-                  <double>20</double>
-                  <double>25</double>
-                </X>
-                <Y>
-                  <double>32530</double>
-                  <double>39259</double>
-                  <double>49659</double>
-                  <double>60000</double>
-                  <double>75000</double>
-                  <double>90000</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Structure].MainStemFinalNodeNumber.Value</XProperty>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>Breadth</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>5</double>
-                  <double>10</double>
-                  <double>15</double>
-                  <double>20</double>
-                  <double>25</double>
-                </X>
-                <Y>
-                  <double>-0.377</double>
-                  <double>-0.144</double>
-                  <double>-0.059</double>
-                  <double>-0.027</double>
-                  <double>-0.016</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Structure].MainStemFinalNodeNumber.Value</XProperty>
-            </LinearInterpolationFunction>
-            <Constant>
-              <Name>Skewness</Name>
-              <Value>0.00025</Value>
-            </Constant>
-          </BellCurveFunction>
           <Constant>
             <Name>NReallocationFactor</Name>
-            <Value>0.1</Value>
+            <Value>0.05</Value>
           </Constant>
           <Constant>
             <Name>NRetranslocationFactor</Name>
-            <Value>0.03</Value>
+            <Value>0.1</Value>
+          </Constant>
+          <Constant>
+            <Name>DMReallocationFactor</Name>
+            <Value>1</Value>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
@@ -1155,11 +1157,11 @@ Potential leaf area is calculated from leaf number using the approach of Keating
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>0.9</double>
+                <double>0.5</double>
                 <double>1</double>
               </X>
               <Y>
-                <double>1</double>
+                <double>0.1</double>
                 <double>1</double>
               </Y>
             </XYPairs>
@@ -1174,65 +1176,31 @@ Potential leaf area is calculated from leaf number using the approach of Keating
                 <double>1</double>
               </X>
               <Y>
-                <double>0.1</double>
+                <double>0</double>
                 <double>1</double>
               </Y>
             </XYPairs>
             <XProperty>[Teff].WaterSupplyDemandRatio</XProperty>
           </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
+          <MultiplyFunction>
             <Name>GrowthDuration</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.3</double>
-                <double>0.5</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>200</double>
-                <double>250</double>
-                <double>100</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].RelativeNodeApperance</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
+            <VariableReference>
+              <Name>Phyllochron</Name>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value</VariableName>
+            </VariableReference>
+            <Constant>
+              <Name>NumberOfExpandingLeaves</Name>
+              <Value>1</Value>
+            </Constant>
+          </MultiplyFunction>
+          <Constant>
             <Name>LagDuration</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.5</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>350</double>
-                <double>650</double>
-                <double>600</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].RelativeNodeApperance</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
+            <Value>500</Value>
+          </Constant>
+          <Constant>
             <Name>SenescenceDuration</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>11</double>
-                <double>20</double>
-              </X>
-              <Y>
-                <double>359</double>
-                <double>350</double>
-                <double>350</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].RelativeNodeApperance</XProperty>
-          </LinearInterpolationFunction>
+            <Value>100</Value>
+          </Constant>
           <Constant>
             <Name>DetachmentLagDuration</Name>
             <Value>1000000</Value>
@@ -1241,30 +1209,21 @@ Potential leaf area is calculated from leaf number using the approach of Keating
             <Name>DetachmentDuration</Name>
             <Value>1000000</Value>
           </Constant>
-          <LinearInterpolationFunction>
+          <Constant>
+            <Name>RelativeBranchLeafSize</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
             <Name>MaximumNConc</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>1</double>
-                <double>10</double>
-              </X>
-              <Y>
-                <double>0.04</double>
-                <double>0.02</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
-          </LinearInterpolationFunction>
+            <Value>0.063</Value>
+          </Constant>
           <Constant>
             <Name>CriticalNConc</Name>
-            <Value>0.015</Value>
-            <Units>g/g</Units>
+            <Value>0.05</Value>
           </Constant>
           <Constant>
             <Name>MinimumNConc</Name>
-            <Value>0.008</Value>
-            <Units>g/g</Units>
+            <Value>0.01</Value>
           </Constant>
           <AddFunction>
             <Name>DroughtInducedSenAcceleration</Name>
@@ -1287,7 +1246,7 @@ Potential leaf area is calculated from leaf number using the approach of Keating
                     <double>0.7</double>
                   </X>
                   <Y>
-                    <double>0</double>
+                    <double>1</double>
                     <double>0</double>
                   </Y>
                 </XYPairs>
@@ -1300,34 +1259,40 @@ Potential leaf area is calculated from leaf number using the approach of Keating
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
+                <double>0</double>
                 <double>1</double>
-                <double>9</double>
               </X>
               <Y>
-                <double>60000</double>
-                <double>30000</double>
+                <double>22000</double>
+                <double>22000</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>SpecificLeafAreaMin</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
+                <double>0</double>
+                <double>0.5</double>
                 <double>1</double>
-                <double>9</double>
               </X>
               <Y>
-                <double>6000</double>
-                <double>6000</double>
+                <double>10000</double>
+                <double>20000</double>
+                <double>20000</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <Constant>
+            <Name>InitialNConc</Name>
+            <Value>0</Value>
+          </Constant>
+          <Constant>
             <Name>StructuralFraction</Name>
-            <Value>0.7</Value>
+            <Value>0.5</Value>
           </Constant>
           <Constant>
             <Name>NonStructuralFraction</Name>
@@ -1341,8 +1306,8 @@ Potential leaf area is calculated from leaf number using the approach of Keating
                 <double>0</double>
                 <double>0.7</double>
                 <double>0.8</double>
-                <double>0.96</double>
-                <double>0.99</double>
+                <double>0.97</double>
+                <double>0.98</double>
               </X>
               <Y>
                 <double>0</double>
@@ -1354,10 +1319,27 @@ Potential leaf area is calculated from leaf number using the approach of Keating
             </XYPairs>
             <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
           </LinearInterpolationFunction>
-          <Constant>
-            <Name>InitialNConc</Name>
-            <Value>0</Value>
-          </Constant>
+          <LinearInterpolationFunction>
+            <Name>MaxArea</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>0.3</double>
+                <double>0.5</double>
+                <double>0.7</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>300</double>
+                <double>1000</double>
+                <double>1600</double>
+                <double>2600</double>
+                <double>2600</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Structure].RelativeNodeApperance</XProperty>
+          </LinearInterpolationFunction>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -1656,7 +1638,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <MaxCover>1</MaxCover>
         <Albedo>0.18</Albedo>
         <Gsmax>0.012</Gsmax>
-        <R50>200</R50>
+        <R50>160</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
@@ -1808,7 +1790,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Value>0.5</Value>
         </Constant>
         <MinimumFunction>
-          <Name>DMDemandFunction</Name>
+          <Name>DMDemandFunctionOLD</Name>
           <MultiplyFunction>
             <Name>PotentialDMAccumulation</Name>
             <VariableReference>
@@ -1853,6 +1835,34 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </VariableReference>
           </MultiplyFunction>
         </MinimumFunction>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <Memo>
+              <Name>memo</Name>
+              <MemoText><![CDATA[]]></MemoText>
+            </Memo>
+            <PhaseLookupValue>
+              <Name>PreStemElongation</Name>
+              <Constant>
+                <Name>StemFraction</Name>
+                <Value>0.3</Value>
+              </Constant>
+              <Start>Emergence</Start>
+              <End>FloralInitiation</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>StemElongation</Name>
+              <Constant>
+                <Name>StemFraction</Name>
+                <Value>0.6</Value>
+              </Constant>
+              <Start>FloralInitiation</Start>
+              <End>Flowering</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
+        </PartitionFractionDemandFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
@@ -6446,12 +6456,12 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
         <Name>Mekelle</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>mekelleGY.met</FileName>
+          <FileName>%root%\Prototypes\Teff\mekelle2008.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
-          <StartDate>2008-08-01T00:00:00</StartDate>
-          <EndDate>2008-12-31T00:00:00</EndDate>
+          <StartDate>2008-08-02T00:00:00</StartDate>
+          <EndDate>2008-11-10T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
@@ -6572,6 +6582,11 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Teff].Leaf.Live.Wt</string>
               <string>[Teff].Leaf.Dead.Wt</string>
               <string>[Teff].Leaf.CoverGreen</string>
+              <string>[Teff].Leaf.AppearedCohortNo</string>
+              <string>[Teff].Leaf.ExpandedCohortNo</string>
+              <string>[Teff].Leaf.SenescingCohortNo</string>
+              <string>[Teff].Structure.TotalStemPopn</string>
+              <string>[Teff].Leaf.CohortArea[1:10]</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -6626,7 +6641,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
-                  <double>1</double>
+                  <double>0</double>
                 </XF>
               </SoilCrop>
               <Thickness>
@@ -6665,11 +6680,11 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
                 <double>0.42</double>
               </DUL>
               <SAT>
-                <double>0.46</double>
-                <double>0.5</double>
-                <double>0.52</double>
-                <double>0.52</double>
-                <double>0.52</double>
+                <double>0.41</double>
+                <double>0.41</double>
+                <double>0.45</double>
+                <double>0.45</double>
+                <double>0.45</double>
               </SAT>
               <KS>
                 <double>250</double>
@@ -6858,11 +6873,9 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <Sample>
               <Name>InitialN</Name>
               <Thickness>
-                <double>150</double>
-                <double>150</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
                 <double>300</double>
                 <double>300</double>
               </Thickness>
@@ -6872,13 +6885,9 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
                 <double>2.45</double>
                 <double>1.08</double>
                 <double>0.15</double>
-                <double>0.83</double>
-                <double>2.3</double>
               </NO3>
               <NH4>
                 <double>0.6</double>
-                <double>0.1</double>
-                <double>0.1</double>
                 <double>0.1</double>
                 <double>0.1</double>
                 <double>0.1</double>
@@ -6893,22 +6902,18 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <Sample>
               <Name>InitialSW</Name>
               <Thickness>
-                <double>150</double>
-                <double>150</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
                 <double>300</double>
                 <double>300</double>
               </Thickness>
               <SW>
-                <double>0.413</double>
-                <double>0.456</double>
-                <double>0.408</double>
-                <double>0.374</double>
-                <double>0.327</double>
-                <double>0.325</double>
-                <double>0.371</double>
+                <double>0.27</double>
+                <double>0.27</double>
+                <double>0.42</double>
+                <double>0.42</double>
+                <double>0.42</double>
               </SW>
               <NO3Units>ppm</NO3Units>
               <NH4Units>ppm</NH4Units>
@@ -6998,7 +7003,7 @@ namespace Models
       <Graph>
         <Name>LAI</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7013,6 +7018,27 @@ namespace Models
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Teff.Leaf.LAI</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series11</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Mekelle2008Crop</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7317,7 +7343,7 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>ET</Name>
+        <Name>WaterStress</Name>
         <Series>
           <Name>Series1</Name>
           <Type>Scatter</Type>
@@ -7334,6 +7360,367 @@ namespace Models
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Teff.Leaf.Fw</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Tillering</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Teff.Structure.TotalStemPopn</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>LeafDevelopment</Name>
+        <Series>
+          <Name>Tips</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Teff.Leaf.AppearedCohortNo</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Ligules</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Teff.Leaf.ExpandedCohortNo</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Dead</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Teff.Leaf.SenescingCohortNo</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>LeafSizes</Name>
+        <Series>
+          <Name>Leaf1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Teff.Leaf.CohortArea1:10(1)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Leaf2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Teff.Leaf.CohortArea1:10(2)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Leaf3</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Teff.Leaf.CohortArea1:10(3)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Leaf4</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Teff.Leaf.CohortArea1:10(4)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Leaf5</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Teff.Leaf.CohortArea1:10(5)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Leaf6</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Teff.Leaf.CohortArea1:10(6)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Leaf7</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-3376729</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Teff.Leaf.CohortArea1:10(7)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Leaf8</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-990142</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Teff.Leaf.CohortArea1:10(8)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>NStress</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Teff.Leaf.Fn</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
