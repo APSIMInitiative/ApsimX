@@ -9,7 +9,7 @@ namespace Tests
     /// Unit tests for statistical test suite.
     /// Comparison values were generated using equivilent functions in R.
     /// </summary>
-    [TestFixture]
+/*    [TestFixture]
     public class TestStats
     {
         static List<double[]> X = new List<double[]>();
@@ -142,5 +142,5 @@ namespace Tests
             for (int i = 0; i < X.Count; i++)
                 Assert.AreEqual(RSR[i], stats[i].RSR, Math.Abs(RSR[i] * 0.0001));
         }
-    }
+    }*/
 }
