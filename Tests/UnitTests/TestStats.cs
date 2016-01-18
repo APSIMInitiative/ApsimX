@@ -17,16 +17,16 @@ namespace Tests
         List<MathUtilities.RegrStats> stats = new List<MathUtilities.RegrStats>();
 
         // expected outputs - see TestStatsSource.R
-        static double[] Slope =       { 1, 0.6472,    0.89455,   1, -0.09504,   7624,       252.80 };
-        static double[] Intercept =   { 0, 71.7165,   21.36885,  0, 230.16707,  -118123,    140 };
-        static double[] SEintercept = { 0, 36.2908,   5.43651,   0, 73.8932,    1.741,      0.7574032};
-        static double[] SEslope =     { 0, 0.1819,    0.04119,   0, 0.2628,     9.340E-06,  0.0002319 };
-        static double[] R2 =          { 1, 0.7049,    0.8613,    1, 0.01456,    0.4184,     0.8405 };
-        static double[] RMSE =        { 0, 18.69386,  23.55145,  0, 326.6446,   186375.5,   3254.854 };
-        static double[] NSE =         { 1, 0.6921534, 0.8309859, 1, -0.8313643, -166798611, -75670.94 };
-        static double[] ME =          { 0, 3.017647,  9.756556,  0, -34.9368,   76251.47,   140 };
-        static double[] MAE =         { 0, 14.04118,  16.63544,  0, 242.7488,   76251.47,   2151.22 };
-        static double[] RSR =         { 0, 0.5382731, 0.4088229, 0, 1.325937,   12785.25,   271.7099 };
+        static double[] Slope =       { 1, 0.6472,    0.89455,      1, -0.09504,   7624,       252.80 };
+        static double[] Intercept =   { 0, 71.7165,   21.36885,     0, 230.16707,  -118123,    140 };
+        static double[] SEintercept = { 0, 21.3700,   4.75055,      0, 55.73383,   38009,      208.66};
+        static double[] SEslope =     { 0, 0.108129,  0.038270674,  0, 0.1630292,  1297.238,   17.63498};
+        static double[] R2 =          { 1, 0.7049,    0.8613,       1, 0.01456,    0.4184,     0.8405 };
+        static double[] RMSE =        { 0, 18.69386,  23.55145,     0, 326.6446,   186375.5,   3254.854 };
+        static double[] NSE =         { 1, 0.6921534, 0.8309859,    1, -0.8313643, -166798611, -75670.94 };
+        static double[] ME =          { 0, 3.017647,  9.756556,     0, -34.9368,   76251.47,   140 };
+        static double[] MAE =         { 0, 14.04118,  16.63544,     0, 242.7488,   76251.47,   2151.22 };
+        static double[] RSR =         { 0, 0.5382731, 0.4088229,    0, 1.325937,   12785.25,   271.7099 };
 
         [SetUp]
         public void Setup()
@@ -77,70 +77,70 @@ namespace Tests
         public void TestSlope()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(Slope[i],  Math.Round(stats[i].Slope, 4));
+                Assert.AreEqual(Slope[i], stats[i].Slope, Math.Abs(Slope[i] * 0.0001));
         }
 
         [Test]
         public void TestIntercept()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(Intercept[i], stats[i].Intercept);
+                Assert.AreEqual(Intercept[i], stats[i].Intercept, Math.Abs(Intercept[i] * 0.0001));
         }
 
         [Test]
         public void TestSEintercept()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(SEintercept[i], stats[i].SEintercept);
+                Assert.AreEqual(SEintercept[i], stats[i].SEintercept, Math.Abs(SEintercept[i] * 0.0001));
         }
 
         [Test]
         public void TestSEslope()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(SEslope[i], stats[i].SEslope);
+                Assert.AreEqual(SEslope[i], stats[i].SEslope, Math.Abs(SEslope[i] * 0.0001));
         }
 
         [Test]
         public void TestR2()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(R2[i], stats[i].R2);
+                Assert.AreEqual(R2[i], stats[i].R2, Math.Abs(R2[i] * 0.001));
         }
 
         [Test]
         public void TestRMSE()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(RMSE[i], stats[i].RMSE);
+                Assert.AreEqual(RMSE[i], stats[i].RMSE, Math.Abs(RMSE[i] * 0.0001));
         }
 
         [Test]
         public void TestNSE()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(NSE[i], stats[i].NSE);
+                Assert.AreEqual(NSE[i], stats[i].NSE, Math.Abs(NSE[i] * 0.0001));
         }
 
         [Test]
         public void TestME()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(ME[i], stats[i].ME);
+                Assert.AreEqual(ME[i], stats[i].ME, Math.Abs(ME[i] * 0.0001));
         }
 
         [Test]
         public void TestMAE()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(MAE[i], stats[i].MAE);
+                Assert.AreEqual(MAE[i], stats[i].MAE, Math.Abs(MAE[i] * 0.0001));
         }
 
         [Test]
         public void TestRSR()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(RSR[i], stats[i].RSR);
+                Assert.AreEqual(RSR[i], stats[i].RSR, Math.Abs(RSR[i] * 0.0001));
         }
     }
 }
