@@ -554,11 +554,16 @@ namespace Models.Graph
             }
             else if ((Filter != null) && (Filter != ""))
               throw new Exception("Column name to filter on must be within square brackets.  e.g [ColumToFilter]");
-            
+            fieldNames.Add("ZoneName");
 
             // Get all data.
             DataStore dataStore = new DataStore(this);
             data = dataStore.GetFilteredData(TableName, fieldNames.ToArray(), filter);
+            if (data == null)
+            {
+                fieldNames.Remove("ZoneName");
+                data = dataStore.GetFilteredData(TableName, fieldNames.ToArray(), filter);
+            }
             dataStore.Disconnect();
 
             // filter data for each definition.

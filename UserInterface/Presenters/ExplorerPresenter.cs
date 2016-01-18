@@ -401,7 +401,7 @@ namespace UserInterface.Presenters
                 {
                     this.view.ShowMessage("Invalid XML. Are you sure you're trying to paste an APSIM model?", DataStore.ErrorLevel.Error);
                 }
-                object newModel = XmlUtilities.Deserialise(document.DocumentElement, Assembly.GetExecutingAssembly());
+                object newModel = XmlUtilities.Deserialise(document.DocumentElement, ApsimXFile.GetType().Assembly);
 
                 // See if the presenter is happy with this model being added.
                 Model parentModel = Apsim.Get(this.ApsimXFile, parentPath) as Model;
@@ -449,7 +449,7 @@ namespace UserInterface.Presenters
                         document.LoadXml(newDoc.DocumentElement.InnerXml);
                     }
 
-                    IModel child = XmlUtilities.Deserialise(document.DocumentElement, Assembly.GetExecutingAssembly()) as IModel;
+                    IModel child = XmlUtilities.Deserialise(document.DocumentElement, ApsimXFile.GetType().Assembly) as IModel;
 
                     AddModelCommand command = new AddModelCommand(parentModel, document.DocumentElement,
                                                                   GetNodeDescription(child), view);

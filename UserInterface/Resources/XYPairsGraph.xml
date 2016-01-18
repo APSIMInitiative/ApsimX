@@ -12,7 +12,7 @@
   <Series>
     <Type>Scatter</Type>
     <Title>StressFactor</Title>
-    <ShowInLegend>true</ShowInLegend>
+    <ShowInLegend>false</ShowInLegend>
     <XAxis>Bottom</XAxis>
     <YAxis>Left</YAxis>
     <ColourArgb>-65536</ColourArgb>
