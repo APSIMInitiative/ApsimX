@@ -726,7 +726,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         </Constant>
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
-          <Value>0.3</Value>
+          <Value>0.0003</Value>
         </Constant>
         <PhaseLookup>
           <Name>DMDemandFunction</Name>
@@ -868,7 +868,7 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <Name>PotentialSizeIncrement</Name>
                 <Constant>
                   <Name>MaximumFinalNConc</Name>
-                  <Value>0.013</Value>
+                  <Value>0.021</Value>
                 </Constant>
                 <VariableReference>
                   <Name>MaximumSize</Name>
@@ -883,24 +883,14 @@ A function is used to provide flowering date as days after sowing(DAS).
         <MultiplyFunction>
           <Name>NumberFunction</Name>
           <VariableReference>
-            <Name>HeadNumber</Name>
-            <VariableName>[Panicle].HeadNumber.Value</VariableName>
+            <Name>StemMass</Name>
+            <VariableName>[Stem].Live.Wt</VariableName>
           </VariableReference>
-          <LinearInterpolationFunction>
-            <Name>GrainsPerPanicle</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>80</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Panicle].Live.Wt</XProperty>
-          </LinearInterpolationFunction>
+          <Constant>
+            <Name>GrainsPerGramStem</Name>
+            <Value>4000</Value>
+            <Units>/g</Units>
+          </Constant>
         </MultiplyFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
@@ -3488,37 +3478,205 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
               <Action>[Irrigation].Apply(amount:26.2, depth:0,efficiency:1, willRunoff:false);</Action>
             </Operation>
             <Operation>
-              <Date>2011-02-01T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:8.9, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2011-01-29T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:17.8, depth:0,efficiency:1, willRunoff:false);</Action>
             </Operation>
             <Operation>
-              <Date>2011-02-04T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:8.9, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2011-02-02T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:17.8, depth:0,efficiency:1, willRunoff:false);</Action>
             </Operation>
             <Operation>
-              <Date>2011-02-07T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:8.9, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2011-02-05T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:17.8, depth:0,efficiency:1, willRunoff:false);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>2</Name>
             <Operation>
-              <Date>1990-07-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:100, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2010-12-21T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:3.3, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2010-12-24T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:3.3, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2010-12-27T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:3.3, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2010-12-31T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:14.3, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-03T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:14.3, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-06T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:14.3, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-10T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:19.7, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-13T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:19.7, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-16T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:19.7, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-19T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:19.7, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-22T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:19.7, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-25T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:19.7, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-29T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:13.4, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-02-02T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:13.4, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-02-05T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:13.4, depth:0,efficiency:1, willRunoff:false);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>3</Name>
             <Operation>
-              <Date>1990-07-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:100, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2010-12-21T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:2.2, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2010-12-24T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:2.2, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2010-12-27T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:2.2, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2010-12-31T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:9.6, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-03T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:9.6, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-06T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:9.6, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-10T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:13.1, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-13T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:13.1, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-16T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:13.1, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-19T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:13.1, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-22T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:13.1, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-25T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:13.1, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-29T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:8.9, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-02-02T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:8.9, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-02-05T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:8.9, depth:0,efficiency:1, willRunoff:false);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>4</Name>
             <Operation>
-              <Date>1990-07-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:100, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2010-12-21T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:1.1, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2010-12-24T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:1.1, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2010-12-27T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:1.1, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2010-12-31T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:4.8, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-03T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:4.8, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-06T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:4.8, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-10T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:6.6, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-13T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:6.6, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-16T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:6.6, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-19T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:6.6, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-22T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:6.6, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-25T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:6.6, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-01-29T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:4.4, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-02-02T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:4.4, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-02-05T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:4.4, depth:0,efficiency:1, willRunoff:false);</Action>
             </Operation>
           </Operations>
           <Operations>
@@ -3921,45 +4079,25 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
               <EnrACoeff>7.4</EnrACoeff>
               <EnrBCoeff>0.2</EnrBCoeff>
               <Thickness>
-                <double>100</double>
-                <double>100</double>
-                <double>100</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
+                <double>150</double>
+                <double>150</double>
+                <double>300</double>
+                <double>300</double>
               </Thickness>
               <Depth>
-                <string>0-10</string>
-                <string>10-20</string>
-                <string>20-30</string>
-                <string>30-50</string>
-                <string>50-70</string>
-                <string>70-90</string>
-                <string>90-110</string>
-                <string>110-130</string>
-                <string>130-150</string>
+                <string>0-15</string>
+                <string>15-30</string>
+                <string>30-60</string>
+                <string>60-90</string>
               </Depth>
               <OC>
-                <double>1.2</double>
-                <double>1</double>
-                <double>0.86</double>
-                <double>0.83</double>
-                <double>0.58</double>
-                <double>0.54</double>
-                <double>0.47</double>
-                <double>0.5</double>
-                <double>0.5</double>
+                <double>1.1</double>
+                <double>0.9</double>
+                <double>0.84</double>
+                <double>0.46</double>
               </OC>
               <FBiom>
                 <double>0.02</double>
-                <double>0.01</double>
-                <double>0.01</double>
-                <double>0.01</double>
-                <double>0.01</double>
-                <double>0.01</double>
                 <double>0.01</double>
                 <double>0.01</double>
                 <double>0.01</double>
@@ -3969,11 +4107,6 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
                 <double>0.5</double>
                 <double>0.58</double>
                 <double>0.55</double>
-                <double>0.86</double>
-                <double>0.9</double>
-                <double>0.95</double>
-                <double>0.95</double>
-                <double>0.95</double>
               </FInert>
               <OCUnits>Total</OCUnits>
             </SoilOrganicMatter>
