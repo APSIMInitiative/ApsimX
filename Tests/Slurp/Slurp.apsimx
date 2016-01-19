@@ -32,30 +32,7 @@
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
-  <Tests>
-    <Name>TestsBinary</Name>
-    <Test>
-      <SimulationName>LandP</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>[ExtraVariables].Script.SWC</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>LandP</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>[Slurp].Leaf.CoverTotal</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Tests</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>AccumIrrigation</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-  </Tests>
+  
   <Simulation>
     <Name>SlurpTestBase</Name>
     <Memo>
