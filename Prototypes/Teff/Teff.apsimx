@@ -2878,8 +2878,8 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
           <Operations>
             <Name>Teff</Name>
             <Operation>
-              <Date>1990-05-20T00:00:00</Date>
-              <Action> [Teff].Sow(population:100., cultivar:"Katumani", depth:50, rowSpacing:250);</Action>
+              <Date>2011-08-01T00:00:00</Date>
+              <Action> [Teff].Sow(population:100., cultivar:"Kuncho", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
           <Operations>
@@ -2894,36 +2894,36 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
           <Operations>
             <Name>0NUSG</Name>
             <Operation>
-              <Date>1990-07-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:100, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2011-08-01T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>23NUSG</Name>
             <Operation>
-              <Date>1990-07-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:100, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2011-08-01T00:00:00</Date>
+              <Action>[Fertiliser].Apply(23, Fertiliser.Types.UreaN, 10);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>46NUSG</Name>
             <Operation>
-              <Date>1990-07-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:100, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2011-08-01T00:00:00</Date>
+              <Action>[Fertiliser].Apply(46, Fertiliser.Types.UreaN, 10);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>69NUSG</Name>
             <Operation>
-              <Date>1990-07-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:100, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2011-08-01T00:00:00</Date>
+              <Action>[Fertiliser].Apply(69, Fertiliser.Types.UreaN, 10);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>46NUC</Name>
             <Operation>
-              <Date>1990-07-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:100, depth:0,efficiency:1, willRunoff:false);</Action>
+              <Date>2011-08-01T00:00:00</Date>
+              <Action>[Fertiliser].Apply(46, Fertiliser.Types.UreaN, 10);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -2935,12 +2935,12 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
         <Name>Ofla</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Prototypes\Chickpea\cooper.met</FileName>
+          <FileName>%root%\Prototypes\Teff\Korem.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
-          <StartDate>1990-01-01T00:00:00</StartDate>
-          <EndDate>1990-12-31T00:00:00</EndDate>
+          <StartDate>2011-08-01T00:00:00</StartDate>
+          <EndDate>2011-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
