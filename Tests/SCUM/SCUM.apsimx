@@ -43,30 +43,7 @@
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>1000</MaximumResultsPerPage>
   </DataStore>
-  <Tests>
-    <Name>TestsBinary</Name>
-    <Test>
-      <SimulationName>SCUMTestBase</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>ExtraVariables.Script.AccumPlantN</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>SCUMTestBase</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>ExtraVariables.Script.AccumEP</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>SCUMTestBase</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>SCUM.Total.Wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-  </Tests>
+  
   <Simulation>
     <Name>SCUMTestBase</Name>
     <Weather>

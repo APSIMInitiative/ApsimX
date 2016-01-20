@@ -723,30 +723,7 @@
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
   </DataStore>
-  <Tests>
-    <Name>Tests</Name>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Yearly</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>YearlyRain</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Yearly</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>RainAprToSepTwoYears</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Yearly</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>ChangeInCarbon</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-  </Tests>
+  
   <Graph>
     <Name>Graph</Name>
     <Series>
