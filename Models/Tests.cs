@@ -142,7 +142,7 @@ namespace Models
                             while (sim as Simulations == null)
                                 sim = ((Model)sim).Parent;
 
-                            throw new ApsimXException(this, "Significant differences found during regression testing of " + PO.Name + " in " + sim != null ? ((Simulations)sim).FileName : "<unknown>");
+                            throw new ApsimXException(this, "Significant differences found during regression testing of " + PO.Name + " in " + (sim != null ? ((Simulations)sim).FileName : "<unknown>"));
                         }
                     }
             }
