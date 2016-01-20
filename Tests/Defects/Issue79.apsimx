@@ -139,29 +139,6 @@ namespace Models
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
   </DataStore>
-  <Tests>
-    <Name>Tests</Name>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>EqualTo</Type>
-      <ColumnNames>GetWeather.Script.LocalMaxT</ColumnNames>
-      <Parameters>1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>EqualTo</Type>
-      <ColumnNames>GetWeather.Script.LocalMinT</ColumnNames>
-      <Parameters>2</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>EqualTo</Type>
-      <ColumnNames>GetWeather.Script.LocalRain</ColumnNames>
-      <Parameters>100</Parameters>
-    </Test>
-  </Tests>
+  
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

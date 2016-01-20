@@ -179,64 +179,32 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Event handler for a User interface "Run APSIM" action
+        /// Accept the current test output as the official baseline for future comparison. 
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Run Tests", AppliesTo = new Type[] { typeof(Tests) })]
-        public void RunTests(object sender, EventArgs e)
+        [ContextMenu(MenuName = "Accept Tests", AppliesTo = new Type[] { typeof(Tests) })]
+        public void AcceptTests(object sender, EventArgs e)
         {
-            RegistryKey registryKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"Software\R-core\R", false);
-            if (registryKey != null)
+            DialogResult result = MessageBox.Show("You are about to change the officially accepted stats for this model. Are you sure?", "Replace official stats?", MessageBoxButtons.YesNo);
+            if(result != DialogResult.Yes)
             {
-                // Will need to make this work on 32bit machines
-                string pathToR = (string)registryKey.GetValue("InstallPath", string.Empty);
-                pathToR += "\\Bin\\x64\\rscript.exe";
-
-                string binFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string scriptFileName = Path.Combine(new string[] 
-                    {
-                        binFolder, 
-                        "..", 
-                        "Tests", 
-                        "RTestSuite",
-                        "RunTest.R"
-                    });
-
-                string workingFolder = Path.Combine(new string[] { binFolder, ".." });
-
-                string arguments = "\"" + scriptFileName + "\" " + "\"" + this.explorerPresenter.ApsimXFile.FileName + "\"";
-                Process process = ProcessUtilities.RunProcess(pathToR, arguments, workingFolder);
-                try
-                {
-                    string message = ProcessUtilities.CheckProcessExitedProperly(process);
-                    this.explorerPresenter.ShowMessage(message, DataStore.ErrorLevel.Information);
-                }
-                catch (Exception err)
-                {
-                    this.explorerPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
-                }
-                
-            }
-            else
-            {
-                this.explorerPresenter.ShowMessage("Could not find R installation.", DataStore.ErrorLevel.Warning);
+                return;
             }
 
+            Tests test = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Tests;
+            try
             {
-            string binFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string apsimxFolder = Path.Combine(binFolder, "..");
-            string scriptFileName = Path.Combine(new string[] 
+                test.Test(true);
+            }
+            catch (ApsimXException ex)
             {
-                binFolder, 
-                "..", 
-                "Tests", 
-                "RTestSuite",
-                "RunTest.Bat"
-            });
-            string workingFolder = apsimxFolder;
-            Process process = ProcessUtilities.RunProcess(scriptFileName, this.explorerPresenter.ApsimXFile.FileName, workingFolder);
-            string errorMessages = ProcessUtilities.CheckProcessExitedProperly(process);
+                this.explorerPresenter.ShowMessage(ex.Message, DataStore.ErrorLevel.Error);
+            }
+            finally
+            {
+                this.explorerPresenter.HideRightHandPanel();
+                this.explorerPresenter.ShowRightHandPanel();
             }
         }
 

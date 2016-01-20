@@ -617,15 +617,6 @@
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
   </DataStore>
-  <Tests>
-    <Name>Tests</Name>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>EqualTo</Type>
-      <ColumnNames>Irrigation.IrrigationApplied</ColumnNames>
-      <Parameters>80</Parameters>
-    </Test>
-  </Tests>
+  
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>
