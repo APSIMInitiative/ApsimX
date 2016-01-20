@@ -5,7 +5,9 @@ Latitude =10.45(DECIMALDEGREES)
  tav =  15.8 (oC)     ! annual average ambient temperature
  amp =   3.8 (oC)     ! annual amplitude in mean monthly temperature
 
- ! Data from yield gap met file but with measured rainfall from Araya paper of teff irrigation (2010, FCR Vol 116)
+! data taken from NASA LARC data with temperature adjusted to give monthly averages for nearby town of Degolo (Not town used in the paper which is 85 km away)
+! Rainfall adjusted to give monthly averages for Kombolcha
+! Did not have data for 2012 so use monthly averages for Degolo for 2 weeks
  Site        year      day  radn    maxt    mint    rain
  ()          ()        ()   () (oC)    (oC)    (mm)
 Jamma   2011   1   17.9   17.2   8.1   0.5
@@ -373,3 +375,18 @@ Jamma   2011   362   22.2   20.4   6.8   0.0
 Jamma   2011   363   21.9   19.5   7.4   0.0
 Jamma   2011   364   22.5   18.3   5.9   0.0
 Jamma   2011   365   22.1   21.4   8.0   0.0
+Jamma   2012     1   22.1   19.0   10.0  0.0
+Jamma   2012     2   22.1   19.0   10.0  0.0
+Jamma   2012     3   22.1   19.0   10.0  0.0
+Jamma   2012     4   22.1   19.0   10.0  0.0
+Jamma   2012     5   22.1   19.0   10.0  0.0
+Jamma   2012     6   22.1   19.0   10.0  0.0
+Jamma   2012     7   22.1   19.0   10.0  0.0
+Jamma   2012     8   22.1   19.0   10.0  0.0
+Jamma   2012     9   22.1   19.0   10.0  0.0
+Jamma   2012    10   22.1   19.0   10.0  0.0
+Jamma   2012    11   22.1   19.0   10.0  0.0
+Jamma   2012    12   22.1   19.0   10.0  0.0
+Jamma   2012    13   22.1   19.0   10.0  0.0
+Jamma   2012    14   22.1   19.0   10.0  0.0
+
