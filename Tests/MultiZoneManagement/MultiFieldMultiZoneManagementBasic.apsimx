@@ -5,16 +5,7 @@
     <Name>DataStore</Name>
     <AutoExport>true</AutoExport>
   </DataStore>
-  <Tests>
-    <Name>TestsBinary</Name>
-    <Test>
-      <SimulationName>TwoZone_GodLevelManagement</SimulationName>
-      <TableName>Report1</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Irrigation.IrrigationApplied</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-  </Tests>
+  
   <Simulation>
     <Name>MultiPaddockSimulation</Name>
     <Clock>

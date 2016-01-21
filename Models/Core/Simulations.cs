@@ -404,9 +404,16 @@ namespace Models.Core
         /// <summary>Call the all completed event in all models.</summary>
         public void CallAllCompleted()
         {
-            object[] args = new object[] { this, new EventArgs() };
-            foreach (Model model in Apsim.ChildrenRecursively(this))
-                Apsim.CallEventHandler(model, "AllCompleted", args);
+            try
+            {
+                object[] args = new object[] { this, new EventArgs() };
+                foreach (Model model in Apsim.ChildrenRecursively(this))
+                    Apsim.CallEventHandler(model, "AllCompleted", args);
+            }
+            catch (Exception err)
+            {
+                ErrorMessage = err.ToString();
+            }
         }
 
         /// <summary>Documents the specified model.</summary>

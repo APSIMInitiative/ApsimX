@@ -102,6 +102,7 @@
     </Compile>
     <Compile Include="SWIMTests.cs" />
     <Compile Include="TestSoils.cs" />
+    <Compile Include="TestStats.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
