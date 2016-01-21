@@ -160,42 +160,10 @@ The model predicts development of primordia on the apex of the main stem and app
           </VariableReference>
           <SubtractFunction>
             <Name>Target</Name>
-            <AddFunction>
-              <Name>TTEmergToFlagLeaf</Name>
-              <MultiplyFunction>
-                <Name>LeafAppearingPhase1</Name>
-                <SubtractFunction>
-                  <Name>NoLeavesRate1</Name>
-                  <VariableReference>
-                    <Name>FinalLeafNo</Name>
-                    <VariableName>[Phenology].FinalLeafNo.Value</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>LeafNoAtEmergence</Name>
-                    <VariableName>[Phenology].LeafNoAtEmergence.Value</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>LeafNoRateChange</Name>
-                    <VariableName>[Phenology].LeafNoRateChange.Value</VariableName>
-                  </VariableReference>
-                </SubtractFunction>
-                <Constant>
-                  <Name>LeafAppearanceRate1</Name>
-                  <Value>41</Value>
-                </Constant>
-              </MultiplyFunction>
-              <MultiplyFunction>
-                <Name>LeafAppearingPhase2</Name>
-                <Constant>
-                  <Name>LeafAppearanceRate2</Name>
-                  <Value>20</Value>
-                </Constant>
-                <VariableReference>
-                  <Name>LeafNoRateChange</Name>
-                  <VariableName>[Phenology].LeafNoRateChange.Value</VariableName>
-                </VariableReference>
-              </MultiplyFunction>
-            </AddFunction>
+            <VariableReference>
+              <Name>TTEmergToFlag</Name>
+              <VariableName>[Phenology].TTEmergToFlagLeaf.Value</VariableName>
+            </VariableReference>
             <VariableReference>
               <Name>TTJuvenile</Name>
               <VariableName>[Phenology].Juvenile.Target.Value</VariableName>
@@ -401,6 +369,51 @@ A function is used to provide maturity date as days after sowing(DAS).
           <Name>LeafNoRateChange</Name>
           <Value>3.5</Value>
         </Constant>
+        <AddFunction>
+          <Name>TTEmergToFlagLeaf</Name>
+          <MultiplyFunction>
+            <Name>LeafAppearingPhase1</Name>
+            <SubtractFunction>
+              <Name>NoLeavesRate1</Name>
+              <VariableReference>
+                <Name>FinalLeafNo</Name>
+                <VariableName>[Phenology].FinalLeafNo.Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>LeafNoAtEmergence</Name>
+                <VariableName>[Phenology].LeafNoAtEmergence.Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>LeafNoRateChange</Name>
+                <VariableName>[Phenology].LeafNoRateChange.Value</VariableName>
+              </VariableReference>
+            </SubtractFunction>
+            <Constant>
+              <Name>LeafAppearanceRate1</Name>
+              <Value>41</Value>
+            </Constant>
+          </MultiplyFunction>
+          <MultiplyFunction>
+            <Name>LeafAppearingPhase2</Name>
+            <Constant>
+              <Name>LeafAppearanceRate2</Name>
+              <Value>20</Value>
+            </Constant>
+            <VariableReference>
+              <Name>LeafNoRateChange</Name>
+              <VariableName>[Phenology].LeafNoRateChange.Value</VariableName>
+            </VariableReference>
+          </MultiplyFunction>
+        </AddFunction>
+        <AccumulateFunction>
+          <Name>TTFromEmergence</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <StartStageName>Emergence</StartStageName>
+          <EndStageName>Maturity</EndStageName>
+        </AccumulateFunction>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -507,21 +520,6 @@ Though tillering is common in some sorghum varieties under certain agronomic con
               </Y>
             </XYPairs>
             <XProperty>[Phenology].Stage</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>WaterStress</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0.3</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Sorghum].WaterSupplyDemandRatio</XProperty>
           </LinearInterpolationFunction>
         </HeightFunction>
         <Constant>
@@ -898,347 +896,14 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </KNH4_xRootLength>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
-      <Leaf>
+      <SimpleLeaf>
         <Name>Leaf</Name>
-        <LeafCohort>
-          <Name>InitialLeaves[1]</Name>
-          <Rank>1</Rank>
-          <Area>380</Area>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[2]</Name>
-          <Rank>2</Rank>
-          <Area>0</Area>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[3]</Name>
-          <Rank>3</Rank>
-          <Area>0</Area>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[4]</Name>
-          <Rank>4</Rank>
-          <Area>0</Area>
-        </LeafCohort>
-        <CompositeBiomass>
+        <Biomass>
           <Name>Live</Name>
-          <Propertys>
-            <string>[Leaf].CohortLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
+        </Biomass>
+        <Biomass>
           <Name>Dead</Name>
-          <Propertys>
-            <string>[Leaf].CohortDead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <ArrayBiomass>
-          <Name>CohortArrayLive</Name>
-          <Propertys>
-            <string>[Leaf].Live</string>
-          </Propertys>
-          <ArraySize>[Leaf].MaxNodeNo</ArraySize>
-        </ArrayBiomass>
-        <ArrayBiomass>
-          <Name>CohortArrayDead</Name>
-          <Propertys>
-            <string>[Leaf].Dead</string>
-          </Propertys>
-          <ArraySize>[Leaf].MaxNodeNo</ArraySize>
-        </ArrayBiomass>
-        <LeafCohortParameters>
-          <Name>CohortParameters</Name>
-          <BellCurveFunction>
-            <Name>MaxArea</Name>
-            <Memo>
-              <Name>Memo</Name>
-              <MemoText><![CDATA[
-<html><body>
-Potential leaf area is calculated from leaf number using the approach of Keating and Wafula (1992).
-Individual leaf size is described using a bell-shaped curve, the parameters of which are derived from final leaf number.
-<br/>
-
-</body></html>]]></MemoText>
-            </Memo>
-            <MultiplyFunction>
-              <Name>LargestLeafPosition</Name>
-              <VariableReference>
-                <Name>FinalLeafNumber</Name>
-                <VariableName>[Structure].MainStemFinalNodeNumber.Value</VariableName>
-              </VariableReference>
-              <Constant>
-                <Name>RelativePositionOfLargestLeaf</Name>
-                <Value>0.67</Value>
-              </Constant>
-            </MultiplyFunction>
-            <LinearInterpolationFunction>
-              <Name>AreaMax</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>1</double>
-                  <double>5</double>
-                  <double>10</double>
-                  <double>15</double>
-                  <double>20</double>
-                  <double>25</double>
-                </X>
-                <Y>
-                  <double>32530</double>
-                  <double>39259</double>
-                  <double>49659</double>
-                  <double>60000</double>
-                  <double>75000</double>
-                  <double>90000</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Structure].MainStemFinalNodeNumber.Value</XProperty>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>Breadth</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>5</double>
-                  <double>10</double>
-                  <double>15</double>
-                  <double>20</double>
-                  <double>25</double>
-                </X>
-                <Y>
-                  <double>-0.377</double>
-                  <double>-0.144</double>
-                  <double>-0.059</double>
-                  <double>-0.027</double>
-                  <double>-0.016</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Structure].MainStemFinalNodeNumber.Value</XProperty>
-            </LinearInterpolationFunction>
-            <Constant>
-              <Name>Skewness</Name>
-              <Value>0.00025</Value>
-            </Constant>
-          </BellCurveFunction>
-          <Constant>
-            <Name>NReallocationFactor</Name>
-            <Value>0.1</Value>
-          </Constant>
-          <Constant>
-            <Name>NRetranslocationFactor</Name>
-            <Value>0.03</Value>
-          </Constant>
-          <Constant>
-            <Name>DMRetranslocationFactor</Name>
-            <Value>0.5</Value>
-          </Constant>
-          <LinearInterpolationFunction>
-            <Name>CellDivisionStress</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0.9</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Sorghum].WaterSupplyDemandRatio</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>ExpansionStress</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0.3</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0.1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Sorghum].WaterSupplyDemandRatio</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>GrowthDuration</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.3</double>
-                <double>0.5</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>200</double>
-                <double>250</double>
-                <double>100</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].RelativeNodeApperance</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>LagDuration</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.5</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>350</double>
-                <double>650</double>
-                <double>600</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].RelativeNodeApperance</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>SenescenceDuration</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>11</double>
-                <double>20</double>
-              </X>
-              <Y>
-                <double>359</double>
-                <double>350</double>
-                <double>350</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].RelativeNodeApperance</XProperty>
-          </LinearInterpolationFunction>
-          <Constant>
-            <Name>DetachmentLagDuration</Name>
-            <Value>1000000</Value>
-          </Constant>
-          <Constant>
-            <Name>DetachmentDuration</Name>
-            <Value>1000000</Value>
-          </Constant>
-          <LinearInterpolationFunction>
-            <Name>MaximumNConc</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>1</double>
-                <double>10</double>
-              </X>
-              <Y>
-                <double>0.04</double>
-                <double>0.02</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
-          </LinearInterpolationFunction>
-          <Constant>
-            <Name>CriticalNConc</Name>
-            <Value>0.015</Value>
-          </Constant>
-          <Constant>
-            <Name>MinimumNConc</Name>
-            <Value>0.008</Value>
-          </Constant>
-          <AddFunction>
-            <Name>DroughtInducedSenAcceleration</Name>
-            <Constant>
-              <Name>One</Name>
-              <Value>1</Value>
-            </Constant>
-            <MultiplyFunction>
-              <Name>Stress</Name>
-              <Constant>
-                <Name>StressResponseCoefficient</Name>
-                <Value>1</Value>
-              </Constant>
-              <LinearInterpolationFunction>
-                <Name>StressFactor</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>0.7</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Sorghum].WaterSupplyDemandRatio</XProperty>
-              </LinearInterpolationFunction>
-            </MultiplyFunction>
-          </AddFunction>
-          <LinearInterpolationFunction>
-            <Name>SpecificLeafAreaMax</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>1</double>
-                <double>9</double>
-              </X>
-              <Y>
-                <double>60000</double>
-                <double>30000</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>SpecificLeafAreaMin</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>1</double>
-                <double>9</double>
-              </X>
-              <Y>
-                <double>6000</double>
-                <double>6000</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
-          </LinearInterpolationFunction>
-          <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>0.7</Value>
-          </Constant>
-          <Constant>
-            <Name>NonStructuralFraction</Name>
-            <Value>0</Value>
-          </Constant>
-          <LinearInterpolationFunction>
-            <Name>ShadeInducedSenescenceRate</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.7</double>
-                <double>0.8</double>
-                <double>0.96</double>
-                <double>0.99</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
-          </LinearInterpolationFunction>
-          <Constant>
-            <Name>InitialNConc</Name>
-            <Value>0</Value>
-          </Constant>
-        </LeafCohortParameters>
+        </Biomass>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
@@ -1379,10 +1044,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </XYPairs>
           <XProperty>[Weather].MinT</XProperty>
         </LinearInterpolationFunction>
-        <VariableReference>
-          <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
-        </VariableReference>
         <MinimumFunction>
           <Name>FRGRFunction</Name>
           <VariableReference>
@@ -1401,22 +1062,291 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
+        <VariableReference>
+          <Name>ThermalTime</Name>
+          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+        </VariableReference>
+        <Constant>
+          <Name>FTN</Name>
+          <Value>0.1</Value>
+        </Constant>
+        <MultiplyFunction>
+          <Name>TPLAMax</Name>
+          <Constant>
+            <Name>cm2Tomm2</Name>
+            <Value>100</Value>
+          </Constant>
+          <PowerFunction>
+            <Name>PowerFunction</Name>
+            <AddFunction>
+              <Name>AddFunction</Name>
+              <VariableReference>
+                <Name>FTN</Name>
+                <VariableName>[Leaf].FTN.Value</VariableName>
+              </VariableReference>
+              <Constant>
+                <Name>One</Name>
+                <Value>1</Value>
+              </Constant>
+            </AddFunction>
+            <Constant>
+              <Name>TillerCoeff</Name>
+              <Value>0.66</Value>
+            </Constant>
+            <Exponent>1</Exponent>
+          </PowerFunction>
+          <PowerFunction>
+            <Name>PowerFunction1</Name>
+            <VariableReference>
+              <Name>FLN</Name>
+              <VariableName>[Phenology].FinalLeafNo.Value</VariableName>
+            </VariableReference>
+            <Constant>
+              <Name>MainStemCoeff</Name>
+              <Value>2.9</Value>
+            </Constant>
+            <Exponent>1</Exponent>
+          </PowerFunction>
+        </MultiplyFunction>
+        <LessThanFunction>
+          <Name>TPLA2</Name>
+          <VariableReference>
+            <Name>TTFromEmergence</Name>
+            <VariableName>[Phenology].TTFromEmergence.Value</VariableName>
+          </VariableReference>
+          <Constant>
+            <Name>Constant</Name>
+            <Value>80</Value>
+          </Constant>
+          <MultiplyFunction>
+            <Name>MultiplyFunction</Name>
+            <DivideFunction>
+              <Name>DivideFunction</Name>
+              <VariableReference>
+                <Name>TTFromEmergence</Name>
+                <VariableName>[Phenology].TTFromEmergence.Value</VariableName>
+              </VariableReference>
+              <Constant>
+                <Name>Constant</Name>
+                <Value>80</Value>
+              </Constant>
+            </DivideFunction>
+            <DivideFunction>
+              <Name>tpla80</Name>
+              <VariableReference>
+                <Name>TPLAMax</Name>
+                <AddFunction>
+                  <Name>AddFunction</Name>
+                  <Constant>
+                    <Name>Constant</Name>
+                    <Value>1</Value>
+                  </Constant>
+                  <ExponentialFunction>
+                    <Name>ExponentialFunction</Name>
+                    <MultiplyFunction>
+                      <Name>MultiplyFunction</Name>
+                      <Constant>
+                        <Name>TPLAProductionCoeff</Name>
+                        <Value>0.018</Value>
+                      </Constant>
+                      <SubtractFunction>
+                        <Name>SubtractFunction</Name>
+                        <Constant>
+                          <Name>Constant</Name>
+                          <Value>80</Value>
+                        </Constant>
+                        <MultiplyFunction>
+                          <Name>TPLAInflection</Name>
+                          <Constant>
+                            <Name>TPLAInlectionRatio</Name>
+                            <Value>0.66</Value>
+                          </Constant>
+                          <VariableReference>
+                            <Name>TTEmergToFlagLeaf</Name>
+                            <VariableName>[Phenology].TTEmergToFlagLeaf.Value</VariableName>
+                          </VariableReference>
+                        </MultiplyFunction>
+                      </SubtractFunction>
+                    </MultiplyFunction>
+                    <A>0</A>
+                    <B>1</B>
+                    <C>-1</C>
+                  </ExponentialFunction>
+                </AddFunction>
+                <VariableName>[Leaf].TPLAMax.Value</VariableName>
+              </VariableReference>
+            </DivideFunction>
+          </MultiplyFunction>
+          <DivideFunction>
+            <Name>tplaover80</Name>
+            <VariableReference>
+              <Name>TPLAMax</Name>
+              <AddFunction>
+                <Name>AddFunction</Name>
+                <Constant>
+                  <Name>Constant</Name>
+                  <Value>1</Value>
+                </Constant>
+                <ExponentialFunction>
+                  <Name>ExponentialFunction</Name>
+                  <MultiplyFunction>
+                    <Name>MultiplyFunction</Name>
+                    <Constant>
+                      <Name>TPLAProductionCoeff</Name>
+                      <Value>0.018</Value>
+                    </Constant>
+                    <SubtractFunction>
+                      <Name>SubtractFunction</Name>
+                      <VariableReference>
+                        <Name>TTFromEmergence</Name>
+                        <VariableName>[Phenology].TTFromEmergence.Value</VariableName>
+                      </VariableReference>
+                      <MultiplyFunction>
+                        <Name>TPLAInflection</Name>
+                        <Constant>
+                          <Name>TPLAInflectionRatio</Name>
+                          <Value>0.66</Value>
+                        </Constant>
+                        <VariableReference>
+                          <Name>TTEmergToFlagLeaf</Name>
+                          <VariableName>[Phenology].TTEmergToFlagLeaf.Value</VariableName>
+                        </VariableReference>
+                      </MultiplyFunction>
+                    </SubtractFunction>
+                  </MultiplyFunction>
+                  <A>0</A>
+                  <B>1</B>
+                  <C>-1</C>
+                </ExponentialFunction>
+              </AddFunction>
+              <VariableName>[Leaf].TPLAMax.Value</VariableName>
+            </VariableReference>
+          </DivideFunction>
+        </LessThanFunction>
+        <Constant>
+          <Name>LAIFunction</Name>
+          <Value>0.1</Value>
+        </Constant>
+        <Constant>
+          <Name>NConc</Name>
+          <Value>1000</Value>
+        </Constant>
+        <Constant>
+          <Name>HeightFunction</Name>
+          <Value>10</Value>
+        </Constant>
+        <LessThanFunction>
+          <Name>Exponent</Name>
+          <VariableReference>
+            <Name>TTFromEmergence</Name>
+            <VariableName>[Phenology].TTFromEmergence.Value</VariableName>
+          </VariableReference>
+          <Constant>
+            <Name>Constant</Name>
+            <Value>80</Value>
+          </Constant>
+          <MultiplyFunction>
+            <Name>MultiplyFunction</Name>
+            <Constant>
+              <Name>TPLAProductionCoeff</Name>
+              <Value>0.018</Value>
+            </Constant>
+            <SubtractFunction>
+              <Name>SubtractFunction</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <Value>80</Value>
+              </Constant>
+              <MultiplyFunction>
+                <Name>TPLAInflection</Name>
+                <Constant>
+                  <Name>TPLAInlectionRatio</Name>
+                  <Value>0.66</Value>
+                </Constant>
+                <VariableReference>
+                  <Name>TTEmergToFlagLeaf</Name>
+                  <VariableName>[Phenology].TTEmergToFlagLeaf.Value</VariableName>
+                </VariableReference>
+              </MultiplyFunction>
+            </SubtractFunction>
+          </MultiplyFunction>
+          <MultiplyFunction>
+            <Name>MultiplyFunction1</Name>
+            <Constant>
+              <Name>TPLAProductionCoeff</Name>
+              <Value>0.018</Value>
+            </Constant>
+            <SubtractFunction>
+              <Name>SubtractFunction</Name>
+              <VariableReference>
+                <Name>TTFromEmergence</Name>
+                <VariableName>[Phenology].TTFromEmergence.Value</VariableName>
+              </VariableReference>
+              <MultiplyFunction>
+                <Name>TPLAInflection</Name>
+                <Constant>
+                  <Name>TPLAInlectionRatio</Name>
+                  <Value>0.66</Value>
+                </Constant>
+                <VariableReference>
+                  <Name>TTEmergToFlagLeaf</Name>
+                  <VariableName>[Phenology].TTEmergToFlagLeaf.Value</VariableName>
+                </VariableReference>
+              </MultiplyFunction>
+            </SubtractFunction>
+          </MultiplyFunction>
+        </LessThanFunction>
+        <DivideFunction>
+          <Name>TPLA</Name>
+          <VariableReference>
+            <Name>TPLAMax</Name>
+            <VariableName>[Leaf].TPLAMax.Value</VariableName>
+          </VariableReference>
+          <AddFunction>
+            <Name>AddFunction</Name>
+            <Constant>
+              <Name>Constant</Name>
+              <Value>1</Value>
+            </Constant>
+            <ExponentialFunction>
+              <Name>ExpFunc</Name>
+              <VariableReference>
+                <Name>Exponent</Name>
+                <VariableName>[Leaf].Exponent.Value</VariableName>
+              </VariableReference>
+              <A>0</A>
+              <B>1</B>
+              <C>-1</C>
+            </ExponentialFunction>
+          </AddFunction>
+        </DivideFunction>
+        <MultiplyFunction>
+          <Name>TPLAInflection</Name>
+          <Constant>
+            <Name>TPLAInlectionRatio</Name>
+            <Value>0.66</Value>
+          </Constant>
+          <VariableReference>
+            <Name>TTEmergToFlagLeaf</Name>
+            <VariableName>[Phenology].TTEmergToFlagLeaf.Value</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
-        <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
-        <StartFractionExpanded>0</StartFractionExpanded>
-        <FractionNextleafExpanded>0</FractionNextleafExpanded>
-        <_ExpandedNodeNo>0</_ExpandedNodeNo>
-        <DeadNodesYesterday>0</DeadNodesYesterday>
-        <MaxCover>1</MaxCover>
+        <BiomassYesterday>0</BiomassYesterday>
         <Albedo>0</Albedo>
         <Gsmax>0</Gsmax>
         <R50>200</R50>
+        <LAI>0</LAI>
+        <Height>0</Height>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
+        <K>0</K>
         <KDead>0.03</KDead>
-        <FractionDied>0</FractionDied>
-      </Leaf>
+        <DeltaBiomass>0</DeltaBiomass>
+        <LAIDead>0</LAIDead>
+        <WaterAllocation>0</WaterAllocation>
+      </SimpleLeaf>
       <GenericAboveGroundOrgan>
         <Name>Husk</Name>
         <PopulationBasedDemandFunction>
@@ -1922,12 +1852,12 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
           <Manager>
             <Name>SorghumSowingRule</Name>
             <Script>
-              <DaysAfterSowing>0</DaysAfterSowing>
               <PlantPopulation>10</PlantPopulation>
               <RowSpacing>500</RowSpacing>
               <SowingDepth>30</SowingDepth>
               <CultivarName>Buster</CultivarName>
               <SowingDate>1997-11-27</SowingDate>
+              <DaysAfterSowing>0</DaysAfterSowing>
             </Script>
             <Code><![CDATA[
         using System;
@@ -2922,65 +2852,65 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
               <SowingDate>1997-11-27</SowingDate>
             </Script>
             <Code><![CDATA[
-        using System;
-        using Models.Core;
-        using Models.PMF;
-        using APSIM.Shared.Utilities;
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
         
-        namespace Models
-        {
-           [Serializable] 
-           [System.Xml.Serialization.XmlInclude(typeof(Model))]
-            public class Script : Model
-            {      
-               [Link] Plant Sorghum;
-               [Link] Clock Clock;
-               [Link] Fertiliser Fertiliser;
-               [Description("Sowing Density (mm)")]
-               public double PlantPopulation { get; set;}
-               [Description("Row Spacing (mm)")]
-               public double RowSpacing { get; set; }
-               [Description("Sowing Depth (mm)")]
-               public double SowingDepth { get; set;}
-               [Description("Cultivar")]
-               [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
-               public string CultivarName { get; set; }
-               [Description("Sowing Date")]
-               public DateTime SowingDate { get; set; }
-               //[Description("Skip Row Configuration")]
-               //public string SkipConfig { get; set;}
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Sorghum;
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Description("Sowing Density (mm)")]
+		public double PlantPopulation { get; set; }
+		[Description("Row Spacing (mm)")]
+		public double RowSpacing { get; set; }
+		[Description("Sowing Depth (mm)")]
+		public double SowingDepth { get; set; }
+		[Description("Cultivar")]
+		[Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
+		public string CultivarName { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+		//[Description("Skip Row Configuration")]
+		//public string SkipConfig { get; set;}
                
-               public int DaysAfterSowing { get; set;}
+		public int DaysAfterSowing { get; set; }
                
              
                
-               [EventSubscribe("DoManagement")]
-               private void OnDoManagement(object sender, EventArgs e)
-               {
-				//double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
-				////////////////////////Need to put in skip///////////////////////////////////////
-				if (Clock.Today.Date == SowingDate)
-				{
-                    Sorghum.Sow(population:PlantPopulation, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);
-                 DaysAfterSowing = 0;
-                 }
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			//double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
+			////////////////////////Need to put in skip///////////////////////////////////////
+			if (Clock.Today.Date == SowingDate)
+			{
+				Sorghum.Sow(population: PlantPopulation, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);
+				DaysAfterSowing = 0;
+			}
                  
-                 if(Clock.Today.Date > SowingDate)
-                 {
-                 DaysAfterSowing+=1;
-                 }
+			if (Clock.Today.Date > SowingDate)
+			{
+				DaysAfterSowing += 1;
+			}
                     
-                //Potato.Sow(... Contains the following arguements:
-                //Population  double  Required  Seeds sowing/m2
-                //Cultivar    string  Required  "NameOfCultivar"
-                //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
-                //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0
-                //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
-                //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
-                //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
-			   }
-            }
-        }
+			//Potato.Sow(... Contains the following arguements:
+			//Population  double  Required  Seeds sowing/m2
+			//Cultivar    string  Required  "NameOfCultivar"
+			//Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
+			//MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0
+			//BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
+			//RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
+			//CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
+		}
+	}
+}
 				]]></Code>
           </Manager>
         </Folder>
@@ -3363,7 +3293,7 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
               <double>200</double>
             </Thickness>
             <SW>
-              <double>0.217</double>
+              <double>0.232</double>
               <double>0.357</double>
               <double>0.375</double>
               <double>0.401</double>
@@ -3524,13 +3454,11 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
             <string>[Sorghum].Phenology.Stage as stage</string>
             <string>[Sorghum].Summariser.AboveGroundLive.Wt as biomass</string>
             <string>[Sorghum].Root.Live.Wt as root.wt</string>
-            <string>[Sorghum].Leaf.Live.Wt as leaf.wt</string>
             <string>[Sorghum].Stem.Live.Wt as stem.wt</string>
             <string>[Sorghum].Rachis.Live.Wt as rachis.wt</string>
             <string>[Sorghum].Grain.Live.Wt as yield</string>
             <string>[Sorghum].Summariser.AboveGroundLive.N as tops.wt</string>
             <string>[Sorghum].Root.Live.N as root.n</string>
-            <string>[Sorghum].Leaf.Live.N as leaf.n</string>
             <string>[Sorghum].Stem.Live.N as stem.n </string>
             <string>[Sorghum].Rachis.Live.N as rachis.n</string>
             <string>[Sorghum].Grain.Live.N as grain.n</string>
@@ -3538,10 +3466,6 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
             <string>[Sorghum].Grain.NumberFunction.Value as grainno</string>
             <string>[Sorghum].Grain.Size as grainsize </string>
             <string>[Sorghum].Structure.MainStemNodeNo as leafno</string>
-            <string>[Sorghum].Leaf.ExpandedNodeNo as liguleno</string>
-            <string>[Sorghum].Leaf.ExpandedCohortNo as ligulenocohort</string>
-            <string>[Sorghum].Leaf.LAI as LAI</string>
-            <string>[Sorghum].Leaf.LAIDead as SLAI</string>
             <string>[Sorghum].Phenology.LeafAppearance1.RemainingLeaves.Value</string>
             <string>[Sorghum].Phenology.LeafAppearance2.RemainingLeaves.Value</string>
             <string>[Sorghum].Phenology.LeafAppearance1._RemainingLeaves</string>
@@ -3562,6 +3486,13 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
             <string>[Phenology].GrainFilling.Target.Value</string>
             <string>[Phenology].Maturing.Target.Value</string>
             <string>[Phenology].MaturityToHarvestRipe.Target.Value</string>
+            <string>[Phenology].TTFromEmergence.Value</string>
+            <string>[Leaf].TPLA.Value</string>
+            <string>[Leaf].TPLA2.Value</string>
+            <string>[Leaf].TPLAMax.Value</string>
+            <string>[Leaf].Exponent.Value</string>
+            <string>[Leaf].TPLAInflection.Value</string>
+            <string>[Phenology].TTEmergToFlagLeaf.Value</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
