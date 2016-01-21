@@ -38,9 +38,18 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SimpleLeaf : BaseOrgan, AboveGround, ICanopy
+    public class SimpleLeaf : BaseOrgan, AboveGround, ICanopy, ILeaf
     {
         #region Canopy interface
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool CohortsInitialised { get; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public double PlantAppearedLeafNo {get; }
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.CropType; } }
@@ -71,7 +80,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (CoverFunction == null)
-                    return 1.0 - Math.Exp((-1 * ExtinctionCoefficientFunction.Value) * LAI);
+                    return 1.0 - Math.Exp((-1 * ExtinctionCoeff.Value) * LAI);
                 return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
             }
         }
@@ -106,7 +115,7 @@ namespace Models.PMF.Organs
         [Link]
         IFunction FRGRFunction = null;   // VPD effect on Growth Interpolation Set
         /// <summary>The dm demand function</summary>
-        [Link]
+        [Link(IsOptional = true)]
         IFunction DMDemandFunction = null;
         /// <summary>The cover function</summary>
         [Link(IsOptional = true)]
@@ -115,14 +124,14 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         IFunction NitrogenDemandSwitch = null;
         /// <summary>The n conc</summary>
-        [Link]
+        [Link(IsOptional = true)]
         IFunction NConc = null;
         /// <summary>The lai function</summary>
         [Link(IsOptional = true)]
         IFunction LAIFunction = null;
         /// <summary>The extinction coefficient function</summary>
         [Link(IsOptional = true)]
-        IFunction ExtinctionCoefficientFunction = null;
+        IFunction ExtinctionCoeff = null;
         /// <summary>The photosynthesis</summary>
         [Link(IsOptional = true)]
         IFunction Photosynthesis = null;
@@ -400,12 +409,12 @@ namespace Models.PMF.Organs
             if (Plant.IsEmerged)
             {
                 FRGR = FRGRFunction.Value;
-                if (CoverFunction == null & ExtinctionCoefficientFunction == null)
+                if (CoverFunction == null & ExtinctionCoeff == null)
                 {
                     throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
                 }
                 if (CoverFunction != null)
-                    LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value * -1));
+                    LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoeff.Value * -1));
                 if (LAIFunction != null)
                     LAI = LAIFunction.Value;
 
@@ -575,7 +584,7 @@ namespace Models.PMF.Organs
                 }
                 tags.Add(new AutoDocumentation.Paragraph("Then LAI is calculated using an inverted Beer Lamberts equation with the estimated Cover value:"
                     + " <b>LAI = Log(1 - Cover) / (ExtinctionCoefficient * -1));", indent));
-                tags.Add(new AutoDocumentation.Paragraph("Where ExtinctionCoefficient has a value of " + ExtinctionCoefficientFunction.Value, indent+1));
+                tags.Add(new AutoDocumentation.Paragraph("Where ExtinctionCoefficient has a value of " + ExtinctionCoeff.Value, indent+1));
             }
             if (LAIFunction != null)
             {
@@ -587,7 +596,7 @@ namespace Models.PMF.Organs
                 }
                 tags.Add(new AutoDocumentation.Paragraph("Then the cover produced by the canopy is calculated using LAI and the Beer Lamberts equation:" + this.Name
                     + " <b>Cover = 1.0 - e<sup>((-1 * ExtinctionCoefficient) * LAI);", indent));
-                tags.Add(new AutoDocumentation.Paragraph("Where ExtinctionCoefficient has a value of " + ExtinctionCoefficientFunction.Value, indent + 1));
+                tags.Add(new AutoDocumentation.Paragraph("Where ExtinctionCoefficient has a value of " + ExtinctionCoeff.Value, indent + 1));
             }
             tags.Add(new AutoDocumentation.Paragraph("The canopies values of Cover and LAI are passed to the MicroClimate module which uses the Penman Monteith equation to calculate potential evapotranspiration for each canopy and passes the value back to the crop", indent ));
             tags.Add(new AutoDocumentation.Paragraph("The effect of growth rate on transpiration is captured using the Fractional Growth Rate (FRGR) function which is parameterised as a function of temperature for the simple leaf", indent));
