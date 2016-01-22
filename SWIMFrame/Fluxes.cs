@@ -42,10 +42,11 @@ namespace SWIMFrame
         /// Only required for unit testing.
         /// </summary>
         /// <param name="soilProps"></param>
-        public static void SetupSsflux(SoilProps setsp, int setnu)
+        public static void SetupSsflux(SoilProps setsp, int setnu, double[] sethpK)
         {
             sp = setsp;
             nu = setnu;
+            hpK = sethpK;
         }
 
         public static void FluxTable(double dz, SoilProps props)
@@ -258,8 +259,11 @@ namespace SWIMFrame
             for (int idx = 1; idx < da.Length; idx++)
             {
                 da[idx] = 1.0 / daTemp[idx];
-                if(idx < db.Length)
-                    db[idx] = 1.0 / dbTemp[idx];
+            }
+
+            for (int idx=1;idx<db.Length;idx++)
+            {
+                db[idx] = 1.0 / dbTemp[idx];
             }
 
             diags.Append("da: ");
@@ -269,12 +273,12 @@ namespace SWIMFrame
 
             // apply Simpson's rule
             // u[] = sum((aphi(n1+1:n2)-aphi(n1:n2-1))*(da(1:np-1)+4*db+da(2:np))/6). Love the C# implementation. Note aphi is now sp.phic
-            u[0] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply
+            u[1] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply
                   (MathUtilities.Subtract(sp.phic.Slice(n1 + 1, n2), sp.phic.Slice(n1, n2 - 1)), 
                   MathUtilities.Add(MathUtilities.Add(MathUtilities.Multiply_Value(db, 4), da.Slice(1, np - 1)), da.Slice(2, np))), 6)); // this is madness!
             da = MathUtilities.Multiply(da, da);
             db = MathUtilities.Multiply(db, db);
-            u[1] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply
+            u[2] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply
                   (MathUtilities.Subtract(sp.phic.Slice(n1 + 1, n2), sp.phic.Slice(n1, n2 - 1)),
                   MathUtilities.Add(MathUtilities.Add(MathUtilities.Multiply_Value(db, 4), da.Slice(1, np - 1)), da.Slice(2, np))), 6));
        //     if (double.IsNaN(u[0]) || double.IsNaN(u[1]))
@@ -367,7 +371,7 @@ namespace SWIMFrame
                     n2 = ib;
                 }
             }
-            u0 = new double[] { 0.0, 0.0 }; // u(1) is z, u(2) is dz/dq (partial deriv)
+            u0 = new double[] {0.0, 0.0, 0.0 }; // u(1) is z, u(2) is dz/dq (partial deriv)
             //write (*,*) q1,q,q2
             for (it = 1; it < maxit; it++)// bounded Newton iterations to get q that gives correct dz
             {
@@ -377,11 +381,16 @@ namespace SWIMFrame
                 if (i > n || j > n) // add sat solns
                 {
                     Ks = Math.Max(Ka, Kb);
-                    u[0] = u[0] + Ks * dh / (Ks - q);
-                    u[1] = u[1] + Ks * dh / Math.Pow(Ks - q, 2);
+                    u[1] += Ks * dh / (Ks - q);
+                    u[2] += Ks * dh / Math.Pow(Ks - q, 2);
                 }
 
-                dq = (v1 - u[0]) / u[1]; // delta z / dz/dq
+                /*/ this is where the deviation occurs.
+                 * The numbers here are correct to 7 dp (single precision from FORTRAN)
+                 * The problem is that we have a small number divided by a much larger number
+                 * which introduces error. This may or may not be a problem.
+                /*/
+                dq = (v1 - u[1]) / u[2]; // delta z / dz/dq
                 qp = q; // save q before updating
                 if (dq > 0.0)
                 {
