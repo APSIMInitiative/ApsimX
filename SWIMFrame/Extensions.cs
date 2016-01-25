@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace SWIMFrame
 {
@@ -27,6 +28,22 @@ namespace SWIMFrame
                 res[i + 1] = source[i + start];
             }
             return res;
+        }
+
+        /// <summary>
+        /// Slice a 2D array
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="dim"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public static double[] Slice2D<T>(this double[,] source, int dim, int start, int end)
+        {
+            Matrix<double> m = Matrix<double>.Build.DenseOfArray(source); 
+            double[] absh = hm.Column(j).ToArray();
+            absh = absh.Slice(1, n[j])
         }
 
         /// <summary>

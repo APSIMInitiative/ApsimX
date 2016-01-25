@@ -125,7 +125,7 @@ namespace SWIMFrame
             phi1max = phi[1, n[1]];
 
             // Get phi for same h.
-            if(h[1,1] > h[2,1])
+            if (h[1, 1] > h[2, 1])
             {
                 i = 1;
                 j = 2;
@@ -139,9 +139,18 @@ namespace SWIMFrame
             Matrix<double> hm = Matrix<double>.Build.DenseOfArray(h); //test
             double[] absh = hm.Column(j).ToArray();
             absh = absh.Slice(1, n[j]);
+            absh = MathUtilities.Subtract_Value(absh, h[i, 1]);
             for (int x = 0; x < absh.Length; x++)
                 absh[x] = Math.Abs(absh[x]);
-            id=MinLoc()
+            id = MinLoc(absh);
+            if (h[j, id] >= h[i, 1])
+                id--;
+
+            //phii(j,:) for soil j will match h(i,:) from soil i and h(j, 1:id) from soil j.
+            //phii(i,:) for soil i will match h(i,:) and fill in for h(j, 1:id).
+            Matrix<double> phiim = Matrix<double>.Build.DenseOfArray(phii);
+            Matrix<double> phim = Matrix<double>.Build.DenseOfArray(phi);
+            phii[j]
 
             return new FluxTable();
         }
