@@ -466,7 +466,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
               <Value>20</Value>
             </Constant>
             <Start>Emergence</Start>
-            <End>End_Juvenile</End>
+            <End>EndJuvenile</End>
           </PhaseLookupValue>
           <PhaseLookupValue>
             <Name>Phyllochron</Name>
@@ -474,8 +474,8 @@ Though tillering is common in some sorghum varieties under certain agronomic con
               <Name>LeafAppRate2</Name>
               <Value>30</Value>
             </Constant>
-            <Start>End_Juvenile</Start>
-            <End>Flag_Leaf</End>
+            <Start>EndJuvenile</Start>
+            <End>FlagLeaf</End>
           </PhaseLookupValue>
         </PhaseLookup>
         <MainStemFinalNodeNumberFunction>
