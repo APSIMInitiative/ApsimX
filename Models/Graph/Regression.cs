@@ -87,7 +87,7 @@ namespace Models.Graph
         private void PutRegressionLineOnGraph(List<SeriesDefinition> definitions, IEnumerable x, IEnumerable y, 
                                               Color colour, string title)
         {
-            MathUtilities.RegrStats stat = MathUtilities.CalcRegressionStats(title, x, y);
+            MathUtilities.RegrStats stat = MathUtilities.CalcRegressionStats(title, y, x);
             if (stat != null)
             {
                 stats.Add(stat);
