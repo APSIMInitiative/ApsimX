@@ -449,13 +449,6 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <Name>ThermalTime</Name>
           <VariableName>[Phenology].ThermalTime.Value</VariableName>
         </VariableReference>
-        <PhaseLookup>
-          <Name>MainStemPrimordiaInitiationRate</Name>
-          <VariableReference>
-            <Name>LeafInitRate</Name>
-            <VariableName>[Structure].LeafInitiationRate.Value</VariableName>
-          </VariableReference>
-        </PhaseLookup>
         <LessThanFunction>
           <Name>MainStemNodeAppearanceRate</Name>
           <VariableReference>
@@ -550,6 +543,10 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <Name>PlantMortality</Name>
           <Value>0</Value>
         </Constant>
+        <VariableReference>
+          <Name>MainStemPrimordiaInitiationRate</Name>
+          <VariableName>[Structure].LeafInitiationRate.Value</VariableName>
+        </VariableReference>
         <InitialiseStage>Emergence</InitialiseStage>
         <PrimaryBudNo>1</PrimaryBudNo>
       </Structure>
@@ -919,12 +916,16 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </Biomass>
         <Biomass>
           <Name>Dead</Name>
+          <Constant>
+            <Name>RUE</Name>
+            <Value>1.25</Value>
+          </Constant>
         </Biomass>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>1.75</Value>
+            <Value>1.25</Value>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
@@ -933,7 +934,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <X>
                 <double>0</double>
                 <double>8</double>
-                <double>15</double>
+                <double>20</double>
                 <double>35</double>
                 <double>50</double>
               </X>
@@ -945,55 +946,8 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
                 <double>0</double>
               </Y>
             </XYPairs>
-            <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
           </WeightedTemperatureFunction>
-          <LinearInterpolationFunction>
-            <Name>FVPD</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>10</double>
-                <double>50</double>
-              </X>
-              <Y>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Leaf].Photosynthesis.VPD</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>FN</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0.3</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Leaf].Fn</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>FW</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.3</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Leaf].Fw</XProperty>
-          </LinearInterpolationFunction>
           <RUECO2Function>
             <Name>FCO2</Name>
             <PhotosyntheticPathway>C4</PhotosyntheticPathway>
@@ -1002,47 +956,37 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Name>RadnInt</Name>
             <VariableName>[Leaf].RadIntTot</VariableName>
           </VariableReference>
+          <Constant>
+            <Name>FVPD</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>FN</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>FW</Name>
+            <Value>1</Value>
+          </Constant>
         </RUEModel>
         <MultiplyFunction>
           <Name>ExtinctionCoeff</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[
-<html><body>
-Extinction coefficient is specified in terms of a potential extinction coefficient which is then discounted during periods of water stress to account for the impact of leaf curling.
-<br/>
-
-</body></html>]]></MemoText>
-          </Memo>
           <LinearInterpolationFunction>
             <Name>PotentialExtinctionCoeff</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>0</double>
-                <double>0.45</double>
-              </X>
-              <Y>
-                <double>0.65</double>
-                <double>0.65</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Leaf].LAI</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>WaterStressImpact</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.7</double>
-              </X>
-              <Y>
+                <double>0.2</double>
                 <double>0.5</double>
                 <double>1</double>
+              </X>
+              <Y>
+                <double>0.7</double>
+                <double>0.4</double>
+                <double>0.4</double>
               </Y>
             </XYPairs>
-            <XProperty>[Sorghum].WaterSupplyDemandRatio</XProperty>
+            <XProperty>[Sorghum].SowingData.RowSpacing</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
         <LinearInterpolationFunction>
@@ -1124,125 +1068,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Exponent>1</Exponent>
           </PowerFunction>
         </MultiplyFunction>
-        <LessThanFunction>
-          <Name>TPLA2</Name>
-          <VariableReference>
-            <Name>TTFromEmergence</Name>
-            <VariableName>[Phenology].TTFromEmergence.Value</VariableName>
-          </VariableReference>
-          <Constant>
-            <Name>Constant</Name>
-            <Value>80</Value>
-          </Constant>
-          <MultiplyFunction>
-            <Name>MultiplyFunction</Name>
-            <DivideFunction>
-              <Name>DivideFunction</Name>
-              <VariableReference>
-                <Name>TTFromEmergence</Name>
-                <VariableName>[Phenology].TTFromEmergence.Value</VariableName>
-              </VariableReference>
-              <Constant>
-                <Name>Constant</Name>
-                <Value>80</Value>
-              </Constant>
-            </DivideFunction>
-            <DivideFunction>
-              <Name>tpla80</Name>
-              <VariableReference>
-                <Name>TPLAMax</Name>
-                <AddFunction>
-                  <Name>AddFunction</Name>
-                  <Constant>
-                    <Name>Constant</Name>
-                    <Value>1</Value>
-                  </Constant>
-                  <ExponentialFunction>
-                    <Name>ExponentialFunction</Name>
-                    <MultiplyFunction>
-                      <Name>MultiplyFunction</Name>
-                      <Constant>
-                        <Name>TPLAProductionCoeff</Name>
-                        <Value>0.018</Value>
-                      </Constant>
-                      <SubtractFunction>
-                        <Name>SubtractFunction</Name>
-                        <Constant>
-                          <Name>Constant</Name>
-                          <Value>80</Value>
-                        </Constant>
-                        <MultiplyFunction>
-                          <Name>TPLAInflection</Name>
-                          <Constant>
-                            <Name>TPLAInlectionRatio</Name>
-                            <Value>0.66</Value>
-                          </Constant>
-                          <VariableReference>
-                            <Name>TTEmergToFlagLeaf</Name>
-                            <VariableName>[Phenology].TTEmergToFlagLeaf.Value</VariableName>
-                          </VariableReference>
-                        </MultiplyFunction>
-                      </SubtractFunction>
-                    </MultiplyFunction>
-                    <A>0</A>
-                    <B>1</B>
-                    <C>-1</C>
-                  </ExponentialFunction>
-                </AddFunction>
-                <VariableName>[Leaf].TPLAMax.Value</VariableName>
-              </VariableReference>
-            </DivideFunction>
-          </MultiplyFunction>
-          <DivideFunction>
-            <Name>tplaover80</Name>
-            <VariableReference>
-              <Name>TPLAMax</Name>
-              <AddFunction>
-                <Name>AddFunction</Name>
-                <Constant>
-                  <Name>Constant</Name>
-                  <Value>1</Value>
-                </Constant>
-                <ExponentialFunction>
-                  <Name>ExponentialFunction</Name>
-                  <MultiplyFunction>
-                    <Name>MultiplyFunction</Name>
-                    <Constant>
-                      <Name>TPLAProductionCoeff</Name>
-                      <Value>0.018</Value>
-                    </Constant>
-                    <SubtractFunction>
-                      <Name>SubtractFunction</Name>
-                      <VariableReference>
-                        <Name>TTFromEmergence</Name>
-                        <VariableName>[Phenology].TTFromEmergence.Value</VariableName>
-                      </VariableReference>
-                      <MultiplyFunction>
-                        <Name>TPLAInflection</Name>
-                        <Constant>
-                          <Name>TPLAInflectionRatio</Name>
-                          <Value>0.66</Value>
-                        </Constant>
-                        <VariableReference>
-                          <Name>TTEmergToFlagLeaf</Name>
-                          <VariableName>[Phenology].TTEmergToFlagLeaf.Value</VariableName>
-                        </VariableReference>
-                      </MultiplyFunction>
-                    </SubtractFunction>
-                  </MultiplyFunction>
-                  <A>0</A>
-                  <B>1</B>
-                  <C>-1</C>
-                </ExponentialFunction>
-              </AddFunction>
-              <VariableName>[Leaf].TPLAMax.Value</VariableName>
-            </VariableReference>
-          </DivideFunction>
-        </LessThanFunction>
-        <Constant>
-          <Name>LAIFunction</Name>
-          <Value>0.1</Value>
-        </Constant>
         <Constant>
           <Name>NConc</Name>
           <Value>1000</Value>
@@ -1312,8 +1137,74 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </SubtractFunction>
           </MultiplyFunction>
         </LessThanFunction>
-        <DivideFunction>
+        <MultiplyFunction>
+          <Name>TPLAInflection</Name>
+          <Constant>
+            <Name>TPLAInlectionRatio</Name>
+            <Value>0.66</Value>
+          </Constant>
+          <VariableReference>
+            <Name>TTEmergToFlagLeaf</Name>
+            <VariableName>[Phenology].TTEmergToFlagLeaf.Value</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
+        <MultiplyFunction>
+          <Name>LAIFunction</Name>
+          <Constant>
+            <Name>cm2tom2</Name>
+            <Value>1E-06</Value>
+          </Constant>
+          <VariableReference>
+            <Name>TPLA</Name>
+            <VariableName>[Leaf].TPLA.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Sorghum].SowingData.Population</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
+        <LessThanFunction>
           <Name>TPLA</Name>
+          <VariableReference>
+            <Name>TTFromEmergence</Name>
+            <VariableName>[Phenology].TTFromEmergence.Value</VariableName>
+          </VariableReference>
+          <Constant>
+            <Name>Constant</Name>
+            <Value>80</Value>
+          </Constant>
+          <AddFunction>
+            <Name>AddFunction</Name>
+            <Constant>
+              <Name>Constant</Name>
+              <Value>200</Value>
+            </Constant>
+            <MultiplyFunction>
+              <Name>MultiplyFunction</Name>
+              <DivideFunction>
+                <Name>DivideFunction</Name>
+                <VariableReference>
+                  <Name>TTFromEmergence</Name>
+                  <VariableName>[Phenology].TTFromEmergence.Value</VariableName>
+                </VariableReference>
+                <Constant>
+                  <Name>Constant</Name>
+                  <Value>80</Value>
+                </Constant>
+              </DivideFunction>
+              <VariableReference>
+                <Name>TPLAToday</Name>
+                <VariableName>[Leaf].TPLAToday.Value</VariableName>
+              </VariableReference>
+            </MultiplyFunction>
+          </AddFunction>
+          <VariableReference>
+            <Name>TPLAToday</Name>
+            <VariableName>[Leaf].TPLAToday.Value</VariableName>
+          </VariableReference>
+        </LessThanFunction>
+        <DivideFunction>
+          <Name>TPLAToday</Name>
           <VariableReference>
             <Name>TPLAMax</Name>
             <VariableName>[Leaf].TPLAMax.Value</VariableName>
@@ -1336,17 +1227,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </ExponentialFunction>
           </AddFunction>
         </DivideFunction>
-        <MultiplyFunction>
-          <Name>TPLAInflection</Name>
-          <Constant>
-            <Name>TPLAInlectionRatio</Name>
-            <Value>0.66</Value>
-          </Constant>
-          <VariableReference>
-            <Name>TTEmergToFlagLeaf</Name>
-            <VariableName>[Phenology].TTEmergToFlagLeaf.Value</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
         <BiomassYesterday>0</BiomassYesterday>
@@ -1894,12 +1774,12 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
             <Manager>
               <Name>SorghumSowingRule</Name>
               <Script>
+                <DaysAfterSowing>0</DaysAfterSowing>
                 <PlantPopulation>10</PlantPopulation>
                 <RowSpacing>500</RowSpacing>
                 <SowingDepth>30</SowingDepth>
                 <CultivarName>Buster</CultivarName>
                 <SowingDate>1997-11-27</SowingDate>
-                <DaysAfterSowing>0</DaysAfterSowing>
               </Script>
               <Code><![CDATA[
 using System;
@@ -2540,8 +2420,10 @@ namespace Models
               <string>[Leaf].TPLA.Value</string>
               <string>[Leaf].TPLA2.Value</string>
               <string>[Leaf].TPLAMax.Value</string>
+              <string>[Leaf].TPLAToday.Value</string>
               <string>[Leaf].Exponent.Value</string>
               <string>[Leaf].TPLAInflection.Value</string>
+              <string>[Leaf].LAI</string>
               <string>[Phenology].TTEmergToFlagLeaf.Value</string>
               <string>[Structure].MainStemFinalNodeNumber.Value</string>
               <string>[Structure].MainStemNodeNo</string>
@@ -2786,6 +2668,77 @@ namespace Models
           <TableName>Report</TableName>
           <XFieldName>date</XFieldName>
           <YFieldName>Structure.MainStemNodeNo</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>TPLA</Name>
+        <Series>
+          <Name>TPLA</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Phenology.TTFromEmergence.Value</XFieldName>
+          <YFieldName>Leaf.TPLA.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>LAI</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Phenology.TTFromEmergence.Value</XFieldName>
+          <YFieldName>Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
