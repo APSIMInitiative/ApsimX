@@ -48,14 +48,13 @@ namespace SWIMFrame
             dz[1, 1] = 20;
             dz[1, 2] = 30;
             dz[1, 4] = 40;
-            for (i = 0; i < 1; i++) //should be 2, using the first one for debugging.
+            for (i = 0; i < 1; i++) //i should be 2, using the first one for debugging.
             {
                 BinaryWriter b = new BinaryWriter(File.OpenWrite("soil" + soils[i].sid + ".dat"));
                 MVG.Params(soils[i].sid, soils[i].ths, soils[i].ks, soils[i].he, soils[i].hd, soils[i].p, soils[i].hg, soils[i].em, soils[i].en);
                 soils[i].sp = Soil.gensptbl(dzmin, soils[i], Kgiven);
-                b.Write(soils[i].sid);
+               // b.Write(soils[i].sid);
                 WriteProps(b, soils[i].sp);
-                WritePropsXML(soils[i].sp);
                 b.Close();
                 for (j = 0; j < ndz[i]; j++)
                 {
