@@ -8,6 +8,7 @@ using Models.PMF.Functions.SupplyFunctions;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
+using Models.PMF.Phen;
 
 namespace Models.PMF.Organs
 {
@@ -144,6 +145,12 @@ namespace Models.PMF.Organs
         /// <summary>The structural fraction</summary>
         [Link(IsOptional = true)]
         IFunction StructuralFraction = null;
+        /// <summary>The structure</summary>
+        [Link]
+        public Structure Structure = null;
+        /// <summary>The phenology</summary>
+        [Link]
+        public Phenology Phenology = null;
         #endregion
 
         #region States and variables
@@ -368,7 +375,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-
+            //if (Phenology.OnDayOf(Structure.InitialiseStage))
+            //    InitialiseCohorts();
+            if (Phenology.OnDayOf("Emergence"))
+            {
+                Structure.MainStemNodeNo = 1.0;
+            }
             EP = 0;
         }
         #endregion
