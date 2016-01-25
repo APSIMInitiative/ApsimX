@@ -423,6 +423,17 @@ A function is used to provide maturity date as days after sowing(DAS).
           <StartStageName>Flowering</StartStageName>
           <EndStageName>Maturity</EndStageName>
         </AccumulateFunction>
+        <AddFunction>
+          <Name>TTEmergToFloralInit</Name>
+          <VariableReference>
+            <Name>TTTargetJuvenille</Name>
+            <VariableName>[Phenology].Juvenile.Target.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>TTTargetJuvToFI</Name>
+            <VariableName>[Phenology].JuvenileToFloralInit.Target.Value</VariableName>
+          </VariableReference>
+        </AddFunction>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -440,73 +451,57 @@ Though tillering is common in some sorghum varieties under certain agronomic con
         </VariableReference>
         <PhaseLookup>
           <Name>MainStemPrimordiaInitiationRate</Name>
-          <PhaseLookupValue>
-            <Name>Plastochron</Name>
-            <MultiplyFunction>
-              <Name>Plastochron</Name>
-              <VariableReference>
-                <Name>Phyllochron</Name>
-                <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
-              </VariableReference>
-              <Constant>
-                <Name>LeafTipsPerPrimordia</Name>
-                <Value>0.5</Value>
-              </Constant>
-            </MultiplyFunction>
-            <Start>Emergence</Start>
-            <End>FloralInitiation</End>
-          </PhaseLookupValue>
+          <VariableReference>
+            <Name>LeafInitRate</Name>
+            <VariableName>[Structure].LeafInitiationRate.Value</VariableName>
+          </VariableReference>
         </PhaseLookup>
-        <PhaseLookup>
+        <LessThanFunction>
           <Name>MainStemNodeAppearanceRate</Name>
-          <PhaseLookupValue>
-            <Name>Phyllochron2</Name>
+          <VariableReference>
+            <Name>CurrentLeafNum</Name>
+            <VariableName>[Structure].MainStemNodeNo</VariableName>
+          </VariableReference>
+          <SubtractFunction>
+            <Name>SubtractFunction</Name>
+            <VariableReference>
+              <Name>FinalLeafNum</Name>
+              <VariableName>[Structure].MainStemFinalNodeNumber.Value</VariableName>
+            </VariableReference>
             <Constant>
-              <Name>LeafAppRate1</Name>
-              <Value>20</Value>
+              <Name>LeafNumRateChange</Name>
+              <Value>3.5</Value>
             </Constant>
-            <Start>Emergence</Start>
-            <End>EndJuvenile</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>Phyllochron</Name>
-            <Constant>
-              <Name>LeafAppRate2</Name>
-              <Value>30</Value>
-            </Constant>
-            <Start>EndJuvenile</Start>
-            <End>FlagLeaf</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
+          </SubtractFunction>
+          <Constant>
+            <Name>LeafAppRate1</Name>
+            <Value>41</Value>
+          </Constant>
+          <Constant>
+            <Name>LeafAppRate2</Name>
+            <Value>20</Value>
+          </Constant>
+        </LessThanFunction>
         <MainStemFinalNodeNumberFunction>
           <Name>MainStemFinalNodeNumber</Name>
-          <OnEventFunction>
+          <AddFunction>
             <Name>FinalLeafNumber</Name>
-            <AddFunction>
-              <Name>PreEventValue</Name>
-              <Constant>
-                <Name>PrimordiaAtEmergence</Name>
-                <Value>4</Value>
-              </Constant>
-              <DivideFunction>
-                <Name>PrimordiaDuringJuvenilePhase</Name>
-                <VariableReference>
-                  <Name>JuvenilePhaseDuration</Name>
-                  <VariableName>[Phenology].Juvenile.Target.Value</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>ApproximatePlastochron</Name>
-                  <VariableName>[Structure].MainStemPrimordiaInitiationRate.Value</VariableName>
-                </VariableReference>
-              </DivideFunction>
-            </AddFunction>
             <VariableReference>
-              <Name>PostEventValue</Name>
-              <VariableName>[Structure].MainStemPrimordiaNo</VariableName>
+              <Name>LeafNumSeed</Name>
+              <VariableName>[Structure].LeafNumSeed.Value</VariableName>
             </VariableReference>
-            <SetEvent>FloralInitiation</SetEvent>
-            <ReSetEvent />
-          </OnEventFunction>
+            <DivideFunction>
+              <Name>DivideFunction</Name>
+              <VariableReference>
+                <Name>TTEmergToFI</Name>
+                <VariableName>[Phenology].TTEmergToFloralInit.Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>LeafInitRate</Name>
+                <VariableName>[Structure].LeafInitiationRate.Value</VariableName>
+              </VariableReference>
+            </DivideFunction>
+          </AddFunction>
           <MaximumMainStemNodeNumber>30</MaximumMainStemNodeNumber>
         </MainStemFinalNodeNumberFunction>
         <HeightFunction>
@@ -541,6 +536,18 @@ Though tillering is common in some sorghum varieties under certain agronomic con
         </Constant>
         <Constant>
           <Name>DroughtInducedBranchMortality</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>LeafNumSeed</Name>
+          <Value>4</Value>
+        </Constant>
+        <Constant>
+          <Name>LeafInitiationRate</Name>
+          <Value>21.6</Value>
+        </Constant>
+        <Constant>
+          <Name>PlantMortality</Name>
           <Value>0</Value>
         </Constant>
         <InitialiseStage>Emergence</InitialiseStage>
@@ -1610,6 +1617,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </GenericAboveGroundOrgan>
       <Cultivar>
         <Name>Buster</Name>
+        <Command />
       </Cultivar>
       <Memo>
         <Name>References</Name>
@@ -2535,6 +2543,8 @@ namespace Models
               <string>[Leaf].Exponent.Value</string>
               <string>[Leaf].TPLAInflection.Value</string>
               <string>[Phenology].TTEmergToFlagLeaf.Value</string>
+              <string>[Structure].MainStemFinalNodeNumber.Value</string>
+              <string>[Structure].MainStemNodeNo</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2757,6 +2767,27 @@ namespace Models
           <YFieldName>stage</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Leaf Expand1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>date</XFieldName>
+          <YFieldName>Structure.MainStemNodeNo</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
