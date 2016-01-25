@@ -454,7 +454,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
               </Constant>
             </MultiplyFunction>
             <Start>Emergence</Start>
-            <End>Floral_Initiation</End>
+            <End>FloralInitiation</End>
           </PhaseLookupValue>
         </PhaseLookup>
         <PhaseLookup>
@@ -504,7 +504,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
               <Name>PostEventValue</Name>
               <VariableName>[Structure].MainStemPrimordiaNo</VariableName>
             </VariableReference>
-            <SetEvent>Floral_Initiation</SetEvent>
+            <SetEvent>FloralInitiation</SetEvent>
             <ReSetEvent />
           </OnEventFunction>
           <MaximumMainStemNodeNumber>30</MaximumMainStemNodeNumber>
