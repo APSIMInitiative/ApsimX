@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
 using Models.PMF.Phen;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Organs
 {
@@ -88,7 +89,7 @@ namespace Models.PMF.Organs
                 }
                 else
                 {
-                    return -1;
+                    return 0;
                 }
             }
         }
@@ -152,12 +153,22 @@ namespace Models.PMF.Organs
         /// <summary>The structural fraction</summary>
         [Link(IsOptional = true)]
         IFunction StructuralFraction = null;
+        /// <summary>TE Function</summary>
+        [Link]
+        IFunction TranspirationEfficiency = null;
+        /// <summary></summary>
+        [Link]
+        IFunction SVPFrac = null;
         /// <summary>The structure</summary>
         [Link]
         public Structure Structure = null;
         /// <summary>The phenology</summary>
         [Link]
         public Phenology Phenology = null;
+        //// <summary>The phenology</summary>
+        //[Link]
+        //public Plant Plant = null;
+
         #endregion
 
         #region States and variables
@@ -187,7 +198,12 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return PotentialEP;
+                double svpMax = MetUtilities.svp(MetData.MaxT) * 0.1;
+                double svpMin = MetUtilities.svp(MetData.MinT) * 0.1;
+                double vpd = Math.Max(SVPFrac.Value * (svpMax - svpMin), 0.01);
+
+                //return PotentialEP;
+                return Photosynthesis.Value / (TranspirationEfficiency.Value / vpd / 0.001) ;
             }
             //set
             //{
