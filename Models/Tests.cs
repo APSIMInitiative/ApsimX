@@ -82,6 +82,9 @@ namespace Models
                         y.Add(yres);
                     }
                 }
+                if (x.Count == 0 || y.Count == 0)
+                    continue;
+
                 stats[c] = MathUtilities.CalcRegressionStats(columnNames[c], y, x);
             }
 
