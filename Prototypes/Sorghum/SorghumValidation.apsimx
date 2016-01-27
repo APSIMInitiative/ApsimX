@@ -609,78 +609,6 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <Name>MaximumPotentialGrainSize</Name>
           <Value>0.3</Value>
         </Constant>
-        <PhaseLookup>
-          <Name>DMDemandFunction</Name>
-          <PhaseLookupValue>
-            <Name>InitialPhase</Name>
-            <FillingRateFunction>
-              <Name>FillingRateFunction</Name>
-              <VariableReference>
-                <Name>NumberFunction</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>FillingDuration</Name>
-                <VariableName>[Phenology].FloweringToGrainFilling.Target.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
-              </VariableReference>
-              <MultiplyFunction>
-                <Name>PotentialSizeIncrement</Name>
-                <VariableReference>
-                  <Name>InitialProportion</Name>
-                  <VariableName>[Grain].InitialGrainProportion.Value</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
-                </VariableReference>
-              </MultiplyFunction>
-            </FillingRateFunction>
-            <Start>Flowering</Start>
-            <End>StartGrainFill</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>LinearPhase</Name>
-            <FillingRateFunction>
-              <Name>FillingRateFunction</Name>
-              <VariableReference>
-                <Name>NumberFunction</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>FillingDuration</Name>
-                <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
-              </VariableReference>
-              <MultiplyFunction>
-                <Name>PotentialSizeIncrement</Name>
-                <SubtractFunction>
-                  <Name>ProportionLinearPhase</Name>
-                  <Constant>
-                    <Name>One</Name>
-                    <Value>1</Value>
-                  </Constant>
-                  <VariableReference>
-                    <Name>InitialProportion</Name>
-                    <VariableName>[Grain].InitialGrainProportion.Value</VariableName>
-                  </VariableReference>
-                </SubtractFunction>
-                <VariableReference>
-                  <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
-                </VariableReference>
-              </MultiplyFunction>
-            </FillingRateFunction>
-            <Start>StartGrainFill</Start>
-            <End>EndGrainFill</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
         <Biomass>
           <Name>Live</Name>
         </Biomass>
@@ -860,6 +788,10 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <StartStageName>StartGrainFill</StartStageName>
           <EndStageName>Maturity</EndStageName>
         </AccumulateFunction>
+        <Constant>
+          <Name>DMDemandFunction</Name>
+          <Value>0</Value>
+        </Constant>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
         <RipeStage />
@@ -2553,7 +2485,7 @@ namespace Models
               <string>[Phenology].ThermalTime.Value as TT</string>
               <string>[SorghumSowingRule].Script.DaysAfterSowing as das</string>
               <string>[Sorghum].Phenology.Stage as stage</string>
-              <string>[Sorghum].Summariser.AboveGroundLive.Wt as biomass</string>
+              <string>[Sorghum].AboveGroundLive.Wt as biomass</string>
               <string>[Sorghum].Root.Live.Wt as root.wt</string>
               <string>[Sorghum].Stem.Live.Wt as stem.wt</string>
               <string>[Sorghum].Rachis.Live.Wt as rachis.wt</string>
@@ -3178,7 +3110,50 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>date</XFieldName>
-          <YFieldName>Grain.FinalGrainNum.Value</YFieldName>
+          <YFieldName>grainno</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>LeafDM</Name>
+        <Series>
+          <Name>TotalFixationSupply</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>date</XFieldName>
+          <YFieldName>Leaf.Live.wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
