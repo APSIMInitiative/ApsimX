@@ -1378,7 +1378,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <Name>MultiplyFunction</Name>
               <VariableReference>
                 <Name>PartitionRate</Name>
-                <VariableName>[Structure].MainStemNodeNo</VariableName>
+                <VariableName>[Leaf].PartitionRate.Value</VariableName>
               </VariableReference>
               <PowerFunction>
                 <Name>PowerFunction</Name>
@@ -2611,6 +2611,7 @@ namespace Models
               <string>[Grain].Live.wt</string>
               <string>[Leaf].DMDemandFunction.Value</string>
               <string>[Grain].FinalGrainNum.Value</string>
+              <string>[Leaf].LeafPartitioningCoefficient.Value</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
