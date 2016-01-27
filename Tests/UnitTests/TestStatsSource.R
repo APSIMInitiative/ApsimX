@@ -57,7 +57,7 @@ rmse(y_large_values, x_large_values)
 rmse(y_neg, x_neg)
 
 # NSE
-NSE(y_simple, y_simple)
+NSE(y_simple, x_simple)
 NSE(y_actual_small, x_actual_small)
 NSE(y_actual_large, x_actual_large)
 NSE(y_minimal, x_minimal)
@@ -66,7 +66,7 @@ NSE(y_large_values, x_large_values)
 NSE(y_neg, x_neg)
 
 # ME
-me(y_simple, y_simple)
+me(y_simple, x_simple)
 me(y_actual_small, x_actual_small)
 me(y_actual_large, x_actual_large)
 me(y_minimal, x_minimal)
@@ -75,7 +75,7 @@ me(y_large_values, x_large_values)
 me(y_neg, x_neg)
 
 # MAE
-mae(y_simple, y_simple)
+mae(y_simple, x_simple)
 mae(y_actual_small, x_actual_small)
 mae(y_actual_large, x_actual_large)
 mae(y_minimal, x_minimal)
@@ -84,7 +84,7 @@ mae(y_large_values, x_large_values)
 mae(y_neg, x_neg)
 
 # RSR
-rsr(y_simple, y_simple)
+rsr(y_simple, x_simple)
 rsr(y_actual_small, x_actual_small)
 rsr(y_actual_large, x_actual_large)
 rsr(y_minimal, x_minimal)

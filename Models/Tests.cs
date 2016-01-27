@@ -82,7 +82,7 @@ namespace Models
                         y.Add(yres);
                     }
                 }
-                stats[c] = MathUtilities.CalcRegressionStats(columnNames[c], x, y);
+                stats[c] = MathUtilities.CalcRegressionStats(columnNames[c], y, x);
             }
 
             //turn stats array into a DataTable
