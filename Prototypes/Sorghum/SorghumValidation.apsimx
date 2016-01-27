@@ -53,6 +53,38 @@ There are a number of passes involved in the allocation of Weight (Wt).  <br/>
         <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
         <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
       </OrganArbitrator>
+      <CompositeBiomass>
+        <Name>AboveGroundLive</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
+The AboveGroundLive composite biomass object includes the Live pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
+]]></MemoText>
+        </Memo>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Stem].Live</string>
+          <string>[Husk].Live</string>
+          <string>[Grain].Live</string>
+          <string>[Rachis].Live</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>AboveGroundDead</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
+The AboveGroundDead composite biomass object includes the Dead pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
+]]></MemoText>
+        </Memo>
+        <Propertys>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Dead</string>
+          <string>[Husk].Dead</string>
+          <string>[Grain].Dead</string>
+          <string>[Rachis].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
       <Phenology>
         <Name>Phenology</Name>
         <Memo>
@@ -916,10 +948,6 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </Biomass>
         <Biomass>
           <Name>Dead</Name>
-          <Constant>
-            <Name>RUE</Name>
-            <Value>1.25</Value>
-          </Constant>
         </Biomass>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -1235,6 +1263,33 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>SVPFrac</Name>
           <Value>0.75</Value>
         </Constant>
+        <PopulationBasedDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <Constant>
+            <Name>ExpansionStress</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>OrganPopulation</Name>
+            <Value>10</Value>
+          </Constant>
+          <Constant>
+            <Name>MaximumOrganWt</Name>
+            <Value>220</Value>
+          </Constant>
+          <Constant>
+            <Name>StartStage</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>GrowthDuration</Name>
+            <Value>1500</Value>
+          </Constant>
+        </PopulationBasedDemandFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
         <BiomassYesterday>0</BiomassYesterday>
@@ -2439,6 +2494,13 @@ namespace Models
               <string>[Leaf].RadIntTot</string>
               <string>[Weather].Radn</string>
               <string>[Leaf].WaterDemand</string>
+              <string>[Arbitrator].DMSupply</string>
+              <string>[Arbitrator].DM.TotalFixationSupply</string>
+              <string>[Leaf].Live.wt</string>
+              <string>[Stem].Live.wt</string>
+              <string>[Husk].Live.wt</string>
+              <string>[Rachis].Live.wt</string>
+              <string>[Grain].Live.wt</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2454,11 +2516,11 @@ namespace Models
       <Graph>
         <Name>Biomass</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>BiomassWt</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2470,16 +2532,16 @@ namespace Models
           <XFieldName>date</XFieldName>
           <YFieldName>biomass</YFieldName>
           <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Series2</Name>
+          <Name>YieldWt</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2490,17 +2552,17 @@ namespace Models
           <TableName>Report</TableName>
           <XFieldName>date</XFieldName>
           <YFieldName>yield</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Series3</Name>
+          <Name>BiomassObs</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2517,15 +2579,15 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Series4</Name>
+          <Name>YieldObs</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>Square</Marker>
+          <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
@@ -2534,6 +2596,69 @@ namespace Models
           <YFieldName>yield</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>LeafWt</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Dash</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>date</XFieldName>
+          <YFieldName>leaf.wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>StemWt</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Dash</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>date</XFieldName>
+          <YFieldName>stem.wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>RootWt</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Dash</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>date</XFieldName>
+          <YFieldName>root.wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -2548,6 +2673,13 @@ namespace Models
         <Axis>
           <Type>Left</Type>
           <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -2817,6 +2949,77 @@ namespace Models
         <Axis>
           <Type>Left</Type>
           <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>DM</Name>
+        <Series>
+          <Name>TotalFixationSupply</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>date</XFieldName>
+          <YFieldName>Arbitrator.DMSupply</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>FixationAccum</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>date</XFieldName>
+          <YFieldName>Arbitrator.DMSupply</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>true</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
