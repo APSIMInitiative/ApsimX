@@ -203,7 +203,7 @@ namespace Models.PMF.Organs
                 double vpd = Math.Max(SVPFrac.Value * (svpMax - svpMin), 0.01);
 
                 //return PotentialEP;
-                return Photosynthesis.Value / (TranspirationEfficiency.Value / vpd / 0.001) ;
+                return Photosynthesis.Value / (TranspirationEfficiency.Value / vpd / 0.001);
             }
             //set
             //{
