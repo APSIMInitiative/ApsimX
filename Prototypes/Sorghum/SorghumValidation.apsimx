@@ -788,8 +788,74 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <StartStageName>StartGrainFill</StartStageName>
           <EndStageName>Maturity</EndStageName>
         </AccumulateFunction>
-        <Constant>
+        <DivideFunction>
+          <Name>DMCaryopsis</Name>
+          <VariableReference>
+            <Name>DMFixationSupply</Name>
+            <VariableName>[Arbitrator].DMSupply</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>GrainNumber</Name>
+            <VariableName>[Grain].NumberFunction.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+        </DivideFunction>
+        <MinimumFunction>
+          <Name>PotGrainFillRate</Name>
+          <MultiplyFunction>
+            <Name>MultiplyFunction</Name>
+            <AddFunction>
+              <Name>AddFunction</Name>
+              <MultiplyFunction>
+                <Name>MultiplyFunction</Name>
+                <VariableReference>
+                  <Name>DMCaryopsis</Name>
+                  <VariableName>[Grain].DMCaryopsis.Value</VariableName>
+                </VariableReference>
+                <Constant>
+                  <Name>Constant</Name>
+                  <Value>0.4026</Value>
+                </Constant>
+              </MultiplyFunction>
+              <Constant>
+                <Name>Constant</Name>
+                <Value>3.19E-05</Value>
+              </Constant>
+            </AddFunction>
+            <Constant>
+              <Name>Constant</Name>
+              <Value>1000</Value>
+            </Constant>
+          </MultiplyFunction>
+          <Constant>
+            <Name>MaxGrainFillRate</Name>
+            <Value>0.09</Value>
+          </Constant>
+        </MinimumFunction>
+        <MultiplyFunction>
           <Name>DMDemandFunction</Name>
+          <VariableReference>
+            <Name>GrainFillRate</Name>
+            <VariableName>[Grain].PotGrainFillRate.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>GrainNumber</Name>
+            <VariableName>[Grain].NumberFunction.Value</VariableName>
+          </VariableReference>
+          <Constant>
+            <Name>Constant</Name>
+            <Value>0.001</Value>
+          </Constant>
+        </MultiplyFunction>
+        <Constant>
+          <Name>DMDemandFunction33</Name>
           <Value>0</Value>
         </Constant>
         <FractionRemoved>0</FractionRemoved>
@@ -1877,12 +1943,12 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
             <Manager>
               <Name>SorghumSowingRule</Name>
               <Script>
-                <DaysAfterSowing>0</DaysAfterSowing>
                 <PlantPopulation>10</PlantPopulation>
                 <RowSpacing>500</RowSpacing>
                 <SowingDepth>30</SowingDepth>
                 <CultivarName>Buster</CultivarName>
                 <SowingDate>1997-11-27</SowingDate>
+                <DaysAfterSowing>0</DaysAfterSowing>
               </Script>
               <Code><![CDATA[
 using System;
@@ -2541,9 +2607,13 @@ namespace Models
               <string>[Husk].Live.wt</string>
               <string>[Rachis].Live.wt</string>
               <string>[Grain].Live.wt</string>
-              <string>[Leaf].DMDemandFunction.Value</string>
+              <string />
               <string>[Grain].FinalGrainNum.Value</string>
               <string>[Leaf].LeafPartitioningCoefficient.Value</string>
+              <string>[Leaf].DMDemandFunction.Value</string>
+              <string>[Stem].DMDemandFunction.Value</string>
+              <string>[Rachis].DMDemandFunction.Value</string>
+              <string>[Grain].DMDemandFunction.Value</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -3061,6 +3131,69 @@ namespace Models
           <TableName>Report</TableName>
           <XFieldName>date</XFieldName>
           <YFieldName>Leaf.DMDemandFunction.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>GrainDemand</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>date</XFieldName>
+          <YFieldName>Grain.DMDemandFunction.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>StemDemand</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-3376729</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Dash</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>date</XFieldName>
+          <YFieldName>Stem.DMDemandFunction.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>RachisDemand</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-990142</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Dash</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>date</XFieldName>
+          <YFieldName>Rachis.DMDemandFunction.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
