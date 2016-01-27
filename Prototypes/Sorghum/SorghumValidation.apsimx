@@ -64,7 +64,6 @@ The AboveGroundLive composite biomass object includes the Live pools of all orga
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Stem].Live</string>
-          <string>[Husk].Live</string>
           <string>[Grain].Live</string>
           <string>[Rachis].Live</string>
         </Propertys>
@@ -80,11 +79,29 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
         <Propertys>
           <string>[Leaf].Dead</string>
           <string>[Stem].Dead</string>
-          <string>[Husk].Dead</string>
           <string>[Grain].Dead</string>
           <string>[Rachis].Dead</string>
         </Propertys>
       </CompositeBiomass>
+      <AddFunction>
+        <Name>TotalPlantDemand</Name>
+        <VariableReference>
+          <Name>LeafDemand</Name>
+          <VariableName>[Leaf].DMDemandFunction.Value</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>StemDemand</Name>
+          <VariableName>[Stem].DMDemandFunction.Value</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>RachisDemand</Name>
+          <VariableName>[Rachis].DMDemandFunction.Value</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>GrainDemand</Name>
+          <VariableName>[Grain].DMDemandFunction.Value</VariableName>
+        </VariableReference>
+      </AddFunction>
       <Phenology>
         <Name>Phenology</Name>
         <Memo>
@@ -743,30 +760,106 @@ Though tillering is common in some sorghum varieties under certain agronomic con
         </PhaseLookup>
         <MultiplyFunction>
           <Name>NumberFunction</Name>
-          <VariableReference>
-            <Name>CobNumber</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
-          </VariableReference>
-          <LinearInterpolationFunction>
-            <Name>KernalsPerCob</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>25</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>550</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Rachis].CobSize.Value</XProperty>
-          </LinearInterpolationFunction>
+          <MinimumFunction>
+            <Name>MinimumFunction</Name>
+            <VariableReference>
+              <Name>FinalGrainNum</Name>
+              <VariableName>[Grain].FinalGrainNum.Value</VariableName>
+            </VariableReference>
+            <MultiplyFunction>
+              <Name>MultiplyFunction</Name>
+              <VariableReference>
+                <Name>FinalGrainNum</Name>
+                <VariableName>[Grain].FinalGrainNum.Value</VariableName>
+              </VariableReference>
+              <DivideFunction>
+                <Name>DivideFunction</Name>
+                <VariableReference>
+                  <Name>TTStartGrainToNow</Name>
+                  <VariableName>[Grain].TTStartGrainToNow.Value</VariableName>
+                </VariableReference>
+                <Constant>
+                  <Name>RampTT</Name>
+                  <Value>100</Value>
+                </Constant>
+              </DivideFunction>
+            </MultiplyFunction>
+          </MinimumFunction>
           <Constant>
-            <Name>GrainPerKernal</Name>
+            <Name>TemperatureFactor</Name>
             <Value>1</Value>
           </Constant>
         </MultiplyFunction>
+        <OnEventFunction>
+          <Name>FinalGrainNum</Name>
+          <Constant>
+            <Name>PreEventValue</Name>
+            <Value>0</Value>
+          </Constant>
+          <DivideFunction>
+            <Name>PostEventValue</Name>
+            <DivideFunction>
+              <Name>GrowthRate</Name>
+              <SubtractFunction>
+                <Name>PlantGrowth</Name>
+                <AddFunction>
+                  <Name>TotalPlantWt</Name>
+                  <VariableReference>
+                    <Name>LiveWt</Name>
+                    <VariableName>[Sorghum].AboveGroundLive.Wt</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>DeadWt</Name>
+                    <VariableName>[Sorghum].AboveGroundDead.Wt</VariableName>
+                  </VariableReference>
+                </AddFunction>
+                <VariableReference>
+                  <Name>GreenWtAtFI</Name>
+                  <VariableName>[Grain].GreenWtAtFI.Value</VariableName>
+                </VariableReference>
+              </SubtractFunction>
+              <VariableReference>
+                <Name>DaysFIToStartGF</Name>
+                <VariableName>[Grain].DaysFIToStartGrainFill.Value</VariableName>
+              </VariableReference>
+            </DivideFunction>
+            <Constant>
+              <Name>DMPerSeed</Name>
+              <Value>0.00083</Value>
+            </Constant>
+          </DivideFunction>
+          <SetEvent>StartGrainFill</SetEvent>
+        </OnEventFunction>
+        <AccumulateFunction>
+          <Name>DaysFIToStartGrainFill</Name>
+          <Constant>
+            <Name>One</Name>
+            <Value>1</Value>
+          </Constant>
+          <StartStageName>FloralInitiation</StartStageName>
+          <EndStageName>StartGrainFill</EndStageName>
+        </AccumulateFunction>
+        <OnEventFunction>
+          <Name>GreenWtAtFI</Name>
+          <Constant>
+            <Name>PreEventValue</Name>
+            <Value>0</Value>
+          </Constant>
+          <VariableReference>
+            <Name>PostEventValue</Name>
+            <VariableName>[Sorghum].AboveGroundLive.Wt</VariableName>
+          </VariableReference>
+          <SetEvent>StartGrainFill</SetEvent>
+        </OnEventFunction>
+        <AccumulateFunction>
+          <Name>TTStartGrainToNow</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <StartStageName>StartGrainFill</StartStageName>
+          <EndStageName>Maturity</EndStageName>
+        </AccumulateFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
         <RipeStage />
@@ -869,17 +962,23 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-So
           <XYPairs>
             <Name>XYPairs</Name>
             <X>
-              <double>0</double>
-              <double>2.99</double>
+              <double>NaN</double>
+              <double>1</double>
+              <double>2</double>
               <double>3</double>
+              <double>4</double>
+              <double>5</double>
               <double>6</double>
               <double>7</double>
             </X>
             <Y>
+              <double>NaN</double>
               <double>0</double>
-              <double>0</double>
-              <double>0.2</double>
-              <double>0.2</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0.33</double>
+              <double>0.33</double>
+              <double>0.087</double>
               <double>0</double>
             </Y>
           </XYPairs>
@@ -1263,33 +1362,69 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>SVPFrac</Name>
           <Value>0.75</Value>
         </Constant>
-        <PopulationBasedDemandFunction>
+        <DivideFunction>
+          <Name>LeafPartitioningCoefficient</Name>
+          <Constant>
+            <Name>One</Name>
+            <Value>1</Value>
+          </Constant>
+          <AddFunction>
+            <Name>AddFunction</Name>
+            <Constant>
+              <Name>One</Name>
+              <Value>1</Value>
+            </Constant>
+            <MultiplyFunction>
+              <Name>MultiplyFunction</Name>
+              <VariableReference>
+                <Name>PartitionRate</Name>
+                <VariableName>[Structure].MainStemNodeNo</VariableName>
+              </VariableReference>
+              <PowerFunction>
+                <Name>PowerFunction</Name>
+                <VariableReference>
+                  <Name>LeafNumber</Name>
+                  <VariableName>[Structure].MainStemNodeNo</VariableName>
+                </VariableReference>
+                <Exponent>2</Exponent>
+              </PowerFunction>
+            </MultiplyFunction>
+          </AddFunction>
+        </DivideFunction>
+        <Constant>
+          <Name>PartitionRate</Name>
+          <Value>0.006</Value>
+        </Constant>
+        <PhaseLookup>
           <Name>DMDemandFunction</Name>
+          <PhaseLookupValue>
+            <Name>BetweenEmergenceAndFlag</Name>
+            <MultiplyFunction>
+              <Name>MultiplyFunction</Name>
+              <VariableReference>
+                <Name>LeafPartitionCoeff</Name>
+                <VariableName>[Leaf].LeafPartitioningCoefficient.Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>DMFixationSupply</Name>
+                <VariableName>[Arbitrator].DMSupply</VariableName>
+              </VariableReference>
+            </MultiplyFunction>
+            <Start>Emergence</Start>
+            <End>FlagLeaf</End>
+          </PhaseLookupValue>
+        </PhaseLookup>
+        <SubtractFunction>
+          <Name>DMRemaining</Name>
           <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <Name>DMFixationSupply</Name>
+            <VariableName>[Arbitrator].DMSupply</VariableName>
           </VariableReference>
-          <Constant>
-            <Name>ExpansionStress</Name>
-            <Value>1</Value>
-          </Constant>
-          <Constant>
-            <Name>OrganPopulation</Name>
-            <Value>10</Value>
-          </Constant>
-          <Constant>
-            <Name>MaximumOrganWt</Name>
-            <Value>220</Value>
-          </Constant>
-          <Constant>
-            <Name>StartStage</Name>
-            <Value>1</Value>
-          </Constant>
-          <Constant>
-            <Name>GrowthDuration</Name>
-            <Value>1500</Value>
-          </Constant>
-        </PopulationBasedDemandFunction>
+          <VariableReference>
+            <Name>LeafDMDemand</Name>
+            <VariableName>[Leaf].DMDemandFunction.Value</VariableName>
+          </VariableReference>
+        </SubtractFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
         <BiomassYesterday>0</BiomassYesterday>
@@ -1306,64 +1441,6 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         <LAIDead>0</LAIDead>
         <WaterAllocation>0</WaterAllocation>
       </SimpleLeaf>
-      <GenericAboveGroundOrgan>
-        <Name>Husk</Name>
-        <PopulationBasedDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Constant>
-            <Name>ExpansionStress</Name>
-            <Value>1</Value>
-          </Constant>
-          <Constant>
-            <Name>OrganPopulation</Name>
-            <Value>4</Value>
-          </Constant>
-          <Constant>
-            <Name>MaximumOrganWt</Name>
-            <Value>0.7</Value>
-          </Constant>
-          <Constant>
-            <Name>StartStage</Name>
-            <Value>5.2</Value>
-          </Constant>
-          <Constant>
-            <Name>GrowthDuration</Name>
-            <Value>453</Value>
-          </Constant>
-        </PopulationBasedDemandFunction>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
-        <Constant>
-          <Name>NReallocationFactor</Name>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>NRetranslocationFactor</Name>
-          <Value>0.1</Value>
-        </Constant>
-        <Constant>
-          <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
-        </Constant>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>0.2</Value>
-        </Constant>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
-        </Constant>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
-      </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Rachis</Name>
         <MultiplyFunction>
@@ -1388,33 +1465,6 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <VariableName>[Rachis].CobNumber.Value</VariableName>
           </VariableReference>
         </DivideFunction>
-        <PopulationBasedDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Constant>
-            <Name>ExpansionStress</Name>
-            <Value>1</Value>
-          </Constant>
-          <Constant>
-            <Name>OrganPopulation</Name>
-            <Value>4</Value>
-          </Constant>
-          <Constant>
-            <Name>MaximumOrganWt</Name>
-            <Value>0.7</Value>
-          </Constant>
-          <Constant>
-            <Name>StartStage</Name>
-            <Value>5.2</Value>
-          </Constant>
-          <Constant>
-            <Name>GrowthDuration</Name>
-            <Value>453</Value>
-          </Constant>
-        </PopulationBasedDemandFunction>
         <Biomass>
           <Name>Live</Name>
         </Biomass>
@@ -1456,6 +1506,41 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </XYPairs>
           <XProperty>[Sorghum].WaterSupplyDemandRatio</XProperty>
         </LinearInterpolationFunction>
+        <PhaseLookup>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookupValue>
+            <Name>BetweenFIAndFlag</Name>
+            <MultiplyFunction>
+              <Name>MultiplyFunction</Name>
+              <VariableReference>
+                <Name>DMRemainingAfterLeaf</Name>
+                <VariableName>[Leaf].DMRemaining.Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>Stem2FlowerFrac</Name>
+                <VariableName>[Stem].StemToFlowerFrac.Value</VariableName>
+              </VariableReference>
+            </MultiplyFunction>
+            <Start>FloralInitiation</Start>
+            <End>FlagLeaf</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>BetweenFlagAndFlowering</Name>
+            <MultiplyFunction>
+              <Name>MultiplyFunction</Name>
+              <VariableReference>
+                <Name>DMFixationSupply</Name>
+                <VariableName>[Arbitrator].DMSupply</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>Stem2FlowerFrac</Name>
+                <VariableName>[Stem].StemToFlowerFrac.Value</VariableName>
+              </VariableReference>
+            </MultiplyFunction>
+            <Start>FlagLeaf</Start>
+            <End>Flowering</End>
+          </PhaseLookupValue>
+        </PhaseLookup>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
@@ -1510,7 +1595,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Value>0.5</Value>
         </Constant>
         <MinimumFunction>
-          <Name>DMDemandFunction</Name>
+          <Name>DMDemandFunction22</Name>
           <MultiplyFunction>
             <Name>PotentialDMAccumulation</Name>
             <VariableReference>
@@ -1555,6 +1640,29 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             </VariableReference>
           </MultiplyFunction>
         </MinimumFunction>
+        <Constant>
+          <Name>StemToFlowerFrac</Name>
+          <Value>0.3</Value>
+        </Constant>
+        <SubtractFunction>
+          <Name>DMDemandFunction</Name>
+          <VariableReference>
+            <Name>DMFixationSupply</Name>
+            <VariableName>[Arbitrator].DMSupply</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>LeafDemand</Name>
+            <VariableName>[Leaf].DMDemandFunction.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>RachisDemand</Name>
+            <VariableName>[Rachis].DMDemandFunction.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>GrainDemand</Name>
+            <VariableName>[Grain].DMDemandFunction.Value</VariableName>
+          </VariableReference>
+        </SubtractFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
@@ -1837,12 +1945,12 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
             <Manager>
               <Name>SorghumSowingRule</Name>
               <Script>
+                <DaysAfterSowing>0</DaysAfterSowing>
                 <PlantPopulation>10</PlantPopulation>
                 <RowSpacing>500</RowSpacing>
                 <SowingDepth>30</SowingDepth>
                 <CultivarName>Buster</CultivarName>
                 <SowingDate>1997-11-27</SowingDate>
-                <DaysAfterSowing>0</DaysAfterSowing>
               </Script>
               <Code><![CDATA[
 using System;
@@ -2501,6 +2609,8 @@ namespace Models
               <string>[Husk].Live.wt</string>
               <string>[Rachis].Live.wt</string>
               <string>[Grain].Live.wt</string>
+              <string>[Leaf].DMDemandFunction.Value</string>
+              <string>[Grain].FinalGrainNum.Value</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2986,6 +3096,27 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Dash</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>date</XFieldName>
+          <YFieldName>Arbitrator.DMSupply</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>true</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>LeafDemand</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
           <ColourArgb>-2793984</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
@@ -2996,10 +3127,10 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>date</XFieldName>
-          <YFieldName>Arbitrator.DMSupply</YFieldName>
+          <YFieldName>Leaf.DMDemandFunction.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-          <Cumulative>true</Cumulative>
+          <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Axis>
@@ -3020,6 +3151,49 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Grain</Name>
+        <Series>
+          <Name>GrainNum</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>date</XFieldName>
+          <YFieldName>Grain.FinalGrainNum.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
