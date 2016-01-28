@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -9,13 +9,13 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
   </Memo>
   <DataStore>
     <Name>DataStore</Name>
-    <Model xsi:type="ExcelInput">
+    <ExcelInput>
       <Name>Observed</Name>
       <FileName>%root%\Tests\Wheat\Observed.xlsx</FileName>
       <SheetNames>
         <string>Observed</string>
       </SheetNames>
-    </Model>
+    </ExcelInput>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
       <PredictedTableName>Report</PredictedTableName>
@@ -32,6 +32,7 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
     <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Experiment>
     <Name>APS26</Name>
@@ -150,6 +151,8 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -697,6 +700,11 @@ namespace Models
         </Operations>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -708,11 +716,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <PredictedObserved>
           <Name>PredictedObserved</Name>
@@ -778,12 +781,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -793,12 +802,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -830,12 +845,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -845,12 +866,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -955,6 +982,8 @@ namespace Models
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -1431,6 +1460,11 @@ namespace Models
         </Operations>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -1442,11 +1476,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -1462,12 +1491,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -1477,12 +1512,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -1514,12 +1555,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -1529,12 +1576,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -1655,6 +1708,8 @@ namespace Models
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -2142,6 +2197,11 @@ namespace Models
         </Operations>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -2153,11 +2213,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Operations>
           <Name>FertiliserSchedule</Name>
@@ -2368,12 +2423,18 @@ private void OnDoManagement(object sender, EventArgs e)
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.TotalNH4</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2677,6 +2738,8 @@ private void OnDoManagement(object sender, EventArgs e)
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -3161,6 +3224,11 @@ private void OnDoManagement(object sender, EventArgs e)
         </Plant15>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -3172,11 +3240,6 @@ private void OnDoManagement(object sender, EventArgs e)
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -3305,6 +3368,11 @@ private void OnDoManagement(object sender, EventArgs e)
         </Operations>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -3316,11 +3384,6 @@ private void OnDoManagement(object sender, EventArgs e)
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -3519,6 +3582,8 @@ private void OnDoManagement(object sender, EventArgs e)
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -4024,6 +4089,11 @@ private void OnDoManagement(object sender, EventArgs e)
         </Plant15>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -4035,11 +4105,6 @@ private void OnDoManagement(object sender, EventArgs e)
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -4346,12 +4411,18 @@ private void OnDoManagement(object sender, EventArgs e)
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -4361,12 +4432,18 @@ private void OnDoManagement(object sender, EventArgs e)
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -4376,12 +4453,18 @@ private void OnDoManagement(object sender, EventArgs e)
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -4391,12 +4474,18 @@ private void OnDoManagement(object sender, EventArgs e)
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744256</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -4428,12 +4517,18 @@ private void OnDoManagement(object sender, EventArgs e)
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -5929,6 +6024,8 @@ public class Script : Model
         </Soil>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -6013,6 +6110,11 @@ public class Script : Model
         </Fertiliser>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -6024,11 +6126,6 @@ public class Script : Model
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -6044,12 +6141,18 @@ public class Script : Model
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -6059,12 +6162,18 @@ public class Script : Model
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>NZObservations</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -6095,12 +6204,18 @@ public class Script : Model
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -6110,12 +6225,18 @@ public class Script : Model
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>NZObservations</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -7039,6 +7160,8 @@ public class Script : Model
         </Soil>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -7112,6 +7235,11 @@ public class Script : Model
         </Fertiliser>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -7123,11 +7251,6 @@ public class Script : Model
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Plant15>
           <Name>Wheat</Name>
@@ -7185,12 +7308,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -7200,12 +7329,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledDiamond</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -7236,12 +7371,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>TotalSW</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -7377,6 +7518,8 @@ namespace Models
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -8169,6 +8312,11 @@ namespace Models
         </Operations>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -8180,11 +8328,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Operations>
           <Name>SowingSchedule</Name>
@@ -8449,12 +8592,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -8627,6 +8776,8 @@ namespace Models
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -9344,6 +9495,11 @@ namespace Models
         </Operations>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -9355,11 +9511,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Operations>
           <Name>SowingSchedule</Name>
@@ -9587,12 +9738,18 @@ private void OnDoManagement(object sender, EventArgs e)
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -10550,6 +10707,8 @@ private void OnDoManagement(object sender, EventArgs e)
         <Name>paddock</Name>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
@@ -11256,6 +11415,11 @@ private void OnDoManagement(object sender, EventArgs e)
         </Plant15>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -11267,11 +11431,6 @@ private void OnDoManagement(object sender, EventArgs e)
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Operations>
           <Name>SowingSchedule</Name>
@@ -11504,12 +11663,18 @@ Simulation results for the combined datasets from the various countries are show
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16776961</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
       <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -11546,12 +11711,18 @@ Simulation results for the combined datasets from the various countries are show
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16776961</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.Wheat.AboveGround.Wt</XFieldName>
       <YFieldName>Predicted.Wheat.AboveGround.Wt</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -11587,12 +11758,18 @@ Simulation results for the combined datasets from the various countries are show
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16776961</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.Wheat.AboveGround.N</XFieldName>
       <YFieldName>Predicted.Wheat.AboveGround.N</YFieldName>
       <ShowInLegend>false</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -11628,12 +11805,18 @@ Simulation results for the combined datasets from the various countries are show
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16776961</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.Wheat.Grain.GrainNo</XFieldName>
       <YFieldName>Predicted.Wheat.Grain.GrainNo</YFieldName>
       <ShowInLegend>false</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -11657,64 +11840,5 @@ Simulation results for the combined datasets from the various countries are show
     <DisabledSeries />
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
-  <Tests>
-    <Name>Tests</Name>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>n</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>residual</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>R^2</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>RMSD</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>SB</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Mean</Type>
-      <ColumnNames>SDSD</ColumnNames>
-      <Parameters>1,value</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>LCS</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>%</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-  </Tests>
   <ExplorerWidth>293</ExplorerWidth>
 </Simulations>

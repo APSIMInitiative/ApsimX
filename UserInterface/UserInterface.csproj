@@ -51,6 +51,45 @@
   <PropertyGroup>
     <ApplicationIcon>ApsimLogo.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugAnyCPU|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\DebugAnyCPU\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugAnyCPU|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugAnyCPU\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ClosedXML, Version=0.75.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -170,8 +209,12 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Utility\ColumnXYSeries.cs" />
-    <Compile Include="Utility\DateTimeCellType.cs" />
-    <Compile Include="Utility\FindAndReplaceForm.cs" />
+    <Compile Include="Utility\DateTimeCellType.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Utility\FindAndReplaceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Utility\FindAndReplaceForm.designer.cs">
       <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
     </Compile>
@@ -204,7 +247,6 @@
     <Compile Include="Menus\ContextMenu.cs" />
     <Compile Include="Presenters\MetDataPresenter.cs" />
     <Compile Include="Presenters\TabbedExplorerPresenter.cs" />
-    <Compile Include="Presenters\TestPresenter.cs" />
     <Compile Include="Presenters\ExplorerPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
     <Compile Include="Presenters\DataStorePresenter.cs" />
@@ -313,12 +355,6 @@
     </Compile>
     <Compile Include="Views\SupplementView.Designer.cs">
       <DependentUpon>SupplementView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TestView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\TestView.Designer.cs">
-      <DependentUpon>TestView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\TitleView.cs">
       <SubType>UserControl</SubType>
@@ -476,9 +512,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\SupplementView.resx">
       <DependentUpon>SupplementView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\TestView.resx">
-      <DependentUpon>TestView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\TitleView.resx">
       <DependentUpon>TitleView.cs</DependentUpon>
@@ -793,7 +826,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\ExternalVariable.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\MultiplyFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LinearInterpolationFunction.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SugarCane.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Sugarcane.png" />
     <EmbeddedResource Include="Resources\Toolboxes\Import.png" />
     <EmbeddedResource Include="Resources\Toolboxes\OpenFile.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Probability.png" />
