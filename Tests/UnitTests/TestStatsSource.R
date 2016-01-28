@@ -21,6 +21,13 @@ y_large_values <- c(6.36,8.08,10.27,13.06,16.60,21.10,26.83,34.10,43.36,55.12,70
 x_neg <- c(-20.00,-19.00,-18.00,-17.00,-16.00,-15.00,-14.00,-13.00,-12.00,-11.00,-10.00,-9.00,-8.00,-7.00,-6.00,-5.00,-4.00,-3.00,-2.00,-1.00,0.00,1.00,2.00,3.00,4.00,5.00,6.00,7.00,8.00,9.00,10.00,11.00,12.00,13.00,14.00,15.00,16.00,17.00,18.00,19.00,20.00)
 y_neg <- c(-7620.00,-6517.00,-5526.00,-4641.00,-3856.00,-3165.00,-2562.00,-2041.00,-1596.00,-1221.00,-910.00,-657.00,-456.00,-301.00,-186.00,-105.00,-52.00,-21.00,-6.00,-1.00,0.00,3.00,14.00,39.00,84.00,155.00,258.00,399.00,584.00,819.00,1110.00,1463.00,1884.00,2379.00,2954.00,3615.00,4368.00,5219.00,6174.00,7239.00, 8420.00)
 
+# edge tests
+x_single <- 0
+y_single <- 0
+
+x_uncor <- c(1,1,2,2)
+y_uncor <- c(1,2,1,2)
+
 # Slope, intercept and standard errors of same
 simple_lm       <- lm(y_simple ~ x_simple)
 actual_small_lm <- lm(y_actual_small ~ x_actual_small)
@@ -29,6 +36,8 @@ minimal_lm      <- lm(y_minimal ~ x_minimal)
 random_lm       <- lm(y_random ~ x_random)
 large_values_lm <- lm(y_large_values ~ x_large_values)
 neg_lm          <- lm(y_neg ~ x_neg)
+single_lm       <- lm(y_single ~ x_single)
+uncor_lm        <- lm(y_uncor ~ x_uncor)
 
 summary(simple_lm)
 summary(actual_small_lm)
@@ -37,6 +46,8 @@ summary(minimal_lm)
 summary(random_lm)
 summary(large_values_lm)
 summary(neg_lm)
+summary(single_lm)
+summary(uncor_lm)
 
 #need for sig figs for SEslope
 summary(simple_lm)[4]
@@ -46,6 +57,8 @@ summary(minimal_lm)[4]
 summary(random_lm)[4]
 summary(large_values_lm)[4]
 summary(neg_lm)[4]
+summary(single_lm)[4]
+summary(uncor_lm)[4]
 
 # RMSE
 rmse(y_simple, x_simple)
@@ -55,39 +68,49 @@ rmse(y_minimal, x_minimal)
 rmse(y_random, x_random)
 rmse(y_large_values, x_large_values)
 rmse(y_neg, x_neg)
+rmse(y_single, x_single)
+rmse(y_uncor, x_uncor)
 
 # NSE
-NSE(y_simple, y_simple)
+NSE(y_simple, x_simple)
 NSE(y_actual_small, x_actual_small)
 NSE(y_actual_large, x_actual_large)
 NSE(y_minimal, x_minimal)
 NSE(y_random, x_random)
 NSE(y_large_values, x_large_values)
 NSE(y_neg, x_neg)
+NSE(y_single, x_single)
+NSE(y_uncor, x_uncor)
 
 # ME
-me(y_simple, y_simple)
+me(y_simple, x_simple)
 me(y_actual_small, x_actual_small)
 me(y_actual_large, x_actual_large)
 me(y_minimal, x_minimal)
 me(y_random, x_random)
 me(y_large_values, x_large_values)
 me(y_neg, x_neg)
+me(y_single, x_single)
+me(y_uncor, x_uncor)
 
 # MAE
-mae(y_simple, y_simple)
+mae(y_simple, x_simple)
 mae(y_actual_small, x_actual_small)
 mae(y_actual_large, x_actual_large)
 mae(y_minimal, x_minimal)
 mae(y_random, x_random)
 mae(y_large_values, x_large_values)
 mae(y_neg, x_neg)
+mae(y_single, x_single)
+mae(y_uncor, x_uncor)
 
 # RSR
-rsr(y_simple, y_simple)
+rsr(y_simple, x_simple)
 rsr(y_actual_small, x_actual_small)
 rsr(y_actual_large, x_actual_large)
 rsr(y_minimal, x_minimal)
 rsr(y_random, x_random)
 rsr(y_large_values, x_large_values)
 rsr(y_neg, x_neg)
+rsr(y_single, x_single)
+rsr(y_uncor, x_uncor)

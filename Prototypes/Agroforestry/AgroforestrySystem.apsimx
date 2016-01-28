@@ -2104,72 +2104,72 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Distance</Name>
             <n>103</n>
-            <Slope>0.9930971007823286</Slope>
-            <Intercept>-0.47860101242521935</Intercept>
-            <SEslope>0.010101807900587626</SEslope>
-            <SEintercept>0.27740936879447226</SEintercept>
+            <Slope>0.996536596628954</Slope>
+            <Intercept>0.70537981990302612</Intercept>
+            <SEslope>0.010136794536124196</SEslope>
+            <SEintercept>0.27307857628750853</SEintercept>
             <R2>0.98965760493570309</R2>
             <RMSE>1.7763276178186396</RMSE>
-            <NSE>0.988150023009664</NSE>
-            <ME>-0.63106796116504849</ME>
+            <NSE>0.98810898175940887</NSE>
+            <ME>0.63106796116504849</ME>
             <MAE>0.63106796116504849</MAE>
-            <RSR>0.10832787577554275</RSR>
+            <RSR>0.10851530519496418</RSR>
           </RegrStats>
           <RegrStats>
             <Name>SW90cm</Name>
             <n>199</n>
-            <Slope>1.0070804397794786</Slope>
-            <Intercept>0.35694878496008187</Intercept>
-            <SEslope>0.0069524286056870171</SEslope>
-            <SEintercept>1.2213238573768284</SEintercept>
+            <Slope>0.98373324670209072</Slope>
+            <Intercept>0.859856798083598</Intercept>
+            <SEslope>0.0067912501271840762</SEslope>
+            <SEintercept>1.2057902371202738</SEintercept>
             <R2>0.99069851071443582</R2>
             <RMSE>11.609358156144836</RMSE>
-            <NSE>0.99031005335563471</NSE>
-            <ME>1.2787803907059456</ME>
+            <NSE>0.99053469584324494</NSE>
+            <ME>-1.2787803907059456</ME>
             <MAE>6.460649869562479</MAE>
-            <RSR>0.098189884637610816</RSR>
+            <RSR>0.097045040132192464</RSR>
           </RegrStats>
           <RegrStats>
             <Name>BiomassWt</Name>
             <n>208</n>
-            <Slope>0.80823100009953963</Slope>
-            <Intercept>20.39523624521091</Intercept>
-            <SEslope>0.030300647082276307</SEslope>
-            <SEintercept>6.3959960838852892</SEintercept>
-            <R2>0.77547375115249484</R2>
+            <Slope>0.95947043735886084</Slope>
+            <Intercept>13.406948123676671</Intercept>
+            <SEslope>0.035970626101581894</SEslope>
+            <SEintercept>7.0773105961499443</SEintercept>
+            <R2>0.77547375115249473</R2>
             <RMSE>72.4794691160906</RMSE>
-            <NSE>0.77146402531325586</NSE>
-            <ME>-7.7693678906936947</ME>
+            <NSE>0.72869945404479763</NSE>
+            <ME>7.7693678906936947</ME>
             <MAE>16.119126727280726</MAE>
-            <RSR>0.47690381004895716</RSR>
+            <RSR>0.51961160149417451</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainWt</Name>
             <n>215</n>
-            <Slope>0.80720926838935825</Slope>
-            <Intercept>19.169973582147321</Intercept>
-            <SEslope>0.031361094967055962</SEslope>
-            <SEintercept>6.60545396289692</SEintercept>
+            <Slope>0.93744232166269748</Slope>
+            <Intercept>17.969852056720953</Intercept>
+            <SEslope>0.036420812826470833</SEslope>
+            <SEintercept>7.1525599494665162</SEintercept>
             <R2>0.7567121306265675</R2>
             <RMSE>75.1413040956459</RMSE>
-            <NSE>0.74949619299101367</NSE>
-            <ME>-9.310747345099724</ME>
+            <NSE>0.7090805573919936</NSE>
+            <ME>9.310747345099724</ME>
             <MAE>19.115732781673323</MAE>
-            <RSR>0.49933823509010206</RSR>
+            <RSR>0.53811367657908271</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainSize</Name>
             <n>215</n>
-            <Slope>0.80720926838935825</Slope>
-            <Intercept>19.169973582147321</Intercept>
-            <SEslope>0.031361094967055962</SEslope>
-            <SEintercept>6.60545396289692</SEintercept>
+            <Slope>0.93744232166269748</Slope>
+            <Intercept>17.969852056720953</Intercept>
+            <SEslope>0.036420812826470833</SEslope>
+            <SEintercept>7.1525599494665162</SEintercept>
             <R2>0.7567121306265675</R2>
             <RMSE>75.1413040956459</RMSE>
-            <NSE>0.74949619299101367</NSE>
-            <ME>-9.310747345099724</ME>
+            <NSE>0.7090805573919936</NSE>
+            <ME>9.310747345099724</ME>
             <MAE>19.115732781673323</MAE>
-            <RSR>0.49933823509010206</RSR>
+            <RSR>0.53811367657908271</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
