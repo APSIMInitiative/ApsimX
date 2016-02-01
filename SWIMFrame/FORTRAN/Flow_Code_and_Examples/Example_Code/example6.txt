@@ -1,0 +1,2 @@
+gfortran -fdefault-real-8 -fbounds-check roots.f95 soildata.f95 solprops_dummy.f95 sinks_r.f95 flow.f95 example6.f95
+
