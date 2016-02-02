@@ -29,10 +29,21 @@
       <ErrorMessage>Specified cast is not valid.</ErrorMessage>
       <FileName>ShallowSoilTest\CoverInterpolated.csv</FileName>
     </Input>
+    <PredictedObserved>
+      <Name>ProfileWater</Name>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>ProfileSWC</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
+    <PredictedObserved>
+      <Name>CanopyCover</Name>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>Cover</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
-  
   <Simulation>
     <Name>SlurpTestBase</Name>
     <Memo>
@@ -7493,7 +7504,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>ProfileSWC</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.SWC</YFieldName>
+        <YFieldName>PSWC</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
