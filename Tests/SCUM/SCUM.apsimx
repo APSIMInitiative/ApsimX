@@ -36,6 +36,87 @@
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
+      <Tests>
+        <Name>Tests</Name>
+        <AcceptedStats>
+          <RegrStats xsi:nil="true" />
+          <RegrStats xsi:nil="true" />
+          <RegrStats xsi:nil="true" />
+          <RegrStats xsi:nil="true" />
+          <RegrStats>
+            <Name>NLeaching</Name>
+            <n>36</n>
+            <Slope>1.0300454275809716</Slope>
+            <Intercept>5.4179440716415428</Intercept>
+            <SEslope>0.053231960594220529</SEslope>
+            <SEintercept>5.293920860714648</SEintercept>
+            <R2>0.91675390813335522</R2>
+            <RMSE>22.431391524714961</RMSE>
+            <NSE>0.89011403548006762</NSE>
+            <ME>7.607618058779738</ME>
+            <MAE>16.125494880047725</MAE>
+            <RSR>0.32685406011949869</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>PW_</Name>
+            <n>36</n>
+            <Slope>1.0300454275809716</Slope>
+            <Intercept>5.4179440716415428</Intercept>
+            <SEslope>0.053231960594220529</SEslope>
+            <SEintercept>5.293920860714648</SEintercept>
+            <R2>0.91675390813335522</R2>
+            <RMSE>22.431391524714961</RMSE>
+            <NSE>0.89011403548006762</NSE>
+            <ME>7.607618058779738</ME>
+            <MAE>16.125494880047725</MAE>
+            <RSR>0.32685406011949869</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>2_</Name>
+            <n>36</n>
+            <Slope>1.0300454275809716</Slope>
+            <Intercept>5.4179440716415428</Intercept>
+            <SEslope>0.053231960594220529</SEslope>
+            <SEintercept>5.293920860714648</SEintercept>
+            <R2>0.91675390813335522</R2>
+            <RMSE>22.431391524714961</RMSE>
+            <NSE>0.89011403548006762</NSE>
+            <ME>7.607618058779738</ME>
+            <MAE>16.125494880047725</MAE>
+            <RSR>0.32685406011949869</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>1</Name>
+            <n>36</n>
+            <Slope>1.0300454275809716</Slope>
+            <Intercept>5.4179440716415428</Intercept>
+            <SEslope>0.053231960594220529</SEslope>
+            <SEintercept>5.293920860714648</SEintercept>
+            <R2>0.91675390813335522</R2>
+            <RMSE>22.431391524714961</RMSE>
+            <NSE>0.89011403548006762</NSE>
+            <ME>7.607618058779738</ME>
+            <MAE>16.125494880047725</MAE>
+            <RSR>0.32685406011949869</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>2</Name>
+            <n>36</n>
+            <Slope>1.0300454275809716</Slope>
+            <Intercept>5.4179440716415428</Intercept>
+            <SEslope>0.053231960594220529</SEslope>
+            <SEintercept>5.293920860714648</SEintercept>
+            <R2>0.91675390813335522</R2>
+            <RMSE>22.431391524714961</RMSE>
+            <NSE>0.89011403548006762</NSE>
+            <ME>7.607618058779738</ME>
+            <MAE>16.125494880047725</MAE>
+            <RSR>0.32685406011949869</RSR>
+          </RegrStats>
+        </AcceptedStats>
+        <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
+        <POName>PredictedObserved</POName>
+      </Tests>
       <PredictedTableName>PredictedLeach</PredictedTableName>
       <ObservedTableName>ObservedLeach</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
@@ -43,7 +124,6 @@
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>1000</MaximumResultsPerPage>
   </DataStore>
-  
   <Simulation>
     <Name>SCUMTestBase</Name>
     <Weather>
