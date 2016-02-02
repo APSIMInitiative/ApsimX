@@ -148,9 +148,45 @@ namespace SWIMFrame
 
             //phii(j,:) for soil j will match h(i,:) from soil i and h(j, 1:id) from soil j.
             //phii(i,:) for soil i will match h(i,:) and fill in for h(j, 1:id).
-            Matrix<double> phiim = Matrix<double>.Build.DenseOfArray(phii);
-            Matrix<double> phim = Matrix<double>.Build.DenseOfArray(phi);
-            phii[j]
+            for (int iid = 1; iid <= id; iid++)
+                phii[j, iid] = phi[j, iid]; // keep these values
+
+            // But interpolate to match values that start at greater h.
+            jj = id + 1; //h(j,id+1) to be checked first
+            phii[j, id + n[i]] = phi[j, n[i]]; // last h values match
+            for (ii = 1; ii <= n[i] - 1; ii++)
+            {
+                while (true) //get place of h(i,ii) in h array for soil j
+                {
+                    if (jj > n[j])
+                    {
+                        Console.WriteLine("twotbls: h[j,n[j]] <= h[i,ii]; i, j, ii, n[j] = " + i + " " + j + " " + ii + " " + n[j]);
+                        break;
+                    }
+
+                    if (h[j, jj] > h[i, ii])
+                        break;
+                    jj += 1;
+                }
+
+                k = jj - 1; //first point for cubic interp
+                if (jj + 2 > n[j])
+                    k = n[j] - 3;
+
+                double[] hCuco = new double[5];
+                double[] phiCuco = new double[5];
+                for (int x = k; x <= k + 3; x++)
+                {
+                    hCuco[x - k + 1] = h[j, x];
+                    phiCuco[x - k + 1] = phi[j, x];
+                }
+
+                co = Soil.Cuco(hCuco, phiCuco); // get cubic coeffs
+                v = h[i, ii] - h[j, k];
+                phii[j, id + ii] = co[1] + v * (co[2] + v * (co[3] + v * co[4]));
+            }
+            ni = id + n[i];
+            // Generate sensible missing values using quadratic extrapolation.
 
             return new FluxTable();
         }

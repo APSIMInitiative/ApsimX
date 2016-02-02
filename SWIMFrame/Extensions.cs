@@ -31,22 +31,6 @@ namespace SWIMFrame
         }
 
         /// <summary>
-        /// Slice a 2D array
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
-        /// <param name="dim"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
-        public static double[] Slice2D<T>(this double[,] source, int dim, int start, int end)
-        {
-            Matrix<double> m = Matrix<double>.Build.DenseOfArray(source); 
-            double[] absh = hm.Column(j).ToArray();
-            absh = absh.Slice(1, n[j])
-        }
-
-        /// <summary>
         /// General method to allow calling of private members for unit testing.
         /// http://www.codeproject.com/Articles/19911/Dynamically-Invoke-A-Method-Given-Strings-with-Met
         /// </summary>

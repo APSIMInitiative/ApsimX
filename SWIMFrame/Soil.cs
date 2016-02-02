@@ -273,7 +273,7 @@ namespace SWIMFrame
             sp.phie = phie;
         }
 
-        private static double[] Cuco(double[] x, double[] y)
+        public static double[] Cuco(double[] x, double[] y)
         {
             // Get coeffs of cubic through (x,y)
             double s, x1, x2, y3, x12, x13, x22, x23, a1, a2, a3, b1, b2, b3, c1, c2, c3;
