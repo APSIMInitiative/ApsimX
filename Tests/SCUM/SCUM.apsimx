@@ -36,6 +36,83 @@
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
+      <Tests>
+        <Name>Tests</Name>
+        <AcceptedStats>
+          <RegrStats>
+            <Name>NLeaching</Name>
+            <n>36</n>
+            <Slope>1.0300454275809723</Slope>
+            <Intercept>5.4179440716415144</Intercept>
+            <SEslope>0.053231960594220133</SEslope>
+            <SEintercept>5.293920860714608</SEintercept>
+            <R2>0.91675390813335644</R2>
+            <RMSE>22.431391524714961</RMSE>
+            <NSE>0.89011403548006762</NSE>
+            <ME>7.607618058779738</ME>
+            <MAE>16.125494880047725</MAE>
+            <RSR>0.32685406011949869</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>PP_</Name>
+            <n>36</n>
+            <Slope>1.0300454275809723</Slope>
+            <Intercept>5.4179440716415144</Intercept>
+            <SEslope>0.053231960594220133</SEslope>
+            <SEintercept>5.293920860714608</SEintercept>
+            <R2>0.91675390813335644</R2>
+            <RMSE>22.431391524714961</RMSE>
+            <NSE>0.89011403548006762</NSE>
+            <ME>7.607618058779738</ME>
+            <MAE>16.125494880047725</MAE>
+            <RSR>0.32685406011949869</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>2_</Name>
+            <n>36</n>
+            <Slope>1.0300454275809723</Slope>
+            <Intercept>5.4179440716415144</Intercept>
+            <SEslope>0.053231960594220133</SEslope>
+            <SEintercept>5.293920860714608</SEintercept>
+            <R2>0.91675390813335644</R2>
+            <RMSE>22.431391524714961</RMSE>
+            <NSE>0.89011403548006762</NSE>
+            <ME>7.607618058779738</ME>
+            <MAE>16.125494880047725</MAE>
+            <RSR>0.32685406011949869</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>1</Name>
+            <n>36</n>
+            <Slope>1.0300454275809723</Slope>
+            <Intercept>5.4179440716415144</Intercept>
+            <SEslope>0.053231960594220133</SEslope>
+            <SEintercept>5.293920860714608</SEintercept>
+            <R2>0.91675390813335644</R2>
+            <RMSE>22.431391524714961</RMSE>
+            <NSE>0.89011403548006762</NSE>
+            <ME>7.607618058779738</ME>
+            <MAE>16.125494880047725</MAE>
+            <RSR>0.32685406011949869</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>2</Name>
+            <n>36</n>
+            <Slope>1.0300454275809723</Slope>
+            <Intercept>5.4179440716415144</Intercept>
+            <SEslope>0.053231960594220133</SEslope>
+            <SEintercept>5.293920860714608</SEintercept>
+            <R2>0.91675390813335644</R2>
+            <RMSE>22.431391524714961</RMSE>
+            <NSE>0.89011403548006762</NSE>
+            <ME>7.607618058779738</ME>
+            <MAE>16.125494880047725</MAE>
+            <RSR>0.32685406011949869</RSR>
+          </RegrStats>
+        </AcceptedStats>
+        <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
+        <POName>PredictedObserved</POName>
+      </Tests>
       <PredictedTableName>PredictedLeach</PredictedTableName>
       <ObservedTableName>ObservedLeach</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
@@ -43,30 +120,6 @@
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>1000</MaximumResultsPerPage>
   </DataStore>
-  <Tests>
-    <Name>TestsBinary</Name>
-    <Test>
-      <SimulationName>SCUMTestBase</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>ExtraVariables.Script.AccumPlantN</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>SCUMTestBase</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>ExtraVariables.Script.AccumEP</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>SCUMTestBase</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>SCUM.Total.Wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-  </Tests>
   <Simulation>
     <Name>SCUMTestBase</Name>
     <Weather>

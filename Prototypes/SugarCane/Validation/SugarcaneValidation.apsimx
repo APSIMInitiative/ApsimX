@@ -25,6 +25,22 @@ Datasets 4 and 17 were not included in simulations as they were not in original 
 
 Dataset 18 was not included as irrigation records were missing. 
 
+nb.
+
+I had to increase the harvest dates in every simulation by one day.
+
+This is because the model does management at the start of everyday (ie. the crop is harvested at the start of every day)
+
+But the "daily" reporting is the very last thing that happens each day.
+
+Therefore if we set our harvest date to be the same as that in the observed data, then our predicted data at harvest will all be zeroed (because after the model harvests it zeros the values).
+
+This is not a problem when we only report at "harvesting" instead of "daily" because the reporting occurs before the values are zeroed. 
+
+However we have to report daily because we have observation data during the crop growth not just at harvesting.
+
+ 
+
 
 ]]></MemoText>
   </Memo>
@@ -3611,11 +3627,11 @@ nb. fertiliser amounts are in (kg/ha) and depths in (mm)
             <Action>[Irrigation].Apply(amount:3, depth:300);   </Action>
           </Operation>
           <Operation>
-            <Date>1995-09-29T00:00:00</Date>
+            <Date>1995-09-30T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1995-09-29T00:00:00</Date>
+            <Date>1995-09-30T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -6837,11 +6853,11 @@ nb. irrigation amounts and depths are in (mm)
             <Action>[Irrigation].Apply(amount:36, depth:300);</Action>
           </Operation>
           <Operation>
-            <Date>1993-10-21T00:00:00</Date>
+            <Date>1993-10-22T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1993-10-21T00:00:00</Date>
+            <Date>1993-10-22T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -10078,11 +10094,11 @@ They are missing the word "tillage". This means these tillage events won't occur
             <Action>[Irrigation].Apply(amount:36, depth:300);</Action>
           </Operation>
           <Operation>
-            <Date>1993-10-21T00:00:00</Date>
+            <Date>1993-10-22T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1993-10-21T00:00:00</Date>
+            <Date>1993-10-22T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -10092,13 +10108,13 @@ They are missing the word "tillage". This means these tillage events won't occur
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -13267,11 +13283,11 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
             <Action>[Irrigation].Apply(amount:200);</Action>
           </Operation>
           <Operation>
-            <Date>1992-07-07T00:00:00</Date>
+            <Date>1992-07-08T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1992-07-07T00:00:00</Date>
+            <Date>1992-07-08T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -13281,13 +13297,13 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -16452,11 +16468,11 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
             <Action>[Irrigation].Apply(amount:289);</Action>
           </Operation>
           <Operation>
-            <Date>1994-08-09T00:00:00</Date>
+            <Date>1994-08-10T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1994-08-09T00:00:00</Date>
+            <Date>1994-08-10T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -16466,13 +16482,13 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -19653,11 +19669,11 @@ However Automatic Irrigations are not possible in ApsimX yet.
             <Action>[Fertiliser].Apply(Amount:32, Type:Fertiliser.Types.NO3N, Depth:50);</Action>
           </Operation>
           <Operation>
-            <Date>1987-10-11T00:00:00</Date>
+            <Date>1987-10-12T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1987-10-11T00:00:00</Date>
+            <Date>1987-10-12T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -19667,13 +19683,13 @@ However Automatic Irrigations are not possible in ApsimX yet.
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -22827,6 +22843,10 @@ All operation irrigations are Overhead, high pressure gun
             <Action>[Irrigation].Apply(amount:55.0);</Action>
           </Operation>
           <Operation>
+            <Date>1993-07-06T00:00:00</Date>
+            <Action>[Sugarcane].HarvestCrop();</Action>
+          </Operation>
+          <Operation>
             <Date>1994-02-04T00:00:00</Date>
             <Action>[Irrigation].Apply(amount:46.9);</Action>
           </Operation>
@@ -22848,18 +22868,14 @@ All operation irrigations are Overhead, high pressure gun
           </Operation>
           <Operation>
             <Date>1994-05-11T00:00:00</Date>
-            <Action>[Irrigation].Apply(amount:36.6);</Action>
+            <Action>[Irrigation].Apply(amount:36.6); </Action>
           </Operation>
           <Operation>
-            <Date>1993-07-05T00:00:00</Date>
+            <Date>1994-05-31T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1994-05-30T00:00:00</Date>
-            <Action>[Sugarcane].HarvestCrop(); </Action>
-          </Operation>
-          <Operation>
-            <Date>1994-05-30T00:00:00</Date>
+            <Date>1994-05-31T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -22869,13 +22885,13 @@ All operation irrigations are Overhead, high pressure gun
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -26030,6 +26046,10 @@ All operation irrigations are Overhead, high pressure gun
             <Action>[Irrigation].Apply(amount:55.0);</Action>
           </Operation>
           <Operation>
+            <Date>1993-07-06T00:00:00</Date>
+            <Action>[Sugarcane].HarvestCrop();</Action>
+          </Operation>
+          <Operation>
             <Date>1994-02-04T00:00:00</Date>
             <Action>[Irrigation].Apply(amount:46.9);</Action>
           </Operation>
@@ -26051,18 +26071,14 @@ All operation irrigations are Overhead, high pressure gun
           </Operation>
           <Operation>
             <Date>1994-05-11T00:00:00</Date>
-            <Action>[Irrigation].Apply(amount:36.6);</Action>
+            <Action>[Irrigation].Apply(amount:36.6); </Action>
           </Operation>
           <Operation>
-            <Date>1993-07-05T00:00:00</Date>
+            <Date>1994-05-31T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1994-05-30T00:00:00</Date>
-            <Action>[Sugarcane].HarvestCrop(); </Action>
-          </Operation>
-          <Operation>
-            <Date>1994-05-30T00:00:00</Date>
+            <Date>1994-05-31T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -26072,13 +26088,13 @@ All operation irrigations are Overhead, high pressure gun
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -29233,6 +29249,10 @@ All operation irrigations are Overhead, high pressure gun
             <Action>[Irrigation].Apply(amount:55.0);</Action>
           </Operation>
           <Operation>
+            <Date>1993-07-06T00:00:00</Date>
+            <Action>[Sugarcane].HarvestCrop();</Action>
+          </Operation>
+          <Operation>
             <Date>1993-10-12T00:00:00</Date>
             <Action>[Fertiliser].Apply(Amount:170, Type:Fertiliser.Types.UreaN, Depth:50);</Action>
           </Operation>
@@ -29258,18 +29278,14 @@ All operation irrigations are Overhead, high pressure gun
           </Operation>
           <Operation>
             <Date>1994-05-11T00:00:00</Date>
-            <Action>[Irrigation].Apply(amount:36.6);</Action>
+            <Action>[Irrigation].Apply(amount:36.6); </Action>
           </Operation>
           <Operation>
-            <Date>1993-07-05T00:00:00</Date>
+            <Date>1994-05-31T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1994-05-30T00:00:00</Date>
-            <Action>[Sugarcane].HarvestCrop(); </Action>
-          </Operation>
-          <Operation>
-            <Date>1994-05-30T00:00:00</Date>
+            <Date>1994-05-31T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -29279,13 +29295,13 @@ All operation irrigations are Overhead, high pressure gun
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -32508,11 +32524,11 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
             <Action>[Irrigation].Apply(amount:5.82, depth:300);</Action>
           </Operation>
           <Operation>
-            <Date>1996-08-26T00:00:00</Date>
+            <Date>1996-08-27T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1996-08-26T00:00:00</Date>
+            <Date>1996-08-27T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -32522,13 +32538,13 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -35716,11 +35732,11 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
             <Action>[Irrigation].Apply(amount:4.48, depth:300);</Action>
           </Operation>
           <Operation>
-            <Date>1996-08-26T00:00:00</Date>
+            <Date>1996-08-27T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1996-08-26T00:00:00</Date>
+            <Date>1996-08-27T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -35730,13 +35746,13 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -38831,11 +38847,11 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
             <Action>[Sugarcane].HillUpTheSoil(CaneFr:1.0, TopsFr:0.50); </Action>
           </Operation>
           <Operation>
-            <Date>1996-08-26T00:00:00</Date>
+            <Date>1996-08-27T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1996-08-26T00:00:00</Date>
+            <Date>1996-08-27T00:00:00</Date>
             <Action>[Sugarcane].EndCrop();</Action>
           </Operation>
         </Operations>
@@ -38845,13 +38861,13 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -42042,11 +42058,11 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <Action>[Fertiliser].Apply(Amount:140, Type:Fertiliser.Types.UreaN, Depth:50);</Action>
           </Operation>
           <Operation>
-            <Date>1995-11-07T00:00:00</Date>
+            <Date>1995-11-08T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1995-11-07T00:00:00</Date>
+            <Date>1995-11-08T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -42056,13 +42072,13 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -44966,11 +44982,11 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <Action>[Irrigation].Apply(amount:23.3);</Action>
           </Operation>
           <Operation>
-            <Date>1995-11-07T00:00:00</Date>
+            <Date>1995-11-08T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1995-11-07T00:00:00</Date>
+            <Date>1995-11-08T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -44980,13 +44996,13 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -47874,11 +47890,11 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <Action>[Irrigation].Apply(amount:20.6);</Action>
           </Operation>
           <Operation>
-            <Date>1995-11-07T00:00:00</Date>
+            <Date>1995-11-08T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1995-11-07T00:00:00</Date>
+            <Date>1995-11-08T00:00:00</Date>
             <Action>[Sugarcane].EndCrop();</Action>
           </Operation>
         </Operations>
@@ -47888,13 +47904,13 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -50790,11 +50806,11 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <Action>[Irrigation].Apply(amount:27.5);</Action>
           </Operation>
           <Operation>
-            <Date>1995-11-07T00:00:00</Date>
+            <Date>1995-11-08T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop();</Action>
           </Operation>
           <Operation>
-            <Date>1995-11-07T00:00:00</Date>
+            <Date>1995-11-08T00:00:00</Date>
             <Action>[Sugarcane].EndCrop();</Action>
           </Operation>
         </Operations>
@@ -50804,13 +50820,13 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -53658,11 +53674,11 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <Action>[Irrigation].Apply(amount:20.6);</Action>
           </Operation>
           <Operation>
-            <Date>1995-11-07T00:00:00</Date>
+            <Date>1995-11-08T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1995-11-07T00:00:00</Date>
+            <Date>1995-11-08T00:00:00</Date>
             <Action>[Sugarcane].EndCrop();</Action>
           </Operation>
         </Operations>
@@ -53672,13 +53688,13 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -56690,11 +56706,11 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
             <Action>[Irrigation].Apply(amount:2.9, depth:300);</Action>
           </Operation>
           <Operation>
-            <Date>1995-09-05T00:00:00</Date>
+            <Date>1995-09-06T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop();</Action>
           </Operation>
           <Operation>
-            <Date>1995-09-05T00:00:00</Date>
+            <Date>1995-09-06T00:00:00</Date>
             <Action>[Sugarcane].EndCrop();</Action>
           </Operation>
         </Operations>
@@ -56704,13 +56720,13 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -59891,11 +59907,11 @@ However Automatic Irrigations are not possible in ApsimX yet.
             <Action>[Fertiliser].Apply(Amount:23, Type:Fertiliser.Types.NO3N, Depth:50);</Action>
           </Operation>
           <Operation>
-            <Date>1987-10-12T00:00:00</Date>
+            <Date>1987-10-13T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1987-10-12T00:00:00</Date>
+            <Date>1987-10-13T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -59905,13 +59921,13 @@ However Automatic Irrigations are not possible in ApsimX yet.
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -63382,11 +63398,11 @@ Likewise fertiliser applications are subsurface fertigations except the followin
             <Action>[Irrigation].Apply(amount:44.4246, depth:300);</Action>
           </Operation>
           <Operation>
-            <Date>1993-01-26T00:00:00</Date>
+            <Date>1993-01-27T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1993-01-26T00:00:00</Date>
+            <Date>1993-01-27T00:00:00</Date>
             <Action>[Sugarcane].EndCrop();</Action>
           </Operation>
         </Operations>
@@ -63396,13 +63412,13 @@ Likewise fertiliser applications are subsurface fertigations except the followin
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -66472,9 +66488,26 @@ All operation irrigations are furrow with 3.46ppm NO3 (10 kg/ha) in irrig water 
 
 Unfortunately solute in irrigations is not possible in ApsimX yet.
 
-1993-09-11 [Sugarcane].SowRatoon(PlantingDensity:10, Depth:150, CultivarName:"Q117_fum", StartingRatoonNo:1); //! plant crop harvested 13/08/93, then stubble shaved 11/09/93
+
+-> nb. the following are included for their comments,
 
 1993-08-13 [Sugarcane].HarvestCrop() // sugar harvest ! plant crop harvested 13/08/93, then stubble shaved 11/09/93
+
+1993-09-11 [Sugarcane].SowRatoon(PlantingDensity:10, Depth:150, CultivarName:"Q117_fum", StartingRatoonNo:1); //! plant crop harvested 13/08/93, then stubble shaved 11/09/93
+
+
+-> nb. Need to make sure the crop is harvested before it is incorporated. 
+
+1993-08-13 [Sugarcane].HarvestCrop();
+
+1993-08-13 [SurfaceOrganicMatter].Incorporate(fraction: 0.9, depth:0); 
+
+
+-> nb. I had to add the following on the last day of the simulation because Apsim Next Generation needs to have an EndCrop done at the end of each simulation.
+
+1994-09-07 [Sugarcane].HarvestCrop();
+
+1994-09-07 [Sugarcane].EndCrop();
 
 
 
@@ -66616,12 +66649,20 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
             <Action>[Irrigation].Apply(amount:229);</Action>
           </Operation>
           <Operation>
+            <Date>1993-08-14T00:00:00</Date>
+            <Action>[Sugarcane].HarvestCrop();</Action>
+          </Operation>
+          <Operation>
             <Date>1993-08-13T00:00:00</Date>
-            <Action>[SurfaceOrganicMatter].Incorporate(fraction: 0.9, depth:0); </Action>
+            <Action>[SurfaceOrganicMatter].Incorporate(fraction: 0.9, depth:0);  </Action>
           </Operation>
           <Operation>
             <Date>1993-08-23T00:00:00</Date>
             <Action>[Irrigation].Apply(amount:228);</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-09-10T00:00:00</Date>
+            <Action>[Sugarcane].EndCrop();</Action>
           </Operation>
           <Operation>
             <Date>1993-09-11T00:00:00</Date>
@@ -66708,11 +66749,11 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
             <Action>[Irrigation].Apply(amount:228);</Action>
           </Operation>
           <Operation>
-            <Date>1993-08-13T00:00:00</Date>
-            <Action>[Sugarcane].HarvestCrop(); </Action>
+            <Date>1994-09-08T00:00:00</Date>
+            <Action>[Sugarcane].HarvestCrop();</Action>
           </Operation>
           <Operation>
-            <Date>1993-09-09T00:00:00</Date>
+            <Date>1994-09-08T00:00:00</Date>
             <Action>[Sugarcane].EndCrop();</Action>
           </Operation>
         </Operations>
@@ -66722,13 +66763,13 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -69987,11 +70028,11 @@ All operation irrigations are subsurface trickle irrigation except for the follo
             <Action>[Sugarcane].LodgeTheCane(); </Action>
           </Operation>
           <Operation>
-            <Date>1992-07-14T00:00:00</Date>
+            <Date>1992-07-15T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1992-07-14T00:00:00</Date>
+            <Date>1992-07-15T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -70001,13 +70042,13 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -73205,6 +73246,10 @@ All operation irrigations are subsurface trickle irrigation except for the follo
             <Action>[Irrigation].Apply(amount:36, depth:300);</Action>
           </Operation>
           <Operation>
+            <Date>1993-08-19T00:00:00</Date>
+            <Action>[Sugarcane].HarvestCrop();</Action>
+          </Operation>
+          <Operation>
             <Date>1993-10-12T00:00:00</Date>
             <Action>[Irrigation].Apply(amount:30);  </Action>
           </Operation>
@@ -73297,15 +73342,11 @@ All operation irrigations are subsurface trickle irrigation except for the follo
             <Action>[Irrigation].Apply(amount:40.5, depth:300);</Action>
           </Operation>
           <Operation>
-            <Date>1993-08-18T00:00:00</Date>
-            <Action>[Sugarcane].HarvestCrop();</Action>
-          </Operation>
-          <Operation>
-            <Date>1994-08-23T00:00:00</Date>
+            <Date>1994-08-24T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1994-08-23T00:00:00</Date>
+            <Date>1994-08-24T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -73315,13 +73356,13 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -76520,6 +76561,10 @@ All operation irrigations are subsurface trickle irrigation except for the follo
             <Action>[Irrigation].Apply(amount:36, depth:300);</Action>
           </Operation>
           <Operation>
+            <Date>1993-08-19T00:00:00</Date>
+            <Action>[Sugarcane].HarvestCrop();</Action>
+          </Operation>
+          <Operation>
             <Date>1993-09-21T00:00:00</Date>
             <Action>[Fertiliser].Apply(Amount:55, Type:Fertiliser.Types.UreaN, Depth:100);</Action>
           </Operation>
@@ -76616,15 +76661,11 @@ All operation irrigations are subsurface trickle irrigation except for the follo
             <Action>[Irrigation].Apply(amount:40.5, depth:300);</Action>
           </Operation>
           <Operation>
-            <Date>1993-08-18T00:00:00</Date>
+            <Date>1994-08-24T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1994-08-23T00:00:00</Date>
-            <Action>[Sugarcane].HarvestCrop(); </Action>
-          </Operation>
-          <Operation>
-            <Date>1994-08-23T00:00:00</Date>
+            <Date>1994-08-24T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -76634,13 +76675,13 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -79865,6 +79906,10 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
             <Action>[Irrigation].Apply(amount:36, depth:300);</Action>
           </Operation>
           <Operation>
+            <Date>1993-08-19T00:00:00</Date>
+            <Action>[Sugarcane].HarvestCrop(); </Action>
+          </Operation>
+          <Operation>
             <Date>1993-09-20T00:00:00</Date>
             <Action>[Fertiliser].Apply(Amount:55, Type:Fertiliser.Types.UreaN, Depth:250);</Action>
           </Operation>
@@ -80001,15 +80046,11 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
             <Action>[Irrigation].Apply(amount:40.5, depth:300);</Action>
           </Operation>
           <Operation>
-            <Date>1993-08-18T00:00:00</Date>
+            <Date>1994-08-24T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1994-08-23T00:00:00</Date>
-            <Action>[Sugarcane].HarvestCrop(); </Action>
-          </Operation>
-          <Operation>
-            <Date>1994-08-23T00:00:00</Date>
+            <Date>1994-08-24T00:00:00</Date>
             <Action>[Sugarcane].EndCrop();</Action>
           </Operation>
         </Operations>
@@ -80019,13 +80060,13 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -83394,11 +83435,11 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
             <Action>[Irrigation].Apply(amount:24.0);</Action>
           </Operation>
           <Operation>
-            <Date>1995-07-26T00:00:00</Date>
+            <Date>1995-07-27T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1995-07-26T00:00:00</Date>
+            <Date>1995-07-27T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -83408,13 +83449,13 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -86300,11 +86341,11 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
             <Action>[Irrigation].Apply(amount:56.0);</Action>
           </Operation>
           <Operation>
-            <Date>1995-07-26T00:00:00</Date>
+            <Date>1995-07-27T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1995-07-26T00:00:00</Date>
+            <Date>1995-07-27T00:00:00</Date>
             <Action>[Sugarcane].EndCrop();</Action>
           </Operation>
         </Operations>
@@ -86314,13 +86355,13 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -89274,11 +89315,11 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
             <Action>[Irrigation].Apply(amount:17.7);</Action>
           </Operation>
           <Operation>
-            <Date>1995-07-26T00:00:00</Date>
+            <Date>1995-07-27T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop();</Action>
           </Operation>
           <Operation>
-            <Date>1995-07-26T00:00:00</Date>
+            <Date>1995-07-27T00:00:00</Date>
             <Action>[Sugarcane].EndCrop();</Action>
           </Operation>
         </Operations>
@@ -89288,13 +89329,13 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>
@@ -92228,11 +92269,11 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
             <Action>[Irrigation].Apply(amount:27.9);</Action>
           </Operation>
           <Operation>
-            <Date>1995-07-26T00:00:00</Date>
+            <Date>1995-07-27T00:00:00</Date>
             <Action>[Sugarcane].HarvestCrop(); </Action>
           </Operation>
           <Operation>
-            <Date>1995-07-26T00:00:00</Date>
+            <Date>1995-07-27T00:00:00</Date>
             <Action>[Sugarcane].EndCrop(); </Action>
           </Operation>
         </Operations>
@@ -92242,13 +92283,13 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Clock].year as year</string>
-            <string>[Clock].day as day</string>
+            <string>[Clock].Today.Year as year</string>
+            <string>[Clock].Today.DayOfYear as day</string>
             <string>[Sugarcane].daysaftersowing as das</string>
             <string>[Sugarcane].crop_status as crop_status</string>
             <string>[Sugarcane].ratoon_no as ratoon_no</string>
-            <string>[Fertiliser].fertiliser</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Fertiliser].NitrogenApplied as fertiliser</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Weather].rain as rain</string>
             <string>[Sugarcane].canefw as canefw</string>
             <string>[Sugarcane].cane_wt as cane_wt</string>

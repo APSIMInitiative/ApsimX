@@ -578,23 +578,11 @@
       <Name>OilPalm</Name>
       <ResourceName>OilPalm</ResourceName>
     </OilPalm>
-    <Slurp>
+    <Plant>
       <Name>Slurp</Name>
+      <ResourceName>Slurp</ResourceName>
       <CropType>Slurp</CropType>
-      <localLAIGreen>5</localLAIGreen>
-      <localLAItot>5</localLAItot>
-      <localLightExtinction>0.6</localLightExtinction>
-      <localCanopyHeight>500</localCanopyHeight>
-      <localCanopyDepth>500</localCanopyDepth>
-      <localMaximumStomatalConductance>0.011</localMaximumStomatalConductance>
-      <localFrgr>1</localFrgr>
-      <localDemandWater>10</localDemandWater>
-      <localDemandNitrogen>5</localDemandNitrogen>
-      <localKNO3>0.1</localKNO3>
-      <localKNH4>0</localKNH4>
-      <localRootDepth>500</localRootDepth>
-      <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
-    </Slurp>
+    </Plant>
     <Folder>
       <Name>Wheat cultivars</Name>
       <Folder>
@@ -854,63 +842,7 @@
       <Exceedence>true</Exceedence>
     </Probability>
   </Folder>
-  <Tests>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>EqualTo</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>value</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>LessThan</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>value</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>GreaterThan</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>value</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>AllPos</Type>
-      <ColumnNames>column</ColumnNames>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Between</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>value1,value2</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Mean</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>5,value</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>1,5</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>CompareToInput</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>1,5</Parameters>
-    </Test>
-  </Tests>
+  <Tests />
   <Experiment>
     <Factors>
       <Factor>
