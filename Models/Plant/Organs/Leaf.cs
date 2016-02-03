@@ -512,6 +512,20 @@ namespace Models.PMF.Organs
             }
         }
 
+
+        /// <summary>Gets the plant senesced leaf no.</summary>
+        /// <value>The plant senesced leaf no.</value>
+        [Units("/plant")]
+        [Description("Number of leaves per plant that have senesced")]
+        public double PlantsenescedLeafNo
+        {
+            get
+            {
+                return PlantAppearedLeafNo/ Plant.Population - PlantAppearedGreenLeafNo;
+            }
+        }
+
+
         //Canopy State variables
 
 

@@ -1530,6 +1530,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
             <string>[FodderBeet].Structure.MainStemNodeNo</string>
             <string>[FodderBeet].Leaf.PlantAppearedLeafNo</string>
             <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
+            <string>[FodderBeet].Leaf.PlantsenescedLeafNo</string>
             <string>[FodderBeet].Leaf.CoverGreen</string>
             <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
             <string>[Phenology].Photoperiod.Value</string>
