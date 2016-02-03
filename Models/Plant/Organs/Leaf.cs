@@ -1024,6 +1024,7 @@ namespace Models.PMF.Organs
                 {
                     double DeltaDeadLeaves = DeadCohortNo - DeadNodesYesterday; //Fixme.  DeadNodesYesterday is never given a value as far as I can see.
                     FractionDied = DeltaDeadLeaves / GreenCohortNo;
+                    DeadNodesYesterday = DeadCohortNo;
                 }
             }
         }
