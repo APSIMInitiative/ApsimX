@@ -1854,7 +1854,14 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
+        <DisabledSeries>
+          <string>CvRiv_Sep</string>
+          <string>CvRiv_Dec</string>
+          <string>CvBri_Sep</string>
+          <string>CvBri_Oct</string>
+          <string>CvBri_Nov</string>
+          <string>CvBri_Dec</string>
+        </DisabledSeries>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
@@ -1917,7 +1924,14 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
+        <DisabledSeries>
+          <string>CvRiv_Sep</string>
+          <string>CvRiv_Dec</string>
+          <string>CvBri_Sep</string>
+          <string>CvBri_Oct</string>
+          <string>CvBri_Nov</string>
+          <string>CvBri_Dec</string>
+        </DisabledSeries>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
@@ -1982,7 +1996,14 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
+        <DisabledSeries>
+          <string>CvRiv_Sep</string>
+          <string>CvRiv_Dec</string>
+          <string>CvBri_Sep</string>
+          <string>CvBri_Oct</string>
+          <string>CvBri_Nov</string>
+          <string>CvBri_Dec</string>
+        </DisabledSeries>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
@@ -2046,7 +2067,14 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
+        <DisabledSeries>
+          <string>CvRiv_Sep</string>
+          <string>CvRiv_Dec</string>
+          <string>CvBri_Sep</string>
+          <string>CvBri_Oct</string>
+          <string>CvBri_Nov</string>
+          <string>CvBri_Dec</string>
+        </DisabledSeries>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
     </Folder>
@@ -2114,7 +2142,6 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries>
           <string>CvRiv_Sep</string>
-          <string>CvRiv_Nov</string>
           <string>CvRiv_Dec</string>
           <string>CvBri_Sep</string>
           <string>CvBri_Oct</string>
@@ -2185,7 +2212,6 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries>
           <string>CvRiv_Sep</string>
-          <string>CvRiv_Nov</string>
           <string>CvRiv_Dec</string>
           <string>CvBri_Sep</string>
           <string>CvBri_Oct</string>
@@ -2580,5 +2606,5 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Experiment>
-  <ExplorerWidth>528</ExplorerWidth>
+  <ExplorerWidth>227</ExplorerWidth>
 </Simulations>
