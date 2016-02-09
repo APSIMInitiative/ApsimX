@@ -2021,7 +2021,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <LineThickness>Normal</LineThickness>
           <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Leaf.Predicted.FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
+          <YFieldName>FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
