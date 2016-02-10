@@ -529,7 +529,7 @@ namespace SWIMFrame
             nsel = j;
         }
         // Return quadratic interpolation coeffs co.
-        private static double[] quadco(double[] x, double[] y)
+        public static double[] quadco(double[] x, double[] y)
         {
             double[] co = new double[4];
             double s, x1, y2, x12, c1, c2;
