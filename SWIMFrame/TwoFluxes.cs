@@ -70,7 +70,7 @@ namespace SWIMFrame
             if (ft1.fend[0].sid != ft1.fend[1].sid || ft2.fend[0].sid != ft2.fend[1].sid)
             {
                 Console.WriteLine("Flux table not for uniform soil.");
-                Environment.Exit[1];
+                Environment.Exit(1);
             }
 
             ft[0] = ft1;
@@ -116,7 +116,10 @@ namespace SWIMFrame
                     i = 2;
                     j = 1;
                 }
-                ii = Find(he[j], h, n[i], i);
+                double[] hFind= new double[n[i] + 1];
+                for (int x = 1; x <= n[i] + 1; x++)
+                    hFind[x - n[i] + 1] = h[i, x];
+                ii = Find(he[j], hFind, n[i]);
                 for (k = 1; k <= n[i] - ii; k++)
                 {
                     h[j, n[j] + k] = h[i, ii + k];//test these
@@ -287,7 +290,7 @@ namespace SWIMFrame
                         v = vlast;
                         for (k = 1; k <= maxit; k++) // solve for upper interface phi giving same fluxes
                         {
-                            q1 = fd(v, f, df);
+                            fd(v, out f, out df, out q1);
                             nit += 1;
                             dx = f / df; // Newton's method - almost always works
                             v = Math.Min(10.0 * phif[1, nft[1]], Math.Max(phii[1, 1], v - dx));
@@ -299,14 +302,14 @@ namespace SWIMFrame
                         if (k > maxit) //failed - bracket q and use bisection
                         {
                             v1 = phii[1, 1];
-                            q1 = fd(v1, f1, df);
+                            fd(v1, out f1, out df, out q1);
                             if (f1 <= 0.0) // answer is off table - use end value
                             {
                                 qp[i, j] = q1;
                                 continue;
                             }
                             v2 = phii[1, ni];
-                            q1 = fd(v2, f2, df);
+                            fd(v2, out f2, out df, out q1);
                             for (k = 1; k <= maxit; k++)
                             {
                                 if (f1 * f2 < 0.0)
@@ -314,23 +317,23 @@ namespace SWIMFrame
                                 v1 = v2;
                                 f1 = f2;
                                 v2 = 2.0 * v1;
-                                q1 = fd(v2, f2, df);
+                                fd(v2, out f2, out df, out q1);
                             }
                             if (k > maxit)
                             {
                                 Console.WriteLine(v1 + " " + v2 + " " + f1 + " " + f2);
                                 v1 = phii[1, 1];
-                                q1 = fd(v1, f1, df);
+                                fd(v1, out f1, out df, out q1);
                                 Console.WriteLine(v1 + " " + f1);
                                 Console.WriteLine("twotbls: too many iterations at i, j = " + i + " " + j);
-                                Environment.Exit[1];
+                                Environment.Exit(1);
                             }
                             for (k = 1; k <= maxit; k++)
                             {
                                 v = 0.5 * (v1 + v2);
-                                q1 = fd(v, f, df);
+                                fd(v, out f, out df, out q1);
                                 e = Math.Abs(f / q1);
-                                if (e < err)
+                                if (e < rerr)
                                     break;
                                 if (f > 0.0)
                                 {
@@ -347,7 +350,7 @@ namespace SWIMFrame
                             if (k > maxit)
                             {
                                 Console.WriteLine("twotbls: too many iterations at i, j = " + i + " " + j);
-                                Environment.Exit[1];
+                                Environment.Exit(1);
                             }
                         }
                         // Solved
@@ -372,15 +375,15 @@ namespace SWIMFrame
 
                 for (i = 1; i <= nft[1]; i++)
                 {
-                    qi1M.SetColumn(i, Fluxes.quadinterp(phifM.Row[2].ToArray(), qpM.Row(i).ToArray(), nft[2], phifiM.Row[2].ToArray()));
+                    qi1M.SetColumn(i, Fluxes.quadinterp(phifM.Row(2).ToArray(), qpM.Row(i).ToArray(), nft[2], phifiM.Row(2).ToArray()));
                 }
                 for (j = 1; j <= nft[2]; j++)
                 {
-                    qi2M.SetColumn(j, Fluxes.quadinterp(phifM.Row[1].ToArray(), qpM.Column(j).ToArray(), nft[1], phifiM.Row[1].ToArray()));
+                    qi2M.SetColumn(j, Fluxes.quadinterp(phifM.Row(1).ToArray(), qpM.Column(j).ToArray(), nft[1], phifiM.Row(1).ToArray()));
                 }
                 for (j = 1; j <= nfi[2]; j++)
                 {
-                    qi3M.SetColumn(j, Fluxes.quadinterp(phifM.Row[1].ToArray(), qi1M.Column(j).ToArray(), nft[1], phifiM.Row[1].ToArray()));
+                    qi3M.SetColumn(j, Fluxes.quadinterp(phifM.Row(1).ToArray(), qi1M.Column(j).ToArray(), nft[1], phifiM.Row(1).ToArray()));
                 }
                 // Put all the fluxes together
                 i = nft[1] + nfi[1];
@@ -451,22 +454,29 @@ namespace SWIMFrame
             return ftwo;
         }
 
-        private static double fd(double phia, out double f, out double d, out double q)
+        private static void fd(double phia, out double f, out double d, out double q)
         {
             //Returns flux difference f, deriv d and upper flux q.
             //phia - phi at interface in upper path.
             double h, phib, der, v, vm1, qv, qvm1, q1, q1d, q2, q2d;
+            phib = 0;
+            q1 = 0;
+            der = 0;
+            q1d = 0;
             if (phia != phialast) {
                 if (phia > phi1max) // both saturated - calc der and lower interface phi
                 {
-                    h = he[1] + (phia - phie[1]) / Ks[1]);
+                    h = he[1] + (phia - phie[1]) / Ks[1];
                     phib = phie[2] + Ks[2] * (h - he[2]);
                     der = Ks[2] / Ks[1];
                 }
                 else // use quadratic interpolation to get them
                 {
-                    ii = find(phia, phii[1, 1:ni), ni)
-        v = phia - phii[1, ii];
+                    double[] phiiFind = new double[ni + 1];
+                    for (int x = 1; x <= ni; x++)
+                        phiiFind[x - ni + 1] = phii[1, x];
+                    ii = Find(phia, phiiFind, ni);
+                    v = phia - phii[1, ii];
                     der = coq[2, ii] + v * 2.0 * coq[3, ii];
                     phib = coq[1, ii] + v * (coq[2, ii] + v * coq[3, ii]);
                 }
@@ -479,26 +489,27 @@ namespace SWIMFrame
                     qvm1 = qf[1, i, nft[1] - 1];
                     q1d = (qv - qvm1) / (v - vm1);
                     q1 = qv + q1d * (phia - v);
-             else // use cubic interpolation
-                call ceval1(phia, q1, q1d)
-      }
+                }
+                else // use cubic interpolation
+                {
+                    ceval1(phia, out q1, out q1d);
+                }
                 phialast = phia;
             }
             // Get lower flux and deriv in same way.
             v = phif[2, nft[2]];
             if (phib > v)
             {
-                vm1 = phif(2, nft[2] - 1);
-             qv = qf(2, nft[2], j);
-             qvm1 = qf(2, nft[2] - 1, j);
-             q2d = (qv - qvm1) / (v - vm1);
-             q2 = qv + q2d * (phib - v);
-                              }
+                vm1 = phif[2, nft[2] - 1];
+                qv = qf[2, nft[2], j];
+                qvm1 = qf[2, nft[2] - 1, j];
+                q2d = (qv - qvm1) / (v - vm1);
+                q2 = qv + q2d * (phib - v);
+            }
             else
-
-                call ceval2(j, phib, q2, q2d)
-  // Set return values.
-  f = q1 - q2;
+                ceval2(j, phib, out q2, out q2d);
+            // Set return values.
+            f = q1 - q2;
             d = q1d - q2d * der;
             q = q1;
         }
@@ -512,7 +523,7 @@ namespace SWIMFrame
             double x;
 
             i1 = 1;
-            i2 = ncol + 1; // allow for last interval in table
+            i2 = nco1 + 1; // allow for last interval in table
             while(true) //use bisection to find place
             {
                 if (i2 - i1 <= 1)
@@ -538,7 +549,7 @@ namespace SWIMFrame
             double x;
 
             i1 = 1;
-            i2 = ncol + 1; // allow for last interval in table
+            i2 = nco1 + 1; // allow for last interval in table
             while (true) //use bisection to find place
             {
                 if (i2 - i1 <= 1)
