@@ -88,6 +88,27 @@ namespace Models
                 stats[c] = MathUtilities.CalcRegressionStats(columnNames[c], y, x);
             }
 
+            //remove any null stats which can occur from non-numeric columns such as dates
+            List<MathUtilities.RegrStats> list = new List<MathUtilities.RegrStats>(stats);
+            list.RemoveAll(l => l == null);
+            stats = list.ToArray();
+
+            //remove entries from column names
+            for (int i = columnNames.Count() - 1; i >= 0; i--)
+            {
+                bool found = false;
+                for (int j = 0; j < stats.Count(); j++)
+                {
+                    if (columnNames[i] == stats[j].Name)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                    columnNames.RemoveAt(i);
+            }
+
             //turn stats array into a DataTable
             //first, check if there is already an AcceptedStats array, create if not.
             //If the names don't match, then use current stats as user has dragged
