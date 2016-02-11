@@ -1263,13 +1263,12 @@ The model consists of:
         <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
+        <Albedo>0</Albedo>
+        <Gsmax>0</Gsmax>
+        <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
-        <GsMax>0.03</GsMax>
-        <R50>200</R50>
-        <Emissivity>0.96</Emissivity>
-        <Albido>0.26</Albido>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -1440,71 +1439,70 @@ The model consists of:
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
-        <CompositeBiomass>
-          <Name>AboveGround</Name>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Live</string>
-            <string>[Stem].Dead</string>
-            <string>[Spike].Live</string>
-            <string>[Spike].Dead</string>
-            <string>[Grain].Live</string>
-            <string>[Grain].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>BelowGround</Name>
-          <Propertys>
-            <string>[Root].Live</string>
-            <string>[Root].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Total</Name>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Live</string>
-            <string>[Stem].Dead</string>
-            <string>[Root].Live</string>
-            <string>[Root].Dead</string>
-            <string>[Spike].Live</string>
-            <string>[Spike].Dead</string>
-            <string>[Grain].Live</string>
-            <string>[Grain].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>TotalLive</Name>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Stem].Live</string>
-            <string>[Root].Live</string>
-            <string>[Spike].Live</string>
-            <string>[Grain].Live</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>TotalDead</Name>
-          <Propertys>
-            <string>[Leaf].Dead</string>
-            <string>[Stem].Dead</string>
-            <string>[Root].Dead</string>
-            <string>[Spike].Dead</string>
-            <string>[Grain].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>AboveGroundLive</Name>
-          <Propertys>
-            <string>[Leaf].Live</string>
-            <string>[Stem].Live</string>
-            <string>[Spike].Live</string>
-            <string>[Grain].Live</string>
-          </Propertys>
-        </CompositeBiomass>
-
+      <CompositeBiomass>
+        <Name>AboveGround</Name>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Live</string>
+          <string>[Stem].Dead</string>
+          <string>[Spike].Live</string>
+          <string>[Spike].Dead</string>
+          <string>[Grain].Live</string>
+          <string>[Grain].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>BelowGround</Name>
+        <Propertys>
+          <string>[Root].Live</string>
+          <string>[Root].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>Total</Name>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Live</string>
+          <string>[Stem].Dead</string>
+          <string>[Root].Live</string>
+          <string>[Root].Dead</string>
+          <string>[Spike].Live</string>
+          <string>[Spike].Dead</string>
+          <string>[Grain].Live</string>
+          <string>[Grain].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>TotalLive</Name>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Stem].Live</string>
+          <string>[Root].Live</string>
+          <string>[Spike].Live</string>
+          <string>[Grain].Live</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>TotalDead</Name>
+        <Propertys>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Dead</string>
+          <string>[Root].Dead</string>
+          <string>[Spike].Dead</string>
+          <string>[Grain].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>AboveGroundLive</Name>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Stem].Live</string>
+          <string>[Spike].Live</string>
+          <string>[Grain].Live</string>
+        </Propertys>
+      </CompositeBiomass>
       <Cultivar>
         <Name>Wakanui</Name>
         <Command>[Phenology].Vernalisation.VernSens = 5</Command>
@@ -1674,6 +1672,9 @@ The model consists of:
     </ExcelInput>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
+      <Tests>
+        <Name>Tests</Name>
+      </Tests>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Observed</ObservedTableName>
       <FieldNameUsedForMatch>Wheat.Phenology.CurrentStageName</FieldNameUsedForMatch>
@@ -1689,24 +1690,36 @@ The model consists of:
     </TimeSeriesStats>
     <PredictedObserved>
       <Name>PreVsObsPhenology</Name>
+      <Tests>
+        <Name>Tests</Name>
+      </Tests>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Zadok</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <PredictedObserved>
       <Name>PreVsObsLeafNumber</Name>
+      <Tests>
+        <Name>Tests</Name>
+      </Tests>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>LeafAppearance</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <PredictedObserved>
       <Name>PreVsObsET</Name>
+      <Tests>
+        <Name>Tests</Name>
+      </Tests>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>ET</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <PredictedObserved>
       <Name>PredictedObservedAll</Name>
+      <Tests>
+        <Name>Tests</Name>
+      </Tests>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Observed</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
@@ -2337,6 +2350,11 @@ namespace Models
         </Operations>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -2348,11 +2366,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Manager>
           <Name>Calculations</Name>
@@ -2454,11 +2467,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2472,11 +2488,14 @@ namespace Models
         <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2512,11 +2531,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2530,11 +2552,14 @@ namespace Models
         <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2570,11 +2595,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>TotalSoilWater</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2588,11 +2616,14 @@ namespace Models
         <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ProfileWater</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2628,11 +2659,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2646,11 +2680,14 @@ namespace Models
         <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2686,11 +2723,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2704,11 +2744,14 @@ namespace Models
         <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2744,11 +2787,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2762,11 +2808,14 @@ namespace Models
         <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2802,11 +2851,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2820,11 +2872,14 @@ namespace Models
         <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2860,11 +2915,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2878,11 +2936,14 @@ namespace Models
         <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2918,11 +2979,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2936,11 +3000,14 @@ namespace Models
         <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2976,11 +3043,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -2994,11 +3064,14 @@ namespace Models
         <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -3545,6 +3618,11 @@ namespace Models
         </Operations>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -3556,11 +3634,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -3619,11 +3692,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -3637,11 +3713,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -3677,11 +3756,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -3695,11 +3777,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -3735,11 +3820,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -3753,11 +3841,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -3793,11 +3884,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.N</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -3811,11 +3905,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -3851,11 +3948,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -3869,11 +3969,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -3909,11 +4012,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.Dead.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -3927,11 +4033,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.Dead.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -3967,11 +4076,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Stem.Live.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -3985,11 +4097,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Stem.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -4025,11 +4140,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -4043,11 +4161,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>TimeSeries</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -4614,6 +4735,11 @@ namespace Models
         </Operations>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -4625,11 +4751,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Operations>
           <Name>FertiliserSchedule</Name>
@@ -4881,11 +5002,14 @@ private void OnDoManagement(object sender, EventArgs e)
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.TotalNH4</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -4925,11 +5049,14 @@ private void OnDoManagement(object sender, EventArgs e)
         <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>PredictedObserved</TableName>
         <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
         <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -5683,6 +5810,11 @@ private void OnDoManagement(object sender, EventArgs e)
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -5694,11 +5826,6 @@ private void OnDoManagement(object sender, EventArgs e)
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -5827,6 +5954,11 @@ private void OnDoManagement(object sender, EventArgs e)
         </Operations>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -5838,11 +5970,6 @@ private void OnDoManagement(object sender, EventArgs e)
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -6546,6 +6673,11 @@ private void OnDoManagement(object sender, EventArgs e)
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -6557,11 +6689,6 @@ private void OnDoManagement(object sender, EventArgs e)
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -6909,11 +7036,14 @@ private void OnDoManagement(object sender, EventArgs e)
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -6927,11 +7057,14 @@ private void OnDoManagement(object sender, EventArgs e)
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -6945,11 +7078,14 @@ private void OnDoManagement(object sender, EventArgs e)
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -6963,11 +7099,14 @@ private void OnDoManagement(object sender, EventArgs e)
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -7003,11 +7142,14 @@ private void OnDoManagement(object sender, EventArgs e)
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -8546,6 +8688,11 @@ namespace Models
         </Fertiliser>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -8557,11 +8704,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -8618,11 +8760,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -8636,11 +8781,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>NZObservations</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -8675,11 +8823,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -8693,11 +8844,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>NZObservations</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -8732,11 +8886,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -8750,11 +8907,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -9717,6 +9877,11 @@ namespace Models
         </Fertiliser>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -9728,11 +9893,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Plant>
           <Name>Wheat</Name>
@@ -9830,11 +9990,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -9848,11 +10011,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledDiamond</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -9887,11 +10053,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>TotalSW</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -10782,6 +10951,11 @@ namespace Models
         </Operations>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -10793,11 +10967,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Operations>
           <Name>SowingSchedule</Name>
@@ -11103,11 +11272,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -11960,6 +12132,11 @@ namespace Models
         </Operations>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -11971,11 +12148,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Operations>
           <Name>SowingSchedule</Name>
@@ -12244,11 +12416,14 @@ private void OnDoManagement(object sender, EventArgs e)
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -13875,6 +14050,11 @@ private void OnDoManagement(object sender, EventArgs e)
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -13886,11 +14066,6 @@ private void OnDoManagement(object sender, EventArgs e)
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Operations>
           <Name>SowingSchedule</Name>
@@ -14164,11 +14339,14 @@ Simulation results for the combined datasets from the various countries are show
       <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
       <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
       <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -14209,11 +14387,14 @@ Simulation results for the combined datasets from the various countries are show
       <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
       <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.Wheat.AboveGround.Wt</XFieldName>
       <YFieldName>Predicted.Wheat.AboveGround.Wt</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -14253,11 +14434,14 @@ Simulation results for the combined datasets from the various countries are show
       <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
       <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.Wheat.AboveGround.N</XFieldName>
       <YFieldName>Predicted.Wheat.AboveGround.N</YFieldName>
       <ShowInLegend>false</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -14297,11 +14481,14 @@ Simulation results for the combined datasets from the various countries are show
       <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
       <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObservedAll</TableName>
       <XFieldName>Observed.Wheat.Leaf.LAI</XFieldName>
       <YFieldName>Predicted.Wheat.Leaf.LAI</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -14342,11 +14529,14 @@ Simulation results for the combined datasets from the various countries are show
       <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
       <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.Wheat.Grain.Number</XFieldName>
       <YFieldName>Predicted.Wheat.Grain.Number</YFieldName>
       <ShowInLegend>false</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -15152,6 +15342,11 @@ namespace Models
         </Fertiliser>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -15163,11 +15358,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Manager>
           <Name>ExtraVariables</Name>
@@ -15485,11 +15675,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -15503,11 +15696,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>SoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -15542,11 +15738,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -15560,11 +15759,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>SoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -15599,11 +15801,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -15617,11 +15822,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>SoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -15656,11 +15864,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -15674,11 +15885,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>SoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -15713,11 +15927,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -15731,11 +15948,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>SoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -15770,11 +15990,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -15788,11 +16011,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>SoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -15827,11 +16053,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -15845,11 +16074,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>SoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -15884,11 +16116,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -15902,11 +16137,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>SoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -15947,11 +16185,14 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
           <Filter />
@@ -15966,11 +16207,14 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>TimeSeries</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Eucalyptus.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
           <Filter />
@@ -16006,11 +16250,14 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Wheat.AboveGroundLive.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -16024,11 +16271,14 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>RainShelterNitrogen</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Wheat.AboveGroundLive.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -16063,11 +16313,14 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>ProfileWater</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -16081,11 +16334,14 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>SoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>ProfileWater</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -16120,11 +16376,14 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -16138,11 +16397,14 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>TimeSeries</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -16177,11 +16439,14 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -16195,11 +16460,14 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Zadok</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Zadock</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -16236,11 +16504,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16254,11 +16525,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>SoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16293,11 +16567,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16311,11 +16588,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>SoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16350,11 +16630,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16368,11 +16651,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>SoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16407,11 +16693,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16425,11 +16714,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>SoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16464,11 +16756,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16482,11 +16777,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>SoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16521,11 +16819,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16539,11 +16840,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>SoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16578,11 +16882,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16596,11 +16903,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>SoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16635,11 +16945,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16653,11 +16966,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>SoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16695,11 +17011,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Stem.Live.NConc</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16713,11 +17032,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Stem.Live.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16752,11 +17074,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.Live.NConc</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16770,11 +17095,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Leaf.Live.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16809,11 +17137,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Grain.Live.NConc</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16827,11 +17158,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Grain.Live.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16866,11 +17200,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Rachis.Live.NConc</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16884,11 +17221,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Rackis.Live.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16923,11 +17263,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Husk.Live.NConc</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16941,11 +17284,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Husk.Live.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16980,11 +17326,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.Dead.NConc</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -16998,11 +17347,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Leaf.Dead.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17040,11 +17392,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17058,11 +17413,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>RainShelterNitrogen</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17097,11 +17455,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Grain.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17115,11 +17476,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>RainShelterNitrogen</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Grain.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17154,11 +17518,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Stem.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17172,11 +17539,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>RainShelterNitrogen</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Stem.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17211,11 +17581,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Rachis.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17229,11 +17602,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>RainShelterNitrogen</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Rachis.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17268,11 +17644,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Husk.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17286,11 +17665,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>RainShelterNitrogen</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Husk.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17328,11 +17710,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17346,11 +17731,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>TimeSeries</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17385,11 +17773,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Stem.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17403,11 +17794,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>TimeSeries</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Stem.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17442,11 +17836,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17460,11 +17857,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>TimeSeries</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17499,11 +17899,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Spike.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17517,11 +17920,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>TimeSeries</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Spike.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17560,11 +17966,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.Photosynthesis.RueAct</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17599,11 +18008,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.Fw</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17638,11 +18050,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Arbitrator.DMSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
             <Filter />
@@ -17657,11 +18072,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Arbitrator.DMDemand</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
             <Filter />
@@ -17700,11 +18118,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17718,11 +18139,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>LeafAppearance</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Structure.MainStemNodeNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17736,11 +18160,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.InitialisedCohortNo</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17754,11 +18181,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Phenology.Stage</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17800,11 +18230,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17818,11 +18251,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>LeafAppearance</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17857,11 +18293,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.SenescingCohortNo</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17875,11 +18314,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>StartSenes</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.DeadCohortNo</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17914,11 +18356,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.DeadCohortNo</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17932,11 +18377,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>EndSenes</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.DeadCohortNo</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17971,11 +18419,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.LAI</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -17989,11 +18440,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>TimeSeries</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.LAI</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -18028,11 +18482,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.CoverTotal</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -18046,11 +18503,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Leaf.CoverTotal</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -18085,11 +18545,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>ExtraVariables.Script.LeafExpandedPosition</XFieldName>
             <YFieldName>ExtraVariables.Script.MostRecentlyExpandedLeafSize</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -18103,11 +18566,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>MaxLeafSize</TableName>
             <XFieldName>ExtraVariables.Script.LeafExpandedPosition</XFieldName>
             <YFieldName>ExtraVariables.Script.MostRecentlyExpandedLeafSize</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -18121,11 +18587,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>Star</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>ExtraVariables.Script.LeafAppearedPosition</XFieldName>
             <YFieldName>ExtraVariables.Script.MostRecentlyAppearedLeafMaxSize</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -18161,11 +18630,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Structure.Height</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -18203,11 +18675,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Grain.NumberFunction.Value</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -18221,11 +18696,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>HarvestData</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>GPSM</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -18260,11 +18738,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -18278,11 +18759,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>TimeSeries</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -18317,11 +18801,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Structure.MainStemPopn</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -18335,11 +18822,14 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>TimeSeries</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -18819,6 +19309,11 @@ namespace Models
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -18830,11 +19325,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -18891,11 +19381,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>PreVsObsPhenology</TableName>
         <XFieldName>Observed.Wheat.Phenology.Zadok.Stage</XFieldName>
         <YFieldName>Predicted.Wheat.Phenology.Zadok.Stage</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -18935,11 +19428,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>PreVsObsLeafNumber</TableName>
         <XFieldName>Observed.Wheat.Structure.MainStemNodeNo</XFieldName>
         <YFieldName>Predicted.Wheat.Structure.MainStemNodeNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -18975,11 +19471,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Structure.MainStemNodeNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -18993,11 +19492,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>LeafAppearance</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Structure.MainStemNodeNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -19469,6 +19971,11 @@ namespace Models
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -19480,11 +19987,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -19542,11 +20044,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -19560,11 +20065,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Dash</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -19578,11 +20086,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>LeafAppearance</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -19596,11 +20107,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>Circle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>LeafAppearance</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -19614,11 +20128,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.SenescingCohortNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -19632,11 +20149,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>Square</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>LeafAppearance</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.SenescingCohortNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -19672,11 +20192,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -19690,11 +20213,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>TimeSeries</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -19735,11 +20261,14 @@ namespace Models
       <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
       <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PreVsObsLeafNumber</TableName>
       <XFieldName>Observed.Wheat.Leaf.AppearedCohortNo</XFieldName>
       <YFieldName>Predicted.Wheat.Leaf.AppearedCohortNo</YFieldName>
       <ShowInLegend>false</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -20227,6 +20756,11 @@ namespace Models
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>0</b_interception>
+          <c_interception>0.3</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.13</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -20238,11 +20772,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>0</b_interception>
-          <c_interception>0.3</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.13</soil_albedo>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -20302,11 +20831,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20320,11 +20852,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>TimeSeries</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20360,11 +20895,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20378,11 +20916,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>TimeSeries</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Eucalyptus.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20396,11 +20937,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20414,11 +20958,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>TimeSeries</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20454,11 +21001,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20472,11 +21022,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Zadok</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20512,11 +21065,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ET</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ET</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20530,11 +21086,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ET</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20574,11 +21133,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>PreVsObsET</TableName>
         <XFieldName>Observed.ET</XFieldName>
         <YFieldName>Predicted.ET</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20614,11 +21176,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>TotalSoilWater</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20632,11 +21197,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ProfileWater</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20672,11 +21240,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20690,11 +21261,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20730,11 +21304,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20748,11 +21325,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20788,11 +21368,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20806,11 +21389,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20846,11 +21432,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20864,11 +21453,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20904,11 +21496,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20922,11 +21517,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20962,11 +21560,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20980,11 +21581,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21020,11 +21624,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21038,11 +21645,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21078,11 +21688,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(9)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21096,11 +21709,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(9)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21136,11 +21752,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(10)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21154,11 +21773,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>SoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SW(10)</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21194,11 +21816,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.Fn</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21212,11 +21837,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.Fw</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21643,6 +22271,11 @@ namespace Models
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -21654,11 +22287,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -21717,11 +22345,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21735,11 +22366,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>LeafAppearance</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21775,11 +22409,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21793,11 +22430,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>TimeSeries</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21833,11 +22473,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21851,11 +22494,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>TimeSeries</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21891,11 +22537,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
         <Filter />
@@ -21910,11 +22559,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>TimeSeries</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Eucalyptus.AboveGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
         <Filter />
@@ -21929,11 +22581,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Dash</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
         <Filter />
@@ -21948,11 +22603,14 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>Circle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>TimeSeries</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
         <Filter />
