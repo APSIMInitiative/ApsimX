@@ -1066,7 +1066,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
       <Tests>
         <Name>Tests</Name>
         <AcceptedStats>
-          <RegrStats xsi:nil="true" />
           <RegrStats>
             <Name>FodderBeet.Phenology.AccumulatedThermalTime.Value</Name>
             <n>68</n>
@@ -3168,5 +3167,5 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>339</ExplorerWidth>
+  <ExplorerWidth>237</ExplorerWidth>
 </Simulations>
