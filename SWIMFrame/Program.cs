@@ -48,7 +48,7 @@ namespace SWIMFrame
             dz[1, 1] = 20;
             dz[1, 2] = 30;
             dz[1, 4] = 40;
-            for (i = 0; i < 1; i++) //i should be 2, using the first one for debugging.
+            for (i = 0; i < 2; i++) //i should be 2, using the first one for debugging.
             {
                 BinaryWriter b = new BinaryWriter(File.OpenWrite("soil" + soils[i].sid + ".dat"));
                 MVG.Params(soils[i].sid, soils[i].ths, soils[i].ks, soils[i].he, soils[i].hd, soils[i].p, soils[i].hg, soils[i].em, soils[i].en);
@@ -59,9 +59,9 @@ namespace SWIMFrame
                 for (j = 0; j < ndz[i]; j++)
                 {
                     Fluxes.FluxTable(dz[i, j], soils[i].sp);
-                    b = new BinaryWriter(File.OpenWrite("soil" + soils[i].sid + "dz" + dz[i, j] * 10));
+                    b = new BinaryWriter(File.OpenWrite("soil" + soils[i].sid + "dz" + (dz[i, j] * 10) + ".dat"));
                     b.Write(soils[i].sid);
-                    //   WriteFluxes(b, Fluxes.ft);
+                    Fluxes.WriteFluxTable(b, Fluxes.ft);
                     b.Close();
                 }
             }
@@ -71,23 +71,18 @@ namespace SWIMFrame
             sp1 = ReadProps("soil103.dat");
             sp2 = ReadProps("soil109.dat");
 
-            ft1 = ReadFluxes("soil103dz50.dat");
-            ft2 = ReadFluxes("soil103dz100.dat");
+            using (BinaryReader b = new BinaryReader(File.OpenRead("soil103dz50.dat")))
+            {
+                ft1 = Fluxes.ReadFluxTable(b);
+            }
+            using (BinaryReader b = new BinaryReader(File.OpenRead("soil103dz100.dat")))
+            {
+                ft2 = Fluxes.ReadFluxTable(b);
+            }
 
             FluxTable ftwo = TwoFluxes.TwoTables(ft1, sp1, ft2, sp2);
             BinaryWriter bw = new BinaryWriter(File.OpenWrite("soil0103dz0050_soil0109dz0100.dat"));
-            //            WriteFluxes(bw, ftwo);
-        }
-
-        private static FluxTable ReadFluxes(string file)
-        {
-            FluxTable ft;
-            using (Stream stream = File.Open(file, FileMode.Open))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                ft = (FluxTable)formatter.Deserialize(stream);
-            }
-            return ft;
+            Fluxes.WriteFluxTable(bw, ftwo);
         }
 
         private static SoilProps ReadProps(string file)
@@ -99,18 +94,6 @@ namespace SWIMFrame
                 sp = (SoilProps)formatter.Deserialize(stream);
             }
             return sp;
-        }
-
-        private static void WriteFluxes(BinaryWriter b, FluxTable fluxTable)
-        {
-            byte[] bytes;
-            BinaryFormatter formatter = new BinaryFormatter();
-            using (MemoryStream stream = new MemoryStream())
-            {
-                formatter.Serialize(stream, fluxTable);
-                bytes = stream.ToArray();
-            }
-            b.Write(bytes);
         }
 
         private static void WriteProps(BinaryWriter b, SoilProps soilProps)

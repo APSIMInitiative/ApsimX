@@ -11,7 +11,7 @@ namespace SWIMFrame
     {
         static int mx = 100;
         static int maxit = 20;
-        static int i, j, k, m, ne, ni, id, ip, nco1, nco2, nit, ie, ii, jj;
+        static int i, j, k, m, ni, id, ip, nco1, nco2, nit, ie, ii, jj;
         static int[] nft = new int[2 + 1];
         static int[] nfu = new int[2 + 1];
         static int[] n = new int[2 + 1];

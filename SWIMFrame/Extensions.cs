@@ -45,7 +45,7 @@ namespace SWIMFrame
             Type theType = Type.GetType("SWIMFrame." + typeName + ", SWIMFrame");
 
             //invoke the method from the string. if there is anything to return, it returns to obj.
-            object obj = theType.InvokeMember(methodName, BindingFlags.InvokeMethod | BindingFlags.NonPublic | BindingFlags.Static, null, null, parameters);
+            object obj = theType.InvokeMember(methodName, BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static, null, null, parameters);
 
             //return the object if it exists
             return obj;

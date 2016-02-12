@@ -386,7 +386,7 @@ namespace SWIMFrame
                 }
 
                 /*/ this is where the deviation occurs.
-                 * The numbers here are correct to 7 dp (single precision from FORTRAN)
+                 * The numbers here are correct to 7 sig figs (single precision from FORTRAN)
                  * The problem is that we have a small number divided by a much larger number
                  * which introduces error. This may or may not be a problem.
                 /*/
@@ -578,6 +578,67 @@ namespace SWIMFrame
                                           0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,
                                           0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00 };
             double[] odefOut = odef(1, 2, aK, hpK);
+        }
+
+        public static void WriteFluxTable(BinaryWriter b, FluxTable ft)
+        {
+            //write number of FluxEnds
+            b.Write(ft.fend.Length);
+            
+            //write FluxEnds
+            for (int i=0;i<ft.fend.Length;i++)
+            {
+                b.Write(ft.fend[i].sid);
+                b.Write(ft.fend[i].nfu);
+                b.Write(ft.fend[i].nft);
+                b.Write(ft.fend[i].phif.Length);
+                for (int j = 0; j < ft.fend[i].phif.Length; j++)
+                    b.Write(ft.fend[i].phif[j]);
+                b.Write(ft.fend[i].dz);
+            }
+
+            //write flux table
+            b.Write(ft.ftable.GetLength(0));
+            b.Write(ft.ftable.GetLength(1));
+            for (int i = 0; i < ft.ftable.GetLength(0); i++)
+                for (int j = 0; i < ft.ftable.GetLength(1); j++)
+                    b.Write(ft.ftable[i, j]);
+        }
+
+        public static FluxTable ReadFluxTable(BinaryReader b)
+        {
+            FluxTable ft = new FluxTable();
+            int nFluxEnd;
+            int nphif;
+            int[] nFluxTable = new int[2];
+
+            //read number of FluxEnds
+            nFluxEnd = b.ReadInt32();
+
+            //read FluxEnds
+            FluxEnd[] fe = new FluxEnd[nFluxEnd];
+            for(int i=0; i< nFluxEnd;i++)
+            {
+                fe[i].sid = b.ReadInt32();
+                fe[i].nfu=b.ReadInt32();
+                fe[i].nft = b.ReadInt32();
+                nphif = b.ReadInt32();
+                for(int j=0;j<nphif;j++)
+                    fe[i].phif[j] = b.ReadDouble();
+                fe[i].dz = b.ReadDouble();
+            }
+            ft.fend = fe;
+
+            // read flux table
+            nFluxTable[0] = b.ReadInt32();
+            nFluxTable[1] = b.ReadInt32();
+            double[,] ftable = new double[nFluxTable[0], nFluxTable[1]];
+            for (int i = 0; i < nFluxTable[0]; i++)
+                for (int j = 0; i < nFluxTable[1]; j++)
+                    ftable[i, j] = b.ReadDouble();
+            ft.ftable = ftable;
+
+            return ft;
         }
     }
 
