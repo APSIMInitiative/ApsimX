@@ -512,6 +512,20 @@ namespace Models.PMF.Organs
             }
         }
 
+
+        /// <summary>Gets the plant senesced leaf no.</summary>
+        /// <value>The plant senesced leaf no.</value>
+        [Units("/plant")]
+        [Description("Number of leaves per plant that have senesced")]
+        public double PlantsenescedLeafNo
+        {
+            get
+            {
+                return PlantAppearedLeafNo/ Plant.Population - PlantAppearedGreenLeafNo;
+            }
+        }
+
+
         //Canopy State variables
 
 
@@ -1024,6 +1038,7 @@ namespace Models.PMF.Organs
                 {
                     double DeltaDeadLeaves = DeadCohortNo - DeadNodesYesterday; //Fixme.  DeadNodesYesterday is never given a value as far as I can see.
                     FractionDied = DeltaDeadLeaves / GreenCohortNo;
+                    DeadNodesYesterday = DeadCohortNo;
                 }
             }
         }

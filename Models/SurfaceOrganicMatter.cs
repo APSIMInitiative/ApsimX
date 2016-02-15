@@ -2774,9 +2774,9 @@
             Array.Resize(ref no3ppm, numSurfom);
             Array.Resize(ref po4ppm, numSurfom);
             Array.Resize(ref specific_area, numSurfom);
-            frPoolC = Resize2DArray<double>(frPoolC, maxFr, numSurfom);
-            frPoolN = Resize2DArray<double>(frPoolN, maxFr, numSurfom);
-            frPoolP = Resize2DArray<double>(frPoolP, maxFr, numSurfom);
+            frPoolC = IncreasePoolArray(frPoolC);
+            frPoolN = IncreasePoolArray(frPoolN);
+            frPoolP = IncreasePoolArray(frPoolP);
 
             int SOMNo = numSurfom - 1;
 
@@ -3183,21 +3183,15 @@
         }
 
         /// <summary>Resize2s the d array.</summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="original">The original.</param>
-        /// <param name="x">The x.</param>
-        /// <param name="y">The y.</param>
         /// <returns></returns>
-        protected T[,] Resize2DArray<T>(T[,] original, int x, int y)
+        private double[,] IncreasePoolArray (double[,] original)
         {
-            T[,] newArray = new T[x, y];
-            int minX = Math.Min(original.GetLength(0), newArray.GetLength(0));
-            int minY = Math.Min(original.GetLength(1), newArray.GetLength(1));
+            double[,] newArray = new double[original.GetLength(0), original.GetLength(1)+1];
 
-            for (int i = 0; i < minY; ++i)
-            {
-                Array.Copy(original, i * original.GetLength(0), newArray, i * newArray.GetLength(0), minX);
-            }
+            for (int x = 0; x < original.GetLength(0); x++)
+                for (int y = 0; y < original.GetLength(1); y++)
+                    newArray[x, y] = original[x, y];
 
             return newArray;
         }

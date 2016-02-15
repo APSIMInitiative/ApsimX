@@ -1,0 +1,12 @@
+SimulationName OldName Clock.Today FodderBeet.Phenology.Stage FodderBeet.Phenology.StageX FodderBeet.Phenology.AccumulatedThermalTime.Value FodderBeet.Summariser.LiveDM FodderBeet.Bulb.Live.Wt FodderBeet.Petiole.Live.Wt FodderBeet.Leaf.Live.Wt FodderBeet.TotalDead.Wt FodderBeet.Total.Wt FoddeBeet.LeafLAI FodderBeet.Leaf.PlantAppearedGreenLeafNo FodderBeet.Structure.MainStemNodeNo FodderBeet.Leaf.PlantSenescedLeafNo FodderBeet.Leaf.CoverGreen
+() () () () () (g/m2) (g/m2) (g/m2) (g/m2) (g/m2) (g/m2) (g/m2) (m2/m2) () () () (0-1)
+LincolnP21_2011CvRiv ABlockN200 2012-01-17 * * * 270.4 97.7 54.9 117.8 * 270.4 1.66 * * * *
+LincolnP21_2011CvRiv ABlockN200 2012-02-20 * * * 1760 1212.4 261.2 286.4 19.5 1779.5 4.6 * * * *
+LincolnP21_2011CvRiv ABlockN200 2012-03-26 * * * 2497.5 2032.9 229.7 234.9 54.4 2551.9 4.67 * * * *
+LincolnP21_2011CvRiv ABlockN200 2012-04-30 * * * 2762.9 2397.7 203.5 161.7 139.7 2902.6 2.94 * * * *
+LincolnP21_2011CvRiv ABlockN200 2012-06-06 * * * 2433.2 2225.9 123.6 83.7 288.4 2721.6 1.43 * * * *
+LincolnP21_2012CvRiv ABlockFull_irr 2013-01-20 * * * 864.2 445.9 168.6 249.7 21.1 885.3 3.95 * * * *
+LincolnP21_2012CvRiv ABlockFull_irr 2013-02-18 * * * 1862.8 1303.7 292.1 267 75.2 1938 4.78 * * * *
+LincolnP21_2012CvRiv ABlockFull_irr 2013-03-18 * * * 2386.4 1963.1 217.7 205.6 156 2542.4 3.64 * * * *
+LincolnP21_2012CvRiv ABlockFull_irr 2013-04-15 * * * 2368.4 2007.9 181.2 179.3 202.3 2570.7 3.39 * * * *
+LincolnP21_2012CvRiv ABlockFull_irr 2013-05-15 * * * 2599.8 2261.1 179.6 159.1 245 2844.8 2.79 * * * *
