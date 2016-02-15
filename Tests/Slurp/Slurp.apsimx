@@ -5160,7 +5160,7 @@ namespace Models
         <Specifications />
       </Factor>
       <Factor>
-        <Name>Cover</Name>
+        <Name>CoverType</Name>
         <Factor>
           <Name>Lucerne</Name>
           <Specifications>

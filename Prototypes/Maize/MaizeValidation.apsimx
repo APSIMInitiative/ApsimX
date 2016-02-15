@@ -1963,101 +1963,101 @@ VShort duration variety released in New Zealand by Pioneer
           </RegrStats>
           <RegrStats>
             <Name>Biomass</Name>
-            <n>191</n>
-            <Slope>0.98539965054902245</Slope>
-            <Intercept>7.0062969374323529</Intercept>
-            <SEslope>0.025661388810176891</SEslope>
-            <SEintercept>27.242128557610226</SEintercept>
-            <R2>0.88638870189528507</R2>
-            <RMSE>200.38344522008183</RMSE>
-            <NSE>0.875213575028471</NSE>
-            <ME>-6.0951590338743644</ME>
-            <MAE>148.12933949766574</MAE>
-            <RSR>0.35232526577527085</RSR>
+            <n>88</n>
+            <Slope>1.0585877280587726</Slope>
+            <Intercept>-95.462132992798388</Intercept>
+            <SEslope>0.045178049874862569</SEslope>
+            <SEintercept>61.921155080072069</SEintercept>
+            <R2>0.86457404795150117</R2>
+            <RMSE>249.2919294355805</RMSE>
+            <NSE>0.81951456217369767</NSE>
+            <ME>-22.893193732813984</ME>
+            <MAE>189.37514486677063</MAE>
+            <RSR>0.42241504109336891</RSR>
           </RegrStats>
           <RegrStats>
             <Name>LAImax</Name>
-            <n>265</n>
-            <Slope>0.98856843800530336</Slope>
-            <Intercept>3.0231009199937944</Intercept>
-            <SEslope>0.016712576972251664</SEslope>
-            <SEintercept>15.062557745380124</SEintercept>
-            <R2>0.93008778694573524</R2>
-            <RMSE>170.12032427593258</RMSE>
-            <NSE>0.92636193846321646</NSE>
-            <ME>-4.3789853342708289</ME>
-            <MAE>106.88565084800763</MAE>
-            <RSR>0.27085084836360795</RSR>
+            <n>74</n>
+            <Slope>0.98904580729004343</Slope>
+            <Intercept>0.080102906286635189</Intercept>
+            <SEslope>0.047282111376171096</SEslope>
+            <SEintercept>0.14235018762902904</SEintercept>
+            <R2>0.85870203715816085</R2>
+            <RMSE>0.54222170423012916</RMSE>
+            <NSE>0.8375019228535997</NSE>
+            <ME>0.05059813362478955</ME>
+            <MAE>0.43234636037647806</MAE>
+            <RSR>0.4003775183310902</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GPSM</Name>
-            <n>349</n>
-            <Slope>0.94600451051428391</Slope>
-            <Intercept>26.389525769107536</Intercept>
-            <SEslope>0.013647542044364547</SEslope>
-            <SEintercept>19.300463923246483</SEintercept>
-            <R2>0.93264522156198293</R2>
-            <RMSE>263.8973050275543</RMSE>
-            <NSE>0.931736225807636</NSE>
-            <ME>-27.05776790486718</ME>
-            <MAE>162.59014427209937</MAE>
-            <RSR>0.26089878494448571</RSR>
+            <n>84</n>
+            <Slope>0.92279114752517766</Slope>
+            <Intercept>61.205309394228379</Intercept>
+            <SEslope>0.038696593231598735</SEslope>
+            <SEintercept>92.7659968771819</SEintercept>
+            <R2>0.873976323471704</R2>
+            <RMSE>445.02058297459376</RMSE>
+            <NSE>0.864602639099209</NSE>
+            <ME>-98.603927204962815</ME>
+            <MAE>338.32455805048403</MAE>
+            <RSR>0.36576698532909441</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainSize</Name>
-            <n>427</n>
-            <Slope>0.94997478468567986</Slope>
-            <Intercept>18.366430572859372</Intercept>
-            <SEslope>0.0113840821995554</SEslope>
-            <SEintercept>14.554929568028928</SEintercept>
-            <R2>0.94247824170212713</R2>
-            <RMSE>238.57983561859223</RMSE>
-            <NSE>0.94191988435674534</NSE>
-            <ME>-22.108151433278525</ME>
-            <MAE>132.89928267913757</MAE>
-            <RSR>0.24071580055547742</RSR>
+            <n>78</n>
+            <Slope>0.36837717552480576</Slope>
+            <Intercept>0.21610391148318367</Intercept>
+            <SEslope>0.11183180888833007</SEslope>
+            <SEintercept>0.032102332674357172</SEintercept>
+            <R2>0.12493432742873945</R2>
+            <RMSE>0.074923802764794614</RMSE>
+            <NSE>-0.82374403804881835</NSE>
+            <ME>0.038209446009190795</ME>
+            <MAE>0.051709654218565541</MAE>
+            <RSR>1.3417759515759997</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FloweringDAS</Name>
-            <n>517</n>
-            <Slope>0.95166065482201512</Slope>
-            <Intercept>14.804833616759538</Intercept>
-            <SEslope>0.0098604136329157165</SEslope>
-            <SEintercept>11.45948849866765</SEintercept>
-            <R2>0.94760834198825772</R2>
-            <RMSE>216.8337226307379</RMSE>
-            <NSE>0.94722859276244031</NSE>
-            <ME>-17.969401667330619</ME>
-            <MAE>110.51836306381381</MAE>
-            <RSR>0.22949800627268</RSR>
+            <n>90</n>
+            <Slope>0.6810553352784201</Slope>
+            <Intercept>19.559462357547297</Intercept>
+            <SEslope>0.076701178219053409</SEslope>
+            <SEintercept>4.3332884840711454</SEintercept>
+            <R2>0.4725566490127</R2>
+            <RMSE>5.51160392061855</RMSE>
+            <NSE>0.31822149073589179</NSE>
+            <ME>1.6666666666666667</ME>
+            <MAE>4.3333333333333339</MAE>
+            <RSR>0.82109877146084376</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
-            <n>607</n>
-            <Slope>0.9523090203178</Slope>
-            <Intercept>13.33833238016166</Intercept>
-            <SEslope>0.00886636573657301</SEslope>
-            <SEintercept>9.5176300223473618</SEintercept>
-            <R2>0.95016985941613818</R2>
-            <RMSE>200.13923617300716</RMSE>
-            <NSE>0.9498835813374088</NSE>
-            <ME>-14.998650184530364</ME>
-            <MAE>95.057650253693154</MAE>
-            <RSR>0.22368248600679117</RSR>
+            <n>90</n>
+            <Slope>0.88812168708614014</Slope>
+            <Intercept>14.670380162595848</Intercept>
+            <SEslope>0.051399742102639714</SEslope>
+            <SEintercept>5.84929918276818</SEintercept>
+            <R2>0.77234753129242328</R2>
+            <RMSE>8.232726023485645</RMSE>
+            <NSE>0.738515271613094</NSE>
+            <ME>2.0666666666666669</ME>
+            <MAE>6.2444444444444445</MAE>
+            <RSR>0.50850697391082089</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FinalLeafNo</Name>
-            <n>628</n>
-            <Slope>0.95260194264997766</Slope>
-            <Intercept>12.757382164191768</Intercept>
-            <SEslope>0.00865720726126031</SEslope>
-            <SEintercept>9.1364572263280763</SEintercept>
-            <R2>0.95083971943165291</R2>
-            <RMSE>196.76453844582724</RMSE>
-            <NSE>0.95056824985532973</NSE>
-            <ME>-14.493595284780739</ME>
-            <MAE>91.895269019266863</MAE>
-            <RSR>0.22215543469997051</RSR>
+            <n>21</n>
+            <Slope>0.83248627215000492</Slope>
+            <Intercept>3.2541544248953418</Intercept>
+            <SEslope>0.1408054326197426</SEslope>
+            <SEintercept>2.6504675892575769</SEintercept>
+            <R2>0.64785786252473931</R2>
+            <RMSE>0.60881828526775017</RMSE>
+            <NSE>0.58285885348319222</NSE>
+            <ME>0.10489634131543332</ME>
+            <MAE>0.48739238608772811</MAE>
+            <RSR>0.630299359349952</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
