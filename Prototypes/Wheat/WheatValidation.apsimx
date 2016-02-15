@@ -1964,16 +1964,16 @@ The model consists of:
           <RegrStats>
             <Name>ET</Name>
             <n>123</n>
-            <Slope>0.14781369250342047</Slope>
-            <Intercept>0.53879071911793375</Intercept>
-            <SEslope>0.029066297786624257</SEslope>
-            <SEintercept>0.11274986132923405</SEintercept>
-            <R2>0.17609320881656543</R2>
-            <RMSE>2.8590392106142111</RMSE>
+            <Slope>0.14781369250342061</Slope>
+            <Intercept>0.53879071911793319</Intercept>
+            <SEslope>0.029066297786624267</SEslope>
+            <SEintercept>0.11274986132923408</SEintercept>
+            <R2>0.17609320881656565</R2>
+            <RMSE>2.8590392106142106</RMSE>
             <NSE>-2.5554362915218825</NSE>
-            <ME>-2.5038901562932643</ME>
+            <ME>-2.5038901562932638</ME>
             <MAE>2.5092893905261704</MAE>
-            <RSR>1.8779058297507756</RSR>
+            <RSR>1.8779058297507754</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
