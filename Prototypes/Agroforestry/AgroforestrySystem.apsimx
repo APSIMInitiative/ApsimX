@@ -2117,59 +2117,45 @@ VShort duration variety released in New Zealand by Pioneer
           </RegrStats>
           <RegrStats>
             <Name>SW90cm</Name>
-            <n>199</n>
-            <Slope>0.98373324670209072</Slope>
-            <Intercept>0.859856798083598</Intercept>
-            <SEslope>0.0067912501271840762</SEslope>
-            <SEintercept>1.2057902371202738</SEintercept>
-            <R2>0.99069851071443582</R2>
-            <RMSE>11.609358156144836</RMSE>
-            <NSE>0.99053469584324494</NSE>
-            <ME>-1.2787803907059456</ME>
-            <MAE>6.460649869562479</MAE>
-            <RSR>0.097045040132192464</RSR>
+            <n>96</n>
+            <Slope>0.99487954842630089</Slope>
+            <Intercept>-2.050276826724172</Intercept>
+            <SEslope>0.034907150485085817</SEslope>
+            <SEintercept>8.8700157210205735</SEintercept>
+            <R2>0.89628067618855889</R2>
+            <RMSE>16.6131418118846</RMSE>
+            <NSE>0.88064457502038673</NSE>
+            <ME>-3.3278885182342006</ME>
+            <MAE>12.715305458780559</MAE>
+            <RSR>0.34367446705093224</RSR>
           </RegrStats>
           <RegrStats>
             <Name>BiomassWt</Name>
-            <n>208</n>
-            <Slope>0.95947043735886084</Slope>
-            <Intercept>13.406948123676671</Intercept>
-            <SEslope>0.035970626101581894</SEslope>
-            <SEintercept>7.0773105961499443</SEintercept>
-            <R2>0.77547375115249473</R2>
-            <RMSE>72.4794691160906</RMSE>
-            <NSE>0.72869945404479763</NSE>
-            <ME>7.7693678906936947</ME>
-            <MAE>16.119126727280726</MAE>
-            <RSR>0.51961160149417451</RSR>
+            <n>9</n>
+            <Slope>0.53113157309145043</Slope>
+            <Intercept>352.10338452383223</Intercept>
+            <SEslope>0.27016217649496249</SEslope>
+            <SEintercept>120.1027382255652</SEintercept>
+            <R2>0.35573238612507618</R2>
+            <RMSE>344.13502099129914</RMSE>
+            <NSE>-0.15030547808369188</NSE>
+            <ME>207.8339798905302</ME>
+            <MAE>229.67878169238418</MAE>
+            <RSR>1.0111843344794336</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainWt</Name>
-            <n>215</n>
-            <Slope>0.93744232166269748</Slope>
-            <Intercept>17.969852056720953</Intercept>
-            <SEslope>0.036420812826470833</SEslope>
-            <SEintercept>7.1525599494665162</SEintercept>
-            <R2>0.7567121306265675</R2>
-            <RMSE>75.1413040956459</RMSE>
-            <NSE>0.7090805573919936</NSE>
-            <ME>9.310747345099724</ME>
-            <MAE>19.115732781673323</MAE>
-            <RSR>0.53811367657908271</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>GrainSize</Name>
-            <n>215</n>
-            <Slope>0.93744232166269748</Slope>
-            <Intercept>17.969852056720953</Intercept>
-            <SEslope>0.036420812826470833</SEslope>
-            <SEintercept>7.1525599494665162</SEintercept>
-            <R2>0.7567121306265675</R2>
-            <RMSE>75.1413040956459</RMSE>
-            <NSE>0.7090805573919936</NSE>
-            <ME>9.310747345099724</ME>
-            <MAE>19.115732781673323</MAE>
-            <RSR>0.53811367657908271</RSR>
+            <n>7</n>
+            <Slope>0.35947823203995988</Slope>
+            <Intercept>130.82842765132611</Intercept>
+            <SEslope>0.24196822943630697</SEslope>
+            <SEintercept>44.808850810286771</SEintercept>
+            <R2>0.30624285534241769</R2>
+            <RMSE>131.61386908025017</RMSE>
+            <NSE>0.14751219735380095</NSE>
+            <ME>55.11173684745026</ME>
+            <MAE>108.1577412550534</MAE>
+            <RSR>0.85481216114395531</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>

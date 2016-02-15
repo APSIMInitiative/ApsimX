@@ -72,6 +72,8 @@ namespace Models
 
             for (int c = 0; c < columnNames.Count; c++) //on each P/O column pair
             {
+                x.Clear();
+                y.Clear();
                 foreach (DataRow row in POtable.Rows)
                 {
                     xstr = row["Observed." + columnNames[c]].ToString();

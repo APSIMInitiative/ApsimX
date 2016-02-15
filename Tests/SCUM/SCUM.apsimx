@@ -40,73 +40,31 @@
         <Name>Tests</Name>
         <AcceptedStats>
           <RegrStats>
+            <Name>N</Name>
+            <n>36</n>
+            <Slope>1</Slope>
+            <Intercept>0</Intercept>
+            <SEslope>0</SEslope>
+            <SEintercept>0</SEintercept>
+            <R2>1</R2>
+            <RMSE>0</RMSE>
+            <NSE>1</NSE>
+            <ME>0</ME>
+            <MAE>0</MAE>
+            <RSR>0</RSR>
+          </RegrStats>
+          <RegrStats>
             <Name>NLeaching</Name>
             <n>36</n>
-            <Slope>1.0300454275809723</Slope>
-            <Intercept>5.4179440716415144</Intercept>
+            <Slope>1.0300454275809718</Slope>
+            <Intercept>5.4179440716415428</Intercept>
             <SEslope>0.053231960594220133</SEslope>
-            <SEintercept>5.293920860714608</SEintercept>
-            <R2>0.91675390813335644</R2>
+            <SEintercept>5.2939208607146089</SEintercept>
+            <R2>0.91675390813335633</R2>
             <RMSE>22.431391524714961</RMSE>
             <NSE>0.89011403548006762</NSE>
             <ME>7.607618058779738</ME>
-            <MAE>16.125494880047725</MAE>
-            <RSR>0.32685406011949869</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>PP_</Name>
-            <n>36</n>
-            <Slope>1.0300454275809723</Slope>
-            <Intercept>5.4179440716415144</Intercept>
-            <SEslope>0.053231960594220133</SEslope>
-            <SEintercept>5.293920860714608</SEintercept>
-            <R2>0.91675390813335644</R2>
-            <RMSE>22.431391524714961</RMSE>
-            <NSE>0.89011403548006762</NSE>
-            <ME>7.607618058779738</ME>
-            <MAE>16.125494880047725</MAE>
-            <RSR>0.32685406011949869</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>2_</Name>
-            <n>36</n>
-            <Slope>1.0300454275809723</Slope>
-            <Intercept>5.4179440716415144</Intercept>
-            <SEslope>0.053231960594220133</SEslope>
-            <SEintercept>5.293920860714608</SEintercept>
-            <R2>0.91675390813335644</R2>
-            <RMSE>22.431391524714961</RMSE>
-            <NSE>0.89011403548006762</NSE>
-            <ME>7.607618058779738</ME>
-            <MAE>16.125494880047725</MAE>
-            <RSR>0.32685406011949869</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>1</Name>
-            <n>36</n>
-            <Slope>1.0300454275809723</Slope>
-            <Intercept>5.4179440716415144</Intercept>
-            <SEslope>0.053231960594220133</SEslope>
-            <SEintercept>5.293920860714608</SEintercept>
-            <R2>0.91675390813335644</R2>
-            <RMSE>22.431391524714961</RMSE>
-            <NSE>0.89011403548006762</NSE>
-            <ME>7.607618058779738</ME>
-            <MAE>16.125494880047725</MAE>
-            <RSR>0.32685406011949869</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>2</Name>
-            <n>36</n>
-            <Slope>1.0300454275809723</Slope>
-            <Intercept>5.4179440716415144</Intercept>
-            <SEslope>0.053231960594220133</SEslope>
-            <SEintercept>5.293920860714608</SEintercept>
-            <R2>0.91675390813335644</R2>
-            <RMSE>22.431391524714961</RMSE>
-            <NSE>0.89011403548006762</NSE>
-            <ME>7.607618058779738</ME>
-            <MAE>16.125494880047725</MAE>
+            <MAE>16.125494880047729</MAE>
             <RSR>0.32685406011949869</RSR>
           </RegrStats>
         </AcceptedStats>
