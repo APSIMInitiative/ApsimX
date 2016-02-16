@@ -1,0 +1,12 @@
+Rivage SD2_Rep1        
+SimulationName OldName Date FodderBeet.Bulb.Live.Wt FodderBeet.Petiole.Live.Wt FodderBeet.Leaf.Live.Wt FodderBeet.Total.Wt FodderBeet.TotalDead.Wt FodderBeet.Leaf.LAI
+() () () (g/m2) (g/m2) (g/m2) (g/m2) (g/m2) (m2/m2)
+Lincoln2014CvRiv_Oct FRNLRivageSD2 2014-12-08 0.35 0.60 2.55 3.49 0.00 0.05
+Lincoln2014CvRiv_Oct FRNLRivageSD2 2015-01-12 157.24 75.61 125.79 371.35 12.71 1.87
+Lincoln2014CvRiv_Oct FRNLRivageSD2 2015-02-02 723.99 184.80 196.88 1142.18 36.51 3.24
+Lincoln2014CvRiv_Oct FRNLRivageSD2 2015-02-23 1058.41 108.31 168.28 1397.97 62.96 3.34
+Lincoln2014CvRiv_Oct FRNLRivageSD2 2015-03-16 1505.36 141.60 207.05 1984.10 130.08 3.48
+Lincoln2014CvRiv_Oct FRNLRivageSD2 2015-04-07 1732.37 46.98 96.53 2107.11 231.23 2.38
+Lincoln2014CvRiv_Oct FRNLRivageSD2 2015-04-29 1851.10 75.33 132.60 2253.30 194.27 1.71
+Lincoln2014CvRiv_Oct FRNLRivageSD2 2015-05-18 2067.07 40.62 85.52 2391.63 198.41 1.17
+Lincoln2014CvRiv_Oct FRNLRivageSD2 2015-06-15 1958.53 43.52 96.72 2334.66 235.88 1.45
