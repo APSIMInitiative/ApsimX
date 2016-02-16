@@ -71,14 +71,28 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
+            //if the model is Testable, run the test method.
+            ITestable testModel = model as ITestable;
+            if (testModel != null)
+                testModel.Test(false, true);
+
             string[] split;
             this.grid = view as IGridView;
             this.model = model as Model;
             this.explorerPresenter = explorerPresenter;
 
             this.FindAllProperties(this.model);
-            this.PopulateGrid(this.model);
-            this.grid.CellsChanged += this.OnCellValueChanged;
+            if (this.grid.DataSource == null)
+            {
+                this.PopulateGrid(this.model);
+            }
+            else
+            {
+                this.grid.ResizeControls();
+                FormatTestGrid();
+            }
+
+                this.grid.CellsChanged += this.OnCellValueChanged;
             this.grid.ButtonClick += OnFileBrowseClick;
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
             if (model != null)
@@ -171,6 +185,13 @@ namespace UserInterface.Presenters
                         Attribute descriptionAttribute = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), true);
                         this.properties.Add(new VariableProperty(this.model, property));
                     }
+
+                    if(property.PropertyType == typeof(DataTable))
+                    {
+                        VariableProperty vp = new VariableProperty(this.model, property);
+                        DataTable dt = vp.Value as DataTable;
+                        this.grid.DataSource = dt;
+                    }
                 }
             }
         }
@@ -185,6 +206,17 @@ namespace UserInterface.Presenters
                 table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
 
             this.grid.DataSource = table;
+        }
+
+        /// <summary>
+        /// Format the grid when displaying Tests.
+        /// </summary>
+        private void FormatTestGrid()
+        {
+            int numCols = this.grid.DataSource.Columns.Count;
+
+            for (int i = 0; i < numCols; i++)
+                this.grid.GetColumn(i).Format = "E4";
         }
 
         /// <summary>

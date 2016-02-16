@@ -471,7 +471,7 @@ namespace Models.PMF.Organs
 
             if (DMDemandFunction != null)
             {
-                tags.Add(new AutoDocumentation.Paragraph("The daily DM demand from this organ is calculated using.", indent));
+                tags.Add(new AutoDocumentation.Paragraph("The daily DM demand from this organ is calculated using:", indent));
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 {
                     if (child.Name == "DMDemandFunction")

@@ -125,8 +125,25 @@ namespace Models.PMF.Functions
 
                 tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + StringUtilities.RemoveTrailingString(XProperty, ".Value") + "</i>", indent));
 
-                tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, xName, Name, indent));
+                tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, xName, LookForYAxisTitle(this), indent));
             }
+        }
+
+        /// <summary>
+        /// Return the y axis title.
+        /// </summary>
+        /// <returns></returns>
+        public static string LookForYAxisTitle(IModel model)
+        {
+            IModel modelContainingLinkField = model.Parent;
+            FieldInfo linkField = modelContainingLinkField.GetType().GetField(model.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+            if (linkField != null)
+            {
+                UnitsAttribute units = ReflectionUtilities.GetAttribute(linkField, typeof(UnitsAttribute), true) as UnitsAttribute;
+                if (units != null)
+                    return model.Name + " (" + units.ToString() + ")";
+            }
+            return model.Name;
         }
 
     }
