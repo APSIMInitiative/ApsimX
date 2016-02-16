@@ -33,7 +33,6 @@ namespace SWIMFrame
         static double[,] qi3 = new double[mx + 1, mx + 1];
         static double[,] qi5 = new double[mx + 1, mx + 1];
         static SoilProps sp;
-        static FluxEnd pe = new FluxEnd();
 
         static StringBuilder diags = new StringBuilder();
 
@@ -221,13 +220,12 @@ namespace SWIMFrame
             j = 2 * nfu - 1;
             for (ie = 0; ie < 2; ie++)
             {
-                pe = ft.fend[ie];
-                pe.phif = new double[phif.Length];
-                pe.sid = sp.sid;
-                pe.nfu = j;
-                pe.nft = i;
-                pe.dz = dz;
-                pe.phif = phii5; //(1:i) assume it's the whole array
+                ft.fend[ie].phif = new double[phif.Length];
+                ft.fend[ie].sid = sp.sid;
+                ft.fend[ie].nfu = j;
+                ft.fend[ie].nft = i;
+                ft.fend[ie].dz = dz;
+                ft.fend[ie].phif = phii5; //(1:i) assume it's the whole array
             }
             ft.ftable = qi5; // (1:i,1:i) as above
         }
@@ -396,21 +394,24 @@ namespace SWIMFrame
                 {
                     q1 = q;
                     q = q + dq;
+
+                    if (q >= q2)
+                        q = 0.5 * (q1 + q2);
                 }
-                if (q >= q2)
-                    q = 0.5 * (q1 + q2);
                 else
                 {
                     q2 = q;
                     q = q + dq;
-                }
-                if (q <= q1)
-                {
-                    q = 0.5 * (q1 + q2);
+
+                    if (q <= q1)
+                    {
+                        q = 0.5 * (q1 + q2);
+                    }
                 }
 
                 // convergence test - q can be at or near zero
-                if (Math.Abs(q - qp) < rerr * Math.Max(Math.Abs(q), Ka) && Math.Abs(u[0] - v1) < rerr * dz || Math.Abs(q1 - q2) < 0.01 * qsmall)
+                double qqp = q - qp;
+                if (Math.Abs(qqp) < rerr * Math.Max(Math.Abs(q), Ka) && Math.Abs(u[1] - v1) < rerr * dz || Math.Abs(q1 - q2) < 0.01 * qsmall)
                     break;
             }
             if (it > maxit)
@@ -581,7 +582,7 @@ namespace SWIMFrame
         }
 
         public static void WriteFluxTable(BinaryWriter b, FluxTable ft)
-        {
+        { 
             //write number of FluxEnds
             b.Write(ft.fend.Length);
             
@@ -601,7 +602,7 @@ namespace SWIMFrame
             b.Write(ft.ftable.GetLength(0));
             b.Write(ft.ftable.GetLength(1));
             for (int i = 0; i < ft.ftable.GetLength(0); i++)
-                for (int j = 0; i < ft.ftable.GetLength(1); j++)
+                for (int j = 0; j < ft.ftable.GetLength(1); j++)
                     b.Write(ft.ftable[i, j]);
         }
 
@@ -623,6 +624,7 @@ namespace SWIMFrame
                 fe[i].nfu=b.ReadInt32();
                 fe[i].nft = b.ReadInt32();
                 nphif = b.ReadInt32();
+                fe[i].phif = new double[nphif];
                 for(int j=0;j<nphif;j++)
                     fe[i].phif[j] = b.ReadDouble();
                 fe[i].dz = b.ReadDouble();
@@ -634,7 +636,7 @@ namespace SWIMFrame
             nFluxTable[1] = b.ReadInt32();
             double[,] ftable = new double[nFluxTable[0], nFluxTable[1]];
             for (int i = 0; i < nFluxTable[0]; i++)
-                for (int j = 0; i < nFluxTable[1]; j++)
+                for (int j = 0; j < nFluxTable[1]; j++)
                     ftable[i, j] = b.ReadDouble();
             ft.ftable = ftable;
 

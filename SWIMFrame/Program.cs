@@ -60,7 +60,6 @@ namespace SWIMFrame
                 {
                     Fluxes.FluxTable(dz[i, j], soils[i].sp);
                     b = new BinaryWriter(File.OpenWrite("soil" + soils[i].sid + "dz" + (dz[i, j] * 10) + ".dat"));
-                    b.Write(soils[i].sid);
                     Fluxes.WriteFluxTable(b, Fluxes.ft);
                     b.Close();
                 }

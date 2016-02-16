@@ -142,7 +142,7 @@ namespace SWIMFrame
             }
 
             Matrix<double> hm = Matrix<double>.Build.DenseOfArray(h); //test
-            double[] absh = hm.Column(j).ToArray();
+            double[] absh = hm.Row(j).ToArray();
             absh = absh.Slice(1, n[j]);
             absh = MathUtilities.Subtract_Value(absh, h[i, 1]);
             for (int x = 0; x < absh.Length; x++)
@@ -214,7 +214,7 @@ namespace SWIMFrame
             for (int x = 1; x <= n[i]; x++)
                 phin[x - 1] = phi[j, x];
             for (int x = id + 1; x <= ni; x++)
-                phii[i, x] = phin[x - id + 1];
+                phii[i, x] = phin[x - id];
 
             for (int x = 1; x < id; x++)
                 hi[x] = h[j, x];
@@ -434,15 +434,14 @@ namespace SWIMFrame
             }
 
             // Assemble flux table
-            for (ie = 1; ie <= 2; ie++)
+            ftwo.fend = new FluxEnd[2];
+            for (ie = 0; ie < 2; ie++)
             {
-                FluxEnd pe = ftwo.fend[ie];
-                FluxEnd qe = ft[ie].fend[1];
-                pe.sid = sp[ie].sid;
-                pe.nfu = qe.nfu;
-                pe.nft = qe.nft;
-                pe.dz = qe.dz;
-                pe.phif = qe.phif;
+                ftwo.fend[ie].sid = sp[ie].sid;
+                ftwo.fend[ie].nfu = ft[ie].fend[1].nfu;
+                ftwo.fend[ie].nft = ft[ie].fend[1].nft;
+                ftwo.fend[ie].dz = ft[ie].fend[1].dz;
+                ftwo.fend[ie].phif = ft[ie].fend[1].phif;
             }
 
             double[,] qi5Slice = new double[i + 1, j + 1];
