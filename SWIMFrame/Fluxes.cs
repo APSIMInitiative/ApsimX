@@ -100,17 +100,22 @@ namespace SWIMFrame
             // rerr and cfac determine spacings of phif.
             Matrix<double> aqM = Matrix<double>.Build.DenseOfArray(aq);
             i = nonlin(nu, sp.phic.Slice(1, nu), aqM.Row(1).ToArray().Slice(1, nu), rerr);
-             re = curv(nu, sp.phic.Slice(1, nu), aqM.Row(1).ToArray().Slice(1, nu));// for unsat phi
-            indices(nu - 2, re.Slice(1,nu-2).Reverse().ToArray(), 1 + nu - i, cfac, out nphif, out iphif);
-            int[] iphifReverse = iphif.Take(nphif).Reverse().ToArray();
-            for (int idx = 0; idx < nphif; idx++)
-                iphif[idx] = 1 + nu - iphifReverse[idx]; // locations of phif in aphi
+            re = curv(nu, sp.phic.Slice(1, nu), aqM.Row(1).ToArray().Slice(1, nu));// for unsat phi
+            double[] rei = new double[nu - 2 + 1];
+            Array.Copy(re.Slice(1, nu - 2).Reverse().ToArray(), 0, rei, 1, re.Slice(1, nu - 2).Reverse().ToArray().Length - 1); //need to 1-index slice
+            indices(nu - 2, rei, 1 + nu - i, cfac, out nphif, out iphif);
+            int[] iphifReverse = iphif.Skip(1).Take(nphif).Reverse().ToArray();
+            int[] iphifReversei = new int[iphifReverse.Length + 1]; // again, need to 1-index
+            Array.Copy(iphifReverse, 0, iphifReversei, 1, iphifReverse.Length);
+            for (int idx = 1; idx < nphif; idx++)
+                iphif[idx] = 1 + nu - iphifReversei[idx]; // locations of phif in aphi
             aqM = Matrix<double>.Build.DenseOfArray(aq); //as above
             re = curv(1 + ns, sp.phic.Slice(nu, nt), aqM.Row(1).ToArray().Slice(nu, nt)); // for sat phi
             indices(ns - 1, re, ns, cfac, out nfs, out ifs);
 
+            int[] ifsTemp = ifs.Slice(2, nfs);
             for (int idx = nphif + 1; idx <= nphif + nfs - 1; idx++)
-                iphif[idx] = nu - 1 + ifs[idx]; //TODO debug this mess
+                iphif[idx] = nu - 1 + ifsTemp[idx - nphif];
             nfu = nphif; // no. of unsat phif
             nphif = nphif + nfs - 1;
             for (int idx = 1; idx <= nphif; idx++)
@@ -212,9 +217,7 @@ namespace SWIMFrame
             {
                 phii5[1 + i * 2] = phii52[i];
             }
-
             // diags - end timer here
-
 
             // Assemble flux table
             j = 2 * nfu - 1;
@@ -228,6 +231,22 @@ namespace SWIMFrame
                 ft.fend[ie].phif = phii5; //(1:i) assume it's the whole array
             }
             ft.ftable = qi5; // (1:i,1:i) as above
+            WriteArray(ft.ftable);
+        }
+
+        public static void WriteArray(double[,] array)
+        {
+            StringBuilder sb = new StringBuilder();
+            int rowLength = array.GetLength(0);
+            int colLength = array.GetLength(1);
+
+            for (int i = 1; i < rowLength; i++)
+            {
+                for (int j = 1; j < colLength; j++)
+                    sb.AppendFormat("{0:G7} " ,array[i, j]);
+                sb.AppendLine();
+            }
+            File.WriteAllText(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", sb.ToString());
         }
 
         /// <summary>
@@ -383,11 +402,6 @@ namespace SWIMFrame
                     u[2] += Ks * dh / Math.Pow(Ks - q, 2);
                 }
 
-                /*/ this is where the deviation occurs.
-                 * The numbers here are correct to 7 sig figs (single precision from FORTRAN)
-                 * The problem is that we have a small number divided by a much larger number
-                 * which introduces error. This may or may not be a problem.
-                /*/
                 dq = (v1 - u[1]) / u[2]; // delta z / dz/dq
                 qp = q; // save q before updating
                 if (dq > 0.0)
@@ -559,7 +573,7 @@ namespace SWIMFrame
                 if (k + 2 > n)
                     i = n - 2;
                 co = quadco(x.Slice(i, i+2), y.Slice(i, i+2));
-                for (j = k; j < i+1; j++)
+                for (j = k; j <= i+1; j++)
                 {
                     z = u[j] - x[i];
                     v[j] = co[1] + z * (co[2] + z * co[3]);
