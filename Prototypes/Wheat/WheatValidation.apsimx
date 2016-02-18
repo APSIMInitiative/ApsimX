@@ -1823,20 +1823,6 @@ The model consists of:
         <Name>Tests</Name>
         <AcceptedStats>
           <RegrStats>
-            <Name>Wheat.Leaf.ExpandedCohortNo</Name>
-            <n>99</n>
-            <Slope>1.248498140389571</Slope>
-            <Intercept>-0.57854802928226157</Intercept>
-            <SEslope>0.02590729227855057</SEslope>
-            <SEintercept>0.24532299356160545</SEintercept>
-            <R2>0.95990694782247288</R2>
-            <RMSE>2.0301171992996254</RMSE>
-            <NSE>0.65738153782525588</NSE>
-            <ME>1.6110281512592257</ME>
-            <MAE>1.7250580994976708</MAE>
-            <RSR>0.58237244923461517</RSR>
-          </RegrStats>
-          <RegrStats>
             <Name>Wheat.Leaf.AppearedCohortNo</Name>
             <n>325</n>
             <Slope>1.0919049539744727</Slope>
@@ -1849,6 +1835,20 @@ The model consists of:
             <ME>2.0792703524637393</ME>
             <MAE>2.1691491030759069</MAE>
             <RSR>1.0197920542059054</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Leaf.ExpandedCohortNo</Name>
+            <n>99</n>
+            <Slope>1.248498140389571</Slope>
+            <Intercept>-0.57854802928226157</Intercept>
+            <SEslope>0.02590729227855057</SEslope>
+            <SEintercept>0.24532299356160545</SEintercept>
+            <R2>0.95990694782247288</R2>
+            <RMSE>2.0301171992996254</RMSE>
+            <NSE>0.65738153782525588</NSE>
+            <ME>1.6110281512592257</ME>
+            <MAE>1.7250580994976708</MAE>
+            <RSR>0.58237244923461517</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.SenescingCohortNo</Name>
@@ -1991,15 +1991,15 @@ The model consists of:
           <RegrStats>
             <Name>Wheat.Leaf.Dead.Wt</Name>
             <n>24</n>
-            <Slope>1.3848994826932015</Slope>
-            <Intercept>34.260099901327649</Intercept>
+            <Slope>1.3848994826932011</Slope>
+            <Intercept>34.260099901327678</Intercept>
             <SEslope>0.26282926319421979</SEslope>
             <SEintercept>15.832415557908416</SEintercept>
             <R2>0.55791734647608981</R2>
             <RMSE>71.3948976407506</RMSE>
             <NSE>-2.6133973698486774</NSE>
             <ME>52.387261788332907</ME>
-            <MAE>58.14205691938129</MAE>
+            <MAE>58.142056919381282</MAE>
             <RSR>1.8608705344824454</RSR>
           </RegrStats>
           <RegrStats>
