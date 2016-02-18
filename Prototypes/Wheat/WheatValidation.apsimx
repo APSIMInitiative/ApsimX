@@ -458,6 +458,23 @@ The model consists of:
             </XYPairs>
             <XProperty>[Leaf].CoverGreen</XProperty>
           </LinearInterpolationFunction>
+          <LinearInterpolationFunction>
+            <Name>Nitrogen</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>1.5</double>
+                <double>2</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Arbitrator].FN</XProperty>
+          </LinearInterpolationFunction>
         </MultiplyFunction>
         <PhaseLookup>
           <Name>ShadeInducedBranchMortality</Name>
@@ -1103,7 +1120,7 @@ The model consists of:
           </LinearInterpolationFunction>
           <Constant>
             <Name>LeafSizeShapeParameter</Name>
-            <Value>0.4</Value>
+            <Value>0.01</Value>
           </Constant>
         </LeafCohortParameters>
         <RUEModel>
@@ -1267,12 +1284,12 @@ The model consists of:
         <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
-        <Albedo>0.18</Albedo>
-        <Gsmax>0.01</Gsmax>
-        <R50>200</R50>
+        <Albedo>0</Albedo>
+        <Gsmax>0</Gsmax>
+        <R50>0</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <KDead>0.03</KDead>
+        <KDead>0</KDead>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -1511,7 +1528,7 @@ The model consists of:
         <Name>Wakanui</Name>
         <Command>[Phenology].Vernalisation.VernSens = 4</Command>
         <Command>[Phenology].Vernalisation.PhotopSens = 3</Command>
-        <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
+        <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
       </Cultivar>
       <Cultivar>
         <Name>GattonHartog</Name>
@@ -16014,7 +16031,8 @@ namespace Models
             <string>[Wheat].Phenology.Zadok.Stage</string>
             <string>[Wheat].Structure.TotalStemPopn</string>
             <string>[Wheat].Structure.MainStemPopn</string>
-            <string>[Wheat].Leaf.CohortArea[1:30]</string>
+            <string>[Wheat].Leaf.CohortArea[4]</string>
+            <string>[Wheat].Arbitrator.FN</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -19102,7 +19120,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Leaf.CohortArea1:30(4)</YFieldName>
+            <YFieldName>Wheat.Leaf.CohortArea4</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>

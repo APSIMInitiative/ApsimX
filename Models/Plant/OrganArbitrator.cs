@@ -483,13 +483,13 @@ namespace Models.PMF
                         if (N != null)
                         {
                             if ((Plant.Phenology.Emerged == true) && (N.TotalPlantDemand > 0) && (N.TotalPlantSupply > 0))
-                                return Math.Min(1, N.TotalPlantSupply / N.TotalPlantDemand);
+                                return N.TotalPlantSupply / N.TotalPlantDemand;
                             else return 1;
                         }
                         else return 1;
                     }
                     else
-                        return Math.Min(1, N.TotalPlantSupply / N.TotalPlantDemand);
+                        return N.TotalPlantSupply / N.TotalPlantDemand;
                 }
                 else
                     return 1;
