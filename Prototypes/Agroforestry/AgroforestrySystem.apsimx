@@ -2102,34 +2102,6 @@ VShort duration variety released in New Zealand by Pioneer
         <Name>Tests</Name>
         <AcceptedStats>
           <RegrStats>
-            <Name>Distance</Name>
-            <n>103</n>
-            <Slope>0.996536596628954</Slope>
-            <Intercept>0.70537981990302612</Intercept>
-            <SEslope>0.010136794536124196</SEslope>
-            <SEintercept>0.27307857628750853</SEintercept>
-            <R2>0.98965760493570309</R2>
-            <RMSE>1.7763276178186396</RMSE>
-            <NSE>0.98810898175940887</NSE>
-            <ME>0.63106796116504849</ME>
-            <MAE>0.63106796116504849</MAE>
-            <RSR>0.10851530519496418</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>SW90cm</Name>
-            <n>96</n>
-            <Slope>0.99487954842630089</Slope>
-            <Intercept>-2.050276826724172</Intercept>
-            <SEslope>0.034907150485085817</SEslope>
-            <SEintercept>8.8700157210205735</SEintercept>
-            <R2>0.89628067618855889</R2>
-            <RMSE>16.6131418118846</RMSE>
-            <NSE>0.88064457502038673</NSE>
-            <ME>-3.3278885182342006</ME>
-            <MAE>12.715305458780559</MAE>
-            <RSR>0.34367446705093224</RSR>
-          </RegrStats>
-          <RegrStats>
             <Name>BiomassWt</Name>
             <n>9</n>
             <Slope>0.53113157309145043</Slope>
@@ -2144,6 +2116,20 @@ VShort duration variety released in New Zealand by Pioneer
             <RSR>1.0111843344794336</RSR>
           </RegrStats>
           <RegrStats>
+            <Name>Distance</Name>
+            <n>103</n>
+            <Slope>0.996536596628954</Slope>
+            <Intercept>0.70537981990302612</Intercept>
+            <SEslope>0.010136794536124196</SEslope>
+            <SEintercept>0.27307857628750853</SEintercept>
+            <R2>0.98965760493570309</R2>
+            <RMSE>1.7763276178186396</RMSE>
+            <NSE>0.98810898175940887</NSE>
+            <ME>0.63106796116504849</ME>
+            <MAE>0.63106796116504849</MAE>
+            <RSR>0.10851530519496418</RSR>
+          </RegrStats>
+          <RegrStats>
             <Name>GrainWt</Name>
             <n>7</n>
             <Slope>0.35947823203995988</Slope>
@@ -2156,6 +2142,20 @@ VShort duration variety released in New Zealand by Pioneer
             <ME>55.11173684745026</ME>
             <MAE>108.1577412550534</MAE>
             <RSR>0.85481216114395531</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>SW90cm</Name>
+            <n>96</n>
+            <Slope>0.99487954842630089</Slope>
+            <Intercept>-2.050276826724172</Intercept>
+            <SEslope>0.034907150485085817</SEslope>
+            <SEintercept>8.8700157210205735</SEintercept>
+            <R2>0.89628067618855889</R2>
+            <RMSE>16.6131418118846</RMSE>
+            <NSE>0.88064457502038673</NSE>
+            <ME>-3.3278885182342006</ME>
+            <MAE>12.715305458780559</MAE>
+            <RSR>0.34367446705093224</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>

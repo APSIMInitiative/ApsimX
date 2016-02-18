@@ -22,18 +22,18 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
         <Name>Tests</Name>
         <AcceptedStats>
           <RegrStats>
-            <Name>Wheat.Zadok.Stage</Name>
-            <n>100</n>
-            <Slope>-INF</Slope>
-            <Intercept>INF</Intercept>
-            <SEslope>NaN</SEslope>
-            <SEintercept>NaN</SEintercept>
-            <R2>INF</R2>
-            <RMSE>5.6789536041809052</RMSE>
-            <NSE>-INF</NSE>
-            <ME>5.0750281585617421</ME>
-            <MAE>5.0750281585617421</MAE>
-            <RSR>INF</RSR>
+            <Name>Wheat.AboveGround.N</Name>
+            <n>32</n>
+            <Slope>0.77844649503057262</Slope>
+            <Intercept>2.3334834635704205</Intercept>
+            <SEslope>0.050153534529322481</SEslope>
+            <SEintercept>0.77764842118261723</SEintercept>
+            <R2>0.88926202984793323</R2>
+            <RMSE>3.1080000176342182</RMSE>
+            <NSE>0.87197697559550147</NSE>
+            <ME>-0.51210821297472475</ME>
+            <MAE>1.6787259412971807</MAE>
+            <RSR>0.352168006627317</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
@@ -50,18 +50,18 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
             <RSR>0.37351877716446236</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>Wheat.AboveGround.N</Name>
-            <n>32</n>
-            <Slope>0.77844649503057262</Slope>
-            <Intercept>2.3334834635704205</Intercept>
-            <SEslope>0.050153534529322481</SEslope>
-            <SEintercept>0.77764842118261723</SEintercept>
-            <R2>0.88926202984793323</R2>
-            <RMSE>3.1080000176342182</RMSE>
-            <NSE>0.87197697559550147</NSE>
-            <ME>-0.51210821297472475</ME>
-            <MAE>1.6787259412971807</MAE>
-            <RSR>0.352168006627317</RSR>
+            <Name>Wheat.Grain.GrainNo</Name>
+            <n>63</n>
+            <Slope>0.89292780292566742</Slope>
+            <Intercept>760.71497170578732</Intercept>
+            <SEslope>0.060562660048741411</SEslope>
+            <SEintercept>511.14083347399213</SEintercept>
+            <R2>0.78087633262884026</R2>
+            <RMSE>1479.9610713227069</RMSE>
+            <NSE>0.7640729982890031</NSE>
+            <ME>-82.016181323504085</ME>
+            <MAE>1168.0422212042784</MAE>
+            <RSR>0.48185280809388792</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Protein</Name>
@@ -76,20 +76,6 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
             <ME>0.53073475054326169</ME>
             <MAE>1.9625413830195042</MAE>
             <RSR>0.86934900552325511</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>Wheat.Grain.GrainNo</Name>
-            <n>63</n>
-            <Slope>0.89292780292566742</Slope>
-            <Intercept>760.71497170578732</Intercept>
-            <SEslope>0.060562660048741411</SEslope>
-            <SEintercept>511.14083347399213</SEintercept>
-            <R2>0.78087633262884026</R2>
-            <RMSE>1479.9610713227069</RMSE>
-            <NSE>0.7640729982890031</NSE>
-            <ME>-82.016181323504085</ME>
-            <MAE>1168.0422212042784</MAE>
-            <RSR>0.48185280809388792</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
@@ -118,6 +104,20 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
             <ME>0.160674257326759</ME>
             <MAE>0.160674257326759</MAE>
             <RSR>NaN</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Zadok.Stage</Name>
+            <n>100</n>
+            <Slope>-INF</Slope>
+            <Intercept>INF</Intercept>
+            <SEslope>NaN</SEslope>
+            <SEintercept>NaN</SEintercept>
+            <R2>INF</R2>
+            <RMSE>5.6789536041809052</RMSE>
+            <NSE>-INF</NSE>
+            <ME>5.0750281585617421</ME>
+            <MAE>5.0750281585617421</MAE>
+            <RSR>INF</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
