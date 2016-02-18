@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -519,60 +519,60 @@
             <NArbitrationOption>RelativeAllocation</NArbitrationOption>
             <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
           </OrganArbitrator>
-            <CompositeBiomass>
-              <Name>AboveGround</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Live</string>
-                <string>[Stem].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>BelowGround</Name>
-              <Propertys>
-                <string>[Root].Live</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>Total</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Live</string>
-                <string>[Stem].Dead</string>
-                <string>[Root].Live</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>TotalLive</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Stem].Live</string>
-                <string>[Root].Live</string>
-              </Propertys>
-            </CompositeBiomass>
-            <DivideFunction>
-              <Name>IndividualTreeLiveWt</Name>
-              <VariableReference>
-                <Name>Population</Name>
-                <VariableName>[Eucalyptus].TotalLive.Wt</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>Population</Name>
-                <VariableName>[Eucalyptus].Population</VariableName>
-              </VariableReference>
-            </DivideFunction>
-            <CompositeBiomass>
-              <Name>TotalDead</Name>
-              <Propertys>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Dead</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>AboveGround</Name>
+            <Propertys>
+              <string>[Leaf].Live</string>
+              <string>[Leaf].Dead</string>
+              <string>[Stem].Live</string>
+              <string>[Stem].Dead</string>
+            </Propertys>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>BelowGround</Name>
+            <Propertys>
+              <string>[Root].Live</string>
+              <string>[Root].Dead</string>
+            </Propertys>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>Total</Name>
+            <Propertys>
+              <string>[Leaf].Live</string>
+              <string>[Leaf].Dead</string>
+              <string>[Stem].Live</string>
+              <string>[Stem].Dead</string>
+              <string>[Root].Live</string>
+              <string>[Root].Dead</string>
+            </Propertys>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>TotalLive</Name>
+            <Propertys>
+              <string>[Leaf].Live</string>
+              <string>[Stem].Live</string>
+              <string>[Root].Live</string>
+            </Propertys>
+          </CompositeBiomass>
+          <DivideFunction>
+            <Name>IndividualTreeLiveWt</Name>
+            <VariableReference>
+              <Name>Population</Name>
+              <VariableName>[Eucalyptus].TotalLive.Wt</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>Population</Name>
+              <VariableName>[Eucalyptus].Population</VariableName>
+            </VariableReference>
+          </DivideFunction>
+          <CompositeBiomass>
+            <Name>TotalDead</Name>
+            <Propertys>
+              <string>[Leaf].Dead</string>
+              <string>[Stem].Dead</string>
+              <string>[Root].Dead</string>
+            </Propertys>
+          </CompositeBiomass>
           <TreeCanopy>
             <Name>Leaf</Name>
             <Biomass>
@@ -932,8 +932,10 @@
           </GenericAboveGroundOrgan>
           <Cultivar>
             <Name>EGrandis</Name>
-            <Alias>EGrandis</Alias>
             <Command />
+            <Alias>
+              <Name>EGrandis</Name>
+            </Alias>
           </Cultivar>
           <CropType>Eucalyptus</CropType>
         </Plant>
@@ -2101,60 +2103,60 @@
             <NArbitrationOption>RelativeAllocation</NArbitrationOption>
             <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
           </OrganArbitrator>
-            <CompositeBiomass>
-              <Name>AboveGround</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Live</string>
-                <string>[Stem].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>BelowGround</Name>
-              <Propertys>
-                <string>[Root].Live</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>Total</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Live</string>
-                <string>[Stem].Dead</string>
-                <string>[Root].Live</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>TotalLive</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Stem].Live</string>
-                <string>[Root].Live</string>
-              </Propertys>
-            </CompositeBiomass>
-            <DivideFunction>
-              <Name>IndividualTreeLiveWt</Name>
-              <VariableReference>
-                <Name>Population</Name>
-                <VariableName>[Eucalyptus].TotalLive.Wt</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>Population</Name>
-                <VariableName>[Eucalyptus].Population</VariableName>
-              </VariableReference>
-            </DivideFunction>
-            <CompositeBiomass>
-              <Name>TotalDead</Name>
-              <Propertys>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Dead</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>AboveGround</Name>
+            <Propertys>
+              <string>[Leaf].Live</string>
+              <string>[Leaf].Dead</string>
+              <string>[Stem].Live</string>
+              <string>[Stem].Dead</string>
+            </Propertys>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>BelowGround</Name>
+            <Propertys>
+              <string>[Root].Live</string>
+              <string>[Root].Dead</string>
+            </Propertys>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>Total</Name>
+            <Propertys>
+              <string>[Leaf].Live</string>
+              <string>[Leaf].Dead</string>
+              <string>[Stem].Live</string>
+              <string>[Stem].Dead</string>
+              <string>[Root].Live</string>
+              <string>[Root].Dead</string>
+            </Propertys>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>TotalLive</Name>
+            <Propertys>
+              <string>[Leaf].Live</string>
+              <string>[Stem].Live</string>
+              <string>[Root].Live</string>
+            </Propertys>
+          </CompositeBiomass>
+          <DivideFunction>
+            <Name>IndividualTreeLiveWt</Name>
+            <VariableReference>
+              <Name>Population</Name>
+              <VariableName>[Eucalyptus].TotalLive.Wt</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>Population</Name>
+              <VariableName>[Eucalyptus].Population</VariableName>
+            </VariableReference>
+          </DivideFunction>
+          <CompositeBiomass>
+            <Name>TotalDead</Name>
+            <Propertys>
+              <string>[Leaf].Dead</string>
+              <string>[Stem].Dead</string>
+              <string>[Root].Dead</string>
+            </Propertys>
+          </CompositeBiomass>
           <TreeCanopy>
             <Name>Leaf</Name>
             <Biomass>
@@ -2514,8 +2516,10 @@
           </GenericAboveGroundOrgan>
           <Cultivar>
             <Name>EGrandis</Name>
-            <Alias>EGrandis</Alias>
             <Command />
+            <Alias>
+              <Name>EGrandis</Name>
+            </Alias>
           </Cultivar>
           <CropType>Eucalyptus</CropType>
         </Plant>
@@ -5101,60 +5105,60 @@
             <NArbitrationOption>RelativeAllocation</NArbitrationOption>
             <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
           </OrganArbitrator>
-            <CompositeBiomass>
-              <Name>AboveGround</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Live</string>
-                <string>[Stem].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>BelowGround</Name>
-              <Propertys>
-                <string>[Root].Live</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>Total</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Live</string>
-                <string>[Stem].Dead</string>
-                <string>[Root].Live</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>TotalLive</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Stem].Live</string>
-                <string>[Root].Live</string>
-              </Propertys>
-            </CompositeBiomass>
-            <DivideFunction>
-              <Name>IndividualTreeLiveWt</Name>
-              <VariableReference>
-                <Name>Population</Name>
-                <VariableName>[Eucalyptus].TotalLive.Wt</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>Population</Name>
-                <VariableName>[Eucalyptus].Population</VariableName>
-              </VariableReference>
-            </DivideFunction>
-            <CompositeBiomass>
-              <Name>TotalDead</Name>
-              <Propertys>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Dead</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>AboveGround</Name>
+            <Propertys>
+              <string>[Leaf].Live</string>
+              <string>[Leaf].Dead</string>
+              <string>[Stem].Live</string>
+              <string>[Stem].Dead</string>
+            </Propertys>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>BelowGround</Name>
+            <Propertys>
+              <string>[Root].Live</string>
+              <string>[Root].Dead</string>
+            </Propertys>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>Total</Name>
+            <Propertys>
+              <string>[Leaf].Live</string>
+              <string>[Leaf].Dead</string>
+              <string>[Stem].Live</string>
+              <string>[Stem].Dead</string>
+              <string>[Root].Live</string>
+              <string>[Root].Dead</string>
+            </Propertys>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>TotalLive</Name>
+            <Propertys>
+              <string>[Leaf].Live</string>
+              <string>[Stem].Live</string>
+              <string>[Root].Live</string>
+            </Propertys>
+          </CompositeBiomass>
+          <DivideFunction>
+            <Name>IndividualTreeLiveWt</Name>
+            <VariableReference>
+              <Name>Population</Name>
+              <VariableName>[Eucalyptus].TotalLive.Wt</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>Population</Name>
+              <VariableName>[Eucalyptus].Population</VariableName>
+            </VariableReference>
+          </DivideFunction>
+          <CompositeBiomass>
+            <Name>TotalDead</Name>
+            <Propertys>
+              <string>[Leaf].Dead</string>
+              <string>[Stem].Dead</string>
+              <string>[Root].Dead</string>
+            </Propertys>
+          </CompositeBiomass>
           <TreeCanopy>
             <Name>Leaf</Name>
             <Biomass>
@@ -5514,8 +5518,10 @@
           </GenericAboveGroundOrgan>
           <Cultivar>
             <Name>EGrandis</Name>
-            <Alias>EGrandis</Alias>
             <Command />
+            <Alias>
+              <Name>EGrandis</Name>
+            </Alias>
           </Cultivar>
           <CropType>Eucalyptus</CropType>
         </Plant>

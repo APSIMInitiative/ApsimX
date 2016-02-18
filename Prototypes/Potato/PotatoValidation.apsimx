@@ -1194,6 +1194,20 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <RSR>6.6109293595054432E-06</RSR>
           </RegrStats>
           <RegrStats>
+            <Name>Potato.Leaf.LAI</Name>
+            <n>146</n>
+            <Slope>0.9844377215164134</Slope>
+            <Intercept>-0.29915030019020783</Intercept>
+            <SEslope>0.033763046508377331</SEslope>
+            <SEintercept>0.10907398007443367</SEintercept>
+            <R2>0.85515198126345915</R2>
+            <RMSE>0.74993138584149077</RMSE>
+            <NSE>0.79230631478003988</NSE>
+            <ME>-0.34241450031907095</ME>
+            <MAE>0.58725463824482516</MAE>
+            <RSR>0.45417081118468217</RSR>
+          </RegrStats>
+          <RegrStats>
             <Name>Potato.Leaf.Live.Wt</Name>
             <n>195</n>
             <Slope>0.70029647340047041</Slope>
@@ -1206,6 +1220,34 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <ME>-27.742251611330587</ME>
             <MAE>32.0596012247717</MAE>
             <RSR>0.75644965905761319</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Potato.Leaf.SpecificArea</Name>
+            <n>146</n>
+            <Slope>0.12733334298236299</Slope>
+            <Intercept>27061.409767585832</Intercept>
+            <SEslope>0.072799634748441783</SEslope>
+            <SEintercept>2137.7674181267748</SEintercept>
+            <R2>0.020803351528212777</R2>
+            <RMSE>6125.2397335849546</RMSE>
+            <NSE>-0.66409823764731568</NSE>
+            <ME>1772.7059793105466</ME>
+            <MAE>4268.8470572049737</MAE>
+            <RSR>1.2855739202833669</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Potato.Stem.Live.N</Name>
+            <n>105</n>
+            <Slope>0.27495641661329057</Slope>
+            <Intercept>1.6969678987980967</Intercept>
+            <SEslope>0.059239397421245947</SEslope>
+            <SEintercept>0.17813798648199788</SEintercept>
+            <R2>0.17297649146068161</R2>
+            <RMSE>1.6626712141333095</RMSE>
+            <NSE>0.11132752707617344</NSE>
+            <ME>-0.068893013775200462</ME>
+            <MAE>1.1968381319143029</MAE>
+            <RSR>0.93819450305501539</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Stem.Live.Wt</Name>
@@ -1222,34 +1264,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <RSR>0.89480294224084578</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>Potato.Tuber.Live.Wt</Name>
-            <n>250</n>
-            <Slope>0.88207904818204763</Slope>
-            <Intercept>41.038911770529239</Intercept>
-            <SEslope>0.0208730328739094</SEslope>
-            <SEintercept>20.087308370457141</SEintercept>
-            <R2>0.878063504595018</R2>
-            <RMSE>215.90801952261558</RMSE>
-            <NSE>0.87187344402664113</NSE>
-            <ME>-47.386156793684769</ME>
-            <MAE>120.45299275679564</MAE>
-            <RSR>0.35723108732228986</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>Potato.Stem.Live.N</Name>
-            <n>105</n>
-            <Slope>0.2749564166132904</Slope>
-            <Intercept>1.6969678987980972</Intercept>
-            <SEslope>0.059239397421245982</SEslope>
-            <SEintercept>0.17813798648199794</SEintercept>
-            <R2>0.17297649146068128</R2>
-            <RMSE>1.6626712141333093</RMSE>
-            <NSE>0.11132752707617344</NSE>
-            <ME>-0.068893013775200268</ME>
-            <MAE>1.1968381319143029</MAE>
-            <RSR>0.93819450305501528</RSR>
-          </RegrStats>
-          <RegrStats>
             <Name>Potato.Tuber.Live.N</Name>
             <n>145</n>
             <Slope>0.97298686368931875</Slope>
@@ -1264,32 +1278,18 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <RSR>0.45205210510847565</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>Potato.Leaf.LAI</Name>
-            <n>146</n>
-            <Slope>0.9844377215164134</Slope>
-            <Intercept>-0.29915030019020783</Intercept>
-            <SEslope>0.033763046508377331</SEslope>
-            <SEintercept>0.10907398007443367</SEintercept>
-            <R2>0.85515198126345915</R2>
-            <RMSE>0.74993138584149077</RMSE>
-            <NSE>0.79230631478003988</NSE>
-            <ME>-0.34241450031907095</ME>
-            <MAE>0.58725463824482516</MAE>
-            <RSR>0.45417081118468217</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>Potato.Leaf.SpecificArea</Name>
-            <n>146</n>
-            <Slope>0.12733334298236299</Slope>
-            <Intercept>27061.409767585832</Intercept>
-            <SEslope>0.072799634748441783</SEslope>
-            <SEintercept>2137.7674181267748</SEintercept>
-            <R2>0.020803351528212777</R2>
-            <RMSE>6125.2397335849546</RMSE>
-            <NSE>-0.66409823764731568</NSE>
-            <ME>1772.7059793105466</ME>
-            <MAE>4268.8470572049737</MAE>
-            <RSR>1.2855739202833669</RSR>
+            <Name>Potato.Tuber.Live.Wt</Name>
+            <n>250</n>
+            <Slope>0.88207904818204763</Slope>
+            <Intercept>41.038911770529239</Intercept>
+            <SEslope>0.0208730328739094</SEslope>
+            <SEintercept>20.087308370457141</SEintercept>
+            <R2>0.878063504595018</R2>
+            <RMSE>215.90801952261558</RMSE>
+            <NSE>0.87187344402664113</NSE>
+            <ME>-47.386156793684769</ME>
+            <MAE>120.45299275679564</MAE>
+            <RSR>0.35723108732228986</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.LiveFWt</Name>
@@ -1347,20 +1347,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <RSR>1.5686869869930744</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>Potato.Tuber.Live.Wt</Name>
-            <n>26</n>
-            <Slope>0.88110387234011733</Slope>
-            <Intercept>75.7327116007283</Intercept>
-            <SEslope>0.048392470039408615</SEslope>
-            <SEintercept>53.835982547487866</SEintercept>
-            <R2>0.93249164132530482</R2>
-            <RMSE>134.17576977939265</RMSE>
-            <NSE>0.92131884903565053</NSE>
-            <ME>-43.686330402369656</ME>
-            <MAE>108.60671728014468</MAE>
-            <RSR>0.27505445433647491</RSR>
-          </RegrStats>
-          <RegrStats>
             <Name>Potato.Tuber.Live.N</Name>
             <n>20</n>
             <Slope>1.0778889375496716</Slope>
@@ -1373,6 +1359,20 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <ME>1.1871865795921239</ME>
             <MAE>1.836089206751969</MAE>
             <RSR>0.3382074036850144</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Potato.Tuber.Live.Wt</Name>
+            <n>26</n>
+            <Slope>0.88110387234011733</Slope>
+            <Intercept>75.7327116007283</Intercept>
+            <SEslope>0.048392470039408615</SEslope>
+            <SEintercept>53.835982547487866</SEintercept>
+            <R2>0.93249164132530482</R2>
+            <RMSE>134.17576977939265</RMSE>
+            <NSE>0.92131884903565053</NSE>
+            <ME>-43.686330402369656</ME>
+            <MAE>108.60671728014468</MAE>
+            <RSR>0.27505445433647491</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.LiveFWt</Name>

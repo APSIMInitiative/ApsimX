@@ -1948,20 +1948,6 @@ VShort duration variety released in New Zealand by Pioneer
         <Name>Tests</Name>
         <AcceptedStats>
           <RegrStats>
-            <Name>GrainWt</Name>
-            <n>103</n>
-            <Slope>0.85703498974335468</Slope>
-            <Intercept>94.85669052447804</Intercept>
-            <SEslope>0.039812364920805615</SEslope>
-            <SEintercept>27.722881329583966</SEintercept>
-            <R2>0.82105063507891329</R2>
-            <RMSE>146.16237421080004</RMSE>
-            <NSE>0.81889563697027756</NSE>
-            <ME>8.2565599322099974</ME>
-            <MAE>112.89020481338197</MAE>
-            <RSR>0.4234927015227371</RSR>
-          </RegrStats>
-          <RegrStats>
             <Name>Biomass</Name>
             <n>88</n>
             <Slope>1.0585877280587726</Slope>
@@ -1976,18 +1962,32 @@ VShort duration variety released in New Zealand by Pioneer
             <RSR>0.42241504109336891</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>LAImax</Name>
-            <n>74</n>
-            <Slope>0.98904580729004343</Slope>
-            <Intercept>0.080102906286635189</Intercept>
-            <SEslope>0.047282111376171096</SEslope>
-            <SEintercept>0.14235018762902904</SEintercept>
-            <R2>0.85870203715816085</R2>
-            <RMSE>0.54222170423012916</RMSE>
-            <NSE>0.8375019228535997</NSE>
-            <ME>0.05059813362478955</ME>
-            <MAE>0.43234636037647806</MAE>
-            <RSR>0.4003775183310902</RSR>
+            <Name>FinalLeafNo</Name>
+            <n>21</n>
+            <Slope>0.83248627215000492</Slope>
+            <Intercept>3.2541544248953418</Intercept>
+            <SEslope>0.1408054326197426</SEslope>
+            <SEintercept>2.6504675892575769</SEintercept>
+            <R2>0.64785786252473931</R2>
+            <RMSE>0.60881828526775017</RMSE>
+            <NSE>0.58285885348319222</NSE>
+            <ME>0.10489634131543332</ME>
+            <MAE>0.48739238608772811</MAE>
+            <RSR>0.630299359349952</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>FloweringDAS</Name>
+            <n>90</n>
+            <Slope>0.6810553352784201</Slope>
+            <Intercept>19.559462357547297</Intercept>
+            <SEslope>0.076701178219053409</SEslope>
+            <SEintercept>4.3332884840711454</SEintercept>
+            <R2>0.4725566490127</R2>
+            <RMSE>5.51160392061855</RMSE>
+            <NSE>0.31822149073589179</NSE>
+            <ME>1.6666666666666667</ME>
+            <MAE>4.3333333333333339</MAE>
+            <RSR>0.82109877146084376</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GPSM</Name>
@@ -2018,18 +2018,32 @@ VShort duration variety released in New Zealand by Pioneer
             <RSR>1.3417759515759997</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>FloweringDAS</Name>
-            <n>90</n>
-            <Slope>0.6810553352784201</Slope>
-            <Intercept>19.559462357547297</Intercept>
-            <SEslope>0.076701178219053409</SEslope>
-            <SEintercept>4.3332884840711454</SEintercept>
-            <R2>0.4725566490127</R2>
-            <RMSE>5.51160392061855</RMSE>
-            <NSE>0.31822149073589179</NSE>
-            <ME>1.6666666666666667</ME>
-            <MAE>4.3333333333333339</MAE>
-            <RSR>0.82109877146084376</RSR>
+            <Name>GrainWt</Name>
+            <n>103</n>
+            <Slope>0.85703498974335468</Slope>
+            <Intercept>94.85669052447804</Intercept>
+            <SEslope>0.039812364920805615</SEslope>
+            <SEintercept>27.722881329583966</SEintercept>
+            <R2>0.82105063507891329</R2>
+            <RMSE>146.16237421080004</RMSE>
+            <NSE>0.81889563697027756</NSE>
+            <ME>8.2565599322099974</ME>
+            <MAE>112.89020481338197</MAE>
+            <RSR>0.4234927015227371</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>LAImax</Name>
+            <n>74</n>
+            <Slope>0.98904580729004343</Slope>
+            <Intercept>0.080102906286635189</Intercept>
+            <SEslope>0.047282111376171096</SEslope>
+            <SEintercept>0.14235018762902904</SEintercept>
+            <R2>0.85870203715816085</R2>
+            <RMSE>0.54222170423012916</RMSE>
+            <NSE>0.8375019228535997</NSE>
+            <ME>0.05059813362478955</ME>
+            <MAE>0.43234636037647806</MAE>
+            <RSR>0.4003775183310902</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
@@ -2044,20 +2058,6 @@ VShort duration variety released in New Zealand by Pioneer
             <ME>2.0666666666666669</ME>
             <MAE>6.2444444444444445</MAE>
             <RSR>0.50850697391082089</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>FinalLeafNo</Name>
-            <n>21</n>
-            <Slope>0.83248627215000492</Slope>
-            <Intercept>3.2541544248953418</Intercept>
-            <SEslope>0.1408054326197426</SEslope>
-            <SEintercept>2.6504675892575769</SEintercept>
-            <R2>0.64785786252473931</R2>
-            <RMSE>0.60881828526775017</RMSE>
-            <NSE>0.58285885348319222</NSE>
-            <ME>0.10489634131543332</ME>
-            <MAE>0.48739238608772811</MAE>
-            <RSR>0.630299359349952</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
