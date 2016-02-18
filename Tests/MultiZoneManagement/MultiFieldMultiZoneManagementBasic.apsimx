@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
     <AutoExport>true</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
-  
   <Simulation>
     <Name>MultiPaddockSimulation</Name>
     <Clock>
@@ -1235,6 +1235,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report1</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -1677,6 +1679,11 @@ namespace Models
       </Plant15>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -1688,11 +1695,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -1756,6 +1758,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report2</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -2221,6 +2225,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -2232,11 +2241,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -2306,6 +2310,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report3</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -2747,6 +2753,11 @@ namespace Models
       </Plant15>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -2758,11 +2769,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -2826,6 +2832,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report4</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -3291,6 +3299,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -3302,11 +3315,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -3376,6 +3384,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report5</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -3817,6 +3827,11 @@ namespace Models
       </Plant15>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -3828,11 +3843,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -3896,6 +3906,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report6</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -4361,6 +4373,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -4372,11 +4389,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -4446,6 +4458,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report7</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -4887,6 +4901,11 @@ namespace Models
       </Plant15>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -4898,11 +4917,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -4966,6 +4980,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report8</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -5431,6 +5447,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -5442,11 +5463,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -5516,6 +5532,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report9</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -5981,6 +5999,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -5992,11 +6015,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -6066,6 +6084,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report10</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -6531,6 +6551,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -6542,11 +6567,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -6616,6 +6636,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report11</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -7081,6 +7103,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -7092,11 +7119,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -7166,6 +7188,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report12</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -7631,6 +7655,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -7642,11 +7671,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -7716,6 +7740,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report13</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -8181,6 +8207,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -8192,11 +8223,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -8266,6 +8292,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report14</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -8731,6 +8759,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -8742,11 +8775,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -8816,6 +8844,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report15</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -9281,6 +9311,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -9292,11 +9327,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -9366,6 +9396,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report16</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -9831,6 +9863,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -9842,11 +9879,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -9916,6 +9948,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report17</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -10381,6 +10415,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -10392,11 +10431,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -10466,6 +10500,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report18</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -10931,6 +10967,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -10942,11 +10983,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -11016,6 +11052,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report19</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -11457,6 +11495,11 @@ namespace Models
       </Plant15>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -11468,11 +11511,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -11536,6 +11574,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report20</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -11977,6 +12017,11 @@ namespace Models
       </Plant15>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -11988,11 +12033,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -12056,6 +12096,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report21</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -12497,6 +12539,11 @@ namespace Models
       </Plant15>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -12508,11 +12555,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -12576,6 +12618,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report22</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -13017,6 +13061,11 @@ namespace Models
       </Plant15>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -13028,11 +13077,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -13096,6 +13140,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report23</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -13561,6 +13607,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -13572,11 +13623,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -13646,6 +13692,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report24</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -14087,6 +14135,11 @@ namespace Models
       </Plant15>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -14098,11 +14151,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -14166,6 +14214,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report25</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -14631,6 +14681,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -14642,11 +14697,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -14716,6 +14766,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report26</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -15181,6 +15233,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -15192,11 +15249,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -15266,6 +15318,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report27</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -15731,6 +15785,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -15742,11 +15801,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -15816,6 +15870,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report28</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -16281,6 +16337,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -16292,11 +16353,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -16366,6 +16422,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report29</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -16831,6 +16889,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -16842,11 +16905,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -16916,6 +16974,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report30</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -17381,6 +17441,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -17392,11 +17457,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -17466,6 +17526,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report31</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -17931,6 +17993,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -17942,11 +18009,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -18016,6 +18078,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report32</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -18481,6 +18545,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -18492,11 +18561,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -18566,6 +18630,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report33</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -19031,6 +19097,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -19042,11 +19113,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -19116,6 +19182,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report34</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -19581,6 +19649,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -19592,11 +19665,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -19666,6 +19734,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report35</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -20131,6 +20201,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -20142,11 +20217,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -20216,6 +20286,8 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report36</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -20681,6 +20753,11 @@ namespace Models
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -20692,11 +20769,6 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -20712,6 +20784,8 @@ namespace Models
     </Zone>
     <Report>
       <Name>ReportMaster</Name>
+      <ExperimentFactorNames />
+      <ExperimentFactorValues />
       <VariableNames>
         <string>[Clock].Today</string>
         <string>[Field_Reporting].Script.RYieldArea_Array</string>
@@ -20737,12 +20811,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report1</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20752,12 +20832,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report10</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20767,12 +20853,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report19</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20782,12 +20874,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report28</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20819,12 +20917,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Field_Reporting.Script.RFertiliserArea_Array(1)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20834,12 +20938,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Field_Reporting.Script.RFertiliserArea_Array(2)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20849,12 +20959,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Field_Reporting.Script.RFertiliserArea_Array(3)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20864,12 +20980,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Field_Reporting.Script.RFertiliserArea_Array(4)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20901,12 +21023,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Field_Reporting.Script.RIrrigationArea_Array(1)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20916,12 +21044,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Field_Reporting.Script.RIrrigationArea_Array(2)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20931,12 +21065,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Field_Reporting.Script.RIrrigationArea_Array(3)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20946,12 +21086,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Field_Reporting.Script.RIrrigationArea_Array(4)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20983,12 +21129,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Field_Reporting.Script.RWaterArea_Array(1)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -20998,12 +21150,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Field_Reporting.Script.RWaterArea_Array(2)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21013,12 +21171,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Field_Reporting.Script.RWaterArea_Array(3)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21028,12 +21192,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Field_Reporting.Script.RWaterArea_Array(4)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21043,12 +21213,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Dash</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>CatchRain.Script.Today_Rain</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21080,12 +21256,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ApplyWater.Script.WaterExport(1)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21095,12 +21277,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ApplyWater.Script.WaterExport(2)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21110,12 +21298,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ApplyWater.Script.WaterExport(3)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21125,12 +21319,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ApplyWater.Script.WaterExport(4)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21162,12 +21362,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Field_Reporting.Script.RDrainArea_Array(1)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21177,12 +21383,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Field_Reporting.Script.RDrainArea_Array(2)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21192,12 +21404,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Field_Reporting.Script.RDrainArea_Array(3)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -21207,12 +21425,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>ReportMaster</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Field_Reporting.Script.RDrainArea_Array(4)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>

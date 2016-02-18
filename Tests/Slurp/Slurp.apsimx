@@ -5,21 +5,21 @@
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>ProfileSWC</Name>
-      <FileName>ShallowSoilTest\SoilWaterContent.xls</FileName>
+      <FileName>ShallowSoilTest\SoilWaterContent.xlsx</FileName>
       <SheetNames>
         <string>ProfileSWC</string>
       </SheetNames>
     </ExcelInput>
     <ExcelInput>
       <Name>LayerSWC</Name>
-      <FileName>ShallowSoilTest\SoilWaterContent.xls</FileName>
+      <FileName>ShallowSoilTest\SoilWaterContent.xlsx</FileName>
       <SheetNames>
         <string>LayerSWC</string>
       </SheetNames>
     </ExcelInput>
     <ExcelInput>
       <Name>Cover</Name>
-      <FileName>ShallowSoilTest\CoverDataObs.xls</FileName>
+      <FileName>ShallowSoilTest\CoverDataObs.xlsx</FileName>
       <SheetNames>
         <string>Cover</string>
       </SheetNames>
@@ -5160,7 +5160,7 @@ namespace Models
         <Specifications />
       </Factor>
       <Factor>
-        <Name>Cover</Name>
+        <Name>CoverType</Name>
         <Factor>
           <Name>Lucerne</Name>
           <Specifications>
