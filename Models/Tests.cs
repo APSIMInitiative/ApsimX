@@ -58,11 +58,18 @@ namespace Models
             string sigIdent = "X";
 
             if (POtable == null)
-                throw new ApsimXException(this, "Could not find PO table. Has the simulation been run?");
-            columnNames = POtable.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList(); //get list of column names;
+            {
+                object sim = PO.Parent;
+                while (sim as Simulations == null)
+                    sim = ((Model)sim).Parent;
+
+                throw new ApsimXException(this, "Could not find PO table in " + (sim != null ? ((Simulations)sim).FileName : "<unknown>") + ". Has the simulation been run?");
+            }
+            columnNames = POtable.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList(); //get list of column names
             columnNames = columnNames.Where(c => c.Contains("Observed")).ToList(); //filter names that are not pred/obs pairs
             for (int i = 0; i < columnNames.Count; i++)
                 columnNames[i] = columnNames[i].Replace("Observed.", "");
+            columnNames.Sort(); //ensure column names are always in the same order
             stats = new MathUtilities.RegrStats[columnNames.Count];
             List<double> x = new List<double>();
             List<double> y = new List<double>();
