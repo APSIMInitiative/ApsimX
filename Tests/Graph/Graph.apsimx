@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Memo>
     <Name>Memo</Name>
@@ -29,44 +29,34 @@ This example shows some of the graphing capabilities.GRAPH SCOPING EXAMPLE:There
       <Interval>NaN</Interval>
     </Axis>
     <Series>
-      <Title>Soil water</Title>
+      <Name>Soil water</Name>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-8388544</ColourArgb>
       <Marker>None</Marker>
       <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>Soil.SoilWater.SWmm(1)</FieldName>
-      </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
       <Cumulative>false</Cumulative>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>Soil.SoilWater.SWmm(1)</YFieldName>
     </Series>
     <Series>
-      <Title>Observed</Title>
+      <Name>Observed</Name>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-8388608</ColourArgb>
       <Marker>FilledCircle</Marker>
       <Line>Solid</Line>
-      <X>
-        <TableName>Observed</TableName>
-        <FieldName>Date</FieldName>
-      </X>
-      <Y>
-        <TableName>Observed</TableName>
-        <FieldName>Soil.SoilWater.SWmm(1)</FieldName>
-      </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
       <Cumulative>false</Cumulative>
+      <TableName>Observed</TableName>
+      <XFieldName>Date</XFieldName>
+      <YFieldName>Soil.SoilWater.SWmm(1)</YFieldName>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
@@ -2488,44 +2478,34 @@ This example shows some of the graphing capabilities.GRAPH SCOPING EXAMPLE:There
             <Interval>NaN</Interval>
           </Axis>
           <Series>
-            <Title>Soil water</Title>
-            <Type>Line</Type>
+            <Name>Soil water</Name>
+            <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8388544</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>SoilWater.sw_dep(1)</FieldName>
-            </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>SoilWater.sw_dep(1)</YFieldName>
           </Series>
           <Series>
-            <Title>Observed</Title>
+            <Name>Observed</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8388608</ColourArgb>
             <Marker>FilledCircle</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Observed</TableName>
-              <FieldName>Date</FieldName>
-            </X>
-            <Y>
-              <TableName>Observed</TableName>
-              <FieldName>sw(1)</FieldName>
-            </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <TableName>Observed</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>sw(1)</YFieldName>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
           <ShowRegressionLine>false</ShowRegressionLine>
@@ -4956,89 +4936,69 @@ This example shows some of the graphing capabilities.GRAPH SCOPING EXAMPLE:There
             <Interval>NaN</Interval>
           </Axis>
           <Series>
-            <Type>Line</Type>
+            <Type>Scatter</Type>
             <XAxis>Top</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-65536</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <FieldName>[Soil].AirDry</FieldName>
-            </X>
-            <Y>
-              <FieldName>[Soil].DepthMidPoints</FieldName>
-            </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <XFieldName>[Soil].AirDry</XFieldName>
+            <YFieldName>[Soil].DepthMidPoints</YFieldName>
           </Series>
           <Series>
-            <Type>Line</Type>
+            <Type>Scatter</Type>
             <XAxis>Top</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <FieldName>[Soil].DUL</FieldName>
-            </X>
-            <Y>
-              <FieldName>[Soil].DepthMidPoints</FieldName>
-            </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <XFieldName>[Soil].DUL</XFieldName>
+            <YFieldName>[Soil].DepthMidPoints</YFieldName>
           </Series>
           <Series>
-            <Type>Line</Type>
+            <Type>Scatter</Type>
             <XAxis>Top</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16711681</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <FieldName>[Soil].SW</FieldName>
-            </X>
-            <Y>
-              <FieldName>[Soil].DepthMidPoints</FieldName>
-            </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <XFieldName>[Soil].SW</XFieldName>
+            <YFieldName>[Soil].DepthMidPoints</YFieldName>
           </Series>
           <Series>
-            <Type>Line</Type>
+            <Type>Scatter</Type>
             <XAxis>Top</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16760704</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <FieldName>[Soil].SAT</FieldName>
-            </X>
-            <Y>
-              <FieldName>[Soil].DepthMidPoints</FieldName>
-            </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <XFieldName>[Soil].SAT</XFieldName>
+            <YFieldName>[Soil].DepthMidPoints</YFieldName>
           </Series>
           <Series>
-            <Type>Line</Type>
+            <Type>Scatter</Type>
             <XAxis>Top</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-32768</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <FieldName>[Soil].LL15</FieldName>
-            </X>
-            <Y>
-              <FieldName>[Soil]l.DepthMidPoints</FieldName>
-            </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <XFieldName>[Soil].LL15</XFieldName>
+            <YFieldName>[Soil]l.DepthMidPoints</YFieldName>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
           <ShowRegressionLine>false</ShowRegressionLine>
@@ -5062,44 +5022,34 @@ This example shows some of the graphing capabilities.GRAPH SCOPING EXAMPLE:There
             <Interval>NaN</Interval>
           </Axis>
           <Series>
-            <Title>Soil water</Title>
-            <Type>Line</Type>
+            <Name>Soil water</Name>
+            <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8388544</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>SoilWater.sw_dep(1)</FieldName>
-            </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>SoilWater.sw_dep(1)</YFieldName>
           </Series>
           <Series>
-            <Title>Observed</Title>
+            <Name>Observed</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8388608</ColourArgb>
             <Marker>FilledCircle</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Observed</TableName>
-              <FieldName>Date</FieldName>
-            </X>
-            <Y>
-              <TableName>Observed</TableName>
-              <FieldName>sw(1)</FieldName>
-            </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <TableName>Observed</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>sw(1)</YFieldName>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
           <ShowRegressionLine>false</ShowRegressionLine>
@@ -7529,44 +7479,34 @@ This example shows some of the graphing capabilities.GRAPH SCOPING EXAMPLE:There
             <Interval>NaN</Interval>
           </Axis>
           <Series>
-            <Title>Soil water</Title>
-            <Type>Line</Type>
+            <Name>Soil water</Name>
+            <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8388544</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>SoilWater.sw_dep(1)</FieldName>
-            </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>SoilWater.sw_dep(1)</YFieldName>
           </Series>
           <Series>
-            <Title>Observed</Title>
+            <Name>Observed</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8388608</ColourArgb>
             <Marker>FilledCircle</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Observed</TableName>
-              <FieldName>Date</FieldName>
-            </X>
-            <Y>
-              <TableName>Observed</TableName>
-              <FieldName>sw(1)</FieldName>
-            </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <TableName>Observed</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>sw(1)</YFieldName>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
           <ShowRegressionLine>false</ShowRegressionLine>
