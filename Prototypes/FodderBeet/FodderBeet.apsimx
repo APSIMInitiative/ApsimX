@@ -6100,7 +6100,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>LincolnP21Data</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FoddeBeet.Leaf.LAI</YFieldName>
+          <YFieldName>FodderBeet.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6128,9 +6128,6 @@ namespace Models
     </Folder>
     <Folder>
       <Name>TestStats</Name>
-      <Folder>
-        <Name>Folder</Name>
-      </Folder>
       <Folder>
         <Name>CanopyStats</Name>
         <Graph>
@@ -6187,7 +6184,7 @@ namespace Models
             <Name>Series1</Name>
             <Regression>
               <Name>Regression</Name>
-              <ForEachSeries>false</ForEachSeries>
+              <ForEachSeries>true</ForEachSeries>
             </Regression>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
