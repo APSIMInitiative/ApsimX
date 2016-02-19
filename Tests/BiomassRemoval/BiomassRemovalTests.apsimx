@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -929,31 +929,28 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <FractionToResidue>0</FractionToResidue>
         <NFixationOption>None</NFixationOption>
       </Nodule>
-
-        <CompositeBiomass>
-          <Name>Total</Name>
-          <Propertys>
-            <string>[Stover].Live</string>
-            <string>[Stover].Dead</string>
-            <string>[Product].Live</string>
-            <string>[Product].Dead</string>
-            <string>[Root].Live</string>
-            <string>[Root].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>AboveGround</Name>
-          <Propertys>
-            <string>[Stover].Live</string>
-            <string>[Stover].Dead</string>
-            <string>[Product].Live</string>
-            <string>[Product].Dead</string>
-          </Propertys>
-        </CompositeBiomass>
-
+      <CompositeBiomass>
+        <Name>Total</Name>
+        <Propertys>
+          <string>[Stover].Live</string>
+          <string>[Stover].Dead</string>
+          <string>[Product].Live</string>
+          <string>[Product].Dead</string>
+          <string>[Root].Live</string>
+          <string>[Root].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>AboveGround</Name>
+        <Propertys>
+          <string>[Stover].Live</string>
+          <string>[Stover].Dead</string>
+          <string>[Product].Live</string>
+          <string>[Product].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
       <Cultivar>
         <Name>Barley_Spring</Name>
-        <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 1000</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.2, 0.0</Command>
@@ -976,10 +973,12 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Product].MaximumNConc.Value = 0.012</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
+        <Alias>
+          <Name>Barley_Spring</Name>
+        </Alias>
       </Cultivar>
       <Cultivar>
         <Name>Wheat_Spring</Name>
-        <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 1000</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.2, 0.0</Command>
@@ -1002,10 +1001,12 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Product].MaximumNConc.Value = 0.013</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
+        <Alias>
+          <Name>Barley_Spring</Name>
+        </Alias>
       </Cultivar>
       <Cultivar>
         <Name>Wheat_Autumn</Name>
-        <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3</Command>
@@ -1028,10 +1029,12 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Product].MaximumNConc.Value = 0.013</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
+        <Alias>
+          <Name>Barley_Spring</Name>
+        </Alias>
       </Cultivar>
       <Cultivar>
         <Name>Potatoes_Long</Name>
-        <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.5, 0.1, 0.0</Command>
@@ -1054,10 +1057,12 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Product].MaximumNConc.Value = 0.018</Command>
         <Command>[Root].MinimumNConc.Value = 0.01</Command>
         <Command>[Root].MaximumNConc.Value = 0.01</Command>
+        <Alias>
+          <Name>Barley_Spring</Name>
+        </Alias>
       </Cultivar>
       <Cultivar>
         <Name>Green_Peas</Name>
-        <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 800</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.4, 0.2, 0.0</Command>
@@ -1081,10 +1086,12 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Root].MinimumNConc.Value = 0.015</Command>
         <Command>[Root].MaximumNConc.Value = 0.015</Command>
         <Command>[Nodule].NFixationOption = Majic</Command>
+        <Alias>
+          <Name>Barley_Spring</Name>
+        </Alias>
       </Cultivar>
       <Cultivar>
         <Name>Maize_Short</Name>
-        <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.6, 0.3</Command>
@@ -1107,10 +1114,12 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Product].MaximumNConc.Value = 0.014</Command>
         <Command>[Root].MinimumNConc.Value = 0.007</Command>
         <Command>[Root].MaximumNConc.Value = 0.007</Command>
+        <Alias>
+          <Name>Barley_Spring</Name>
+        </Alias>
       </Cultivar>
       <Cultivar>
         <Name>Spinich</Name>
-        <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.3, 0.1, 0.0</Command>
@@ -1133,6 +1142,9 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Command>[Product].MaximumNConc.Value = 0.03</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
+        <Alias>
+          <Name>Barley_Spring</Name>
+        </Alias>
       </Cultivar>
       <Cultivar>
         <Name>Kale</Name>
@@ -1145,7 +1157,6 @@ Kale has 0oCd duration canopy expanding, senescence and maturity targets with a 
 
 ]]></MemoText>
         </Memo>
-        <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 3000</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.7, 0.3, 0.1</Command>
@@ -1168,6 +1179,9 @@ Kale has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[Product].MaximumNConc.Value = 0.03</Command>
         <Command>[Root].MinimumNConc.Value = 0.008</Command>
         <Command>[Root].MaximumNConc.Value = 0.008</Command>
+        <Alias>
+          <Name>Barley_Spring</Name>
+        </Alias>
       </Cultivar>
       <Cultivar>
         <Name>Rape</Name>
@@ -1180,7 +1194,6 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
 
 ]]></MemoText>
         </Memo>
-        <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 2400</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.7, 0.3, 0.0</Command>
@@ -1203,6 +1216,9 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[Product].MaximumNConc.Value = 0.03</Command>
         <Command>[Root].MinimumNConc.Value = 0.008</Command>
         <Command>[Root].MaximumNConc.Value = 0.008</Command>
+        <Alias>
+          <Name>Barley_Spring</Name>
+        </Alias>
       </Cultivar>
       <Memo>
         <Name>References</Name>
@@ -1217,7 +1233,6 @@ Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 201
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
   </DataStore>
-  
   <Simulation>
     <Name>BiomassRemoveHarvestTest</Name>
     <Weather>

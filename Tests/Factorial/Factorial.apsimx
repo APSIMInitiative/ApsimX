@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Experiment>
     <Name>Experiment</Name>
@@ -2551,24 +2551,19 @@
             <Interval>NaN</Interval>
           </Axis>
           <Series>
-            <Title>Predicted</Title>
-            <Type>Line</Type>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>SoilWater.sw_dep(1)</FieldName>
-            </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>SoilWater.sw_dep(1)</YFieldName>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
           <ShowRegressionLine>false</ShowRegressionLine>
@@ -3302,6 +3297,5 @@
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
   </DataStore>
-  
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>
