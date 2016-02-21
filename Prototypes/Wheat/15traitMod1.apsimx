@@ -1808,7 +1808,7 @@ The model consists of:
       <Name>Simulation</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>mets\gatton-15-g3.met</FileName>
+        <FileName>gatton15g3.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
