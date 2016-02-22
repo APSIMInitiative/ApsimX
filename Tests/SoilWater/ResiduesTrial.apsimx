@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -25,89 +25,6 @@
     </TimeSeriesStats>
     <AutoExport>false</AutoExport>
   </DataStore>
-  <Tests>
-    <Name>TestsBinary</Name>
-    <Test>
-      <SimulationName>ResiduesCoverHarvesterWindrow</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>SurfaceOrganicMatter.Cover</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>ResiduesCoverHarvesterWindrow</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>SurfaceOrganicMatter.Wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>ResiduesCoverBareSoil</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Soil.SoilWater.SWmm(1)</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>ResiduesCoverMownStubble</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Soil.SoilWater.SWmm(1)</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>ResiduesCoverHarvesterWindrow</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Soil.SoilWater.SWmm(1)</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>ResiduesCoverStandingStubble</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Soil.SoilWater.SWmm(1)</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-  </Tests>
-  <Tests>
-    <Name>TestsStats</Name>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>R^2</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>residual</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>RMSD</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>n</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>All</SimulationName>
-      <TableName>TimeSeriesStats</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>%</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-  </Tests>
   <Experiment>
     <Name>Residues</Name>
     <Factors>
@@ -877,44 +794,34 @@
             <Interval>NaN</Interval>
           </Axis>
           <Series>
-            <Title>SWC20cm</Title>
-            <Type>Line</Type>
+            <Name>SWC20cm</Name>
+            <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>SoilWater.sw_dep(1)</FieldName>
-            </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>SoilWater.sw_dep(1)</YFieldName>
           </Series>
           <Series>
-            <Title>Obs SWC 20cm</Title>
+            <Name>Obs SWC 20cm</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-65536</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Input</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Input</TableName>
-              <FieldName>sw_dep(1)</FieldName>
-            </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
+            <TableName>Input</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>sw_dep(1)</YFieldName>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
           <ShowRegressionLine>false</ShowRegressionLine>
@@ -1192,43 +1099,33 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Residue</Title>
-        <Type>Line</Type>
+        <Name>Residue</Name>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>ObservedResidues</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ObservedResidues</TableName>
-          <FieldName>surfaceom_wt</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>ObservedResidues</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>surfaceom_wt</YFieldName>
       </Series>
       <Series>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>ObservedResidues</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ObservedResidues</TableName>
-          <FieldName>surfaceom_wt</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>ObservedResidues</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>surfaceom_wt</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1252,43 +1149,33 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Residue</Title>
-        <Type>Line</Type>
+        <Name>Residue</Name>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>SurfaceOrganicMatter.Cover</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SurfaceOrganicMatter.Cover</YFieldName>
       </Series>
       <Series>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>ObservedResidues</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ObservedResidues</TableName>
-          <FieldName>Cover</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>ObservedResidues</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Cover</YFieldName>
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1312,44 +1199,34 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Predicted</Title>
-        <Type>Line</Type>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Soil.SoilWater.SWmm(1)</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Soil.SoilWater.SWmm(1)</YFieldName>
       </Series>
       <Series>
-        <Title>Observed</Title>
+        <Name>Observed</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
         <Marker>Circle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>ObservedSoilWater</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ObservedSoilWater</TableName>
-          <FieldName>Soil.SoilWater.SWmm(1)</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>ObservedSoilWater</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Soil.SoilWater.SWmm(1)</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1373,44 +1250,34 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Predicted</Title>
-        <Type>Line</Type>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Soil.SoilWater.SWmm(2)</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Soil.SoilWater.SWmm(2)</YFieldName>
       </Series>
       <Series>
-        <Title>Observed</Title>
+        <Name>Observed</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
         <Marker>Circle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>ObservedSoilWater</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ObservedSoilWater</TableName>
-          <FieldName>Soil.SoilWater.SWmm(2)</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>ObservedSoilWater</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Soil.SoilWater.SWmm(2)</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1434,44 +1301,34 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Predicted</Title>
-        <Type>Line</Type>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Soil.SoilWater.SWmm(3)</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Soil.SoilWater.SWmm(3)</YFieldName>
       </Series>
       <Series>
-        <Title>Observed</Title>
+        <Name>Observed</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
         <Marker>Circle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>ObservedSoilWater</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ObservedSoilWater</TableName>
-          <FieldName>Soil.SoilWater.SWmm(3)</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>ObservedSoilWater</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Soil.SoilWater.SWmm(3)</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1495,44 +1352,34 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Predicted</Title>
-        <Type>Line</Type>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>ExtraVariables.Script.SWDep60</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.SWDep60</YFieldName>
       </Series>
       <Series>
-        <Title>Observed</Title>
+        <Name>Observed</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
         <Marker>Circle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>ObservedSoilWater</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ObservedSoilWater</TableName>
-          <FieldName>ExtraVariables.Script.SWDep60</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>ObservedSoilWater</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.SWDep60</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>

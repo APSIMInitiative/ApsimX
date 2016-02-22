@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -971,7 +971,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>TotalPlantWt</Title>
+          <Name>TotalPlantWt</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -989,9 +989,12 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.TotalPlantWt</YFieldName>
         </Series>
         <Series>
-          <Title>AboveGroundWt</Title>
+          <Name>AboveGroundWt</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1009,9 +1012,12 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.AboveGroundWt</YFieldName>
         </Series>
         <Series>
-          <Title>StandingWt</Title>
+          <Name>StandingWt</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1029,9 +1035,12 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.StandingPlantWt</YFieldName>
         </Series>
         <Series>
-          <Title>HarvestableWt</Title>
+          <Name>HarvestableWt</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1049,6 +1058,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.HarvestableWt</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -1074,7 +1086,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>TotalPlantWt</Title>
+          <Name>TotalPlantWt</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1092,9 +1104,12 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.TotalPlantWt</YFieldName>
         </Series>
         <Series>
-          <Title>RyegrassTotal</Title>
+          <Name>RyegrassTotal</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1112,9 +1127,12 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.SpeciesTotalWt(1)</YFieldName>
         </Series>
         <Series>
-          <Title>RyegrassAbvGround</Title>
+          <Name>RyegrassAbvGround</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1132,6 +1150,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.SpeciesAboveGroundWt(1)</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -1157,7 +1178,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>DMcut</Title>
+          <Name>DMcut</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1175,6 +1196,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.HarvestWt</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -1200,7 +1224,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Potential</Title>
+          <Name>Potential</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1218,9 +1242,12 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.PlantPotentialGrowthWt</YFieldName>
         </Series>
         <Series>
-          <Title>PotentialW</Title>
+          <Name>PotentialW</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1238,9 +1265,12 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.PlantGrowthNoNLimit</YFieldName>
         </Series>
         <Series>
-          <Title>Actual</Title>
+          <Name>Actual</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1258,9 +1288,12 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.PlantGrowthWt</YFieldName>
         </Series>
         <Series>
-          <Title>Herbage</Title>
+          <Name>Herbage</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1278,6 +1311,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.HerbageGrowthWt</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -1303,8 +1339,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Total</Title>
-          <Type>Line</Type>
+          <Name>Total</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -1321,10 +1357,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.LAI_total</YFieldName>
         </Series>
         <Series>
-          <Title>Green</Title>
-          <Type>Line</Type>
+          <Name>Green</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -1341,10 +1380,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.LAI_green</YFieldName>
         </Series>
         <Series>
-          <Title>Dead</Title>
-          <Type>Line</Type>
+          <Name>Dead</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744384</ColourArgb>
@@ -1361,6 +1403,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.LAI_dead</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -1386,8 +1431,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Demand</Title>
-          <Type>Line</Type>
+          <Name>Demand</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -1404,10 +1449,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.WaterDemand</YFieldName>
         </Series>
         <Series>
-          <Title>Uptake</Title>
-          <Type>Line</Type>
+          <Name>Uptake</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -1424,6 +1472,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.WaterUptake</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -1449,8 +1500,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Demand</Title>
-          <Type>Line</Type>
+          <Name>Demand</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -1467,10 +1518,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.NitrogenDemand</YFieldName>
         </Series>
         <Series>
-          <Title>Uptake</Title>
-          <Type>Line</Type>
+          <Name>Uptake</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -1487,10 +1541,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.NitrogenUptake</YFieldName>
         </Series>
         <Series>
-          <Title>Fixed</Title>
-          <Type>Line</Type>
+          <Name>Fixed</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
@@ -1507,6 +1564,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.PlantFixedN</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -1532,8 +1592,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>SoilNO3</Title>
-          <Type>Line</Type>
+          <Name>SoilNO3</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -1550,10 +1610,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalNO3</YFieldName>
         </Series>
         <Series>
-          <Title>SoilNH4</Title>
-          <Type>Line</Type>
+          <Name>SoilNH4</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -1570,6 +1633,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalNH4</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -1601,8 +1667,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>HumusN</Title>
-          <Type>Line</Type>
+          <Name>HumusN</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -1619,10 +1685,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalHumusN</YFieldName>
         </Series>
         <Series>
-          <Title>BiomN</Title>
-          <Type>Line</Type>
+          <Name>BiomN</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -1639,10 +1708,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalBiomN</YFieldName>
         </Series>
         <Series>
-          <Title>FomN</Title>
-          <Type>Line</Type>
+          <Name>FomN</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
@@ -1659,10 +1731,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalFomN</YFieldName>
         </Series>
         <Series>
-          <Title>Series4</Title>
-          <Type>Line</Type>
+          <Name>Series4</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -1679,6 +1754,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalFomN</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -2715,8 +2793,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>TotalPlantWt</Title>
-          <Type>Line</Type>
+          <Name>TotalPlantWt</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -2733,10 +2811,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.TotalPlantWt</YFieldName>
         </Series>
         <Series>
-          <Title>AboveGroundWt</Title>
-          <Type>Line</Type>
+          <Name>AboveGroundWt</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -2753,10 +2834,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.AboveGroundWt</YFieldName>
         </Series>
         <Series>
-          <Title>StandingWt</Title>
-          <Type>Line</Type>
+          <Name>StandingWt</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
@@ -2773,10 +2857,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.StandingPlantWt</YFieldName>
         </Series>
         <Series>
-          <Title>HarvestableWt</Title>
-          <Type>Line</Type>
+          <Name>HarvestableWt</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -2793,6 +2880,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.HarvestableWt</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -2818,8 +2908,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>TotalPlantWt</Title>
-          <Type>Line</Type>
+          <Name>TotalPlantWt</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -2836,10 +2926,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.TotalPlantWt</YFieldName>
         </Series>
         <Series>
-          <Title>RyegrassTotal</Title>
-          <Type>Line</Type>
+          <Name>RyegrassTotal</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -2856,10 +2949,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.SpeciesTotalWt(1)</YFieldName>
         </Series>
         <Series>
-          <Title>RyegrassAbvGround</Title>
-          <Type>Line</Type>
+          <Name>RyegrassAbvGround</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
@@ -2876,6 +2972,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.SpeciesAboveGroundWt(1)</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -2901,8 +3000,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>DMcut</Title>
-          <Type>Line</Type>
+          <Name>DMcut</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -2919,6 +3018,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.HarvestWt</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -2944,8 +3046,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Potential</Title>
-          <Type>Line</Type>
+          <Name>Potential</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -2962,10 +3064,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.PlantPotentialGrowthWt</YFieldName>
         </Series>
         <Series>
-          <Title>PotentialW</Title>
-          <Type>Line</Type>
+          <Name>PotentialW</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -2982,10 +3087,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.PlantGrowthNoNLimit</YFieldName>
         </Series>
         <Series>
-          <Title>Actual</Title>
-          <Type>Line</Type>
+          <Name>Actual</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
@@ -3002,10 +3110,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.PlantGrowthWt</YFieldName>
         </Series>
         <Series>
-          <Title>Herbage</Title>
-          <Type>Line</Type>
+          <Name>Herbage</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -3022,6 +3133,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.HerbageGrowthWt</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -3047,8 +3161,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Total</Title>
-          <Type>Line</Type>
+          <Name>Total</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -3065,10 +3179,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.LAI_total</YFieldName>
         </Series>
         <Series>
-          <Title>Green</Title>
-          <Type>Line</Type>
+          <Name>Green</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -3085,10 +3202,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.LAI_green</YFieldName>
         </Series>
         <Series>
-          <Title>Dead</Title>
-          <Type>Line</Type>
+          <Name>Dead</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744384</ColourArgb>
@@ -3105,6 +3225,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.LAI_dead</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -3130,8 +3253,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Demand</Title>
-          <Type>Line</Type>
+          <Name>Demand</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -3148,10 +3271,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.WaterDemand</YFieldName>
         </Series>
         <Series>
-          <Title>Uptake</Title>
-          <Type>Line</Type>
+          <Name>Uptake</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -3168,6 +3294,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.WaterUptake</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -3193,8 +3322,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Demand</Title>
-          <Type>Line</Type>
+          <Name>Demand</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -3211,10 +3340,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.NitrogenDemand</YFieldName>
         </Series>
         <Series>
-          <Title>Uptake</Title>
-          <Type>Line</Type>
+          <Name>Uptake</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -3231,10 +3363,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.NitrogenUptake</YFieldName>
         </Series>
         <Series>
-          <Title>Fixed</Title>
-          <Type>Line</Type>
+          <Name>Fixed</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
@@ -3251,6 +3386,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.PlantFixedN</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -3276,8 +3414,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>SoilNO3</Title>
-          <Type>Line</Type>
+          <Name>SoilNO3</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -3294,10 +3432,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalNO3</YFieldName>
         </Series>
         <Series>
-          <Title>SoilNH4</Title>
-          <Type>Line</Type>
+          <Name>SoilNH4</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -3314,6 +3455,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalNH4</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -3345,8 +3489,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>HumusN</Title>
-          <Type>Line</Type>
+          <Name>HumusN</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -3363,10 +3507,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalHumusN</YFieldName>
         </Series>
         <Series>
-          <Title>BiomN</Title>
-          <Type>Line</Type>
+          <Name>BiomN</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -3383,10 +3530,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalBiomN</YFieldName>
         </Series>
         <Series>
-          <Title>FomN</Title>
-          <Type>Line</Type>
+          <Name>FomN</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
@@ -3403,10 +3553,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalFomN</YFieldName>
         </Series>
         <Series>
-          <Title>SurfOMN</Title>
-          <Type>Line</Type>
+          <Name>SurfOMN</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -3423,6 +3576,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SurfaceOrganicMatter.N</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -4467,8 +4623,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>TotalPlantWt</Title>
-          <Type>Line</Type>
+          <Name>TotalPlantWt</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -4485,10 +4641,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.TotalPlantWt</YFieldName>
         </Series>
         <Series>
-          <Title>AboveGroundWt</Title>
-          <Type>Line</Type>
+          <Name>AboveGroundWt</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -4505,10 +4664,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.AboveGroundWt</YFieldName>
         </Series>
         <Series>
-          <Title>StandingWt</Title>
-          <Type>Line</Type>
+          <Name>StandingWt</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
@@ -4525,10 +4687,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.StandingPlantWt</YFieldName>
         </Series>
         <Series>
-          <Title>HarvestableWt</Title>
-          <Type>Line</Type>
+          <Name>HarvestableWt</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -4545,6 +4710,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.HarvestableWt</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -4570,8 +4738,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>TotalPlantWt</Title>
-          <Type>Line</Type>
+          <Name>TotalPlantWt</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -4588,10 +4756,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.TotalPlantWt</YFieldName>
         </Series>
         <Series>
-          <Title>RyegrassTotal</Title>
-          <Type>Line</Type>
+          <Name>RyegrassTotal</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -4608,10 +4779,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.SpeciesTotalWt(1)</YFieldName>
         </Series>
         <Series>
-          <Title>RyegrassAbvGround</Title>
-          <Type>Line</Type>
+          <Name>RyegrassAbvGround</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
@@ -4628,10 +4802,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.SpeciesAboveGroundWt(1)</YFieldName>
         </Series>
         <Series>
-          <Title>CloverTotal</Title>
-          <Type>Line</Type>
+          <Name>CloverTotal</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32640</ColourArgb>
@@ -4648,10 +4825,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.SpeciesTotalWt(2)</YFieldName>
         </Series>
         <Series>
-          <Title>CloverAbvGround</Title>
-          <Type>Line</Type>
+          <Name>CloverAbvGround</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16711936</ColourArgb>
@@ -4668,6 +4848,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.SpeciesAboveGroundWt(2)</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -4693,8 +4876,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>DMcut</Title>
-          <Type>Line</Type>
+          <Name>DMcut</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -4711,6 +4894,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.HarvestWt</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -4736,8 +4922,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Potential</Title>
-          <Type>Line</Type>
+          <Name>Potential</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -4754,10 +4940,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.PlantPotentialGrowthWt</YFieldName>
         </Series>
         <Series>
-          <Title>PotentialW</Title>
-          <Type>Line</Type>
+          <Name>PotentialW</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -4774,10 +4963,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.PlantGrowthNoNLimit</YFieldName>
         </Series>
         <Series>
-          <Title>Actual</Title>
-          <Type>Line</Type>
+          <Name>Actual</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
@@ -4794,10 +4986,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.PlantGrowthWt</YFieldName>
         </Series>
         <Series>
-          <Title>Herbage</Title>
-          <Type>Line</Type>
+          <Name>Herbage</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -4814,6 +5009,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.HerbageGrowthWt</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -4839,8 +5037,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Total</Title>
-          <Type>Line</Type>
+          <Name>Total</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -4857,10 +5055,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.LAI_total</YFieldName>
         </Series>
         <Series>
-          <Title>Green</Title>
-          <Type>Line</Type>
+          <Name>Green</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -4877,10 +5078,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.LAI_green</YFieldName>
         </Series>
         <Series>
-          <Title>Dead</Title>
-          <Type>Line</Type>
+          <Name>Dead</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744384</ColourArgb>
@@ -4897,6 +5101,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.LAI_dead</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -4922,8 +5129,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Demand</Title>
-          <Type>Line</Type>
+          <Name>Demand</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -4940,10 +5147,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.WaterDemand</YFieldName>
         </Series>
         <Series>
-          <Title>Uptake</Title>
-          <Type>Line</Type>
+          <Name>Uptake</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -4960,6 +5170,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.WaterUptake</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -4985,8 +5198,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Demand</Title>
-          <Type>Line</Type>
+          <Name>Demand</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -5003,10 +5216,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.NitrogenDemand</YFieldName>
         </Series>
         <Series>
-          <Title>Uptake</Title>
-          <Type>Line</Type>
+          <Name>Uptake</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -5023,10 +5239,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.NitrogenUptake</YFieldName>
         </Series>
         <Series>
-          <Title>Fixed</Title>
-          <Type>Line</Type>
+          <Name>Fixed</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
@@ -5043,6 +5262,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AgPasture.PlantFixedN</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -5068,8 +5290,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>SoilNO3</Title>
-          <Type>Line</Type>
+          <Name>SoilNO3</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -5086,10 +5308,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalNO3</YFieldName>
         </Series>
         <Series>
-          <Title>SoilNH4</Title>
-          <Type>Line</Type>
+          <Name>SoilNH4</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -5106,6 +5331,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalNH4</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -5137,8 +5365,8 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>HumusN</Title>
-          <Type>Line</Type>
+          <Name>HumusN</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -5155,10 +5383,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalHumusN</YFieldName>
         </Series>
         <Series>
-          <Title>BiomN</Title>
-          <Type>Line</Type>
+          <Name>BiomN</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -5175,10 +5406,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalBiomN</YFieldName>
         </Series>
         <Series>
-          <Title>FomN</Title>
-          <Type>Line</Type>
+          <Name>FomN</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
@@ -5195,10 +5429,13 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalFomN</YFieldName>
         </Series>
         <Series>
-          <Title>SurfOMN</Title>
-          <Type>Line</Type>
+          <Name>SurfOMN</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -5215,6 +5452,9 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SurfaceOrganicMatter.N</YFieldName>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>

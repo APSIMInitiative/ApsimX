@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Test</Name>
@@ -48,50 +48,57 @@ namespace Models
 	public class Script : Model, IWeather
 	{
 		[Link] Clock Clock;
-		[Link] IWeather weather; // parent weather.
+		[Link] IWeather weather;
+		// parent weather.
 		
 		/// <summary>Gets the start date of the weather file</summary>
-        public DateTime StartDate { get { return weather.StartDate; } }
+		public DateTime StartDate { get { return weather.StartDate; } }
 
-        /// <summary>Gets the end date of the weather file</summary>
-        public DateTime EndDate { get { return weather.EndDate; } }
+		/// <summary>Gets the end date of the weather file</summary>
+		public DateTime EndDate { get { return weather.EndDate; } }
 
-        /// <summary>Gets or sets the maximum temperature (oc)</summary>
-        public double MaxT { get { return 1.0; } }
+		/// <summary>Gets or sets the maximum temperature (oc)</summary>
+		public double MaxT { get { return 1.0; } }
 
-        /// <summary>Gets or sets the minimum temperature (oc)</summary>
-        public double MinT { get { return 2.0; } }
+		/// <summary>Gets or sets the minimum temperature (oc)</summary>
+		public double MinT { get { return 2.0; } }
 
-        /// <summary>Gets or sets the rainfall (mm)</summary>
-        public double Rain { get { return weather.Rain; } }
+		/// <summary>Gets or sets the rainfall (mm)</summary>
+		public double Rain { get { return weather.Rain; } }
 
-        /// <summary>Gets or sets the solar radiation. MJ/m2/day</summary>
-        public double Radn { get { return weather.Radn; } }
+		/// <summary>Gets or sets the solar radiation. MJ/m2/day</summary>
+		public double Radn { get { return weather.Radn; } }
 
-        /// <summary>Gets or sets the vapor pressure</summary>
-        public double VP { get { return 5.0; } }
+		/// <summary>Gets or sets the vapor pressure</summary>
+		public double VP { get { return 5.0; } }
 
-        /// <summary>
-        /// Gets or sets the wind value found in weather file or zero if not specified.
-        /// </summary>
-        public double Wind { get { return 6.0; } }
+		/// <summary>
+		/// Gets or sets the wind value found in weather file or zero if not specified.
+		/// </summary>
+		public double Wind { get { return 6.0; } }
 
-        /// <summary>
-        /// Gets or sets the CO2 level. If not specified in the weather file the default is 350.
-        /// </summary>
-        public double CO2 { get { return 7.0; } }
+		/// <summary>
+		/// Gets or sets the CO2 level. If not specified in the weather file the default is 350.
+		/// </summary>
+		public double CO2 { get { return 7.0; } }
 
-        /// <summary>Gets the latitude</summary>
-        public double Latitude { get { return 8.0; } }
+		/// <summary>Gets the latitude</summary>
+		public double Latitude { get { return 8.0; } }
 
-        /// <summary>Gets the average temperature</summary>
-        public double Tav { get { return 9.0; } }
+		/// <summary>Gets the average temperature</summary>
+		public double Tav { get { return 9.0; } }
 
-        /// <summary>Gets the temperature amplitude.</summary>
-        public double Amp { get { return 10.0; } }
+		/// <summary>Gets the temperature amplitude.</summary>
+		public double Amp { get { return 10.0; } }
 
-        /// <summary>Gets the duration of the day in hours.</summary>
-        public double DayLength { get { return 11.0; } }
+		/// <summary>Gets the duration of the day in hours.</summary>
+		public double DayLength { get { return 11.0; } }
+        
+		public double CalculateDayLength(double Twighlight)
+		{
+			return DayLength;
+		}
+        
 		
 	}
 }
@@ -109,12 +116,13 @@ namespace Models
 	[Serializable]
 	public class Script : Model
 	{
-		[Link] IWeather localWeather; // parent in this field.
+		[Link] IWeather localWeather;
+		// parent in this field.
 		
 		public DateTime LocalStartDate { get { return localWeather.StartDate; } }
-		public double LocalMaxT { get {	return localWeather.MaxT; } }
-		public double LocalMinT { get {	return localWeather.MinT; } }
-		public double LocalRain { get {	return localWeather.Rain; } }
+		public double LocalMaxT { get { return localWeather.MaxT; } }
+		public double LocalMinT { get { return localWeather.MinT; } }
+		public double LocalRain { get { return localWeather.Rain; } }
 	}
 	
 
@@ -131,29 +139,5 @@ namespace Models
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
   </DataStore>
-  <Tests>
-    <Name>Tests</Name>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>EqualTo</Type>
-      <ColumnNames>GetWeather.Script.LocalMaxT</ColumnNames>
-      <Parameters>1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>EqualTo</Type>
-      <ColumnNames>GetWeather.Script.LocalMinT</ColumnNames>
-      <Parameters>2</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>Test</SimulationName>
-      <TableName>Report</TableName>
-      <Type>EqualTo</Type>
-      <ColumnNames>GetWeather.Script.LocalRain</ColumnNames>
-      <Parameters>100</Parameters>
-    </Test>
-  </Tests>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

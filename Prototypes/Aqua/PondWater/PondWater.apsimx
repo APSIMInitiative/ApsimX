@@ -1,0 +1,733 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+  <Name>Simulations</Name>
+  <Simulation>
+    <Name>Rain_Evap_Test</Name>
+    <Weather>
+      <Name>Weather</Name>
+      <FileName>Ingham.met</FileName>
+    </Weather>
+    <Clock>
+      <Name>clock</Name>
+      <StartDate>1990-01-01T00:00:00</StartDate>
+      <EndDate>2000-12-31T00:00:00</EndDate>
+    </Clock>
+    <Summary>
+      <Name>summaryfile</Name>
+    </Summary>
+    <Zone>
+      <Name>Pond</Name>
+      <PondWater>
+        <Name>PondWater</Name>
+        <SurfaceArea>10000</SurfaceArea>
+        <MaxPondDepth>1</MaxPondDepth>
+        <Kpan>1</Kpan>
+      </PondWater>
+      <Report>
+        <Name>Report</Name>
+        <VariableNames>
+          <string>[Clock].Today</string>
+          <string>[Weather].Rain as Rain</string>
+          <string>[Weather].PanEvap as PanEvap</string>
+          <string>[PondWater].PondEvap as PondEvap</string>
+          <string>[PondWater].PondDepth as PondDepth</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].DoReport</string>
+        </EventNames>
+      </Report>
+      <Area>1</Area>
+      <Slope>0</Slope>
+    </Zone>
+    <Graph>
+      <Name>Graph</Name>
+      <Series>
+        <Name>Series 0</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Rain</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series2</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>PondEvap</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series3</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-65281</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>PondDepth</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series4</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>PanEvap</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Caption />
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Rain</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
+  </Simulation>
+  <Simulation>
+    <Name>Salinity_RainDilute_EvapConcentrate_Test</Name>
+    <Weather>
+      <Name>Weather</Name>
+      <FileName>Ingham.met</FileName>
+    </Weather>
+    <Clock>
+      <Name>clock</Name>
+      <StartDate>1990-01-01T00:00:00</StartDate>
+      <EndDate>2000-12-31T00:00:00</EndDate>
+    </Clock>
+    <Summary>
+      <Name>summaryfile</Name>
+    </Summary>
+    <Zone>
+      <Name>Pond</Name>
+      <PondWater>
+        <Name>PondWater</Name>
+        <SurfaceArea>10000</SurfaceArea>
+        <MaxPondDepth>1</MaxPondDepth>
+        <Kpan>1</Kpan>
+      </PondWater>
+      <Folder>
+        <Name>Manager folder</Name>
+        <Manager>
+          <Name>Add water on fixed date</Name>
+          <Script>
+            <added_date>01-jan</added_date>
+            <volume>10000</volume>
+            <temperature>15</temperature>
+            <salinity>5</salinity>
+            <ph>2</ph>
+            <n>3</n>
+            <p>4</p>
+            <tss>10</tss>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+using Models.Aqua;
+
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+
+		[Link] Clock Clock;
+		[Link] Summary Summary;
+		[Link] PondWater PondWater;
+		
+		
+	    [Description("Add Water on this date (dd-mmm)")]
+		public string added_date {get; set;}
+		
+		[Description("Volume of Water Added (m^3)")]
+		public double volume {get; set;}
+		
+		[Description("Temperature of Water Added (oC)")]
+		public double temperature {get; set;}
+		
+		[Description("Salinity of Water Added (kg/m^3)")]
+		public double salinity {get; set;}
+		
+		[Description("PH of Water Added")]
+		public double ph {get; set;}
+		
+		[Description("Nitrogen of Water Added (kg/m^3)")]
+		public double n {get; set;}
+	
+	    [Description("Phosphorus of Water Added (kg/m^3)")]
+		public double p {get; set;}
+		
+		[Description("Total Suspended Solids of Water Added (kg/m^3)")]
+		public double tss {get; set;}
+
+
+        
+       [EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+		}
+        
+        
+        
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{
+
+        if (DateUtilities.DatesEqual(added_date, Clock.Today))
+			{
+			WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);
+			PondWater.Fill(Volume: volume, WaterProperties: addedProps);
+			}
+
+		}
+      
+	}
+}
+]]></Code>
+        </Manager>
+      </Folder>
+      <Report>
+        <Name>Report</Name>
+        <VariableNames>
+          <string>[Clock].Today</string>
+          <string>[Weather].Rain as Rain</string>
+          <string>[PondWater].PondEvap as PondEvap</string>
+          <string>[PondWater].PondDepth as PondDepth</string>
+          <string>[PondWater].PondTemp as PondTemp</string>
+          <string>[PondWater].Salinity as Salinity</string>
+          <string>[PondWater].PH as PH</string>
+          <string>[PondWater].N as N</string>
+          <string>[PondWater].P as P</string>
+          <string>[PondWater].TSS as TSS</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].DoReport</string>
+        </EventNames>
+      </Report>
+      <Graph>
+        <Name>Graph</Name>
+        <Series>
+          <Name>Series 0</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>PondDepth</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Salinity</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>PondDepth</Title>
+          <Inverted>false</Inverted>
+          <Minimum>0</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Area>1</Area>
+      <Slope>0</Slope>
+    </Zone>
+    <Area>0</Area>
+    <Slope>0</Slope>
+  </Simulation>
+  <Simulation>
+    <Name>MixingTest</Name>
+    <Weather>
+      <Name>Weather</Name>
+      <FileName>Ingham.met</FileName>
+    </Weather>
+    <Clock>
+      <Name>clock</Name>
+      <StartDate>1990-01-01T00:00:00</StartDate>
+      <EndDate>2000-12-31T00:00:00</EndDate>
+    </Clock>
+    <Summary>
+      <Name>summaryfile</Name>
+    </Summary>
+    <Zone>
+      <Name>PrawnPond</Name>
+      <PondWater>
+        <Name>PondWater</Name>
+        <SurfaceArea>10000</SurfaceArea>
+        <MaxPondDepth>1</MaxPondDepth>
+        <Kpan>1</Kpan>
+      </PondWater>
+      <Folder>
+        <Name>Manager folder</Name>
+        <Manager>
+          <Name>Add water to PrawnPond on fixed date</Name>
+          <Script>
+            <added_date>01-jan</added_date>
+            <volume>10000</volume>
+            <temperature>15</temperature>
+            <salinity>5</salinity>
+            <ph>2</ph>
+            <n>3</n>
+            <p>4</p>
+            <tss>10</tss>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+using Models.Aqua;
+
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+
+		[Link] Clock Clock;
+		[Link] Summary Summary;
+		[Link] PondWater PondWater;
+		
+		
+	    [Description("Add Water on this date (dd-mmm)")]
+		public string added_date {get; set;}
+		
+		[Description("Volume of Water Added (m^3)")]
+		public double volume {get; set;}
+		
+		[Description("Temperature of Water Added (oC)")]
+		public double temperature {get; set;}
+		
+		[Description("Salinity of Water Added (kg/m^3)")]
+		public double salinity {get; set;}
+		
+		[Description("PH of Water Added")]
+		public double ph {get; set;}
+		
+		[Description("Nitrogen of Water Added (kg/m^3)")]
+		public double n {get; set;}
+	
+	    [Description("Phosphorus of Water Added (kg/m^3)")]
+		public double p {get; set;}
+		
+		[Description("Total Suspended Solids of Water Added (kg/m^3)")]
+		public double tss {get; set;}
+
+
+        
+       [EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+		}
+        
+        
+        
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{
+
+        if (DateUtilities.DatesEqual(added_date, Clock.Today))
+			{
+			WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);
+			PondWater.Fill(Volume: volume, WaterProperties: addedProps);
+			}
+
+		}
+      
+	}
+}
+]]></Code>
+        </Manager>
+      </Folder>
+      <Report>
+        <Name>Report</Name>
+        <VariableNames>
+          <string>[Clock].Today</string>
+          <string>[Weather].Rain as Rain</string>
+          <string>PondWater.PondEvap as P_PondEvap</string>
+          <string>PondWater.PondDepth as P_PondDepth</string>
+          <string>PondWater.PondTemp as P_PondTemp</string>
+          <string>PondWater.Salinity as P_Salinity</string>
+          <string>PondWater.PH as P_PH</string>
+          <string>PondWater.N as P_N</string>
+          <string>PondWater.P as P_P</string>
+          <string>PondWater.TSS as P_TSS</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].DoReport</string>
+        </EventNames>
+      </Report>
+      <Area>1</Area>
+      <Slope>0</Slope>
+    </Zone>
+    <Zone>
+      <Name>SettlingPond</Name>
+      <PondWater>
+        <Name>PondWater</Name>
+        <SurfaceArea>10000</SurfaceArea>
+        <MaxPondDepth>1</MaxPondDepth>
+        <Kpan>1</Kpan>
+      </PondWater>
+      <Folder>
+        <Name>Manager folder</Name>
+        <Manager>
+          <Name>Add water on SettlingPond on fixed date</Name>
+          <Script>
+            <added_date>01-jan</added_date>
+            <volume>5000</volume>
+            <temperature>10</temperature>
+            <salinity>0</salinity>
+            <ph>0</ph>
+            <n>0</n>
+            <p>0</p>
+            <tss>0</tss>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+using Models.Aqua;
+
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+
+		[Link] Clock Clock;
+		[Link] Summary Summary;
+		[Link] PondWater PondWater;
+		
+		
+	    [Description("Add Water on this date (dd-mmm)")]
+		public string added_date {get; set;}
+		
+		[Description("Volume of Water Added (m^3)")]
+		public double volume {get; set;}
+		
+		[Description("Temperature of Water Added (oC)")]
+		public double temperature {get; set;}
+		
+		[Description("Salinity of Water Added (kg/m^3)")]
+		public double salinity {get; set;}
+		
+		[Description("PH of Water Added")]
+		public double ph {get; set;}
+		
+		[Description("Nitrogen of Water Added (kg/m^3)")]
+		public double n {get; set;}
+	
+	    [Description("Phosphorus of Water Added (kg/m^3)")]
+		public double p {get; set;}
+		
+		[Description("Total Suspended Solids of Water Added (kg/m^3)")]
+		public double tss {get; set;}
+
+
+        
+       [EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+		}
+        
+        
+        
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{
+
+        if (DateUtilities.DatesEqual(added_date, Clock.Today))
+			{
+			WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);
+			PondWater.Fill(Volume: volume, WaterProperties: addedProps);
+			}
+
+		}
+      
+	}
+}
+]]></Code>
+        </Manager>
+      </Folder>
+      <Report>
+        <Name>Report</Name>
+        <VariableNames>
+          <string>[Clock].Today</string>
+          <string>[Weather].Rain as Rain</string>
+          <string>PondWater.PondEvap as S_PondEvap</string>
+          <string>PondWater.PondDepth as S_PondDepth</string>
+          <string>PondWater.PondTemp as S_PondTemp</string>
+          <string>PondWater.Salinity as S_Salinity</string>
+          <string>PondWater.PH as S_PH</string>
+          <string>PondWater.N as S_N</string>
+          <string>PondWater.P as S_P</string>
+          <string>PondWater.TSS as S_TSS</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].DoReport</string>
+        </EventNames>
+      </Report>
+      <Area>1</Area>
+      <Slope>0</Slope>
+    </Zone>
+    <Manager>
+      <Name>Transfer water from PrawnPond to SettlingPond</Name>
+      <Script>
+        <added_date>02-jan</added_date>
+        <volume>5000</volume>
+      </Script>
+      <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+using Models.Aqua;
+
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+
+		[Link] Clock Clock;
+		[Link] Summary Summary;
+		[Link] Zone PrawnPond;
+		[Link] Zone SettlingPond;
+		
+		PondWater prawnWater;
+		PondWater settlingWater;
+		
+		
+	    [Description("Transfer Water on this date (dd-mmm)")]
+		public string added_date {get; set;}
+		
+		[Description("Volume of Water Transfered (m^3)")]
+		public double volume {get; set;}
+		
+
+
+        
+       [EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+	    	prawnWater = (PondWater)Apsim.Find(PrawnPond,"PondWater");
+	    	settlingWater = (PondWater)Apsim.Find(SettlingPond,"PondWater");
+		}
+        
+        
+        
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{
+
+        if (DateUtilities.DatesEqual(added_date, Clock.Today))
+			{
+			
+			prawnWater.Empty(volume);
+			settlingWater.Fill(Volume: volume, WaterProperties: prawnWater.PondProps);
+			
+			}
+
+		}
+      
+	}
+}
+]]></Code>
+    </Manager>
+    <Graph>
+      <Name>PondDepth</Name>
+      <Series>
+        <Name>Series 0</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Dash</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>P_PondDepth</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series2</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Dash</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>S_PondDepth</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Caption />
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>PondDepth</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Salinity</Name>
+      <Series>
+        <Name>Series 0</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>P_Salinity</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series2</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>S_Salinity</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Caption />
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Rain</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
+  </Simulation>
+  <DataStore>
+    <Name>DataStore</Name>
+    <AutoExport>false</AutoExport>
+  </DataStore>
+  <ExplorerWidth>250</ExplorerWidth>
+</Simulations>

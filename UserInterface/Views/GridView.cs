@@ -265,6 +265,11 @@ namespace UserInterface.Views
             {
                 pictureBox1.Image = Image.FromStream(file);
                 pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                pictureBox1.Visible = true;
+                Grid.Dock = DockStyle.Left;
+                this.Controls.SetChildIndex(pictureBox1, 0);
+                this.Controls.SetChildIndex(Grid, 1);
+                this.Parent.Refresh();
             }
         }
 
@@ -292,6 +297,13 @@ namespace UserInterface.Views
         public void EndEdit()
         {
             this.Grid.EndEdit();
+        }
+
+        /// <summary>Lock the left most number of columns.</summary>
+        /// <param name="number"></param>
+        public void LockLeftMostColumns(int number)
+        {
+            this.Grid.Columns[number - 1].Frozen = true;
         }
 
         /// <summary>
@@ -388,6 +400,15 @@ namespace UserInterface.Views
                         }
                         this.Grid.RowCount = this.DataSource.Rows.Count;
                     }
+
+                    // Format DateTime columns
+                    for (int col = 0; col < this.DataSource.Columns.Count; col++)
+                    {
+                        if (DataSource.Columns[col].DataType == typeof(DateTime))
+                        {
+                            this.Grid.Columns[col].DefaultCellStyle.Format = "yyyy-MM-d";
+                        }
+                    }
                 }
 
                 // ColIndex doesn't matter since we're resizing all of them.
@@ -398,10 +419,10 @@ namespace UserInterface.Views
                 {
                     col.Width = Convert.ToInt32(col.GetPreferredWidth(DataGridViewAutoSizeColumnMode.DisplayedCells, true) * 1.2);
 
-                    //col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-                    //int newWidth = Convert.ToInt32(col.Width * 1.0);
-                    //col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                    //col.Width = newWidth;
+                    col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+                    int newWidth = Convert.ToInt32(col.Width * 1.0);
+                    col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    col.Width = newWidth;
                 }
 
                 // Reinstate Grid.CellValueChanged event.
@@ -457,7 +478,13 @@ namespace UserInterface.Views
                 // Put the new value into the table on the correct row.
                 if (this.DataSource != null)
                 {
-                    this.DataSource.Rows[e.RowIndex][e.ColumnIndex] = newValue;
+                    try
+                    {
+                        this.DataSource.Rows[e.RowIndex][e.ColumnIndex] = newValue;
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
 
                 if (this.valueBeforeEdit != null && this.valueBeforeEdit.GetType() == typeof(string) && newValue == null)
@@ -515,6 +542,8 @@ namespace UserInterface.Views
                 Grid.Height = 0;
                 Grid.Visible = false;
             }
+            else
+                Grid.Visible = true;
 
             //resize PictureBox
             pictureBox1.Location = new Point(Grid.Width, 0);
@@ -688,7 +717,24 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnCopyToClipboard(object sender, EventArgs e)
         {
-            DataObject content = this.Grid.GetClipboardContent();
+            // this.Grid.EndEdit();
+            DataObject content = new DataObject();
+            if (this.Grid.SelectedCells.Count==1)
+            {
+                if (this.Grid.CurrentCell.IsInEditMode)
+                {
+                    if (this.Grid.EditingControl is System.Windows.Forms.TextBox)
+                    {
+                        string text = ((System.Windows.Forms.TextBox)this.Grid.EditingControl).SelectedText;
+                        content.SetText(text);
+                    }
+                }
+                else
+                    content.SetText(this.Grid.CurrentCell.Value.ToString());
+            }
+            else
+            content = this.Grid.GetClipboardContent();
+
             Clipboard.SetDataObject(content);
         }
 

@@ -40,20 +40,41 @@ namespace UserInterface.Views
             int numControls = Controls.Count;
             if (numControls > 0)
             {
-
+                int numCols = 2;
                 int numRows;
                 if (numControls == 1)
+                {
+                    numCols = 1;
                     numRows = 1;
+                }
                 else
-                    numRows = (int)Math.Sqrt(numControls - 1) + 1;
-                int numCols = (int)Math.Ceiling((double)numControls / numRows);
-                int width = Size.Width / numCols;
+                {
+                    numCols = 2;
+                    numRows = (int)Math.Ceiling((double)numControls / numCols);
+                }
+
+                int width = (Size.Width - 50) / numCols;
                 int height = Size.Height / numRows - 1;
+                if (height < Size.Height / 2)
+                {
+                    height = Size.Height / 2;
+                    AutoScroll = true;
+                    VScroll = true;
+                }
                 int controlNumber = 0;
                 int col = 0;
                 int row = 0;
                 foreach (Control control in Controls)
                 {
+                    GraphView graphView = control as GraphView;
+                    if (graphView != null)
+                    {
+                        graphView.FontSize = 10;
+                        graphView.Refresh();
+                        graphView.SingleClick += OnGraphClick;
+                        graphView.IsLegendVisible = false;
+                    }
+
                     control.Location = new Point(col * width, row * height);
                     control.Width = width;
                     control.Height = height;
@@ -69,6 +90,19 @@ namespace UserInterface.Views
             this.Resize += OnResize;
         }
 
+        /// <summary>User has double clicked a graph.</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnGraphClick(object sender, EventArgs e)
+        {
+            GraphView graphView = sender as GraphView;
+            if (graphView != null)
+            {
+                graphView.IsLegendVisible = !graphView.IsLegendVisible;
+                graphView.Refresh();
+            }
+        }
+
         /// <summary>Called when user resized view.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -76,5 +110,6 @@ namespace UserInterface.Views
         {
             PositionAndRefreshControls();
         }
+
     }
 }

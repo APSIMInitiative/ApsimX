@@ -91,6 +91,18 @@ namespace Models.PMF.Organs
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.CropType; } }
 
+        /// <summary>Albedo.</summary>
+        [Description("Albedo")]
+        public double Albedo { get; set; }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        [Description("GSMAX")]
+        public double Gsmax { get; set; }
+
+        /// <summary>Gets or sets the R50.</summary>
+        [Description("R50")]
+        public double R50 { get; set; }
+
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
         public double LAI
@@ -114,13 +126,25 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover));
+                if (Plant.IsAlive)
+                    return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover));
+                else
+                    return 0;
             }
         }
 
         /// <summary>Gets the cover total.</summary>
         [Units("0-1")]
-        public double CoverTotal { get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); } }
+        public double CoverTotal 
+        { 
+            get 
+            {
+                if (Plant.IsAlive)
+                    return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
+                else
+                    return 0;
+            } 
+        }
 
         /// <summary>Gets the height.</summary>
         [Units("mm")]
@@ -132,7 +156,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets  FRGR.</summary>
         [Units("0-1")]
-        public double FRGR { get { return Photosynthesis.FRGR; } }
+        public double FRGR { get; set; }
         
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [Units("mm")]
@@ -141,7 +165,6 @@ namespace Models.PMF.Organs
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } 
         #endregion
-
 
         #region Links
         /// <summary>The arbitrator</summary>
@@ -168,18 +191,23 @@ namespace Models.PMF.Organs
             public IFunction MaxArea = null;
             /// <summary>The growth duration</summary>
             [Link]
+            [Units("deg day")]
             public IFunction GrowthDuration = null;
             /// <summary>The lag duration</summary>
             [Link]
+            [Units("deg day")]
             public IFunction LagDuration = null;
             /// <summary>The senescence duration</summary>
             [Link]
+            [Units("deg day")]
             public IFunction SenescenceDuration = null;
             /// <summary>The detachment lag duration</summary>
             [Link]
+            [Units("deg day")]
             public IFunction DetachmentLagDuration = null;
             /// <summary>The detachment duration</summary>
             [Link]
+            [Units("deg day")]
             public IFunction DetachmentDuration = null;
             /// <summary>The specific leaf area maximum</summary>
             [Link]
@@ -248,7 +276,10 @@ namespace Models.PMF.Organs
         /// <summary>The leaf cohort parameters</summary>
         [Link] LeafCohortParameters CohortParameters = null;
         /// <summary>The photosynthesis</summary>
-        [Link] RUEModel Photosynthesis = null;
+        [Link] IFunction Photosynthesis = null;
+        /// <summary>The Fractional Growth Rate</summary>
+        [Link]
+        IFunction FRGRFunction = null;
         /// <summary>The thermal time</summary>
         [Link]
         IFunction ThermalTime = null;
@@ -276,25 +307,8 @@ namespace Models.PMF.Organs
         /// <value>The k dead.</value>
         [Description("Extinction Coefficient (Dead)")]
         public double KDead { get; set; }
-        /// <summary>Gets or sets the gs maximum.</summary>
-        /// <value>The gs maximum.</value>
-        [Description("GsMax")]
-        public double GsMax { get; set; }
-        /// <summary>Gets or sets the R50.</summary>
-        /// <value>The R50.</value>
-        [Description("R50")]
-        public double R50 { get; set; }
-        /// <summary>Gets or sets the emissivity.</summary>
-        /// <value>The emissivity.</value>
-        [Description("Emissivity")]
-        public double Emissivity { get; set; }
-        /// <summary>Gets or sets the albido.</summary>
-        /// <value>The albido.</value>
-        [Description("Albido")]
-        public double Albido { get; set; }
         
         #endregion
-
 
         #region States
 
@@ -497,6 +511,20 @@ namespace Models.PMF.Organs
                 return n;
             }
         }
+
+
+        /// <summary>Gets the plant senesced leaf no.</summary>
+        /// <value>The plant senesced leaf no.</value>
+        [Units("/plant")]
+        [Description("Number of leaves per plant that have senesced")]
+        public double PlantsenescedLeafNo
+        {
+            get
+            {
+                return PlantAppearedLeafNo/ Plant.Population - PlantAppearedGreenLeafNo;
+            }
+        }
+
 
         //Canopy State variables
 
@@ -959,6 +987,8 @@ namespace Models.PMF.Organs
                     }
                 }
                 _ExpandedNodeNo = ExpandedCohortNo + FractionNextleafExpanded;
+
+                FRGR = FRGRFunction.Value;
             }
         }
         /// <summary>Clears this instance.</summary>
@@ -1008,6 +1038,7 @@ namespace Models.PMF.Organs
                 {
                     double DeltaDeadLeaves = DeadCohortNo - DeadNodesYesterday; //Fixme.  DeadNodesYesterday is never given a value as far as I can see.
                     FractionDied = DeltaDeadLeaves / GreenCohortNo;
+                    DeadNodesYesterday = DeadCohortNo;
                 }
             }
         }
@@ -1081,7 +1112,7 @@ namespace Models.PMF.Organs
                 }
 
 
-                return new BiomassSupplyType { Fixation = Photosynthesis.Growth(RadIntTot), Retranslocation = Retranslocation, Reallocation = Reallocation };
+                return new BiomassSupplyType { Fixation = Photosynthesis.Value, Retranslocation = Retranslocation, Reallocation = Reallocation };
             }
         }
         /// <summary>Sets the dm potential allocation.</summary>
@@ -1650,8 +1681,8 @@ namespace Models.PMF.Organs
             {
                 Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
 
-                if (TotalDM > 0)
-                    SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
+                if (Wt > 0)
+                    SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
 
                 Structure.MainStemNodeNo = 0;
                 Structure.Clear();
@@ -1675,7 +1706,5 @@ namespace Models.PMF.Organs
             InitialLeaves = initialLeaves.ToArray();
         }
         #endregion
-
-
     }
 }

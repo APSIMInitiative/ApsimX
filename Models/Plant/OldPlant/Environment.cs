@@ -12,7 +12,7 @@ namespace Models.PMF.OldPlant
     /// An environment model for plant
     /// </summary>
     [Serializable]
-    [ValidParent(typeof(Plant15))]
+    [ValidParent(ParentType = typeof(Plant15))]
     public class Environment : Model
     {
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Models.Core;
 using Models.Factorial;
+using APSIM.Shared.Utilities;
 
 namespace Models.Factorial
 {
@@ -13,7 +14,7 @@ namespace Models.Factorial
     [Serializable]
     [ViewName("UserInterface.Views.MemoView")]
     [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
-    [ValidParent(typeof(Simulations))]
+    [ValidParent(ParentType = typeof(Simulations))]
     public class Experiment : Model
     {
         /// <summary>
@@ -41,12 +42,46 @@ namespace Models.Factorial
                     Apsim.CallEventHandler(child, "Loaded", null);
 
                 foreach (FactorValue value in combination)
+                {
                     value.ApplyToSimulation(newSimulation);
+                }
+                PushFactorsToReportModels(newSimulation, combination);
 
                 simulations.Add(newSimulation);
             }
 
             return simulations.ToArray();
+        }
+
+        /// <summary>Find all report models and give them the factor values.</summary>
+        /// <param name="factorValues">The factor values to send to each report model.</param>
+        /// <param name="simulation">The simulation to search for report models.</param>
+        private void PushFactorsToReportModels(Simulation simulation, List<FactorValue> factorValues)
+        {
+            List<string> names = new List<string>();
+            List<string> values = new List<string>();
+
+            foreach (FactorValue factorValue in factorValues)
+            {
+                Factor topLevelFactor = factorValue.Factor;
+                if (topLevelFactor.Parent is Factor)
+                    topLevelFactor = topLevelFactor.Parent as Factor;
+                string name = topLevelFactor.Name;
+                string value = factorValue.Name.Replace(topLevelFactor.Name, "");
+                if (value == string.Empty)
+                {
+                    name = "Factors";
+                    value = factorValue.Name;
+                }
+                names.Add(name);
+                values.Add(value);
+            }
+
+            foreach (Report.Report report in Apsim.ChildrenRecursively(simulation, typeof(Report.Report)))
+            {
+                report.ExperimentFactorNames = names;
+                report.ExperimentFactorValues = values;
+            }
         }
 
         /// <summary>
@@ -87,6 +122,8 @@ namespace Models.Factorial
 
                     foreach (FactorValue value in combination)
                         value.ApplyToSimulation(newSimulation);
+
+                    PushFactorsToReportModels(newSimulation, combination);
 
                     return newSimulation;
                 }
@@ -138,44 +175,11 @@ namespace Models.Factorial
                     allValues.Add(factorValues);
                 }
                 if (doFullFactorial)
-                    return AllCombinationsOf<FactorValue>(allValues.ToArray());
+                    return MathUtilities.AllCombinationsOf<FactorValue>(allValues.ToArray());
                 else
                     return allValues;
             }
             return null;
         }
-
-        /// <summary>
-        /// From: http://stackoverflow.com/questions/545703/combination-of-listlistint
-        /// </summary>
-        private static List<List<T>> AllCombinationsOf<T>(params List<T>[] sets)
-        {
-            // need array bounds checking etc for production
-            var combinations = new List<List<T>>();
-
-            // prime the data
-            if (sets.Length > 0)
-            {
-                foreach (var value in sets[0])
-                    combinations.Add(new List<T> { value });
-
-                foreach (var set in sets.Skip(1))
-                    combinations = AddExtraSet(combinations, set);
-            }
-            return combinations;
-        }
-
-        private static List<List<T>> AddExtraSet<T>
-             (List<List<T>> combinations, List<T> set)
-        {
-            var newCombinations = from value in set
-                                  from combination in combinations
-                                  select new List<T>(combination) { value };
-
-            return newCombinations.ToList();
-        }
-
     }
-
-     
 }

@@ -23,7 +23,7 @@ namespace Models.PMF.Functions
         /// <summary>The exponent</summary>
         [Description("Exponent")]
         public double Exponent { get; set; }
-        
+
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
         /// <summary>Gets the value.</summary>
@@ -41,9 +41,16 @@ namespace Models.PMF.Functions
                     IFunction F = ChildFunctions[0] as IFunction;
                     return Math.Pow(F.Value, Exponent);
                 }
-                else
+                else if (ChildFunctions.Count == 2)
                 {
-                    throw new Exception("Power function must have only one argument");
+
+                    IFunction F = ChildFunctions[0] as IFunction;
+                    IFunction P = ChildFunctions[1] as IFunction;
+                    return Math.Pow(F.Value, P.Value);
+                }
+                else {
+
+                    throw new Exception("Invalid number of arguments for Power function");
                 }
             }
         }

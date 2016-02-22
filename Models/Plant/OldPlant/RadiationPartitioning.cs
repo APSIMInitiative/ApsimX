@@ -11,7 +11,7 @@ namespace Models.PMF.OldPlant
     /// Radiation partitioning
     /// </summary>
     [Serializable]
-    [ValidParent(typeof(Plant15))]
+    [ValidParent(ParentType = typeof(Plant15))]
     public class RadiationPartitioning : Model
     {
         /// <summary>Gets or sets the fract incident radn.</summary>

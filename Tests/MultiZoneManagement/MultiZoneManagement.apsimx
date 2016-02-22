@@ -1,20 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
   </DataStore>
-  <Tests>
-    <Name>TestsBinary</Name>
-    <Test>
-      <SimulationName>TwoZone_GodLevelManagement</SimulationName>
-      <TableName>Report1</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>Irrigation.IrrigationApplied</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-  </Tests>
   <Simulation>
     <Name>TwoZone_GodLevelManagement</Name>
     <Clock>
@@ -1281,44 +1271,34 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Field1</Title>
+        <Name>Field1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report1</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report1</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report1</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.AboveGround.Wt</YFieldName>
       </Series>
       <Series>
-        <Title>Field2</Title>
+        <Name>Field2</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>None</Marker>
         <Line>Dash</Line>
-        <X>
-          <TableName>Report2</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report2</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>Report2</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.AboveGround.Wt</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1343,44 +1323,34 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Field1</Title>
+        <Name>Field1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report1</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report1</TableName>
-          <FieldName>Irrigation.IrrigationApplied</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>true</Cumulative>
+        <TableName>Report1</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Irrigation.IrrigationApplied</YFieldName>
       </Series>
       <Series>
-        <Title>Field2</Title>
+        <Name>Field2</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>None</Marker>
         <Line>Dash</Line>
-        <X>
-          <TableName>Report2</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report2</TableName>
-          <FieldName>Irrigation.IrrigationApplied</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>true</Cumulative>
+        <TableName>Report2</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Irrigation.IrrigationApplied</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>

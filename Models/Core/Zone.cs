@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Xml.Schema;
 using System.Reflection;
 using System.Linq;
+using Models;
 
 namespace Models.Core
 {
@@ -15,7 +16,8 @@ namespace Models.Core
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
-    [ValidParent(typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
     public class Zone : Model
     {
         /// <summary>Area of the zone.</summary>
@@ -73,7 +75,7 @@ namespace Models.Core
 
         /// <summary>Gets the locater model for the specified model.</summary>
         /// <returns>The an instance of a locater class for the specified model. Never returns null.</returns>
-        private Locater Locator()
+        public Locater Locator()
         {
             var simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
             if (simulation == null)

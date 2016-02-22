@@ -24,6 +24,15 @@ namespace Models.PMF.OldPlant
         /// <summary>Canopy type</summary>
         public string CanopyType { get { return Plant.CropType; } }
 
+        /// <summary>Albedo.</summary>
+        public double Albedo { get { return 0.15; } }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        public double Gsmax { get { return 0.01; } }
+
+        /// <summary>Gets or sets the R50.</summary>
+        public double R50 { get { return 200; } }
+
         /// <summary>Gets the lai.</summary>
         /// <value>The lai.</value>
         [Units("m^2/m^2")]
@@ -60,7 +69,8 @@ namespace Models.PMF.OldPlant
         public double FRGR { get { return Plant.FRGR; } }
 
         /// <summary>Sets the potential evapotranspiration.</summary>
-        public double PotentialEP { set { Plant.PotentialEP = value; } }
+        [XmlIgnore]
+        public double PotentialEP { get { return Plant.PotentialEP; } set { Plant.PotentialEP = value; } }
 
         /// <summary>Sets the light profile.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { set { Plant.LightProfile = value; } }
@@ -311,8 +321,6 @@ namespace Models.PMF.OldPlant
         private double dltLeafNoSen;
         /// <summary>The DLT node no pot</summary>
         private double dltNodeNoPot;
-        /// <summary>The external sw demand</summary>
-        private bool ExternalSWDemand = false;
         /// <summary>The transp eff</summary>
         private double transpEff;
 
@@ -374,10 +382,11 @@ namespace Models.PMF.OldPlant
         /// <param name="Supply">The supply.</param>
         public override void DoSWDemand(double Supply)
         {
-            if (ExternalSWDemand == true)
+            if (PotentialEP > 0)
             {
+                sw_demand = PotentialEP;
                 transpEff = dlt_dm_pot_rue / sw_demand;
-                ExternalSWDemand = false;
+                
             }
             else
             {
@@ -1028,6 +1037,7 @@ namespace Models.PMF.OldPlant
             NMax = 0.0;
             sw_demand_te = 0.0;
             sw_demand = 0.0;
+            //PotentialEP = 0.0;
             dltLAI = 0.0;
             dltSLAI = 0.0;
             dltLAI_pot = 0.0;
@@ -1088,6 +1098,21 @@ namespace Models.PMF.OldPlant
 
             Dead.Clear();
             Live.Clear();
+            
+            PotentialEP = 0.0;
+            sw_demand = 0;
+            sw_demand_te = 0;
+            NodeNo = 0;
+
+            Util.ZeroArray(LeafNo);
+            Util.ZeroArray(LeafNoSen);
+            Util.ZeroArray(LeafArea);
+
+            _LAI = 0.0;
+            _SLAI = 0.0;
+            maxLAI = 0.0;
+
+
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -1102,6 +1127,14 @@ namespace Models.PMF.OldPlant
 
                 InitialiseAreas();
             }
+        }
+        /// <summary>Called when day starts.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            PotentialEP = 0.0;
         }
         #endregion
 

@@ -41,7 +41,7 @@ namespace Importer
                                       "Lupin","Maize","MaizeZ","Millet","Mucuna","Mungbean","Navybean",
                                       "Oats","Oryza","Oryza2","Ozcot","Peanut","Pigeonpea","Potato",
                                       "raphanus_raphanistrum","Root","Seedling","Slurp","Sorghum",
-                                      "Soybean","Stylo","Sugar","SugarCane","Sunflower","SweetCorn",
+                                      "Soybean","Stylo","Sugar","Sugarcane","Sunflower","SweetCorn",
                                       "SweetSorghum","Taro2","Triticale","vine","Weed","WF_Millet",
                                       "Wheat","Wheat2","Wheat2X"};
 

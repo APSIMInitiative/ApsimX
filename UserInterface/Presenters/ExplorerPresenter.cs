@@ -393,8 +393,15 @@ namespace UserInterface.Presenters
             try
             {
                 XmlDocument document = new XmlDocument();
-                document.LoadXml(xml);
-                object newModel = XmlUtilities.Deserialise(document.DocumentElement, Assembly.GetExecutingAssembly());
+                try
+                {
+                    document.LoadXml(xml);
+                }
+                catch(XmlException)
+                {
+                    this.view.ShowMessage("Invalid XML. Are you sure you're trying to paste an APSIM model?", DataStore.ErrorLevel.Error);
+                }
+                object newModel = XmlUtilities.Deserialise(document.DocumentElement, ApsimXFile.GetType().Assembly);
 
                 // See if the presenter is happy with this model being added.
                 Model parentModel = Apsim.Get(this.ApsimXFile, parentPath) as Model;
@@ -442,7 +449,7 @@ namespace UserInterface.Presenters
                         document.LoadXml(newDoc.DocumentElement.InnerXml);
                     }
 
-                    IModel child = XmlUtilities.Deserialise(document.DocumentElement, Assembly.GetExecutingAssembly()) as IModel;
+                    IModel child = XmlUtilities.Deserialise(document.DocumentElement, ApsimXFile.GetType().Assembly) as IModel;
 
                     AddModelCommand command = new AddModelCommand(parentModel, document.DocumentElement,
                                                                   GetNodeDescription(child), view);
@@ -590,28 +597,11 @@ namespace UserInterface.Presenters
         {
             e.Allow = false;
 
-            Model destinationModel = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
-            if (destinationModel != null)
+            Model parentModel = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
+            if (parentModel != null)
             {
-                if (destinationModel.GetType() == typeof(Folder) || destinationModel.GetType() == typeof(Factor))
-                    e.Allow = true;
-
                 DragObject dragObject = e.DragObject as DragObject;
-                ValidParentAttribute validParent = ReflectionUtilities.GetAttribute(dragObject.ModelType, typeof(ValidParentAttribute), true) as ValidParentAttribute;
-                if (validParent == null || validParent.ParentModels.Length == 0)
-                {
-                    e.Allow = true;
-                }
-                else
-                {
-                    foreach (Type allowedParentType in validParent.ParentModels)
-                    {
-                        if (allowedParentType == destinationModel.GetType())
-                        {
-                            e.Allow = true;
-                        }
-                    }
-                }
+                e.Allow = Apsim.IsChildAllowable(parentModel, dragObject.ModelType);
             }
         }
 
@@ -825,7 +815,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>Hide the right hand panel.</summary>
-        private void HideRightHandPanel()
+        public void HideRightHandPanel()
         {
             if (this.currentRightHandPresenter != null)
             {
@@ -844,11 +834,11 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>Display a view on the right hand panel in view.</summary>
-        private void ShowRightHandPanel()
+        public void ShowRightHandPanel()
         {
             if (this.view.SelectedNode != string.Empty)
             {
-                object model = Apsim.Get(this.ApsimXFile, this.view.SelectedNode);
+                object model = Apsim.Get(this.ApsimXFile,  this.view.SelectedNode);
 
                 if (model != null)
                 {
@@ -863,23 +853,31 @@ namespace UserInterface.Presenters
 
                     if (viewName != null && presenterName != null)
                     {
-                        UserControl newView = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString()) as UserControl;
-                        this.currentRightHandPresenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
-                        if (newView != null && this.currentRightHandPresenter != null)
-                        {
-                            try
-                            {
-                                this.view.AddRightHandView(newView);
-                                this.currentRightHandPresenter.Attach(model, newView, this);
-                            }
-                            catch (Exception err)
-                            {
-                                string message = err.Message;
-                                message += "\r\n" + err.StackTrace;
-                                this.ShowMessage(message, DataStore.ErrorLevel.Error);
-                            }
-                        }
+                        ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
                     }
+                }
+            }
+        }
+        /// <summary>Show a view in the right hand panel.</summary>
+        /// <param name="model">The model.</param>
+        /// <param name="viewName">The view name.</param>
+        /// <param name="presenterName">The presenter name.</param>
+        public void ShowInRightHandPanel(object model, string viewName, string presenterName)
+        {
+            UserControl newView = Assembly.GetExecutingAssembly().CreateInstance(viewName) as UserControl;
+            this.currentRightHandPresenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName) as IPresenter;
+            if (newView != null && this.currentRightHandPresenter != null)
+            {
+                try
+                {
+                    this.view.AddRightHandView(newView);
+                    this.currentRightHandPresenter.Attach(model, newView, this);
+                }
+                catch (Exception err)
+                {
+                    string message = err.Message;
+                    message += "\r\n" + err.StackTrace;
+                    this.ShowMessage(message, DataStore.ErrorLevel.Error);
                 }
             }
         }

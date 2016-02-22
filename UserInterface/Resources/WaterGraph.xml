@@ -12,6 +12,7 @@
           <Inverted>false</Inverted>
         </Axis>
         <Series>
+          <Name>LL15</Name>
           <Type>Area</Type>
           <Title>LL15</Title>
           <ShowInLegend>false</ShowInLegend>
@@ -26,6 +27,7 @@
           <SplitOn>*</SplitOn>
         </Series>
         <Series>
+          <Name>Air dry</Name>
           <Type>Scatter</Type>
           <Title>Air dry</Title>
           <ShowInLegend>true</ShowInLegend>
@@ -38,6 +40,7 @@
           <SplitOn>*</SplitOn>
         </Series>
         <Series>
+          <Name>LL15</Name>
           <Type>Scatter</Type>
           <Title>LL15</Title>
           <ShowInLegend>true</ShowInLegend>
@@ -50,6 +53,7 @@
           <SplitOn>*</SplitOn>
         </Series>
         <Series>
+          <Name>DUL</Name>
           <Type>Scatter</Type>
           <Title>DUL</Title>
           <ShowInLegend>true</ShowInLegend>
@@ -62,6 +66,7 @@
           <SplitOn>*</SplitOn>
         </Series>
         <Series>
+          <Name>SAT</Name>
           <Type>Scatter</Type>
           <Title>SAT</Title>
           <ShowInLegend>true</ShowInLegend>
@@ -74,6 +79,7 @@
           <SplitOn>*</SplitOn>
         </Series>
         <Series>
+          <Name>LL15</Name>
           <Type>Scatter</Type>
           <Title>LL15</Title>
           <ShowInLegend>false</ShowInLegend>

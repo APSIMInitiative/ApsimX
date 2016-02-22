@@ -18,6 +18,8 @@ namespace UserInterface.Presenters
     /// </summary>
     public class FolderPresenter : IPresenter
     {
+        private List<GraphPresenter> presenters = new List<GraphPresenter>();
+
         /// <summary>
         /// Attach the specified Model and View.
         /// </summary>
@@ -35,6 +37,7 @@ namespace UserInterface.Presenters
                 GraphView graphView = new GraphView();
                 GraphPresenter presenter = new GraphPresenter();
                 presenter.Attach(graph, graphView, explorerPresenter);
+                presenters.Add(presenter);
                 views.Add(graphView);
             }
 
@@ -47,6 +50,10 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            foreach (GraphPresenter presenter in presenters)
+                presenter.Detach();
+
+            presenters.Clear();
         }
 
     }

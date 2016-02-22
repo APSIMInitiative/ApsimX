@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
+using APSIM.Shared;
 using Models.Core;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Functions
 {
@@ -42,7 +44,8 @@ namespace Models.PMF.Functions
             foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                 memo.Document(tags, -1, indent);
 
-             tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + VariableName + "</i>", indent));
+
+            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + StringUtilities.RemoveTrailingString(VariableName,".Value") + "</i>", indent));
         
         }
 

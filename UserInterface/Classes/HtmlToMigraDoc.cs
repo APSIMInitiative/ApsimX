@@ -10,10 +10,13 @@
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Reflection;
     using System.Text;
 
     class HtmlToMigraDoc
     {
+        private static bool foundCode = false;
+
         /// <summary>
         /// A list of table column names - used when parsing HTML tables.
         /// </summary>
@@ -86,6 +89,7 @@
                 case "tr": return AddTableRow(node, section);
                 case "td": return AddTableColumn(node, section);
                 case "img": return AddImage(node, section, imagePath);
+                case "code": foundCode = true; return null;
             }
 
             return null;
@@ -95,6 +99,7 @@
         {
             string href = node.GetAttributeValue("href", "");
             Hyperlink link;
+            href = href.Replace("&amp;", "&");
             if (href.StartsWith("#"))
                 link = GetParagraph(section).AddHyperlink(href.Substring(1), HyperlinkType.Bookmark);
             else
@@ -115,16 +120,18 @@
             if (srcAttribute != null)
             {
                 string fullPath = Path.Combine(imagePath, srcAttribute.Value);
+                if (!File.Exists(fullPath))
+                {
+                    // Look in documentation folder.
+                    string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    fullPath = Path.Combine(binDirectory, @"..\Documentation\Images", Path.GetFileName(fullPath));
+                    fullPath = Path.GetFullPath(fullPath);
+                }
+
                 if (File.Exists(fullPath))
                 {
                     Paragraph para = section.Section.AddParagraph();
                     Image image1 = para.AddImage(fullPath);
-                    //image1.Height = "8cm";
-                    //image1.Width = "8cm";
-                    //image1.LockAspectRatio = true;
-                    //Image image = section.Section.AddImage(fullPath);
-                    //image.Height = new Unit(100, UnitType.Millimeter);
-                    //image.
                 }
             }
             return section;
@@ -267,20 +274,17 @@
             bool isFirst = node.ParentNode.Elements("li").First() == node;
             bool isLast = node.ParentNode.Elements("li").Last() == node;
 
-            // if this is the first item add the ListStart paragraph
-            if (isFirst)
-                section.AddParagraph().Style = "ListStart";
-
             Paragraph listItem = section.AddParagraph();
             listItem.Style = listStyle;
 
             // disable continuation if this is the first list item
             listItem.Format.ListInfo.ContinuePreviousList = !isFirst;
 
-            // if the this is the last item add the ListEnd paragraph
             if (isLast)
-                section.AddParagraph().Style = "ListEnd";
-
+            {
+                var listEnd = section.AddParagraph();
+                listEnd.Style = "ListEnd";
+            }
             return listItem;
         }
 
@@ -323,6 +327,16 @@
         /// <returns>The </returns>
         private static DocumentObject AddText(DocumentObject parentObject, string text)
         {
+            if (foundCode)
+            {
+                if (parentObject is Section)
+                    AddCodeBlock(parentObject as Section, text);
+                else if (parentObject is Paragraph)
+                    AddCodeBlock((parentObject as Paragraph).Section, text);
+                foundCode = false;
+                return null;
+            }
+
             // remove line breaks
             var innerText = text.Replace("\r", string.Empty).Replace("\n", string.Empty);
 
@@ -434,6 +448,12 @@
             var links = doc.Styles["Hyperlink"];
             links.Font.Color = MigraDoc.DocumentObjectModel.Colors.Blue;
 
+            if (doc.Styles["ListEnd"] == null)
+            {
+                var unorderedlist = doc.AddStyle("ListStart", "Normal");
+                unorderedlist.ParagraphFormat.SpaceAfter = 0;
+            }
+
             if (doc.Styles["UnorderedList"] == null)
             {
                 var unorderedlist = doc.AddStyle("UnorderedList", "Normal");
@@ -454,6 +474,12 @@
                 orderedlist.ParagraphFormat.SpaceAfter = 0;
             }
 
+            if (doc.Styles["ListEnd"] == null)
+            {
+                var unorderedlist = doc.AddStyle("ListEnd", "Normal");
+                unorderedlist.ParagraphFormat.SpaceAfter = 0;
+            }
+
             if (doc.Styles["HorizontalRule"] == null)
             { 
                 var hr = doc.AddStyle("HorizontalRule", "Normal");
@@ -464,6 +490,43 @@
                 hr.ParagraphFormat.LineSpacing = 0;
                 hr.ParagraphFormat.SpaceBefore = 15;
             }
+            if (doc.Styles["TableParagraph"] == null)
+            {
+                var style = doc.Styles.AddStyle("TableParagraph", "Normal");
+                style.Font.Size = 8;
+                style.ParagraphFormat.SpaceAfter = Unit.FromCentimeter(0);
+                style.Font = new MigraDoc.DocumentObjectModel.Font("Courier New");
+            }
         }
+
+        /// <summary>
+        /// Add a text frame.
+        /// </summary>
+        /// <param name="section"></param>
+        private static void AddCodeBlock(Section section, string text)
+        {
+            Table table = section.AddTable();
+            table.Borders.Width = "0.5pt";
+            table.Borders.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
+            table.LeftPadding = "5mm";
+            table.Rows.LeftIndent = "0cm";
+
+            var column = table.AddColumn();
+            column.Width = Unit.FromMillimeter(180);
+
+            Row row = table.AddRow();
+
+            string[] lines = text.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+
+            foreach (string line in lines)
+            {
+                int numSpaces = StringUtilities.IndexNotOfAny(line, " ".ToCharArray(), 0);
+                Paragraph p = row[0].AddParagraph();
+                p.AddSpace(numSpaces);
+                p.AddText(line);
+                p.Style = "TableParagraph";
+            }
+        }
+
     }
 }

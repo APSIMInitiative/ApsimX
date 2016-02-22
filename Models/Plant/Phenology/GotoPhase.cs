@@ -26,7 +26,22 @@ namespace Models.PMF.Phen
         /// <summary>Gets the fraction complete.</summary>
         /// <value>The fraction complete.</value>
         /// <exception cref="System.Exception">Cannot call rewind class</exception>
-        public override double FractionComplete { get { throw new Exception("Cannot call rewind class"); } }
+        public override double FractionComplete
+        {
+            get
+            {
+                if (Phenology != null)
+                    throw new Exception("Cannot call rewind class");
+                else return 0;
+            }
+
+            set
+            {
+                if(Phenology != null)
+                throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
+            }
+        }
+           
 
         /// <summary>The phase name to goto</summary>
         [Description("PhaseNameToGoto")]

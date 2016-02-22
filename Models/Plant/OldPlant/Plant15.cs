@@ -109,7 +109,7 @@ namespace Models.PMF.OldPlant
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(typeof(Zone))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class Plant15 : ModelCollectionFromResource, ICrop, IUptake
     {
         /// <summary>The phenology</summary>
@@ -761,39 +761,11 @@ namespace Models.PMF.OldPlant
             NStress.Update();
             Population.Update();
 
-            UpdateCanopy();
-
             foreach (Organ1 Organ in Organ1s)
                 Organ.DoNConccentrationLimits();
 
             // PUBLISH BiomassRemoved event
             DoBiomassRemoved();
-        }
-
-        /// <summary>Provides canopy data to SoilWater.</summary>
-        public NewCanopyType CanopyData { get { return LocalCanopyData; } }
-        /// <summary>The local canopy data</summary>
-        NewCanopyType LocalCanopyData = new NewCanopyType();
-
-        /// <summary>Updates the canopy.</summary>
-        private void UpdateCanopy()
-        {
-            // PUBLISH New_Canopy event
-            double cover_green = 0;
-            double cover_sen = 0;
-            foreach (Organ1 Organ in Organ1s)
-            {
-                cover_green += Organ.CoverGreen; //Fix me maybe.  Neil thinks this looks wrong 
-                cover_sen += Organ.CoverSen;
-            }
-            double cover_tot = (1.0 - (1.0 - cover_green) * (1.0 - cover_sen));
-
-            Util.Debug("NewCanopy.height=%f", LocalCanopyData.height);
-            Util.Debug("NewCanopy.depth=%f", LocalCanopyData.depth);
-            Util.Debug("NewCanopy.lai=%f", LocalCanopyData.lai);
-            Util.Debug("NewCanopy.lai_tot=%f", LocalCanopyData.lai_tot);
-            Util.Debug("NewCanopy.cover=%f", LocalCanopyData.cover);
-            Util.Debug("NewCanopy.cover_tot=%f", LocalCanopyData.cover_tot);
         }
 
         /// <summary>Does the biomass removed.</summary>
@@ -912,7 +884,6 @@ namespace Models.PMF.OldPlant
             PlantSpatial.CanopyWidth = Leaf.width;
             foreach (Organ1 Organ in Organ1s)
                 Organ.DoCover();
-            UpdateCanopy();
 
             foreach (Organ1 Organ in Organ1s)
                 Organ.DoNConccentrationLimits();
@@ -1225,8 +1196,6 @@ namespace Models.PMF.OldPlant
 
                 foreach (Organ1 Organ in Organ1s)
                     Organ.DoCover();
-
-                UpdateCanopy();
 
                 double remove_biom_pheno = MathUtilities.Divide(dmRemovedGreenTops, biomassGreenTops, 0.0);
                 Phenology.OnRemoveBiomass(remove_biom_pheno);

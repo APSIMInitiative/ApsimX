@@ -17,7 +17,7 @@ namespace Models.PMF
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(typeof(Zone))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class SimpleTree : Model, ICrop, ICanopy, IUptake
     {
         #region Canopy interface
@@ -65,6 +65,15 @@ namespace Models.PMF
         /// Gets or sets the type of the crop.
         /// </summary>
         public string CropType { get; set; }
+
+        /// <summary>Albedo.</summary>
+        public double Albedo { get { return 0.15; } }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        public double Gsmax { get { return 0.01; } }
+
+        /// <summary>Gets or sets the R50.</summary>
+        public double R50 { get { return 200; } }
 
         /// <summary>The soil</summary>
         [Link]

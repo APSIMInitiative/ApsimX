@@ -15,7 +15,7 @@ namespace Models.PMF.Organs
     /// This class represents a base organ
     /// </summary>
     [Serializable]
-    [ValidParent(typeof(Plant))]
+    [ValidParent(ParentType = typeof(Plant))]
     public class BaseOrgan : Model, IOrgan, IArbitration
     {
         #region Links to other models or compontnets
@@ -151,10 +151,10 @@ namespace Models.PMF.Organs
 
         #region Organ properties
         /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
-        public double TotalDM { get { return Live.Wt + Dead.Wt; } }
+        public double Wt { get { return Live.Wt + Dead.Wt; } }
 
         /// <summary>Gets the total (live + dead) n (g/m2)</summary>
-        public double TotalN { get { return Live.N + Dead.N; } }
+        public double N { get { return Live.N + Dead.N; } }
         
         /// <summary>Gets the dm supply photosynthesis.</summary>
         /// <value>The dm supply photosynthesis.</value>
@@ -178,8 +178,8 @@ namespace Models.PMF.Organs
                     throw new Exception("The sum of FractionToResidue and FractionRemoved sent with your " + "!!!!PLACE HOLDER FOR EVENT SENDER!!!!" + " is greater than 1.  Had this execption not triggered you would be removing more biomass from " + Name + " than there is to remove");
                 if (RemainFrac < 1)
                 {
-                    Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name + " removing " + FractionRemoved * 100 + "% and returning " + FractionToResidue * 100 + "% to the surface organic matter");
-                    SurfaceOrganicMatter.Add(TotalDM * 10 * FractionToResidue, TotalN * 10 * FractionToResidue, 0, Plant.CropType, Name);
+                    Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name + " removing " + value.FractionRemoved * 100 + "% and returning " + value.FractionToResidue * 100 + "% to the surface organic matter");
+                    SurfaceOrganicMatter.Add(Wt * 10 * value.FractionToResidue, N * 10 * value.FractionToResidue, 0, Plant.CropType, Name);
                     if(Live.StructuralWt > 0)
                     Live.StructuralWt *= RemainFrac;
                     if(Live.NonStructuralWt > 0)
@@ -254,8 +254,8 @@ namespace Models.PMF.Organs
         ///[EventSubscribe("PlantEnding")]
         virtual public void DoPlantEnding()
         {
-                if (TotalDM > 0)
-                    SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
+                if (Wt > 0)
+                    SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
                 Clear();
         }
 

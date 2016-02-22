@@ -61,12 +61,6 @@ namespace Models.AgPasture1
 		/// <summary>Event to be invoked when sowing or at initialisation (tell models about existence of this species).</summary>
 		public event EventHandler Sowing;
 
-		/// <summary>Reference to a NewCanopy event</summary>
-		/// <param name="Data">The data about this plnat's canopy.</param>
-		public delegate void NewCanopyDelegate(NewCanopyType Data);
-		/// <summary>Event to be invoked at the beginning of everyday.</summary>
-		public event NewCanopyDelegate NewCanopy;
-
 		/// <summary>Reference to a FOM incorporation event</summary>
 		/// <param name="Data">The data with soil FOM to be added.</param>
 		public delegate void FOMLayerDelegate(Soils.FOMLayerType Data);
@@ -181,22 +175,6 @@ namespace Models.AgPasture1
 		public double interceptedRadn;
 		/// <summary>Light profile (energy available for each canopy layer)</summary>
 		private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
-
-
-		/// <summary>Data about this plant's canopy (LAI, height, etc)</summary>
-		private NewCanopyType myCanopyData = new NewCanopyType();
-		/// <summary>Gets or sets the data about this plant's canopy, used by MicroClimate</summary>
-		public NewCanopyType CanopyData
-		{
-			get
-			{
-				if (!isSwardControlled)
-					return myCanopyData;
-				else
-					return null;
-			}
-		}
-
 
 		// TODO: Have to verify how this works, it seems Microclime needs a sow event, not new crop...
 		/// <summary>Invokes the NewCrop event (info about this crop type)</summary>
@@ -3273,10 +3251,6 @@ namespace Models.AgPasture1
 			// mean air temperature for today
 			Tmean = (MetData.MaxT + MetData.MinT) * 0.5;
 			TmeanW = (MetData.MaxT * 0.75) + (MetData.MinT * 0.25);
-
-			// Send information about this species canopy, MicroClimate will compute intercepted radiation and water demand
-			if (!isSwardControlled)
-				DoNewCanopyEvent();
 		}
 
 		/// <summary>Performs the plant growth calculations</summary>
@@ -3652,7 +3626,7 @@ namespace Models.AgPasture1
 			double Pmax_EarlyLateDay = referencePhotosynthesisRate * effTemp1 * efCO2 * NcFactor;
 			double Pmax_MiddleDay = referencePhotosynthesisRate * effTemp2 * efCO2 * NcFactor;
 
-			double myDayLength = 3600 * MetData.DayLength;  //conversion of hour to seconds
+			double myDayLength = 3600 * MetData.CalculateDayLength(-6);  //conversion of hour to seconds
 
 			// Photosynthetically active radiation, PAR = 0.5*Radn, converted from MJ/m2 to J/2 (10^6)
 			double myPAR = 0.5 * interceptedRadn * 1000000;
@@ -4148,24 +4122,6 @@ namespace Models.AgPasture1
 		#endregion
 
 		#region - Water uptake processes  ----------------------------------------------------------------------------------
-
-		/// <summary>
-		/// Provides canopy data for MicroClimate, who will do the energy balance and calc water demand
-		/// </summary>
-		private void DoNewCanopyEvent()
-		{
-			if (NewCanopy != null)
-			{
-				myCanopyData.sender = Name;
-				myCanopyData.lai = greenLAI;
-				myCanopyData.lai_tot = TotalLAI;
-				myCanopyData.height = myHeight;
-				myCanopyData.depth = myHeight;
-				myCanopyData.cover = GreenCover;
-				myCanopyData.cover_tot = TotalCover;
-				NewCanopy.Invoke(myCanopyData);
-			}
-		}
 
 		/// <summary>Gets the water uptake for each layer as calculated by an external module (SWIM)</summary>
 		/// <param name="SoilWater">The soil water.</param>

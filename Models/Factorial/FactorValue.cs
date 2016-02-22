@@ -14,13 +14,20 @@ namespace Models.Factorial
     /// This class represents a series of paths and the same number of object values.
     /// Its sole purpose is to apply the object values to the model represented by the paths.
     /// </summary>
-    [ValidParent(ParentModels = new Type[] { typeof(Factor), typeof(FactorValue) })]
+    [ValidParent(ParentType = typeof(Factor))]
+    [ValidParent(ParentType = typeof(FactorValue))]
     public class FactorValue
     {
+        /// <summary>Parent factor.</summary>
+        private Factor factor;
+
         /// <summary>
         /// Name of factor value
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>Gets the parent factor.</summary>
+        public Factor Factor { get { return factor; } }
 
         /// <summary>
         /// The paths to the models.
@@ -35,24 +42,30 @@ namespace Models.Factorial
         /// <summary>
         /// Constructor
         /// </summary>
-        public FactorValue(string name, string path, object value)
+        public FactorValue(Factor factor, string name, string path, object value)
         {
+            this.factor = factor;
             this.Name = name;
             this.paths = new List<string>();
             paths.Add(path);
             values = new List<object>();
             this.values.Add(value);
+
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public FactorValue(string name, List<string> paths, List<object> values)
+        public FactorValue(Factor factor, string name, List<string> paths, List<object> values)
         {
+            this.factor = factor;
             this.Name = name;
             this.paths = paths;
             this.values = values;
         }
+
+        /// <summary>Gets all values.</summary>
+        public List<object> Values { get { return values; } }
 
         /// <summary>
         /// Apply this FactorValue to the specified simulation
@@ -105,6 +118,7 @@ namespace Models.Factorial
         private static void ApplyModelReplacement(Simulation newSimulation, string path, IModel value)
         {
             IModel newModel = Apsim.Clone(value);
+            newSimulation.Locator().Clear();
             IModel modelToReplace = newSimulation.Get(path) as IModel;
             if (modelToReplace == null)
                 throw new Exception("Cannot find model to replace. Model path: " + path);

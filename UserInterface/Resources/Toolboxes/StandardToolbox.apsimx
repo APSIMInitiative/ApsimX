@@ -578,172 +578,160 @@
       <Name>OilPalm</Name>
       <ResourceName>OilPalm</ResourceName>
     </OilPalm>
-    <Slurp>
+    <Plant>
       <Name>Slurp</Name>
+      <ResourceName>Slurp</ResourceName>
       <CropType>Slurp</CropType>
-      <localLAIGreen>5</localLAIGreen>
-      <localLAItot>5</localLAItot>
-      <localLightExtinction>0.6</localLightExtinction>
-      <localCanopyHeight>500</localCanopyHeight>
-      <localCanopyDepth>500</localCanopyDepth>
-      <localMaximumStomatalConductance>0.011</localMaximumStomatalConductance>
-      <localFrgr>1</localFrgr>
-      <localDemandWater>10</localDemandWater>
-      <localDemandNitrogen>5</localDemandNitrogen>
-      <localKNO3>0.1</localKNO3>
-      <localKNH4>0</localKNH4>
-      <localRootDepth>500</localRootDepth>
-      <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
-    </Slurp>
+    </Plant>
     <Folder>
       <Name>Wheat cultivars</Name>
       <Folder>
         <Name>Yield Prophet cultivars</Name>
         <Cultivar>
           <Name>Early</Name>
-          <Alias>agtscythe</Alias>
-          <Alias>arrino</Alias>
-          <Alias>bonnie_rock</Alias>
-          <Alias>bowerbird</Alias>
-          <Alias>crusader</Alias>
-          <Alias>dart</Alias>
-          <Alias>drysdale</Alias>
-          <Alias>emurock</Alias>
-          <Alias>hunter</Alias>
-          <Alias>hybrid_mercury</Alias>
-          <Alias>hyperno</Alias>
-          <Alias>imposeclplus</Alias>
-          <Alias>kalka</Alias>
-          <Alias>kirchauff</Alias>
-          <Alias>kukri</Alias>
-          <Alias>livingston</Alias>
-          <Alias>mace</Alias>
-          <Alias>ouyen</Alias>
-          <Alias>perengori</Alias>
-          <Alias>ruby</Alias>
-          <Alias>tamaroi</Alias>
-          <Alias>wyalkatchem</Alias>
-          <Alias>young</Alias>
+          <Alias><Name>agtscythe</Name></Alias>
+          <Alias><Name>arrino</Name></Alias>
+          <Alias><Name>bonnie_rock</Name></Alias>
+          <Alias><Name>bowerbird</Name></Alias>
+          <Alias><Name>crusader</Name></Alias>
+          <Alias><Name>dart</Name></Alias>
+          <Alias><Name>drysdale</Name></Alias>
+          <Alias><Name>emurock</Name></Alias>
+          <Alias><Name>hunter</Name></Alias>
+          <Alias><Name>hybrid_mercury</Name></Alias>
+          <Alias><Name>hyperno</Name></Alias>
+          <Alias><Name>imposeclplus</Name></Alias>
+          <Alias><Name>kalka</Name></Alias>
+          <Alias><Name>kirchauff</Name></Alias>
+          <Alias><Name>kukri</Name></Alias>
+          <Alias><Name>livingston</Name></Alias>
+          <Alias><Name>mace</Name></Alias>
+          <Alias><Name>ouyen</Name></Alias>
+          <Alias><Name>perengori</Name></Alias>
+          <Alias><Name>ruby</Name></Alias>
+          <Alias><Name>tamaroi</Name></Alias>
+          <Alias><Name>wyalkatchem</Name></Alias>
+          <Alias><Name>young</Name></Alias>
           <Command>[Phenology].Vernalisation.VernSens = 2.3</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
         </Cultivar>
         <Cultivar>
           <Name>EarlyMid</Name>
-          <Alias>annuello</Alias>
-          <Alias>barunga</Alias>
-          <Alias>carnamah</Alias>
-          <Alias>catalina</Alias>
-          <Alias>clf_stiletto</Alias>
-          <Alias>cobra</Alias>
-          <Alias>corack</Alias>
-          <Alias>correll</Alias>
-          <Alias>diamondbird</Alias>
-          <Alias>estoc</Alias>
-          <Alias>frame</Alias>
-          <Alias>gladius</Alias>
-          <Alias>goroke</Alias>
-          <Alias>grenadeclplus</Alias>
-          <Alias>guardian</Alias>
-          <Alias>halbred</Alias>
-          <Alias>hartog</Alias>
-          <Alias>impala</Alias>
-          <Alias>justica</Alias>
-          <Alias>kord</Alias>
-          <Alias>merlin</Alias>
-          <Alias>mitre</Alias>
-          <Alias>pugsley</Alias>
-          <Alias>shield</Alias>
-          <Alias>spitfire</Alias>
-          <Alias>stiletto</Alias>
-          <Alias>sunguard</Alias>
-          <Alias>sunstate</Alias>
-          <Alias>ventura</Alias>
-          <Alias>yallaroi</Alias>
-          <Alias>yawa</Alias>
-          <Alias>yitpi</Alias>
+          <Alias><Name>annuello</Name></Alias>
+          <Alias><Name>barunga</Name></Alias>
+          <Alias><Name>carnamah</Name></Alias>
+          <Alias><Name>catalina</Name></Alias>
+          <Alias><Name>clf_stiletto</Name></Alias>
+          <Alias><Name>cobra</Name></Alias>
+          <Alias><Name>corack</Name></Alias>
+          <Alias><Name>correll</Name></Alias>
+          <Alias><Name>diamondbird</Name></Alias>
+          <Alias><Name>estoc</Name></Alias>
+          <Alias><Name>frame</Name></Alias>
+          <Alias><Name>gladius</Name></Alias>
+          <Alias><Name>goroke</Name></Alias>
+          <Alias><Name>grenadeclplus</Name></Alias>
+          <Alias><Name>guardian</Name></Alias>
+          <Alias><Name>halbred</Name></Alias>
+          <Alias><Name>hartog</Name></Alias>
+          <Alias><Name>impala</Name></Alias>
+          <Alias><Name>justica</Name></Alias>
+          <Alias><Name>kord</Name></Alias>
+          <Alias><Name>merlin</Name></Alias>
+          <Alias><Name>mitre</Name></Alias>
+          <Alias><Name>pugsley</Name></Alias>
+          <Alias><Name>shield</Name></Alias>
+          <Alias><Name>spitfire</Name></Alias>
+          <Alias><Name>stiletto</Name></Alias>
+          <Alias><Name>sunguard</Name></Alias>
+          <Alias><Name>sunstate</Name></Alias>
+          <Alias><Name>ventura</Name></Alias>
+          <Alias><Name>yallaroi</Name></Alias>
+          <Alias><Name>yawa</Name></Alias>
+          <Alias><Name>yitpi</Name></Alias>
           <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
         </Cultivar>
         <Cultivar>
           <Name>VeryEarly</Name>
-          <Alias>h45</Alias>
-          <Alias>h46</Alias>
-          <Alias>saintly</Alias>
-          <Alias>silverstar</Alias>
-          <Alias>tamarinrock</Alias>
-          <Alias>waagan</Alias>
-          <Alias>westonia</Alias>
-          <Alias>wollaroi</Alias>
-          <Alias>zippy</Alias>
+          <Alias><Name>h45</Name></Alias>
+          <Alias><Name>h46</Name></Alias>
+          <Alias><Name>saintly</Name></Alias>
+          <Alias><Name>silverstar</Name></Alias>
+          <Alias><Name>tamarinrock</Name></Alias>
+          <Alias><Name>waagan</Name></Alias>
+          <Alias><Name>westonia</Name></Alias>
+          <Alias><Name>wollaroi</Name></Alias>
+          <Alias><Name>zippy</Name></Alias>
           <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 1.5</Command>
         </Cultivar>
         <Cultivar>
           <Name>Mid</Name>
-          <Alias>arrivato</Alias>
-          <Alias>babbler</Alias>
-          <Alias>barham</Alias>
-          <Alias>baxter</Alias>
-          <Alias>buckley</Alias>
-          <Alias>camm</Alias>
-          <Alias>carinya</Alias>
-          <Alias>clf-jnz</Alias>
-          <Alias>derrimut</Alias>
-          <Alias>dollarbird</Alias>
-          <Alias>elmoreclplus</Alias>
-          <Alias>justicaclplus</Alias>
-          <Alias>saphire</Alias>
-          <Alias>wallup</Alias>
+          <Alias><Name>arrivato</Name></Alias>
+          <Alias><Name>babbler</Name></Alias>
+          <Alias><Name>barham</Name></Alias>
+          <Alias><Name>baxter</Name></Alias>
+          <Alias><Name>buckley</Name></Alias>
+          <Alias><Name>camm</Name></Alias>
+          <Alias><Name>carinya</Name></Alias>
+          <Alias><Name>clf</Name>-jnz</Alias>
+          <Alias><Name>derrimut</Name></Alias>
+          <Alias><Name>dollarbird</Name></Alias>
+          <Alias><Name>elmoreclplus</Name></Alias>
+          <Alias><Name>justicaclplus</Name></Alias>
+          <Alias><Name>saphire</Name></Alias>
+          <Alias><Name>wallup</Name></Alias>
           <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
         </Cultivar>
         <Cultivar>
           <Name>MidPlus</Name>
-          <Alias>bellaroi</Alias>
-          <Alias>lang</Alias>
-          <Alias>caparoi</Alias>
-          <Alias>suntop</Alias>
+          <Alias><Name>bellaroi</Name></Alias>
+          <Alias><Name>lang</Name></Alias>
+          <Alias><Name>caparoi</Name></Alias>
+          <Alias><Name>suntop</Name></Alias>
           <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
         </Cultivar>
         <Cultivar>
           <Name>MidLate</Name>
-          <Alias>braewood</Alias>
-          <Alias>calingiri</Alias>
-          <Alias>chara</Alias>
-          <Alias>endure</Alias>
-          <Alias>envoy</Alias>
-          <Alias>gauntlet</Alias>
-          <Alias>gazelle</Alias>
-          <Alias>giles</Alias>
-          <Alias>magenta</Alias>
-          <Alias>phantom</Alias>
-          <Alias>sentinel</Alias>
-          <Alias>sunlin</Alias>
-          <Alias>sunvale</Alias>
-          <Alias>wylie</Alias>
+          <Alias><Name>braewood</Name></Alias>
+          <Alias><Name>calingiri</Name></Alias>
+          <Alias><Name>chara</Name></Alias>
+          <Alias><Name>endure</Name></Alias>
+          <Alias><Name>envoy</Name></Alias>
+          <Alias><Name>gauntlet</Name></Alias>
+          <Alias><Name>gazelle</Name></Alias>
+          <Alias><Name>giles</Name></Alias>
+          <Alias><Name>magenta</Name></Alias>
+          <Alias><Name>phantom</Name></Alias>
+          <Alias><Name>sentinel</Name></Alias>
+          <Alias><Name>sunlin</Name></Alias>
+          <Alias><Name>sunvale</Name></Alias>
+          <Alias><Name>wylie</Name></Alias>
           <Command>[Phenology].Vernalisation.VernSens = 2.8</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
           <Command />
         </Cultivar>
         <Cultivar>
           <Name>Late</Name>
-          <Alias>beaufont</Alias>
-          <Alias>bolac</Alias>
-          <Alias>forrest</Alias>
-          <Alias>kelallac</Alias>
-          <Alias>preston</Alias>
-          <Alias>strzelecki</Alias>
+          <Alias><Name>beaufont</Name></Alias>
+          <Alias><Name>bolac</Name></Alias>
+          <Alias><Name>forrest</Name></Alias>
+          <Alias><Name>kelallac</Name></Alias>
+          <Alias><Name>preston</Name></Alias>
+          <Alias><Name>strzelecki</Name></Alias>
           <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
         </Cultivar>
         <Cultivar>
           <Name>WinterWheat</Name>
-          <Alias>lorikeet</Alias>
-          <Alias>wylah</Alias>
-          <Alias>rosella</Alias>
-          <Alias>whistler</Alias>
-          <Alias>wedgetail</Alias>
+          <Alias><Name>lorikeet</Name></Alias>
+          <Alias><Name>wylah</Name></Alias>
+          <Alias><Name>rosella</Name></Alias>
+          <Alias><Name>whistler</Name></Alias>
+          <Alias><Name>wedgetail</Name></Alias>
           <Command>[Phenology].Vernalisation.VernSens = 3.9</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.9</Command>
           <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 380</Command>
@@ -751,36 +739,36 @@
         </Cultivar>
         <Cultivar>
           <Name>Axe</Name>
-          <Alias>axe</Alias>
+          <Alias><Name>axe</Name></Alias>
           <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
           <Command />
         </Cultivar>
         <Cultivar>
           <Name>Scout</Name>
-          <Alias>scout</Alias>
-          <Alias>l</Alias>
+          <Alias><Name>scout</Name></Alias>
+          <Alias><Name>l</Name></Alias>
           <Command>[Phenology].Vernalisation.VernSens = 1.8</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
           <Command>[Phenology].StartGrainFillToEndGrainFill.Target.Value = 550</Command>
         </Cultivar>
         <Cultivar>
           <Name>Lincoln</Name>
-          <Alias>lincoln</Alias>
+          <Alias><Name>lincoln</Name></Alias>
           <Command>[Phenology].Vernalisation.VernSens = 1.8</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
         </Cultivar>
         <Cultivar>
           <Name>GregoryLancer</Name>
-          <Alias>gregory</Alias>
-          <Alias>lancer</Alias>
+          <Alias><Name>gregory</Name></Alias>
+          <Alias><Name>lancer</Name></Alias>
           <Command>[Phenology].Vernalisation.VernSens = 2.7</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
           <Command />
         </Cultivar>
         <Cultivar>
           <Name>Eaglehawk</Name>
-          <Alias>eaglehawk</Alias>
+          <Alias><Name>eaglehawk</Name></Alias>
           <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 2.5</Command>
           <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.Value = 500</Command>
@@ -790,8 +778,6 @@
         </Cultivar>
         <Cultivar>
           <Name>Marombi</Name>
-          <Alias>marombi</Alias>
-          <Alias />
           <Command>[Phenology].Vernalisation.VernSens = 3.9</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
           <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 455</Command>
@@ -856,63 +842,7 @@
       <Exceedence>true</Exceedence>
     </Probability>
   </Folder>
-  <Tests>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>EqualTo</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>value</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>LessThan</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>value</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>GreaterThan</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>value</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>AllPos</Type>
-      <ColumnNames>column</ColumnNames>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Between</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>value1,value2</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Mean</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>5,value</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>1,5</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>CompareToInput</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>1,5</Parameters>
-    </Test>
-  </Tests>
+  <Tests />
   <Experiment>
     <Factors>
       <Factor>

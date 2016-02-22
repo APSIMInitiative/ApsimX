@@ -16,7 +16,11 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.ManagerView")]
     [PresenterName("UserInterface.Presenters.ManagerPresenter")]
-    [ValidParent(ParentModels=new Type[] { typeof(Simulation), typeof(Zone) })]
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
+    [ValidParent(ParentType = typeof(Zones.RectangularZone))]
+    [ValidParent(ParentType = typeof(Zones.CircularZone))]
+    [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
     public class Manager : Model
     {
         // ----------------- Privates

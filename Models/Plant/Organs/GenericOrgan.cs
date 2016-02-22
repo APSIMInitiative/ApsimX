@@ -151,6 +151,7 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         [Units("g/m^2")]
         public double LiveFWt { get; set; }
+
         #endregion
 
         #region Organ functions
@@ -268,7 +269,7 @@ namespace Models.PMF.Organs
                 if (value.NonStructural < -0.0000000001)
                     throw new Exception("-ve NonStructuralDM Allocation to " + Name);
                 if ((value.NonStructural - DMDemand.NonStructural) > 0.0000000001)
-                    throw new Exception("StructuralDM Allocation to " + Name + " is in excess of its Capacity");
+                    throw new Exception("Non StructuralDM Allocation to " + Name + " is in excess of its Capacity");
                 if (DMDemand.NonStructural > 0)
                     Live.NonStructuralWt += value.NonStructural;
 
@@ -470,7 +471,7 @@ namespace Models.PMF.Organs
 
             if (DMDemandFunction != null)
             {
-                tags.Add(new AutoDocumentation.Paragraph("The daily DM demand from this organ is calculated using.", indent));
+                tags.Add(new AutoDocumentation.Paragraph("The daily DM demand from this organ is calculated using:", indent));
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 {
                     if (child.Name == "DMDemandFunction")

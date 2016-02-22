@@ -68,6 +68,14 @@ namespace Models.PMF.Functions
             YesterdaysValue = 0;
         }
 
+        /// <summary>Called when [EndCrop].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PhaseRewind")]
+        private void OnPhaseRewind(object sender, EventArgs e)
+        {
+            YesterdaysValue = Integral.Value;
+        }
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>

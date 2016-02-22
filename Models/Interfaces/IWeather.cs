@@ -53,7 +53,9 @@ namespace Models.Interfaces
         /// <summary>Gets the temperature amplitude.</summary>
         double Amp { get; }
 
-        /// <summary>Gets the duration of the day in hours.</summary>
-        double DayLength { get; }
+        /// <summary>
+        /// Gets the duration of the day in hours.
+        /// </summary>
+        double CalculateDayLength(double Twilight);
     }
 }

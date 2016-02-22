@@ -128,7 +128,7 @@
         {
             stopwatch.Stop();
 
-            string errorMessage = simulations.ErrorMessage;
+            string errorMessage = GetErrorsFromSimulations();
             if (errorMessage == null)
                 explorerPresenter.ShowMessage(modelClicked.Name + " complete "
                         + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
@@ -142,6 +142,29 @@
                 player.Stream = Properties.Resources.success;
             player.Play();
             IsRunning = false;
+        }
+
+        /// <summary>
+        /// This gets called everytime a simulation completes. When all are done then
+        /// invoke each model's OnAllCompleted method.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private string GetErrorsFromSimulations()
+        {
+            string errorMessage = null;
+            foreach (JobManager.IRunnable job in jobManager.CompletedJobs)
+            {
+                Simulation simulation = job as Simulation;
+                if (simulation != null && simulation.ErrorMessage != null)
+                {
+                    if (errorMessage == null)
+                        errorMessage += "Errors were found in these simulations:\r\n";
+                    errorMessage += simulation.Name + "\r\n" + simulation.ErrorMessage + "\r\n\r\n";
+                }
+            }
+
+            return errorMessage;
         }
 
         /// <summary>

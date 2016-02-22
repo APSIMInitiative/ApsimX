@@ -45,6 +45,18 @@ namespace Models.Graph
         /// <summary>No marker should be display</summary>
         None,
 
+        /// <summary>A filled circle marker</summary>
+        FilledCircle,
+
+        /// <summary>A filled diamond marker</summary>
+        FilledDiamond,
+
+        /// <summary>A filled square marker</summary>
+        FilledSquare,
+
+        /// <summary>A filled triangle marker</summary>
+        FilledTriangle,
+
         /// <summary>A circle marker</summary>
         Circle,
 
@@ -64,19 +76,17 @@ namespace Models.Graph
         Plus,
 
         /// <summary>A star marker</summary>
-        Star,
+        Star
+    }
 
-        /// <summary>A filled circle marker</summary>
-        FilledCircle,
+    /// <summary>An enumeration for the different sizes of markers</summary>
+    public enum MarkerSizeType
+    {
+        /// <summary>Normal size markers.</summary>
+        Normal,
 
-        /// <summary>A filled diamond marker</summary>
-        FilledDiamond,
-
-        /// <summary>A filled square marker</summary>
-        FilledSquare,
-
-        /// <summary>A filled triangle marker</summary>
-        FilledTriangle 
+        /// <summary>Small markers</summary>
+        Small
     }
 
     /// <summary>An enumeration representing the different types of lines</summary>
@@ -98,11 +108,27 @@ namespace Models.Graph
         None 
     }
 
+    /// <summary>An enumeration for the different thicknesses of lines.</summary>
+    public enum LineThicknessType
+    {
+        /// <summary>Normal line thickness</summary>
+        Normal,
+
+        /// <summary>Thin line thickess</summary>
+        Thin
+    }
+
     /// <summary>
     /// A class for defining a graph series. A list of these is given to graph when graph is drawing itself.
     /// </summary>
     public class SeriesDefinition
     {
+        /// <summary>A list of simulation names.</summary>
+        public string[] SimulationNames = null;
+
+        /// <summary>Series definition filter.</summary>
+        public string Filter = null;
+
         /// <summary>Gets the series type</summary>
         public SeriesType type;
 
@@ -111,6 +137,12 @@ namespace Models.Graph
 
         /// <summary>Gets the line type to show</summary>
         public LineType line;
+
+        /// <summary>Gets the marker size</summary>
+        public MarkerSizeType markerSize;
+
+        /// <summary>Gets the line thickness</summary>
+        public LineThicknessType lineThickness;
 
         /// <summary>Gets the colour.</summary>
         public Color colour;
