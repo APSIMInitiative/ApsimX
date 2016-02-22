@@ -5,21 +5,21 @@
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>ProfileSWC</Name>
-      <FileName>ShallowSoilTest\SoilWaterContent.xls</FileName>
+      <FileName>%root%\Tests\Slurp\ShallowSoilTest\SoilWaterContent.xlsx</FileName>
       <SheetNames>
         <string>ProfileSWC</string>
       </SheetNames>
     </ExcelInput>
     <ExcelInput>
       <Name>LayerSWC</Name>
-      <FileName>ShallowSoilTest\SoilWaterContent.xls</FileName>
+      <FileName>%root%\Tests\Slurp\ShallowSoilTest\SoilWaterContent.xlsx</FileName>
       <SheetNames>
         <string>LayerSWC</string>
       </SheetNames>
     </ExcelInput>
     <ExcelInput>
       <Name>Cover</Name>
-      <FileName>ShallowSoilTest\CoverDataObs.xls</FileName>
+      <FileName>%root%\Tests\Slurp\ShallowSoilTest\CoverDataObs.xlsx</FileName>
       <SheetNames>
         <string>Cover</string>
       </SheetNames>
@@ -27,16 +27,58 @@
     <Input>
       <Name>Input</Name>
       <ErrorMessage>Specified cast is not valid.</ErrorMessage>
-      <FileName>ShallowSoilTest\CoverInterpolated.csv</FileName>
+      <FileName>%root%\Tests\Slurp\ShallowSoilTest\CoverInterpolated.csv</FileName>
     </Input>
     <PredictedObserved>
       <Name>ProfileWater</Name>
+      <Tests>
+        <Name>Tests</Name>
+        <AcceptedStats>
+          <RegrStats>
+            <Name>PSWC</Name>
+            <n>448</n>
+            <Slope>0.7433261264647274</Slope>
+            <Intercept>47.537470959176346</Intercept>
+            <SEslope>0.03277526941183221</SEslope>
+            <SEintercept>7.3535171699026964</SEintercept>
+            <R2>0.53559028585105173</R2>
+            <RMSE>35.532319544018662</RMSE>
+            <NSE>0.41946951656353215</NSE>
+            <ME>-8.7925834333041433</ME>
+            <MAE>27.354327596053118</MAE>
+            <RSR>0.76107467206872115</RSR>
+          </RegrStats>
+        </AcceptedStats>
+        <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
+        <POName>ProfileWater</POName>
+      </Tests>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>ProfileSWC</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <PredictedObserved>
       <Name>CanopyCover</Name>
+      <Tests>
+        <Name>Tests</Name>
+        <AcceptedStats>
+          <RegrStats>
+            <Name>Slurp.Leaf.CoverTotal</Name>
+            <n>824</n>
+            <Slope>1.0135080689834304</Slope>
+            <Intercept>-0.041930843368039983</Intercept>
+            <SEslope>0.007032305650724744</SEslope>
+            <SEintercept>0.005566810818574775</SEintercept>
+            <R2>0.96193223734531108</R2>
+            <RMSE>0.068422625244649649</RMSE>
+            <NSE>0.94770680215271219</NSE>
+            <ME>-0.032031059935304196</ME>
+            <MAE>0.03311722682985576</MAE>
+            <RSR>0.22853825769122579</RSR>
+          </RegrStats>
+        </AcceptedStats>
+        <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
+        <POName>CanopyCover</POName>
+      </Tests>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Cover</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
@@ -7444,7 +7486,7 @@ namespace Models
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
-        <Filter>[Cover] = 'Lucerne'</Filter>
+        <Filter>[Cover] = 'TypeLucerne'</Filter>
       </Series>
       <Axis>
         <Type>Bottom</Type>
@@ -7509,7 +7551,7 @@ namespace Models
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
-        <Filter>[Cover] = 'Lucerne'</Filter>
+        <Filter>[Cover] = 'TypeLucerne'</Filter>
       </Series>
       <Axis>
         <Type>Bottom</Type>
