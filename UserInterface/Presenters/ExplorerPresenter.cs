@@ -92,7 +92,7 @@ namespace UserInterface.Presenters
             this.mainMenu = new MainMenu(this);
             this.contextMenu = new ContextMenu(this);
 
-            this.view.ShortcutKeys = new Keys[] { Keys.F5 };
+            this.view.ShortcutKeys = new string[] { "F5" };
             this.view.SelectedNodeChanged += this.OnNodeSelected;
             this.view.DragStarted += this.OnDragStart;
             this.view.AllowDrop += this.OnAllowDrop;

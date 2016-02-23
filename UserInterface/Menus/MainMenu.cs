@@ -6,14 +6,11 @@
 namespace UserInterface.Presenters
 {
     using System;
-    using System.IO;
+    using System.Diagnostics;
+    using System.Reflection;
     using Models;
     using Models.Core;
-    using System.Diagnostics;
     using global::UserInterface.Forms;
-    using System.Windows.Forms;
-
-
 
     /// <summary>
     /// This class contains methods for all main menu items that the ExplorerView exposes to the user.
@@ -110,7 +107,8 @@ namespace UserInterface.Presenters
         [MainMenu(MenuName = "Upgrade")]
         public void OnUpgrade(object sender, EventArgs e)
         {
-            Version version = new Version(Application.ProductVersion);
+            // Get the version of the current assembly.
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
             if (version.Revision == 0)
                 explorerPresenter.ShowMessage("You are on a custom build. You cannot upgrade.", DataStore.ErrorLevel.Error);
             else

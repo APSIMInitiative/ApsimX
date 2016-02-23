@@ -8,7 +8,6 @@ namespace UserInterface.Interfaces
     using System;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
-    using System.Windows.Forms;
     using EventArguments;
 
     /// <summary>A structure for holding info about an item in the treeview.</summary>
@@ -40,7 +39,7 @@ namespace UserInterface.Interfaces
         /// <summary>The checked</summary>
         public bool Checked;
         /// <summary>The shortcut key</summary>
-        public Keys ShortcutKey;
+        public string ShortcutKey;
         /// <summary>The enabled</summary>
         public bool Enabled;
     }
@@ -168,7 +167,7 @@ namespace UserInterface.Interfaces
 
         /// <summary>Gets or sets the shortcut keys.</summary>
         /// <value>The shortcut keys.</value>
-        Keys[] ShortcutKeys { get; set; }
+        string[] ShortcutKeys { get; set; }
 
         /// <summary>Populate the main menu tool strip.</summary>
         /// <param name="menuDescriptions">Menu descriptions for each menu item.</param>

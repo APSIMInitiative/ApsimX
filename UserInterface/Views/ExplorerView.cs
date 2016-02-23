@@ -212,7 +212,7 @@ namespace UserInterface.Views
 
         /// <summary>Gets or sets the shortcut keys.</summary>
         /// <value>The shortcut keys.</value>
-        public Keys[] ShortcutKeys { get; set; }
+        public string[] ShortcutKeys { get; set; }
 
         /// <summary>Populate the main menu tool strip.</summary>
         /// <param name="menuDescriptions">Menu descriptions for each menu item.</param>
@@ -248,7 +248,11 @@ namespace UserInterface.Views
                 ToolStripMenuItem Button = PopupMenu.Items.Add(Description.Name, Icon, Description.OnClick) as ToolStripMenuItem;
                 Button.TextImageRelation = TextImageRelation.ImageBeforeText;
                 Button.Checked = Description.Checked;
-                Button.ShortcutKeys = Description.ShortcutKey;
+                if (Description.ShortcutKey != null)
+                {
+                    KeysConverter kc = new KeysConverter();
+                    Button.ShortcutKeys = (Keys)kc.ConvertFromString(Description.ShortcutKey);
+                }
                 Button.Enabled = Description.Enabled;
             }
         }
@@ -360,8 +364,20 @@ namespace UserInterface.Views
         /// <param name="percent"></param>
         public void ShowProgress(int percent)
         {
-            progressBar.Visible = true;
-            progressBar.Value = percent;
+            // We need to use "Invoke" if the timer is running in a
+            // different thread. That means we can use either
+            // System.Timers.Timer or Windows.Forms.Timer in 
+            // RunCommand.cs
+            MethodInvoker progressBarUpdate = delegate
+            {
+                progressBar.Visible = true;
+                progressBar.Value = percent;
+            };
+
+            if (InvokeRequired)
+                this.BeginInvoke(new Action(progressBarUpdate));
+            else
+                progressBarUpdate();
         }
 
         /// <summary>
@@ -520,10 +536,15 @@ namespace UserInterface.Views
         /// <returns>True if command key was processed.</returns>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (ShortcutKeyPressed != null && ShortcutKeys != null && ShortcutKeys.Contains(keyData))
+            if (ShortcutKeyPressed != null && ShortcutKeys != null)
             {
-                ShortcutKeyPressed.Invoke(this, new KeysArgs() { Keys = keyData });
-                return true;
+                KeysConverter kc = new KeysConverter();
+                string keyName = kc.ConvertToString(keyData);
+                if (ShortcutKeys.Contains(keyName))
+                {
+                    ShortcutKeyPressed.Invoke(this, new KeysArgs() { Keys = keyData });
+                    return true;
+                }
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
