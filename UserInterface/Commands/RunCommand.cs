@@ -8,7 +8,7 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Media;
-    using System.Windows.Forms;
+    using System.Timers;
 
     class RunCommand : ICommand
     {
@@ -83,7 +83,8 @@
                 {
                     timer = new Timer();
                     timer.Interval = 1000;
-                    timer.Tick += OnTimerTick;
+                    timer.AutoReset = true;
+                    timer.Elapsed += OnTimerTick;
                 }
                 jobManager.AddJob(simulations);
                 jobManager.AllJobsCompleted += OnComplete;
@@ -172,7 +173,7 @@
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnTimerTick(object sender, EventArgs e)
+        private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
             // One job will be the simulations object we added above. We don't want
             // to count this in the list of simulations being run, hence the -1 below.

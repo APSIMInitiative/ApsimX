@@ -184,6 +184,14 @@ namespace UserInterface.Views
             }
         }
 
+        public void ExportToClipboard()
+        {
+            // Set the clipboard text.
+            Bitmap bitmap = new Bitmap(800, 600);
+            Export(bitmap, false);
+            Clipboard.SetImage(bitmap);
+        }
+
         /// <summary>
         /// Invoked when the user clicks on an axis.
         /// </summary>
@@ -428,7 +436,7 @@ namespace UserInterface.Views
         /// Show the specified editor.
         /// </summary>
         /// <param name="editor">The editor to show</param>
-        public void ShowEditorPanel(UserControl editor)
+        public void ShowEditorPanel(object editorObj)
         {
         }
 
