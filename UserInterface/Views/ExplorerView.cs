@@ -271,13 +271,14 @@ namespace UserInterface.Views
         /// Add a user control to the right hand panel. If Control is null then right hand panel will be cleared.
         /// </summary>
         /// <param name="control">The control to add.</param>
-        public void AddRightHandView(UserControl control)
+        public void AddRightHandView(object control)
         {
             RightHandPanel.Controls.Clear();
-            if (control != null)
+            UserControl userControl = control as UserControl;
+            if (userControl != null)
             {
-                RightHandPanel.Controls.Add(control);
-                control.Dock = DockStyle.Fill;
+                RightHandPanel.Controls.Add(userControl);
+                userControl.Dock = DockStyle.Fill;
             }
         }
 

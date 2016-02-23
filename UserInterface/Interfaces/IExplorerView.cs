@@ -188,7 +188,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Add a view to the right hand panel.
         /// </summary>
-        void AddRightHandView(UserControl Control);
+        void AddRightHandView(object Control);
 
         /// <summary>
         /// Ask about saving.
