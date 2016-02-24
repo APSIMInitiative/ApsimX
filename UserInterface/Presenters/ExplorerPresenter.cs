@@ -19,7 +19,6 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models;
     using Models.Core;
-    using Models.Factorial;
 
     /// <summary>
     /// This presenter class is responsible for populating the view
@@ -93,7 +92,7 @@ namespace UserInterface.Presenters
             this.mainMenu = new MainMenu(this);
             this.contextMenu = new ContextMenu(this);
 
-            this.view.ShortcutKeys = new Keys[] { Keys.F5 };
+            this.view.ShortcutKeys = new string[] { "F5" };
             this.view.SelectedNodeChanged += this.OnNodeSelected;
             this.view.DragStarted += this.OnDragStart;
             this.view.AllowDrop += this.OnAllowDrop;
@@ -864,7 +863,7 @@ namespace UserInterface.Presenters
         /// <param name="presenterName">The presenter name.</param>
         public void ShowInRightHandPanel(object model, string viewName, string presenterName)
         {
-            UserControl newView = Assembly.GetExecutingAssembly().CreateInstance(viewName) as UserControl;
+            object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName);
             this.currentRightHandPresenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName) as IPresenter;
             if (newView != null && this.currentRightHandPresenter != null)
             {

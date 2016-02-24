@@ -6,7 +6,6 @@
 namespace Models.Core
 {
     using System;
-using System.Windows.Forms;
 
     /// <summary>
     /// Specifies that the related class should use the user interface view
@@ -25,6 +24,6 @@ using System.Windows.Forms;
         /// </summary>
         public Type[] AppliesTo { get; set; }
 
-        public Keys ShortcutKey { get; set; }
+        public string ShortcutKey { get; set; }
     } 
 }

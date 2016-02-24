@@ -9,9 +9,6 @@ namespace UserInterface.Presenters
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Windows.Forms;
     using System.Xml;
     using Importer;
     using Models.Core;
@@ -71,11 +68,7 @@ namespace UserInterface.Presenters
         /// <param name="askToSave">Flag to turn on the request to save</param>
         public void Close(bool askToSave = true)
         {
-            UserControl view = this.view as UserControl;
-            Form mainForm = view.ParentForm;
-            if (!askToSave)
-                mainForm.DialogResult = DialogResult.Cancel;
-            mainForm.Close();
+            this.view.Close(askToSave);
         }
 
         /// <summary>
@@ -107,26 +100,30 @@ namespace UserInterface.Presenters
                 this.Presenters.Add(presenter);
                 try
                 {
-                    Cursor.Current = Cursors.WaitCursor;
+                    this.view.WaitCursor = true;
+                    try
+                    {
+                        Simulations simulations = Simulations.Read(fileName);
+                        presenter.Attach(simulations, explorerView, null);
+                        this.view.AddTab(fileName, Properties.Resources.apsim_logo32, explorerView, true);
 
-                    Simulations simulations = Simulations.Read(fileName);
-                    presenter.Attach(simulations, explorerView, null);
-                    this.view.AddTab(fileName, Properties.Resources.apsim_logo32, explorerView, true);
-
-                    // restore the simulation tree width on the form
-                    if (simulations.ExplorerWidth == 0)
-                        presenter.TreeWidth = 250;
-                    else
-                        presenter.TreeWidth = Math.Min(simulations.ExplorerWidth, this.view.TabWidth - 20); // ?
-                    Utility.Configuration.Settings.AddMruFile(fileName);
-                    List<string> validMrus = new List<string>();                           // make sure recently used files still exist before displaying them
-                    foreach (string s in Utility.Configuration.Settings.MruList)
-                        if (File.Exists(s))
-                            validMrus.Add(s);
-                    Utility.Configuration.Settings.MruList = validMrus;
-                    //this.view.FillMruList(validMrus);
-
-                    Cursor.Current = Cursors.Default;
+                        // restore the simulation tree width on the form
+                        if (simulations.ExplorerWidth == 0)
+                            presenter.TreeWidth = 250;
+                        else
+                            presenter.TreeWidth = Math.Min(simulations.ExplorerWidth, this.view.TabWidth - 20); // ?
+                        Utility.Configuration.Settings.AddMruFile(fileName);
+                        List<string> validMrus = new List<string>();                           // make sure recently used files still exist before displaying them
+                        foreach (string s in Utility.Configuration.Settings.MruList)
+                            if (File.Exists(s))
+                                validMrus.Add(s);
+                        Utility.Configuration.Settings.MruList = validMrus;
+                        //this.view.FillMruList(validMrus);
+                    }
+                    finally
+                    {
+                        this.view.WaitCursor = false;
+                    }
                 }
                 catch (Exception err)
                 {
@@ -289,12 +286,18 @@ namespace UserInterface.Presenters
             APSIMImporter importer = new APSIMImporter();
             try
             {
-                Cursor.Current = Cursors.WaitCursor;
-                importer.ProcessFile(fileName);
+                this.view.WaitCursor = true;
+                try
+                {
+                    importer.ProcessFile(fileName);
 
-                string newFileName = Path.ChangeExtension(fileName, ".apsimx");
-                this.OpenApsimXFileInTab(newFileName);
-                Cursor.Current = Cursors.Default;
+                    string newFileName = Path.ChangeExtension(fileName, ".apsimx");
+                    this.OpenApsimXFileInTab(newFileName);
+                }
+                finally
+                {
+                    this.view.WaitCursor = false;
+                }
             }
             catch (Exception exp)
             {
