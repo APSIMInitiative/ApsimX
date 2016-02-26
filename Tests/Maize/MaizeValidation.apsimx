@@ -209,6 +209,11 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
         <string>MaxLeafSize</string>
       </SheetNames>
     </ExcelInput>
+    <Probability>
+      <Name>Probability</Name>
+      <TableName>SensibilityReport</TableName>
+      <Exceedence>false</Exceedence>
+    </Probability>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
@@ -38204,5 +38209,822 @@ Simulation results for the combined datasets from the various countries are show
     <DisabledSeries />
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
+  <Folder>
+    <Name>Sensibility Tests</Name>
+    <Experiment>
+      <Name>Bugesera</Name>
+      <Memo>
+        <Name>Memo</Name>
+        <MemoText><![CDATA[Maize is grown in the Bugesera region of southern Rwanda in Central Africa.  The region has a bimodal rainfall distribution which allows two plantings per year.  For low input situations the maize yields should vary between 1 and 3 t/ha per crop.  Under fertilised conditions the yield should increase up to 5 t/ha per crop.]]></MemoText>
+      </Memo>
+      <Factors>
+        <Name>Factors</Name>
+        <Factor>
+          <Name>NRate</Name>
+          <Specifications>
+            <string>[SowingFertiliser].Script.Amount = 0, 50</string>
+          </Specifications>
+        </Factor>
+      </Factors>
+      <Simulation>
+        <Name>Bugesera</Name>
+        <Clock>
+          <Name>Clock</Name>
+          <StartDate>2000-01-01T00:00:00</StartDate>
+          <EndDate>2013-12-31T00:00:00</EndDate>
+        </Clock>
+        <Summary>
+          <Name>SummaryFile</Name>
+        </Summary>
+        <Weather>
+          <Name>Weather</Name>
+          <FileName>C:\APSIMX\Tests\Maize\Bugesera.met</FileName>
+        </Weather>
+        <Manager>
+          <Name>ClimateChange</Name>
+          <Script>
+            <DeltaMaxT>0</DeltaMaxT>
+            <DeltaRadiation>0</DeltaRadiation>
+            <DeltaRain>0</DeltaRain>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF.OldPlant;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Weather Weather;
+		[Link] Summary Summary;
+		
+		[Description("Change in Maximum Temperature (oC)")]
+		public double DeltaMaxT { get; set; }
+		[Description("Change in SolarRadiation (%)")]
+		public double DeltaRadiation { get; set; }
+		[Description("Change in Rainfall (%)")]
+		public double DeltaRain { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+		}
+		
+
+		[EventSubscribe("PreparingNewWeatherData")]
+		private void OnPreparingNewWeatherData(object sender, EventArgs e)
+		{
+			Weather.MaxT += DeltaMaxT;
+			Weather.Radn *= (1.0 + DeltaRadiation / 100);
+			Weather.Rain *= (1.0 + DeltaRain / 100);
+		}
+		
+	}
+}
+]]></Code>
+        </Manager>
+        <SoilArbitrator>
+          <Name>Soil Arbitrator</Name>
+        </SoilArbitrator>
+        <Zone>
+          <Name>Field</Name>
+          <Report>
+            <Name>SensibilityReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
+            <VariableNames>
+              <string>[Clock].Today</string>
+              <string>Maize.Phenology.CurrentStageName</string>
+              <string>Maize.AboveGround.Wt</string>
+              <string>Maize.AboveGround.N</string>
+              <string>Maize.Grain.Size</string>
+              <string>Maize.Grain.Number</string>
+              <string>Maize.Grain.Wt</string>
+              <string>Maize.Grain.N</string>
+              <string>Maize.Total.Wt</string>
+              <string>Maize.Phenology.FloweringDAS.value as FloweringDAS</string>
+              <string>Maize.Phenology.MaturityDAS.value as MaturityDAS</string>
+              <string>[Maize].Phenology.DaysAfterSowing</string>
+              <string>sum of [Weather].Rain from [Maize].Sowing to [Maize].Harvesting as InCropRain</string>
+              <string>[Soil].SoilNitrogen.OC[1] as SurfaceOC</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Maize].Harvesting</string>
+            </EventNames>
+          </Report>
+          <Fertiliser>
+            <Name>Fertiliser</Name>
+          </Fertiliser>
+          <SurfaceOrganicMatter>
+            <Name>SurfaceOrganicMatter</Name>
+            <ResidueTypes>
+              <Name>ResidueTypes</Name>
+              <LoadFromResource>ResidueTypes</LoadFromResource>
+            </ResidueTypes>
+            <Pools>
+              <Pool>
+                <PoolName>wheat_stubble</PoolName>
+                <ResidueType>wheat</ResidueType>
+                <Mass>500</Mass>
+                <CNRatio>100</CNRatio>
+                <CPRatio>NaN</CPRatio>
+                <StandingFraction>0</StandingFraction>
+              </Pool>
+            </Pools>
+            <PoolName>wheat_stubble</PoolName>
+            <type>wheat</type>
+            <mass>500</mass>
+            <standing_fraction>0</standing_fraction>
+            <cpr />
+            <cnr>100</cnr>
+            <CriticalResidueWeight>2000</CriticalResidueWeight>
+            <OptimumDecompTemp>20</OptimumDecompTemp>
+            <MaxCumulativeEOS>20</MaxCumulativeEOS>
+            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+            <TotalLeachRain>25</TotalLeachRain>
+            <MinRainToLeach>10</MinRainToLeach>
+            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+            <DefaultCPRatio>0</DefaultCPRatio>
+            <DefaultStandingFraction>0</DefaultStandingFraction>
+            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
+          </SurfaceOrganicMatter>
+          <Soil>
+            <Name>Soil</Name>
+            <SoilWater>
+              <Name>SoilWater</Name>
+              <residueinterception>0</residueinterception>
+              <SummerDate>1-Nov</SummerDate>
+              <SummerU>3</SummerU>
+              <SummerCona>4.5</SummerCona>
+              <WinterDate>1-Apr</WinterDate>
+              <WinterU>3</WinterU>
+              <WinterCona>4.5</WinterCona>
+              <DiffusConst>40</DiffusConst>
+              <DiffusSlope>21</DiffusSlope>
+              <Salb>0.13</Salb>
+              <CN2Bare>73</CN2Bare>
+              <CNRed>20</CNRed>
+              <CNCov>0.8</CNCov>
+              <slope>NaN</slope>
+              <discharge_width>NaN</discharge_width>
+              <catchment_area>NaN</catchment_area>
+              <max_pond>0</max_pond>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <SWCON>
+                <double>0.45</double>
+                <double>0.3</double>
+                <double>0.3</double>
+                <double>0.3</double>
+                <double>0.3</double>
+                <double>0.3</double>
+                <double>0.3</double>
+              </SWCON>
+            </SoilWater>
+            <SoilNitrogen>
+              <Name>SoilNitrogen</Name>
+              <fom_type>
+                <string>default</string>
+                <string>manure</string>
+                <string>mucuna</string>
+                <string>lablab</string>
+                <string>shemp</string>
+                <string>stable</string>
+              </fom_type>
+              <fract_carb>
+                <double>0.2</double>
+                <double>0.3</double>
+                <double>0.54</double>
+                <double>0.57</double>
+                <double>0.45</double>
+                <double>0</double>
+              </fract_carb>
+              <fract_cell>
+                <double>0.7</double>
+                <double>0.3</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.47</double>
+                <double>0.1</double>
+              </fract_cell>
+              <fract_lign>
+                <double>0.1</double>
+                <double>0.4</double>
+                <double>0.09</double>
+                <double>0.06</double>
+                <double>0.08</double>
+                <double>0.9</double>
+              </fract_lign>
+              <wfpsN2N2O_x>
+                <double>22</double>
+                <double>88</double>
+              </wfpsN2N2O_x>
+              <wfpsN2N2O_y>
+                <double>0.1</double>
+                <double>1</double>
+              </wfpsN2N2O_y>
+            </SoilNitrogen>
+            <InitialWater>
+              <Name>InitialWater</Name>
+              <PercentMethod>FilledFromTop</PercentMethod>
+              <FractionFull>0.25</FractionFull>
+              <DepthWetSoil>NaN</DepthWetSoil>
+            </InitialWater>
+            <Water>
+              <Name>Water</Name>
+              <SoilCrop>
+                <Name>MaizeSoil</Name>
+                <LL>
+                  <double>0.199</double>
+                  <double>0.222</double>
+                  <double>0.249</double>
+                  <double>0.294</double>
+                  <double>0.32</double>
+                  <double>0.382</double>
+                  <double>0.443</double>
+                </LL>
+                <KL>
+                  <double>0.08</double>
+                  <double>0.08</double>
+                  <double>0.07</double>
+                  <double>0.05</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.01</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                </XF>
+              </SoilCrop>
+              <SoilCrop>
+                <Name>NavyBeanSoil</Name>
+                <LL>
+                  <double>0.199</double>
+                  <double>0.222</double>
+                  <double>0.249</double>
+                  <double>0.294</double>
+                  <double>0.32</double>
+                  <double>0.32</double>
+                  <double>0.32</double>
+                </LL>
+                <KL>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.04</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </XF>
+              </SoilCrop>
+              <SoilCrop>
+                <Name>WeedSoil</Name>
+                <LL>
+                  <double>0.199</double>
+                  <double>0.222</double>
+                  <double>0.249</double>
+                  <double>0.294</double>
+                  <double>0.32</double>
+                  <double>0.32</double>
+                  <double>0.32</double>
+                </LL>
+                <KL>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.04</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </XF>
+              </SoilCrop>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <BD>
+                <double>1.52</double>
+                <double>1.54</double>
+                <double>1.51</double>
+                <double>1.44</double>
+                <double>1.35</double>
+                <double>1.35</double>
+                <double>1.35</double>
+              </BD>
+              <AirDry>
+                <double>0.0796</double>
+                <double>0.1332</double>
+                <double>0.249</double>
+                <double>0.294</double>
+                <double>0.32</double>
+                <double>0.32</double>
+                <double>0.32</double>
+              </AirDry>
+              <LL15>
+                <double>0.199</double>
+                <double>0.222</double>
+                <double>0.249</double>
+                <double>0.294</double>
+                <double>0.32</double>
+                <double>0.32</double>
+                <double>0.32</double>
+              </LL15>
+              <DUL>
+                <double>0.309</double>
+                <double>0.323</double>
+                <double>0.358</double>
+                <double>0.412</double>
+                <double>0.443</double>
+                <double>0.443</double>
+                <double>0.443</double>
+              </DUL>
+              <SAT>
+                <double>0.382</double>
+                <double>0.389</double>
+                <double>0.399</double>
+                <double>0.426</double>
+                <double>0.459</double>
+                <double>0.459</double>
+                <double>0.459</double>
+              </SAT>
+            </Water>
+            <SoilOrganicMatter>
+              <Name>SoilOrganicMatter</Name>
+              <RootCN>40</RootCN>
+              <RootWt>1000</RootWt>
+              <SoilCN>12.8</SoilCN>
+              <EnrACoeff>7.4</EnrACoeff>
+              <EnrBCoeff>0.2</EnrBCoeff>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <Depth>
+                <string>0-15</string>
+                <string>15-30</string>
+                <string>30-60</string>
+                <string>60-90</string>
+                <string>90-120</string>
+                <string>120-150</string>
+                <string>150-180</string>
+              </Depth>
+              <OC>
+                <double>2</double>
+                <double>1</double>
+                <double>0.75</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+              </OC>
+              <FBiom>
+                <double>0.04</double>
+                <double>0.02</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+              </FBiom>
+              <FInert>
+                <double>0.25</double>
+                <double>0.5</double>
+                <double>0.8</double>
+                <double>0.99</double>
+                <double>0.99</double>
+                <double>0.99</double>
+                <double>0.99</double>
+              </FInert>
+              <OCUnits>Total</OCUnits>
+            </SoilOrganicMatter>
+            <Analysis>
+              <Name>Analysis</Name>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <PH>
+                <double>5.35</double>
+                <double>5.1</double>
+                <double>4.85</double>
+                <double>4.9</double>
+                <double>5.1</double>
+                <double>5.1</double>
+                <double>5.1</double>
+              </PH>
+              <PHUnits>Water</PHUnits>
+              <BoronUnits>HotWater</BoronUnits>
+            </Analysis>
+            <Sample>
+              <Name>Initial nitrogen</Name>
+              <Thickness>
+                <double>200</double>
+                <double>1600</double>
+              </Thickness>
+              <NO3>
+                <double>1.3</double>
+                <double>1.3</double>
+              </NO3>
+              <NH4>
+                <double>2.4</double>
+                <double>2.4</double>
+              </NH4>
+              <NO3Units>kgha</NO3Units>
+              <NH4Units>kgha</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
+            <RecordNumber>0</RecordNumber>
+            <Site>Bugesera</Site>
+            <NearestTown>Nyamata</NearestTown>
+            <Region>Bugesera</Region>
+            <Country>Rwanda</Country>
+            <Latitude>-2.15</Latitude>
+            <Longitude>30.45</Longitude>
+            <DataSource>Rwanda soil database using properties for Ferralsol</DataSource>
+          </Soil>
+          <Plant>
+            <Name>Maize</Name>
+            <ResourceName>Maize</ResourceName>
+            <CropType>Maize</CropType>
+          </Plant>
+          <MicroClimate>
+            <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.3</soil_albedo>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
+          </MicroClimate>
+          <Manager>
+            <Name>SowingFertiliser</Name>
+            <Script>
+              <Amount>0</Amount>
+              <CropName>maize</CropName>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		
+		
+		[Description("Amount of fertiliser to be applied (kg/ha)")]
+		public double Amount { get; set; }
+		
+		[Description("Crop to be fertilised")]
+		public string CropName { get; set; }
+		
+		
+		
+
+		[EventSubscribe("Sowing")]
+		private void OnSowing(object sender, EventArgs e)
+		{
+			Model crop = sender as Model;
+			if (crop.Name.ToLower() == CropName.ToLower())
+				Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
+		}
+		
+	}
+}
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>SowingRuleA</Name>
+            <Script>
+              <StartDate>15-sep</StartDate>
+              <EndDate>15-oct</EndDate>
+              <MinESW>30</MinESW>
+              <MinRain>30</MinRain>
+              <RainDays>3</RainDays>
+              <CultivarName>katumani</CultivarName>
+              <SowingDepth>30</SowingDepth>
+              <RowSpacing>750</RowSpacing>
+              <Population>5.3</Population>
+              <MustSow>True</MustSow>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		[Link] Plant Maize;
+		[Link] Soil Soil;
+		Accumulator accumulatedRain;
+		
+		[Description("Start of sowing window (d-mmm)")]
+		public string StartDate { get; set; }
+		[Description("End of sowing window (d-mmm)")]
+		public string EndDate { get; set; }
+		[Description("Minimum extractable soil water for sowing (mm)")]
+		public double MinESW { get; set; }
+		[Description("Accumulated rainfall required for sowing (mm)")]
+		public double MinRain { get; set; }
+		[Description("Duration of rainfall accumulation (d)")]
+		public int RainDays { get; set; }
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set; }
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set; }
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set; }
+		[Description("Plant population (/m2)")]
+		public double Population { get; set; }
+		[Description("Must sow at end of window (T/F)")]
+		public bool MustSow{ get; set; }
+		
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
+		}
+		
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			accumulatedRain.Update();
+			
+			if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
+			    Maize.IsAlive == false &&
+			    Soil.SoilWater.ESW > MinESW &&
+			    accumulatedRain.Sum > MinRain)
+			    || (DateUtilities.WithinDates(EndDate, Clock.Today, EndDate) && Maize.IsAlive == false && MustSow == true))
+			{
+				Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>SowingRuleB</Name>
+            <Script>
+              <StartDate>1-mar</StartDate>
+              <EndDate>30-mar</EndDate>
+              <MinESW>30</MinESW>
+              <MinRain>30</MinRain>
+              <RainDays>3</RainDays>
+              <CultivarName>katumani</CultivarName>
+              <SowingDepth>30</SowingDepth>
+              <RowSpacing>750</RowSpacing>
+              <Population>5.3</Population>
+              <MustSow>True</MustSow>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		[Link] Plant Maize;
+		[Link] Soil Soil;
+		Accumulator accumulatedRain;
+		
+		[Description("Start of sowing window (d-mmm)")]
+		public string StartDate { get; set; }
+		[Description("End of sowing window (d-mmm)")]
+		public string EndDate { get; set; }
+		[Description("Minimum extractable soil water for sowing (mm)")]
+		public double MinESW { get; set; }
+		[Description("Accumulated rainfall required for sowing (mm)")]
+		public double MinRain { get; set; }
+		[Description("Duration of rainfall accumulation (d)")]
+		public int RainDays { get; set; }
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set; }
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set; }
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set; }
+		[Description("Plant population (/m2)")]
+		public double Population { get; set; }
+		[Description("Must sow at end of window (T/F)")]
+		public bool MustSow{ get; set; }
+		
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
+		}
+		
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			accumulatedRain.Update();
+			
+			if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
+			    Maize.IsAlive == false &&
+			    Soil.SoilWater.ESW > MinESW &&
+			    accumulatedRain.Sum > MinRain)
+			    || (DateUtilities.WithinDates(EndDate, Clock.Today, EndDate) && Maize.IsAlive == false && MustSow == true))
+			{
+				Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Harvesting</Name>
+            <Script>
+              <RemoveFraction>1</RemoveFraction>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models.SurfaceOM;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Maize;
+		[Link] Zone zone;
+		[Link] SurfaceOrganicMatter SOM;
+
+		[Description("Fraction of resiudes to remove at harvest (0-1)")]
+		public double RemoveFraction { get; set; }
+
+	
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Maize.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			{
+				Maize.Harvest();
+				Maize.EndCrop();
+				if (RemoveFraction > 0)
+					SOM.Incorporate(RemoveFraction, 0.0);				
+			}
+		}
+		
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
+			
+		}
+	}
+}
+	   ]]></Code>
+          </Manager>
+          <Area>1</Area>
+          <Slope>0</Slope>
+        </Zone>
+        <Area>0</Area>
+        <Slope>0</Slope>
+      </Simulation>
+      <Graph>
+        <Name>Yield CDF</Name>
+        <Series>
+          <Name>Yield</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>Star</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Probability</TableName>
+          <XFieldName>Maize.Grain.Wt</XFieldName>
+          <YFieldName>Probability</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+    </Experiment>
+  </Folder>
   <ExplorerWidth>394</ExplorerWidth>
 </Simulations>
