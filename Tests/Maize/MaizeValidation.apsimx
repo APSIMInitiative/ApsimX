@@ -8,9 +8,6 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
 
 ]]></MemoText>
   </Memo>
-  <Replacements>
-    <Name>Replacements</Name>
-  </Replacements>
   <DataStore>
     <Name>DataStore</Name>
     <ExcelInput>
