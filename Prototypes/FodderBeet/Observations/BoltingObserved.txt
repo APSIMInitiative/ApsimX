@@ -1,0 +1,10 @@
+SimulationName	Clock.Today	Phenology.StageCode.Value
+()	()	()
+Lincoln2014CvBri_Sep	2015-10-07	8
+Lincoln2014CvBri_Oct	2015-10-07	8
+Lincoln2014CvBri_Nov	2015-10-08	8
+Lincoln2014CvBri_Dec	2015-10-09	8
+Lincoln2014CvRiv_Sep	2015-10-10	8
+Lincoln2014CvRiv_Oct	2015-10-10	8
+Lincoln2014CvRiv_Nov	2015-10-09	8
+Lincoln2014CvRiv_Dec	2015-10-09	8

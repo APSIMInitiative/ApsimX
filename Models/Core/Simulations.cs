@@ -406,7 +406,16 @@ namespace Models.Core
         {
             object[] args = new object[] { this, new EventArgs() };
             foreach (Model model in Apsim.ChildrenRecursively(this))
-                Apsim.CallEventHandler(model, "AllCompleted", args);
+            {
+                try
+                {
+                    Apsim.CallEventHandler(model, "AllCompleted", args);
+                }
+                catch (Exception err)
+                {
+                    ErrorMessage += err.ToString() + Environment.NewLine;
+                }
+            }
         }
 
         /// <summary>Documents the specified model.</summary>

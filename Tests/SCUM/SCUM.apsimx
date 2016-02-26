@@ -36,37 +36,187 @@
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
+      <Tests>
+        <Name>Tests</Name>
+        <AcceptedStats>
+          <RegrStats>
+            <Name>N</Name>
+            <n>36</n>
+            <Slope>1</Slope>
+            <Intercept>0</Intercept>
+            <SEslope>0</SEslope>
+            <SEintercept>0</SEintercept>
+            <R2>1</R2>
+            <RMSE>0</RMSE>
+            <NSE>1</NSE>
+            <ME>0</ME>
+            <MAE>0</MAE>
+            <RSR>0</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>NLeaching</Name>
+            <n>36</n>
+            <Slope>1.013475772478535</Slope>
+            <Intercept>11.544914455675212</Intercept>
+            <SEslope>0.077183774211116718</SEslope>
+            <SEintercept>6.97477212521611</SEintercept>
+            <R2>0.83528318499323528</R2>
+            <RMSE>31.285068569813976</RMSE>
+            <NSE>0.75943026656540624</NSE>
+            <ME>12.407520193378552</ME>
+            <MAE>17.612741744165948</MAE>
+            <RSR>0.48361890041559419</RSR>
+          </RegrStats>
+        </AcceptedStats>
+        <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
+        <POName>PredictedObserved</POName>
+      </Tests>
       <PredictedTableName>PredictedLeach</PredictedTableName>
       <ObservedTableName>ObservedLeach</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
+    <PredictedObserved>
+      <Name>PredictedObserved_RSSoilWater</Name>
+      <Tests>
+        <Name>Tests</Name>
+        <AcceptedStats>
+          <RegrStats>
+            <Name>ProfileWater</Name>
+            <n>126</n>
+            <Slope>0.97980052082076508</Slope>
+            <Intercept>6.181746040964299</Intercept>
+            <SEslope>0.032338812617252924</SEslope>
+            <SEintercept>10.243514571204775</SEintercept>
+            <R2>0.88099434144610367</R2>
+            <RMSE>15.224579520736327</RMSE>
+            <NSE>0.86989865002744216</NSE>
+            <ME>-0.15950079625078284</ME>
+            <MAE>12.630479773662231</MAE>
+            <RSR>0.35926146408423792</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(1)</Name>
+            <n>126</n>
+            <Slope>1.1904239143774464</Slope>
+            <Intercept>-0.0037317545963274079</Intercept>
+            <SEslope>0.034215189188493478</SEslope>
+            <SEintercept>0.006214972887759229</SEintercept>
+            <R2>0.90708142038440576</R2>
+            <RMSE>0.043555011536342572</RMSE>
+            <NSE>0.70027180818200341</NSE>
+            <ME>0.027363502015018776</ME>
+            <MAE>0.03003506981908494</MAE>
+            <RSR>0.54529753038578654</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(2)</Name>
+            <n>126</n>
+            <Slope>0.99624398597248121</Slope>
+            <Intercept>-0.0081603847804596341</Intercept>
+            <SEslope>0.034691207675009057</SEslope>
+            <SEintercept>0.0073831152823203572</SEintercept>
+            <R2>0.86929393319809911</R2>
+            <RMSE>0.022634694159327107</RMSE>
+            <NSE>0.82321422519913579</NSE>
+            <ME>-0.008933758502097898</ME>
+            <MAE>0.017973961097969379</MAE>
+            <RSR>0.418787193089874</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(3)</Name>
+            <n>126</n>
+            <Slope>0.7308785652412263</Slope>
+            <Intercept>0.043529089347487365</Intercept>
+            <SEslope>0.035195425718631559</SEslope>
+            <SEintercept>0.0071087496773183448</SEintercept>
+            <R2>0.77667273812636206</R2>
+            <RMSE>0.025251114784935278</RMSE>
+            <NSE>0.73962566283628051</NSE>
+            <ME>-0.0091711884372688637</ME>
+            <MAE>0.020844884284819641</MAE>
+            <RSR>0.50823997695021661</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(4)</Name>
+            <n>126</n>
+            <Slope>0.48602062308353472</Slope>
+            <Intercept>0.09918195524184012</Intercept>
+            <SEslope>0.043436406938563495</SEslope>
+            <SEintercept>0.0087823746206632178</SEintercept>
+            <R2>0.5024061391868464</R2>
+            <RMSE>0.02539736802828263</RMSE>
+            <NSE>0.49431318981381112</NSE>
+            <ME>-0.0031050397662914634</ME>
+            <MAE>0.01934202949206253</MAE>
+            <RSR>0.708289081381154</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(5)</Name>
+            <n>126</n>
+            <Slope>0.27502639541748081</Slope>
+            <Intercept>0.14516130365363011</Intercept>
+            <SEslope>0.048383718824957213</SEslope>
+            <SEintercept>0.0098226321505974715</SEintercept>
+            <R2>0.20670964885126608</R2>
+            <RMSE>0.028978738314181372</RMSE>
+            <NSE>0.18410314345912837</NSE>
+            <ME>-0.00017001215071559678</ME>
+            <MAE>0.024307208624531944</MAE>
+            <RSR>0.89967854518353574</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(6)</Name>
+            <n>126</n>
+            <Slope>0.15792976996552754</Slope>
+            <Intercept>0.17177348082565253</Intercept>
+            <SEslope>0.028495160527606516</SEslope>
+            <SEintercept>0.00569939630472189</SEintercept>
+            <R2>0.19853924491061514</R2>
+            <RMSE>0.019211158736613058</RMSE>
+            <NSE>0.14828771702185473</NSE>
+            <ME>0.0042633236966322929</ME>
+            <MAE>0.015290972884330754</MAE>
+            <RSR>0.91921306653281865</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(7)</Name>
+            <n>126</n>
+            <Slope>-0.017874456096361589</Slope>
+            <Intercept>0.20342949553348091</Intercept>
+            <SEslope>0.0072472229067174288</SEslope>
+            <SEintercept>0.0014698320053705848</SEintercept>
+            <R2>0.046762925430718583</R2>
+            <RMSE>0.025490401404748442</RMSE>
+            <NSE>-0.045937637052615887</NSE>
+            <ME>-0.0014439934541841293</ME>
+            <MAE>0.02097237791389597</MAE>
+            <RSR>1.0186444643225894</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(8)</Name>
+            <n>126</n>
+            <Slope>-0.034482770984420354</Slope>
+            <Intercept>0.20242552722066867</Intercept>
+            <SEslope>0.016776169416433871</SEslope>
+            <SEintercept>0.0034644370896252785</SEintercept>
+            <R2>0.032949305505105664</R2>
+            <RMSE>0.028238942454572882</RMSE>
+            <NSE>-0.2494640173570406</NSE>
+            <ME>-0.0096003373823464952</ME>
+            <MAE>0.021691844735977378</MAE>
+            <RSR>1.1133497367255743</RSR>
+          </RegrStats>
+        </AcceptedStats>
+        <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
+        <POName>PredictedObserved_RSSoilWater</POName>
+      </Tests>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>SoilWater</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>1000</MaximumResultsPerPage>
   </DataStore>
-  <Tests>
-    <Name>TestsBinary</Name>
-    <Test>
-      <SimulationName>SCUMTestBase</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>ExtraVariables.Script.AccumPlantN</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>SCUMTestBase</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>ExtraVariables.Script.AccumEP</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>SCUMTestBase</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>SCUM.Total.Wt</ColumnNames>
-      <Parameters>1,1</Parameters>
-    </Test>
-  </Tests>
   <Simulation>
     <Name>SCUMTestBase</Name>
     <Weather>
@@ -11587,7 +11737,7 @@ SCUM gave reasionable predictions of Product N removals, soil water contents and
           <Specifications>
             <string>[Nit]</string>
             <string>[TreatmentID].Script.Nitrogen = N1</string>
-            <string>[InF].Script.TreatFact = 0.5</string>
+            <string>[InF].Script.TreatFact = 1</string>
           </Specifications>
         </Factor>
         <Factor>
@@ -11626,7 +11776,7 @@ SCUM gave reasionable predictions of Product N removals, soil water contents and
           <Specifications>
             <string>[Nit]</string>
             <string>[TreatmentID].Script.Nitrogen = N2</string>
-            <string>[InF].Script.TreatFact = 1</string>
+            <string>[InF].Script.TreatFact = 2</string>
           </Specifications>
         </Factor>
         <Specifications />
@@ -12012,7 +12162,7 @@ namespace Models
           <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
         </Soil>
         <SurfaceOrganicMatter>
-          <Name>surface organic matter</Name>
+          <Name>SurfaceOrganicMatter</Name>
           <PondActive>no</PondActive>
           <ReportAdditions>no</ReportAdditions>
           <ReportRemovals>no</ReportRemovals>
@@ -12107,8 +12257,11 @@ namespace Models
 			Soil.SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };
 			Soil.SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };
 			Soil.SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };
-			Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
 			Soil.SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };
+			Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
+			Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
+			Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
+
 		}
 			
 	}
@@ -12146,6 +12299,7 @@ using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
 using System.Data;
 using Models.PMF.Interfaces;
+using Models.SurfaceOM;
 
 namespace Models
 {
@@ -12157,6 +12311,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Zone zone;
 		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
 		
 		[Description("File of Yields")]
 		public string YieldFile { get; set; }
@@ -12261,9 +12416,11 @@ namespace Models
 			{
 				SCUM.Harvest(Remove);
 				SCUM.EndCrop();
+				SurfOM.Incorporate(0.8, 10);
 			}
 			else if (Clock.Today.Date == SowingDate3)
 			{
+				SurfOM.Incorporate(1, 10);
 				SCUM.Sow(cultivar: Crop3, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 				object ResetValue = Convert.ToDouble(Yields.Rows[2][Treatment]);
 				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
@@ -12793,7 +12950,8 @@ namespace Models
           <Manager>
             <Name>InF</Name>
             <Script>
-              <FertDate>2005-11-25</FertDate>
+              <FertDate1>2005-10-26</FertDate1>
+              <FertDate2>2005-11-25</FertDate2>
               <NFert>0</NFert>
               <TreatFact>0</TreatFact>
               <IrrDate1>2005-11-18</IrrDate1>
@@ -12832,24 +12990,26 @@ namespace Models
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrigation;
 		
-		[Description("Data of Fert on Wheat")]
-		public DateTime FertDate { get; set; }
+		[Description("Date of Fert on Wheat")]
+		public DateTime FertDate1 { get; set; }
+		[Description("Date of Fert on Wheat")]
+		public DateTime FertDate2 { get; set; }
 		public int NFert { get; set; }
 		public double TreatFact { get; set; }
-		
-		[Description("Data of Fert on Wheat")]
+	
+		[Description("Date of Irrig on Wheat")]
 		public DateTime IrrDate1 { get; set; }
 		public int Irr1 { get; set; }
 		public double IrrFact1 { get; set; }
-		[Description("Data of Fert on Wheat")]
+		[Description("Date of Irrig on Wheat")]
 		public DateTime IrrDate2 { get; set; }
 		public int Irr2 { get; set; }
 		public double IrrFact2 { get; set; }
-		[Description("Data of Fert on Wheat")]
+		[Description("Date of Irrig on Wheat")]
 		public DateTime IrrDate3 { get; set; }
 		public int Irr3 { get; set; }
 		public double IrrFact3 { get; set; }
-		[Description("Data of Fert on Wheat")]
+		[Description("Date of Irrig on Wheat")]
 		public DateTime IrrDate4 { get; set; }
 		public int Irr4 { get; set; }
 		public double IrrFact4 { get; set; }
@@ -12858,7 +13018,11 @@ namespace Models
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (Clock.Today.Date == FertDate)
+			if (Clock.Today.Date == FertDate1)
+			{
+				Fert.Apply(NFert * TreatFact * 0.5, Fertiliser.Types.UreaN, 50);
+			}
+			if (Clock.Today.Date == FertDate2)
 			{
 				Fert.Apply(NFert * TreatFact, Fertiliser.Types.UreaN, 50);
 			}
@@ -12994,8 +13158,9 @@ namespace Models
             <string>[TreatmentID].Script.Rotation as RotTreat</string>
             <string>[TreatmentID].Script.Irrigation as IrrigTreat</string>
             <string>[TreatmentID].Script.Nitrogen as NitTreat</string>
-            <string>[Surface organic matter].N</string>
-            <string>[Surface organic matter].wt</string>
+            <string>[SurfaceOrganicMatter].N</string>
+            <string>[SurfaceOrganicMatter].wt</string>
+            <string>[SurfaceOrganicMatter].Cover</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -16101,8 +16266,8 @@ namespace Models
           <Type>Left</Type>
           <Title>Profile water content (mm)</Title>
           <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
+          <Minimum>200</Minimum>
+          <Maximum>500</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <Axis>
@@ -16166,8 +16331,8 @@ namespace Models
           <Type>Left</Type>
           <Title>Profile Water Content (mm)</Title>
           <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
+          <Minimum>200</Minimum>
+          <Maximum>500</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <Axis>
@@ -16234,8 +16399,8 @@ namespace Models
           <Type>Left</Type>
           <Title>fwt</Title>
           <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
+          <Minimum>0</Minimum>
+          <Maximum>550</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <Axis>
@@ -16299,8 +16464,8 @@ namespace Models
           <Type>Left</Type>
           <Title>fwt</Title>
           <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
+          <Minimum>0</Minimum>
+          <Maximum>550</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <Axis>
@@ -16337,8 +16502,8 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.NLeaching</XFieldName>
-          <YFieldName>Predicted.NLeaching</YFieldName>
+          <XFieldName>Predicted.NLeaching</XFieldName>
+          <YFieldName>Observed.NLeaching</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -16347,18 +16512,18 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Predicted Leaching (kg/ha)</Title>
+          <Title>Observed Leaching (kg/ha)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
-          <Maximum>350</Maximum>
+          <Maximum>400</Maximum>
           <Interval>50</Interval>
         </Axis>
         <Axis>
           <Type>Bottom</Type>
-          <Title>Observed Leaching (kg/ha)</Title>
+          <Title>Predicted Leaching (kg/ha)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
-          <Maximum>350</Maximum>
+          <Maximum>400</Maximum>
           <Interval>50</Interval>
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
@@ -16385,8 +16550,8 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.NLeaching</XFieldName>
-          <YFieldName>Predicted.NLeaching</YFieldName>
+          <XFieldName>Predicted.NLeaching</XFieldName>
+          <YFieldName>Observed.NLeaching</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -16395,15 +16560,15 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Predicted Leaching (kg/ha)</Title>
+          <Title>Observed Leaching (kg/ha)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
-          <Maximum>350</Maximum>
-          <Interval>50</Interval>
+          <Maximum>400</Maximum>
+          <Interval>400</Interval>
         </Axis>
         <Axis>
           <Type>Bottom</Type>
-          <Title>Observed Leaching (kg/ha)</Title>
+          <Title>Predicted Leaching (kg/ha)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>350</Maximum>
@@ -16433,8 +16598,8 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.NLeaching</XFieldName>
-          <YFieldName>Predicted.NLeaching</YFieldName>
+          <XFieldName>Predicted.NLeaching</XFieldName>
+          <YFieldName>Observed.NLeaching</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -16443,18 +16608,18 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Predicted Leaching (kg/ha)</Title>
+          <Title>Observed Leaching (kg/ha)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
-          <Maximum>350</Maximum>
+          <Maximum>400</Maximum>
           <Interval>50</Interval>
         </Axis>
         <Axis>
           <Type>Bottom</Type>
-          <Title>Observed Leaching (kg/ha)</Title>
+          <Title>Predicted Leaching (kg/ha)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
-          <Maximum>350</Maximum>
+          <Maximum>400</Maximum>
           <Interval>50</Interval>
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
@@ -16481,8 +16646,8 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.NLeaching</XFieldName>
-          <YFieldName>Predicted.NLeaching</YFieldName>
+          <XFieldName>Predicted.NLeaching</XFieldName>
+          <YFieldName>Observed.NLeaching</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -16491,25 +16656,201 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Predicted Leaching (kg/ha)</Title>
+          <Title>Observed Leaching (kg/ha)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
-          <Maximum>350</Maximum>
+          <Maximum>400</Maximum>
           <Interval>50</Interval>
         </Axis>
         <Axis>
           <Type>Bottom</Type>
-          <Title>Observed Leaching (kg/ha)</Title>
+          <Title>Predicted Leaching (kg/ha)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
-          <Maximum>350</Maximum>
+          <Maximum>400</Maximum>
           <Interval>50</Interval>
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <Memo>
+        <Name>Memo</Name>
+        <MemoText><![CDATA[Predictions working well for all but the high N treatment in the final wheat crop following the potato crop.  I suspect the model is under predicting Denitrification here]]></MemoText>
+      </Memo>
     </Folder>
+    <Graph>
+      <Name>SWC_PP</Name>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SWC</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter>[NitTreat] = 'N1'</Filter>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Profile water content (mm)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>200</Minimum>
+        <Maximum>500</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Drainage_PP</Name>
+      <Series>
+        <Name>NLeach</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Drainage</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter>[NitTreat] = 'N2'</Filter>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Accumulated leaching (kg/ha)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Evaporation</Name>
+      <Series>
+        <Name>ES</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ExtraVariables.Script.AccumES</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter>[NitTreat] = 'N2'</Filter>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Accumulated leaching (kg/ha)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Cover</Name>
+      <Series>
+        <Name>ES</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SurfaceOrganicMatter.Cover</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter>[NitTreat] = 'N2'</Filter>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Accumulated leaching (kg/ha)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
   </Experiment>
-  <ExplorerWidth>272</ExplorerWidth>
+  <ExplorerWidth>286</ExplorerWidth>
 </Simulations>

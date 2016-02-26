@@ -847,63 +847,7 @@
       <Exceedence>true</Exceedence>
     </Probability>
   </Folder>
-  <Tests>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>EqualTo</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>value</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>LessThan</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>value</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>GreaterThan</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>value</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>AllPos</Type>
-      <ColumnNames>column</ColumnNames>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Between</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>value1,value2</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Mean</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>5,value</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>Tolerance</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>1,5</Parameters>
-    </Test>
-    <Test>
-      <SimulationName>simulation</SimulationName>
-      <TableName>Report</TableName>
-      <Type>CompareToInput</Type>
-      <ColumnNames>column</ColumnNames>
-      <Parameters>1,5</Parameters>
-    </Test>
-  </Tests>
+  <Tests />
   <Experiment>
     <Factors>
       <Factor>

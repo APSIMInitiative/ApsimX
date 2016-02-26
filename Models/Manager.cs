@@ -6,7 +6,6 @@ using Models.Core;
 using System.Xml.Schema;
 using System.Runtime.Serialization;
 using System.IO;
-using System.Windows.Forms;
 using APSIM.Shared.Utilities;
 namespace Models
 {
