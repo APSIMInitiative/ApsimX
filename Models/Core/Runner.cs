@@ -210,7 +210,8 @@
 
                 // For each .apsimx file - read it in and create a job for each simulation it contains.
                 string workingDirectory = Directory.GetCurrentDirectory();
-                string apsimExe = Path.Combine(workingDirectory, "Bin", "Model.exe");
+                string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string apsimExe = Path.Combine(workingDirectory, "Model.exe");
                 List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
                 foreach (string apsimxFileName in files)
                 {
