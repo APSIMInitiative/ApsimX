@@ -30,9 +30,6 @@
         /// <summary>The stop watch we can use to time the runs.</summary>
         private Stopwatch stopwatch = new Stopwatch();
 
-        /// <summary>The number of jobs being run.</summary>
-        private int numSimulationsToRun;
-
         /// <summary>Retuns true if simulations are running.</summary>
         public bool IsRunning { get; set; }
 
@@ -64,33 +61,17 @@
             {
                 stopwatch.Start();
 
-                if (modelClicked is Simulations)
-                {
-                    simulations.SimulationToRun = null;  // signal that we want to run all simulations.
-                    numSimulationsToRun = Simulations.FindAllSimulationsToRun(simulations).Length;
-                }
-                else
-                {
-                    simulations.SimulationToRun = modelClicked;
-                    numSimulationsToRun = Simulations.FindAllSimulationsToRun(modelClicked).Length;
-                }
+                JobManager.IRunnable job = Runner.ForSimulations(simulations, modelClicked);
 
-                if (explorerPresenter != null)
-                    explorerPresenter.ShowMessage(modelClicked.Name + " running (" + numSimulationsToRun + ")", Models.DataStore.ErrorLevel.Information);
-
-
-                if (numSimulationsToRun > 1)
-                {
-                    timer = new Timer();
-                    timer.Interval = 1000;
-                    timer.AutoReset = true;
-                    timer.Elapsed += OnTimerTick;
-                }
-                jobManager.AddJob(simulations);
+                jobManager.AddJob(job);
                 jobManager.AllJobsCompleted += OnComplete;
                 jobManager.Start(waitUntilFinished: false);
-                if (numSimulationsToRun > 1)
-                    timer.Start();
+
+                timer = new Timer();
+                timer.Interval = 1000;
+                timer.AutoReset = true;
+                timer.Elapsed += OnTimerTick;
+                //timer.Start();
             }
         }
 
@@ -175,11 +156,15 @@
         /// <param name="e"></param>
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
+            int numSimulationsRun = jobManager.CompletedJobs.Count;
+            int numSimulationsToRun = jobManager.JobCount + numSimulationsRun;
+
+            explorerPresenter.ShowMessage(modelClicked.Name + " running (" + numSimulationsToRun + ")", Models.DataStore.ErrorLevel.Information);
+
             // One job will be the simulations object we added above. We don't want
             // to count this in the list of simulations being run, hence the -1 below.
-            if (jobManager.JobCount > 1)
+            if (numSimulationsToRun > 1)
             {
-                int numSimulationsRun = numSimulationsToRun - jobManager.JobCount;
                 double percent = numSimulationsRun * 1.0 / numSimulationsToRun * 100.0;
                 explorerPresenter.ShowProgress(Convert.ToInt32(percent));
                 if (jobManager.JobCount == 0)
