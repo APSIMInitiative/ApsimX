@@ -38238,7 +38238,7 @@ Simulation results for the combined datasets from the various countries are show
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <FileName>C:\APSIMX\Tests\Maize\Bugesera.met</FileName>
+          <FileName>Bugesera.met</FileName>
         </Weather>
         <Manager>
           <Name>ClimateChange</Name>
