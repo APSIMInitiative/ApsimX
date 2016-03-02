@@ -352,7 +352,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
       <Name>Base324</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>..\WeatherFiles\Popondetta.met</FileName>
+        <FileName>..\..\WeatherFiles\Popondetta.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
@@ -1929,7 +1929,7 @@ namespace Models
       <Name>Base212</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>..\WeatherFiles\Hargy.met</FileName>
+        <FileName>..\..\WeatherFiles\Hargy.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
@@ -3527,7 +3527,7 @@ namespace Models
       <Name>Base504</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>..\WeatherFiles\Sagarai.met</FileName>
+        <FileName>..\..\WeatherFiles\Sagarai.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
