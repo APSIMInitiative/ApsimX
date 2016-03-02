@@ -119,8 +119,16 @@ namespace UserInterface.Presenters
                         rowDate = rowDate.AddDays(day - 1);                 // calc date
                         data.Rows[r][0] = rowDate.ToShortDateString();      // store in Date col
                     }
-                    data.Columns.RemoveAt(yrCol);       // remove unwanted columns
-                    data.Columns.RemoveAt(dayCol);
+                    if (dayCol > yrCol)
+                    {
+                        data.Columns.RemoveAt(dayCol);
+                        data.Columns.RemoveAt(yrCol);       // remove unwanted columns
+                    }
+                    else
+                    {
+                        data.Columns.RemoveAt(yrCol);       // remove unwanted columns
+                        data.Columns.RemoveAt(dayCol);
+                    }
                 }
                 this.weatherDataView.PopulateData(data);
             }
