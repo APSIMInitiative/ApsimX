@@ -5,21 +5,21 @@
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>NZObserved</Name>
-      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <FileName>%root%\Tests\Validation\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>observed</string>
       </SheetNames>
     </ExcelInput>
     <ExcelInput>
       <Name>RainShelterN</Name>
-      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <FileName>%root%\Tests\Validation\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>RainShelterNitrogen</string>
       </SheetNames>
     </ExcelInput>
     <ExcelInput>
       <Name>RainShelterSW</Name>
-      <FileName>%root%\Tests\Maize\Observations\SoilWater.xlsx</FileName>
+      <FileName>%root%\Tests\Validation\Maize\Observations\SoilWater.xlsx</FileName>
       <SheetNames>
         <string>SoilWater</string>
       </SheetNames>
@@ -27,12 +27,12 @@
     <Input>
       <Name>ABlockObserved</Name>
       <ErrorMessage>The process cannot access the file 'C:\ApsimX\Tests\SCUM\AblockObserved.txt' because it is being used by another process.</ErrorMessage>
-      <FileName>%root%\Tests\SCUM\AblockObserved.txt</FileName>
+      <FileName>%root%\Tests\Validation\SCUM\AblockObserved.txt</FileName>
     </Input>
     <Input>
       <Name>ABlockSWC</Name>
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>%root%\Tests\SCUM\AblockSWC.txt</FileName>
+      <FileName>%root%\Tests\Validation\SCUM\AblockSWC.txt</FileName>
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
@@ -7536,7 +7536,7 @@ Testing of SCUM under New Zealand conditions was undertaken using the data Maize
       <Name>Lincoln2012</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>%root%\Tests\Maize\lincoln.met</FileName>
+        <FileName>%root%\Tests\Validation\Maize\lincoln.met</FileName>
       </Weather>
       <Clock>
         <Name>clock</Name>
@@ -12271,7 +12271,7 @@ namespace Models
           <Manager>
             <Name>Sowing_Yield</Name>
             <Script>
-              <YieldFile>%root%\Tests\SCUM\YieldsToSet.csv</YieldFile>
+              <YieldFile>%root%\Tests\Validation\SCUM\YieldsToSet.csv</YieldFile>
               <InitialRootDepth>10</InitialRootDepth>
               <Crop1>Potatoes_Short</Crop1>
               <SowingDate1>2004-10-15</SowingDate1>
@@ -12449,7 +12449,7 @@ namespace Models
           <Manager>
             <Name>NConcReps</Name>
             <Script>
-              <NConcFile>%root%\Tests\SCUM\NO3.csv</NConcFile>
+              <NConcFile>%root%\Tests\Validation\SCUM\NO3.csv</NConcFile>
               <TotalLeach>0</TotalLeach>
               <Leach_60>0</Leach_60>
               <ObservedLeach1>0</ObservedLeach1>

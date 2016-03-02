@@ -12,7 +12,7 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>Observed</Name>
-      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <FileName>%root%\Tests\Validation\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>HarvestData</string>
       </SheetNames>
@@ -144,35 +144,35 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
     </PredictedObserved>
     <ExcelInput>
       <Name>ObservedTimeSeries</Name>
-      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <FileName>%root%\Tests\Validation\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>TimeSeriesData</string>
       </SheetNames>
     </ExcelInput>
     <ExcelInput>
       <Name>NZObserved</Name>
-      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <FileName>%root%\Tests\Validation\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>observed</string>
       </SheetNames>
     </ExcelInput>
     <ExcelInput>
       <Name>RainShelterN</Name>
-      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <FileName>%root%\Tests\Validation\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>RainShelterNitrogen</string>
       </SheetNames>
     </ExcelInput>
     <ExcelInput>
       <Name>RainShelterSW</Name>
-      <FileName>%root%\Tests\Maize\Observations\SoilWater.xlsx</FileName>
+      <FileName>%root%\Tests\Validation\Maize\Observations\SoilWater.xlsx</FileName>
       <SheetNames>
         <string>SoilWater</string>
       </SheetNames>
     </ExcelInput>
     <ExcelInput>
       <Name>RainShelterCob</Name>
-      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <FileName>%root%\Tests\Validation\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>RachisHusk_RainS</string>
       </SheetNames>
@@ -183,7 +183,7 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
     </TimeSeriesStats>
     <ExcelInput>
       <Name>PhenologySimple</Name>
-      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <FileName>%root%\Tests\Validation\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>PhenologySimple</string>
       </SheetNames>
@@ -302,7 +302,7 @@ Note.  The BMW1 trail consists of data from unreplicated plots.
         </Memo>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Tests\Maize\KATUMANI.MET</FileName>
+          <FileName>%root%\Tests\Validation\Maize\KATUMANI.MET</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
@@ -1376,7 +1376,7 @@ namespace Models
         <Name>JMW2Kiboko</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Tests\Maize\KIBOKO.MET</FileName>
+          <FileName>%root%\Tests\Validation\Maize\KIBOKO.MET</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
@@ -11868,7 +11868,7 @@ namespace Models
         <Name>BMW1</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Tests\Maize\KATUMANI.MET</FileName>
+          <FileName>%root%\Tests\Validation\Maize\KATUMANI.MET</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
@@ -13440,7 +13440,7 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
         <Name>K841</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Tests\Maize\CLS183.MET</FileName>
+          <FileName>%root%\Tests\Validation\Maize\CLS183.MET</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
@@ -14586,7 +14586,7 @@ namespace Models
         </Memo>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Tests\Maize\CLS183.MET</FileName>
+          <FileName>%root%\Tests\Validation\Maize\CLS183.MET</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
@@ -15728,7 +15728,7 @@ namespace Models
         <Name>DRK1</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Tests\Maize\DRK.met</FileName>
+          <FileName>%root%\Tests\Validation\Maize\DRK.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
@@ -17530,7 +17530,7 @@ namespace Models
         <Name>DRK3</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Tests\Maize\DRK.met</FileName>
+          <FileName>%root%\Tests\Validation\Maize\DRK.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
@@ -22618,7 +22618,7 @@ Testing of APSIM Maize, Soil Water, Soil Nitrogen, Manure, and Soil Temperature 
         </Memo>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Tests\Maize\Ames2.met</FileName>
+          <FileName>%root%\Tests\Validation\Maize\Ames2.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
@@ -23414,7 +23414,7 @@ namespace Models
       <Name>Ames2006</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>%root%\Tests\Maize\Ames2.met</FileName>
+        <FileName>%root%\Tests\Validation\Maize\Ames2.met</FileName>
       </Weather>
       <Clock>
         <Name>clock</Name>
@@ -24420,7 +24420,7 @@ namespace Models
       <Name>Ames2007</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>%root%\Tests\Maize\Ames2.met</FileName>
+        <FileName>%root%\Tests\Validation\Maize\Ames2.met</FileName>
       </Weather>
       <Clock>
         <Name>clock</Name>
@@ -31577,7 +31577,7 @@ This trial was conducted to provide data for parametersising the Leaf Area model
         <Name>Lincoln2010</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Tests\Maize\lincoln.met</FileName>
+          <FileName>%root%\Tests\Validation\Maize\lincoln.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
@@ -34513,7 +34513,7 @@ namespace Models
         <Name>Lincoln2008</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Tests\Maize\lincoln.met</FileName>
+          <FileName>%root%\Tests\Validation\Maize\lincoln.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
@@ -35844,7 +35844,7 @@ namespace Models
         <Name>HawksBay2010</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Tests\Maize\HawkesBay.met</FileName>
+          <FileName>%root%\Tests\Validation\Maize\HawkesBay.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>

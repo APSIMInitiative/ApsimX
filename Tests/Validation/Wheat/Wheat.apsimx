@@ -11,7 +11,7 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>Observed</Name>
-      <FileName>%root%\Tests\Wheat\Observed.xlsx</FileName>
+      <FileName>%root%\Tests\Validation\Wheat\Observed.xlsx</FileName>
       <SheetNames>
         <string>Observed</string>
       </SheetNames>
@@ -130,7 +130,7 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
     <Input>
       <Name>NZObservations</Name>
       <ErrorMessage />
-      <FileName>%root%\Tests\Wheat\RainShelterBiomass.txt</FileName>
+      <FileName>%root%\Tests\Validation\Wheat\RainShelterBiomass.txt</FileName>
     </Input>
     <TimeSeriesStats>
       <Name>TimeSeriesStats</Name>
