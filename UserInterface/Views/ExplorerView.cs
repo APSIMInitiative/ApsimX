@@ -334,28 +334,36 @@ namespace UserInterface.Views
         /// <param name="errorLevel">The error level.</param>
         public void ShowMessage(string message, Models.DataStore.ErrorLevel errorLevel)
         {
-            StatusWindow.Visible = message != null;
+            MethodInvoker messageUpdate = delegate
+            {
+                StatusWindow.Visible = message != null;
 
-            // Output the message
-            if (errorLevel == Models.DataStore.ErrorLevel.Error)
-            {
-                StatusWindow.ForeColor = Color.Red;
-            }
-            else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
-            {
-                StatusWindow.ForeColor = Color.Brown;
-            }
+                // Output the message
+                if (errorLevel == Models.DataStore.ErrorLevel.Error)
+                {
+                    StatusWindow.ForeColor = Color.Red;
+                }
+                else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
+                {
+                    StatusWindow.ForeColor = Color.Brown;
+                }
+                else
+                {
+                    StatusWindow.ForeColor = Color.Blue;
+                }
+                message = message.TrimEnd("\n".ToCharArray());
+                message = message.Replace("\n", "\n                      ");
+                message += "\n";
+                StatusWindow.Text = message;
+                this.toolTip1.SetToolTip(this.StatusWindow, message);
+                progressBar.Visible = false;
+                Application.DoEvents();
+            };
+
+            if (InvokeRequired)
+                this.BeginInvoke(new Action(messageUpdate));
             else
-            {
-                StatusWindow.ForeColor = Color.Blue;
-            }
-            message = message.TrimEnd("\n".ToCharArray());
-            message = message.Replace("\n", "\n                      ");
-            message += "\n";
-            StatusWindow.Text = message;
-            this.toolTip1.SetToolTip(this.StatusWindow, message);
-            progressBar.Visible = false;
-            Application.DoEvents();
+                messageUpdate();
         }
 
         /// <summary>
