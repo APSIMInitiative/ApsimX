@@ -128,14 +128,14 @@ namespace SWIMFrame
             for (j = 2; j <= nphif; j++)
                 for (i = 2; i <= j; i++)
                 {
-                    q1 = qf[i, j + 1];
+                    q1 = qf[i - 1, j];
                     if (sp.hc[iphif[j]] - dz < sp.hc[iphif[i]])
                         q1 = 0.0; // improve?
                     qf[i, j] = ssflux(iphif[i], iphif[j], dz, q1, 0.1 * rerr);
                 }
             // Then for upper end wetter
             for (i = 2; i <= nphif; i++)
-                for (j = i - 1; j > 1; j--)
+                for (j = i - 1; j >= 1; j--)
                 {
                     q1 = qf[i, j + 1];
                     if (j + 1 == i)
@@ -165,7 +165,7 @@ namespace SWIMFrame
             {
                 qi2Return = quadinterp(phif, qfM.Column(j).ToArray(), nphif, phii);
                 for (int idx = 1; idx < qi2Return.Length; idx++)
-                    qi2[idx, i] = qi2Return[idx];
+                    qi2[idx, j] = qi2Return[idx];
             }
 
             for (j = 1; j <= ni; j++)
@@ -173,20 +173,25 @@ namespace SWIMFrame
                 qi1M = Matrix<double>.Build.DenseOfArray(qi1);
                 qi3Return = quadinterp(phif, qi1M.Column(j).ToArray(), nphif, phii);
                 for (int idx = 1; idx < qi3Return.Length; idx++)
-                    qi3[idx, i] = qi3Return[idx];
+                    qi3[idx, j] = qi3Return[idx];
             }
 
             // Put all the fluxes together.
             i = nphif + ni;
-            for (int iidx = 1; iidx <= i; iidx += 2)
-                for (int npidx = 1; npidx < nphif; npidx++)
-                    for (int niidx = 1; niidx < ni; niidx++)
-                    {
-                        qi5[iidx, iidx] = qf[npidx, npidx];
-                        qi5[iidx, iidx + 1] = qi1[npidx, niidx];
-                        qi5[iidx + 1, iidx] = qi2[niidx, npidx];
-                        qi5[iidx + 1, iidx + 1] = qi3[niidx, niidx];
-                    }
+            for (int row = 1; row <= i; row += 2)
+                for (int col = 1; col <= i; col += 2)
+                {
+                    qi5[row, col] = qf[row / 2 + 1, col / 2 + 1];
+                    qi5[row, col + 1] = qi1[row / 2 + 1, col / 2 + 1];
+                    qi5[row + 1, col] = qi2[row / 2 + 1, col / 2 + 1];
+                    qi5[row + 1, col + 1] = qi3[row / 2 + 1, col / 2 + 1];
+                }
+
+/*            Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(qi5);
+            printMatrix = printMatrix.RemoveRow(0);
+            printMatrix = printMatrix.RemoveColumn(0);
+            MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t",  null, "E6", null, null);
+            Environment.Exit(0);*/
 
             // Get accurate qi5(j,j)=Kofphi(phii(ip))
             ip = 0;
@@ -231,22 +236,6 @@ namespace SWIMFrame
                 ft.fend[ie].phif = phii5; //(1:i) assume it's the whole array
             }
             ft.ftable = qi5; // (1:i,1:i) as above
-            WriteArray(ft.ftable);
-        }
-
-        public static void WriteArray(double[,] array)
-        {
-            StringBuilder sb = new StringBuilder();
-            int rowLength = array.GetLength(0);
-            int colLength = array.GetLength(1);
-
-            for (int i = 1; i < rowLength; i++)
-            {
-                for (int j = 1; j < colLength; j++)
-                    sb.AppendFormat("{0:G7} " ,array[i, j]);
-                sb.AppendLine();
-            }
-            File.WriteAllText(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", sb.ToString());
         }
 
         /// <summary>
@@ -322,7 +311,7 @@ namespace SWIMFrame
             i = ia; j = ib; n = nu;
             if (i == j) // free drainage
             {
-                return sp.Kc[i-1];
+                return sp.Kc[i];
             }
             ha = sp.hc[i]; hb = sp.hc[j]; Ka = sp.Kc[i]; Kb = sp.Kc[j];
             if (i >= n && j >= n) // saturated flow

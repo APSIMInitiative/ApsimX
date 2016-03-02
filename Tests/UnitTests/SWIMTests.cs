@@ -269,7 +269,7 @@ namespace UnitTests
         {
             MVG.TestParams(103, 9.0, 0.99670220130280185, 9.99999999999998460E-003);
             SoilProps sp = Soil.gensptbl(1.0, new SoilParam(10, 103, 0.4, 2.0, -2.0, -10.0, 1.0 / 3.0, 1.0), true);
-            Fluxes.FluxTable(5.0, sp);
+           Fluxes.FluxTable(5.0, sp);
             FluxTable ft = Fluxes.ft;
         }
 
@@ -337,16 +337,14 @@ namespace UnitTests
                 1.1659401715497246, 1.5782001871550688, 1.8347236571922523, 1.9630393164523054 };
             MVG.TestParams(103, 9.0, 0.99670220130280185, 0.001);
             Fluxes.SetupSsflux(Soil.gensptbl(1.0, new SoilParam(10, 103, 0.4, 2.0, -2.0, -10.0, 1.0 / 3.0, 1.0), true), 23, hpK);
-            int[] ia = new int[] { 1,1,7 };
-            int[] ib = new int[] { 2,14,23 };
-            double[] qin = new double[] { -1.14159583972650572E-006, -4.08926049774738995E-002, -2.6310543444356651 };
-            double[] ssflux = new double[] { -1.13963081216825338E-006, -4.03360467551977520E-002, -2.630866817212414 };
+            int[] ia = new int[] { 1, 1, 7, 7 };
+            int[] ib = new int[] { 2, 14, 23, 7 };
+            double[] qin = new double[] { -1.14159583972650572E-006, -4.08926049774738995E-002, -2.6310543444356651, 0.0 };
+            double[] ssflux = new double[] { -1.13963081216825338E-006, -4.03360467551977520E-002, -2.630866817212414, 1.56777923621120863E-006 };
 
             for (int i = 0; i < ia.Length; i++)
             {
-                double res = (double)Extensions.TestMethod("Fluxes", "ssflux", new object[] {ia[i], ib[i], 5.0, qin[i], 0.001 });
-             //Getting differences here but not sure if they're compounding floating points. Will need to check actual simulation data
-             //to see if they're significant.
+                double res = (double)Extensions.TestMethod("Fluxes", "ssflux", new object[] { ia[i], ib[i], 5.0, qin[i], 0.001 });
                 Assert.AreEqual(ssflux[i], res, Math.Abs(ssflux[i] * 1E-6));
             }
         }
