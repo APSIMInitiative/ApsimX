@@ -5,28 +5,28 @@
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>NZObserved</Name>
-      <FileName>%root%\Prototypes\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>observed</string>
       </SheetNames>
     </ExcelInput>
     <ExcelInput>
       <Name>RainShelterN</Name>
-      <FileName>%root%\Prototypes\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>RainShelterNitrogen</string>
       </SheetNames>
     </ExcelInput>
     <ExcelInput>
       <Name>RainShelterSW</Name>
-      <FileName>%root%\Prototypes\Maize\Observations\SoilWater.xlsx</FileName>
+      <FileName>%root%\Tests\Maize\Observations\SoilWater.xlsx</FileName>
       <SheetNames>
         <string>SoilWater</string>
       </SheetNames>
     </ExcelInput>
     <Input>
       <Name>ABlockObserved</Name>
-      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\SCUM\AblockObserved.txt' because it is being used by another process.</ErrorMessage>
+      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Tests\SCUM\AblockObserved.txt' because it is being used by another process.</ErrorMessage>
       <FileName>%root%\Tests\SCUM\AblockObserved.txt</FileName>
     </Input>
     <Input>
@@ -7536,7 +7536,7 @@ Testing of SCUM under New Zealand conditions was undertaken using the data Maize
       <Name>Lincoln2012</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>%root%\Prototypes\Maize\lincoln.met</FileName>
+        <FileName>%root%\Tests\Maize\lincoln.met</FileName>
       </Weather>
       <Clock>
         <Name>clock</Name>
