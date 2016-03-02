@@ -83,6 +83,8 @@
             /// <summary>Signal that this job isn't time consuming</summary>
             public bool IsComputationallyTimeConsuming { get { return false; } }
 
+            /// <summary>Number of sims running.</summary>
+            public int numRunning { get; private set; }
 
             /// <summary>Run the jobs.</summary>
             /// <param name="sender"></param>
@@ -92,7 +94,6 @@
                 JobManager jobManager = e.Argument as JobManager;
 
                 List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
-
 
                 DataStore store = Apsim.Child(simulations, typeof(DataStore)) as DataStore;
 
@@ -149,6 +150,8 @@
                     }
                 }
 
+                if (ErrorMessage != null)
+                    throw new Exception(ErrorMessage);
             }
         }
 
@@ -228,6 +231,9 @@
                 foreach (JobManager.IRunnable job in jobs)
                     if (job.ErrorMessage != null)
                         ErrorMessage += job.ErrorMessage + Environment.NewLine;
+
+                if (ErrorMessage != null)
+                    throw new Exception(ErrorMessage);
             }
         }
 
@@ -287,7 +293,10 @@
                 string stdout = p.StandardOutput.ReadToEnd();
                 p.WaitForExit();
                 if (p.ExitCode > 0)
+                {
                     ErrorMessage = stdout;
+                    throw new Exception(ErrorMessage);
+                }
             }
         }
     }
