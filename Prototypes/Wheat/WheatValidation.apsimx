@@ -1794,7 +1794,7 @@ The model consists of:
     <Input>
       <Name>NZObservations</Name>
       <ErrorMessage />
-      <FileName>%root%\Tests\Wheat\RainShelterBiomass.txt</FileName>
+      <FileName>%root%\Tests\Validation\Wheat\RainShelterBiomass.txt</FileName>
     </Input>
     <TimeSeriesStats>
       <Name>TimeSeriesStats</Name>

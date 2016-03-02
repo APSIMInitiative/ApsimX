@@ -1,0 +1,1519 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+  <Name>Simulations</Name>
+  <DataStore>
+    <Name>DataStore</Name>
+    <AutoExport>false</AutoExport>
+  </DataStore>
+  <Folder>
+    <Name>SimpleIntercrop</Name>
+    <Simulation>
+      <Name>Intercrop</Name>
+      <Clock>
+        <Name>Clock</Name>
+        <StartDate>1900-01-01T00:00:00</StartDate>
+        <EndDate>1904-12-31T00:00:00</EndDate>
+      </Clock>
+      <Summary>
+        <Name>SummaryFile</Name>
+      </Summary>
+      <Weather>
+        <Name>Weather</Name>
+        <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
+      </Weather>
+      <SoilArbitrator>
+        <Name>Soil Arbitrator</Name>
+      </SoilArbitrator>
+      <Zone>
+        <Name>Field</Name>
+        <Report>
+          <Name>Intercrop</Name>
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>Slurp1.Root.Depth</string>
+            <string>Slurp2.Root.Depth</string>
+            <string>Slurp1.Leaf.LAI</string>
+            <string>Slurp2.Leaf.LAI</string>
+            <string>Slurp1.Root.WaterUptake</string>
+            <string>Slurp2.Root.WaterUptake</string>
+            <string>Slurp1.Leaf.WaterDemand</string>
+            <string>Slurp2.Leaf.WaterDemand</string>
+            <string>[ExtraVariables].Script.AccumEO</string>
+            <string>[ExtraVariables].Script.AccumEP</string>
+            <string>[ExtraVariables].Script.AccumES</string>
+            <string>[ExtraVariables].Script.AccumDrainage</string>
+            <string>[ExtraVariables].Script.AccumRunoff</string>
+            <string>[ExtraVariables].Script.AccumRainfall</string>
+            <string>[ExtraVariables].Script.AccumIrrigation</string>
+            <string>[ExtraVariables].Script.AccumOutflowLat</string>
+            <string>[ExtraVariables].Script.SoilWaterDeficit</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].EndOfDay</string>
+          </EventNames>
+          <ResultsPerPage>0</ResultsPerPage>
+        </Report>
+        <Fertiliser>
+          <Name>Fertiliser</Name>
+        </Fertiliser>
+        <Manager>
+          <Name>Slurp2Sow</Name>
+          <Script>
+            <CultivarName>StaticCrop</CultivarName>
+            <InitialRootDepth>600</InitialRootDepth>
+            <SowingDate>1900-10-01</SowingDate>
+          </Script>
+          <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+
+		[Description("Cultivar")]
+		public string CultivarName { get; set; }
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+
+               
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				foreach (Plant slurp in Apsim.FindAll(this, typeof(Plant)))
+					slurp.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+			}
+		}
+	}
+}
+				]]></Code>
+        </Manager>
+        <Soil>
+          <Name>Soil</Name>
+          <Water>
+            <Name>Water</Name>
+            <SoilCrop>
+              <Name>WheatSoil</Name>
+              <LL>
+                <double>0.261</double>
+                <double>0.248</double>
+                <double>0.28</double>
+                <double>0.306</double>
+                <double>0.36</double>
+                <double>0.392</double>
+                <double>0.446</double>
+              </LL>
+              <KL>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
+            <SoilCrop>
+              <Name>BarleySoil</Name>
+              <LL>
+                <double>0.261</double>
+                <double>0.248</double>
+                <double>0.28</double>
+                <double>0.306</double>
+                <double>0.36</double>
+                <double>0.392</double>
+                <double>0.446</double>
+              </LL>
+              <KL>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
+            <SoilCrop>
+              <Name>Slurp1Soil</Name>
+              <LL>
+                <double>0.261</double>
+                <double>0.248</double>
+                <double>0.28</double>
+                <double>0.306</double>
+                <double>0.36</double>
+                <double>0.392</double>
+                <double>0.446</double>
+              </LL>
+              <KL>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
+            <SoilCrop>
+              <Name>Slurp2Soil</Name>
+              <LL>
+                <double>0.261</double>
+                <double>0.248</double>
+                <double>0.28</double>
+                <double>0.306</double>
+                <double>0.36</double>
+                <double>0.392</double>
+                <double>0.446</double>
+              </LL>
+              <KL>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <BD>
+              <double>1.01056473311131</double>
+              <double>1.07145631083388</double>
+              <double>1.09393858528057</double>
+              <double>1.15861335018721</double>
+              <double>1.17301160318016</double>
+              <double>1.16287303586874</double>
+              <double>1.18749547755906</double>
+            </BD>
+            <AirDry>
+              <double>0.130250054518252</double>
+              <double>0.198689390775399</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+            </AirDry>
+            <LL15>
+              <double>0.260500109036505</double>
+              <double>0.248361738469248</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+            </LL15>
+            <DUL>
+              <double>0.52100021807301</double>
+              <double>0.496723476938497</double>
+              <double>0.488437607673005</double>
+              <double>0.480296969355493</double>
+              <double>0.471583596524955</double>
+              <double>0.457070570557793</double>
+              <double>0.452331759845006</double>
+            </DUL>
+            <SAT>
+              <double>0.588654817693846</double>
+              <double>0.565676863836273</double>
+              <double>0.557192986686577</double>
+              <double>0.532787415023694</double>
+              <double>0.527354112007486</double>
+              <double>0.531179986464627</double>
+              <double>0.521888499034317</double>
+            </SAT>
+            <KS>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+            </KS>
+          </Water>
+          <SoilWater>
+            <Name>SoilWater</Name>
+            <residueinterception>0</residueinterception>
+            <SummerDate>1-Nov</SummerDate>
+            <SummerU>5</SummerU>
+            <SummerCona>5</SummerCona>
+            <WinterDate>1-Apr</WinterDate>
+            <WinterU>5</WinterU>
+            <WinterCona>5</WinterCona>
+            <DiffusConst>40</DiffusConst>
+            <DiffusSlope>16</DiffusSlope>
+            <Salb>0.12</Salb>
+            <CN2Bare>73</CN2Bare>
+            <CNRed>20</CNRed>
+            <CNCov>0.8</CNCov>
+            <slope>NaN</slope>
+            <discharge_width>NaN</discharge_width>
+            <catchment_area>NaN</catchment_area>
+            <max_pond>0</max_pond>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <SWCON>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+            </SWCON>
+          </SoilWater>
+          <SoilNitrogen>
+            <Name>SoilNitrogen</Name>
+            <fom_type>
+              <string>default</string>
+              <string>manure</string>
+              <string>mucuna</string>
+              <string>lablab</string>
+              <string>shemp</string>
+              <string>stable</string>
+            </fom_type>
+            <fract_carb>
+              <double>0.2</double>
+              <double>0.3</double>
+              <double>0.54</double>
+              <double>0.57</double>
+              <double>0.45</double>
+              <double>0</double>
+            </fract_carb>
+            <fract_cell>
+              <double>0.7</double>
+              <double>0.3</double>
+              <double>0.37</double>
+              <double>0.37</double>
+              <double>0.47</double>
+              <double>0.1</double>
+            </fract_cell>
+            <fract_lign>
+              <double>0.1</double>
+              <double>0.4</double>
+              <double>0.09</double>
+              <double>0.06</double>
+              <double>0.08</double>
+              <double>0.9</double>
+            </fract_lign>
+            <wfpsN2N2O_x>
+              <double>22</double>
+              <double>88</double>
+            </wfpsN2N2O_x>
+            <wfpsN2N2O_y>
+              <double>0.1</double>
+              <double>1</double>
+            </wfpsN2N2O_y>
+          </SoilNitrogen>
+          <SoilOrganicMatter>
+            <Name>SoilOrganicMatter</Name>
+            <RootCN>40</RootCN>
+            <RootWt>1000</RootWt>
+            <SoilCN>12</SoilCN>
+            <EnrACoeff>7.4</EnrACoeff>
+            <EnrBCoeff>0.2</EnrBCoeff>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <Depth>
+              <string>0-15</string>
+              <string>15-30</string>
+              <string>30-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+              <string>150-180</string>
+            </Depth>
+            <OC>
+              <double>1.2</double>
+              <double>0.96</double>
+              <double>0.6</double>
+              <double>0.3</double>
+              <double>0.18</double>
+              <double>0.12</double>
+              <double>0.12</double>
+            </OC>
+            <FBiom>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </FBiom>
+            <FInert>
+              <double>0.4</double>
+              <double>0.6</double>
+              <double>0.8</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </FInert>
+            <OCUnits>Total</OCUnits>
+          </SoilOrganicMatter>
+          <Analysis>
+            <Name>Analysis</Name>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <PH>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+            </PH>
+            <PHUnits>Water</PHUnits>
+            <BoronUnits>HotWater</BoronUnits>
+          </Analysis>
+          <InitialWater>
+            <Name>InitialWater</Name>
+            <PercentMethod>EvenlyDistributed</PercentMethod>
+            <FractionFull>1</FractionFull>
+            <DepthWetSoil>NaN</DepthWetSoil>
+          </InitialWater>
+          <Sample>
+            <Name>InitialN</Name>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <NO3>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </NO3>
+            <NH4>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+            </NH4>
+            <SW>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </SW>
+            <OC>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </OC>
+            <EC>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </EC>
+            <CL>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </CL>
+            <ESP>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </ESP>
+            <PH>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </PH>
+            <NO3Units>ppm</NO3Units>
+            <NH4Units>ppm</NH4Units>
+            <SWUnits>Volumetric</SWUnits>
+            <OCUnits>Total</OCUnits>
+            <PHUnits>Water</PHUnits>
+          </Sample>
+          <RecordNumber>0</RecordNumber>
+          <ASCOrder>Vertosol</ASCOrder>
+          <ASCSubOrder>Black</ASCSubOrder>
+          <SoilType>Clay</SoilType>
+          <LocalName />
+          <Site>Norwin</Site>
+          <NearestTown>Norwin</NearestTown>
+          <Region>Darling Downs and Granite Belt</Region>
+          <State>Queensland</State>
+          <Country>Australia</Country>
+          <NaturalVegetation>Qld. Bluegrass, possible Qld. Blue gum</NaturalVegetation>
+          <ApsoilNumber>900</ApsoilNumber>
+          <Latitude>-27.581836</Latitude>
+          <Longitude>151.320206</Longitude>
+          <LocationAccuracy> +/- 20m</LocationAccuracy>
+          <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
+          <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+        </Soil>
+        <SurfaceOrganicMatter>
+          <Name>SurfaceOrganicMatter</Name>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>wheat_stubble</PoolName>
+              <ResidueType>wheat</ResidueType>
+              <Mass>500</Mass>
+              <CNRatio>100</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
+          <PoolName>wheat_stubble</PoolName>
+          <type>wheat</type>
+          <mass>500</mass>
+          <standing_fraction>0</standing_fraction>
+          <cpr />
+          <cnr>100</cnr>
+          <CriticalResidueWeight>2000</CriticalResidueWeight>
+          <OptimumDecompTemp>20</OptimumDecompTemp>
+          <MaxCumulativeEOS>20</MaxCumulativeEOS>
+          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+          <TotalLeachRain>25</TotalLeachRain>
+          <MinRainToLeach>10</MinRainToLeach>
+          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+          <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
+          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+          <FractionFaecesAdded>0.5</FractionFaecesAdded>
+        </SurfaceOrganicMatter>
+        <MicroClimate>
+          <Name>MicroClimate</Name>
+          <air_pressure>1010</air_pressure>
+          <soil_emissivity>0.96</soil_emissivity>
+          <sun_angle>15</sun_angle>
+          <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+          <night_interception_fraction>0.5</night_interception_fraction>
+          <windspeed_default>3</windspeed_default>
+          <refheight>2</refheight>
+          <albedo>0.15</albedo>
+          <emissivity>0.96</emissivity>
+          <gsmax>0.01</gsmax>
+          <r50>200</r50>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
+        </MicroClimate>
+        <Plant>
+          <Name>Slurp1</Name>
+          <Memo>
+            <Name>TitlePage</Name>
+            <MemoText><![CDATA[
+# SLURP: the Sound of a crop using water
+
+This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to provide a simple representation of crops.  It is usefull for water and nitrogen balance studies where the focus is on soil processes and a very simple crop is adequate.  The model does not predict crop growth, development or yields.  It simply takes up water and nitrogen.   .  
+
+SLURP has no phenology so the behaviour of the SLURP is the same throughout its ontology (with the exception of root depth being able to increase).  SLURP consists of 2 organs:  
+   1. Leaf which ls represented with a Simpleleaf class and provides a Water uptake demand to the soil arbitrator.  
+   2. Root which extracts water and nitrogen from the soil for plant growth  
+ 
+
+##Inclusion in APSIM simulations
+A Slurp crop is included in a simulation the same as any other APSIM crop  
+ * The Slurp object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  
+ * It is then planted with a sowing rule  
+<pre><code class='language-cs'>
+Slurp.Sow(cultivar: StaticCrop, population: 1, depth: 10, rowSpacing: 150);  
+</code></pre>
+  * Note that SLURP has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  
+  * depth in the Sow arguement is the depth that the crop is sown at.  While this has no effect on emergence in SLURP it also sets the depth that the root system is initialised at.  For static crops this depth should be set to the rooting depth that is expected as roots will not grow during the simulation
+
+##Altering Slurp properties during runs
+In some cases users will wish to change properties of Slurp while the simulation is running.  This can be done using a the set method in a manager script.
+
+<pre><code class='language-cs'>
+object LAIResetValue = leaflai;<br>
+zone.Set("Slurp.Leaf.LAIFunction.Value", LAIResetValue);<br>
+object HeightResetValue = CoverToday * MaximumHeight;<br>
+zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);<br>
+</code></pre>]]></MemoText>
+          </Memo>
+          <OrganArbitrator>
+            <Name>Arbitrator</Name>
+            <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
+            <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+          </OrganArbitrator>
+          <Root>
+            <Name>Root</Name>
+            <Memo>
+              <Name>Description</Name>
+              <MemoText><![CDATA[
+Stuff regarding Root]]></MemoText>
+            </Memo>
+            <CompositeBiomass>
+              <Name>Live</Name>
+              <Propertys>
+                <string>[Root].LayerLive</string>
+              </Propertys>
+            </CompositeBiomass>
+            <CompositeBiomass>
+              <Name>Dead</Name>
+              <Propertys>
+                <string>[Root].LayerDead</string>
+              </Propertys>
+            </CompositeBiomass>
+            <AirTemperatureFunction>
+              <Name>TemperatureEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>26</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+            </AirTemperatureFunction>
+            <Constant>
+              <Name>RootFrontVelocity</Name>
+              <Value>0</Value>
+              <Units>mm/d</Units>
+            </Constant>
+            <Constant>
+              <Name>MaxDailyNUptake</Name>
+              <Value>6</Value>
+            </Constant>
+            <Constant>
+              <Name>MaximumRootDepth</Name>
+              <Value>1000</Value>
+              <Units>mm</Units>
+            </Constant>
+            <Constant>
+              <Name>NitrogenDemandSwitch</Name>
+              <Value>1</Value>
+              <Units>mm</Units>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>KLModifier</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>200</double>
+                  <double>1500</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+              <Memo>
+                <Name>Description</Name>
+                <MemoText><![CDATA[
+This is important in SLURP as it is set for each species to represent their differences in rooting patterns between crop species
+]]></MemoText>
+              </Memo>
+              <XProperty>[Root].LayerMidPointDepth</XProperty>
+            </LinearInterpolationFunction>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+            <InitialDM>50</InitialDM>
+            <SpecificRootLength>40000</SpecificRootLength>
+            <KNO3_yProperty>
+              <double>0.02</double>
+              <double>0.02</double>
+            </KNO3_yProperty>
+            <KNO3_xRootLength>
+              <double>0</double>
+              <double>0.003</double>
+            </KNO3_xRootLength>
+            <KNH4_yProperty>
+              <double>0</double>
+              <double>0</double>
+            </KNH4_yProperty>
+            <KNH4_xRootLength>
+              <double>0</double>
+              <double>0.003</double>
+            </KNH4_xRootLength>
+            <NuptakeSupply>0</NuptakeSupply>
+          </Root>
+          <SimpleLeaf>
+            <Name>Leaf</Name>
+            <Biomass>
+              <Name>Live</Name>
+            </Biomass>
+            <Biomass>
+              <Name>Dead</Name>
+            </Biomass>
+            <Constant>
+              <Name>Photosynthesis</Name>
+              <Value>5</Value>
+              <Units>g/m2/d</Units>
+            </Constant>
+            <AirTemperatureFunction>
+              <Name>FRGRFunction</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <Line>Solid</Line>
+                    <XFieldName>[XYPairs].X</XFieldName>
+                    <YFieldName>[XYPairs].Y</YFieldName>
+                    <ShowInLegend>true</ShowInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                </Graph>
+                <X>
+                  <double>0</double>
+                  <double>10</double>
+                  <double>25</double>
+                  <double>40</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </AirTemperatureFunction>
+            <PartitionFractionDemandFunction>
+              <Name>DMDemandFunction</Name>
+              <Constant>
+                <Name>PartitionFraction</Name>
+                <Value>1</Value>
+              </Constant>
+            </PartitionFractionDemandFunction>
+            <Constant>
+              <Name>NConc</Name>
+              <Value>0.05</Value>
+            </Constant>
+            <Constant>
+              <Name>LAIFunction</Name>
+              <Value>5</Value>
+            </Constant>
+            <Constant>
+              <Name>ExtinctionCoefficientFunction</Name>
+              <Value>0.7</Value>
+            </Constant>
+            <Constant>
+              <Name>StructuralFraction</Name>
+              <Value>0.5</Value>
+            </Constant>
+            <Constant>
+              <Name>HeightFunction</Name>
+              <Value>400</Value>
+              <Units>mm</Units>
+            </Constant>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+            <BiomassYesterday>0</BiomassYesterday>
+            <LAI>0</LAI>
+            <Height>0</Height>
+            <FRGR>0</FRGR>
+            <PotentialEP>0</PotentialEP>
+            <K>0</K>
+            <KDead>0</KDead>
+            <DeltaBiomass>0</DeltaBiomass>
+            <LAIDead>0</LAIDead>
+            <WaterAllocation>0</WaterAllocation>
+          </SimpleLeaf>
+          <Cultivar>
+            <Name>StaticCrop</Name>
+            <Memo>
+              <Name>Description</Name>
+              <MemoText><![CDATA[The static crop is the base crop and uses all the paramaters values specified above.
+]]></MemoText>
+            </Memo>
+            <Alias>
+              <Name>StaticCrop</Name>
+            </Alias>
+          </Cultivar>
+          <Cultivar>
+            <Name>StaticTree</Name>
+            <Memo>
+              <Name>Description</Name>
+              <MemoText><![CDATA[The static tree is similar to the static crop but is taller, has a deeper root system and a lower extinction coefficient
+]]></MemoText>
+            </Memo>
+            <Command>[Root].MaximumRootDepth.Value = 2600</Command>
+            <Command>[Leaf].ExtinctionCoefficientFunction.Value = 0.65</Command>
+            <Command>[Leaf].HeightFunction.Value = 5000</Command>
+            <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500, 2000</Command>
+            <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3, 0.1</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Pasture</Name>
+            <Memo>
+              <Name>Description</Name>
+              <MemoText><![CDATA[The pasture differs from the base crop because its has a RootFrontVelocity of 15 (as opposed to zero) which means the roots grow downward from sowing untill the MaximumRootDepth is reached.  It ExtinctionCoefficient and MaximumRootDepth are different to the base StaticCrop and it has a different pattern of kl with depth.
+]]></MemoText>
+            </Memo>
+            <Command>[Root].MaximumRootDepth.Value = 800</Command>
+            <Command>[Root].RootFrontVelocity.Value = 15</Command>
+            <Command>[Leaf].ExtinctionCoefficientFunction.Value = 0.65</Command>
+            <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000</Command>
+            <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.7, 0.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Lucerne</Name>
+            <Memo>
+              <Name>Description</Name>
+              <MemoText><![CDATA[Lucerne also grows root depth like pasture but has a greater root depth, different kl pattern and different extinction coefficient
+]]></MemoText>
+            </Memo>
+            <Command>[Root].MaximumRootDepth.Value = 2500</Command>
+            <Command>[Root].RootFrontVelocity.Value = 15</Command>
+            <Command>[Leaf].ExtinctionCoefficientFunction.Value = 0.8</Command>
+            <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500, 2000</Command>
+            <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3, 0.1</Command>
+          </Cultivar>
+          <CropType>Slurp</CropType>
+        </Plant>
+        <Plant>
+          <Name>Slurp2</Name>
+          <Memo>
+            <Name>TitlePage</Name>
+            <MemoText><![CDATA[
+# SLURP: the Sound of a crop using water
+
+This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to provide a simple representation of crops.  It is usefull for water and nitrogen balance studies where the focus is on soil processes and a very simple crop is adequate.  The model does not predict crop growth, development or yields.  It simply takes up water and nitrogen.   .  
+
+SLURP has no phenology so the behaviour of the SLURP is the same throughout its ontology (with the exception of root depth being able to increase).  SLURP consists of 2 organs:  
+   1. Leaf which ls represented with a Simpleleaf class and provides a Water uptake demand to the soil arbitrator.  
+   2. Root which extracts water and nitrogen from the soil for plant growth  
+ 
+
+##Inclusion in APSIM simulations
+A Slurp crop is included in a simulation the same as any other APSIM crop  
+ * The Slurp object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  
+ * It is then planted with a sowing rule  
+<pre><code class='language-cs'>
+Slurp.Sow(cultivar: StaticCrop, population: 1, depth: 10, rowSpacing: 150);  
+</code></pre>
+  * Note that SLURP has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  
+  * depth in the Sow arguement is the depth that the crop is sown at.  While this has no effect on emergence in SLURP it also sets the depth that the root system is initialised at.  For static crops this depth should be set to the rooting depth that is expected as roots will not grow during the simulation
+
+##Altering Slurp properties during runs
+In some cases users will wish to change properties of Slurp while the simulation is running.  This can be done using a the set method in a manager script.
+
+<pre><code class='language-cs'>
+object LAIResetValue = leaflai;<br>
+zone.Set("Slurp.Leaf.LAIFunction.Value", LAIResetValue);<br>
+object HeightResetValue = CoverToday * MaximumHeight;<br>
+zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);<br>
+</code></pre>]]></MemoText>
+          </Memo>
+          <OrganArbitrator>
+            <Name>Arbitrator</Name>
+            <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
+            <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+          </OrganArbitrator>
+          <Root>
+            <Name>Root</Name>
+            <Memo>
+              <Name>Description</Name>
+              <MemoText><![CDATA[
+Stuff regarding Root]]></MemoText>
+            </Memo>
+            <CompositeBiomass>
+              <Name>Live</Name>
+              <Propertys>
+                <string>[Root].LayerLive</string>
+              </Propertys>
+            </CompositeBiomass>
+            <CompositeBiomass>
+              <Name>Dead</Name>
+              <Propertys>
+                <string>[Root].LayerDead</string>
+              </Propertys>
+            </CompositeBiomass>
+            <AirTemperatureFunction>
+              <Name>TemperatureEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>26</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+            </AirTemperatureFunction>
+            <Constant>
+              <Name>RootFrontVelocity</Name>
+              <Value>0</Value>
+              <Units>mm/d</Units>
+            </Constant>
+            <Constant>
+              <Name>MaxDailyNUptake</Name>
+              <Value>6</Value>
+            </Constant>
+            <Constant>
+              <Name>MaximumRootDepth</Name>
+              <Value>1000</Value>
+              <Units>mm</Units>
+            </Constant>
+            <Constant>
+              <Name>NitrogenDemandSwitch</Name>
+              <Value>1</Value>
+              <Units>mm</Units>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>KLModifier</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>200</double>
+                  <double>1500</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+              <Memo>
+                <Name>Description</Name>
+                <MemoText><![CDATA[
+This is important in SLURP as it is set for each species to represent their differences in rooting patterns between crop species
+]]></MemoText>
+              </Memo>
+              <XProperty>[Root].LayerMidPointDepth</XProperty>
+            </LinearInterpolationFunction>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+            <InitialDM>50</InitialDM>
+            <SpecificRootLength>40000</SpecificRootLength>
+            <KNO3_yProperty>
+              <double>0.02</double>
+              <double>0.02</double>
+            </KNO3_yProperty>
+            <KNO3_xRootLength>
+              <double>0</double>
+              <double>0.003</double>
+            </KNO3_xRootLength>
+            <KNH4_yProperty>
+              <double>0</double>
+              <double>0</double>
+            </KNH4_yProperty>
+            <KNH4_xRootLength>
+              <double>0</double>
+              <double>0.003</double>
+            </KNH4_xRootLength>
+            <NuptakeSupply>0</NuptakeSupply>
+          </Root>
+          <SimpleLeaf>
+            <Name>Leaf</Name>
+            <Biomass>
+              <Name>Live</Name>
+            </Biomass>
+            <Biomass>
+              <Name>Dead</Name>
+            </Biomass>
+            <Constant>
+              <Name>Photosynthesis</Name>
+              <Value>5</Value>
+              <Units>g/m2/d</Units>
+            </Constant>
+            <AirTemperatureFunction>
+              <Name>FRGRFunction</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <Line>Solid</Line>
+                    <XFieldName>[XYPairs].X</XFieldName>
+                    <YFieldName>[XYPairs].Y</YFieldName>
+                    <ShowInLegend>true</ShowInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                </Graph>
+                <X>
+                  <double>0</double>
+                  <double>10</double>
+                  <double>25</double>
+                  <double>40</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </AirTemperatureFunction>
+            <PartitionFractionDemandFunction>
+              <Name>DMDemandFunction</Name>
+              <Constant>
+                <Name>PartitionFraction</Name>
+                <Value>1</Value>
+              </Constant>
+            </PartitionFractionDemandFunction>
+            <Constant>
+              <Name>NConc</Name>
+              <Value>0.05</Value>
+            </Constant>
+            <Constant>
+              <Name>LAIFunction</Name>
+              <Value>5</Value>
+            </Constant>
+            <Constant>
+              <Name>ExtinctionCoefficientFunction</Name>
+              <Value>0.7</Value>
+            </Constant>
+            <Constant>
+              <Name>StructuralFraction</Name>
+              <Value>0.5</Value>
+            </Constant>
+            <Constant>
+              <Name>HeightFunction</Name>
+              <Value>400</Value>
+              <Units>mm</Units>
+            </Constant>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+            <BiomassYesterday>0</BiomassYesterday>
+            <LAI>0</LAI>
+            <Height>0</Height>
+            <FRGR>0</FRGR>
+            <PotentialEP>0</PotentialEP>
+            <K>0</K>
+            <KDead>0</KDead>
+            <DeltaBiomass>0</DeltaBiomass>
+            <LAIDead>0</LAIDead>
+            <WaterAllocation>0</WaterAllocation>
+          </SimpleLeaf>
+          <Cultivar>
+            <Name>StaticCrop</Name>
+            <Memo>
+              <Name>Description</Name>
+              <MemoText><![CDATA[The static crop is the base crop and uses all the paramaters values specified above.
+]]></MemoText>
+            </Memo>
+            <Alias>
+              <Name>StaticCrop</Name>
+            </Alias>
+          </Cultivar>
+          <Cultivar>
+            <Name>StaticTree</Name>
+            <Memo>
+              <Name>Description</Name>
+              <MemoText><![CDATA[The static tree is similar to the static crop but is taller, has a deeper root system and a lower extinction coefficient
+]]></MemoText>
+            </Memo>
+            <Command>[Root].MaximumRootDepth.Value = 2600</Command>
+            <Command>[Leaf].ExtinctionCoefficientFunction.Value = 0.65</Command>
+            <Command>[Leaf].HeightFunction.Value = 5000</Command>
+            <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500, 2000</Command>
+            <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3, 0.1</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Pasture</Name>
+            <Memo>
+              <Name>Description</Name>
+              <MemoText><![CDATA[The pasture differs from the base crop because its has a RootFrontVelocity of 15 (as opposed to zero) which means the roots grow downward from sowing untill the MaximumRootDepth is reached.  It ExtinctionCoefficient and MaximumRootDepth are different to the base StaticCrop and it has a different pattern of kl with depth.
+]]></MemoText>
+            </Memo>
+            <Command>[Root].MaximumRootDepth.Value = 800</Command>
+            <Command>[Root].RootFrontVelocity.Value = 15</Command>
+            <Command>[Leaf].ExtinctionCoefficientFunction.Value = 0.65</Command>
+            <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000</Command>
+            <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.7, 0.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Lucerne</Name>
+            <Memo>
+              <Name>Description</Name>
+              <MemoText><![CDATA[Lucerne also grows root depth like pasture but has a greater root depth, different kl pattern and different extinction coefficient
+]]></MemoText>
+            </Memo>
+            <Command>[Root].MaximumRootDepth.Value = 2500</Command>
+            <Command>[Root].RootFrontVelocity.Value = 15</Command>
+            <Command>[Leaf].ExtinctionCoefficientFunction.Value = 0.8</Command>
+            <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500, 2000</Command>
+            <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3, 0.1</Command>
+          </Cultivar>
+          <CropType>Slurp</CropType>
+        </Plant>
+        <Manager>
+          <Name>ExtraVariables</Name>
+          <Script />
+          <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soils.Soil Soil;
+		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
+		[Link] Weather Met;
+		[Link] Fertiliser Fert;
+		[Link] Irrigation Irrig;
+		[Link] Plant Slurp;
+		[Link] Zone zone;
+					
+		[XmlIgnore] public bool InitialDay { get; set; }
+		
+		[XmlIgnore] public double AccumPlantN { get; set; }
+		[XmlIgnore] public double AccumMineralisation { get; set; }
+		[XmlIgnore] public double AccumDenit { get; set; }
+		[XmlIgnore] public double AccumFert { get; set; }
+		[XmlIgnore] public double AccumLeach { get; set; }
+		[XmlIgnore] public double AccumDetach { get; set; }
+		[XmlIgnore] public double DeltaSoilOMN { get; set; }
+		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
+		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
+		[XmlIgnore] public double SoilNitrogenContent { get; set; }
+		
+		[XmlIgnore] public double AccumEO { get; set; }
+		[XmlIgnore] public double AccumEP { get; set; }
+		[XmlIgnore] public double AccumES { get; set; }
+		[XmlIgnore] public double AccumDrainage { get; set; }
+		[XmlIgnore] public double AccumRunoff { get; set; }
+		[XmlIgnore] public double AccumOutflowLat { get; set; }
+		[XmlIgnore] public double AccumIrrigation { get; set; }
+		[XmlIgnore] public double AccumRainfall { get; set; }
+		[XmlIgnore] public double SoilWaterDeficit { get; set; }
+	
+		[XmlIgnore] public double  InitialSoilOMN { get; set; }
+		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
+		[XmlIgnore] public double  InitialMineralN { get; set; }
+		
+		[XmlIgnore] public double SWC { get; set; }
+		[XmlIgnore] public double DUL { get; set; }
+		[XmlIgnore] public double OutFlowLat { get; set; }
+
+		[XmlIgnore] public double FomN { get; set; }
+		[XmlIgnore] public double BiomN { get; set; }
+		[XmlIgnore] public double HumN { get; set; }
+		[XmlIgnore] public double OrganicN { get; set; }
+		[XmlIgnore] public double NO3N { get; set; }
+		[XmlIgnore] public double NH4N { get; set; }
+		[XmlIgnore] public double UreaN { get; set; }
+		[XmlIgnore] public double MineralN { get; set; }
+		[XmlIgnore] public double DltNMinRes { get; set; }
+		[XmlIgnore] public double DltNMinTot { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			InitialDay = true;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			//!!!!!! Nitrogen balance components !!!!!!
+			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			OrganicN = FomN + HumN + BiomN;
+			NO3N = MathUtilities.Sum(Soil.NO3N);
+			NH4N = MathUtilities.Sum(Soil.NH4N);
+			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			MineralN = NO3N + NH4N + UreaN; 
+			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
+			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			int layers = Soil.Thickness.Length;
+			if (InitialDay == true)
+			{
+				InitialSurfaceOMN = SOM.N;
+				InitialSoilOMN = OrganicN;
+				InitialMineralN = MineralN;
+				InitialDay = false;
+			}
+			AccumFert += Fert.NitrogenApplied;
+			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
+			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
+			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+			AccumPlantN -= (double)zone.Get("Slurp1.Root.NUptake");
+			DeltaSoilOMN = OrganicN - InitialSoilOMN;
+			DeltaSoilMineralN = MineralN - InitialMineralN;
+			SoilNitrogenContent = MineralN;
+			
+			//!!!!!! Water balance components !!!!!!
+			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+
+			AccumIrrigation += Irrig.IrrigationApplied;
+			AccumRainfall += Met.Rain;
+			//AccumEP -= (double)zone.Get("[Slurp].Leaf.Transpiration");
+			AccumEP -= (double)zone.Get("Slurp1.Root.WaterUptake");
+			SoilWaterDeficit = (SWC - DUL);
+			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
+			AccumOutflowLat -= OutFlowLat;
+		}
+		
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
+			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			
+			
+			AccumEO -= Soil.SoilWater.Eo;
+			AccumES -= Soil.SoilWater.Es; 
+			AccumDrainage -= Soil.SoilWater.Drainage;
+			AccumRunoff -= Soil.SoilWater.Runoff;
+			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
+			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+		}
+	}
+}
+	   ]]></Code>
+        </Manager>
+        <Irrigation>
+          <Name>Irrigation</Name>
+        </Irrigation>
+        <Fertiliser>
+          <Name>Fertiliser1</Name>
+        </Fertiliser>
+        <Area>1</Area>
+        <Slope>0</Slope>
+      </Zone>
+      <Graph>
+        <Name>Uptakes</Name>
+        <Series>
+          <Name>Slurp1Demand</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Intercrop</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Slurp1.Leaf.WaterDemand</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Slurp2Demand</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Intercrop</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Slurp2.Leaf.WaterDemand</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Slurp1Uptake</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Intercrop</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Slurp1.Root.WaterUptake</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Slurp2Uptake</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Intercrop</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Slurp2.Root.WaterUptake</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated Water Changes (mm)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Uptakes1</Name>
+        <Series>
+          <Name>Slurp1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Intercrop</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Slurp1.Leaf.WaterDemand</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Slurp2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <TableName>Intercrop</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Slurp2.Leaf.WaterDemand</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated Water Changes (mm)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Area>0</Area>
+      <Slope>0</Slope>
+    </Simulation>
+  </Folder>
+  <ExplorerWidth>350</ExplorerWidth>
+</Simulations>

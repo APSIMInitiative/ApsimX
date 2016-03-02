@@ -5,7 +5,7 @@
     <Name>Slurp</Name>
     <Weather>
       <Name>Weather</Name>
-      <FileName>..\WeatherFiles\lincoln.met</FileName>
+      <FileName>..\..\WeatherFiles\lincoln.met</FileName>
     </Weather>
     <Clock>
       <Name>Clock</Name>
@@ -607,7 +607,7 @@
     <Name>NoSlurp</Name>
     <Weather>
       <Name>Weather</Name>
-      <FileName>..\WeatherFiles\lincoln.met</FileName>
+      <FileName>..\..\WeatherFiles\lincoln.met</FileName>
     </Weather>
     <Clock>
       <Name>Clock</Name>
