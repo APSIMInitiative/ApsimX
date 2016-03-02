@@ -97,7 +97,7 @@ namespace Models
 
                     if (jobManager.SomeHadErrors)
                     {
-                        PrintErrors(jobManager);
+                        Console.WriteLine(job.ErrorMessage);
                         exitCode = 1;
                     }
                     else
@@ -116,19 +116,6 @@ namespace Models
             if (exitCode != 0)
                 Console.WriteLine("ERRORS FOUND!!");
             return exitCode;
-        }
-
-        /// <summary>
-        /// Print all error messages to console.
-        /// </summary>
-        /// <param name="jobManager">The job manager.</param>
-        private static void PrintErrors(JobManager jobManager)
-        {
-            foreach (JobManager.IRunnable job in jobManager.CompletedJobs)
-            {
-                if (job.ErrorMessage != null && job.ErrorMessage != string.Empty)
-                    Console.WriteLine(job.ErrorMessage + Environment.NewLine);
-            }
         }
 
         /// <summary>

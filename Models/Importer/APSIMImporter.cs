@@ -674,8 +674,12 @@ namespace Importer
         /// <returns>The new created node</returns>
         private static XmlNode ImportObject(XmlNode destParent, XmlNode newNode, Model newObject, string objName)
         {
+            // Try using the pre built serialization assembly first.
+            string binDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
+            string deserializerFileName = Path.Combine(binDirectory, "Model.XmlSerializers.dll");
+
             newObject.Name = objName;
-            string newObjxml = XmlUtilities.Serialise(newObject, false);
+            string newObjxml = XmlUtilities.Serialise(newObject, false, deserializerFileName);
             XmlDocument xdoc = new XmlDocument();
             xdoc.LoadXml(newObjxml);
             newNode = destParent.OwnerDocument.ImportNode(xdoc.DocumentElement, true);
