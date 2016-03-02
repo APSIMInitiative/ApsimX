@@ -1,41 +1,40 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
+  <Memo>
+    <Name>Memo</Name>
+    <MemoText><![CDATA[
+The purpose of this test is to compare soil and nitrogen values against APSIM to ensure the models are the same.  The results should be accurate to within 1% or less. <br/>
+]]></MemoText>
+  </Memo>
   <Simulation>
-    <Name>Test</Name>
+    <Name>comparisons</Name>
     <Weather>
-      <Name>Weather</Name>
-      <FileName>%root%\Tests\WeatherFiles\lincoln.met</FileName>
+      <Name>met</Name>
+      <FileName>..\..\WeatherFiles\WeeWaa1889_2012.met</FileName>
     </Weather>
     <Clock>
-      <Name>Clock</Name>
-      <StartDate>1960-01-01T00:00:00</StartDate>
-      <EndDate>1960-01-01T00:00:00</EndDate>
+      <Name>clock</Name>
+      <StartDate>2007-01-01T00:00:00</StartDate>
+      <EndDate>2012-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
-      <Name>Summary</Name>
+      <Name>summaryfile</Name>
     </Summary>
     <Zone>
-      <Name>Field</Name>
-      <Irrigation>
-        <Name>Irrigation</Name>
-      </Irrigation>
-      <Report>
-        <Name>Report</Name>
-        <VariableNames>
-          <string>[Clock].Today</string>
-          <string>[Irrigation].IrrigationApplied</string>
-        </VariableNames>
-        <EventNames>
-          <string>[Clock].DoReport</string>
-        </EventNames>
-      </Report>
+      <Name>paddock</Name>
       <Soil>
         <Name>Soil</Name>
+        <InitialWater>
+          <Name>Initial water</Name>
+          <PercentMethod>FilledFromTop</PercentMethod>
+          <FractionFull>1</FractionFull>
+          <DepthWetSoil>NaN</DepthWetSoil>
+        </InitialWater>
         <Water>
           <Name>Water</Name>
           <SoilCrop>
-            <Name>WheatSoil</Name>
+            <Name>BarleySoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -77,7 +76,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>BarleySoil</Name>
+            <Name>ChickpeaSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -119,15 +118,183 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>PotatoSoil</Name>
+            <Name>LucerneSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
+              <double>0.29</double>
+              <double>0.29</double>
+              <double>0.3</double>
+              <double>0.31</double>
+              <double>0.32</double>
+              <double>0.33</double>
+              <double>0.34</double>
+              <double>0.35</double>
               <double>0.36</double>
-              <double>0.43</double>
-              <double>0.51</double>
-              <double>0.5</double>
-              <double>0.5</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.09</double>
+              <double>0.09</double>
+              <double>0.09</double>
+              <double>0.09</double>
+              <double>0.09</double>
+              <double>0.09</double>
+              <double>0.09</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>MaizeSoil</Name>
+            <LL>
+              <double>0.29</double>
+              <double>0.29</double>
+              <double>0.34</double>
+              <double>0.34</double>
+              <double>0.37</double>
+              <double>0.4</double>
+              <double>0.42</double>
+              <double>0.48</double>
+              <double>0.47</double>
+              <double>0.46</double>
+              <double>0.44</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.08</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>Perennial GrassSoil</Name>
+            <LL>
+              <double>0.29</double>
+              <double>0.29</double>
+              <double>0.39</double>
+              <double>0.41</double>
+              <double>0.4</double>
+              <double>0.4</double>
+              <double>0.41</double>
+              <double>0.41</double>
+              <double>0.4</double>
+              <double>0.4</double>
+              <double>0.42</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.09</double>
+              <double>0.07</double>
+              <double>0.05</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>SorghumSoil</Name>
+            <LL>
+              <double>0.29</double>
+              <double>0.29</double>
+              <double>0.35</double>
+              <double>0.38</double>
+              <double>0.4</double>
+              <double>0.4</double>
+              <double>0.4</double>
+              <double>0.48</double>
+              <double>0.47</double>
+              <double>0.46</double>
+              <double>0.44</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.08</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>WheatSoil</Name>
+            <LL>
+              <double>0.29</double>
+              <double>0.29</double>
+              <double>0.32</double>
+              <double>0.32</double>
+              <double>0.35</double>
+              <double>0.38</double>
+              <double>0.41</double>
               <double>0.48</double>
               <double>0.47</double>
               <double>0.46</double>
@@ -244,10 +411,10 @@
           <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>6</SummerU>
-          <SummerCona>3</SummerCona>
+          <SummerCona>3.5</SummerCona>
           <WinterDate>1-Apr</WinterDate>
           <WinterU>6</WinterU>
-          <WinterCona>3</WinterCona>
+          <WinterCona>3.5</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
@@ -341,17 +508,17 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0424800298346015</double>
-            <double>0.88808310684101255</double>
-            <double>0.88971598303094179</double>
-            <double>0.88999827292189926</double>
-            <double>0.77000000125133716</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0.93392590415751187</double>
+            <double>0.83154588968770127</double>
+            <double>0.862578881029763</double>
+            <double>0.877319581636015</double>
+            <double>0.76475247963879023</double>
+            <double>0.44706055179613058</double>
+            <double>0.26830107269333631</double>
+            <double>0.21865773716672665</double>
+            <double>0.15905022778116015</double>
+            <double>0.12924598410863142</double>
+            <double>0.11931740140058296</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -443,19 +610,6 @@
             <double>300</double>
             <double>300</double>
           </Thickness>
-          <EC>
-            <double>0.2</double>
-            <double>0.25</double>
-            <double>0.31</double>
-            <double>0.4</double>
-            <double>0.59</double>
-            <double>0.84</double>
-            <double>0.93</double>
-            <double>1.01</double>
-            <double>1.06</double>
-            <double>1.05</double>
-            <double>1.01</double>
-          </EC>
           <PH>
             <double>8.4</double>
             <double>8.8</double>
@@ -472,14 +626,8 @@
           <PHUnits>Water</PHUnits>
           <BoronUnits>HotWater</BoronUnits>
         </Analysis>
-        <InitialWater>
-          <Name>Initial water</Name>
-          <PercentMethod>FilledFromTop</PercentMethod>
-          <FractionFull>0.1</FractionFull>
-          <DepthWetSoil>NaN</DepthWetSoil>
-        </InitialWater>
         <Sample>
-          <Name>Sample</Name>
+          <Name>Initial nitrogen</Name>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -494,7 +642,7 @@
             <double>300</double>
           </Thickness>
           <NO3>
-            <double>1116.5030034479878</double>
+            <double>6.50300344798777</double>
             <double>2.10100111398159</double>
             <double>2.10100111398159</double>
             <double>1.70100090189562</double>
@@ -541,7 +689,7 @@
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
         <ResidueTypes>
-          <Name>ResidueTypesList</Name>
+          <Name>ResidueTypes</Name>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
         <TillageTypes>
@@ -550,19 +698,19 @@
         </TillageTypes>
         <Pools>
           <Pool>
-            <PoolName>Potato</PoolName>
-            <ResidueType>Potato</ResidueType>
+            <PoolName>wheat</PoolName>
+            <ResidueType>wheat</ResidueType>
             <Mass>1000</Mass>
             <CNRatio>80</CNRatio>
-            <CPRatio>0</CPRatio>
+            <CPRatio>NaN</CPRatio>
             <StandingFraction>0</StandingFraction>
           </Pool>
         </Pools>
-        <PoolName>Potato</PoolName>
-        <type>Potato</type>
+        <PoolName>wheat</PoolName>
+        <type>wheat</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
-        <cpr>0</cpr>
+        <cpr />
         <cnr>80</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -577,6 +725,23 @@
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
+      <Fertiliser>
+        <Name>fertiliser</Name>
+      </Fertiliser>
+      <Report>
+        <Name>Report</Name>
+        <VariableNames>
+          <string>[Clock].Today</string>
+          <string>[Calculations].Script.TotalNO3</string>
+          <string>[Calculations].Script.SW</string>
+          <string>[Calculations].Script.TotalN</string>
+          <string>[Calculations].Script.TotalC</string>
+          <string>[met].Rain</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].DoReport</string>
+        </EventNames>
+      </Report>
       <MicroClimate>
         <Name>MicroClimate</Name>
         <air_pressure>1010</air_pressure>
@@ -586,7 +751,7 @@
         <night_interception_fraction>0.5</night_interception_fraction>
         <windspeed_default>3</windspeed_default>
         <refheight>2</refheight>
-        <albedo>0.29366217672824863</albedo>
+        <albedo>0.15</albedo>
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
@@ -594,20 +759,69 @@
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
+        <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
-      <Operations>
-        <Name>Operations</Name>
-        <Operation>
-          <Date>1960-01-01T00:00:00</Date>
-          <Action>[Irrigation].Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>1960-01-01T00:00:00</Date>
-          <Action>[Irrigation].Apply(30);</Action>
-        </Operation>
-      </Operations>
-      <Area>0</Area>
+      <Manager>
+        <Name>Calculations</Name>
+        <Script>
+          <Offset>460</Offset>
+          <TotalNO3>144.237693334171</TotalNO3>
+          <SW>1460.28954762248</SW>
+          <TotalN>12359.5347096548</TotalN>
+          <TotalC>150899.832779773</TotalC>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OilPalm;
+using Models.Soils;
+using Models.SurfaceOM;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soil Soil;
+		[Link] SurfaceOrganicMatter SurfaceOM;
+		[Link] Summary Summary;
+		
+		public double Offset {get; set;}
+	    public double TotalNO3 {get; set;}
+	    public double SW {get;set;}
+	    public double TotalN {get;set;}
+	    public double TotalC {get;set;}
+		
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+		{	
+			TotalNO3 = 0;
+			SW = 0;
+			TotalN = 0;
+			TotalC = 0;
+		}
+		
+		[EventSubscribe("DoDailyInitialisation")]
+		private void OnDoDailyInitialisation(object sender, EventArgs e)
+		{
+		}
+		
+       [EventSubscribe("DoManagementCalculations")]
+       private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
+			TotalNO3 = MathUtilities.Sum(Soil.NO3N);
+			SW = MathUtilities.Sum(Soil.SoilWater.SWmm);
+			TotalN = MathUtilities.Sum(Soil.SoilNitrogen.TotalN);
+			TotalC = MathUtilities.Sum(Soil.SoilNitrogen.TotalC);
+		}
+	}
+}
+]]></Code>
+      </Manager>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
     <Area>0</Area>
@@ -615,7 +829,279 @@
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
+    <Input>
+      <Name>Input</Name>
+      <ErrorMessage />
+      <FileName>Apsim.out</FileName>
+    </Input>
     <AutoExport>false</AutoExport>
   </DataStore>
+  <Graph>
+    <Name>NO3</Name>
+    <Series>
+      <Name />
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-65536</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>Calculations.Script.TotalNO3</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Series>
+      <Name>Series</Name>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <TableName>Input</TableName>
+      <XFieldName>Date</XFieldName>
+      <YFieldName>Calculations.Script.TotalNO3</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Year</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>TopRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>SW</Name>
+    <Series>
+      <Name />
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-65536</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>Calculations.Script.SW</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Series>
+      <Name>Series</Name>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <TableName>Input</TableName>
+      <XFieldName>Date</XFieldName>
+      <YFieldName>Calculations.Script.SW</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Year</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>TopRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>TotalN</Name>
+    <Series>
+      <Name />
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-65536</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>Calculations.Script.TotalN</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Series>
+      <Name>Series</Name>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Dash</Line>
+      <TableName>Input</TableName>
+      <XFieldName>Date</XFieldName>
+      <YFieldName>Calculations.Script.TotalN</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Year</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>TopRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>TotalC</Name>
+    <Series>
+      <Name />
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-65536</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>Calculations.Script.TotalC</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Series>
+      <Name>Series</Name>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <TableName>Input</TableName>
+      <XFieldName>Date</XFieldName>
+      <YFieldName>Calculations.Script.TotalC</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Year</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>TopRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>SW and rain</Name>
+    <Series>
+      <Name />
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-65536</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>Calculations.Script.SW</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Series>
+      <Name>Series</Name>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Right</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>met.Rain</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Year</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Right</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>TopRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

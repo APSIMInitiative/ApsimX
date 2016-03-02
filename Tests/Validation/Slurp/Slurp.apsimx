@@ -5,21 +5,21 @@
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>ProfileSWC</Name>
-      <FileName>%root%\Tests\Slurp\ShallowSoilTest\SoilWaterContent.xlsx</FileName>
+      <FileName>%root%\Tests\Validation\Slurp\ShallowSoilTest\SoilWaterContent.xlsx</FileName>
       <SheetNames>
         <string>ProfileSWC</string>
       </SheetNames>
     </ExcelInput>
     <ExcelInput>
       <Name>LayerSWC</Name>
-      <FileName>%root%\Tests\Slurp\ShallowSoilTest\SoilWaterContent.xlsx</FileName>
+      <FileName>%root%\Tests\Validation\Slurp\ShallowSoilTest\SoilWaterContent.xlsx</FileName>
       <SheetNames>
         <string>LayerSWC</string>
       </SheetNames>
     </ExcelInput>
     <ExcelInput>
       <Name>Cover</Name>
-      <FileName>%root%\Tests\Slurp\ShallowSoilTest\CoverDataObs.xlsx</FileName>
+      <FileName>%root%\Tests\Validation\Slurp\ShallowSoilTest\CoverDataObs.xlsx</FileName>
       <SheetNames>
         <string>Cover</string>
       </SheetNames>
@@ -27,7 +27,7 @@
     <Input>
       <Name>Input</Name>
       <ErrorMessage>Specified cast is not valid.</ErrorMessage>
-      <FileName>%root%\Tests\Slurp\ShallowSoilTest\CoverInterpolated.csv</FileName>
+      <FileName>%root%\Tests\Validation\Slurp\ShallowSoilTest\CoverInterpolated.csv</FileName>
     </Input>
     <PredictedObserved>
       <Name>ProfileWater</Name>
@@ -1831,21 +1831,21 @@ namespace Models
         <Factor>
           <Name>P087073</Name>
           <Specifications>
-            <string>[Weather].FileName = %root%\Tests\Slurp\Weather\P087073.met</string>
+            <string>[Weather].FileName = %root%\Tests\Validation\Slurp\Weather\P087073.met</string>
             <string>[Clock].StartDate = 1980-03-01</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>P108081</Name>
           <Specifications>
-            <string>[Weather].FileName = %root%\Tests\Slurp\Weather\P108081.met</string>
+            <string>[Weather].FileName = %root%\Tests\Validation\Slurp\Weather\P108081.met</string>
             <string>[Clock].StartDate = 1980-03-01</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>P128077</Name>
           <Specifications>
-            <string>[Weather].FileName = %root%\Tests\Slurp\Weather\P128077.met</string>
+            <string>[Weather].FileName = %root%\Tests\Validation\Slurp\Weather\P128077.met</string>
             <string>[Clock].StartDate = 1980-03-01</string>
           </Specifications>
         </Factor>
@@ -2721,7 +2721,7 @@ namespace Models
       <Name>SoilXClimateBase</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>%root%\Tests\Slurp\Weather\P087073.met</FileName>
+        <FileName>%root%\Tests\Validation\Slurp\Weather\P087073.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
@@ -5920,7 +5920,7 @@ namespace Models
         <Manager>
           <Name>SetCropVariables</Name>
           <Script>
-            <CoverFile>%root%\Tests\Slurp\ShallowSoilTest\CoverInterpolated.csv</CoverFile>
+            <CoverFile>%root%\Tests\Validation\Slurp\ShallowSoilTest\CoverInterpolated.csv</CoverFile>
             <Ext_coef>0.8</Ext_coef>
             <MaximumHeight>600</MaximumHeight>
             <Cover>

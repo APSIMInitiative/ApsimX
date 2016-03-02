@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Simulation>
@@ -11,7 +11,7 @@
     <Summary>
       <Name>SummaryFile</Name>
     </Summary>
-    <Model xsi:type="ControlledEnvironment">
+    <ControlledEnvironment>
       <Name>ControlledEnvironment</Name>
       <MaxT>25</MaxT>
       <MinT>10</MinT>
@@ -23,11 +23,13 @@
       <CO2>350</CO2>
       <Latitude>-27</Latitude>
       <DayLength>12</DayLength>
-    </Model>
+    </ControlledEnvironment>
     <Zone>
       <Name>Field</Name>
       <Report>
         <Name>Report</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>Wheat.Zadok.Stage</string>
@@ -415,6 +417,11 @@
       </Plant15>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
         <air_pressure>1010</air_pressure>
         <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
@@ -426,11 +433,6 @@
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
       </MicroClimate>
       <Manager>
         <Name>SowingFertiliser</Name>
@@ -561,12 +563,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Yield</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -596,6 +604,7 @@ namespace Models
   <DataStore>
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <ExplorerWidth>296</ExplorerWidth>
 </Simulations>
