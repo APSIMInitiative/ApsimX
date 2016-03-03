@@ -50,11 +50,15 @@ namespace Models.AgPasture1
 		[Link(IsOptional=true)]
 		private Arbitrator.Arbitrator apsimArbitrator = null;
 
-		//- Events  ---------------------------------------------------------------------------------------------------
+        /// <summary>The summary</summary>
+        [Link]
+        ISummary Summary = null;
 
-		/// <summary>Reference to a NewCrop event</summary>
-		/// <param name="Data">Data about crop type</param>
-		public delegate void NewCropDelegate(PMF.NewCropType Data);
+        //- Events  ---------------------------------------------------------------------------------------------------
+
+        /// <summary>Reference to a NewCrop event</summary>
+        /// <param name="Data">Data about crop type</param>
+        public delegate void NewCropDelegate(PMF.NewCropType Data);
 		/// <summary>Event to be invoked to tell other models about the existence of this species</summary>
 		public event NewCropDelegate NewCrop;
 
@@ -5031,8 +5035,17 @@ namespace Models.AgPasture1
 			isAlive = false;
 		}
 
-		/// <summary>Reset this plant to zero (kill crop)</summary>
-		public void ResetZero()
+        /// <summary>End the crop.</summary>
+        public void EndCrop()
+        {
+            Summary.WriteMessage(this, "Crop ending");
+
+            // Code to be added
+
+        }
+
+        /// <summary>Reset this plant to zero (kill crop)</summary>
+        public void ResetZero()
 		{
 
 			// Zero out the DM pools
