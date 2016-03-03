@@ -23104,7 +23104,7 @@ namespace Models
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <FileName>C:\APSIMX\Prototypes\Wheat\Wagga1314.met</FileName>
+          <FileName>Wagga1314.met</FileName>
         </Weather>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
@@ -23679,7 +23679,7 @@ namespace Models
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <FileName>C:\APSIMX\Prototypes\Wheat\Wagga1314.met</FileName>
+          <FileName>Wagga1314.met</FileName>
         </Weather>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
