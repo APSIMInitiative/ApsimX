@@ -32,6 +32,8 @@ namespace SWIMFrame
         static double[,] qi2 = new double[mx + 1, mx + 1];
         static double[,] qi3 = new double[mx + 1, mx + 1];
         static double[,] qi5 = new double[mx + 1, mx + 1];
+        static double[,] aKco = new double[3 + 1, mx + 1];
+    //    static double[,] aphico = new double[3 + 1, mx + 1];
         static SoilProps sp;
 
         static StringBuilder diags = new StringBuilder();
@@ -60,12 +62,18 @@ namespace SWIMFrame
             ft.fend = new FluxEnd[2];
             nu = sp.nc;
             he = sp.he; Ks = sp.ks;
+            for (i = 1; i < 4; i++) // this is needed as some calcs require indexs out of range of the sp arrays
+                for (j = 1; j < sp.Kco.GetLength(1); j++)
+                {
+                    aKco[i, j] = sp.Kco[i - 1, j];
+                   // aphico[i, j] = sp.phico[i, j]; //doesn't seem to be used
+                }
 
             // Get K values for Simpson's integration rule in subroutine odef.
             for (i = 1; i <= nu - 1; i++)
             {
                 x = 0.5 * (sp.phic[i + 1] - sp.phic[i]);
-                hpK[i] = sp.Kc[i] + x * (sp.Kco[0, i] + x * (sp.Kco[1, i] + x * sp.Kco[2, i]));
+                hpK[i] = sp.Kc[i] + x * (aKco[1, i] + x * (aKco[2, i] + x * aKco[3, i]));
             }
 
             // Get fluxes aq(1,:) for values aphi[i] at bottom (wet), aphi(1) at top (dry).
@@ -187,11 +195,10 @@ namespace SWIMFrame
                     qi5[row + 1, col + 1] = qi3[row / 2 + 1, col / 2 + 1];
                 }
 
-/*            Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(qi5);
+            Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(qi5);
             printMatrix = printMatrix.RemoveRow(0);
             printMatrix = printMatrix.RemoveColumn(0);
             MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t",  null, "E6", null, null);
-            Environment.Exit(0);*/
 
             // Get accurate qi5(j,j)=Kofphi(phii(ip))
             ip = 0;
@@ -199,28 +206,28 @@ namespace SWIMFrame
             {
                 ip = ip + 1;
                 ii = iphif[ip + 1] - 1;
-                if (ii >= sp.Kco.GetLength(1))
-                    ii = sp.Kco.GetLength(1) - 1;
-                do // Search down to locate phii position for cubic.
+               // if (ii >= sp.Kco.GetLength(1))
+               //     ii = sp.Kco.GetLength(1) - 1;
+                while (true) // Search down to locate phii position for cubic.
                 {
                     if (sp.phic[ii] <= phii[ip])
                         break;
                     ii = ii - 1;
-                } while (true);
+                } 
                 x = phii[ip] - sp.phic[ii];
-                qi5[j, j] = sp.Kc[ii] + x * (sp.Kco[0, ii] + x * (sp.Kco[1, ii] + x * sp.Kco[2, ii]));
+                qi5[j, j] = sp.Kc[ii] + x * (aKco[1, ii] + x * (aKco[2, ii] + x * aKco[3, ii]));
             }
 
             double[] phii51 = phif.Slice(1, nphif);
             double[] phii52 = phii.Slice(1, ni);
             for (int i = 1;i <= nphif;i++)
             {
-                phii5[i * 2] = phii51[i];
+                phii5[i * 2 - 1] = phii51[i];
             }
 
             for (int i = 1; i <= ni; i++)
             {
-                phii5[1 + i * 2] = phii52[i];
+                phii5[i * 2] = phii52[i];
             }
             // diags - end timer here
 
