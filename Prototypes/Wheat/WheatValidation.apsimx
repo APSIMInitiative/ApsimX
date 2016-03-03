@@ -1784,7 +1784,7 @@ The model consists of:
     <Input>
       <Name>NZObservations</Name>
       <ErrorMessage />
-      <FileName>%root%\Tests\Wheat\RainShelterBiomass.txt</FileName>
+      <FileName>%root%\Tests\Validation\Wheat\RainShelterBiomass.txt</FileName>
     </Input>
     <TimeSeriesStats>
       <Name>TimeSeriesStats</Name>
@@ -1819,6 +1819,55 @@ The model consists of:
     </PredictedObserved>
     <PredictedObserved>
       <Name>PreVsObsLeafNumber</Name>
+      <Tests>
+        <Name>Tests</Name>
+        <AcceptedStats>
+          <RegrStats>
+            <Name>Wheat.Leaf.AppearedCohortNo</Name>
+            <n>325</n>
+            <Slope>1.0919049539744727</Slope>
+            <Intercept>1.3059400188205235</Intercept>
+            <SEslope>0.0335484931006816</SEslope>
+            <SEintercept>0.29485350959449869</SEintercept>
+            <R2>0.76633340001022954</R2>
+            <RMSE>2.5921795825679785</RMSE>
+            <NSE>-0.043185635777739373</NSE>
+            <ME>2.0792703524637393</ME>
+            <MAE>2.1691491030759069</MAE>
+            <RSR>1.0197920542059054</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Leaf.ExpandedCohortNo</Name>
+            <n>99</n>
+            <Slope>1.248498140389571</Slope>
+            <Intercept>-0.57854802928226157</Intercept>
+            <SEslope>0.02590729227855057</SEslope>
+            <SEintercept>0.24532299356160545</SEintercept>
+            <R2>0.95990694782247288</R2>
+            <RMSE>2.0301171992996254</RMSE>
+            <NSE>0.65738153782525588</NSE>
+            <ME>1.6110281512592257</ME>
+            <MAE>1.7250580994976708</MAE>
+            <RSR>0.58237244923461517</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Leaf.SenescingCohortNo</Name>
+            <n>10</n>
+            <Slope>0.75165475428580331</Slope>
+            <Intercept>-1.7427563039282505</Intercept>
+            <SEslope>0.21262950847487858</SEslope>
+            <SEintercept>1.1573572216244983</SEintercept>
+            <R2>0.60969020081085157</R2>
+            <RMSE>3.3586218025307035</RMSE>
+            <NSE>-0.83712007098846053</NSE>
+            <ME>-2.9463157894736844</ME>
+            <MAE>2.9463157894736844</MAE>
+            <RSR>1.2858491606287321</RSR>
+          </RegrStats>
+        </AcceptedStats>
+        <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
+        <POName>PreVsObsLeafNumber</POName>
+      </Tests>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>LeafAppearance</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
@@ -1942,15 +1991,15 @@ The model consists of:
           <RegrStats>
             <Name>Wheat.Leaf.Dead.Wt</Name>
             <n>24</n>
-            <Slope>1.3848994826932015</Slope>
-            <Intercept>34.260099901327649</Intercept>
+            <Slope>1.3848994826932011</Slope>
+            <Intercept>34.260099901327678</Intercept>
             <SEslope>0.26282926319421979</SEslope>
             <SEintercept>15.832415557908416</SEintercept>
             <R2>0.55791734647608981</R2>
             <RMSE>71.3948976407506</RMSE>
             <NSE>-2.6133973698486774</NSE>
             <ME>52.387261788332907</ME>
-            <MAE>58.14205691938129</MAE>
+            <MAE>58.142056919381282</MAE>
             <RSR>1.8608705344824454</RSR>
           </RegrStats>
           <RegrStats>

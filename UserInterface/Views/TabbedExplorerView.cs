@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using UserInterface.Commands;
 using System.Reflection;
 
 namespace UserInterface.Views
@@ -17,7 +12,7 @@ namespace UserInterface.Views
         event EventHandler<PopulateStartPageArgs> PopulateStartPage;
 
         event EventHandler MruFileClick;
-       
+
         event EventHandler TabClosing;
 
         /// <summary>
@@ -53,6 +48,10 @@ namespace UserInterface.Views
         /// Gets the current tab index.
         /// </summary>
         int CurrentTabIndex { get; }
+
+        bool WaitCursor { get; set; }
+
+        void Close(bool askToSave = true);
     }
 
 
@@ -89,6 +88,37 @@ namespace UserInterface.Views
             {
                 return TabControl.SelectedIndex;
             }
+        }
+
+        public bool WaitCursor
+        {
+            get
+            {
+                return Cursor.Current == Cursors.WaitCursor;
+            }
+            set
+            {
+                if (value == true)
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                }
+                else
+                {
+                    Cursor.Current = Cursors.Default;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Close the application.
+        /// </summary>
+        /// <param name="askToSave">Flag to turn on the request to save</param>
+        public void Close(bool askToSave = true)
+        {
+            Form mainForm = this.ParentForm;
+            if (!askToSave)
+                mainForm.DialogResult = DialogResult.Cancel;
+            mainForm.Close();
         }
 
         /// <summary>
