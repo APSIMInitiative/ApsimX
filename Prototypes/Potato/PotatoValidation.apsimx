@@ -54,7 +54,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <X>
               <double>2</double>
               <double>20</double>
-              <double>35</double>
+              <double>30</double>
             </X>
             <Y>
               <double>0</double>
@@ -818,7 +818,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>0</double>
               </Y>
             </XYPairs>
-            <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
           </WeightedTemperatureFunction>
           <LinearInterpolationFunction>
             <Name>FW</Name>
@@ -1130,7 +1130,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
       <Cultivar>
         <Name>Coliban</Name>
         <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.10,0.19</Command>
-        <Command />
+        <Command>[Phenology].Vegetative.Target.Value = 200</Command>
       </Cultivar>
       <Cultivar>
         <Name>Others</Name>
@@ -1283,6 +1283,8 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <string>[Potato].Root.NUptake</string>
         <string>[PotatoPlantAndHarvest].Script.Harvested</string>
         <string>[PotatoPlantAndHarvest].Script.ReadyForHarvest</string>
+        <string>[Weather].MaxT</string>
+        <string>[Weather].MinT</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -1293,7 +1295,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
-      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\Potato\Observed\potato_observations.txt' because it is being used by another process.</ErrorMessage>
+      <ErrorMessage />
       <FileName>Observed\potato_observations.txt</FileName>
     </Input>
     <Input>
@@ -1307,7 +1309,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
       <FileName>Observed\cultivar_nodenumber.txt</FileName>
     </Input>
     <PredictedObserved>
-      <Name>PredictedObserved</Name>
+      <Name>TimeCoarseData</Name>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Input</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
@@ -1322,12 +1324,21 @@ The duration of a potato crop is determined by the number of leaves that the mai
       <Name>TimeSeriesStats</Name>
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
+    <PredictedObserved>
+      <Name>NodeAppearance</Name>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>InputNodeNo</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
+    <PredictedObserved>
+      <Name>RadnInt</Name>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>InputRadInd</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
     <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
+    <MaximumResultsPerPage>1000</MaximumResultsPerPage>
   </DataStore>
-  <Tests>
-    <Name>Tests</Name>
-  </Tests>
   <Memo>
     <Name>Development Experiments</Name>
     <MemoText><![CDATA[#Model development
@@ -2115,11 +2126,11 @@ namespace Models
 				FinalTag = "yield";
 				ReadyForHarvest = true;
 			}
-			if ((Potato.Phenology.Stage >= 7) && (Harvested == false))
-			{
-				FinalTag = "yield";
-				ReadyForHarvest = true;
-			}
+			//if ((Potato.Phenology.Stage >= 7) && (Harvested == false))
+			//{
+			//	FinalTag = "yield";
+			//	ReadyForHarvest = true;
+			//}
 		}
 	}
 }
@@ -13403,12 +13414,12 @@ This trial was run in A Block of the Plant and Food Research farm on a templeton
             <Name>PotatoPlantAndHarvest</Name>
             <Script>
               <PlantingDate>2000-05-02</PlantingDate>
-              <CultivarName>RussetBurbank</CultivarName>
+              <CultivarName>IlamHardy</CultivarName>
               <RowSpace>280</RowSpace>
               <RowWidth>770</RowWidth>
               <PlantingDepth>170</PlantingDepth>
-              <StemNumberPerSeedTuber>2.4</StemNumberPerSeedTuber>
-              <SetFinalLeafNumber>0</SetFinalLeafNumber>
+              <StemNumberPerSeedTuber>3</StemNumberPerSeedTuber>
+              <SetFinalLeafNumber>34</SetFinalLeafNumber>
               <HarvestDate>2000-10-16</HarvestDate>
             </Script>
             <Code><![CDATA[
@@ -17453,7 +17464,7 @@ namespace Models
             <Name>PotatoPlantAndHarvest</Name>
             <Script>
               <PlantingDate>2007-11-23</PlantingDate>
-              <CultivarName>RussetBurbank</CultivarName>
+              <CultivarName>Coliban</CultivarName>
               <RowSpace>280</RowSpace>
               <RowWidth>770</RowWidth>
               <PlantingDepth>170</PlantingDepth>
@@ -21111,70 +21122,6 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>Cover</Name>
-        <Series>
-          <Name>Predicted</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Leaf.CoverGreen</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Observed</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>InputRadInd</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Leaf.CoverGreen</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Canopy Cover (0-1)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopRight</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
         <Name>TuberN%</Name>
         <Series>
           <Name>Predicted</Name>
@@ -21592,6 +21539,199 @@ namespace Models
         <Axis>
           <Type>Left</Type>
           <Title>Predicted Fresh Tuber Yieldt (g /m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Fw</Name>
+        <Series>
+          <Name>Prediceted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Potato.Leaf.Fw</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Tuber live weight (g DM/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Fn</Name>
+        <Series>
+          <Name>Prediceted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Potato.Leaf.Fn</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Tuber live weight (g DM/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Ft</Name>
+        <Series>
+          <Name>Prediceted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Potato.Leaf.Photosynthesis.FT.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Tuber live weight (g DM/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Temp</Name>
+        <Series>
+          <Name>Prediceted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weather.MaxT</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Prediceted1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weather.MinT</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Tuber live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -22180,51 +22320,51 @@ A range of excelent experimental data has been collected by Plant and Food Resea
               <SowingDate>2004-05-10</SowingDate>
             </Script>
             <Code><![CDATA[
-using System;
-using Models.Core;
-using Models.PMF;
-using APSIM.Shared.Utilities;
+        using System;
+        using Models.Core;
+        using Models.PMF;
+        using APSIM.Shared.Utilities;
         
-namespace Models
-{
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Plant Potato;
-		[Link] Clock Clock;
+        namespace Models
+        {
+           [Serializable] 
+           [System.Xml.Serialization.XmlInclude(typeof(Model))]
+            public class Script : Model
+            {      
+               [Link] Plant Potato;
+               [Link] Clock Clock;
 
-		[Description("Spacing (mm) between plants within rows")]
-		public double RowSpace { get; set; }
-		[Description("Spacing (mm) between rows")]
-		public double RowWidth { get; set; }
-		[Description("Depth (mm) tubers are planted")]
-		public double PlantingDepth { get; set; }
-		[Description("Number of stems per seed tuber")]
-		public double StemNumberPerSeedTuber { get; set; }
-		[Description("Cultivar")]
-		public string CultivarName { get; set; }
-		[Description("Sowing Date")]
-		public DateTime SowingDate { get; set; }
+               [Description("Spacing (mm) between plants within rows")]
+               public double RowSpace { get; set; }
+               [Description("Spacing (mm) between rows")]
+               public double RowWidth { get; set; }
+               [Description("Depth (mm) tubers are planted")]
+               public double PlantingDepth { get; set; }
+               [Description("Number of stems per seed tuber")]
+               public double StemNumberPerSeedTuber { get; set; }
+               [Description("Cultivar")]
+               public string CultivarName { get; set; }
+               [Description("Sowing Date")]
+               public DateTime SowingDate { get; set; }
 
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
+               {
+				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
-			if (Clock.Today.Date == SowingDate)
-				Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);
-			//Potato.Sow(... Contains the following arguements:
-			//Population  double  Required  Seeds sowing/m2
-			//Cultivar    string  Required  "NameOfCultivar"
-			//Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
-			//MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0
-			//BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
-			//RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
-			//CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
-		}
-	}
-}
+				if (Clock.Today.Date == SowingDate)
+                    Potato.Sow(population:PlantPopulation, cultivar:CultivarName, depth:PlantingDepth, rowSpacing:150, budNumber:StemNumberPerSeedTuber);
+                //Potato.Sow(... Contains the following arguements:
+                //Population  double  Required  Seeds sowing/m2
+                //Cultivar    string  Required  "NameOfCultivar"
+                //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
+                //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0
+                //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
+                //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
+                //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
+			   }
+            }
+        }
 				]]></Code>
           </Manager>
         </Folder>
@@ -24635,20 +24775,20 @@ namespace Models
 {
 	[Serializable] 
 	public class Script : Model
-	{
-		[Link] Plant Plant;
-		[Link] Zone zone;
+	{      
+        [Link] Plant Plant;          
+		[Link] Zone zone;			
 		[Description("Path for coefficient to be Overwritten")]
 		public string OverRidePath { get; set; }
 		[Description("Value for new coefficient Interger")]
-		public int OverRideInterger { get; set; }
+        public int OverRideInterger { get; set; }
         
 		[EventSubscribe("Sowing")]
 		private void OnSowing(object sender, EventArgs e)
 		{
 			object ResetValue = OverRideInterger;
 			zone.Set(OverRidePath, ResetValue);
-		}
+	    }
 	}
 }
 	   ]]></Code>
@@ -26047,6 +26187,30 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
+            <urea_min>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </urea_min>
+            <nh4_min>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </nh4_min>
+            <no3_min>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </no3_min>
             <wfpsN2N2O_x>
               <double>22</double>
               <double>88</double>
@@ -26056,12 +26220,12 @@ namespace Models
               <double>1</double>
             </wfpsN2N2O_y>
             <oc>
-              <double>1.8339616032051749</double>
-              <double>1.4698957823178243</double>
-              <double>1.1994518037137214</double>
-              <double>1.0302605988896378</double>
-              <double>0.4703451342743874</double>
-              <double>0.4701368369937437</double>
+              <double>1.930726003260905</double>
+              <double>1.4850413916138878</double>
+              <double>1.2078800883840255</double>
+              <double>1.0367928679653171</double>
+              <double>0.47372572858988587</double>
+              <double>0.47198385424301831</double>
             </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
@@ -26163,10 +26327,17 @@ namespace Models
         </Irrigation>
         <SurfaceOrganicMatter>
           <Name>surface organic matter</Name>
+          <PondActive>no</PondActive>
+          <ReportAdditions>no</ReportAdditions>
+          <ReportRemovals>no</ReportRemovals>
           <ResidueTypes>
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
+          <TillageTypes>
+            <Name>TillageTypesList</Name>
+            <TillageType />
+          </TillageTypes>
           <Pools>
             <Pool>
               <PoolName>wheat</PoolName>
@@ -26199,7 +26370,7 @@ namespace Models
         <MicroClimate>
           <Name>MicroClimate</Name>
           <a_interception>0</a_interception>
-          <b_interception>0</b_interception>
+          <b_interception>1</b_interception>
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
@@ -26217,8 +26388,1187 @@ namespace Models
         </MicroClimate>
         <Plant>
           <Name>Potato</Name>
-          <ResourceName>Potato</ResourceName>
+          <Memo>
+            <Name>TitlePage</Name>
+            <MemoText><![CDATA[
+# The APSIM Potato Model
+
+_Brown, H.E., Huth, N.I. and Holzworth, D.P._
+
+##Building the model.
+The APSIM potato model has been described in part by [Brown_etal_2011] and developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
+
+The model consists of:
+
+* a phenology model to simulate development between growth phases  
+* a structure model to simulate plant morphology  
+* a collection of organs to simulate the various plant parts  
+* an arbitrator to allocate resources (N, biomass) to the various plant organs  
+
+##Pecularities of potato
+Potato is a challenging crop to model because it is vegetatviely propigated.  For seed propigate crops, plants are always equally dormant at planting and their development begins there on.  With potato the physiological status of the seed tubers vary depending on:
+* the conditions the mother plant encountered late in its life (Stress, Desication etc)
+* the conditions that the tuber was stored (Cool store, ground store, dry store etc)
+* treatment of the seed prior to planting (chitting, cutting etc)
+All of these factors infuence the developmental behaviour of the crop that is produced including
+* The timing of emergence
+* The number of stems produced per plant and subsequent tuber number and canopy development
+* The timing of tuber initiation and subsequent growth and partitioning
+* The duration of haulm growth and subsequent tuber filling duration
+
+There are an enormous number of potato cultivars and they, they all differ in their responses of post planting behavour due to pre planting seed conditions, there is not a good quantitative understanding of how environment and managemet of seed potato prior to planting influences post planting behaviour and it is beyond the scope of the current APSIM infrastructure to provide environmental conditions during storage of seed.  We have tried but with a list of excuses this long we have not yet succeeded in building the effects of seed physiology into the potato model in anything other than a very elementry way.  However, it is possible to set the model up to capture seed effects for specific simulations. 
+
+##Including a potato crop in an APSIM simulation
+There is a Potato example simulation available by clicking the 'Open an Example' icon available on the first tab displayed when APSIM Next Gen is opened.  This provides a useful demonstration of how to simulate a potato crop and provides some useful graphs for viewing models predictions.  
+To incluce a potato crop in a simulation the 'Potato' model needs to be added to the paddock, field or zone in which it is to be grown.  This can be done by right clicking on the 'Paddock', selecting 'Add' from the drop down menu and then selecting 'Potato' from the list that comes up.  A sowing action also needs to be set to start the crop off and a harvest event to remove the potato crop so the next crop can be simulated.  The 'PotatoPlantAndHarvest' manager module that is included in the 'Potato, example simulation has script written to instigate these events and can be copied from the example simulation into other simulations.
+###Setting sowing depth (emergence date)
+The potato model predicts emergence date as a function of sowing depth and all subsequent phenology is dependent on this timing.  Because this date is effected by seed physiology and can't yet be modeled we recommend that planting depth is not set at the actual planting depth, but varied to ensure the model predicts a realistic emergence date.  Planting depth is set in the 'PotatoPlantAndHarvest' module
+###Setting stem number (tuber number and early canopy growth)
+The 'PotatoPlantAndHarvest' script sets the number of stems that will appear from each seed piece.  This varies enormiously due to seed physiology and variety and should be set to a number that is realistic for the cultivar being simulated and the pre-planting treatment of the seed tubers.  This parameter influences tuber number and the early development of the canopy so should be set carefully.
+###Setting final leaf number (Crop duration)
+The duration of a potato crop is determined by the number of leaves that the mainstem produces and how long it takes for these to appear and seness.  This responds to photoperiod in many varieties and is influenced by the pre-planting treatment of seed tubers.  As such this parameter is given a default value for each cultivar but can also be set in the'PotatoPlantAndHarvest' script if more is know about the expected determinany of the potatoes under the circumstances being simulated.  Please read  [Brown_etal_2011] for a clear definition of final leaf number.]]></MemoText>
+          </Memo>
+          <Phenology>
+            <Name>Phenology</Name>
+            <AirTemperatureFunction>
+              <Name>ThermalTime</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>2</double>
+                  <double>20</double>
+                  <double>30</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>18</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </AirTemperatureFunction>
+            <GenericPhase>
+              <Name>Dormant</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[This phase is currenttly set with a very short duration and is a place holder until we have a suitalbe method for modelling tuber dormancy]]></MemoText>
+              </Memo>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Constant>
+                <Name>Target</Name>
+                <Value>1</Value>
+              </Constant>
+              <Start>Planting</Start>
+              <End>Peeping</End>
+            </GenericPhase>
+            <EmergingPhase>
+              <Name>Sprouting</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[The sprouting phase controls when the crop emerges.  In potato this is influenced by the physiological stage of the seed tuber when it is planted.  This is difficult to model as the seed tubers physiological status begins when it is still on the mother plant and is influenced by the treatment of the mother plant, the storage conditions of the tuber, conditions when the seed is being prepared for planting and the variety of potato.  There is currently no good way of modelling this as it would require environmental information from beyond the field where the crop is to be grown which is currently beyond the scope of APSIM.  In the absence of something more elegent, we recommend that the user adjusts sowing depth to achieve a realistic emergence date and let the model deal with phenological develpment there after.]]></MemoText>
+              </Memo>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Start>Peeping</Start>
+              <End>Emergence</End>
+              <ShootLag>72</ShootLag>
+              <ShootRate>1.35</ShootRate>
+            </EmergingPhase>
+            <GenericPhase>
+              <Name>Vegetative</Name>
+              <Constant>
+                <Name>Target</Name>
+                <Value>300</Value>
+              </Constant>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[During the vegetative phase the crop is only growing stem, root and leaf.  Tuber initiation usually occurs soon after emergence and the duration of this phase can be influenced by the physiological status of the seed tuber at planting.  As discussed above, we do not have a suitable method for modelling this yet so we have treated the time from emergence to tuber initiation as a thermal time constant.]]></MemoText>
+              </Memo>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Start>Emergence</Start>
+              <End>TuberInitiation</End>
+            </GenericPhase>
+            <LeafAppearancePhase>
+              <Name>EarlyTuber</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[During the vegetative phase the crop is only growing stem, root and leaf.  Tuber initiation usually occurs soon after emergence and the duration of this phase can be influenced by the physiological status of the seed tuber at planting.  As discussed above, we do not have a suitable method for modelling this yet so we have treated the time from emergence to tuber initiation as a thermal time constant.]]></MemoText>
+              </Memo>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Start>TuberInitiation</Start>
+              <End>FinalLeaf</End>
+            </LeafAppearancePhase>
+            <LeafDeathPhase>
+              <Name>LateTuber</Name>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Start>FinalLeaf</Start>
+              <End>FullSenescence</End>
+            </LeafDeathPhase>
+            <GenericPhase>
+              <Name>Senesced</Name>
+              <Constant>
+                <Name>Target</Name>
+                <Value>200</Value>
+              </Constant>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Start>FullSenescence</Start>
+              <End>Maturity</End>
+            </GenericPhase>
+            <EndPhase>
+              <Name>Maturity</Name>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Start>Maturity</Start>
+              <End>Unused</End>
+            </EndPhase>
+          </Phenology>
+          <OrganArbitrator>
+            <Name>Arbitrator</Name>
+            <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
+            <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+          </OrganArbitrator>
+          <Structure>
+            <Name>Structure</Name>
+            <VariableReference>
+              <Name>ThermalTime</Name>
+              <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            </VariableReference>
+            <PhaseLookupValue>
+              <Name>MainStemPrimordiaInitiationRate</Name>
+              <DivideFunction>
+                <Name>NodeInitiationRateFunction</Name>
+                <VariableReference>
+                  <Name>Phyllochron</Name>
+                  <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value</VariableName>
+                </VariableReference>
+                <Constant>
+                  <Name>PrimordiaPerMainstemNode</Name>
+                  <Value>2</Value>
+                </Constant>
+              </DivideFunction>
+              <Start>Emergence</Start>
+              <End>FinalLeaf</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>MainStemNodeAppearanceRate</Name>
+              <LinearInterpolationFunction>
+                <Name>Phyllochron</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.15</double>
+                    <double>0.74</double>
+                    <double>0.75</double>
+                    <double>1</double>
+                  </X>
+                  <Y>
+                    <double>5</double>
+                    <double>30</double>
+                    <double>30</double>
+                    <double>60</double>
+                    <double>60</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Structure].RelativeNodeApperance</XProperty>
+              </LinearInterpolationFunction>
+              <Start>Emergence</Start>
+              <End>FinalLeaf</End>
+            </PhaseLookupValue>
+            <Constant>
+              <Name>MainStemFinalNodeNumber</Name>
+              <Value>34</Value>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>HeightModel</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>200</double>
+                  <double>1200</double>
+                  <double>4000</double>
+                </X>
+                <Y>
+                  <double>20</double>
+                  <double>300</double>
+                  <double>700</double>
+                  <double>900</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Stem].Live.Wt</XProperty>
+            </LinearInterpolationFunction>
+            <MultiplyFunction>
+              <Name>BranchingRate</Name>
+              <LinearInterpolationFunction>
+                <Name>Potential_Branching_Rate</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>7</double>
+                    <double>8</double>
+                    <double>13</double>
+                    <double>14</double>
+                    <double>34</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0.5</double>
+                    <double>0.5</double>
+                    <double>0</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Structure].MainStemNodeNo</XProperty>
+              </LinearInterpolationFunction>
+              <LinearInterpolationFunction>
+                <Name>LinearInterpolationFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.4</double>
+                    <double>0.55</double>
+                    <double>0.8</double>
+                    <double>1</double>
+                  </X>
+                  <Y>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0.45</double>
+                    <double>0</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Leaf].CoverGreen</XProperty>
+              </LinearInterpolationFunction>
+            </MultiplyFunction>
+            <InitialiseStage>Emergence</InitialiseStage>
+            <PrimaryBudNo>4</PrimaryBudNo>
+          </Structure>
+          <GenericAboveGroundOrgan>
+            <Name>Tuber</Name>
+            <PotentialSizeDemandFunction>
+              <Name>DMDemandFunction</Name>
+              <LinearInterpolationFunction>
+                <Name>PotentialGrowthIncrement</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>4</double>
+                    <double>4.04</double>
+                    <double>4.32</double>
+                    <double>4.52</double>
+                    <double>4.95</double>
+                    <double>6.54</double>
+                  </X>
+                  <Y>
+                    <double>0.017</double>
+                    <double>0.017</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.018</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Phenology].Stage</XProperty>
+              </LinearInterpolationFunction>
+              <MultiplyFunction>
+                <Name>OrganNumber</Name>
+                <Constant>
+                  <Name>OrganNumberPerStem</Name>
+                  <Value>5</Value>
+                </Constant>
+                <VariableReference>
+                  <Name>VariableReference</Name>
+                  <VariableName>[Structure].MainStemPopn</VariableName>
+                </VariableReference>
+              </MultiplyFunction>
+              <AirTemperatureFunction>
+                <Name>ThermalTime</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>20</double>
+                    <double>35</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>18</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </AirTemperatureFunction>
+              <AccumulateFunction>
+                <Name>AccumThermalTime</Name>
+                <VariableReference>
+                  <Name>VariableReference</Name>
+                  <VariableName>[Structure].ThermalTime.Value</VariableName>
+                </VariableReference>
+                <StartStageName>TuberInitiation</StartStageName>
+                <EndStageName>Maturity</EndStageName>
+              </AccumulateFunction>
+              <StartStageName>TuberInitiation</StartStageName>
+              <EndStageName>Maturity</EndStageName>
+            </PotentialSizeDemandFunction>
+            <Constant>
+              <Name>StructuralFraction</Name>
+              <Value>1</Value>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>DryMatterContent</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>4</double>
+                  <double>4.5</double>
+                </X>
+                <Y>
+                  <double>0.13</double>
+                  <double>0.22</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Phenology].Stage</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>MaximumNConc</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>3</double>
+                  <double>4</double>
+                  <double>5</double>
+                  <double>6</double>
+                </X>
+                <Y>
+                  <double>0.023</double>
+                  <double>0.023</double>
+                  <double>0.018</double>
+                  <double>0.015</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Phenology].Stage</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>MinimumNConc</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>4</double>
+                  <double>4.1</double>
+                  <double>7</double>
+                </X>
+                <Y>
+                  <double>0.02</double>
+                  <double>0.006</double>
+                  <double>0.006</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Phenology].Stage</XProperty>
+            </LinearInterpolationFunction>
+            <Biomass>
+              <Name>Live</Name>
+            </Biomass>
+            <Biomass>
+              <Name>Dead</Name>
+            </Biomass>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </GenericAboveGroundOrgan>
+          <Root>
+            <Name>Root</Name>
+            <CompositeBiomass>
+              <Name>Live</Name>
+              <Propertys>
+                <string>[Root].LayerLive</string>
+              </Propertys>
+            </CompositeBiomass>
+            <CompositeBiomass>
+              <Name>Dead</Name>
+              <Propertys>
+                <string>[Root].LayerDead</string>
+              </Propertys>
+            </CompositeBiomass>
+            <PhaseBasedSwitch>
+              <Name>NitrogenDemandSwitch</Name>
+              <Start>Planting</Start>
+              <End>FinalLeaf</End>
+            </PhaseBasedSwitch>
+            <AirTemperatureFunction>
+              <Name>TemperatureEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>26</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+            </AirTemperatureFunction>
+            <PhaseLookup>
+              <Name>RootFrontVelocity</Name>
+              <PhaseLookupValue>
+                <Name>PhaseLookupValue</Name>
+                <Constant>
+                  <Name>Constant</Name>
+                  <Value>10</Value>
+                </Constant>
+                <Start>Peeping</Start>
+                <End>FinalLeaf</End>
+              </PhaseLookupValue>
+            </PhaseLookup>
+            <PhaseLookup>
+              <Name>PartitionFraction</Name>
+              <PhaseLookupValue>
+                <Name>PhaseLookupValue</Name>
+                <Constant>
+                  <Name>Constant</Name>
+                  <Value>0.3</Value>
+                </Constant>
+                <Start>Emergence</Start>
+                <End>TuberInitiation</End>
+              </PhaseLookupValue>
+              <PhaseLookupValue>
+                <Name>PhaseLookupValue</Name>
+                <Constant>
+                  <Name>Constant</Name>
+                  <Value>0.05</Value>
+                </Constant>
+                <Start>TuberInitiation</Start>
+                <End>FinalLeaf</End>
+              </PhaseLookupValue>
+              <PhaseLookupValue>
+                <Name>PhaseLookupValue</Name>
+                <Constant>
+                  <Name>Constant</Name>
+                  <Value>0</Value>
+                </Constant>
+                <Start>FinalLeaf</Start>
+                <End>FullSenescence</End>
+              </PhaseLookupValue>
+            </PhaseLookup>
+            <Constant>
+              <Name>MaximumNConc</Name>
+              <Value>0.01</Value>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>MaxDailyNUptake</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>0.02</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>6</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Root].Length</XProperty>
+            </LinearInterpolationFunction>
+            <Constant>
+              <Name>MinimumNConc</Name>
+              <Value>0.01</Value>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>KLModifier</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>3</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Leaf].LAI</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>SenescenceRate</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>0.1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Leaf].FractionDied</XProperty>
+            </LinearInterpolationFunction>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+            <InitialDM>5</InitialDM>
+            <SpecificRootLength>40000</SpecificRootLength>
+            <KNO3_yProperty>
+              <double>0.02</double>
+              <double>0.02</double>
+            </KNO3_yProperty>
+            <KNO3_xRootLength>
+              <double>0</double>
+              <double>0.003</double>
+            </KNO3_xRootLength>
+            <KNH4_yProperty>
+              <double>0</double>
+              <double>0</double>
+            </KNH4_yProperty>
+            <KNH4_xRootLength>
+              <double>0</double>
+              <double>0.003</double>
+            </KNH4_xRootLength>
+            <NuptakeSupply>0</NuptakeSupply>
+          </Root>
+          <Leaf>
+            <Name>Leaf</Name>
+            <VariableReference>
+              <Name>ThermalTime</Name>
+              <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            </VariableReference>
+            <LeafCohort>
+              <Name>InitialLeaf1</Name>
+              <Rank>1</Rank>
+              <Area>900</Area>
+            </LeafCohort>
+            <LeafCohort>
+              <Name>InitialLeaf2</Name>
+              <Rank>2</Rank>
+              <Area>600</Area>
+            </LeafCohort>
+            <LeafCohort>
+              <Name>InitialLeaf3</Name>
+              <Rank>3</Rank>
+              <Area>300</Area>
+            </LeafCohort>
+            <LeafCohortParameters>
+              <Name>CohortParameters</Name>
+              <LinearInterpolationFunction>
+                <Name>MaxArea</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.15</double>
+                    <double>0.3</double>
+                    <double>0.44</double>
+                    <double>0.59</double>
+                    <double>0.73</double>
+                  </X>
+                  <Y>
+                    <double>2000</double>
+                    <double>18000</double>
+                    <double>27000</double>
+                    <double>15000</double>
+                    <double>6000</double>
+                    <double>1500</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Structure].RelativeNodeApperance</XProperty>
+              </LinearInterpolationFunction>
+              <LinearInterpolationFunction>
+                <Name>GrowthDuration</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.3</double>
+                    <double>0.4</double>
+                    <double>1</double>
+                  </X>
+                  <Y>
+                    <double>200</double>
+                    <double>400</double>
+                    <double>400</double>
+                    <double>400</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Structure].RelativeNodeApperance</XProperty>
+              </LinearInterpolationFunction>
+              <LinearInterpolationFunction>
+                <Name>LagDuration</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.15</double>
+                    <double>0.3</double>
+                    <double>0.4</double>
+                    <double>0.73</double>
+                    <double>1</double>
+                  </X>
+                  <Y>
+                    <double>350</double>
+                    <double>350</double>
+                    <double>350</double>
+                    <double>350</double>
+                    <double>350</double>
+                    <double>20</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Structure].RelativeNodeApperance</XProperty>
+              </LinearInterpolationFunction>
+              <LinearInterpolationFunction>
+                <Name>SenescenceDuration</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.15</double>
+                    <double>0.3</double>
+                    <double>0.4</double>
+                    <double>0.73</double>
+                    <double>1</double>
+                  </X>
+                  <Y>
+                    <double>350</double>
+                    <double>350</double>
+                    <double>350</double>
+                    <double>350</double>
+                    <double>350</double>
+                    <double>100</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Structure].RelativeNodeApperance</XProperty>
+              </LinearInterpolationFunction>
+              <Constant>
+                <Name>DetachmentLagDuration</Name>
+                <Value>1000000</Value>
+              </Constant>
+              <Constant>
+                <Name>DetachmentDuration</Name>
+                <Value>1000000</Value>
+              </Constant>
+              <LinearInterpolationFunction>
+                <Name>SpecificLeafAreaMax</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>1</double>
+                  </X>
+                  <Y>
+                    <double>40000</double>
+                    <double>25000</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Structure].RelativeNodeApperance</XProperty>
+              </LinearInterpolationFunction>
+              <Constant>
+                <Name>SpecificLeafAreaMin</Name>
+                <Value>25000</Value>
+              </Constant>
+              <Constant>
+                <Name>StructuralFraction</Name>
+                <Value>0.5</Value>
+              </Constant>
+              <Constant>
+                <Name>MaximumNConc</Name>
+                <Value>0.07</Value>
+              </Constant>
+              <Constant>
+                <Name>MinimumNConc</Name>
+                <Value>0.03</Value>
+              </Constant>
+              <Constant>
+                <Name>InitialNConc</Name>
+                <Value>0</Value>
+              </Constant>
+              <Constant>
+                <Name>NReallocationFactor</Name>
+                <Value>1</Value>
+              </Constant>
+              <Constant>
+                <Name>NRetranslocationFactor</Name>
+                <Value>0.01</Value>
+              </Constant>
+              <LinearInterpolationFunction>
+                <Name>ExpansionStress</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0.5</double>
+                    <double>1</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>1</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Potato].WaterSupplyDemandRatio</XProperty>
+              </LinearInterpolationFunction>
+              <Constant>
+                <Name>CriticalNConc</Name>
+                <Value>0.05</Value>
+              </Constant>
+              <Constant>
+                <Name>DMRetranslocationFactor</Name>
+                <Value>0.5</Value>
+              </Constant>
+              <LinearInterpolationFunction>
+                <Name>ShadeInducedSenescenceRate</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.5</double>
+                    <double>0.8</double>
+                    <double>1</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0.03</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
+              </LinearInterpolationFunction>
+              <Constant>
+                <Name>NonStructuralFraction</Name>
+                <Value>0.2</Value>
+              </Constant>
+            </LeafCohortParameters>
+            <RUEModel>
+              <Name>Photosynthesis</Name>
+              <Constant>
+                <Name>RUE</Name>
+                <Value>1.2</Value>
+              </Constant>
+              <RUECO2Function>
+                <Name>FCO2</Name>
+                <PhotosyntheticPathway>C3</PhotosyntheticPathway>
+              </RUECO2Function>
+              <LinearInterpolationFunction>
+                <Name>FN</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>1.5</double>
+                  </X>
+                  <Y>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Leaf].Fn</XProperty>
+              </LinearInterpolationFunction>
+              <WeightedTemperatureFunction>
+                <Name>FT</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>12</double>
+                    <double>24</double>
+                    <double>34</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+                <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+              </WeightedTemperatureFunction>
+              <LinearInterpolationFunction>
+                <Name>FW</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.4</double>
+                    <double>1.5</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>1</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Leaf].Fw</XProperty>
+              </LinearInterpolationFunction>
+              <LinearInterpolationFunction>
+                <Name>FVPD</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>10</double>
+                    <double>50</double>
+                  </X>
+                  <Y>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Leaf].Photosynthesis.VPD</XProperty>
+              </LinearInterpolationFunction>
+              <VariableReference>
+                <Name>RadnInt</Name>
+                <VariableName>[Leaf].RadIntTot</VariableName>
+              </VariableReference>
+            </RUEModel>
+            <MinimumFunction>
+              <Name>FRGRFunction</Name>
+              <VariableReference>
+                <Name>RUE_FT</Name>
+                <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+              </VariableReference>
+              <MinimumFunction>
+                <Name>Others</Name>
+                <VariableReference>
+                  <Name>RUE_FN</Name>
+                  <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>RUE_FVPD</Name>
+                  <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+                </VariableReference>
+              </MinimumFunction>
+            </MinimumFunction>
+            <MultiplyFunction>
+              <Name>ExtinctionCoeff</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <Value>0.8</Value>
+              </Constant>
+              <LinearInterpolationFunction>
+                <Name>LinearInterpolationFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>1</double>
+                  </X>
+                  <Y>
+                    <double>0.5</double>
+                    <double>1</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Potato].WaterSupplyDemandRatio</XProperty>
+              </LinearInterpolationFunction>
+            </MultiplyFunction>
+            <LinearInterpolationFunction>
+              <Name>FrostFraction</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>-1</double>
+                  <double>0</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Weather].MinT</XProperty>
+            </LinearInterpolationFunction>
+            <CompositeBiomass>
+              <Name>Live</Name>
+              <Propertys>
+                <string>[Leaf].CohortLive</string>
+              </Propertys>
+            </CompositeBiomass>
+            <CompositeBiomass>
+              <Name>Dead</Name>
+              <Propertys>
+                <string>[Leaf].CohortDead</string>
+              </Propertys>
+            </CompositeBiomass>
+            <CompositeBiomass>
+              <Name>Total</Name>
+              <Propertys>
+                <string>[Leaf].Live</string>
+                <string>[Leaf].Dead</string>
+              </Propertys>
+            </CompositeBiomass>
+            <ArrayBiomass>
+              <Name>CohortArrayLive</Name>
+              <Propertys>
+                <string>[Leaf].Live</string>
+              </Propertys>
+              <ArraySize>[Leaf].MaxNodeNo</ArraySize>
+            </ArrayBiomass>
+            <ArrayBiomass>
+              <Name>CohortArrayDead</Name>
+              <Propertys>
+                <string>[Leaf].Dead</string>
+              </Propertys>
+              <ArraySize>[Leaf].MaxNodeNo</ArraySize>
+            </ArrayBiomass>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+            <CurrentExpandingLeaf>10</CurrentExpandingLeaf>
+            <StartFractionExpanded>0.88608885312500008</StartFractionExpanded>
+            <FractionNextleafExpanded>0.89094664983812755</FractionNextleafExpanded>
+            <_ExpandedNodeNo>10.890946649838128</_ExpandedNodeNo>
+            <DeadNodesYesterday>9</DeadNodesYesterday>
+            <MaxCover>1</MaxCover>
+            <Albedo>0.26</Albedo>
+            <Gsmax>0.03</Gsmax>
+            <R50>200</R50>
+            <FRGR>1</FRGR>
+            <PotentialEP>0</PotentialEP>
+            <LightProfile>
+              <CanopyEnergyBalanceInterceptionlayerType>
+                <thickness>0.079549208283424377</thickness>
+                <amount>0</amount>
+              </CanopyEnergyBalanceInterceptionlayerType>
+            </LightProfile>
+            <KDead>0.3</KDead>
+            <FractionDied>0</FractionDied>
+          </Leaf>
+          <GenericAboveGroundOrgan>
+            <Name>Stem</Name>
+            <InternodeDemandFunction>
+              <Name>DMDemandFunction</Name>
+              <Constant>
+                <Name>InterNodeWt</Name>
+                <Value>0.2</Value>
+              </Constant>
+            </InternodeDemandFunction>
+            <Constant>
+              <Name>NReallocationFactor</Name>
+              <Value>0</Value>
+            </Constant>
+            <Constant>
+              <Name>NRetranslocationFactor</Name>
+              <Value>0.05</Value>
+            </Constant>
+            <PhaseBasedSwitch>
+              <Name>NitrogenDemandSwitch</Name>
+              <Start>Planting</Start>
+              <End>FinalLeaf</End>
+            </PhaseBasedSwitch>
+            <Constant>
+              <Name>DMRetranslocationFactor</Name>
+              <Value>0</Value>
+            </Constant>
+            <Constant>
+              <Name>StructuralFraction</Name>
+              <Value>1</Value>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>MaximumNConc</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>3</double>
+                  <double>4</double>
+                  <double>5.3</double>
+                </X>
+                <Y>
+                  <double>0.06</double>
+                  <double>0.05</double>
+                  <double>0.025</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Phenology].Stage</XProperty>
+            </LinearInterpolationFunction>
+            <Constant>
+              <Name>MinimumNConc</Name>
+              <Value>0.006</Value>
+            </Constant>
+            <Biomass>
+              <Name>Live</Name>
+            </Biomass>
+            <Biomass>
+              <Name>Dead</Name>
+            </Biomass>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </GenericAboveGroundOrgan>
+          <CompositeBiomass>
+            <Name>AboveGround</Name>
+            <Propertys>
+              <string>[Leaf].Live</string>
+              <string>[Leaf].Dead</string>
+              <string>[Stem].Live</string>
+              <string>[Stem].Dead</string>
+            </Propertys>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>BelowGround</Name>
+            <Propertys>
+              <string>[Root].Live</string>
+              <string>[Root].Dead</string>
+              <string>[Tuber].Live</string>
+              <string>[Tuber].Dead</string>
+            </Propertys>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>Total</Name>
+            <Propertys>
+              <string>[Leaf].Live</string>
+              <string>[Leaf].Dead</string>
+              <string>[Stem].Live</string>
+              <string>[Stem].Dead</string>
+              <string>[Root].Live</string>
+              <string>[Root].Dead</string>
+              <string>[Tuber].Live</string>
+              <string>[Tuber].Dead</string>
+            </Propertys>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>TotalLive</Name>
+            <Propertys>
+              <string>[Leaf].Live</string>
+              <string>[Stem].Live</string>
+              <string>[Root].Live</string>
+              <string>[Tuber].Live</string>
+            </Propertys>
+          </CompositeBiomass>
+          <CompositeBiomass>
+            <Name>TotalDead</Name>
+            <Propertys>
+              <string>[Leaf].Dead</string>
+              <string>[Stem].Dead</string>
+              <string>[Root].Dead</string>
+              <string>[Tuber].Dead</string>
+            </Propertys>
+          </CompositeBiomass>
+          <Cultivar>
+            <Name>JerseyBenny</Name>
+            <Command>[Structure].MainStemFinalNodeNumber.Value = 19</Command>
+            <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X = 0,6,7,10,11</Command>
+            <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y = 0,0,0.5,0.5,0</Command>
+            <Command>[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem.Value = 3</Command>
+            <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>IlamHardy</Name>
+            <Command>[Structure].MainStemFinalNodeNumber.Value = 26</Command>
+            <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.18</Command>
+            <Command>[Phenology].Vegetative.Target.Value = 200</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Horizon</Name>
+            <Command>[Structure].MainStemFinalNodeNumber.Value = 28</Command>
+            <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.12,0.16</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Karaka</Name>
+            <Command>[Structure].MainStemFinalNodeNumber.Value = 29</Command>
+            <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
+            <Command />
+          </Cultivar>
+          <Cultivar>
+            <Name>Nooksac</Name>
+            <Command>[Structure].MainStemFinalNodeNumber.Value = 36</Command>
+            <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
+            <Command />
+          </Cultivar>
+          <Cultivar>
+            <Name>RedRascal</Name>
+            <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
+            <Command />
+          </Cultivar>
+          <Cultivar>
+            <Name>Rua</Name>
+            <Command>[Structure].MainStemFinalNodeNumber.Value = 29</Command>
+            <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.Y = 5,40,40,60,60</Command>
+            <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X = 0,6,7,20,21</Command>
+            <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y = 0,0,0.5,0.5,0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Nadine</Name>
+            <Command>[Structure].MainStemFinalNodeNumber.Value = 29</Command>
+            <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.11,0.15</Command>
+            <Command />
+          </Cultivar>
+          <Cultivar>
+            <Name>RussetBurbank</Name>
+            <Command>[Structure].MainStemFinalNodeNumber.Value = 34</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Coliban</Name>
+            <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.10,0.19</Command>
+            <Command>[Phenology].Vegetative.Target.Value = 200</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Others</Name>
+            <Alias>
+              <Name>Fianna</Name>
+            </Alias>
+            <Alias>
+              <Name>RussetRanger</Name>
+            </Alias>
+            <Alias>
+              <Name>Moonlight</Name>
+            </Alias>
+            <Alias>
+              <Name>Agria</Name>
+            </Alias>
+            <Alias>
+              <Name>Bondi</Name>
+            </Alias>
+            <Alias>
+              <Name>Crop39</Name>
+            </Alias>
+            <Command />
+          </Cultivar>
           <CropType>Potato</CropType>
+          <BiomassRemovalData>
+            <OrganList>
+              <OrganBiomassRemovalType>
+                <NameOfOrgan>Tuber</NameOfOrgan>
+                <FractionRemoved>1</FractionRemoved>
+                <FractionToResidue>0</FractionToResidue>
+              </OrganBiomassRemovalType>
+              <OrganBiomassRemovalType>
+                <NameOfOrgan>Root</NameOfOrgan>
+                <FractionRemoved>0</FractionRemoved>
+                <FractionToResidue>0.5</FractionToResidue>
+              </OrganBiomassRemovalType>
+              <OrganBiomassRemovalType>
+                <NameOfOrgan>Leaf</NameOfOrgan>
+                <FractionRemoved>0</FractionRemoved>
+                <FractionToResidue>0</FractionToResidue>
+              </OrganBiomassRemovalType>
+              <OrganBiomassRemovalType>
+                <NameOfOrgan>Stem</NameOfOrgan>
+                <FractionRemoved>0</FractionRemoved>
+                <FractionToResidue>1</FractionToResidue>
+              </OrganBiomassRemovalType>
+            </OrganList>
+            <PhenologyStageSet>0</PhenologyStageSet>
+          </BiomassRemovalData>
         </Plant>
         <Folder>
           <Name>Manager folder</Name>
@@ -26734,6 +28084,53 @@ namespace Models
 }
 				]]></Code>
           </Manager>
+          <Manager>
+            <Name>RemoveRainfall</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Rainfall is included in Irrigation applications]]></MemoText>
+            </Memo>
+            <Script>
+              <StartDate>2006-10-05</StartDate>
+              <EndDate>2007-03-03</EndDate>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+
+
+
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Weather Met;
+		[Link] Clock Clock;
+    
+		[Description("Start Date")]
+		public DateTime StartDate { get; set; }
+        
+		[Description("End Date")]
+		public DateTime EndDate { get; set; }
+ 
+    
+		[EventSubscribe("PreparingNewWeatherData")]
+		private void OnPreparingNewWeatherData(object sender, EventArgs e)
+		{
+			if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
+				Met.Rain = 0;		
+		}
+	}
+}]]></Code>
+          </Manager>
         </Folder>
         <Manager>
           <Name>ExtraVariables</Name>
@@ -26885,6 +28282,7 @@ namespace Models
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
+            <string>Name as ZoneName</string>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
             <string>Potato.Phenology.CurrentPhaseName</string>
@@ -26998,9 +28396,16 @@ namespace Models
             <string>[ExtraVariables].Script.BiomN</string>
             <string>[ExtraVariables].Script.DltNMinRes</string>
             <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[PotatoHarvestRule].Script.FinalTag</string>
+            <string>[PotatoPlantAndHarvest].Script.FinalTag</string>
             <string>Potato.Tuber.LiveFWt</string>
             <string>Potato.Tuber.DryMatterContent.Value</string>
+            <string>[Potato].Arbitrator.NO3NSupply</string>
+            <string>[Potato].Arbitrator.NH4NSupply</string>
+            <string>[Potato].Root.NUptake</string>
+            <string>[PotatoPlantAndHarvest].Script.Harvested</string>
+            <string>[PotatoPlantAndHarvest].Script.ReadyForHarvest</string>
+            <string>[Weather].MaxT</string>
+            <string>[Weather].MinT</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>

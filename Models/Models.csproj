@@ -133,6 +133,7 @@
     <Compile Include="Core\AutoDocumentation.cs" />
     <Compile Include="Core\Converter.cs" />
     <Compile Include="Core\Alias.cs" />
+    <Compile Include="Core\Runner.cs" />
     <Compile Include="Graph\IGraphable.cs" />
     <Compile Include="Core\ITestable.cs" />
     <Compile Include="Core\Replacements.cs" />
@@ -430,6 +431,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Maize.xml" />
     <Content Include="Resources\ResidueTypes.xml">
       <SubType>Designer</SubType>
     </Content>
