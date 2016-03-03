@@ -139,6 +139,10 @@ namespace UserInterface.Commands
 
                 if (!ignoreChild)
                 {
+                    if (child.Name.Contains("Sensibility"))
+                    {
+                        headingLevel = 0;
+                    }
                     if (Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
                     {
                         string childFolderPath = Path.Combine(workingDirectory, child.Name);
@@ -364,6 +368,8 @@ namespace UserInterface.Commands
                     GraphView graphView = new GraphView();
                     graphView.BackColor = System.Drawing.Color.White;
                     graphView.FontSize = 12;
+                    graphView.Width = 500;
+                    graphView.Height = 500;
                     graphPresenter.Attach(tag, graphView, ExplorerPresenter);
                     string PNGFileName = graphPresenter.ExportToPDF(workingDirectory);
                     section.AddImage(PNGFileName);
