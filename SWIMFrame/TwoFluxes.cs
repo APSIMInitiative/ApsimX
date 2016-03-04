@@ -27,9 +27,9 @@ namespace SWIMFrame
         static double[] phico2 = new double[mx + 1];
         static double[] y2 = new double[3 * mx + 1];
         static double[] hi = new double[3 * mx + 1];
-        static double[,] phif = new double[2, mx + 1];
-        static double[,] phifi = new double[2, mx + 1];
-        static double[,] phii5 = new double[2, mx + 1];
+        static double[,] phif = new double[2 + 1, mx + 1];
+        static double[,] phifi = new double[2 + 1, mx + 1];
+        static double[,] phii5 = new double[2 + 1, mx + 1];
         static double[,] coq = new double[3 + 1, 3 * mx + 1];
         static double[,] co1 = new double[4 + 1, mx + 1];
         static double[,] qp = new double[mx + 1, mx + 1];
@@ -89,6 +89,10 @@ namespace SWIMFrame
                     phi[i, x] = sp[i - 1].phi[x]; //and this
                 }
             }
+    /*        Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(ft[0].ftable);
+            printMatrix = printMatrix.RemoveRow(0);
+            printMatrix = printMatrix.RemoveColumn(0);
+            MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t", null, "E6", null, null);*/
 
             // Discard unwanted input - use original uninterpolated values only.
             for (i = 1; i <= 2; i++)
@@ -97,8 +101,11 @@ namespace SWIMFrame
                 j = 1 + m / 2;
                 for (int x = 1; x <= j; x++)
                 {
-                    phif[1, x] = ft[i - 1].fend[0].phif[x * 2 - 1]; //test these
-                    qf[i, x, x] = ft[i - 1].ftable[x * 2 - 1, x * 2 - 1];
+                    phif[i, x] = ft[i - 1].fend[0].phif[x * 2 - 1]; //test these !discard every second
+                    for(int y=1; y<= m;y++)
+                        qf[i, y, x] = ft[i - 1].ftable[x * 2 - 1, y * 2 - 1];
+                    nft[i] = j;
+                    nfu[i] = 1 + ft[i - 1].fend[1].nfu / 2; //ft[i].fend[1].nfu should be odd
                 }
             }
 
@@ -266,7 +273,7 @@ namespace SWIMFrame
 
                 // Get fluxes
                 nit = 0;
-                for (i = 1; i <= nft[1]; i++)
+                for (i = 1; i <= nft[1]; i++) //step through top phis
                 {
                     vlast = phif[1, i];
                     k = 1;
@@ -284,6 +291,7 @@ namespace SWIMFrame
                             ip = nft[1] - 3;
                         k++;
                     }
+                    co1 = co1M.ToArray();
                     nco1 = k;
                     for (j = 1; j <= nft[2]; j++) // bottom phis
                     {
@@ -453,6 +461,33 @@ namespace SWIMFrame
             return ftwo;
         }
 
+        public static double[] Testfd(double phia, int[] nft, double[] phie, double[] Ks,
+                                      double[,] phif, double[,,] qf, double[] he, double[,] coq,
+                                      double[,] co1, int nco1, double[] phico1, double phi1max,
+                                      double[,] phii, double[,,] co2, double[] phico2, int j)
+        {
+            double f;
+            double d;
+            double q;
+            TwoFluxes.nft = nft;
+            TwoFluxes.phie = phie;
+            TwoFluxes.Ks = Ks;
+            TwoFluxes.phif = phif;
+            TwoFluxes.qf = qf;
+            TwoFluxes.he = he;
+            TwoFluxes.coq = coq;
+            TwoFluxes.co1 = co1;
+            TwoFluxes.nco1 = nco1;
+            TwoFluxes.phico1 = phico1;
+            TwoFluxes.phi1max = phi1max;
+            TwoFluxes.phii = phii;
+            TwoFluxes.co2 = co2;
+            TwoFluxes.phico2 = phico2;
+            TwoFluxes.j = j;
+            fd(phia, out f, out d, out q);
+            return new double[] { f, d, q };
+        }
+
         private static void fd(double phia, out double f, out double d, out double q)
         {
             //Returns flux difference f, deriv d and upper flux q.
@@ -462,7 +497,8 @@ namespace SWIMFrame
             q1 = 0;
             der = 0;
             q1d = 0;
-            if (phia != phialast) {
+            if (phia != phialast)
+            {
                 if (phia > phi1max) // both saturated - calc der and lower interface phi
                 {
                     h = he[1] + (phia - phie[1]) / Ks[1];
@@ -473,7 +509,7 @@ namespace SWIMFrame
                 {
                     double[] phiiFind = new double[ni + 1];
                     for (int x = 1; x <= ni; x++)
-                        phiiFind[x - ni + 1] = phii[1, x];
+                        phiiFind[x] = phii[1, x];
                     ii = Find(phia, phiiFind, ni);
                     v = phia - phii[1, ii];
                     der = coq[2, ii] + v * 2.0 * coq[3, ii];
@@ -514,6 +550,18 @@ namespace SWIMFrame
         }
 
 
+        public static double[] Testceval1(double phi, double[,] co1, double[] phico1, int j, int nco1)
+        {
+            double q;
+            double qd;
+            TwoFluxes.co1 = co1;
+            TwoFluxes.phico1 = phico1;
+            TwoFluxes.j = j;
+            TwoFluxes.nco1 = nco1;
+            ceval1(phi, out q, out qd);
+            return new double[] { q, qd };
+        }
+
         private static void ceval1(double phi, out double q, out double qd)
         {
             //Return flux q and deriv qd given phi.
@@ -528,7 +576,7 @@ namespace SWIMFrame
                 if (i2 - i1 <= 1)
                     break;
 
-                im = (i1 + i2) / 2;
+               im = (i1 + i2) / 2;
                 if (phico1[im] > phi)
                     i2 = im;
                 else i1 = im;
@@ -555,13 +603,13 @@ namespace SWIMFrame
                     break;
 
                 im = (i1 + i2) / 2;
-                if (phico1[im] > phi)
+                if (phico2[im] > phi)
                     i2 = im;
                 else i1 = im;
             }
 
             //Interpolate
-            x = phi - phico1[i1];
+            x = phi - phico2[i1];
             q = co2[1, i1, j] + x * (co2[2, i1, j] + x * (co2[3, i1, j] + x * co2[4, i1, j]));
             qd = co2[2, i1, j] + x * (2.0 * co2[3, i1, j] + x * 3.0 * co2[4, i1, j]);
         }

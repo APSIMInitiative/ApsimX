@@ -195,11 +195,11 @@ namespace SWIMFrame
                     qi5[row + 1, col + 1] = qi3[row / 2 + 1, col / 2 + 1];
                 }
 
-            Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(qi5);
+     /*       Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(qi5);
             printMatrix = printMatrix.RemoveRow(0);
             printMatrix = printMatrix.RemoveColumn(0);
             MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t",  null, "E6", null, null);
-
+*/
             // Get accurate qi5(j,j)=Kofphi(phii(ip))
             ip = 0;
             for (j = 2; j <= i; j += 2)

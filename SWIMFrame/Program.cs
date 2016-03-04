@@ -48,7 +48,7 @@ namespace SWIMFrame
             dz[1, 1] = 20;
             dz[1, 2] = 30;
             dz[1, 4] = 40;
-            for (i = 0; i < 2; i++) //i should be 2, using the first one for debugging.
+            for (i = 0; i < 2; i++)
             {
                 BinaryWriter b = new BinaryWriter(File.OpenWrite("soil" + soils[i].sid + ".dat"));
                 MVG.Params(soils[i].sid, soils[i].ths, soils[i].ks, soils[i].he, soils[i].hd, soils[i].p, soils[i].hg, soils[i].em, soils[i].en);
@@ -74,7 +74,7 @@ namespace SWIMFrame
             {
                 ft1 = Fluxes.ReadFluxTable(b);
             }
-            using (BinaryReader b = new BinaryReader(File.OpenRead("soil103dz100.dat")))
+            using (BinaryReader b = new BinaryReader(File.OpenRead("soil109dz100.dat")))
             {
                 ft2 = Fluxes.ReadFluxTable(b);
             }
