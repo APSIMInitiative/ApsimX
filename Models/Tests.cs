@@ -141,7 +141,7 @@ namespace Models
             Table.Columns.Add("Accepted", typeof(double));
             Table.Columns.Add("Current", typeof(double));
             Table.Columns.Add("Difference", typeof(double));
-            Table.Columns.Add("Fail?", typeof(char));
+            Table.Columns.Add("Fail?", typeof(string));
 
             double accepted;
             double current;
@@ -159,7 +159,7 @@ namespace Models
                         accepted,
                         current,
                         difference,
-                        Math.Abs(difference) > Math.Abs(accepted) * 0.01 ? "X" : " ");
+                        Math.Abs(difference) > Math.Abs(accepted) * 0.01 ? "FAIL" : " ");
                 }
 
             if (accept)
