@@ -2239,15 +2239,17 @@ namespace Models.AgPasture1
 			//    mySpecies[s].SetInGermination();
 		}
 
-		/// <summary>Kills all the plant mySpecies in the sward (zero variables and set to not alive)</summary>
-		/// <param name="KillData">Fraction of crop to kill (here always 100%)</param>
+		/// <summary>Kills a frction of each species in the sward</summary>
+		/// <param name="KillData">Fraction of crop to kill (if 1.0, crop ends)</param>
 		[EventSubscribe("KillCrop")]
 		private void OnKillCrop(KillCropType KillData)
 		{
 			foreach (PastureSpecies mySpecies in mySward)
 				mySpecies.OnKillCrop(KillData);
 
-			isAlive = false;
+            double myEpsilon = 0.00001;
+            if (1.0 - KillData.KillFraction <= myEpsilon)
+		        isAlive = false;
 		}
 
 		/// <summary>Harvest (remove DM) the sward</summary>
