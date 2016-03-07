@@ -139,6 +139,10 @@ namespace UserInterface.Commands
 
                 if (!ignoreChild)
                 {
+                    if (child.Name.Contains("Sensibility"))
+                    {
+                        headingLevel = 0;
+                    }
                     if (Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
                     {
                         string childFolderPath = Path.Combine(workingDirectory, child.Name);
@@ -335,6 +339,9 @@ namespace UserInterface.Commands
                     AutoDocumentation.Heading heading = tag as AutoDocumentation.Heading;
                     if (heading.headingLevel > 0 && heading.headingLevel <= 6)
                     {
+                        if (heading.headingLevel == 1)
+                            section.AddPageBreak();
+
                         Paragraph para = section.AddParagraph(heading.text, "Heading" + heading.headingLevel);
                         if (heading.headingLevel == 1)
                             para.Format.OutlineLevel = OutlineLevel.Level1;
@@ -364,6 +371,8 @@ namespace UserInterface.Commands
                     GraphView graphView = new GraphView();
                     graphView.BackColor = System.Drawing.Color.White;
                     graphView.FontSize = 12;
+                    graphView.Width = 500;
+                    graphView.Height = 500;
                     graphPresenter.Attach(tag, graphView, ExplorerPresenter);
                     string PNGFileName = graphPresenter.ExportToPDF(workingDirectory);
                     section.AddImage(PNGFileName);

@@ -5019,29 +5019,36 @@ namespace Models.AgPasture1
 			prevState = new SpeciesState();
 		}
 
-		/// <summary>Kills this plant (zero all variables and set to not alive)</summary>
-		/// <param name="KillData">Fraction of crop to kill (here always 100%)</param>
+		/// <summary>Kills a fraction of this plant</summary>
+		/// <param name="KillData">Fraction of crop to kill (if 1.0, crop ends)</param>
 		[EventSubscribe("KillCrop")]
 		public void OnKillCrop(KillCropType KillData)
 		{
-			// Return all above ground parts to surface OM
-			DoSurfaceOMReturn(dmShoot, Nshoot);
+            double fractionRemaining = 1.0 - KillData.KillFraction;
+		    double myEpsilon = 0.00001;
 
-			// Incorporate all root mass to soil fresh organic matter
-			DoIncorpFomEvent(dmRoot, Nroot);
+		    if (fractionRemaining > myEpsilon)
+		    {
+                // move a fraction of live tissue to dead pool
+                // TODO
 
-			ResetZero();
-
-			isAlive = false;
-		}
+		        updateAggregated();
+                SaveState();
+            }
+        }
 
         /// <summary>End the crop.</summary>
         public void EndCrop()
         {
-            Summary.WriteMessage(this, "Crop ending");
+            // Return all above ground parts to surface OM
+            DoSurfaceOMReturn(dmShoot, Nshoot);
 
-            // Code to be added
+            // Incorporate all root mass to soil fresh organic matter
+            DoIncorpFomEvent(dmRoot, Nroot);
 
+            ResetZero();
+
+            isAlive = false;
         }
 
         /// <summary>Reset this plant to zero (kill crop)</summary>
