@@ -67,32 +67,14 @@ namespace SWIMFrame
             Fluxes.WriteDiags();
 
             //generate and write composite flux table for path with two soil types
-            sp1 = ReadProps("soil103.dat");
-            sp2 = ReadProps("soil109.dat");
-
-            using (BinaryReader b = new BinaryReader(File.OpenRead("soil103dz50.dat")))
-            {
-                ft1 = Fluxes.ReadFluxTable(b);
-            }
-            using (BinaryReader b = new BinaryReader(File.OpenRead("soil109dz100.dat")))
-            {
-                ft2 = Fluxes.ReadFluxTable(b);
-            }
+            sp1 = Soil.ReadProps("soil103.dat");
+            sp2 = Soil.ReadProps("soil109.dat");
+            ft1 = Fluxes.ReadFluxTable("soil103dz50.dat");
+            ft2 = Fluxes.ReadFluxTable("soil109dz100.dat");
 
             FluxTable ftwo = TwoFluxes.TwoTables(ft1, sp1, ft2, sp2);
             BinaryWriter bw = new BinaryWriter(File.OpenWrite("soil0103dz0050_soil0109dz0100.dat"));
             Fluxes.WriteFluxTable(bw, ftwo);
-        }
-
-        private static SoilProps ReadProps(string file)
-        {
-            SoilProps sp;
-            using (Stream stream = File.Open(file, FileMode.Open))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                sp = (SoilProps)formatter.Deserialize(stream);
-            }
-            return sp;
         }
 
         private static void WriteProps(BinaryWriter b, SoilProps soilProps)

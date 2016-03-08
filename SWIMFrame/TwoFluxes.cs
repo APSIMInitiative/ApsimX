@@ -59,10 +59,11 @@ namespace SWIMFrame
               and lower paths, for all phi at upper and lower ends of composite path.
               Increases no. of fluxes in table by quadratic interpolation.
               ft1, ft2 - flux tables for upper and lower paths.
-              sp1, sp2 - soil prop tables for upper and lower paths.
-              Note that arrays are one indexed; 0 index is not used.
+              sp1, sp2 - soil prop tables for upper and lower paths. -PR
+              
+             Note that arrays are one indexed; 0 index is not used.
               Exception to this is flux/soil arrays where array index is not used in calculations.
-              This results in a waste of memory and should be rectified once SWIM is complete.
+              This results in a waste of memory and should be rectified once SWIM is complete. -JF
             */
 
 
@@ -89,21 +90,24 @@ namespace SWIMFrame
                     phi[i, x] = sp[i - 1].phi[x]; //and this
                 }
             }
-    /*        Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(ft[0].ftable);
-            printMatrix = printMatrix.RemoveRow(0);
-            printMatrix = printMatrix.RemoveColumn(0);
-            MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t", null, "E6", null, null);*/
 
             // Discard unwanted input - use original uninterpolated values only.
             for (i = 1; i <= 2; i++)
             {
                 m = ft[i - 1].fend[0].nft; //should be odd
                 j = 1 + m / 2;
-                for (int x = 1; x <= j; x++)
+
+               /* for (int row = 1; row <= i; row += 2)
+                    for (int col = 1; col <= i; col += 2)
+                    {
+                        qf[i,row,col]
+                    }*/
+
+                        for (int x = 1; x <= j; x++)
                 {
-                    phif[i, x] = ft[i - 1].fend[0].phif[x * 2 - 1]; //test these !discard every second
+                    phif[i, x] = ft[i - 1].fend[0].phif[x * 2 - 1]; //discard every second
                     for(int y=1; y<= m;y++)
-                        qf[i, y, x] = ft[i - 1].ftable[x * 2 - 1, y * 2 - 1];
+                        qf[i, x, y] = ft[i - 1].ftable[x * 2 - 1, y * 2 - 1];
                     nft[i] = j;
                     nfu[i] = 1 + ft[i - 1].fend[1].nfu / 2; //ft[i].fend[1].nfu should be odd
                 }
@@ -217,11 +221,11 @@ namespace SWIMFrame
             }
 
             // phii(i,id+1:ni)=phi(i,1:n(i))
-            double[] phin = new double[n[i] + 1];
+            double[] phin = new double[ni - id + 1];
             for (int x = 1; x <= n[i]; x++)
-                phin[x - 1] = phi[j, x];
+                phin[x] = phi[i, x];
             for (int x = id + 1; x <= ni; x++)
-                phii[i, x] = phin[x - id];
+                phii[i, x] = phin[x - (id + 1) + 1];
 
             for (int x = 1; x < id; x++)
                 hi[x] = h[j, x];
@@ -458,6 +462,11 @@ namespace SWIMFrame
                     qi5Slice[x, y] = qi5[x, y];
             ftwo.ftable = qi5Slice;
 
+         /* Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(ftwo.ftable);
+          printMatrix = printMatrix.RemoveRow(0);
+          printMatrix = printMatrix.RemoveColumn(0);
+          MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t", null, "E6", null, null);*/
+
             return ftwo;
         }
 
@@ -512,8 +521,12 @@ namespace SWIMFrame
                         phiiFind[x] = phii[1, x];
                     ii = Find(phia, phiiFind, ni);
                     v = phia - phii[1, ii];
+                 /*   Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(coq);
+                    printMatrix = printMatrix.RemoveRow(0);
+                    printMatrix = printMatrix.RemoveColumn(0);
+                    MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t", null, "E6", null, null);*/
                     der = coq[2, ii] + v * 2.0 * coq[3, ii];
-                    phib = coq[1, ii] + v * (coq[2, ii] + v * coq[3, ii]);
+                   // phib = coq[1, ii] + v * (coq[2, ii] + v * coq[3, ii]);
                 }
                 // Get upper flux and deriv.
                 v = phif[1, nft[1]];
@@ -550,13 +563,12 @@ namespace SWIMFrame
         }
 
 
-        public static double[] Testceval1(double phi, double[,] co1, double[] phico1, int j, int nco1)
+        public static double[] Testceval1(double phi, double[,] co1, double[] phico1, int nco1)
         {
             double q;
             double qd;
             TwoFluxes.co1 = co1;
             TwoFluxes.phico1 = phico1;
-            TwoFluxes.j = j;
             TwoFluxes.nco1 = nco1;
             ceval1(phi, out q, out qd);
             return new double[] { q, qd };
@@ -586,6 +598,21 @@ namespace SWIMFrame
             x = phi - phico1[i1];
             q = co1[1, i1] + x * (co1[2, i1] + x * (co1[3, i1] + x * co1[4, i1]));
             qd = co1[2, i1] + x * (2.0 * co1[3, i1] + x * 3.0 * co1[4, i1]);
+        }
+
+        public static double[] Testceval2(double phi, double[] co2, double[] phico2, int j, int nco1)
+        {
+            double q;
+            double qd;
+            TwoFluxes.co2[1, 1, 1] = co2[0];
+            TwoFluxes.co2[2, 1, 1] = co2[1];
+            TwoFluxes.co2[3, 1, 1] = co2[2];
+            TwoFluxes.co2[4, 1, 1] = co2[3];
+            TwoFluxes.phico2 = phico2;
+            TwoFluxes.j = j;
+            TwoFluxes.nco1 = nco1;
+            ceval2(j, phi, out q, out qd);
+            return new double[] { q, qd };
         }
 
         private static void ceval2(int j, double phi, out double q, out double qd)
@@ -647,7 +674,11 @@ namespace SWIMFrame
 
         private static double[] linco (double[] x, double[] y)
         {
-            return new double[4];
+            double[] co = new double[4];
+            //Return linear interpolation coeffs co.
+            co[1] = y[1];
+            co[2] = (y[2] - y[1]) / (x[2] - x[1]);
+            return co;
         }
     }
 }

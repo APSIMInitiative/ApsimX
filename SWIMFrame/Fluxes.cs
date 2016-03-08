@@ -616,39 +616,42 @@ namespace SWIMFrame
                     b.Write(ft.ftable[i, j]);
         }
 
-        public static FluxTable ReadFluxTable(BinaryReader b)
+        public static FluxTable ReadFluxTable(string file)
         {
             FluxTable ft = new FluxTable();
-            int nFluxEnd;
-            int nphif;
-            int[] nFluxTable = new int[2];
-
-            //read number of FluxEnds
-            nFluxEnd = b.ReadInt32();
-
-            //read FluxEnds
-            FluxEnd[] fe = new FluxEnd[nFluxEnd];
-            for(int i=0; i< nFluxEnd;i++)
+            using (BinaryReader b = new BinaryReader(File.OpenRead(file)))
             {
-                fe[i].sid = b.ReadInt32();
-                fe[i].nfu=b.ReadInt32();
-                fe[i].nft = b.ReadInt32();
-                nphif = b.ReadInt32();
-                fe[i].phif = new double[nphif];
-                for(int j=0;j<nphif;j++)
-                    fe[i].phif[j] = b.ReadDouble();
-                fe[i].dz = b.ReadDouble();
-            }
-            ft.fend = fe;
+                int nFluxEnd;
+                int nphif;
+                int[] nFluxTable = new int[2];
 
-            // read flux table
-            nFluxTable[0] = b.ReadInt32();
-            nFluxTable[1] = b.ReadInt32();
-            double[,] ftable = new double[nFluxTable[0], nFluxTable[1]];
-            for (int i = 0; i < nFluxTable[0]; i++)
-                for (int j = 0; j < nFluxTable[1]; j++)
-                    ftable[i, j] = b.ReadDouble();
-            ft.ftable = ftable;
+                //read number of FluxEnds
+                nFluxEnd = b.ReadInt32();
+
+                //read FluxEnds
+                FluxEnd[] fe = new FluxEnd[nFluxEnd];
+                for (int i = 0; i < nFluxEnd; i++)
+                {
+                    fe[i].sid = b.ReadInt32();
+                    fe[i].nfu = b.ReadInt32();
+                    fe[i].nft = b.ReadInt32();
+                    nphif = b.ReadInt32();
+                    fe[i].phif = new double[nphif];
+                    for (int j = 0; j < nphif; j++)
+                        fe[i].phif[j] = b.ReadDouble();
+                    fe[i].dz = b.ReadDouble();
+                }
+                ft.fend = fe;
+
+                // read flux table
+                nFluxTable[0] = b.ReadInt32();
+                nFluxTable[1] = b.ReadInt32();
+                double[,] ftable = new double[nFluxTable[0], nFluxTable[1]];
+                for (int i = 0; i < nFluxTable[0]; i++)
+                    for (int j = 0; j < nFluxTable[1]; j++)
+                        ftable[i, j] = b.ReadDouble();
+                ft.ftable = ftable;
+            }
 
             return ft;
         }

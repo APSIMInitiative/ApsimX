@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
+using System.Runtime.Serialization.Formatters.Binary;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace SWIMFrame
@@ -301,6 +301,17 @@ namespace SWIMFrame
             co[3] = s * s * c2;
             co[4] = s * s * s * c3;
             return co;
+        }
+
+        public static SoilProps ReadProps(string file)
+        {
+            SoilProps sp;
+            using (Stream stream = File.Open(file, FileMode.Open))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                sp = (SoilProps)formatter.Deserialize(stream);
+            }
+            return sp;
         }
     }
 
