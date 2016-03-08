@@ -3040,14 +3040,17 @@ namespace Models.AgPasture1
 		/// <summary>The C:N ratio of cell wall</summary>
 		const double CNratioCellWall = 100.0;
 
-		#endregion
+        /// <summary>Maximum difference between two values of double precision in this model</summary>
+        const double myEpsilon = 0.000001;
 
-		#region Initialisation methods  ------------------------------------------------------------------------------------
+        #endregion
 
-		/// <summary>Performs the initialisation procedures for this species (set DM, N, LAI, etc)</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
+        #region Initialisation methods  ------------------------------------------------------------------------------------
+
+        /// <summary>Performs the initialisation procedures for this species (set DM, N, LAI, etc)</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 			// get the number of layers in the soil profile
@@ -5019,13 +5022,16 @@ namespace Models.AgPasture1
 			prevState = new SpeciesState();
 		}
 
-		/// <summary>Kills a fraction of this plant</summary>
-		/// <param name="KillData">Fraction of crop to kill (if 1.0, crop ends)</param>
-		[EventSubscribe("KillCrop")]
-		public void OnKillCrop(KillCropType KillData)
+        /// <summary>Kills a fraction of this plant</summary>
+        /// <remarks>
+        /// This will move DM and N from live to dead pools, 
+        /// if killFraction is 1.0 then the crop is ended
+        /// </remarks>
+        /// <param name="killFraction">Fraction of crop to kill (0-1)</param>
+        [EventSubscribe("KillCrop")]
+		public void OnKillCrop(double killFraction)
 		{
-            double fractionRemaining = 1.0 - KillData.KillFraction;
-		    double myEpsilon = 0.00001;
+            double fractionRemaining = 1.0 - killFraction;
 
 		    if (fractionRemaining > myEpsilon)
 		    {
@@ -5498,6 +5504,7 @@ namespace Models.AgPasture1
 
 		#endregion
 	}
+
 
 	/// <summary>Stores the state variables of a pasture species</summary>
 	[Serializable]
