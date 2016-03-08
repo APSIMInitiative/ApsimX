@@ -1708,7 +1708,7 @@ namespace Models.AgPasture1
 				foreach (PastureSpecies mySpecies in mySward)
 				{
 					// stores the current state for this mySpecies
-					mySpecies.SaveState();
+					mySpecies.SaveCurrentState();
 
 					// pass on the fraction of radiation and green vover to each species update 
 					//  needed this for at least untill the radiation budget can be done for each species separately
@@ -2239,16 +2239,20 @@ namespace Models.AgPasture1
 			//    mySpecies[s].SetInGermination();
 		}
 
-		/// <summary>Kills a frction of each species in the sward</summary>
-		/// <param name="KillData">Fraction of crop to kill (if 1.0, crop ends)</param>
-		[EventSubscribe("KillCrop")]
-		private void OnKillCrop(KillCropType KillData)
-		{
-			foreach (PastureSpecies mySpecies in mySward)
-				mySpecies.OnKillCrop(KillData);
+        /// <summary>Kills a fraction of each plant in the sward</summary>
+        /// <remarks>
+        /// This will move DM and N from live to dead pools, 
+        /// if killFraction is 1.0 then the crops will be ended
+        /// </remarks>
+        /// <param name="killFraction">Fraction of crop to kill (0-1)</param>
+        [EventSubscribe("KillCrop")]
+        public void OnKillCrop(double killFraction)
+        {
+            foreach (PastureSpecies mySpecies in mySward)
+				mySpecies.OnKillCrop(killFraction);
 
             double myEpsilon = 0.00001;
-            if (1.0 - KillData.KillFraction <= myEpsilon)
+            if (1.0 - killFraction <= myEpsilon)
 		        isAlive = false;
 		}
 
