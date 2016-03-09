@@ -126,7 +126,7 @@ namespace ApServer
             }
 
             Process process = new Process();
-            process.StartInfo.FileName = "model.exe";
+            process.StartInfo.FileName = "Models.exe";
             process.StartInfo.Arguments = Path.Combine(dataDir, dir, "*.apsimx") + " /Recurse";
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;

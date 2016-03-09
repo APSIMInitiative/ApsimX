@@ -7,3 +7,7 @@ or
 	"resolves #XXX"
     
 where XXX is an active git hub issue.  Thus, you must also have loged a relavent git hub issue to relate your pull request to.
+
+To get Jenkins to retest a pull request you can type this into a comment:
+
+	retest this please Jenkins
