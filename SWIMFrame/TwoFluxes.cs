@@ -255,6 +255,8 @@ namespace SWIMFrame
             coq = coqM.ToArray();
             coq[3, ni - 1] = 0;
 
+            double[,] getco = new double[20, 20];
+
             // Set up cubic coeffs to get fluxes q given phi.
             for (j = 1; j <= nft[2]; j++)
             {
@@ -263,7 +265,8 @@ namespace SWIMFrame
                 while (true)
                 {
                     phico2[k] = phif[2, ip];
-                    double[] co2co = Soil.Cuco(new double[5] { 0, phif[2, ip], phif[2, ip + 1], phif[2, ip + 2], phif[2, ip + 3] }, new double[5] { 0, qf[2, ip, j], qf[2, ip + 1, j], qf[2, ip + 2, j], qf[2, ip + 3, j] });
+                    double[] co2co = Soil.Cuco(new double[5] { 0, phif[2, ip], phif[2, ip + 1], phif[2, ip + 2], phif[2, ip + 3] },
+                                               new double[5] { 0, qf[2, ip, j], qf[2, ip + 1, j], qf[2, ip + 2, j], qf[2, ip + 3, j] });
                     for (int x = 1; x < co2co.Length; x++)
                         co2[x, k, j] = co2co[x];
                     ip += 3;
@@ -273,7 +276,18 @@ namespace SWIMFrame
                         ip = nft[2] - 3;
                     k++;
                 }
-                nco2 = k;
+                for (int x = 1; x < 20; x++)
+                    for (int y = 1; y < 20; y++)
+                        getco[x, y] = co2[1, x, y];
+            }
+
+            Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(getco);
+            printMatrix = printMatrix.RemoveRow(0);
+            printMatrix = printMatrix.RemoveColumn(0);
+            MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t", null, "E6", null, null);
+
+            nco2 = k;
+                
 
                 // Get fluxes
                 nit = 0;
@@ -367,7 +381,6 @@ namespace SWIMFrame
                         }
                         // Solved
                         qp[i, j] = q1;
-                    }
                 }
 
                 //interpolate extra fluxes
