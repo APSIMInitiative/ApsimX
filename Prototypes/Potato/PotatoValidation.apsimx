@@ -27975,10 +27975,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Script>
               <PlantingDate>2006-10-10</PlantingDate>
               <CultivarName>RussetBurbank</CultivarName>
-              <RowSpace>300</RowSpace>
-              <RowWidth>900</RowWidth>
+              <RowSpace>370</RowSpace>
+              <RowWidth>860</RowWidth>
               <PlantingDepth>170</PlantingDepth>
-              <StemNumberPerSeedTuber>2.4</StemNumberPerSeedTuber>
+              <StemNumberPerSeedTuber>4.12</StemNumberPerSeedTuber>
               <SetFinalLeafNumber>0</SetFinalLeafNumber>
               <HarvestDate>2007-03-31</HarvestDate>
             </Script>
@@ -31621,7 +31621,7 @@ namespace Models
             <AirDry>
               <double>0.15</double>
               <double>0.26</double>
-              <double>0.01</double>
+              <double>0.1</double>
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
@@ -31629,7 +31629,7 @@ namespace Models
             <LL15>
               <double>0.32</double>
               <double>0.26</double>
-              <double>0.01</double>
+              <double>0.1</double>
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
@@ -31637,15 +31637,15 @@ namespace Models
             <DUL>
               <double>0.4</double>
               <double>0.3</double>
-              <double>0.02</double>
+              <double>0.2</double>
               <double>0.02</double>
               <double>0.02</double>
               <double>0.02</double>
             </DUL>
             <SAT>
-              <double>0.56</double>
-              <double>0.56</double>
-              <double>0.03</double>
+              <double>0.52</double>
+              <double>0.52</double>
+              <double>0.3</double>
               <double>0.03</double>
               <double>0.03</double>
               <double>0.03</double>
@@ -33609,8 +33609,8 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <CultivarName>RussetBurbank</CultivarName>
               <RowSpace>370</RowSpace>
               <RowWidth>860</RowWidth>
-              <PlantingDepth>200</PlantingDepth>
-              <StemNumberPerSeedTuber>4</StemNumberPerSeedTuber>
+              <PlantingDepth>170</PlantingDepth>
+              <StemNumberPerSeedTuber>2</StemNumberPerSeedTuber>
               <SetFinalLeafNumber>0</SetFinalLeafNumber>
               <HarvestDate>2007-03-22</HarvestDate>
             </Script>
@@ -36979,6 +36979,70 @@ namespace Models
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Potato.Leaf.LAI</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Leaf Area Index (m2/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>WaterStress</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Potato.Leaf.Fw</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-990142</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Potato.Leaf.Fn</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
