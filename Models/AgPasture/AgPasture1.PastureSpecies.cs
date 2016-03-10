@@ -3024,8 +3024,8 @@ namespace Models.AgPasture1
 		/// <summary>The C:N ratio of cell wall</summary>
 		const double CNratioCellWall = 100.0;
 
-        /// <summary>Maximum difference between two values of double precision in this model</summary>
-        const double myEpsilon = 0.000001;
+	    /// <summary>Maximum difference between two values of double precision in this model</summary>
+	    const double myEpsilon = 0.000001;
 
         #endregion
 
@@ -4854,11 +4854,10 @@ namespace Models.AgPasture1
 		/// <exception cref="System.Exception">   + Name +  - removal of DM resulted in loss of mass balance</exception>
 		public void RemoveDM(double AmountToRemove)
 		{
-			// check existing amount and what is harvestable
-			double PreRemovalDM = dmShoot;
-			double PreRemovalN = NShoot;
+            // save current state
+            SaveCurrentState();
 
-			if (HarvestableWt > 0.0)
+            if (HarvestableWt > 0.0)
 			{
 				// get the DM weights for each pool, consider preference and available DM
 				double tempPrefGreen = preferenceForGreenDM + (preferenceForDeadDM * (AmountToRemove / HarvestableWt));
@@ -4924,8 +4923,6 @@ namespace Models.AgPasture1
 				updateAggregated();
 
 				// check mass balance and set outputs
-				//dmDefoliated = PreRemovalDM - dmShoot;
-				//Ndefoliated = PreRemovalN - NShoot;
                 dmDefoliated= prevState.dmShoot - dmShoot;
                 prevState.dmdefoliated = dmDefoliated;
                 Ndefoliated = prevState.NShoot - NShoot;
