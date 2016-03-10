@@ -4920,21 +4920,11 @@ namespace Models.AgPasture1
 				updateAggregated();
 
 				// check mass balance and set outputs
-<<<<<<< HEAD
-				//myDefoliatedDM = PreRemovalDM - dmShoot;
-				//myDefoliatedN = PreRemovalN - NShoot;
                 myDefoliatedDM= prevState.dmShoot - dmShoot;
                 prevState.dmdefoliated = myDefoliatedDM;
                 myDefoliatedN = prevState.NShoot - NShoot;
                 prevState.Ndefoliated = myDefoliatedN;
                if (Math.Abs(myDefoliatedDM - AmountToRemove) > 0.00001)
-=======
-                dmDefoliated= prevState.dmShoot - dmShoot;
-                prevState.dmdefoliated = dmDefoliated;
-                Ndefoliated = prevState.NShoot - NShoot;
-                prevState.Ndefoliated = Ndefoliated;
-               if (Math.Abs(dmDefoliated - AmountToRemove) > 0.00001)
->>>>>>> 1350f3c2f235ef5e4e52f5e2cfcb58f6c2e6696b
 					throw new Exception("  " + Name + " - removal of DM resulted in loss of mass balance");
 			}
 		}
