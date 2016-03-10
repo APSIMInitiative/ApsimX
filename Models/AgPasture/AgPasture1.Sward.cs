@@ -1597,12 +1597,15 @@ namespace Models.AgPasture1
 		/// <summary>Nitrogen to protein conversion factor</summary>
 		const double N2Protein = 6.25;
 
-		#endregion
+        /// <summary>Maximum difference between two values of double precision in this model</summary>
+        const double myEpsilon = 0.000001;
 
-		#region Initialisation methods  ------------------------------------------------------------------------------------
+        #endregion
 
-		/// <summary>Called when [loaded].</summary>
-		[EventSubscribe("Loaded")]
+        #region Initialisation methods  ------------------------------------------------------------------------------------
+
+        /// <summary>Called when [loaded].</summary>
+        [EventSubscribe("Loaded")]
 		private void OnLoaded()
 		{
 			// get the number and reference to the mySpecies in the sward
@@ -2251,7 +2254,6 @@ namespace Models.AgPasture1
             foreach (PastureSpecies mySpecies in mySward)
 				mySpecies.OnKillCrop(killFraction);
 
-            double myEpsilon = 0.00001;
             if (1.0 - killFraction <= myEpsilon)
 		        isAlive = false;
 		}
