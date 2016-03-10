@@ -5088,12 +5088,61 @@ namespace Models.AgPasture1
 		{
             double fractionRemaining = 1.0 - killFraction;
 
-		    if (fractionRemaining > myEpsilon)
-		    {
-                // move a fraction of live tissue to dead pool
-                // TODO
+            if (killFraction > myEpsilon)
+            {
+                if (fractionRemaining > myEpsilon)
+                {
+                    // move a fraction of live tissue to dead pool
+                    leaves.tissue[3].DM += (leaves.tissue[0].DM + leaves.tissue[1].DM + leaves.tissue[2].DM) *
+                                           killFraction;
+                    leaves.tissue[0].DM *= fractionRemaining;
+                    leaves.tissue[1].DM *= fractionRemaining;
+                    leaves.tissue[2].DM *= fractionRemaining;
+                    stems.tissue[3].DM += (stems.tissue[0].DM + stems.tissue[1].DM + stems.tissue[2].DM) * killFraction;
+                    stems.tissue[0].DM *= fractionRemaining;
+                    stems.tissue[1].DM *= fractionRemaining;
+                    stems.tissue[2].DM *= fractionRemaining;
+                    stolons.tissue[3].DM += (stolons.tissue[0].DM + stolons.tissue[1].DM + stolons.tissue[2].DM) *
+                                            killFraction;
+                    stolons.tissue[0].DM *= fractionRemaining;
+                    stolons.tissue[1].DM *= fractionRemaining;
+                    stolons.tissue[2].DM *= fractionRemaining;
+                    roots.tissue[3].DM += roots.tissue[0].DM * killFraction;
+                    roots.tissue[0].DM *= fractionRemaining;
 
-		        updateAggregated();
+                    leaves.tissue[3].Namount += (leaves.tissue[0].Namount + leaves.tissue[1].Namount +
+                                                 leaves.tissue[2].Namount) * killFraction;
+                    leaves.tissue[0].Namount *= fractionRemaining;
+                    leaves.tissue[1].Namount *= fractionRemaining;
+                    leaves.tissue[2].Namount *= fractionRemaining;
+                    stems.tissue[3].Namount += (stems.tissue[0].Namount + stems.tissue[1].Namount +
+                                                stems.tissue[2].Namount) * killFraction;
+                    stems.tissue[0].Namount *= fractionRemaining;
+                    stems.tissue[1].Namount *= fractionRemaining;
+                    stems.tissue[2].Namount *= fractionRemaining;
+                    stolons.tissue[3].Namount += (stolons.tissue[0].Namount + stolons.tissue[1].Namount +
+                                                  stolons.tissue[2].Namount) * killFraction;
+                    stolons.tissue[0].Namount *= fractionRemaining;
+                    stolons.tissue[1].Namount *= fractionRemaining;
+                    stolons.tissue[2].Namount *= fractionRemaining;
+                    roots.tissue[3].Namount += roots.tissue[0].Namount * killFraction;
+                    roots.tissue[0].Namount *= fractionRemaining;
+                }
+                else
+                {
+                    // End crop
+                    //Above_ground part returns to surface OM comletey (frac = 1.0)
+                    DoSurfaceOMReturn(dmShoot, NShoot);
+
+                    //Incorporate root mass in soil fresh organic matter
+                    DoIncorpFomEvent(dmRoot, NRoot);
+
+                    //ZeroVars();
+
+                    isAlive = false;
+                }
+
+                updateAggregated();
                 SaveCurrentState();
             }
         }
