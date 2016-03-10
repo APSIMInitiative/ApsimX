@@ -219,6 +219,18 @@ namespace UserInterface.Interfaces
         string SaveAs(string OldFilename);
 
         /// <summary>
+        /// Get whatever text is currently on the clipboard
+        /// </summary>
+        /// <returns></returns>
+        string GetClipboardText();
+
+        /// <summary>
+        /// Place text on the clipboard
+        /// </summary>
+        /// <param name="text"></param>
+        void SetClipboardText(string text);
+
+        /// <summary>
         /// Change the name of the tab.
         /// </summary>
         void ChangeTabText(string NewTabName);
