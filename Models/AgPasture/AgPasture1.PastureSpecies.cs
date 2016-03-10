@@ -51,9 +51,8 @@ namespace Models.AgPasture1
 		[Link(IsOptional=true)]
 		private Arbitrator.Arbitrator apsimArbitrator = null;
 
-        /// <summary>The summary</summary>
-        [Link]
-        ISummary Summary = null;
+	    ///// <summary>The summary</summary>
+	    //[Link] private ISummary Summary = null;
 
         //- Events  ---------------------------------------------------------------------------------------------------
 
@@ -3425,7 +3424,9 @@ namespace Models.AgPasture1
 		{
 			// auxiliary DM variables
 			dmShoot = leaves.DMTotal + stems.DMTotal + stolons.DMTotal;
-		    dmRoot = roots.DMTotal;
+            dmShootGreen = leaves.DMGreen + stems.DMGreen + stolons.DMGreen;
+            dmShootDead = leaves.tissue[3].DM + stems.tissue[3].DM + stolons.tissue[3].DM;
+            dmRoot = roots.DMTotal;
 
 			// auxiliary N variables
 		    NShoot = leaves.NTotal + stems.NTotal + stolons.NTotal;
@@ -4145,6 +4146,7 @@ namespace Models.AgPasture1
 
 	            // N remobilised to be potentially used for growth tomorrow
 	            NRemobilised = Nleaf3Remob + Nstem3Remob + Nstol3Remob + NrootRemob;
+	            prevState.Nremob = NRemobilised;
 	            NLuxury2 = Math.Max(0.0, leaves.tissue[1].Nconc - LeafNopt * relativeNStage2) * leaves.tissue[1].DM +
 	                       Math.Max(0.0, stems.tissue[1].Nconc - NcStemOpt * relativeNStage2) * stems.tissue[1].DM +
 	                       Math.Max(0.0, stolons.tissue[1].Nconc - NcStolonOpt * relativeNStage2) * stolons.tissue[1].DM;
@@ -4911,8 +4913,6 @@ namespace Models.AgPasture1
                 stems.tissue[3].Namount *= fractionRemainingDead;
 
 				//C and N remobilised are also removed proportionally
-				double PreRemovalNRemob = NRemobilised;
-				double PreRemovalCRemob = CRemobilised;
 				NRemobilised *= fractionRemainingGreen;
 				CRemobilised *= fractionRemainingGreen;
 
@@ -4924,9 +4924,13 @@ namespace Models.AgPasture1
 				updateAggregated();
 
 				// check mass balance and set outputs
-				dmDefoliated = PreRemovalDM - dmShoot;
-				Ndefoliated = PreRemovalN - NShoot;
-				if (Math.Abs(dmDefoliated - AmountToRemove) > 0.00001)
+				//dmDefoliated = PreRemovalDM - dmShoot;
+				//Ndefoliated = PreRemovalN - NShoot;
+                dmDefoliated= prevState.dmShoot - dmShoot;
+                prevState.dmdefoliated = dmDefoliated;
+                Ndefoliated = prevState.NShoot - NShoot;
+                prevState.Ndefoliated = Ndefoliated;
+               if (Math.Abs(dmDefoliated - AmountToRemove) > 0.00001)
 					throw new Exception("  " + Name + " - removal of DM resulted in loss of mass balance");
 			}
 		}
