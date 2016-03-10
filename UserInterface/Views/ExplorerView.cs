@@ -134,7 +134,6 @@ namespace UserInterface.Views
                 TreeView.SelectedNode = node;
 
                 TreeView.AfterSelect += OnAfterSelect;
-
             }
         }
 
@@ -717,6 +716,24 @@ namespace UserInterface.Views
                 if (!e.CancelEdit)
                     previouslySelectedNodePath = args.NodePath;
             }
+        }
+
+        /// <summary>
+        /// Get whatever text is currently on the clipboard
+        /// </summary>
+        /// <returns></returns>
+        public string GetClipboardText()
+        {
+            return Clipboard.GetText();
+        }
+
+        /// <summary>
+        /// Place text on the clipboard
+        /// </summary>
+        /// <param name="text"></param>
+        public void SetClipboardText(string text)
+        {
+            Clipboard.SetText(text);
         }
 
         /// <summary>User has closed the status window.</summary>

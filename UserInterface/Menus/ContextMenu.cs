@@ -64,7 +64,7 @@ namespace UserInterface.Presenters
             if (model != null)
             {
                 // Set the clipboard text.
-                System.Windows.Forms.Clipboard.SetText(Apsim.Serialise(model));
+                this.explorerPresenter.SetClipboardText(Apsim.Serialise(model));
             }
         }
 
@@ -76,7 +76,7 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Paste", ShortcutKey = "Ctrl+V")]
         public void OnPasteClick(object sender, EventArgs e)
         {
-            this.explorerPresenter.Add(System.Windows.Forms.Clipboard.GetText(), this.explorerPresenter.CurrentNodePath);
+            this.explorerPresenter.Add(this.explorerPresenter.GetClipboardText(), this.explorerPresenter.CurrentNodePath);
         }
 
         /// <summary>
