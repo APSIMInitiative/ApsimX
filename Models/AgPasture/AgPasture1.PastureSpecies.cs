@@ -98,9 +98,6 @@ namespace Models.AgPasture1
         /// <summary>Gets the LAI (m^2/m^2)</summary>
         public double LAI { get { return GreenLAI; } }
 
-        /// <summary>Gets the maximum LAI (m^2/m^2)</summary>
-        public double LAITotal { get { return TotalLAI; } }
-
         /// <summary>Gets the cover green (0-1)</summary>
         public double CoverGreen { get { return GreenCover; } }
 
@@ -112,7 +109,7 @@ namespace Models.AgPasture1
         [Units("mm")]
         public double Height
         {
-            get { return myHeight; }  // minimum = 20mm  - TODO: update this function
+            get { return myPlantHeight; }  // minimum = 20mm  - TODO: update this function
         }
 
         /// <summary>Gets the canopy depth (mm)</summary>
@@ -2407,9 +2404,9 @@ namespace Models.AgPasture1
 		/// <value>The total LAI.</value>
 		[Description("Total leaf area index")]
 		[Units("m^2/m^2")]
-		public double TotalLAI
+		public double LAITotal
 		{
-			get { return greenLAI + deadLAI; }
+			get { return LAIGreen + LAIDead; }
 		}
 
 		/// <summary>Gets the plant's green LAI (leaf area index).</summary>
@@ -2418,7 +2415,7 @@ namespace Models.AgPasture1
 		[Units("m^2/m^2")]
 		public double GreenLAI
 		{
-			get { return greenLAI; }
+			get { return LAIGreen; }
 		}
 
 		/// <summary>Gets the plant's dead LAI (leaf area index).</summary>
@@ -2427,7 +2424,7 @@ namespace Models.AgPasture1
 		[Units("m^2/m^2")]
 		public double DeadLAI
 		{
-			get { return deadLAI; }
+			get { return LAIDead; }
 		}
 
 		/// <summary>Gets the irradiance on top of canopy.</summary>
@@ -2447,8 +2444,8 @@ namespace Models.AgPasture1
 		{
 			get
 			{
-				if (greenLAI + deadLAI == 0) return 0;
-				return (1.0 - (Math.Exp(-lightExtentionCoeff * (greenLAI + deadLAI))));
+				if (LAIGreen + LAIDead == 0) return 0;
+				return (1.0 - (Math.Exp(-lightExtentionCoeff * (LAIGreen + LAIDead))));
 			}
 		}
 
@@ -2460,10 +2457,10 @@ namespace Models.AgPasture1
 		{
 			get
 			{
-				if (greenLAI == 0)
+				if (LAIGreen == 0)
 					return 0.0;
 				else
-					return (1.0 - Math.Exp(-lightExtentionCoeff * greenLAI));
+					return (1.0 - Math.Exp(-lightExtentionCoeff * LAIGreen));
 			}
 		}
 
@@ -2475,10 +2472,10 @@ namespace Models.AgPasture1
 		{
 			get
 			{
-				if (deadLAI == 0)
+				if (LAIDead == 0)
 					return 0.0;
 				else
-					return (1.0 - Math.Exp(-lightExtentionCoeff * deadLAI));
+					return (1.0 - Math.Exp(-lightExtentionCoeff * LAIDead));
 			}
 		}
 
@@ -2645,7 +2642,7 @@ namespace Models.AgPasture1
 		[Units("kgDM/ha")]
 		public double HarvestedWt
 		{
-			get { return dmDefoliated; }
+			get { return myDefoliatedDM; }
 		}
 
 		/// <summary>Gets the fraction of the plant that was harvested.</summary>
@@ -2654,7 +2651,7 @@ namespace Models.AgPasture1
 		[Units("0-1")]
 		public double HarvestedFraction
 		{
-			get { return fractionHarvested; }
+			get { return myFractionHarvested; }
 		}
 
 		/// <summary>Gets the amount of plant N removed by harvest.</summary>
@@ -2663,7 +2660,7 @@ namespace Models.AgPasture1
 		[Units("kgN/ha")]
 		public double HarvestedN
 		{
-			get { return Ndefoliated; }
+			get { return myDefoliatedN; }
 		}
 
 		/// <summary>Gets the N concentration in harvested DM.</summary>
@@ -2681,7 +2678,7 @@ namespace Models.AgPasture1
 		[Units("0-1")]
 		public double HerbageDigestibility
 		{
-			get { return digestHerbage; }
+			get { return myDigestHerbage; }
 		}
 
 		// TODO: Digestibility of harvested material should be better calculated (consider fraction actually removed)
@@ -2691,7 +2688,7 @@ namespace Models.AgPasture1
 		[Units("0-1")]
 		public double HarvestedDigestibility
 		{
-			get { return digestDefoliated; }
+			get { return myDigestDefoliated; }
 		}
 
 		/// <summary>Gets the average herbage ME (metabolisable energy).</summary>
@@ -2700,7 +2697,7 @@ namespace Models.AgPasture1
 		[Units("(MJ/ha)")]
 		public double HerbageME
 		{
-			get { return 16 * digestHerbage * StandingWt; }
+			get { return 16 * myDigestHerbage * StandingWt; }
 		}
 
 		/// <summary>Gets the average ME (metabolisable energy) of harvested DM.</summary>
@@ -2709,7 +2706,7 @@ namespace Models.AgPasture1
 		[Units("(MJ/ha)")]
 		public double HarvestedME
 		{
-			get { return 16 * digestDefoliated * HarvestedWt; }
+			get { return 16 * myDigestDefoliated * HarvestedWt; }
 		}
 
         #endregion
@@ -2888,24 +2885,24 @@ namespace Models.AgPasture1
 		// harvest and digestibility  ---------------------------------------------------------------------------------
 
 		/// <summary>The DM amount harvested (defoliated)</summary>
-		private double dmDefoliated = 0.0;
+		private double myDefoliatedDM = 0.0;
 		/// <summary>The N amount harvested (defoliated)</summary>
-		private double Ndefoliated = 0.0;
+		private double myDefoliatedN = 0.0;
 		/// <summary>The digestibility of herbage</summary>
-		private double digestHerbage = 0.0;
+		private double myDigestHerbage = 0.0;
 		/// <summary>The digestibility of defoliated material</summary>
-		private double digestDefoliated = 0.0;
+		private double myDigestDefoliated = 0.0;
 		/// <summary>The fraction of standing DM harvested</summary>
-		internal double fractionHarvested = 0.0;
+		internal double myFractionHarvested = 0.0;
 
 		// Plant height, LAI and cover  -------------------------------------------------------------------------------
 
 		/// <summary>The plant's average height</summary>
-		private double myHeight;
+		private double myPlantHeight;
 		/// <summary>The plant's green LAI</summary>
-		private double greenLAI;
+		private double LAIGreen;
 		/// <summary>The plant's dead LAI</summary>
-		private double deadLAI;
+		private double LAIDead;
 
 		// root variables  --------------------------------------------------------------------------------------------
 
@@ -3156,7 +3153,7 @@ namespace Models.AgPasture1
 			InitialiseRootsProperties();
 
 			// 5. Canopy height and related variables
-			myHeight = Math.Max(20.0, HeightFromMass.Value(StandingWt));  // TODO:update this approach
+			myPlantHeight = Math.Max(20.0, HeightFromMass.Value(StandingWt));  // TODO:update this approach
 			InitialiseCanopy();
 			// maximum shoot:root ratio
 			maxSRratio = (1 - MaxRootFraction) / MaxRootFraction;
@@ -3180,10 +3177,10 @@ namespace Models.AgPasture1
 			myCanopyProperties.Name = Name;
 			myCanopyProperties.CoverGreen = GreenCover;
 			myCanopyProperties.CoverTot = TotalCover;
-			myCanopyProperties.CanopyDepth = myHeight;
-			myCanopyProperties.CanopyHeight = myHeight;
-			myCanopyProperties.LAIGreen = greenLAI;
-			myCanopyProperties.LAItot = TotalLAI;
+			myCanopyProperties.CanopyDepth = myPlantHeight;
+			myCanopyProperties.CanopyHeight = myPlantHeight;
+			myCanopyProperties.LAIGreen = LAIGreen;
+			myCanopyProperties.LAItot = LAITotal;
 			myCanopyProperties.MaximumStomatalConductance = myStomatalConductanceMax;
 			myCanopyProperties.HalfSatStomatalConductance = 200.0;  // TODO: this should be on the UI
 			myCanopyProperties.CanopyEmissivity = 0.96;  // TODO: this should be on the UI
@@ -3298,7 +3295,7 @@ namespace Models.AgPasture1
 				phenoStage = annualsPhenology();
 
 			// Compute the potential growth
-			if (phenoStage == 0 || greenLAI == 0.0)
+			if (phenoStage == 0 || LAIGreen == 0.0)
 			{
 				// Growth before germination is null
 				Pgross = 0.0;
@@ -3359,7 +3356,7 @@ namespace Models.AgPasture1
 			// Update LAI
 			EvaluateLAI();
 
-			digestHerbage = calcDigestibility();
+			myDigestHerbage = calcDigestibility();
 		}
 
 		#region - Handling and auxilary processes  -------------------------------------------------------------------------
@@ -3368,9 +3365,9 @@ namespace Models.AgPasture1
 		internal void RefreshVariables()
 		{
 			// reset some variables
-			dmDefoliated = 0.0;
-			Ndefoliated = 0.0;
-			digestDefoliated = 0.0;
+			myDefoliatedDM = 0.0;
+			myDefoliatedN = 0.0;
+			myDigestDefoliated = 0.0;
 
 			// TODO:
 			// these are needed when AgPasture controls the growth (not necessarily the partition of soil stuff)
@@ -3379,7 +3376,7 @@ namespace Models.AgPasture1
 			if (!isSwardControlled)
 			{
 				swardLightExtCoeff = lightExtentionCoeff;
-				swardGreenCover = CalcPlantCover(greenLAI);
+				swardGreenCover = CalcPlantCover(LAIGreen);
 			}
 			//else
 			//    Sward will set these values
@@ -3478,13 +3475,13 @@ namespace Models.AgPasture1
 		{
 			double greenTissue = leaves.DMGreen + (stolons.DMGreen * 0.3);  // assuming stolons have 0.3*SLA
 			greenTissue /= 10000;   // converted from kg/ha to kg/m2
-			greenLAI = greenTissue * specificLeafArea;
+			LAIGreen = greenTissue * specificLeafArea;
 
 			// Adjust accounting for resilience after unfavoured conditions
 			if (!isLegume && dmShootGreen < 1000)
 			{
 				greenTissue = stems.DMGreen / 10000;
-				greenLAI += greenTissue * specificLeafArea * Math.Sqrt((1000 - dmShootGreen) / 10000);
+				LAIGreen += greenTissue * specificLeafArea * Math.Sqrt((1000 - dmShootGreen) / 10000);
 			}
 			/* 
 			 This adjust assumes cover will be bigger for the same amount of DM when DM is low, due to:
@@ -3494,7 +3491,7 @@ namespace Models.AgPasture1
 			 » Specific leaf area should be reduced (RCichota2014) - TODO
 			 */
 
-			deadLAI = (leaves.tissue[3].DM / 10000) * specificLeafArea;
+			LAIDead = (leaves.tissue[3].DM / 10000) * specificLeafArea;
 		}
 
 		/// <summary>Compute the average digestibility of aboveground plant material</summary>
@@ -3942,8 +3939,8 @@ namespace Models.AgPasture1
 	            }
 
 	            // Fraction of DM defoliated today
-	            double FracDefoliated = MathUtilities.Divide(dmDefoliated,
-	                dmDefoliated + prevState.leaves.DMTotal + prevState.stems.DMTotal + prevState.stolons.DMTotal, 0.0);
+	            double FracDefoliated = MathUtilities.Divide(myDefoliatedDM,
+	                myDefoliatedDM + prevState.leaves.DMTotal + prevState.stems.DMTotal + prevState.stolons.DMTotal, 0.0);
 
 	            // Adjust stolon turnover due to defoliation (increase stolon senescence)
 	            gamaS += FracDefoliated * (1 - gama);
@@ -4889,7 +4886,7 @@ namespace Models.AgPasture1
 					fractionRemainingDead = Math.Max(0.0, Math.Min(1.0, 1.0 - RemovingDeadDM / StandingDeadWt));
 
 				// get digestibility of DM being harvested
-				digestDefoliated = calcDigestibility();
+				myDigestDefoliated = calcDigestibility();
 
                 // update the various pools
                 leaves.tissue[0].DM *= fractionRemainingGreen;
@@ -4924,13 +4921,13 @@ namespace Models.AgPasture1
 				updateAggregated();
 
 				// check mass balance and set outputs
-				//dmDefoliated = PreRemovalDM - dmShoot;
-				//Ndefoliated = PreRemovalN - NShoot;
-                dmDefoliated= prevState.dmShoot - dmShoot;
-                prevState.dmdefoliated = dmDefoliated;
-                Ndefoliated = prevState.NShoot - NShoot;
-                prevState.Ndefoliated = Ndefoliated;
-               if (Math.Abs(dmDefoliated - AmountToRemove) > 0.00001)
+				//myDefoliatedDM = PreRemovalDM - dmShoot;
+				//myDefoliatedN = PreRemovalN - NShoot;
+                myDefoliatedDM= prevState.dmShoot - dmShoot;
+                prevState.dmdefoliated = myDefoliatedDM;
+                myDefoliatedN = prevState.NShoot - NShoot;
+                prevState.Ndefoliated = myDefoliatedN;
+               if (Math.Abs(myDefoliatedDM - AmountToRemove) > 0.00001)
 					throw new Exception("  " + Name + " - removal of DM resulted in loss of mass balance");
 			}
 		}
@@ -4951,7 +4948,7 @@ namespace Models.AgPasture1
 
 
 			// get digestibility of DM being removed
-			digestDefoliated = calcDigestibility();
+			myDigestDefoliated = calcDigestibility();
 
 			for (int i = 0; i < RemovalData.dm.Length; i++)			  // for each pool (green or dead)
 			{
@@ -5008,8 +5005,8 @@ namespace Models.AgPasture1
 				if (part.ToLower() == "leaf")
 				{
 					// removing green leaves
-					dmDefoliated += LeafGreenWt * fractionR;
-					Ndefoliated += LeafGreenN * fractionR;
+					myDefoliatedDM += LeafGreenWt * fractionR;
+					myDefoliatedN += LeafGreenN * fractionR;
 
 					leaves.tissue[0].DM *= fractionR;
                     leaves.tissue[1].DM *= fractionR;
@@ -5022,8 +5019,8 @@ namespace Models.AgPasture1
 				else if (part.ToLower() == "stem")
 				{
 					// removing green stems
-					dmDefoliated += StemGreenWt * fractionR;
-					Ndefoliated += StemGreenN * fractionR;
+					myDefoliatedDM += StemGreenWt * fractionR;
+					myDefoliatedN += StemGreenN * fractionR;
 
                     stems.tissue[0].DM *= fractionR;
                     stems.tissue[1].DM *= fractionR;
@@ -5039,8 +5036,8 @@ namespace Models.AgPasture1
 				if (part.ToLower() == "leaf")
 				{
 					// removing dead leaves
-					dmDefoliated += LeafDeadWt * fractionR;
-					Ndefoliated += LeafDeadN * fractionR;
+					myDefoliatedDM += LeafDeadWt * fractionR;
+					myDefoliatedN += LeafDeadN * fractionR;
 
                     leaves.tissue[3].DM *= fractionR;
                     leaves.tissue[3].Namount *= fractionR;
@@ -5048,8 +5045,8 @@ namespace Models.AgPasture1
 				else if (part.ToLower() == "stem")
 				{
 					// removing dead stems
-					dmDefoliated += StemDeadWt * fractionR;
-					Ndefoliated += StemDeadN * fractionR;
+					myDefoliatedDM += StemDeadWt * fractionR;
+					myDefoliatedN += StemDeadN * fractionR;
 
                     stems.tissue[3].DM *= fractionR;
                     stems.tissue[3].Namount *= fractionR;
@@ -5061,7 +5058,7 @@ namespace Models.AgPasture1
 		public void RefreshAfterRemove()
 		{
 			// set values for fractionHarvest (in fact fraction harvested)
-			fractionHarvested = MathUtilities.Divide(dmDefoliated, StandingWt + dmDefoliated, 0.0);
+			myFractionHarvested = MathUtilities.Divide(myDefoliatedDM, StandingWt + myDefoliatedDM, 0.0);
 
 			// recalc the digestibility
 			calcDigestibility();
@@ -5121,16 +5118,16 @@ namespace Models.AgPasture1
             stems.tissue[0].DM = stems.tissue[1].DM = stems.tissue[2].DM = stems.tissue[3].DM = 0.0;
             stolons.tissue[0].DM = stolons.tissue[1].DM = stolons.tissue[2].DM = stolons.tissue[3].DM = 0.0;
             roots.tissue[0].DM = roots.tissue[1].DM = roots.tissue[2].DM = roots.tissue[3].DM = 0.0;
-            dmDefoliated = 0.0;
+            myDefoliatedDM = 0.0;
 
             // Zero out the N pools
             leaves.tissue[0].Namount = leaves.tissue[1].Namount = leaves.tissue[2].Namount = leaves.tissue[3].Namount = 0.0;
             stems.tissue[0].Namount = stems.tissue[1].Namount = stems.tissue[2].Namount = stems.tissue[3].Namount = 0.0;
             stolons.tissue[0].Namount = stolons.tissue[1].Namount = stolons.tissue[2].Namount = stolons.tissue[3].Namount = 0.0;
             roots.tissue[0].Namount = roots.tissue[1].Namount = roots.tissue[2].Namount = roots.tissue[3].Namount = 0.0;
-            Ndefoliated = 0.0;
+            myDefoliatedN = 0.0;
 
-			digestDefoliated = 0.0;
+			myDigestDefoliated = 0.0;
 
 			updateAggregated();
 

@@ -2,5 +2,12 @@
  Changelog
 =================================
 
-4/3/2016. changed --- to === cause it's prettier (RCichota)
-8/3/2016. Test
+10/3/2016,Changed greenLAI property name to LAIGreen to match Arbitrator
+10/3/2016,Changed deadLAI property name to LAIDead for consistency
+10/3/2016,Chanegd TotalLAI property to LAITotal, removing existing LAITotal property
+10/3/2016,Renamed myHeight to myPlantHeight
+10/3/2016,dmDefoliated to myDefoliatedDM
+10/3/2016,Ndefoliated to myDefoliatedN
+10/3/2016,digestHerbage to myDigestHerbage
+10/3/2016,digestDefoliated to myDigestDefoliated
+10/3/2016,fractionHarvested to myFractionHarvested

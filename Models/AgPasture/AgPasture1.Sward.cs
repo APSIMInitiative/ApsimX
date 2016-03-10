@@ -1186,8 +1186,8 @@ namespace Models.AgPasture1
 			get
 			{
 				// TODO: check whether this should be updated everyday - now it uses the value at the beginning of the simulation only
-				//double result = mySward.Sum(mySpecies => mySpecies.TotalLAI * mySpecies.LightExtentionCoeff)
-				//              / mySward.Sum(mySpecies => mySpecies.TotalLAI);
+				//double result = mySward.Sum(mySpecies => mySpecies.LAITotal * mySpecies.LightExtentionCoeff)
+				//              / mySward.Sum(mySpecies => mySpecies.LAITotal);
 
 				return initialLightExtCoeff;
 			}
@@ -1671,8 +1671,8 @@ namespace Models.AgPasture1
 					swardRootFraction = RootProfileDistribution();
 
 					// set the light extinction coefficient for each species
-					double sumLightExtCoeff = mySward.Sum(mySpecies => mySpecies.TotalLAI * mySpecies.LightExtentionCoeff);
-					double sumLAI = mySward.Sum(mySpecies => mySpecies.TotalLAI);
+					double sumLightExtCoeff = mySward.Sum(mySpecies => mySpecies.LAITotal * mySpecies.LightExtentionCoeff);
+					double sumLAI = mySward.Sum(mySpecies => mySpecies.LAITotal);
 					initialLightExtCoeff = sumLightExtCoeff / sumLAI;
 					foreach (PastureSpecies mySpecies in mySward)
 						mySpecies.swardLightExtCoeff = initialLightExtCoeff;
@@ -2317,9 +2317,9 @@ namespace Models.AgPasture1
 				{
 					// get the actual fractions to remove for each mySpecies
 					if (tempTotal > 0.0)
-						mySward[s].fractionHarvested = Math.Max(0.0, Math.Min(1.0, tempWeights[s] * tempAmounts[s] / tempTotal));
+						mySward[s].myFractionHarvested = Math.Max(0.0, Math.Min(1.0, tempWeights[s] * tempAmounts[s] / tempTotal));
 					else
-						mySward[s].fractionHarvested = 0.0;
+						mySward[s].myFractionHarvested = 0.0;
 
 					// remove DM and N for each mySpecies (digestibility is also evaluated)
 					mySward[s].RemoveDM(amountToRemove * mySward[s].HarvestedFraction);
