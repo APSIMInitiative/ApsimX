@@ -110,7 +110,10 @@
                     store.RemoveUnwantedSimulations(simulations);
 
                     if (model is Simulation)
+                    {
                         simulationsToRun = new Simulation[1] { Apsim.Clone(model as Simulation) as Simulation };
+                        Simulations.CallOnLoaded(simulationsToRun[0]);
+                    }
                     else
                         simulationsToRun = Simulations.FindAllSimulationsToRun(model);
                 }
