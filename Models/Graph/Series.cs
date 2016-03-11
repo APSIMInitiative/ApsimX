@@ -550,7 +550,8 @@ namespace Models.Graph
                if (posCloseBracket == -1)
                        throw new Exception("Invalid filter column name: " + Filter);
                FilterName = Filter.Substring(1, posCloseBracket - 1);
-               fieldNames.Add(FilterName);
+               if (!fieldNames.Contains(FilterName))
+                    fieldNames.Add(FilterName);
             }
             else if ((Filter != null) && (Filter != ""))
               throw new Exception("Column name to filter on must be within square brackets.  e.g [ColumToFilter]");
