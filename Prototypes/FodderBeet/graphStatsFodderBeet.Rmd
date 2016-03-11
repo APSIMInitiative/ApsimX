@@ -1,0 +1,199 @@
+---
+title: "Stats"
+output: word_document
+---
+
+Table of stats
+
+```{r ReadObserved, echo=FALSE, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library (hydroGOF)
+library(xtable)
+library(knitr)
+library(tidyr)
+library(RSQLite)
+
+# load data
+setwd("C:\\GitHubRepos\\ApsimX\\Prototypes\\FodderBeet\\Observations")
+obsData <- read.table("ObservedDataForStats.txt", header = TRUE)
+
+# get time format right
+obsData <- obsData %>% mutate(Date = dmy(Date))
+str(obsData)
+head(obsData)
+summary(obsData)
+
+# create N categories
+obsData$N_cat <- NULL
+obsData$N_cat[obsData$N_Treat<=75] <- "low N"
+obsData$N_cat[obsData$N_Treat>75 & obsData$NTrmt<=150] <- "mid N"
+obsData$N_cat[obsData$N_Treat>150] <- "high N"
+
+
+# create yield categories
+obsData$yieldCat <- NULL
+obsData$yieldCat[obsData$N_lim== "No" & obsData$W_lim== "No"] <- "Potential"
+obsData$yieldCat[obsData$N_lim== "Yes" & obsData$W_lim== "No"] <- "N-limited only"
+obsData$yieldCat[obsData$N_lim== "No" & obsData$W_lim== "Yes"] <- "Water-limited only"
+obsData$yieldCat[obsData$N_lim== "Yes" & obsData$W_lim== "Yes"] <- "Co-limited"
+
+obsData$N_cat <- as.factor(obsData$N_cat)
+
+summary(obsData)
+
+print(unique(obsData$Name))
+
+```
+
+```{r, ReadSimulated, echo=FALSE, include=FALSE}
+# load Justin's function
+GetApsimNGTable <- function(dbLoc, table) 
+{
+    connection <- dbConnect(SQLite(), dbname = dbLoc, flags = SQLITE_RW)
+    table <- dbReadTable(connection, table, row.names=NULL)
+    dbDisconnect(connection)
+    return(table)
+}
+
+dbPath <- "C:\\GitHubRepos\\ApsimX\\Prototypes\\FodderBeet\\"
+
+dbName <- "FodderBeet.db.Report.csv"
+#dbName <- "SimData.txt"
+
+myDb <- read.csv(paste0(dbPath,dbName), header=TRUE)
+#myDb <- read.table("C:\\GitHubRepos\\ApsimX\\Prototypes\\FodderBeet\\SimData.txt", header=TRUE)
+
+# get date sorted
+myDb$Date <- ymd(myDb$Clock.Today)
+
+# remove unecessary variables
+myDb <- myDb %>%
+  select(-FodderBeet.Phenology.CurrentPhaseName, 
+         -Phenology.Photoperiod.Value)
+
+summary(myDb)
+head(myDb)
+str(myDb)
+
+myDb$Name <- gsub(" ", "", myDb$Name, fixed = TRUE)
+
+myDb %>%
+  filter(Name == "LincolnP21_Cv2012") %>%
+  summary()
+
+
+```
+
+
+```{r MergeObsPred, echo=FALSE, include=FALSE}
+
+# Add info for merging
+
+
+
+# re-arrange
+outVarsPos <- grep("FodderBeet",names(myDb)) # find output variables
+simData <- myDb %>% gather("Variable", "Predicted", outVarsPos)
+
+head(simData)
+head(obsData)
+str(simData)
+summary(simData)
+summary(obsData)
+
+mergedDF <- merge(obsData,simData, by=c("Date","Variable","Name")) # FIXME: add experiment?
+head(mergedDF)
+tail(mergedDF)
+summary(mergedDF)
+
+unique(mergedDF$Name)
+
+mergedDF %>%
+  filter(Name == "LincolnP21_Cv2012")
+
+obsData %>%
+  filter(Name == "LincolnP21_Cv2012")
+
+simData %>%
+  filter(Name == "LincolnP21_Cv2012")
+
+summary(simData)
+unique(simData$Name)
+
+```
+
+
+
+Potential yield
+
+```{r, echo=FALSE,echo=FALSE, fig.height=18,fig.width=12}
+
+varNameDf <- read.table("C:\\GitHubRepos\\ApsimX\\Prototypes\\FodderBeet\\VariableNames.txt", header = TRUE)
+summary(varNameDf)
+
+mergedDF <- merge(mergedDF,varNameDf, by="Variable")
+
+
+mergedDF$SimpleName <- 
+  factor(mergedDF$SimpleName, 
+         levels = c("Node Number",
+"Green Leaves",
+"Seneced Leaves",
+"LAI",
+"Total DM",
+"Bulb DM",
+"Leaf DM",
+"Petiole DM",
+"Total N",
+"Bulb N",
+"Leaf N",
+"Petiole N",
+"Light Interception"
+)
+         )
+
+#potential
+mergedDF %>%
+#  filter(Name == "LincolnP21_Cv2011" | Name == "LincolnP21_Cv2012") %>%
+#  filter(W_lim == "No", N_lim == "No") %>%
+  filter(Calib_Test == "Calib") %>%
+  ggplot(aes(x=Observed, y= Predicted)) +
+  geom_point(aes(colour= Name, shape = Cultivar_Treat , size = 1)) +
+  geom_abline(intercept = 0, slope = 1) +
+  coord_fixed(ratio = 1) +
+  facet_wrap(~SimpleName, scales = "free")
+
+#potential
+mergedDF %>%
+#  filter(Name == "LincolnP21_Cv2011" | Name == "LincolnP21_Cv2012") %>%
+#  filter(W_lim == "No", N_lim == "No") %>%
+ # filter(Calib_Test == "Calib") %>%
+ # filter(SowingDate_Treat == "Oct") %>%
+  ggplot(aes(x=Observed, y= Predicted)) +
+  geom_point(aes(colour= Name, shape = Cultivar_Treat , size = 1)) +
+  geom_abline(intercept = 0, slope = 1) +
+  coord_fixed(ratio = 1) +
+  facet_wrap(Calib_Test~SimpleName, scales = "free")
+
+```
+
+
+Stats table
+
+```{r, echo=FALSE ,fig.align='right'}
+# Give stats
+mergedDF %>%
+  group_by(Calib_Test,SimpleName) %>%
+  summarise(
+    n = n(),
+    r2 = round(br2(Predicted,Observed)*100,0),
+  #  rmse = round(rmse(Predicted,Observed),0),
+    r_rmse = round(rmse(Predicted,Observed)/mean(Observed)*100,1),
+    nse = round(NSE(Predicted,Observed),1)
+  ) %>%
+  kable(format = "markdown")
+
+```
+
