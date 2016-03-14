@@ -116,6 +116,7 @@ namespace UserInterface.Views
             // 
             // uxGraphShowYears
             // 
+            this.uxGraphShowYears.AllowDrop = true;
             this.uxGraphShowYears.Location = new System.Drawing.Point(449, 37);
             this.uxGraphShowYears.Minimum = new decimal(new int[] {
             1,
@@ -130,7 +131,6 @@ namespace UserInterface.Views
             0,
             0,
             0});
-            this.uxGraphShowYears.ValueChanged += new System.EventHandler(this.uxGraphShowYears_ValueChanged);
             // 
             // label3
             // 
@@ -143,14 +143,15 @@ namespace UserInterface.Views
             // 
             // uxGraphStartYear
             // 
+            this.uxGraphStartYear.AllowDrop = true;
             this.uxGraphStartYear.Location = new System.Drawing.Point(305, 37);
             this.uxGraphStartYear.Maximum = new decimal(new int[] {
-            1900,
+            3000,
             0,
             0,
             0});
             this.uxGraphStartYear.Minimum = new decimal(new int[] {
-            1900,
+            1899,
             0,
             0,
             0});
@@ -162,7 +163,6 @@ namespace UserInterface.Views
             0,
             0,
             0});
-            this.uxGraphStartYear.ValueChanged += new System.EventHandler(this.uxGraphStartYear_ValueChanged);
             // 
             // label4
             // 
@@ -270,7 +270,7 @@ namespace UserInterface.Views
             this.tabData.Location = new System.Drawing.Point(4, 22);
             this.tabData.Name = "tabData";
             this.tabData.Padding = new System.Windows.Forms.Padding(3);
-            this.tabData.Size = new System.Drawing.Size(542, 323);
+            this.tabData.Size = new System.Drawing.Size(542, 325);
             this.tabData.TabIndex = 0;
             this.tabData.Text = "Data";
             this.tabData.UseVisualStyleBackColor = true;
@@ -284,7 +284,7 @@ namespace UserInterface.Views
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(536, 317);
+            this.dataGridView1.Size = new System.Drawing.Size(536, 319);
             this.dataGridView1.TabIndex = 0;
             // 
             // tabRainfall
@@ -292,7 +292,7 @@ namespace UserInterface.Views
             this.tabRainfall.Controls.Add(this.panel6);
             this.tabRainfall.Location = new System.Drawing.Point(4, 22);
             this.tabRainfall.Name = "tabRainfall";
-            this.tabRainfall.Size = new System.Drawing.Size(542, 323);
+            this.tabRainfall.Size = new System.Drawing.Size(542, 325);
             this.tabRainfall.TabIndex = 2;
             this.tabRainfall.Text = "Rainfall Chart";
             this.tabRainfall.UseVisualStyleBackColor = true;
@@ -303,7 +303,7 @@ namespace UserInterface.Views
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(0, 0);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(542, 323);
+            this.panel6.Size = new System.Drawing.Size(542, 325);
             this.panel6.TabIndex = 2;
             // 
             // graphViewRainfall
@@ -315,7 +315,7 @@ namespace UserInterface.Views
             this.graphViewRainfall.Location = new System.Drawing.Point(0, 0);
             this.graphViewRainfall.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.graphViewRainfall.Name = "graphViewRainfall";
-            this.graphViewRainfall.Size = new System.Drawing.Size(542, 323);
+            this.graphViewRainfall.Size = new System.Drawing.Size(542, 325);
             this.graphViewRainfall.TabIndex = 3;
             // 
             // tabRainfallMonth
@@ -323,7 +323,7 @@ namespace UserInterface.Views
             this.tabRainfallMonth.Controls.Add(this.graphViewMonthlyRainfall);
             this.tabRainfallMonth.Location = new System.Drawing.Point(4, 22);
             this.tabRainfallMonth.Name = "tabRainfallMonth";
-            this.tabRainfallMonth.Size = new System.Drawing.Size(542, 323);
+            this.tabRainfallMonth.Size = new System.Drawing.Size(542, 325);
             this.tabRainfallMonth.TabIndex = 6;
             this.tabRainfallMonth.Text = "Monthly Rainfall";
             this.tabRainfallMonth.UseVisualStyleBackColor = true;
@@ -337,7 +337,7 @@ namespace UserInterface.Views
             this.graphViewMonthlyRainfall.Location = new System.Drawing.Point(0, 0);
             this.graphViewMonthlyRainfall.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.graphViewMonthlyRainfall.Name = "graphViewMonthlyRainfall";
-            this.graphViewMonthlyRainfall.Size = new System.Drawing.Size(542, 323);
+            this.graphViewMonthlyRainfall.Size = new System.Drawing.Size(542, 325);
             this.graphViewMonthlyRainfall.TabIndex = 4;
             // 
             // tabTemperature
@@ -345,7 +345,7 @@ namespace UserInterface.Views
             this.tabTemperature.Controls.Add(this.graphViewTemperature);
             this.tabTemperature.Location = new System.Drawing.Point(4, 22);
             this.tabTemperature.Name = "tabTemperature";
-            this.tabTemperature.Size = new System.Drawing.Size(542, 323);
+            this.tabTemperature.Size = new System.Drawing.Size(542, 325);
             this.tabTemperature.TabIndex = 4;
             this.tabTemperature.Text = "Temperature";
             this.tabTemperature.UseVisualStyleBackColor = true;
@@ -359,7 +359,7 @@ namespace UserInterface.Views
             this.graphViewTemperature.Location = new System.Drawing.Point(0, 0);
             this.graphViewTemperature.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.graphViewTemperature.Name = "graphViewTemperature";
-            this.graphViewTemperature.Size = new System.Drawing.Size(542, 323);
+            this.graphViewTemperature.Size = new System.Drawing.Size(542, 325);
             this.graphViewTemperature.TabIndex = 4;
             // 
             // tabRadiation
@@ -367,7 +367,7 @@ namespace UserInterface.Views
             this.tabRadiation.Controls.Add(this.graphViewRadiation);
             this.tabRadiation.Location = new System.Drawing.Point(4, 22);
             this.tabRadiation.Name = "tabRadiation";
-            this.tabRadiation.Size = new System.Drawing.Size(542, 323);
+            this.tabRadiation.Size = new System.Drawing.Size(542, 325);
             this.tabRadiation.TabIndex = 5;
             this.tabRadiation.Text = "Radiation";
             this.tabRadiation.UseVisualStyleBackColor = true;
@@ -381,7 +381,7 @@ namespace UserInterface.Views
             this.graphViewRadiation.Location = new System.Drawing.Point(0, 0);
             this.graphViewRadiation.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.graphViewRadiation.Name = "graphViewRadiation";
-            this.graphViewRadiation.Size = new System.Drawing.Size(542, 323);
+            this.graphViewRadiation.Size = new System.Drawing.Size(542, 325);
             this.graphViewRadiation.TabIndex = 5;
             // 
             // TabbedMetDataView
@@ -420,9 +420,7 @@ namespace UserInterface.Views
         private System.Windows.Forms.Panel uxBrowsePanel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.NumericUpDown uxGraphShowYears;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.NumericUpDown uxGraphStartYear;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label uxFileName;
         private System.Windows.Forms.Button button2;
@@ -443,5 +441,7 @@ namespace UserInterface.Views
         private GraphView graphViewTemperature;
         private System.Windows.Forms.TabPage tabRadiation;
         private GraphView graphViewRadiation;
+        private System.Windows.Forms.NumericUpDown uxGraphShowYears;
+        private System.Windows.Forms.NumericUpDown uxGraphStartYear;
     }
 }

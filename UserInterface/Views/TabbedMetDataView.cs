@@ -10,10 +10,10 @@ namespace UserInterface.Views
     /// <param name="FileName">Name of the file.</param>
     public delegate void BrowseDelegate(string FileName);
 
-    /// <summary>A delegate for a numericUpDown click event</summary>
-    /// <param name="startYear">the start year for the data being displayed in the graph</param>
-    /// <param name="showYears">the number of years of data to be used/displayed in the graph</param>
-    public delegate void GraphRefreshDelegate(int startYear, int showYears);
+    ///// <summary>A delegate for a numericUpDown click event</summary>
+    ///// <param name="startYear">the start year for the data being displayed in the graph</param>
+    ///// <param name="showYears">the number of years of data to be used/displayed in the graph</param>
+    //public delegate void GraphRefreshDelegate(decimal startYear, decimal showYears);
 
 
     /// <summary>
@@ -25,7 +25,7 @@ namespace UserInterface.Views
         event BrowseDelegate BrowseClicked;
 
         /// <summary>Occurs when the start year numericUpDown is clicked</summary>
-        event GraphRefreshDelegate GraphRefreshClicked;
+        //event GraphRefreshDelegate GraphRefreshClicked;
 
         /// <summary>Gets or sets the filename.</summary>
         string Filename { get; set; }
@@ -49,19 +49,19 @@ namespace UserInterface.Views
         IGraphView GraphRadiation { get; }
 
         /// <summary>sets the Graph Year</summary>
-        int GraphStartYear { get; set; }
+         decimal GraphStartYear { get; set; }
 
         /// <summary>set the minimum value for the 'Start Year' NumericUpDown control </summary>
-        int GraphStartYearMinValue { set; }
+        decimal GraphStartYearMinValue { get; set; }
 
         /// <summary>set the maximum value for the graph 'Start Year' NumericUpDown control  </summary>
-        int GraphStartYearMaxValue { set; }
+        decimal GraphStartYearMaxValue { get; set; }
 
         /// <summary>sets/gets the value of 'Show Years' NumericUpDown control </summary>
-        int GraphShowYears { get; set; }
+        decimal GraphShowYears { get; set; }
 
         /// <summary>set the maximum value for the 'Show Years' NumericUpDown control  </summary>
-        int GraphShowYearsMaxValue { set; }
+        decimal GraphShowYearsMaxValue { set; }
 
         /// <summary>Populates the data grid</summary>
         /// <param name="Data">The data</param>
@@ -78,7 +78,7 @@ namespace UserInterface.Views
         public event BrowseDelegate BrowseClicked;
 
         /// <summary>Occurs when start year or show Years numericUpDowns are clicked</summary>
-        public event GraphRefreshDelegate GraphRefreshClicked;
+        //public event GraphRefreshDelegate GraphRefreshClicked;
 
 
         /// <summary>Initializes a new instance of the <see cref="TabbedMetDataView"/> class.</summary>
@@ -123,35 +123,37 @@ namespace UserInterface.Views
         public IGraphView GraphRadiation { get { return graphViewRadiation; } }
 
         /// <summary>Sets the Graph Year</summary>
-        public int GraphStartYear 
+        public decimal GraphStartYear 
         {
-            get { return (int)uxGraphStartYear.Value; }
-            set { uxGraphStartYear.Value = value;}
+            get { return uxGraphStartYear.Value; }
+            set { uxGraphStartYear.Value = Convert.ToDecimal(value); }
         }
 
         /// <summary>set the minimum value for the graph 'Year to display' </summary>
-        public int GraphStartYearMinValue
+        public decimal GraphStartYearMinValue
         {
-            set { uxGraphStartYear.Minimum = value; }
+            get { return uxGraphStartYear.Minimum;  }
+            set { uxGraphStartYear.Minimum = Convert.ToDecimal(value); }
         }
 
         /// <summary>set the maximum value for the graph 'Year to display' </summary>
-        public int GraphStartYearMaxValue
+        public decimal GraphStartYearMaxValue
         {
-            set { uxGraphStartYear.Maximum = value; }
+            get { return uxGraphStartYear.Maximum; }
+            set { uxGraphStartYear.Maximum = Convert.ToDecimal(value); }
         }
 
         /// <summary>Sets the Graph Year</summary>
-        public int GraphShowYears
+        public decimal GraphShowYears
         {
-            get { return (int)uxGraphShowYears.Value; }
-            set { uxGraphShowYears.Value = value; }
+            get { return uxGraphShowYears.Value; }
+            set { uxGraphShowYears.Value = Convert.ToDecimal(value); }
         }
 
         /// <summary>set the maximum value for the graph 'Year to display' </summary>
-        public int GraphShowYearsMaxValue
+        public decimal GraphShowYearsMaxValue
         {
-            set { uxGraphShowYears.Maximum = value; }
+            set { uxGraphShowYears.Maximum = Convert.ToDecimal(value); }
         }
 
         /// <summary>Populates the data.</summary>
@@ -177,23 +179,23 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>Handles the change event for the GraphStartYear NumericUpDown </summary>
-        /// <param name="sender">The source of the event</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void uxGraphStartYear_ValueChanged(object sender, EventArgs e)
-        {
-            if (GraphRefreshClicked != null)
-                GraphRefreshClicked.Invoke((int)uxGraphStartYear.Value, (int)uxGraphShowYears.Value);
-        }
+        ///// <summary>Handles the change event for the GraphStartYear NumericUpDown </summary>
+        ///// <param name="sender">The source of the event</param>
+        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        //private void uxGraphStartYear_ValueChanged(object sender, EventArgs e)
+        //{
+        //    //if (GraphRefreshClicked != null)
+        //        GraphRefreshClicked.Invoke(uxGraphStartYear.Value, uxGraphShowYears.Value);
+        //}
 
-        /// <summary>Handles the change event for the GraphShowYears NumericUpDown </summary>
-        /// <param name="sender">The source of the event</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void uxGraphShowYears_ValueChanged(object sender, EventArgs e)
-        {
-            if (GraphRefreshClicked != null)
-                GraphRefreshClicked.Invoke((int)uxGraphStartYear.Value, (int)uxGraphShowYears.Value);
-        }
+        ///// <summary>Handles the change event for the GraphShowYears NumericUpDown </summary>
+        ///// <param name="sender">The source of the event</param>
+        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        //private void uxGraphShowYears_ValueChanged(object sender, EventArgs e)
+        //{
+        //    if (GraphRefreshClicked != null)
+        //        GraphRefreshClicked.Invoke((int)uxGraphStartYear.Value, (int)uxGraphShowYears.Value);
+        //}
 
 
         private void TabControl1_SelectedIndexChanged(object sender, EventArgs e)

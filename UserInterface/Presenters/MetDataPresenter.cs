@@ -43,7 +43,7 @@ namespace UserInterface.Presenters
             this.weatherDataView = (view as IMetDataView);
 
             this.weatherDataView.BrowseClicked += this.OnBrowse;
-            this.weatherDataView.GraphRefreshClicked += this.GraphRefreshValueChanged;
+            //this.weatherDataView.GraphRefreshClicked += this.GraphRefreshValueChanged;
 
             this.WriteTableAndSummary(this.weatherData.FullFileName);
 
@@ -53,7 +53,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             this.weatherDataView.BrowseClicked -= this.OnBrowse;
-            this.weatherDataView.GraphRefreshClicked -= this.GraphRefreshValueChanged;
+           // this.weatherDataView.GraphRefreshClicked -= this.GraphRefreshValueChanged;
         }
 
         /// <summary>Called when [browse].</summary>
@@ -66,29 +66,29 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>
-        /// This is called when the Graph StartYear or the Graphing ShowYears Numeric updown controls are changed by the user.
-        /// It refreshes the graphs accordingly.
-        /// </summary>
-        /// <param name="startYear"></param>
-        /// <param name="showYears"></param>
-        public void GraphRefreshValueChanged(int startYear, int showYears)
-        {
-            try
-            {
-                DataTable data = this.graphMetData;
-                DateTime startDate = new DateTime(startYear, 1, 1);
-                DateTime endDate = new DateTime(startYear, 12, 31);
-                if (showYears > 1)
-                    endDate = endDate.AddYears(showYears - 1);
+        ///// <summary>
+        ///// This is called when the Graph StartYear or the Graphing ShowYears Numeric updown controls are changed by the user.
+        ///// It refreshes the graphs accordingly.
+        ///// </summary>
+        ///// <param name="startYear"></param>
+        ///// <param name="showYears"></param>
+        //public void GraphRefreshValueChanged(decimal startYear, decimal showYears)
+        //{
+        //    try
+        //    {
+        //        DataTable data = this.graphMetData;
+        //        DateTime startDate = new DateTime(Convert.ToInt16(startYear), 1, 1);
+        //        DateTime endDate = new DateTime(Convert.ToInt16(startYear), 12, 31);
+        //        if (showYears > 1)
+        //            endDate = endDate.AddYears(Convert.ToInt16(showYears) - 1);
 
-                this.DisplayDetailedGraphs(data, startDate, endDate);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        //        this.DisplayDetailedGraphs(data, startDate, endDate);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
 
 
     /// <summary>
@@ -135,7 +135,7 @@ namespace UserInterface.Presenters
 
                 //modLMC - 10/03/2016 - Add the Qmax (Max Radiation) column that we require for the graphs
                 //This is done here so that we can use the "day" or "doy" column if it exists, as it will be quicker
-                CalcQmax(data, weatherData.Latitude);
+                MetUtilities.CalcQmax(data, weatherData.Latitude);
 
                 //modLMC - 10/03/2016 - Modified to use this new function, as some data has "doy" and not "day"
                 int dayCol = data.Columns.IndexOf("day");
@@ -232,17 +232,32 @@ namespace UserInterface.Presenters
         private void SetGraphControlsDefaultValues()
         {
             //Set the default values for these based on the data.
-            weatherDataView.GraphStartYearMinValue = this.weatherData.StartDate.Year;
-            weatherDataView.GraphStartYearMaxValue = this.weatherData.EndDate.Year;
-            weatherDataView.GraphStartYear = this.weatherData.StartDate.Year;
-            weatherDataView.GraphShowYears = 1;
-            if (this.weatherData.EndDate.Year > this.weatherData.StartDate.Year)
+            //Need to ensure that these are set in a specific order
+            //original range = 1900 to 3000; value = 1900
+
+            //Options for new Min Year:  less than current, greater than current, and greater than max
+            //if less, just set it first, then value, then max
+            //else is greater than max, then do max first, then value set value to max, set min, then reset value
+            //if greater than current but less than max, then set value first, then min, then max
+
+            if (this.weatherData.StartDate.Year < weatherDataView.GraphStartYearMinValue)
             {
-                weatherDataView.GraphShowYearsMaxValue = (this.weatherData.EndDate.Year - this.weatherData.StartDate.Year);
+                weatherDataView.GraphStartYearMinValue = this.weatherData.StartDate.Year;
+                weatherDataView.GraphStartYear = this.weatherData.StartDate.Year;
+                weatherDataView.GraphStartYearMaxValue = this.weatherData.EndDate.Year;
             }
-            else
+            else if (weatherDataView.GraphStartYearMinValue >= this.weatherData.EndDate.Year)
             {
-                weatherDataView.GraphShowYearsMaxValue = 1;
+                weatherDataView.GraphStartYearMaxValue = this.weatherData.EndDate.Year;
+                weatherDataView.GraphStartYear = this.weatherData.EndDate.Year;
+                weatherDataView.GraphStartYearMinValue = this.weatherData.StartDate.Year;
+                weatherDataView.GraphStartYear = this.weatherData.StartDate.Year;
+            }
+            else  //we are between our original range
+            {
+                weatherDataView.GraphStartYear = this.weatherData.StartDate.Year;
+                weatherDataView.GraphStartYearMinValue = this.weatherData.StartDate.Year;
+                weatherDataView.GraphStartYearMaxValue = this.weatherData.EndDate.Year;
             }
         }
 
@@ -276,12 +291,12 @@ namespace UserInterface.Presenters
             {
                 // Need to be able to filter the table based on first date and last date, so that we can graph
                 // graph the daily values for rainfall, temperature and radiation
-                DateTime[] dailyDates = GetArrayofDates(firstDate, lastDate);
-                double[] dailyRain = GetColumnAsDoubles(table, "rain", firstDate, lastDate);
-                double[] dailyMaxTemp = GetColumnAsDoubles(table, "maxt", firstDate, lastDate);
-                double[] dailyMinTemp = GetColumnAsDoubles(table, "mint", firstDate, lastDate);
-                double[] dailyRadn = GetColumnAsDoubles(table, "radn", firstDate, lastDate);
-                double[] dailyMaxRadn = GetColumnAsDoubles(table, "Qmax", firstDate, lastDate);
+                DateTime[] dailyDates = DateUtilities.GetArrayofDates(firstDate, lastDate);
+                double[] dailyRain = DataTableUtilities.GetColumnAsDoubles(table, "rain", firstDate, lastDate);
+                double[] dailyMaxTemp = DataTableUtilities.GetColumnAsDoubles(table, "maxt", firstDate, lastDate);
+                double[] dailyMinTemp = DataTableUtilities.GetColumnAsDoubles(table, "mint", firstDate, lastDate);
+                double[] dailyRadn = DataTableUtilities.GetColumnAsDoubles(table, "radn", firstDate, lastDate);
+                double[] dailyMaxRadn = DataTableUtilities.GetColumnAsDoubles(table, "Qmax", firstDate, lastDate);
                 double[] monthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", firstDate, lastDate);
 
                 String rainMessage = string.Empty ;
@@ -495,109 +510,6 @@ namespace UserInterface.Presenters
             this.weatherDataView.GraphRadiation.FormatAxis(Axis.AxisType.Right, "Radiation (mJ/m2)", false, double.NaN, double.NaN, double.NaN);
             this.weatherDataView.GraphRadiation.FormatTitle(title);
             this.weatherDataView.GraphRadiation.Refresh();
-        }
-
-
-
-        //-----------------------------------------------------------------------------------------------------------------------------
-        //To be added to DateUtilities 
-        //-----------------------------------------------------------------------------------------------------------------------------
-
-        /// <summary>Creates a Datetime array of dates for a specific date range</summary>
-        /// <param name="startDate"></param>
-        /// <param name="endDate"></param>
-        /// <returns>a DateTime array</returns>
-        private DateTime[] GetArrayofDates(DateTime startDate, DateTime endDate)
-        {
-            List<DateTime> rValues = new List<DateTime>();
-            for (DateTime dt = startDate; dt <= endDate; dt = dt.AddDays(1))
-            {
-                rValues.Add(dt);
-            }
-            return rValues.ToArray();
-        }
-
-
-        //-----------------------------------------------------------------------------------------------------------------------------
-        //To be added to MetUtilities 
-        //-----------------------------------------------------------------------------------------------------------------------------
-
-        /// <summary>Calculates the MaxRadiation on all rows in datatable, based on latitude</summary>
-        /// <param name="table"></param>
-        /// <param name="latitude"></param>
-        private void CalcQmax(DataTable table, double latitude)
-        {
-            if (!double.IsNaN(latitude))
-            {
-                // ----------------------------------------------------------------------------------
-                // Add a calculated QMax column to the daily data.
-                // ----------------------------------------------------------------------------------
-                if (((table.Columns["Qmax"] == null)))
-                {
-                    table.Columns.Add("Qmax", Type.GetType("System.Single"));
-                }
-                // Do we have a VP column?
-                bool haveVPColumn = (table.Columns["VP"] != null);
-
-                //do we have a "doy" or "day" column, and which column is it in
-                bool haveDOYColumn = true;
-                int dayCol = table.Columns.IndexOf("day");
-
-                // Loop through all rows and calculate a QMax
-                DateTime cDate;
-                DataRow row;
-                int doy = 0;
-                for (int r = 0; r <= table.Rows.Count - 1; r++)
-                {
-                    if (haveDOYColumn == true)
-                    {
-                        doy = Convert.ToInt16(table.Rows[r][dayCol]);
-                    }
-                    else {
-                        row = table.Rows[r];
-                        cDate = DataTableUtilities.GetDateFromRow(row);
-                        doy = cDate.DayOfYear;
-                    }
-
-                    if (haveVPColumn && !Convert.IsDBNull(table.Rows[r]["vp"]))
-                    {
-                        table.Rows[r]["Qmax"] = MetUtilities.QMax(doy + 1, latitude, MetUtilities.Taz, MetUtilities.Alpha,
-                            Convert.ToSingle(table.Rows[r]["vp"]));
-                    }
-                    else
-                    {
-                        table.Rows[r]["Qmax"] = MetUtilities.QMax(doy + 1, latitude, MetUtilities.Taz, MetUtilities.Alpha,
-                            MetUtilities.svp(Convert.ToSingle(table.Rows[r]["mint"])));
-                    }
-                }
-            }
-        }
-
-        //-----------------------------------------------------------------------------------------------------------------------------
-        //To be added to DataTableUtilities
-        //-----------------------------------------------------------------------------------------------------------------------------
-            
-        /// <summary>Get columns as doubles within specific data range</summary>
-        /// <param name="dTable"></param>
-        /// <param name="colName"></param>
-        /// <param name="firstDate"></param>
-        /// <param name="lastDate"></param>
-        /// <returns></returns>
-        private double[] GetColumnAsDoubles(System.Data.DataTable dTable, string colName, DateTime firstDate, DateTime lastDate)
-        {
-            var result = from row in dTable.AsEnumerable()
-                         where (DataTableUtilities.GetDateFromRow(row) >= firstDate &&
-                                DataTableUtilities.GetDateFromRow(row) <= lastDate)
-                         select new
-                         {
-                             val = row.Field<float>(colName)
-                         };
-
-            List<double> rValues = new List<double>();
-            foreach (var row in result)
-                rValues.Add(row.val);
-
-            return rValues.ToArray();
         }
 
     }
