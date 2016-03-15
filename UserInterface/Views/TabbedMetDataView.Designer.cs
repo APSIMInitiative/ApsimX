@@ -131,6 +131,7 @@ namespace UserInterface.Views
             0,
             0,
             0});
+            this.uxGraphShowYears.ValueChanged += new System.EventHandler(this.uxGraphShowYears_ValueChanged);
             // 
             // label3
             // 
@@ -163,6 +164,7 @@ namespace UserInterface.Views
             0,
             0,
             0});
+            this.uxGraphStartYear.ValueChanged += new System.EventHandler(this.uxGraphStartYear_ValueChanged);
             // 
             // label4
             // 
@@ -408,6 +410,11 @@ namespace UserInterface.Views
             this.tabRadiation.ResumeLayout(false);
             this.ResumeLayout(false);
 
+        }
+
+        private void UxGraphStartYear_ValueChanged(object sender, System.EventArgs e)
+        {
+            throw new System.NotImplementedException();
         }
 
         private void TabControl1_SelectedIndexChanged1(object sender, System.EventArgs e)

@@ -27,7 +27,18 @@ namespace UserInterface.Presenters
         /// <summary>The met data view</summary>
         private IMetDataView weatherDataView;
 
+        //these are used to display the graphs, and refresh graphs as required
+        /// <summary>Hold the data used by the graphs</summary>
         private DataTable graphMetData;
+
+        /// <summary>Hold the first date in datatable, for use in the graphs</summary>
+        private DateTime dataFirstDate;
+        /// <summary>Hold the last date in datatable, for use in the graphs</summary>
+        private DateTime dataLastDate;
+
+        /// <summary>Hold an array of months for the graph,  by default, is set to will Jan yyyy to Dec yyyy, except where
+        /// data being displays is not for full year</summary>
+        private string[] monthsToDisplay = DateUtilities.LowerCaseMonths;
 
         /// <summary>The explorer presenter</summary>
         private ExplorerPresenter explorerPresenter;
@@ -43,7 +54,7 @@ namespace UserInterface.Presenters
             this.weatherDataView = (view as IMetDataView);
 
             this.weatherDataView.BrowseClicked += this.OnBrowse;
-            //this.weatherDataView.GraphRefreshClicked += this.GraphRefreshValueChanged;
+            this.weatherDataView.GraphRefreshClicked += this.GraphRefreshValueChanged;
 
             this.WriteTableAndSummary(this.weatherData.FullFileName);
 
@@ -53,7 +64,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             this.weatherDataView.BrowseClicked -= this.OnBrowse;
-           // this.weatherDataView.GraphRefreshClicked -= this.GraphRefreshValueChanged;
+            this.weatherDataView.GraphRefreshClicked -= this.GraphRefreshValueChanged;
         }
 
         /// <summary>Called when [browse].</summary>
@@ -66,41 +77,49 @@ namespace UserInterface.Presenters
             }
         }
 
-        ///// <summary>
-        ///// This is called when the Graph StartYear or the Graphing ShowYears Numeric updown controls are changed by the user.
-        ///// It refreshes the graphs accordingly.
-        ///// </summary>
-        ///// <param name="startYear"></param>
-        ///// <param name="showYears"></param>
-        //public void GraphRefreshValueChanged(decimal startYear, decimal showYears)
-        //{
-        //    try
-        //    {
-        //        DataTable data = this.graphMetData;
-        //        DateTime startDate = new DateTime(Convert.ToInt16(startYear), 1, 1);
-        //        DateTime endDate = new DateTime(Convert.ToInt16(startYear), 12, 31);
-        //        if (showYears > 1)
-        //            endDate = endDate.AddYears(Convert.ToInt16(showYears) - 1);
+        /// <summary>
+        /// This is called when the Graph StartYear or the Graphing ShowYears Numeric updown controls are changed by the user.
+        /// It refreshes the graphs accordingly.
+        /// </summary>
+        /// <param name="startYear"></param>
+        /// <param name="showYears"></param>
+        public void GraphRefreshValueChanged(decimal startYear, decimal showYears)
+        {
+            try
+            {
+                DataTable data = this.graphMetData;
+                DateTime startDate = new DateTime(Convert.ToInt16(startYear), 1, 1);
+                DateTime endDate = new DateTime(Convert.ToInt16(startYear), 12, 31);
+                if (showYears > 1)
+                    endDate = endDate.AddYears(Convert.ToInt16(showYears) - 1);
 
-        //        this.DisplayDetailedGraphs(data, startDate, endDate);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
+                this.DisplayDetailedGraphs(data, startDate, endDate, false);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
 
-    /// <summary>
-    /// Get data from the weather file and present it to the view as both a table and a summary
-    /// </summary>
-    /// <param name="filename">The filename.</param>
-    private void WriteTableAndSummary(string filename)
+        /// <summary>
+        /// Get data from the weather file and present it to the view as both a table and a summary
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        private void WriteTableAndSummary(string filename)
         {
             // Clear any previous summary
             this.weatherDataView.Summarylabel = string.Empty;
             this.weatherDataView.GraphSummary.Clear();
             this.weatherDataView.GraphSummary.Refresh();
+            this.weatherDataView.GraphRainfall.Clear();
+            this.weatherDataView.GraphRainfall.Refresh();
+            this.weatherDataView.GraphMonthlyRainfall.Clear();
+            this.weatherDataView.GraphMonthlyRainfall.Refresh();
+            this.weatherDataView.GraphTemperature.Clear();
+            this.weatherDataView.GraphTemperature.Refresh();
+            this.weatherDataView.GraphRadiation.Clear();
+            this.weatherDataView.GraphRadiation.Refresh();
             if (filename != null)
             {
                 try
@@ -109,8 +128,8 @@ namespace UserInterface.Presenters
                     DataTable data = this.weatherData.GetAllData();
                     this.WriteTable(data);
                     this.WriteSummary(data);
-                    this.SetGraphControlsDefaultValues();
                     this.DisplayDetailedGraphs(data);
+
                 }
                 catch (Exception err)
                 {
@@ -191,39 +210,117 @@ namespace UserInterface.Presenters
 
             if (table != null && table.Rows.Count > 0)
             {
-                DateTime firstDate = DataTableUtilities.GetDateFromRow(table.Rows[0]);
-                DateTime lastDate = DataTableUtilities.GetDateFromRow(table.Rows[table.Rows.Count - 1]);
-                if (firstDate.DayOfYear != 1)
-                    firstDate = new DateTime(firstDate.Year + 1, 1, 1);
-                if (lastDate.Day != 31 || lastDate.Month != 12)
-                    lastDate = new DateTime(lastDate.Year - 1, 12, 31);
+                dataFirstDate = DataTableUtilities.GetDateFromRow(table.Rows[0]);
+                dataLastDate = DataTableUtilities.GetDateFromRow(table.Rows[table.Rows.Count - 1]);
 
-                double[] yearlyRainfall = MathUtilities.YearlyTotals(table, "Rain", firstDate, lastDate);
-                double[] monthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", firstDate, lastDate);
-                double[] monthlyMaxT = MathUtilities.AverageDailyTotalsForEachMonth(table, "maxt", firstDate, lastDate);
-                double[] monthlyMinT = MathUtilities.AverageDailyTotalsForEachMonth(table, "mint", firstDate, lastDate);
+                TimeSpan diff = dataLastDate - dataFirstDate;
+                //modLMC - 16/03/2016 - don't change dates if data is within the same year
+                if (diff.Days > 365)
+                {
+                    if (dataFirstDate.DayOfYear != 1)
+                        dataFirstDate = new DateTime(dataFirstDate.Year + 1, 1, 1);
+                    if (dataLastDate.Day != 31 || dataLastDate.Month != 12)
+                        dataLastDate = new DateTime(dataLastDate.Year - 1, 12, 31);
+                }
+
+                double[] yearlyRainfall = MathUtilities.YearlyTotals(table, "Rain", dataFirstDate, dataLastDate);
+                double[] monthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", dataFirstDate, dataLastDate);
+                double[] monthlyMaxT = MathUtilities.AverageDailyTotalsForEachMonth(table, "maxt", dataFirstDate, dataLastDate);
+                double[] monthlyMinT = MathUtilities.AverageDailyTotalsForEachMonth(table, "mint", dataFirstDate, dataLastDate);
+
+                //what do we do if the date range is less than 1 year.
+                //modlmc - 15/03/2016 - modified to pass in the "Month" values, and they may/may not contain a full year.
+                if (monthlyRainfall.Length <= 12)
+                    monthsToDisplay = DataTableUtilities.GetDistinctMonthsasStrings(table, dataFirstDate, dataLastDate);
 
                 // long term average rainfall
                 if (yearlyRainfall.Length != 0)
                 {
                     double totalYearlyRainfall = MathUtilities.Sum(yearlyRainfall);
-                    int numYears = lastDate.Year - firstDate.Year + 1;
+                    int numYears = dataLastDate.Year - dataFirstDate.Year + 1;
                     double meanYearlyRainfall = totalYearlyRainfall / numYears;
                     double stddev = MathUtilities.StandardDeviation(yearlyRainfall);
 
-                    summary.AppendLine(String.Format("For years : {0} - {1}", firstDate.Year, lastDate.Year));
+                    summary.AppendLine(String.Format("For years : {0} - {1}", dataFirstDate.Year, dataLastDate.Year));
                     summary.AppendLine("Long term average yearly rainfall : " + String.Format("{0,3:f2}mm", meanYearlyRainfall));
                     summary.AppendLine("Yearly rainfall std deviation     : " + String.Format("{0,3:f2}mm", stddev));
 
-                    this.weatherDataView.Summarylabel = summary.ToString();
-                    string title = String.Format("Long term average data for years : {0} - {1}", firstDate.Year, lastDate.Year);
-                    this.PopulateSummaryGraph(title, 
+                    string title = String.Format("Long term average data for years : {0} - {1}", dataFirstDate.Year, dataLastDate.Year);
+
+                    //modlmc - 15/03/2016 - modified to pass in the "Month" values, and they may/may not contain a full year.
+                    this.PopulateSummaryGraph(title,
+                                        monthsToDisplay,
                                         monthlyRainfall,
                                         monthlyMaxT,
                                         monthlyMinT);
 
                 }
+                this.weatherDataView.Summarylabel = summary.ToString();
             }
+        }
+
+        /// <summary>sets the date range for the graphs, and calls the graph display functions</summary>
+        /// <param name="table"></param>
+        private void DisplayDetailedGraphs(DataTable table)
+        {
+            if (table != null && table.Rows.Count > 0)
+            {
+                //By default, only do one year (the first year)
+                DateTime endDate = new DateTime(dataFirstDate.Year, 12, 31);
+                DisplayDetailedGraphs(table, dataFirstDate, endDate, true);
+            }
+        }
+
+
+        /// <summary>This refreshes data being displayed on the graphs, based on the value of the startYear and showYear values  </summary>
+        /// <param name="table"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        private void DisplayDetailedGraphs(DataTable table, DateTime startDate, DateTime endDate, Boolean updateYears)
+        {
+            try
+            {
+                if (table != null && table.Rows.Count > 0)
+                {
+                    // Need to be able to filter the table based on first date and last date, so that we can graph
+                    // graph the daily values for rainfall, temperature and radiation
+                    DateTime[] dailyDates = DataTableUtilities.GetColumnAsDates(table, "Date", startDate, endDate);
+                    double[] dailyRain = DataTableUtilities.GetColumnAsDoubles(table, "rain", startDate, endDate);
+                    double[] dailyMaxTemp = DataTableUtilities.GetColumnAsDoubles(table, "maxt", startDate, endDate);
+                    double[] dailyMinTemp = DataTableUtilities.GetColumnAsDoubles(table, "mint", startDate, endDate);
+                    double[] dailyRadn = DataTableUtilities.GetColumnAsDoubles(table, "radn", startDate, endDate);
+                    double[] dailyMaxRadn = DataTableUtilities.GetColumnAsDoubles(table, "Qmax", startDate, endDate);
+                    double[] monthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", startDate, endDate);
+
+                    String rainMessage = string.Empty ;
+                    if (dailyRain.Length != 0)
+                    {
+                        double totalYearlyRainfall = Math.Round(MathUtilities.Sum(dailyRain), 1);
+                        rainMessage = "Total Rainfall for the year " + startDate.Year.ToString()
+                                    + " is " + totalYearlyRainfall.ToString() + "mm.";
+
+                        this.PopulateRainfallGraph(rainMessage, dailyDates, dailyRain);
+                        this.PopulateTemperatureGraph("Temperature", dailyDates, dailyMaxTemp, dailyMinTemp);
+                        this.PopulateRadiationGraph("Radiation", dailyDates, dailyRain, dailyRadn, dailyMaxRadn);
+
+                        double[] avgMonthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", dataFirstDate, dataLastDate);
+                        this.PopulateMonthlyRainfallGraph("Monthly Rainfall", 
+                                                        monthsToDisplay, 
+                                                        monthlyRainfall, 
+                                                        avgMonthlyRainfall);
+
+                        //this is only done if first time displaying this data
+                        if (updateYears == true)
+                            this.SetGraphControlsDefaultValues();
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Unable to display Detailed Graphs: " + e.Message.ToString());
+            }
+
         }
 
         /// <summary>
@@ -231,10 +328,6 @@ namespace UserInterface.Presenters
         /// </summary>
         private void SetGraphControlsDefaultValues()
         {
-            //Set the default values for these based on the data.
-            //Need to ensure that these are set in a specific order
-            //original range = 1900 to 3000; value = 1900
-
             //Options for new Min Year:  less than current, greater than current, and greater than max
             //if less, just set it first, then value, then max
             //else is greater than max, then do max first, then value set value to max, set min, then reset value
@@ -261,70 +354,6 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>sets the date range for the graphs, and calls the graph display functions</summary>
-        /// <param name="table"></param>
-        private void DisplayDetailedGraphs(DataTable table)
-        {
-            if (table != null && table.Rows.Count > 0)
-            {
-                DateTime firstDate = DataTableUtilities.GetDateFromRow(table.Rows[0]);
-                if (firstDate.DayOfYear != 1)
-                    firstDate = new DateTime(firstDate.Year + 1, 1, 1);
-
-                //By default, only do one year (the first year)
-                DateTime lastDate = new DateTime(firstDate.Year, 12, 31);
-                DisplayDetailedGraphs(table, firstDate, lastDate);
-            }
-        }
-
-
-        /// <summary>This refreshes data being displayed on the graphs, based on the value of the startYear and showYear values  </summary>
-        /// <param name="table"></param>
-        /// <param name="firstDate"></param>
-        /// <param name="lastDate"></param>
-        private void DisplayDetailedGraphs(DataTable table, DateTime firstDate, DateTime lastDate)
-        { 
-
-            // Make sure the data in the table consists of full years of data i.e.
-            // exclude the first and/or last year of data if they aren't complete.
-            if (table != null && table.Rows.Count > 0)
-            {
-                // Need to be able to filter the table based on first date and last date, so that we can graph
-                // graph the daily values for rainfall, temperature and radiation
-                DateTime[] dailyDates = DateUtilities.GetArrayofDates(firstDate, lastDate);
-                double[] dailyRain = DataTableUtilities.GetColumnAsDoubles(table, "rain", firstDate, lastDate);
-                double[] dailyMaxTemp = DataTableUtilities.GetColumnAsDoubles(table, "maxt", firstDate, lastDate);
-                double[] dailyMinTemp = DataTableUtilities.GetColumnAsDoubles(table, "mint", firstDate, lastDate);
-                double[] dailyRadn = DataTableUtilities.GetColumnAsDoubles(table, "radn", firstDate, lastDate);
-                double[] dailyMaxRadn = DataTableUtilities.GetColumnAsDoubles(table, "Qmax", firstDate, lastDate);
-                double[] monthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", firstDate, lastDate);
-
-                String rainMessage = string.Empty ;
-                if (dailyRain.Length != 0)
-                {
-                    double totalYearlyRainfall = Math.Round(MathUtilities.Sum(dailyRain), 1);
-                    rainMessage = "Total Rainfall for the year " + firstDate.Year.ToString() 
-                                + " is " + totalYearlyRainfall.ToString() + "mm.";
-                }
-
-                //this requires a different date range as we want the monthly average rainfall for all years
-                DateTime fDate = DataTableUtilities.GetDateFromRow(table.Rows[0]);
-                DateTime lDate = DataTableUtilities.GetDateFromRow(table.Rows[table.Rows.Count - 1]);
-                if (fDate.DayOfYear != 1)
-                    fDate = new DateTime(fDate.Year + 1, 1, 1);
-                if (lDate.Day != 31 || lDate.Month != 12)
-                    lDate = new DateTime(lDate.Year - 1, 12, 31);
-
-                double[] avgMonthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", fDate, lDate);
-
-
-                this.PopulateRainfallGraph(rainMessage, dailyDates, dailyRain);
-                this.PopulateMonthlyRainfallGraph("Monthly Rainfall", monthlyRainfall, avgMonthlyRainfall);
-                this.PopulateTemperatureGraph("Temperature", dailyDates, dailyMaxTemp, dailyMinTemp);
-                this.PopulateRadiationGraph("Radiation", dailyDates, dailyRain, dailyRadn, dailyMaxRadn);
-
-            }
-        }
 
 
         /// <summary>Create the monthly Summary chart</summary>
@@ -332,18 +361,18 @@ namespace UserInterface.Presenters
         /// <param name="monthlyMaxT">Monthly Maximum Temperatures</param>
         /// <param name="monthlyMinT">Monthly Minimum Temperatures</param>
         /// <param name="title">The title.</param>
-        private void PopulateSummaryGraph(string title, double[] monthlyRain, double[] monthlyMaxT, double[] monthlyMinT)
+        private void PopulateSummaryGraph(string title, string[] months, double[] monthlyRain, double[] monthlyMaxT, double[] monthlyMinT)
         {
             this.weatherDataView.GraphSummary.Clear();
             this.weatherDataView.GraphSummary.DrawBar("",
-                                      DateUtilities.LowerCaseMonths,
+                                      months,
                                       monthlyRain,
                                       Axis.AxisType.Bottom,
                                       Axis.AxisType.Left,
                                       Color.LightSkyBlue,
                                       true);
             this.weatherDataView.GraphSummary.DrawLineAndMarkers("Maximum Temperature",
-                                                     DateUtilities.LowerCaseMonths,
+                                                     months,
                                                      monthlyMaxT,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,
@@ -354,7 +383,7 @@ namespace UserInterface.Presenters
                                                      MarkerSizeType.Normal,
                                                      true);
             this.weatherDataView.GraphSummary.DrawLineAndMarkers("Minimum Temperature",
-                                                     DateUtilities.LowerCaseMonths,
+                                                     months,
                                                      monthlyMinT,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,
@@ -400,28 +429,31 @@ namespace UserInterface.Presenters
         /// <param name="title"></param>
         /// <param name="monthlyRain"></param>
         /// <param name="avgMonthlyRain"></param>
-        private void PopulateMonthlyRainfallGraph(string title, double[] monthlyRain, double[] avgMonthlyRain)
+        private void PopulateMonthlyRainfallGraph(string title, string[] months, double[] monthlyRain, double[] avgMonthlyRain)
         {
             this.weatherDataView.GraphMonthlyRainfall.Clear();
             this.weatherDataView.GraphMonthlyRainfall.DrawBar(title,
-                                                       DateUtilities.LowerCaseMonths,
+                                                       months,
                                                        monthlyRain,
                                                        Axis.AxisType.Bottom,
                                                        Axis.AxisType.Left,
                                                        Color.LightSkyBlue,
                                                        true);
 
-            this.weatherDataView.GraphMonthlyRainfall.DrawLineAndMarkers("Long term average Rainfall",
-                                                     DateUtilities.LowerCaseMonths,
-                                                     avgMonthlyRain,
-                                                     Axis.AxisType.Bottom,
-                                                     Axis.AxisType.Left,
-                                                     Color.Blue,
-                                                     LineType.Solid,
-                                                     MarkerType.None,
-                                                     LineThicknessType.Normal,
-                                                     MarkerSizeType.Normal,
-                                                     true);
+            if (avgMonthlyRain.Length != 0)
+            {
+                this.weatherDataView.GraphMonthlyRainfall.DrawLineAndMarkers("Long term average Rainfall",
+                                                 months,
+                                                 avgMonthlyRain,
+                                                 Axis.AxisType.Bottom,
+                                                 Axis.AxisType.Left,
+                                                 Color.Blue,
+                                                 LineType.Solid,
+                                                 MarkerType.None,
+                                                 LineThicknessType.Normal,
+                                                 MarkerSizeType.Normal,
+                                                 true);
+            }
 
             this.weatherDataView.GraphMonthlyRainfall.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN);
             this.weatherDataView.GraphMonthlyRainfall.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN);
