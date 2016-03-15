@@ -7,8 +7,8 @@ using UserInterface.Interfaces;
 namespace UserInterface.Views
 {
     /// <summary>A delegate for a button click</summary>
-    /// <param name="FileName">Name of the file.</param>
-    public delegate void BrowseDelegate(string FileName);
+    /// <param name="fileName">Name of the file.</param>
+    public delegate void BrowseDelegate(string fileName);
 
     ///// <summary>A delegate for a numericUpDown click event</summary>
     ///// <param name="startYear">the start year for the data being displayed in the graph</param>
@@ -49,7 +49,7 @@ namespace UserInterface.Views
         IGraphView GraphRadiation { get; }
 
         /// <summary>sets the Graph Year</summary>
-         decimal GraphStartYear { get; set; }
+        decimal GraphStartYearValue { get; set; }
 
         /// <summary>set the minimum value for the 'Start Year' NumericUpDown control </summary>
         decimal GraphStartYearMinValue { get; set; }
@@ -58,7 +58,7 @@ namespace UserInterface.Views
         decimal GraphStartYearMaxValue { get; set; }
 
         /// <summary>sets/gets the value of 'Show Years' NumericUpDown control </summary>
-        decimal GraphShowYears { get; set; }
+        decimal GraphShowYearsValue { get; set; }
 
         /// <summary>set the maximum value for the 'Show Years' NumericUpDown control  </summary>
         decimal GraphShowYearsMaxValue { set; }
@@ -91,8 +91,8 @@ namespace UserInterface.Views
         /// <value>The filename.</value>
         public string Filename
         {
-            get { return uxFileName.Text; }
-            set { uxFileName.Text = value;}
+            get { return FileNameControl.Text; }
+            set { FileNameControl.Text = value;}
         }
 
         /// <summary>Sets the summarylabel.</summary>
@@ -123,37 +123,37 @@ namespace UserInterface.Views
         public IGraphView GraphRadiation { get { return graphViewRadiation; } }
 
         /// <summary>Sets the Graph Year</summary>
-        public decimal GraphStartYear 
+        public decimal GraphStartYearValue 
         {
-            get { return uxGraphStartYear.Value; }
-            set { uxGraphStartYear.Value = Convert.ToDecimal(value); }
+            get { return GraphStartYearControl.Value; }
+            set { GraphStartYearControl.Value = Convert.ToDecimal(value); }
         }
 
         /// <summary>set the minimum value for the graph 'Year to display' </summary>
         public decimal GraphStartYearMinValue
         {
-            get { return uxGraphStartYear.Minimum;  }
-            set { uxGraphStartYear.Minimum = Convert.ToDecimal(value); }
+            get { return GraphStartYearControl.Minimum;  }
+            set { GraphStartYearControl.Minimum = Convert.ToDecimal(value); }
         }
 
         /// <summary>set the maximum value for the graph 'Year to display' </summary>
         public decimal GraphStartYearMaxValue
         {
-            get { return uxGraphStartYear.Maximum; }
-            set { uxGraphStartYear.Maximum = Convert.ToDecimal(value); }
+            get { return GraphStartYearControl.Maximum; }
+            set { GraphStartYearControl.Maximum = Convert.ToDecimal(value); }
         }
 
         /// <summary>Gets and sets the Graph Year</summary>
-        public decimal GraphShowYears
+        public decimal GraphShowYearsValue
         {
-            get { return uxGraphShowYears.Value; }
-            set { uxGraphShowYears.Value = Convert.ToDecimal(value); }
+            get { return GraphShowYearsControl.Value; }
+            set { GraphShowYearsControl.Value = Convert.ToDecimal(value); }
         }
 
         /// <summary>set the maximum value for the graph 'Year to display' </summary>
         public decimal GraphShowYearsMaxValue
         {
-            set { uxGraphShowYears.Maximum = Convert.ToDecimal(value); }
+            set { GraphShowYearsControl.Maximum = Convert.ToDecimal(value); }
         }
 
         /// <summary>Populates the data.</summary>
@@ -170,12 +170,12 @@ namespace UserInterface.Views
         private void OnButton1Click(object sender, EventArgs e)
         {
             
-            openFileDialog1.FileName = label1.Text;
+            openFileDialog1.FileName = FileNameControl.Text;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                label1.Text = openFileDialog1.FileName;
+                FileNameControl.Text = openFileDialog1.FileName;
                 if (BrowseClicked != null)
-                    BrowseClicked.Invoke(label1.Text);    //reload the grid with data
+                    BrowseClicked.Invoke(FileNameControl.Text);    //reload the grid with data
             }
         }
 
@@ -185,7 +185,7 @@ namespace UserInterface.Views
         private void uxGraphStartYear_ValueChanged(object sender, EventArgs e)
         {
             if (GraphRefreshClicked != null)
-                GraphRefreshClicked.Invoke(uxGraphStartYear.Value, uxGraphShowYears.Value);
+                GraphRefreshClicked.Invoke(GraphStartYearControl.Value, GraphShowYearsControl.Value);
         }
 
         /// <summary>Handles the change event for the GraphShowYears NumericUpDown </summary>
@@ -194,7 +194,7 @@ namespace UserInterface.Views
         private void uxGraphShowYears_ValueChanged(object sender, EventArgs e)
         {
             if (GraphRefreshClicked != null)
-                GraphRefreshClicked.Invoke((int)uxGraphStartYear.Value, (int)uxGraphShowYears.Value);
+                GraphRefreshClicked.Invoke((int)GraphStartYearControl.Value, (int)GraphShowYearsControl.Value);
         }
 
         /// <summary>
@@ -208,11 +208,11 @@ namespace UserInterface.Views
             TabControl tc = (TabControl)sender;
             if (tc.SelectedIndex == 0 || tc.SelectedIndex == 1)
             {
-                uxBrowsePanel.Height = 41;
+                BrowsePanelControl.Height = 41;
             }
             else
             {
-                uxBrowsePanel.Height = 68;
+                BrowsePanelControl.Height = 68;
             }
         }
     }

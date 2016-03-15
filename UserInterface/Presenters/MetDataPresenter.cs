@@ -219,6 +219,11 @@ namespace UserInterface.Presenters
                 {
                     if (dataFirstDate.DayOfYear != 1)
                         dataFirstDate = new DateTime(dataFirstDate.Year + 1, 1, 1);
+                }
+
+                //modLMC - 16/03/2016 - don't change dates if data is within the same year
+                if (dataFirstDate.Year != dataLastDate.Year)
+                { 
                     if (dataLastDate.Day != 31 || dataLastDate.Month != 12)
                         dataLastDate = new DateTime(dataLastDate.Year - 1, 12, 31);
                 }
@@ -318,7 +323,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception e)
             {
-                throw new Exception("Unable to display Detailed Graphs: " + e.Message.ToString());
+                throw new Exception("Unable to display Detailed Graphs due to insufficient data: " + e.Message.ToString());
             }
 
         }
@@ -336,20 +341,28 @@ namespace UserInterface.Presenters
             if (this.weatherData.StartDate.Year < weatherDataView.GraphStartYearMinValue)
             {
                 weatherDataView.GraphStartYearMinValue = this.weatherData.StartDate.Year;
-                weatherDataView.GraphStartYear = this.weatherData.StartDate.Year;
+                weatherDataView.GraphStartYearValue = this.weatherData.StartDate.Year;
                 weatherDataView.GraphStartYearMaxValue = this.weatherData.EndDate.Year;
             }
             else if (weatherDataView.GraphStartYearMinValue >= this.weatherData.EndDate.Year)
             {
                 weatherDataView.GraphStartYearMaxValue = this.weatherData.EndDate.Year;
-                weatherDataView.GraphStartYear = this.weatherData.EndDate.Year;
+                weatherDataView.GraphStartYearValue = this.weatherData.EndDate.Year;
                 weatherDataView.GraphStartYearMinValue = this.weatherData.StartDate.Year;
-                weatherDataView.GraphStartYear = this.weatherData.StartDate.Year;
+                weatherDataView.GraphStartYearValue = this.weatherData.StartDate.Year;
             }
             else  //we are between our original range
             {
-                weatherDataView.GraphStartYear = this.weatherData.StartDate.Year;
-                weatherDataView.GraphStartYearMinValue = this.weatherData.StartDate.Year;
+                if (weatherDataView.GraphStartYearMinValue < this.weatherData.StartDate.Year)
+                {
+                    weatherDataView.GraphStartYearMinValue = this.weatherData.StartDate.Year;
+                    weatherDataView.GraphStartYearValue = this.weatherData.StartDate.Year;
+                }
+                else
+                {
+                    weatherDataView.GraphStartYearValue = this.weatherData.StartDate.Year;
+                    weatherDataView.GraphStartYearMinValue = this.weatherData.StartDate.Year;
+                }
                 weatherDataView.GraphStartYearMaxValue = this.weatherData.EndDate.Year;
             }
         }
@@ -432,15 +445,18 @@ namespace UserInterface.Presenters
         private void PopulateMonthlyRainfallGraph(string title, string[] months, double[] monthlyRain, double[] avgMonthlyRain)
         {
             this.weatherDataView.GraphMonthlyRainfall.Clear();
-            this.weatherDataView.GraphMonthlyRainfall.DrawBar(title,
-                                                       months,
-                                                       monthlyRain,
-                                                       Axis.AxisType.Bottom,
-                                                       Axis.AxisType.Left,
-                                                       Color.LightSkyBlue,
-                                                       true);
+            if (months.Length == monthlyRain.Length)
+            {
+                this.weatherDataView.GraphMonthlyRainfall.DrawBar(title,
+                                                           months,
+                                                           monthlyRain,
+                                                           Axis.AxisType.Bottom,
+                                                           Axis.AxisType.Left,
+                                                           Color.LightSkyBlue,
+                                                           true);
+            }
 
-            if (avgMonthlyRain.Length != 0)
+            if ((avgMonthlyRain.Length != 0) && (avgMonthlyRain.Length == monthlyRain.Length))
             {
                 this.weatherDataView.GraphMonthlyRainfall.DrawLineAndMarkers("Long term average Rainfall",
                                                  months,

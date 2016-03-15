@@ -30,14 +30,14 @@ namespace UserInterface.Views
         private void InitializeComponent()
         {
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.uxBrowsePanel = new System.Windows.Forms.Panel();
+            this.BrowsePanelControl = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.uxGraphShowYears = new System.Windows.Forms.NumericUpDown();
+            this.GraphShowYearsControl = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
-            this.uxGraphStartYear = new System.Windows.Forms.NumericUpDown();
+            this.GraphStartYearControl = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
-            this.uxFileName = new System.Windows.Forms.Label();
+            this.FileNameControl = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabSummary = new System.Windows.Forms.TabPage();
@@ -56,9 +56,9 @@ namespace UserInterface.Views
             this.graphViewTemperature = new GraphView();
             this.tabRadiation = new System.Windows.Forms.TabPage();
             this.graphViewRadiation = new GraphView();
-            this.uxBrowsePanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.uxGraphShowYears)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.uxGraphStartYear)).BeginInit();
+            this.BrowsePanelControl.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GraphShowYearsControl)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GraphStartYearControl)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabSummary.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -77,23 +77,23 @@ namespace UserInterface.Views
             this.openFileDialog1.Filter = "APSIM Weather file (*.met)|*.met";
             this.openFileDialog1.Title = "Open an APSIM Weather file";
             // 
-            // uxBrowsePanel
+            // BrowsePanelControl
             // 
-            this.uxBrowsePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uxBrowsePanel.Controls.Add(this.label1);
-            this.uxBrowsePanel.Controls.Add(this.label2);
-            this.uxBrowsePanel.Controls.Add(this.uxGraphShowYears);
-            this.uxBrowsePanel.Controls.Add(this.label3);
-            this.uxBrowsePanel.Controls.Add(this.uxGraphStartYear);
-            this.uxBrowsePanel.Controls.Add(this.label4);
-            this.uxBrowsePanel.Controls.Add(this.uxFileName);
-            this.uxBrowsePanel.Controls.Add(this.button2);
-            this.uxBrowsePanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.uxBrowsePanel.Location = new System.Drawing.Point(0, 0);
-            this.uxBrowsePanel.Margin = new System.Windows.Forms.Padding(3, 3, 3, 6);
-            this.uxBrowsePanel.Name = "uxBrowsePanel";
-            this.uxBrowsePanel.Size = new System.Drawing.Size(550, 36);
-            this.uxBrowsePanel.TabIndex = 0;
+            this.BrowsePanelControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.BrowsePanelControl.Controls.Add(this.label1);
+            this.BrowsePanelControl.Controls.Add(this.label2);
+            this.BrowsePanelControl.Controls.Add(this.GraphShowYearsControl);
+            this.BrowsePanelControl.Controls.Add(this.label3);
+            this.BrowsePanelControl.Controls.Add(this.GraphStartYearControl);
+            this.BrowsePanelControl.Controls.Add(this.label4);
+            this.BrowsePanelControl.Controls.Add(this.FileNameControl);
+            this.BrowsePanelControl.Controls.Add(this.button2);
+            this.BrowsePanelControl.Dock = System.Windows.Forms.DockStyle.Top;
+            this.BrowsePanelControl.Location = new System.Drawing.Point(0, 0);
+            this.BrowsePanelControl.Margin = new System.Windows.Forms.Padding(3, 3, 3, 6);
+            this.BrowsePanelControl.Name = "BrowsePanelControl";
+            this.BrowsePanelControl.Size = new System.Drawing.Size(550, 36);
+            this.BrowsePanelControl.TabIndex = 0;
             // 
             // label1
             // 
@@ -114,24 +114,24 @@ namespace UserInterface.Views
             this.label2.TabIndex = 25;
             this.label2.Text = "years";
             // 
-            // uxGraphShowYears
+            // GraphShowYearsControl
             // 
-            this.uxGraphShowYears.AllowDrop = true;
-            this.uxGraphShowYears.Location = new System.Drawing.Point(449, 37);
-            this.uxGraphShowYears.Minimum = new decimal(new int[] {
+            this.GraphShowYearsControl.AllowDrop = true;
+            this.GraphShowYearsControl.Location = new System.Drawing.Point(449, 37);
+            this.GraphShowYearsControl.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.uxGraphShowYears.Name = "uxGraphShowYears";
-            this.uxGraphShowYears.Size = new System.Drawing.Size(45, 20);
-            this.uxGraphShowYears.TabIndex = 24;
-            this.uxGraphShowYears.Value = new decimal(new int[] {
+            this.GraphShowYearsControl.Name = "GraphShowYearsControl";
+            this.GraphShowYearsControl.Size = new System.Drawing.Size(45, 20);
+            this.GraphShowYearsControl.TabIndex = 24;
+            this.GraphShowYearsControl.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.uxGraphShowYears.ValueChanged += new System.EventHandler(this.uxGraphShowYears_ValueChanged);
+            this.GraphShowYearsControl.ValueChanged += new System.EventHandler(this.uxGraphShowYears_ValueChanged);
             // 
             // label3
             // 
@@ -142,29 +142,29 @@ namespace UserInterface.Views
             this.label3.TabIndex = 23;
             this.label3.Text = "show";
             // 
-            // uxGraphStartYear
+            // GraphStartYearControl
             // 
-            this.uxGraphStartYear.AllowDrop = true;
-            this.uxGraphStartYear.Location = new System.Drawing.Point(305, 37);
-            this.uxGraphStartYear.Maximum = new decimal(new int[] {
+            this.GraphStartYearControl.AllowDrop = true;
+            this.GraphStartYearControl.Location = new System.Drawing.Point(305, 37);
+            this.GraphStartYearControl.Maximum = new decimal(new int[] {
             3000,
             0,
             0,
             0});
-            this.uxGraphStartYear.Minimum = new decimal(new int[] {
+            this.GraphStartYearControl.Minimum = new decimal(new int[] {
             1899,
             0,
             0,
             0});
-            this.uxGraphStartYear.Name = "uxGraphStartYear";
-            this.uxGraphStartYear.Size = new System.Drawing.Size(57, 20);
-            this.uxGraphStartYear.TabIndex = 22;
-            this.uxGraphStartYear.Value = new decimal(new int[] {
+            this.GraphStartYearControl.Name = "GraphStartYearControl";
+            this.GraphStartYearControl.Size = new System.Drawing.Size(57, 20);
+            this.GraphStartYearControl.TabIndex = 22;
+            this.GraphStartYearControl.Value = new decimal(new int[] {
             1900,
             0,
             0,
             0});
-            this.uxGraphStartYear.ValueChanged += new System.EventHandler(this.uxGraphStartYear_ValueChanged);
+            this.GraphStartYearControl.ValueChanged += new System.EventHandler(this.uxGraphStartYear_ValueChanged);
             // 
             // label4
             // 
@@ -175,15 +175,15 @@ namespace UserInterface.Views
             this.label4.TabIndex = 21;
             this.label4.Text = "Start year for Graphs";
             // 
-            // uxFileName
+            // FileNameControl
             // 
-            this.uxFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.FileNameControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.uxFileName.Location = new System.Drawing.Point(79, 9);
-            this.uxFileName.Name = "uxFileName";
-            this.uxFileName.Size = new System.Drawing.Size(453, 18);
-            this.uxFileName.TabIndex = 1;
-            this.uxFileName.Text = "File name";
+            this.FileNameControl.Location = new System.Drawing.Point(79, 9);
+            this.FileNameControl.Name = "FileNameControl";
+            this.FileNameControl.Size = new System.Drawing.Size(453, 18);
+            this.FileNameControl.TabIndex = 1;
+            this.FileNameControl.Text = "File name";
             // 
             // button2
             // 
@@ -193,6 +193,7 @@ namespace UserInterface.Views
             this.button2.TabIndex = 0;
             this.button2.Text = "Browse...";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.OnButton1Click);
             // 
             // tabControl1
             // 
@@ -391,13 +392,13 @@ namespace UserInterface.Views
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.uxBrowsePanel);
+            this.Controls.Add(this.BrowsePanelControl);
             this.Name = "TabbedMetDataView";
             this.Size = new System.Drawing.Size(550, 387);
-            this.uxBrowsePanel.ResumeLayout(false);
-            this.uxBrowsePanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.uxGraphShowYears)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.uxGraphStartYear)).EndInit();
+            this.BrowsePanelControl.ResumeLayout(false);
+            this.BrowsePanelControl.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GraphShowYearsControl)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GraphStartYearControl)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabSummary.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
@@ -424,12 +425,12 @@ namespace UserInterface.Views
 
         #endregion
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.Panel uxBrowsePanel;
+        private System.Windows.Forms.Panel BrowsePanelControl;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label uxFileName;
+        private System.Windows.Forms.Label FileNameControl;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabSummary;
@@ -448,7 +449,7 @@ namespace UserInterface.Views
         private GraphView graphViewTemperature;
         private System.Windows.Forms.TabPage tabRadiation;
         private GraphView graphViewRadiation;
-        private System.Windows.Forms.NumericUpDown uxGraphShowYears;
-        private System.Windows.Forms.NumericUpDown uxGraphStartYear;
+        private System.Windows.Forms.NumericUpDown GraphShowYearsControl;
+        private System.Windows.Forms.NumericUpDown GraphStartYearControl;
     }
 }
