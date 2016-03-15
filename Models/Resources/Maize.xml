@@ -1979,6 +1979,28 @@ The variety sr52 is a Zimbabwean early-medium maturing hybrid.  Photoperiod resp
     <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
   </Cultivar>
   <Cultivar>
+    <Name>Melkassa</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety Melkassa is a local early-medium maturing Ethiopian variety.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 230</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 160</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 387</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.33</Command>
+  </Cultivar>
+
+
+  <Cultivar>
     <Name>r215</Name>
     <Memo>
       <Name>memo</Name>
