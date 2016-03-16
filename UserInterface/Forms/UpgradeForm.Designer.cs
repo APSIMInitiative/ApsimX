@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "2015-06-07",
             "text"}, -1);
             this.label1 = new System.Windows.Forms.Label();
@@ -87,10 +87,9 @@
             this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listView1.HideSelection = false;
             this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem2});
+            listViewItem1});
             this.listView1.Location = new System.Drawing.Point(13, 49);
             this.listView1.Name = "listView1";
-            this.listView1.Scrollable = false;
             this.listView1.ShowGroups = false;
             this.listView1.Size = new System.Drawing.Size(595, 217);
             this.listView1.TabIndex = 3;
@@ -114,19 +113,19 @@
             this.viewMoreDetailToolStripMenuItem,
             this.upgradeToThisVersionToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(239, 56);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(233, 52);
             // 
             // viewMoreDetailToolStripMenuItem
             // 
             this.viewMoreDetailToolStripMenuItem.Name = "viewMoreDetailToolStripMenuItem";
-            this.viewMoreDetailToolStripMenuItem.Size = new System.Drawing.Size(238, 26);
+            this.viewMoreDetailToolStripMenuItem.Size = new System.Drawing.Size(232, 24);
             this.viewMoreDetailToolStripMenuItem.Text = "View more detail";
             this.viewMoreDetailToolStripMenuItem.Click += new System.EventHandler(this.OnViewMoreDetail);
             // 
             // upgradeToThisVersionToolStripMenuItem
             // 
             this.upgradeToThisVersionToolStripMenuItem.Name = "upgradeToThisVersionToolStripMenuItem";
-            this.upgradeToThisVersionToolStripMenuItem.Size = new System.Drawing.Size(238, 26);
+            this.upgradeToThisVersionToolStripMenuItem.Size = new System.Drawing.Size(232, 24);
             this.upgradeToThisVersionToolStripMenuItem.Text = "Upgrade to this version";
             this.upgradeToThisVersionToolStripMenuItem.Click += new System.EventHandler(this.OnUpgrade);
             // 
@@ -305,8 +304,9 @@
             this.htmlView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.htmlView1.ImagePath = null;
             this.htmlView1.Location = new System.Drawing.Point(13, 440);
-            this.htmlView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.htmlView1.Margin = new System.Windows.Forms.Padding(4);
             this.htmlView1.Name = "htmlView1";
             this.htmlView1.Size = new System.Drawing.Size(692, 261);
             this.htmlView1.TabIndex = 26;
