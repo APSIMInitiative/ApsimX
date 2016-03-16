@@ -965,7 +965,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
               <Y>
                 <double>0.1</double>
                 <double>0.15</double>
-                <double>0.2</double>
+                <double>0.24</double>
                 <double>0.15</double>
                 <double>0.1</double>
               </Y>
@@ -2059,6 +2059,45 @@ namespace Models
 	}
 }
 	  
+]]></Code>
+        </Manager>
+        <Manager>
+          <Name>SetSoilParams</Name>
+          <Script />
+          <Code><![CDATA[// Jo Sharp's soil N parameters
+using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Soils.Soil Soil;
+
+		[EventSubscribe("DoInitialSummary")]
+		private void OnDoInitialSummary(object sender, EventArgs e)
+		{
+			Soil.SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };
+			Soil.SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };
+			Soil.SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };
+			Soil.SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };
+			Soil.SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };
+			Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
+			Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
+			Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
+                  
+		}
+
+	}
+}
 ]]></Code>
         </Manager>
         <Area>1</Area>
@@ -5292,6 +5331,45 @@ namespace Models
 	  
 ]]></Code>
         </Manager>
+        <Manager>
+          <Name>SetSoilParams</Name>
+          <Script />
+          <Code><![CDATA[// Jo Sharp's soil N parameters
+using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Soils.Soil Soil;
+
+		[EventSubscribe("DoInitialSummary")]
+		private void OnDoInitialSummary(object sender, EventArgs e)
+		{
+			Soil.SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };
+			Soil.SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };
+			Soil.SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };
+			Soil.SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };
+			Soil.SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };
+			Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
+			Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
+			Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
+                  
+		}
+
+	}
+}
+]]></Code>
+        </Manager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -6219,6 +6297,102 @@ namespace Models
             <Title />
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>LAI</Name>
+          <Series>
+            <Name>Series1</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>Circle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObserved_P21</TableName>
+            <XFieldName>Observed.FodderBeet.Leaf.LAI</XFieldName>
+            <YFieldName>Predicted.FodderBeet.Leaf.LAI</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>LightInterception</Name>
+          <Series>
+            <Name>Series1</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>Circle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObserved_P21</TableName>
+            <XFieldName>Observed.FodderBeet.Leaf.CoverGreen</XFieldName>
+            <YFieldName>Predicted.FodderBeet.Leaf.CoverGreen</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>0.6</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>0.6</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
