@@ -154,6 +154,16 @@ mergedDF$SimpleName <-
 )
          )
 
+
+# sort out xlim and ylim for graphs
+maxAxesValues <- mergedDF %>%
+  group_by(Calib_Test, SimpleName) %>%
+  summarise(axes.limits = max(Observed, Predicted))
+head(maxAxesValues, 20)
+
+mergedDF <- merge(mergedDF, maxAxesValues, by=c("Calib_Test", "SimpleName"))
+
+
 #potential
 mergedDF %>%
 #  filter(Name == "LincolnP21_Cv2011" | Name == "LincolnP21_Cv2012") %>%

@@ -2344,7 +2344,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Leaf.Predicted.FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
+          <YFieldName>FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -5054,7 +5054,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
             <string>[FodderBeet].AboveGround.Wt</string>
             <string>[FodderBeet].Leaf.Photosynthesis.RadnInt.Value</string>
             <string>[FodderBeet].Leaf.Photosynthesis.RUEact.Value</string>
-            <string>[ExtraVariables].Script.AccumPlantN</string>
+            <string>[ExtraVariables].Script.AccumPlantN as AboveGroundLiveN</string>
             <string>[FodderBeet].Leaf.Live.N</string>
             <string>[FodderBeet].Root.Live.N</string>
             <string>[FodderBeet].Bulb.Live.N</string>
@@ -6171,7 +6171,7 @@ namespace Models
             <Title />
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
+            <Maximum>70</Maximum>
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
@@ -6460,7 +6460,7 @@ namespace Models
             <Title />
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
+            <Maximum>600</Maximum>
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
