@@ -80,6 +80,10 @@ namespace Models.PMF.Organs
         [Units("g/m2/d")]
         IFunction DMDemandFunction = null;
         /// <summary>The initial wt function</summary>
+        /// <summary>The dm reallocation factor</summary>
+        [Link(IsOptional = true)]
+        public IFunction DMReallocationFactor = null;
+        /// <summary>The n retranslocation factor</summary>
         [Link(IsOptional = true)]
         [Units("g/m2")]
         IFunction InitialWtFunction = null;
