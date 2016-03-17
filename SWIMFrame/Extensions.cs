@@ -50,5 +50,30 @@ namespace SWIMFrame
             //return the object if it exists
             return obj;
         }
+
+        /// <summary>
+        /// Returns a row or column from the given 2D array.
+        /// </summary>
+        /// <param name="m">The array.</param>
+        /// <param name="index">The index to return.</param>
+        /// <param name="row">True for row, false for column</param>
+        /// <returns></returns>
+        public static double[] GetRowCol(double[,] m, int index, bool row)
+        {
+            double[] retVal;
+            if(row)
+            {
+                retVal = new double[m.GetLength(0)];
+                for (int i = 0; i < m.GetLength(0); i++)
+                    retVal[i] = m[index, i];
+            }
+            else
+            {
+                retVal = new double[m.GetLength(1)];
+                for (int i = 0; i < m.GetLength(1); i++)
+                    retVal[i] = m[i,index];
+            }
+            return retVal;
+        }
     }
 }

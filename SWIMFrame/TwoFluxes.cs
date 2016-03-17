@@ -97,20 +97,14 @@ namespace SWIMFrame
                 m = ft[i - 1].fend[0].nft; //should be odd
                 j = 1 + m / 2;
 
-               /* for (int row = 1; row <= i; row += 2)
-                    for (int col = 1; col <= i; col += 2)
-                    {
-                        qf[i,row,col]
-                    }*/
-
-                        for (int x = 1; x <= j; x++)
+                for (int x = 1; x <= j; x++)
                 {
                     phif[i, x] = ft[i - 1].fend[0].phif[x * 2 - 1]; //discard every second
                     for(int y=1; y<= m;y++)
                         qf[i, x, y] = ft[i - 1].ftable[x * 2 - 1, y * 2 - 1];
-                    nft[i] = j;
-                    nfu[i] = 1 + ft[i - 1].fend[1].nfu / 2; //ft[i].fend[1].nfu should be odd
                 }
+                nft[i] = j;
+                nfu[i] = 1 + ft[i - 1].fend[1].nfu / 2; //ft[i].fend[1].nfu should be odd
             }
 
             // Extend phi2 and h2 if he1>he2, or vice-versa.
@@ -169,7 +163,7 @@ namespace SWIMFrame
 
             // But interpolate to match values that start at greater h.
             jj = id + 1; //h(j,id+1) to be checked first
-            phii[j, id + n[i]] = phi[j, n[i]]; // last h values match
+            phii[j, id + n[i]] = phi[j, n[j]]; // last h values match
             for (ii = 1; ii <= n[i] - 1; ii++)
             {
                 while (true) //get place of h(i,ii) in h array for soil j
@@ -177,7 +171,7 @@ namespace SWIMFrame
                     if (jj > n[j])
                     {
                         Console.WriteLine("twotbls: h[j,n[j]] <= h[i,ii]; i, j, ii, n[j] = " + i + " " + j + " " + ii + " " + n[j]);
-                        break;
+                        Environment.Exit(1);
                     }
 
                     if (h[j, jj] > h[i, ii])
@@ -227,18 +221,15 @@ namespace SWIMFrame
             for (int x = id + 1; x <= ni; x++)
                 phii[i, x] = phin[x - (id + 1) + 1];
 
-            for (int x = 1; x < id; x++)
+            //hi(1:id) = h(j, 1:id)
+            for (int x = 1; x <= id; x++)
                 hi[x] = h[j, x];
 
             // hi(id+1:ni)=h(i,1:n(i))
-            double[] hin = new double[n[i] + 1];
             for (int x = 1; x <= n[i]; x++)
-                hin[x - 1] = h[j, x];
+                hi[id + x] = h[i, x];
 
-            for (int x = id + 1; x <= ni; x++)
-                hi[x] = h[i, x - id + 1];
-
-            /* hi(1:ni) are h values for the interface tables.
+               /* hi(1:ni) are h values for the interface tables.
                 * phii(1,1:ni) are corresponding interface phi values for upper layer.
                 * phii(2,1:ni) are corresponding interface phi values for lower layer.
                 * Set up quadratic interpolation coeffs to get phii2 given phii1.
@@ -281,11 +272,11 @@ namespace SWIMFrame
                         getco[x, y] = co2[1, x, y];
             }
 
-            Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(getco);
+         /*   Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(getco);
             printMatrix = printMatrix.RemoveRow(0);
             printMatrix = printMatrix.RemoveColumn(0);
             MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t", null, "E6", null, null);
-
+*/
             nco2 = k;
                 
 
@@ -475,10 +466,10 @@ namespace SWIMFrame
                     qi5Slice[x, y] = qi5[x, y];
             ftwo.ftable = qi5Slice;
 
-         /* Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(ftwo.ftable);
+          Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(ftwo.ftable);
           printMatrix = printMatrix.RemoveRow(0);
           printMatrix = printMatrix.RemoveColumn(0);
-          MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t", null, "E6", null, null);*/
+          MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t", null, "E6", null, null);
 
             return ftwo;
         }
@@ -593,7 +584,6 @@ namespace SWIMFrame
             //Use cubic interpolation in table(phico1, co1).
             int i1, i2, im;
             double x;
-
             i1 = 1;
             i2 = nco1 + 1; // allow for last interval in table
             while(true) //use bisection to find place
@@ -654,14 +644,14 @@ namespace SWIMFrame
             qd = co2[2, i1, j] + x * (2.0 * co2[3, i1, j] + x * 3.0 * co2[4, i1, j]);
         }
 
-        private static int Find(double x, double[] xa, int n)
+        //Return i where xa(i) <= x < xa(i+1)
+        public static int Find(double x, double[] xa)
         {
             int i1 = 1;
-            int i2 = n - 1;
+            int i2 = xa.Length - 1;
             int im;
 
-            //Return i where xa(i)<=x<xa(i+1)
-            while (true)
+            while (true) //use bisection
             {
                 if (i2 - i1 <= 1)
                     break;
@@ -675,7 +665,7 @@ namespace SWIMFrame
             return i1;
         }
 
-        private static int MinLoc (double[] array)
+        public static int MinLoc (double[] array)
         {
             int pos=1;
             for (int i = 1; i < array.Length; i++)

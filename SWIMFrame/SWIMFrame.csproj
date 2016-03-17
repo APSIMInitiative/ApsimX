@@ -77,11 +77,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
+    <Compile Include="Flow.cs" />
     <Compile Include="Fluxes.cs" />
+    <Compile Include="ISink.cs" />
     <Compile Include="MVG.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SinkDripperDrain.cs" />
     <Compile Include="Soil.cs" />
+    <Compile Include="SoilData.cs" />
+    <Compile Include="SolProps.cs" />
     <Compile Include="TwoFluxes.cs" />
   </ItemGroup>
   <ItemGroup>
