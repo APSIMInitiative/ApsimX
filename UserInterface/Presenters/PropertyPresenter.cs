@@ -216,7 +216,7 @@ namespace UserInterface.Presenters
             int numCols = this.grid.DataSource.Columns.Count;
 
             for (int i = 0; i < numCols; i++)
-                this.grid.GetColumn(i).Format = "E4";
+                this.grid.GetColumn(i).Format = "F4";
         }
 
         /// <summary>

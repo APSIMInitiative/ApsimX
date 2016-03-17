@@ -16,7 +16,7 @@ namespace UserInterface.Views
     interface IFolderView
     {
         /// <summary>Sets the user controls to show.</summary>
-        void SetContols(List<UserControl> controls);
+        void SetContols(List<GraphView> controls);
     }
 
     /// <summary>
@@ -25,7 +25,7 @@ namespace UserInterface.Views
     public partial class FolderView : UserControl, IFolderView
     {
         /// <summary>Sets the controls to show.</summary>
-        public void SetContols(List<UserControl> controls)
+        public void SetContols(List<GraphView> controls)
         {
             foreach (UserControl control in controls)
                 control.Parent = this;

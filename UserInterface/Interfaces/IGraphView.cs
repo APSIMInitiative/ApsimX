@@ -8,7 +8,6 @@ namespace UserInterface.Interfaces
     using System;
     using System.Collections;
     using System.Drawing;
-    using System.Windows.Forms;
     using Models.Graph;
     using EventArguments;
 
@@ -57,7 +56,7 @@ namespace UserInterface.Interfaces
         /// Show the specified editor.
         /// </summary>
         /// <param name="editor">Show the specified series editor</param>
-        void ShowEditorPanel(UserControl editor);
+        void ShowEditorPanel(object editorObj);
 
         /// <summary>
         /// Clear the graph of everything.
@@ -205,6 +204,11 @@ namespace UserInterface.Interfaces
         /// <param name="bitmap">Bitmap to write to</param>
         /// <param name="legendOutside">Put legend outside of graph?</param>
         void Export(Bitmap bitmap, bool legendOutside);
+
+        /// <summary>
+        /// Export the graph to the clipboard
+        /// </summary>
+        void ExportToClipboard();
 
         /// <summary>
         /// Add an action (on context menu) on the memo.

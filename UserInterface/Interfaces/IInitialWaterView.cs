@@ -6,10 +6,6 @@
 namespace UserInterface.Interfaces
 {
     using System;
-    using System.Collections;
-    using System.Drawing;
-    using System.Windows.Forms;
-    using Models.Graph;
 
     /// <summary>
     /// This interface defines the API for talking to an initial water view.
