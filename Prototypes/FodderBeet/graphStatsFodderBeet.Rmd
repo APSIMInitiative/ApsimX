@@ -243,6 +243,7 @@ mergedDF %>%
  # filter(SowingDate_Treat == "Oct") %>%
   ggplot(aes(x=Observed, y= Predicted)) +
   geom_point(aes(colour= Name, shape = Cultivar_Treat, size = 1.5)) +
+  geom_smooth(method = "lm", se = TRUE, linetype = 3, colour="darkgrey") +
   geom_abline(intercept = 0, slope = 1) +
   coord_fixed(ratio = 1) +
   facet_wrap(Calib_Test~SimpleName, scales = "free")
