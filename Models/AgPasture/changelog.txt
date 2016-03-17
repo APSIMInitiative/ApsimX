@@ -11,3 +11,91 @@
 10/3/2016,digestHerbage to myDigestHerbage
 10/3/2016,digestDefoliated to myDigestDefoliated
 10/3/2016,fractionHarvested to myFractionHarvested
+15/3/2016,renamed leaves to myLeaves
+17/3/2016,renamed stems to myStems
+17/3/2016,renamed stolons to myStolons
+17/3/2016,renamed root to myRoots
+
+17/3/2016,renamed dmShoot to myDMShoot
+17/3/2016,renamed dmShootGreen to myDMShootGreen
+17/3/2016,renamed dmShootDead
+17/3/2016,renamed dmRoot
+17/3/2016,renamed NShoot
+17/3/2016,renamed NRoot
+17/3/2016,renamed isSwardControlled
+17/3/2016,renamed isAlive 
+17/3/2016,renamed isAnnual
+17/3/2016,renamed MyIsLegume 
+17/3/2016,renamed isLegume
+17/3/2016,renamed dayEmerg
+17/3/2016,renamed monEmerg
+17/3/2016,renamed dayAnth
+17/3/2016,renamed monAnth
+17/3/2016,renamed daysToMature
+17/3/2016,renamed daysEmgToAnth
+17/3/2016,renamed phenoStage
+17/3/2016,renamed phenoFactor
+17/3/2016,renamed daysfromEmergence
+17/3/2016,renamed daysfromAnthesis
+17/3/2016,renamed dRootDepth
+17/3/2016,renamed maxRootDepth
+17/3/2016,renamed NcStemOpt
+17/3/2016,renamed NcStolonOpt
+17/3/2016,renamed NcRootOpt
+17/3/2016,renamed NcStemMax
+17/3/2016,renamed NcStolonMax
+17/3/2016,renamed NcRootMax
+17/3/2016,renamed NcStemMin
+17/3/2016,renamed NcStolonMin
+17/3/2016,renamed NcRootMin
+17/3/2016,renamed NdemandLux
+17/3/2016,renamed NdemandOpt
+17/3/2016,renamed Nfixation
+17/3/2016,renamed NRemobilised
+17/3/2016,renamed Nleaf3Remob
+17/3/2016,renamed Nstem3Remob
+17/3/2016,renamed Nstol3Remob
+17/3/2016,renamed NrootRemob
+17/3/2016,renamed Nremob2NewGrowth
+17/3/2016,renamed newGrowthN
+17/3/2016,renamed NLuxury2
+17/3/2016,renamed NLuxury3
+17/3/2016,renamed NFastRemob2
+17/3/2016,renamed NFastRemob3
+17/3/2016,renamed rootFraction
+17/3/2016,renamed maxSRratio
+17/3/2016,renamed IL
+17/3/2016,renamed Pgross
+17/3/2016,renamed Resp_g
+17/3/2016,renamed Resp_m
+17/3/2016,renamed CRemobilised
+17/3/2016,renamed dGrowthPot
+17/3/2016,renamed dGrowthWstress
+17/3/2016,renamed dGrowthActual
+17/3/2016,renamed dGrowthRoot
+17/3/2016,renamed dGrowthShoot
+17/3/2016,renamed dGrowthEff
+17/3/2016,renamed dLitter
+17/3/2016,renamed dNlitter
+17/3/2016,renamed dRootSen
+17/3/2016,renamed dNrootSen
+17/3/2016,renamed fShoot
+17/3/2016,renamed gama
+17/3/2016,renamed gamaS
+17/3/2016,renamed gamaD
+17/3/2016,renamed gamaR
+17/3/2016,renamed glfWater
+17/3/2016,renamed glfTemp
+17/3/2016,renamed glfN
+17/3/2016,renamed NcFactor
+17/3/2016,renamed highTempEffect
+17/3/2016,renamed lowTempEffect
+17/3/2016,renamed accumT4Heat
+17/3/2016,renamed accumT4Cold
+17/3/2016,renamed nLayers
+17/3/2016,renamed Tmean
+17/3/2016,renamed TmeanW
+17/3/2016,renamed SpeciesState
+17/3/2016,renamed intRadnFrac
+17/3/2016,renamed swardLightExtCoeff
+17/3/2016,renamed swardGreenCover

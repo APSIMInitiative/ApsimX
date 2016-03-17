@@ -1632,7 +1632,7 @@ namespace Models.AgPasture1
 
 			foreach (PastureSpecies mySpecies in mySward)
 			{
-				mySpecies.isSwardControlled = isSwardControlled;
+				mySpecies.myIsSwardControlled = isSwardControlled;
 				mySpecies.myWaterUptakeSource = waterUptakeSource;
 				mySpecies.myNitrogenUptakeSource = nUptakeSource;
 
@@ -1678,7 +1678,7 @@ namespace Models.AgPasture1
 					double sumLAI = mySward.Sum(mySpecies => mySpecies.LAITotal);
 					initialLightExtCoeff = sumLightExtCoeff / sumLAI;
 					foreach (PastureSpecies mySpecies in mySward)
-						mySpecies.swardLightExtCoeff = initialLightExtCoeff;
+						mySpecies.mySwardLightExtCoeff = initialLightExtCoeff;
 					//// TODO: check whether this should be updated every day
 
 					// tell other modules about the existence of this plant (whole sward)
@@ -1718,10 +1718,10 @@ namespace Models.AgPasture1
 					if (isSwardControlled)
 					{
 						// plant green cover
-						mySpecies.swardGreenCover = GreenCover;
+						mySpecies.mySwardGreenCover = GreenCover;
 
 						// fraction of light intercepted by each species
-						mySpecies.intRadnFrac = mySpecies.GreenCover / mySward.Sum(aSpecies => aSpecies.GreenCover);
+						mySpecies.myIntRadnFrac = mySpecies.GreenCover / mySward.Sum(aSpecies => aSpecies.GreenCover);
 					}
 
 					// step 01 - preparation and potential growth
@@ -1804,7 +1804,7 @@ namespace Models.AgPasture1
 				double waterLoggingFactor = 1 - Math.Max(0.0, 0.1 * (sWater - sDUL) / (sSat - sDUL));
 				double waterLimitingFactor = (waterDeficitFactor < 0.999) ? waterDeficitFactor : waterLoggingFactor;
 				foreach (PastureSpecies mySpecies in mySward)
-					mySpecies.glfWater = waterLimitingFactor;
+					mySpecies.myGLFWater = waterLimitingFactor;
 				//mySpecies.glfWater = mySpecies.WaterLimitingFactor() * mySpecies.WaterLoggingFactor();
 			}
 			else
@@ -1985,14 +1985,14 @@ namespace Models.AgPasture1
 
 				// preliminary N budget
 				foreach (PastureSpecies mySpecies in mySward)
-					mySpecies.newGrowthN = mySpecies.FixedN + mySpecies.RemobilisedN + mySpecies.mySoilNuptake;
+					mySpecies.myNewGrowthN = mySpecies.FixedN + mySpecies.RemobilisedN + mySpecies.mySoilNuptake;
 				swardNewGrowthN = swardNFixation + swardNRemobNewGrowth + swardSoilNuptake;
 
 				// evaluate whether further remobilisation (from luxury N) is needed
 				foreach (PastureSpecies mySpecies in mySward)
 				{
 					mySpecies.CalcNLuxuryRemob();
-					mySpecies.newGrowthN += mySpecies.RemobT2LuxuryN + mySpecies.RemobT3LuxuryN;
+					mySpecies.myNewGrowthN += mySpecies.RemobT2LuxuryN + mySpecies.RemobT3LuxuryN;
 				}
 				swardNFastRemob2 = mySward.Sum(mySpecies => mySpecies.RemobT2LuxuryN);
 				swardNFastRemob3 = mySward.Sum(mySpecies => mySpecies.RemobT3LuxuryN);
@@ -2005,9 +2005,9 @@ namespace Models.AgPasture1
 				foreach (PastureSpecies mySpecies in mySward)
 				{
 					if (mySpecies.ActualGrowthN > 0.0)
-						mySpecies.glfN = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(mySpecies.ActualGrowthN, mySpecies.RequiredOptimumN, 1.0)));
+						mySpecies.myGLFN = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(mySpecies.ActualGrowthN, mySpecies.RequiredOptimumN, 1.0)));
 					else
-						mySpecies.glfN = 1.0;
+						mySpecies.myGLFN = 1.0;
 				}
 			}
 			else
@@ -2077,7 +2077,7 @@ namespace Models.AgPasture1
 		private double CalcNFixation()
 		{
 			foreach (PastureSpecies mySpecies in mySward)
-				mySpecies.Nfixation = mySpecies.CalcNFixation();
+				mySpecies.myNfixation = mySpecies.CalcNFixation();
 			return mySward.Sum(mySpecies => mySpecies.FixedN);
 		}
 
