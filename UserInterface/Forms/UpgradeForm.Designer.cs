@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "2015-06-07",
             "text"}, -1);
             this.label1 = new System.Windows.Forms.Label();
@@ -87,12 +87,11 @@
             this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listView1.HideSelection = false;
             this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem2});
+            listViewItem1});
             this.listView1.Location = new System.Drawing.Point(13, 49);
             this.listView1.Name = "listView1";
-            this.listView1.Scrollable = false;
             this.listView1.ShowGroups = false;
-            this.listView1.Size = new System.Drawing.Size(595, 217);
+            this.listView1.Size = new System.Drawing.Size(606, 217);
             this.listView1.TabIndex = 3;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -305,18 +304,20 @@
             this.htmlView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.htmlView1.ImagePath = null;
             this.htmlView1.Location = new System.Drawing.Point(13, 440);
-            this.htmlView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.htmlView1.Margin = new System.Windows.Forms.Padding(4);
             this.htmlView1.Name = "htmlView1";
-            this.htmlView1.Size = new System.Drawing.Size(692, 261);
+            this.htmlView1.Size = new System.Drawing.Size(703, 261);
             this.htmlView1.TabIndex = 26;
             // 
             // button1
             // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.button1.Location = new System.Drawing.Point(630, 49);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 51);
+            this.button1.Size = new System.Drawing.Size(86, 51);
             this.button1.TabIndex = 28;
             this.button1.Text = "Upgrade";
             this.button1.UseVisualStyleBackColor = true;
@@ -324,9 +325,10 @@
             // 
             // button2
             // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button2.Location = new System.Drawing.Point(630, 113);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 51);
+            this.button2.Size = new System.Drawing.Size(86, 51);
             this.button2.TabIndex = 29;
             this.button2.Text = "View detail";
             this.button2.UseVisualStyleBackColor = true;
@@ -336,7 +338,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(719, 714);
+            this.ClientSize = new System.Drawing.Size(730, 714);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.checkBox1);

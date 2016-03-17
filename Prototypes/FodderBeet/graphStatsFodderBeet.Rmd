@@ -47,6 +47,64 @@ print(unique(obsData$Name))
 
 ```
 
+
+```{r CustumStats}
+
+gauchStats <- function(sim, meas) {
+  
+  n_s <- length(sim)
+  n_m <- length(meas)
+  model <- lm(meas~sim)
+  sim_sq <- sum((sim - mean(sim))^2)
+  mes_sq <- sum((meas - mean(meas))^2)
+  r2 <- summary(model)$r.squared
+  slope <- model$coefficients[[2]]
+  
+  sb <- (sum(mean(meas)) - sum(mean(sim)))^2
+  nu <- (1-slope)^2 * (sim_sq/n_s)
+  lc <- (1-r2) * (mes_sq/n_m)
+  msd <- sb+nu+lc
+  
+  sb_r <- round((sb/msd)*100,1)
+  nu_r <- round((nu/msd)*100,1)
+  lc_r <- round((lc/msd)*100,1)
+  
+  msd_r <- sb_r+nu_r+lc_r
+  
+  out <- c(sb_r,nu_r,lc_r, msd_r)
+ # out <- c(sb,nu,lc, msd,sim_sq,mes_sq,r2,n_s,n_m,slope ) # testing
+  
+  return(out)
+  
+}
+
+# test dataset
+s <- c(342.5,	68.3,	70.1,	286.1,	333.8)
+m <- c(299.64,	161.36,	201.45,	220.8,	217.67)
+
+
+
+x <- gauchStats(s,m)
+
+x[1]
+x[2]
+x[3]
+x[4]
+x[5]
+x[6]
+x[7]
+x[8]
+x[9]
+x[10]
+
+
+
+```
+
+
+
+
+
 ```{r, ReadSimulated, echo=FALSE, include=FALSE}
 # load Justin's function
 GetApsimNGTable <- function(dbLoc, table) 
@@ -70,7 +128,7 @@ myDb$Date <- ymd(myDb$Clock.Today)
 
 # remove unecessary variables
 myDb <- myDb %>%
-  select(-FodderBeet.Phenology.CurrentPhaseName, 
+  dplyr::select(-FodderBeet.Phenology.CurrentPhaseName, 
          -Phenology.Photoperiod.Value)
 
 summary(myDb)
@@ -176,13 +234,16 @@ mergedDF %>%
   facet_wrap(~SimpleName, scales = "free")
 
 #potential
+
 mergedDF %>%
+  mutate(Calib_Test = ifelse(Calib_Test=="Calib","Calibration", "Testing"))  %>%
 #  filter(Name == "LincolnP21_Cv2011" | Name == "LincolnP21_Cv2012") %>%
 #  filter(W_lim == "No", N_lim == "No") %>%
  # filter(Calib_Test == "Calib") %>%
  # filter(SowingDate_Treat == "Oct") %>%
   ggplot(aes(x=Observed, y= Predicted)) +
-  geom_point(aes(colour= Name, shape = Cultivar_Treat , size = 1)) +
+  geom_point(aes(colour= Name, shape = Cultivar_Treat, size = 1.5)) +
+  geom_smooth(method = "lm", se = TRUE, linetype = 3, colour="darkgrey") +
   geom_abline(intercept = 0, slope = 1) +
   coord_fixed(ratio = 1) +
   facet_wrap(Calib_Test~SimpleName, scales = "free")
@@ -201,7 +262,10 @@ mergedDF %>%
     r2 = round(br2(Predicted,Observed)*100,0),
   #  rmse = round(rmse(Predicted,Observed),0),
     r_rmse = round(rmse(Predicted,Observed)/mean(Observed)*100,1),
-    nse = round(NSE(Predicted,Observed),1)
+    nse = round(NSE(Predicted,Observed),1),
+    sb = gauchStats(Predicted,Observed)[1],
+  nu = gauchStats(Predicted,Observed)[2],
+  lc = gauchStats(Predicted,Observed)[3]
   ) %>%
   kable(format = "markdown")
 
