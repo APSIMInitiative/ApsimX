@@ -167,7 +167,7 @@
                 if (showNumberRunning)
                 {
                     showNumberRunning = false;
-                    explorerPresenter.ShowMessage(modelClicked.Name + " running (" + numSimulationsToRun + ")", Models.DataStore.ErrorLevel.Information);
+                    explorerPresenter.ShowMessage(modelClicked.Name + " running (" + (numSimulationsToRun-1) + ")", Models.DataStore.ErrorLevel.Information);
                 }
 
                 double percent = numSimulationsRun * 1.0 / numSimulationsToRun * 100.0;

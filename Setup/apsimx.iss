@@ -4,7 +4,7 @@
 ;APSIM setup script
 
 #include  "ISPPBuiltins.iss"
-#define AppVerNo GetStringFileInfo("..\Bin\Model.exe", PRODUCT_VERSION) 
+#define AppVerNo GetStringFileInfo("..\Bin\Models.exe", PRODUCT_VERSION) 
 
 [Setup]
 AppName=APSIM
