@@ -70,7 +70,7 @@ myDb$Date <- ymd(myDb$Clock.Today)
 
 # remove unecessary variables
 myDb <- myDb %>%
-  select(-FodderBeet.Phenology.CurrentPhaseName, 
+  dplyr::select(-FodderBeet.Phenology.CurrentPhaseName, 
          -Phenology.Photoperiod.Value)
 
 summary(myDb)
