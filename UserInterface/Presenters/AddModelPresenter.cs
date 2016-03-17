@@ -11,6 +11,8 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Views;
+    using System.IO;
+    using System.Reflection;
 
     /// <summary>This presenter lets the user add a model.</summary>
     public class AddModelPresenter : IPresenter
@@ -66,8 +68,12 @@ namespace UserInterface.Presenters
                 view.WaitCursor = true;
                 try
                 {
+                    // Use the pre built serialization assembly.
+                    string binDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
+                    string deserializerFileName = Path.Combine(binDirectory, "Models.XmlSerializers.dll");
+
                     object child = Activator.CreateInstance(selectedModelType, true);
-                    string childXML = XmlUtilities.Serialise(child, false);
+                    string childXML = XmlUtilities.Serialise(child, false, deserializerFileName);
                     this.explorerPresenter.Add(childXML, Apsim.FullPath(model));
                     this.explorerPresenter.HideRightHandPanel();
                 }
