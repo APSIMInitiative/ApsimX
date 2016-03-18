@@ -15,7 +15,6 @@
 17/3/2016,renamed stems to myStems
 17/3/2016,renamed stolons to myStolons
 17/3/2016,renamed root to myRoots
-
 17/3/2016,renamed dmShoot to myDMShoot
 17/3/2016,renamed dmShootGreen to myDMShootGreen
 17/3/2016,renamed dmShootDead
@@ -62,6 +61,8 @@
 17/3/2016,renamed NLuxury3
 17/3/2016,renamed NFastRemob2
 17/3/2016,renamed NFastRemob3
+17/3/2016,renamed LAIGreen
+17/3/2016,renamed LAIDead
 17/3/2016,renamed rootFraction
 17/3/2016,renamed maxSRratio
 17/3/2016,renamed IL
@@ -99,3 +100,125 @@
 17/3/2016,renamed intRadnFrac
 17/3/2016,renamed swardLightExtCoeff
 17/3/2016,renamed swardGreenCover
+18/3/2016,renamed hasInitialised 
+18/3/2016,renamed isAlive
+18/3/2016,renamed swardRootDepth
+18/3/2016,renamed swardRootFraction
+18/3/2016,renamed avgSRL
+18/3/2016,renamed soilAvailableWater
+18/3/2016,renamed swardWaterDemand
+18/3/2016,renamed swardWaterUptake
+18/3/2016,renamed soilAvailableN
+18/3/2016,renamed soilNH4Available
+18/3/2016,renamed soilNO3Available
+18/3/2016,renamed swardNFixation
+18/3/2016,renamed swardNdemand
+18/3/2016,renamed swardSoilNdemand
+18/3/2016,renamed swardSoilNuptake
+18/3/2016,renamed swardRemobilisedN
+18/3/2016,renamed swardNRemobNewGrowth
+18/3/2016,renamed swardNewGrowthN
+18/3/2016,renamed swardNFastRemob2
+18/3/2016,renamed swardNFastRemob3
+18/3/2016,renamed nLayers
+18/3/2016,renamed initialLightExtCoeff
+18/3/2016,renamed myNumSpecies
+18/3/2016,renamed isSwardControlled
+18/3/2016,renamed waterUptakeSource
+18/3/2016,renamed nUptakeSource
+18/3/2016,renamed useAltWUptake
+18/3/2016,renamed nUptakeSource
+18/3/2016,renamed useAltNUptake
+18/3/2016,renamed referenceKSuptake
+18/3/2016,renamed rootDistributionMethod
+18/3/2016,renamed expoLinearDepthParam
+18/3/2016,renamed expoLinearCurveParam
+18/3/2016,renamed MetData
+18/3/2016,renamed Soil
+18/3/2016,renamed interceptedRadn
+18/3/2016,renamed Clock
+18/3/2016,renamed MetData
+18/3/2016,renamed Soil
+18/3/2016,renamed apsimArbitrator
+18/3/2016,renamed speciesFamily
+18/3/2016,renamed photosynthesisPathway
+18/3/2016,renamed iniDMShoot
+18/3/2016,renamed iniDMRoot
+18/3/2016,renamed iniRootDepth
+18/3/2016,renamed initialDMFractions_grass
+18/3/2016,renamed initialDMFractions_legume
+18/3/2016,renamed iniDMFraction
+18/3/2016,renamed referencePhotosynthesisRate
+18/3/2016,renamed maintenanceRespirationCoef
+18/3/2016,renamed growthRespirationCoef
+18/3/2016,renamed lightExtentionCoeff
+18/3/2016,renamed growthTmin
+18/3/2016,renamed growthTmax
+18/3/2016,renamed growthTopt
+18/3/2016,renamed growthTq
+18/3/2016,renamed heatOnsetT
+18/3/2016,renamed heatFullT
+18/3/2016,renamed heatSumT
+18/3/2016,renamed referenceT4Heat
+18/3/2016,renamed coldOnsetT
+18/3/2016,renamed coldFullT
+18/3/2016,renamed coldSumT
+18/3/2016,renamed referenceT4Cold
+18/3/2016,renamed specificLeafArea
+18/3/2016,renamed specificRootLength
+18/3/2016,renamed maxRootFraction
+18/3/2016,renamed shootSeasonalAllocationIncrease
+18/3/2016,renamed doyIniHighShoot
+18/3/2016,renamed higherShootAllocationPeriods
+18/3/2016,renamed fracToLeaf
+18/3/2016,renamed fracToStolon
+18/3/2016,renamed turnoverRateLive2Dead
+18/3/2016,renamed turnoverRateDead2Litter
+18/3/2016,renamed turnoverRateRootSenescence
+18/3/2016,renamed tissueTurnoverTmin
+18/3/2016,renamed tissueTurnoverTopt
+18/3/2016,renamed tissueTurnoverWFactorMax
+18/3/2016,renamed tissueTurnoverGLFWopt
+18/3/2016,renamed stockParameter
+18/3/2016,renamed digestibilityLive
+18/3/2016,renamed digestibilityDead
+18/3/2016,renamed minimumGreenWt
+18/3/2016,renamed minimumDeadWt
+18/3/2016,renamed preferenceForGreenDM
+18/3/2016,renamed preferenceForDeadDM
+18/3/2016,renamed leafNopt
+18/3/2016,renamed leafNmax
+18/3/2016,renamed leafNmin
+18/3/2016,renamed relativeNStems
+18/3/2016,renamed relativeNStolons
+18/3/2016,renamed relativeNRoots
+18/3/2016,renamed relativeNStage2
+18/3/2016,renamed relativeNStage3
+18/3/2016,renamed minimumNFixation
+18/3/2016,renamed maximumNFixation
+18/3/2016,renamed kappaNRemob2
+18/3/2016,renamed kappaNRemob3
+18/3/2016,renamed kappaNRemob4
+18/3/2016,renamed kappaCRemob
+18/3/2016,renamed facCNRemob
+18/3/2016,renamed dillutionCoefN
+18/3/2016,renamed glfGeneric
+18/3/2016,renamed waterStressExponent
+18/3/2016,renamed waterLoggingCoefficient
+18/3/2016,renamed referenceCO2
+18/3/2016,renamed coefficientCO2EffectOnPhotosynthesis
+18/3/2016,renamed offsetCO2EffectOnNuptake
+18/3/2016,renamed minimumCO2EffectOnNuptake
+18/3/2016,renamed exponentCO2EffectOnNuptake
+18/3/2016,renamed rootDistributionMethod
+18/3/2016,renamed expoLinearDepthParam
+18/3/2016,renamed expoLinearCurveParam
+
+18/3/2016,renamed interceptedRadn to RadnIntercepted
+18/3/2016,renamed myIntRadnFrac to myRadnIntFrac
+18/3/2016,renamed GreenLAI to LAIGreen
+18/3/2016,renamed DeadLAi to LAIDead
+18/3/2016,renamed TotalCover to CoverTotal
+18/3/2016,renamed GreenCover to CoverGreen
+18/3/2016,renamed DeadCover to CoverDead
+
