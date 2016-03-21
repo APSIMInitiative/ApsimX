@@ -827,28 +827,28 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <XYPairs>
             <Name>XYPairs</Name>
             <X>
-              <double>1</double>
+              <double>0</double>
               <double>100</double>
+              <double>250</double>
               <double>500</double>
-              <double>800</double>
-              <double>1200</double>
+              <double>750</double>
+              <double>1000</double>
+              <double>1250</double>
               <double>1500</double>
-              <double>1600</double>
+              <double>1750</double>
             </X>
             <Y>
-              <double>0.2</double>
+              <double>0.1</double>
               <double>1</double>
-              <double>4</double>
-              <double>8</double>
-              <double>9</double>
-              <double>10</double>
-              <double>10</double>
+              <double>3</double>
+              <double>7.5</double>
+              <double>7.5</double>
+              <double>7.5</double>
+              <double>7.5</double>
+              <double>7.5</double>
+              <double>7.5</double>
             </Y>
           </XYPairs>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[Allocation determined by Node number]]></MemoText>
-          </Memo>
           <XProperty>[Root].Depth</XProperty>
         </LinearInterpolationFunction>
         <FractionRemoved>0</FractionRemoved>
@@ -990,7 +990,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
               <Y>
                 <double>0.1</double>
                 <double>0.15</double>
-                <double>0.2</double>
+                <double>0.24</double>
                 <double>0.15</double>
                 <double>0.1</double>
               </Y>
@@ -2429,9 +2429,6 @@ namespace Models
 }
 	  
 ]]></Code>
-<<<<<<< HEAD
-        </Manager>
-=======
           </Manager>
           <Manager>
             <Name>SowDateCv</Name>
@@ -2666,7 +2663,6 @@ namespace Models
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
->>>>>>> ef810c7b635b92ea7182744cb6773e9da16ce674
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -2950,7 +2946,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Leaf.Predicted.FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
+          <YFieldName>FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -5772,101 +5768,6 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-<<<<<<< HEAD
-        <Report>
-          <Name>Report</Name>
-          <ExperimentFactorNames />
-          <ExperimentFactorValues />
-          <VariableNames>
-            <string>[Clock].Today</string>
-            <string>[FodderBeet].Leaf.Fw</string>
-            <string>[FodderBeet].Leaf.Fn</string>
-            <string>[FodderBeet].Phenology.CurrentPhaseName</string>
-            <string>[FodderBeet].Phenology.Stage</string>
-            <string>[FodderBeet].Phenology.ThermalTime.Value</string>
-            <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value</string>
-            <string>[FodderBeet].Leaf.Live.Wt</string>
-            <string>[FodderBeet].Total.Wt</string>
-            <string>[FodderBeet].Petiole.Live.Wt</string>
-            <string>[FodderBeet].Bulb.Live.Wt</string>
-            <string>[FodderBeet].Leaf.LAI</string>
-            <string>[FodderBeet].Structure.MainStemNodeNo</string>
-            <string>[FodderBeet].Leaf.PlantAppearedLeafNo</string>
-            <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
-            <string>[FodderBeet].Leaf.PlantsenescedLeafNo</string>
-            <string>[FodderBeet].Leaf.CoverGreen</string>
-            <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
-            <string>[FodderBeet].AboveGround.Wt</string>
-            <string>[FodderBeet].Leaf.Photosynthesis.RadnInt.Value</string>
-            <string>[FodderBeet].Leaf.Photosynthesis.RUEact.Value</string>
-            <string>[ExtraVariables].Script.AccumPlantN</string>
-            <string>[FodderBeet].Leaf.Live.N</string>
-            <string>[FodderBeet].Root.Live.N</string>
-            <string>[FodderBeet].Bulb.Live.N</string>
-            <string>[FodderBeet].Petiole.Live.N</string>
-            <string>[FodderBeet].Leaf.Live.NConc</string>
-            <string>[FodderBeet].Root.Live.NConc</string>
-          </VariableNames>
-          <EventNames>
-            <string>[Clock].DoReport</string>
-          </EventNames>
-        </Report>
-        <Operations>
-          <Name>Irrigation_and_Fertiliser</Name>
-          <Operation>
-            <Date>2011-11-17T00:00:00</Date>
-            <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 0);</Action>
-          </Operation>
-          <Operation>
-            <Date>2011-12-22T00:00:00</Date>
-            <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 0); </Action>
-          </Operation>
-          <Operation>
-            <Date>2011-11-18T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>2011-12-22T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>2011-12-29T00:00:00</Date>
-            <Action>[Irrigation].Apply(15);</Action>
-          </Operation>
-          <Operation>
-            <Date>2012-01-04T00:00:00</Date>
-            <Action>[Irrigation].Apply(30);</Action>
-          </Operation>
-          <Operation>
-            <Date>2012-01-12T00:00:00</Date>
-            <Action>[Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>2012-01-24T00:00:00</Date>
-            <Action>[Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>2012-02-01T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>2012-02-07T00:00:00</Date>
-            <Action>[Irrigation].Apply(30);</Action>
-          </Operation>
-          <Operation>
-            <Date>2012-03-22T00:00:00</Date>
-            <Action>[Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>2012-05-11T00:00:00</Date>
-            <Action>[Irrigation].Apply(30);</Action>
-          </Operation>
-        </Operations>
-        <Manager>
-          <Name>ExtraVariables</Name>
-          <Script />
-          <Code><![CDATA[using System;
-=======
         <Folder>
           <Name>Management</Name>
           <Manager>
@@ -5912,7 +5813,6 @@ namespace Models
             <Name>ExtraVariables</Name>
             <Script />
             <Code><![CDATA[using System;
->>>>>>> ef810c7b635b92ea7182744cb6773e9da16ce674
 using Models.Core;
 using System.Collections.Generic;
 using System.Text;
@@ -6083,9 +5983,6 @@ namespace Models
 }
 	  
 ]]></Code>
-<<<<<<< HEAD
-        </Manager>
-=======
           </Manager>
           <Manager>
             <Name>SowDateCv</Name>
@@ -6319,7 +6216,6 @@ namespace Models
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
->>>>>>> ef810c7b635b92ea7182744cb6773e9da16ce674
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -7199,7 +7095,7 @@ namespace Models
             <Title />
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
+            <Maximum>70</Maximum>
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
@@ -7247,6 +7143,102 @@ namespace Models
             <Title />
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>LAI</Name>
+          <Series>
+            <Name>Series1</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>Circle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObserved_P21</TableName>
+            <XFieldName>Observed.FodderBeet.Leaf.LAI</XFieldName>
+            <YFieldName>Predicted.FodderBeet.Leaf.LAI</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>LightInterception</Name>
+          <Series>
+            <Name>Series1</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>Circle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObserved_P21</TableName>
+            <XFieldName>Observed.FodderBeet.Leaf.CoverGreen</XFieldName>
+            <YFieldName>Predicted.FodderBeet.Leaf.CoverGreen</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>0.6</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>0.6</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
@@ -7488,7 +7480,7 @@ namespace Models
             <Title />
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
+            <Maximum>600</Maximum>
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
