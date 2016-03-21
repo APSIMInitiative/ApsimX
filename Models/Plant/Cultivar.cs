@@ -154,7 +154,7 @@ namespace Models.PMF
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel + 1));
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
             string aliasString = StringUtilities.BuildString(Aliases, ",");
             if (aliasString != string.Empty)
