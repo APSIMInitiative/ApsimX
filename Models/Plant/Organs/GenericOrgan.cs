@@ -203,15 +203,29 @@ namespace Models.PMF.Organs
         {
             get
             {
+                BiomassSupplyType Supply = new BiomassSupplyType();
+                // Calculate Reallocation Supply.
+                double _DMReallocationFactor = 0;
+                if (DMReallocationFactor != null) //Default of zero means N reallocation is truned off
+                    _DMReallocationFactor = DMReallocationFactor.Value;
+                Supply.Reallocation = SenescenceRate * StartLive.NonStructuralN * _DMReallocationFactor;
+
+                // Calculate Retranslocation Supply.
                 double _DMRetranslocationFactor = 0;
                 if (DMRetranslocationFactor != null) //Default of 0 means retranslocation is always truned off!!!!
                     _DMRetranslocationFactor = DMRetranslocationFactor.Value;
-                return new BiomassSupplyType
+
+                Supply.Fixation = 0;
+                Supply.Retranslocation = StartLive.NonStructuralWt * _DMRetranslocationFactor;
+
+                return Supply;
+               /* return new BiomassSupplyType
                 {
                     Fixation = 0,
                     Retranslocation = StartLive.NonStructuralWt * _DMRetranslocationFactor,
                     Reallocation = 0
                 };
+                */
             }
         }
         /// <summary>Gets or sets the n demand.</summary>
@@ -399,7 +413,7 @@ namespace Models.PMF.Organs
                 StartLive = Live;
                 StartNReallocationSupply = NSupply.Reallocation;
                 StartNRetranslocationSupply = NSupply.Retranslocation;
-            }
+              }
         }
 
         /// <summary>Does the nutrient allocations.</summary>

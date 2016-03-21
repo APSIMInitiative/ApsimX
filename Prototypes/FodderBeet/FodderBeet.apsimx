@@ -819,13 +819,38 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           </Propertys>
         </CompositeBiomass>
         <Constant>
-          <Name>MaxDailyNUptake</Name>
-          <Value>7.5</Value>
-        </Constant>
-        <Constant>
           <Name>StructuralFraction</Name>
           <Value>0.8</Value>
         </Constant>
+        <LinearInterpolationFunction>
+          <Name>MaxDailyNUptake</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>1</double>
+              <double>100</double>
+              <double>500</double>
+              <double>800</double>
+              <double>1200</double>
+              <double>1500</double>
+              <double>1600</double>
+            </X>
+            <Y>
+              <double>0.2</double>
+              <double>1</double>
+              <double>4</double>
+              <double>8</double>
+              <double>9</double>
+              <double>10</double>
+              <double>10</double>
+            </Y>
+          </XYPairs>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Allocation determined by Node number]]></MemoText>
+          </Memo>
+          <XProperty>[Root].Depth</XProperty>
+        </LinearInterpolationFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
         <InitialDM>5</InitialDM>
