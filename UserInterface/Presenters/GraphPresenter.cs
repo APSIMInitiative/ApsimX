@@ -205,7 +205,9 @@ namespace UserInterface.Presenters
         /// <returns></returns>
         public string ExportToPDF(string folder)
         {
-            Rectangle r = new Rectangle(0, 0, 800, 500);
+            // The rectange numbers below are optimised for generation of PDF document
+            // on a computer that has its display settings at 100%.
+            Rectangle r = new Rectangle(0, 0, 600, 450); 
             Bitmap img = new Bitmap(r.Width, r.Height);
 
             graphView.Export(img, true);
