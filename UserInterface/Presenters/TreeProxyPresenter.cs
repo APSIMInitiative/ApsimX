@@ -3,14 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.Windows.Forms;
     using System.Linq;
-    using System.Text;
     using Models.Agroforestry;
     using Models.Core;
     using Models.Soils;
-    using Models.Zones;
-    using Models;
     using Views;
 
     public class TreeProxyPresenter : IPresenter, IExportable

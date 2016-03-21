@@ -17,13 +17,10 @@ namespace Models.Core
     /// new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]
-    public class Simulations : Model, JobManager.IRunnable
+    public class Simulations : Model
     {
         /// <summary>The _ file name</summary>
         private string _FileName;
-
-        /// <summary>The job manager</summary>
-        JobManager jobManager;
 
         /// <summary>Gets or sets the width of the explorer.</summary>
         /// <value>The width of the explorer.</value>
@@ -151,7 +148,7 @@ namespace Models.Core
 
         /// <summary>Call Loaded event in specified model and all children</summary>
         /// <param name="model">The model.</param>
-        private static void CallOnLoaded(IModel model)
+        public static void CallOnLoaded(IModel model)
         {
             // Call OnLoaded in all models.
             Apsim.CallEventHandler(model, "Loaded", null);
@@ -288,69 +285,9 @@ namespace Models.Core
             return m as Simulations;
         }
 
-        /// <summary>
-        /// Allows the GUI to specify a simulation to run. It then calls
-        /// 'Run' below to run this simulation.
-        /// </summary>
-        /// <value>The simulation to run.</value>
-        [XmlIgnore]
-        public Model SimulationToRun { get; set; }
-
-        /// <summary>The number to run</summary>
-        private int NumToRun;
-        ///// <summary>The number completed</summary>
-        //private int NumCompleted;
-
-        /// <summary>Run all simulations.</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void Run(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            this.ErrorMessage = null;
-
-            // Get a reference to the JobManager so that we can add jobs to it.
-            jobManager = e.Argument as JobManager;
-
-            // Get a reference to our child DataStore.
-            DataStore store = Apsim.Child(this, typeof(DataStore)) as DataStore;
-
-            // Remove old simulation data.
-            if (store == null)
-                throw new Exception("Cannot find a data store in simulation file " + FileName);
-            store.RemoveUnwantedSimulations(this);
-
-            Simulation[] simulationsToRun;
-            if (SimulationToRun == null)
-            {
-                // As we are going to run all simulations, we can delete all tables in the DataStore. This
-                // will clean up order of columns in the tables and removed unused ones.
-                store.DeleteAllTables();
-
-                simulationsToRun = Simulations.FindAllSimulationsToRun(this);
-            }
-            else
-                simulationsToRun = Simulations.FindAllSimulationsToRun(SimulationToRun);
-
-            store.Disconnect();
-
-            MakeSubstitutions(simulationsToRun);
-
-            NumToRun = simulationsToRun.Length;
-            //NumCompleted = 0;
-
-            jobManager.AllJobsCompleted -= OnSimulationCompleted;
-            jobManager.AllJobsCompleted += OnSimulationCompleted;
-            foreach (Simulation simulation in simulationsToRun)
-            {
-                //simulation.Commencing -= OnSimulationCommencing;
-                //simulation.Commencing += OnSimulationCommencing;
-                jobManager.AddJob(simulation);
-            }
-        }
-
         /// <summary>Make model substitutions if necessary.</summary>
         /// <param name="simulations">The simulations to make substitutions in.</param>
-        private void MakeSubstitutions(Simulation[] simulations)
+        public void MakeSubstitutions(Simulation[] simulations)
         {
             IModel replacements = Apsim.Child(this, "Replacements");
             if (replacements != null)
@@ -373,47 +310,6 @@ namespace Models.Core
                             }
                         }
                     }
-                }
-            }
-        }
-
-        /// <summary>This gets called everytime a simulation commences.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            // We trap the commencing event so that we can then subscribe to 
-            // the completed event. If we subscibe to the completed event
-            // before the simulation starts then our completed event will be
-            // called before all other models. We want to be last so that we
-            // can invoke the 'AllCompleted' event.
-            (sender as Simulation).Completed += OnSimulationCompleted;
-        }
-
-        /// <summary>
-        /// This gets called everytime a simulation completes. When all are done then
-        /// invoke each model's OnAllCompleted method.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            CallAllCompleted();
-        }
-
-        /// <summary>Call the all completed event in all models.</summary>
-        public void CallAllCompleted()
-        {
-            object[] args = new object[] { this, new EventArgs() };
-            foreach (Model model in Apsim.ChildrenRecursively(this))
-            {
-                try
-                {
-                    Apsim.CallEventHandler(model, "AllCompleted", args);
-                }
-                catch (Exception err)
-                {
-                    ErrorMessage += err.ToString() + Environment.NewLine;
                 }
             }
         }

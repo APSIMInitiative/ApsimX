@@ -1,19 +1,16 @@
 ﻿using System;
-using UserInterface.Views;
-using Models.Graph;
-using Models.Core;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Collections;
 using System.Linq;
-using Models.Factorial;
-using UserInterface.Interfaces;
-using System.Data;
-using Models;
-using UserInterface.EventArguments;
-using Models.Soils;
 using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Graph;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
@@ -315,10 +312,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void CopyGraphToClipboard(object sender, EventArgs e)
         {
-            // Set the clipboard text.
-            Bitmap bitmap = new Bitmap(800, 600);
-            graphView.Export(bitmap, false);
-            System.Windows.Forms.Clipboard.SetImage(bitmap);
+            graphView.ExportToClipboard();
         }
 
         /// <summary>User has clicked "Include In Documentation" menu item.</summary>

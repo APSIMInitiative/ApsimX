@@ -6,14 +6,13 @@
 namespace UserInterface.Presenters
 {
     using System;
-    using Models.Graph;
-    using Views;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
     using System.Collections.Generic;
     using System.Linq;
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Views;
+    using System.IO;
     using System.Reflection;
-    using System.Windows.Forms;
 
     /// <summary>This presenter lets the user add a model.</summary>
     public class AddModelPresenter : IPresenter
@@ -66,12 +65,22 @@ namespace UserInterface.Presenters
             Type selectedModelType = allowableChildModels.Find(m => m.Name == view.List.SelectedValue);
             if (selectedModelType != null)
             {
-                Cursor.Current = Cursors.WaitCursor;
-                object child = Activator.CreateInstance(selectedModelType, true);
-                string childXML = XmlUtilities.Serialise(child, false);
-                this.explorerPresenter.Add(childXML, Apsim.FullPath(model));
-                this.explorerPresenter.HideRightHandPanel();
-                Cursor.Current = Cursors.Default;
+                view.WaitCursor = true;
+                try
+                {
+                    // Use the pre built serialization assembly.
+                    string binDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
+                    string deserializerFileName = Path.Combine(binDirectory, "Models.XmlSerializers.dll");
+
+                    object child = Activator.CreateInstance(selectedModelType, true);
+                    string childXML = XmlUtilities.Serialise(child, false, deserializerFileName);
+                    this.explorerPresenter.Add(childXML, Apsim.FullPath(model));
+                    this.explorerPresenter.HideRightHandPanel();
+                }
+                finally
+                {
+                    view.WaitCursor = false;
+                }
             }
         }
 

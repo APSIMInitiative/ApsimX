@@ -134,7 +134,6 @@ namespace UserInterface.Views
                 TreeView.SelectedNode = node;
 
                 TreeView.AfterSelect += OnAfterSelect;
-
             }
         }
 
@@ -212,7 +211,7 @@ namespace UserInterface.Views
 
         /// <summary>Gets or sets the shortcut keys.</summary>
         /// <value>The shortcut keys.</value>
-        public Keys[] ShortcutKeys { get; set; }
+        public string[] ShortcutKeys { get; set; }
 
         /// <summary>Populate the main menu tool strip.</summary>
         /// <param name="menuDescriptions">Menu descriptions for each menu item.</param>
@@ -248,7 +247,11 @@ namespace UserInterface.Views
                 ToolStripMenuItem Button = PopupMenu.Items.Add(Description.Name, Icon, Description.OnClick) as ToolStripMenuItem;
                 Button.TextImageRelation = TextImageRelation.ImageBeforeText;
                 Button.Checked = Description.Checked;
-                Button.ShortcutKeys = Description.ShortcutKey;
+                if (Description.ShortcutKey != null)
+                {
+                    KeysConverter kc = new KeysConverter();
+                    Button.ShortcutKeys = (Keys)kc.ConvertFromString(Description.ShortcutKey);
+                }
                 Button.Enabled = Description.Enabled;
             }
         }
@@ -271,13 +274,14 @@ namespace UserInterface.Views
         /// Add a user control to the right hand panel. If Control is null then right hand panel will be cleared.
         /// </summary>
         /// <param name="control">The control to add.</param>
-        public void AddRightHandView(UserControl control)
+        public void AddRightHandView(object control)
         {
             RightHandPanel.Controls.Clear();
-            if (control != null)
+            UserControl userControl = control as UserControl;
+            if (userControl != null)
             {
-                RightHandPanel.Controls.Add(control);
-                control.Dock = DockStyle.Fill;
+                RightHandPanel.Controls.Add(userControl);
+                userControl.Dock = DockStyle.Fill;
             }
         }
 
@@ -329,28 +333,36 @@ namespace UserInterface.Views
         /// <param name="errorLevel">The error level.</param>
         public void ShowMessage(string message, Models.DataStore.ErrorLevel errorLevel)
         {
-            StatusWindow.Visible = message != null;
+            MethodInvoker messageUpdate = delegate
+            {
+                StatusWindow.Visible = message != null;
 
-            // Output the message
-            if (errorLevel == Models.DataStore.ErrorLevel.Error)
-            {
-                StatusWindow.ForeColor = Color.Red;
-            }
-            else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
-            {
-                StatusWindow.ForeColor = Color.Brown;
-            }
+                // Output the message
+                if (errorLevel == Models.DataStore.ErrorLevel.Error)
+                {
+                    StatusWindow.ForeColor = Color.Red;
+                }
+                else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
+                {
+                    StatusWindow.ForeColor = Color.Brown;
+                }
+                else
+                {
+                    StatusWindow.ForeColor = Color.Blue;
+                }
+                message = message.TrimEnd("\n".ToCharArray());
+                message = message.Replace("\n", "\n                      ");
+                message += "\n";
+                StatusWindow.Text = message;
+                this.toolTip1.SetToolTip(this.StatusWindow, message);
+                progressBar.Visible = false;
+                Application.DoEvents();
+            };
+
+            if (InvokeRequired)
+                this.BeginInvoke(new Action(messageUpdate));
             else
-            {
-                StatusWindow.ForeColor = Color.Blue;
-            }
-            message = message.TrimEnd("\n".ToCharArray());
-            message = message.Replace("\n", "\n                      ");
-            message += "\n";
-            StatusWindow.Text = message;
-            this.toolTip1.SetToolTip(this.StatusWindow, message);
-            progressBar.Visible = false;
-            Application.DoEvents();
+                messageUpdate();
         }
 
         /// <summary>
@@ -359,8 +371,20 @@ namespace UserInterface.Views
         /// <param name="percent"></param>
         public void ShowProgress(int percent)
         {
-            progressBar.Visible = true;
-            progressBar.Value = percent;
+            // We need to use "Invoke" if the timer is running in a
+            // different thread. That means we can use either
+            // System.Timers.Timer or Windows.Forms.Timer in 
+            // RunCommand.cs
+            MethodInvoker progressBarUpdate = delegate
+            {
+                progressBar.Visible = true;
+                progressBar.Value = percent;
+            };
+
+            if (InvokeRequired)
+                this.BeginInvoke(new Action(progressBarUpdate));
+            else
+                progressBarUpdate();
         }
 
         /// <summary>
@@ -519,10 +543,15 @@ namespace UserInterface.Views
         /// <returns>True if command key was processed.</returns>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (ShortcutKeyPressed != null && ShortcutKeys != null && ShortcutKeys.Contains(keyData))
+            if (ShortcutKeyPressed != null && ShortcutKeys != null)
             {
-                ShortcutKeyPressed.Invoke(this, new KeysArgs() { Keys = keyData });
-                return true;
+                KeysConverter kc = new KeysConverter();
+                string keyName = kc.ConvertToString(keyData);
+                if (ShortcutKeys.Contains(keyName))
+                {
+                    ShortcutKeyPressed.Invoke(this, new KeysArgs() { Keys = keyData });
+                    return true;
+                }
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
@@ -687,6 +716,24 @@ namespace UserInterface.Views
                 if (!e.CancelEdit)
                     previouslySelectedNodePath = args.NodePath;
             }
+        }
+
+        /// <summary>
+        /// Get whatever text is currently on the clipboard
+        /// </summary>
+        /// <returns></returns>
+        public string GetClipboardText()
+        {
+            return Clipboard.GetText();
+        }
+
+        /// <summary>
+        /// Place text on the clipboard
+        /// </summary>
+        /// <param name="text"></param>
+        public void SetClipboardText(string text)
+        {
+            Clipboard.SetText(text);
         }
 
         /// <summary>User has closed the status window.</summary>

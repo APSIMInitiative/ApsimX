@@ -447,19 +447,23 @@ namespace UserInterface.Views
         /// Show the specified editor.
         /// </summary>
         /// <param name="editor">The editor to show</param>
-        public void ShowEditorPanel(UserControl editor)
+        public void ShowEditorPanel(object editorObj)
         {
-            if (this.bottomPanel.Controls.Count > 1)
+            UserControl editor = editorObj as UserControl;
+            if (editor != null)
             {
-                this.bottomPanel.Controls.RemoveAt(1);
-            }
+                if (this.bottomPanel.Controls.Count > 1)
+                {
+                    this.bottomPanel.Controls.RemoveAt(1);
+                }
 
-            this.bottomPanel.Controls.Add(editor);
-            this.bottomPanel.Visible = true;
-            this.bottomPanel.Height = editor.Height;
-            this.splitter.Visible = true;
-            editor.Dock = DockStyle.Fill;
-            editor.SendToBack();
+                this.bottomPanel.Controls.Add(editor);
+                this.bottomPanel.Visible = true;
+                this.bottomPanel.Height = editor.Height;
+                this.splitter.Visible = true;
+                editor.Dock = DockStyle.Fill;
+                editor.SendToBack();
+            }
         }
 
         /// <summary>
@@ -474,6 +478,14 @@ namespace UserInterface.Views
             this.plot1.Height = bitmap.Height;
             this.plot1.DrawToBitmap(bitmap, new Rectangle(0, 0, bitmap.Width, bitmap.Height));
             this.plot1.Dock = DockStyle.Fill;
+        }
+
+        public void ExportToClipboard()
+        {
+            // Set the clipboard text.
+            Bitmap bitmap = new Bitmap(800, 600);
+            Export(bitmap, false);
+            Clipboard.SetImage(bitmap);
         }
 
         /// <summary>

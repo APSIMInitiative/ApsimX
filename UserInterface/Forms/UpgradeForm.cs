@@ -76,8 +76,14 @@ namespace UserInterface.Forms
                 label1.Text = "You are currently using a custom build of APSIM. You cannot upgrade this to a newer version.";
             else
             {
-                label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below.";
                 PopulateUpgradeList();
+                if (upgrades.Length > 0)
+                {
+                    label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below.";
+                    label1.Text = label1.Text + Environment.NewLine + "Select an upgrade below.";
+                }
+                else
+                    label1.Text = "You are currently using version " + version.ToString() + ". You are using the latest version.";
             }
 
             firstNameBox.Text = Utility.Configuration.Settings.FirstName;
@@ -115,7 +121,7 @@ namespace UserInterface.Forms
         private void PopulateUpgradeList()
         {
             Version version = new Version(Application.ProductVersion);
-
+            //version = new Version(0, 0, 0, 652);  
             upgrades = WebUtilities.CallRESTService<Upgrade[]>("http://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
             foreach (Upgrade upgrade in upgrades)
             {
@@ -124,6 +130,8 @@ namespace UserInterface.Forms
                 newItem.SubItems.Add(upgrade.IssueTitle);
                 listView1.Items.Add(newItem);
             }
+            if (listView1.Items.Count > 0)
+                listView1.Items[0].Selected = true;
         }
 
         /// <summary>

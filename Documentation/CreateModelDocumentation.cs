@@ -23,23 +23,25 @@ public class Script
         string modelName = System.Environment.GetEnvironmentVariable("ModelName");
         
         // Open wheat validation in a tab
-        string fileName = Path.Combine(binFolder, @"..\Tests\" + modelName + @"\" + modelName + "Validation.apsimx");
-        tabbedExplorerPresenter.OpenApsimXFileInTab(fileName);
-    
-        // Get the presenter for this tab.
-        ExplorerPresenter presenter = tabbedExplorerPresenter.Presenters[0];
-        presenter.SelectNode(".Simulations");
+        string fileName = Path.Combine(binFolder, @"..\Tests\Validation\" + modelName + @"\" + modelName + ".apsimx");
+        if (File.Exists(fileName))
+        {
+            tabbedExplorerPresenter.OpenApsimXFileInTab(fileName);
+        
+            // Get the presenter for this tab.
+            ExplorerPresenter presenter = tabbedExplorerPresenter.Presenters[0];
+            presenter.SelectNode(".Simulations");
 
-        // Export the model to HTML
-        string folderName = Path.Combine(binFolder, @"..\Documentation\PDF");
-        Directory.CreateDirectory(folderName);
-       
-        ExportNodeCommand command = new ExportNodeCommand(presenter, presenter.CurrentNodePath);
-        command.Do(null);
+            // Export the model to HTML
+            string folderName = Path.Combine(binFolder, @"..\Documentation\PDF");
+            Directory.CreateDirectory(folderName);
+           
+            ExportNodeCommand command = new ExportNodeCommand(presenter, presenter.CurrentNodePath);
+            command.Do(null);
 
-        // Copy the file into the PDF directory.
-        File.Copy(command.FileNameWritten, @"..\Documentation\PDF\" + modelName + ".pdf");
-
+            // Copy the file into the PDF directory.
+            File.Copy(command.FileNameWritten, @"..\Documentation\PDF\" + modelName + ".pdf");
+        }
         // Close the user interface.
         tabbedExplorerPresenter.Close(false);
     }

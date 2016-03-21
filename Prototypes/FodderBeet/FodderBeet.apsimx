@@ -1431,65 +1431,415 @@ in file: C:\ApsimX\Prototypes\FodderBeet\Observations\FRNL_N_Uptake.txt</ErrorMe
       <Name>Factors</Name>
       <Factor>
         <Name>Cv</Name>
-        <Operations>
+        <Factor>
           <Name>Riv_Sep</Name>
-          <Operation>
-            <Date>2014-09-19T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:9, cultivar:"Rivage", depth:10, rowSpacing:500);</Action>
-          </Operation>
-        </Operations>
-        <Operations>
+          <Operations>
+            <Name>Nit</Name>
+            <Operation>
+              <Date>2014-09-19T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-10-16T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-17T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-28T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-15T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-24T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-01-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-02-10T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-04-09T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+          </Operations>
+          <Specifications>
+            <string>[SowDateCv].Script.CropToSow = Rivage</string>
+            <string>[SowDateCv].Script.SowingDate = 2014-09-19 </string>
+            <string>[NFert]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>Riv_Oct</Name>
-          <Operation>
-            <Date>2014-10-17T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:9, cultivar:"Rivage", depth:10, rowSpacing:500);</Action>
-          </Operation>
-        </Operations>
-        <Operations>
+          <Operations>
+            <Name>Nit</Name>
+            <Operation>
+              <Date>2014-09-19T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-10-16T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-17T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-28T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-15T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-24T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-01-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-02-10T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-04-09T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+          </Operations>
+          <Specifications>
+            <string>[SowDateCv].Script.CropToSow = Rivage</string>
+            <string>[SowDateCv].Script.SowingDate = 2014-10-17 </string>
+            <string>[NFert]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>Riv_Nov</Name>
-          <Operation>
-            <Date>2014-11-17T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:9, cultivar:"Rivage", depth:5, rowSpacing:500);</Action>
-          </Operation>
-        </Operations>
-        <Operations>
+          <Operations>
+            <Name>Nit</Name>
+            <Operation>
+              <Date>2014-09-19T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-10-16T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-17T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-28T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-15T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-24T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-01-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-02-10T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-04-09T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+          </Operations>
+          <Specifications>
+            <string>[SowDateCv].Script.CropToSow = Rivage</string>
+            <string>[SowDateCv].Script.SowingDate = 2014-11-17 </string>
+            <string>[NFert]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>Riv_Dec</Name>
-          <Operation>
-            <Date>2014-12-15T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:9, cultivar:"Rivage", depth:10, rowSpacing:500);</Action>
-          </Operation>
-        </Operations>
-        <Operations>
+          <Operations>
+            <Name>Nit</Name>
+            <Operation>
+              <Date>2014-09-19T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-10-16T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-17T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-28T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-15T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-24T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-01-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-02-10T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-04-09T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+          </Operations>
+          <Specifications>
+            <string>[SowDateCv].Script.CropToSow = Rivage</string>
+            <string>[SowDateCv].Script.SowingDate = 2014-12-15 </string>
+            <string>[NFert]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>Bri_Sep</Name>
-          <Operation>
-            <Date>2014-09-20T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:9, cultivar:"Brigadier", depth:10, rowSpacing:500);</Action>
-          </Operation>
-        </Operations>
-        <Operations>
+          <Operations>
+            <Name>Nit</Name>
+            <Operation>
+              <Date>2014-09-19T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-10-16T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-17T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-28T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-15T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-24T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-01-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-02-10T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-04-09T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+          </Operations>
+          <Specifications>
+            <string>[SowDateCv].Script.CropToSow = Brigadier</string>
+            <string>[SowDateCv].Script.SowingDate = 2014-09-19 </string>
+            <string>[NFert]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>Bri_Oct</Name>
-          <Operation>
-            <Date>2014-10-19T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:9, cultivar:"Brigadier", depth:10, rowSpacing:500);</Action>
-          </Operation>
-        </Operations>
-        <Operations>
+          <Operations>
+            <Name>Nit</Name>
+            <Operation>
+              <Date>2014-09-19T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-10-16T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-17T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-28T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-15T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-24T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-01-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-02-10T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-04-09T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+          </Operations>
+          <Specifications>
+            <string>[SowDateCv].Script.CropToSow = Brigadier</string>
+            <string>[SowDateCv].Script.SowingDate = 2014-10-17 </string>
+            <string>[NFert]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>Bri_Nov</Name>
-          <Operation>
-            <Date>2014-11-18T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:9, cultivar:"Brigadier", depth:5, rowSpacing:500);</Action>
-          </Operation>
-        </Operations>
-        <Operations>
+          <Operations>
+            <Name>Nit</Name>
+            <Operation>
+              <Date>2014-09-19T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-10-16T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-17T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-28T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-15T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-24T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-01-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-02-10T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-04-09T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+          </Operations>
+          <Specifications>
+            <string>[SowDateCv].Script.CropToSow = Brigadier</string>
+            <string>[SowDateCv].Script.SowingDate = 2014-11-17 </string>
+            <string>[NFert]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>Bri_Dec</Name>
-          <Operation>
-            <Date>2014-12-16T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:9, cultivar:"Brigadier", depth:10, rowSpacing:500);</Action>
-          </Operation>
-        </Operations>
-        <Specifications>
-          <string>[SowDateCv]</string>
-        </Specifications>
+          <Operations>
+            <Name>Nit</Name>
+            <Operation>
+              <Date>2014-09-19T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-10-16T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-17T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-28T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-15T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-24T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-01-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-02-10T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-04-09T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+          </Operations>
+          <Specifications>
+            <string>[SowDateCv].Script.CropToSow = Brigadier</string>
+            <string>[SowDateCv].Script.SowingDate = 2014-12-15 </string>
+            <string>[NFert]</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
       </Factor>
       <Memo>
         <Name>Memo</Name>
@@ -1829,13 +2179,6 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <Fertiliser>
           <Name>fertiliser</Name>
         </Fertiliser>
-        <Operations>
-          <Name>SowDateCv</Name>
-          <Operation>
-            <Date>2014-10-17T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:9, cultivar:"Rivage", depth:10, rowSpacing:500);</Action>
-          </Operation>
-        </Operations>
         <SurfaceOrganicMatter>
           <Name>surface organic matter</Name>
           <ResidueTypes>
@@ -1871,120 +2214,51 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Report>
-          <Name>Report</Name>
-          <ExperimentFactorNames />
-          <ExperimentFactorValues />
-          <VariableNames>
-            <string>[Clock].Today</string>
-            <string>[FodderBeet].Leaf.Fw</string>
-            <string>[FodderBeet].Leaf.Fn</string>
-            <string>[FodderBeet].Phenology.CurrentPhaseName</string>
-            <string>[FodderBeet].Phenology.Stage</string>
-            <string>[FodderBeet].Phenology.ThermalTime.Value</string>
-            <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value</string>
-            <string>[FodderBeet].Leaf.Live.Wt</string>
-            <string>[FodderBeet].Total.Wt</string>
-            <string>[FodderBeet].Petiole.Live.Wt</string>
-            <string>[FodderBeet].Bulb.Live.Wt</string>
-            <string>[FodderBeet].Leaf.LAI</string>
-            <string>[FodderBeet].Structure.MainStemNodeNo</string>
-            <string>[FodderBeet].Leaf.PlantAppearedLeafNo</string>
-            <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
-            <string>[FodderBeet].Leaf.PlantsenescedLeafNo</string>
-            <string>[FodderBeet].Leaf.CoverGreen</string>
-            <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
-            <string>[Phenology].Photoperiod.Value</string>
-            <string>[FodderBeet].AboveGround.Wt</string>
-            <string>[FodderBeet].Leaf.Photosynthesis.RadnInt.Value</string>
-            <string>[FodderBeet].Leaf.Photosynthesis.RUEact.Value</string>
-            <string>[ExtraVariables].Script.AccumPlantN</string>
-            <string>[FodderBeet].Leaf.Live.N</string>
-            <string>[FodderBeet].Root.Live.N</string>
-            <string>[FodderBeet].Bulb.Live.N</string>
-            <string>[FodderBeet].Petiole.Live.N</string>
-            <string>[FodderBeet].Leaf.Live.NConc</string>
-            <string>[FodderBeet].Root.Live.NConc</string>
-          </VariableNames>
-          <EventNames>
-            <string>[Clock].DoReport</string>
-          </EventNames>
-        </Report>
-        <Operations>
-          <Name>Irrigation_and_Fertiliser</Name>
-          <Operation>
-            <Date>2014-11-16T00:00:00</Date>
-            <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 0);</Action>
-          </Operation>
-          <Operation>
-            <Date>2014-11-28T00:00:00</Date>
-            <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 0); </Action>
-          </Operation>
-          <Operation>
-            <Date>2014-12-24T00:00:00</Date>
-            <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 0); </Action>
-          </Operation>
-          <Operation>
-            <Date>2015-04-15T00:00:00</Date>
-            <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 0); </Action>
-          </Operation>
-          <Operation>
-            <Date>2014-11-14T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>2014-11-24T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>2014-12-10T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>2014-12-24T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-01-06T00:00:00</Date>
-            <Action>[Irrigation].Apply(15);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-01-13T00:00:00</Date>
-            <Action>[Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-02-04T00:00:00</Date>
-            <Action>[Irrigation].Apply(30);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-02-10T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-02-20T00:00:00</Date>
-            <Action>[Irrigation].Apply(30);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-03-02T00:00:00</Date>
-            <Action>[Irrigation].Apply(30);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-03-10T00:00:00</Date>
-            <Action>[Irrigation].Apply(30);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-04-07T00:00:00</Date>
-            <Action>[Irrigation].Apply(35);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-04-15T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-        </Operations>
-        <Manager>
-          <Name>ExtraVariables</Name>
-          <Script />
-          <Code><![CDATA[using System;
+        <Folder>
+          <Name>Management</Name>
+          <Manager>
+            <Name>SetSoilParams</Name>
+            <Script />
+            <Code><![CDATA[// Jo Sharp's soil N parameters
+using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Soils.Soil Soil;
+
+		[EventSubscribe("DoInitialSummary")]
+		private void OnDoInitialSummary(object sender, EventArgs e)
+		{
+			Soil.SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };
+			Soil.SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };
+			Soil.SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };
+			Soil.SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };
+			Soil.SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };
+			Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
+			Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
+			Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
+                  
+		}
+
+	}
+}
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>ExtraVariables</Name>
+            <Script />
+            <Code><![CDATA[using System;
 using Models.Core;
 using System.Collections.Generic;
 using System.Text;
@@ -2155,7 +2429,244 @@ namespace Models
 }
 	  
 ]]></Code>
+<<<<<<< HEAD
         </Manager>
+=======
+          </Manager>
+          <Manager>
+            <Name>SowDateCv</Name>
+            <Script>
+              <InitialRootDepth>5</InitialRootDepth>
+              <CropToSow>Rivage</CropToSow>
+              <SowingDate>0001-01-01</SowingDate>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
+namespace Models
+{
+	[Serializable] 
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant FodderBeet;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
+		
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Sown Crop")]
+		public string CropToSow { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+		//[Description("Sowing Date2")]
+		//public DateTime SowingDate2 { get; set; }
+		//[Description("Sowing Date3")]
+		//public DateTime SowingDate3 { get; set; }
+		//[Description("Sowing Date4")]
+		//public DateTime SowingDate4 { get; set; }
+		
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
+			}
+			//else if (Clock.Today.Date == SowingDate2)
+			{
+				//	FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+			}
+			//else if (Clock.Today.Date == SowingDate3)
+			{
+				//	FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+			}
+			//else if (Clock.Today.Date == SowingDate4)
+			{
+				//	FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+		
+			}
+			
+			
+		}
+	}
+}
+				]]></Code>
+          </Manager>
+          <Operations>
+            <Name>Irrig_Schedule</Name>
+            <Operation>
+              <Date>2014-10-30T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-03T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-10T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-15T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-11-21T00:00:00</Date>
+              <Action>[Irrigation].Apply(10)</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-14T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-24T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-10T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-24T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-01-06T00:00:00</Date>
+              <Action>[Irrigation].Apply(15);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-01-13T00:00:00</Date>
+              <Action>[Irrigation].Apply(25);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-02-04T00:00:00</Date>
+              <Action>[Irrigation].Apply(30);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-02-10T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-02-20T00:00:00</Date>
+              <Action>[Irrigation].Apply(30);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-03-02T00:00:00</Date>
+              <Action>[Irrigation].Apply(30);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-03-10T00:00:00</Date>
+              <Action>[Irrigation].Apply(30);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-04-07T00:00:00</Date>
+              <Action>[Irrigation].Apply(35);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-04-15T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+          </Operations>
+          <Operations>
+            <Name>NFert</Name>
+            <Operation>
+              <Date>2014-09-19T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-10-16T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-17T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-11-28T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-15T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2014-12-24T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-01-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-02-10T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-04-09T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
+            </Operation>
+          </Operations>
+        </Folder>
+        <Report>
+          <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[FodderBeet].Leaf.Fw</string>
+            <string>[FodderBeet].Leaf.Fn</string>
+            <string>[FodderBeet].Phenology.CurrentPhaseName</string>
+            <string>[FodderBeet].Phenology.Stage</string>
+            <string>[FodderBeet].Phenology.ThermalTime.Value</string>
+            <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value</string>
+            <string>[FodderBeet].Leaf.Live.Wt</string>
+            <string>[FodderBeet].Total.Wt</string>
+            <string>[FodderBeet].Petiole.Live.Wt</string>
+            <string>[FodderBeet].Bulb.Live.Wt</string>
+            <string>[FodderBeet].Leaf.LAI</string>
+            <string>[FodderBeet].Structure.MainStemNodeNo</string>
+            <string>[FodderBeet].Leaf.PlantAppearedLeafNo</string>
+            <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
+            <string>[FodderBeet].Leaf.PlantsenescedLeafNo</string>
+            <string>[FodderBeet].Leaf.CoverGreen</string>
+            <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
+            <string>[Phenology].Photoperiod.Value</string>
+            <string>[FodderBeet].AboveGround.Wt</string>
+            <string>[FodderBeet].Leaf.Photosynthesis.RadnInt.Value</string>
+            <string>[FodderBeet].Leaf.Photosynthesis.RUEact.Value</string>
+            <string>[ExtraVariables].Script.AccumPlantN</string>
+            <string>[FodderBeet].Leaf.Live.N</string>
+            <string>[FodderBeet].Root.Live.N</string>
+            <string>[FodderBeet].Bulb.Live.N</string>
+            <string>[FodderBeet].Petiole.Live.N</string>
+            <string>[FodderBeet].Leaf.Live.NConc</string>
+            <string>[FodderBeet].Root.Live.NConc</string>
+            <string>[ExtraVariables].Script.AccumFert</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
+        </Report>
+>>>>>>> ef810c7b635b92ea7182744cb6773e9da16ce674
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -2657,12 +3168,10 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries>
-          <string>CvRiv_Sep</string>
-          <string>CvRiv_Oct</string>
-          <string>CvRiv_Nov</string>
-          <string>CvRiv_Dec</string>
           <string>CvBri_Sep</string>
+          <string>CvBri_Oct</string>
           <string>CvBri_Nov</string>
+          <string>CvBri_Dec</string>
         </DisabledSeries>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
@@ -2726,15 +3235,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries>
-          <string>CvRiv_Sep</string>
-          <string>CvRiv_Nov</string>
-          <string>CvRiv_Dec</string>
-          <string>CvBri_Sep</string>
-          <string>CvBri_Oct</string>
-          <string>CvBri_Nov</string>
-          <string>CvBri_Dec</string>
-        </DisabledSeries>
+        <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
@@ -2861,9 +3362,6 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries>
-          <string>CvRiv_Sep</string>
-          <string>CvRiv_Nov</string>
-          <string>CvRiv_Dec</string>
           <string>CvBri_Sep</string>
           <string>CvBri_Oct</string>
           <string>CvBri_Nov</string>
@@ -4563,6 +5061,56 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
     </Folder>
+    <Folder>
+      <Name>NFert</Name>
+      <Graph>
+        <Name>FertN</Name>
+        <Series>
+          <Name>Simulated</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.AccumFert</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Fertiliser (kgN/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>0</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>50</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries>
+          <string>CvBri_Sep</string>
+          <string>CvBri_Oct</string>
+          <string>CvBri_Nov</string>
+          <string>CvBri_Dec</string>
+        </DisabledSeries>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+    </Folder>
   </Experiment>
   <Experiment>
     <Name>LincolnP21_</Name>
@@ -4570,184 +5118,292 @@ namespace Models
       <Name>Factors</Name>
       <Factor>
         <Name>Cv</Name>
-        <Operations>
+        <Factor>
           <Name>2011</Name>
-          <Operation>
-            <Date>2011-10-31T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:9, cultivar:"Rivage", depth:10, rowSpacing:500);</Action>
-          </Operation>
-          <Operation>
-            <Date>2014-11-16T00:00:00</Date>
-            <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 0);</Action>
-          </Operation>
-          <Operation>
-            <Date>2014-11-28T00:00:00</Date>
-            <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 0); </Action>
-          </Operation>
-          <Operation>
-            <Date>2014-12-24T00:00:00</Date>
-            <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 0); </Action>
-          </Operation>
-          <Operation>
-            <Date>2015-04-15T00:00:00</Date>
-            <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 0); </Action>
-          </Operation>
-          <Operation>
-            <Date>2014-11-14T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>2014-11-24T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>2014-12-10T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>2014-12-24T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-01-06T00:00:00</Date>
-            <Action>[Irrigation].Apply(15);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-01-13T00:00:00</Date>
-            <Action>[Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-02-04T00:00:00</Date>
-            <Action>[Irrigation].Apply(30);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-02-10T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-02-20T00:00:00</Date>
-            <Action>[Irrigation].Apply(30);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-03-02T00:00:00</Date>
-            <Action>[Irrigation].Apply(30);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-03-10T00:00:00</Date>
-            <Action>[Irrigation].Apply(30);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-04-07T00:00:00</Date>
-            <Action>[Irrigation].Apply(35);</Action>
-          </Operation>
-          <Operation>
-            <Date>2015-04-15T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-        </Operations>
-        <Operations>
+          <Operations>
+            <Name>Irrigation_n_Fertiliser</Name>
+            <Operation>
+              <Date>2011-11-17T00:00:00</Date>
+              <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-12-22T00:00:00</Date>
+              <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 0); </Action>
+            </Operation>
+            <Operation>
+              <Date>2012-10-29T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-11-29T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 0); </Action>
+            </Operation>
+            <Operation>
+              <Date>2011-11-18T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-12-22T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-12-29T00:00:00</Date>
+              <Action>[Irrigation].Apply(15);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-01-11T00:00:00</Date>
+              <Action>[Irrigation].Apply(30);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-01-12T00:00:00</Date>
+              <Action>[Irrigation].Apply(25);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-01-24T00:00:00</Date>
+              <Action>[Irrigation].Apply(25);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-02-01T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-02-07T00:00:00</Date>
+              <Action>[Irrigation].Apply(30);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-03-22T00:00:00</Date>
+              <Action>[Irrigation].Apply(25);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-05-11T00:00:00</Date>
+              <Action>[Irrigation].Apply(30);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-10-31T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-06T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-13T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-20T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-21T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-27T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-01-03T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-01-10T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-01-24T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-01-31T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-02-07T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-02-14T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-02-21T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-02-28T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-03-07T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-03-14T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-04-04T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-04-18T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+          </Operations>
+          <Specifications>
+            <string>[SowDateCv].Script.SowingDate = 2011-10-31</string>
+            <string>[Irrigation_n_Fertiliser]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>2012</Name>
-          <Operation>
-            <Date>2012-10-29T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:9, cultivar:"Rivage", depth:10, rowSpacing:500);</Action>
-          </Operation>
-          <Operation>
-            <Date>2012-10-29T00:00:00</Date>
-            <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 0);</Action>
-          </Operation>
-          <Operation>
-            <Date>2012-11-29T00:00:00</Date>
-            <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 0);</Action>
-          </Operation>
-          <Operation>
-            <Date>2012-12-21T00:00:00</Date>
-            <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 0); </Action>
-          </Operation>
-          <Operation>
-            <Date>0001-01-01T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>2012-12-06T00:00:00</Date>
-            <Action>[Irrigation].Apply(52);</Action>
-          </Operation>
-          <Operation>
-            <Date>2012-12-13T00:00:00</Date>
-            <Action>[Irrigation].Apply(8.1);</Action>
-          </Operation>
-          <Operation>
-            <Date>2012-12-20T00:00:00</Date>
-            <Action>[Irrigation].Apply(35);</Action>
-          </Operation>
-          <Operation>
-            <Date>2012-12-21T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>2012-12-27T00:00:00</Date>
-            <Action>[Irrigation].Apply(26);</Action>
-          </Operation>
-          <Operation>
-            <Date>2013-01-03T00:00:00</Date>
-            <Action>[Irrigation].Apply(32);</Action>
-          </Operation>
-          <Operation>
-            <Date>2013-01-10T00:00:00</Date>
-            <Action>[Irrigation].Apply(34);</Action>
-          </Operation>
-          <Operation>
-            <Date>2013-01-24T00:00:00</Date>
-            <Action>[Irrigation].Apply(24.1);</Action>
-          </Operation>
-          <Operation>
-            <Date>2013-01-31T00:00:00</Date>
-            <Action>[Irrigation].Apply(40.9);</Action>
-          </Operation>
-          <Operation>
-            <Date>2013-02-07T00:00:00</Date>
-            <Action>[Irrigation].Apply(17.5);</Action>
-          </Operation>
-          <Operation>
-            <Date>2013-02-14T00:00:00</Date>
-            <Action>[Irrigation].Apply(32.2);</Action>
-          </Operation>
-          <Operation>
-            <Date>2013-02-21T00:00:00</Date>
-            <Action>[Irrigation].Apply(26.7);</Action>
-          </Operation>
-          <Operation>
-            <Date>2013-02-28T00:00:00</Date>
-            <Action>[Irrigation].Apply(24.7);</Action>
-          </Operation>
-          <Operation>
-            <Date>2013-03-07T00:00:00</Date>
-            <Action>[Irrigation].Apply(25.3);</Action>
-          </Operation>
-          <Operation>
-            <Date>2013-03-14T00:00:00</Date>
-            <Action>[Irrigation].Apply(19.4);</Action>
-          </Operation>
-          <Operation>
-            <Date>2013-04-04T00:00:00</Date>
-            <Action>[Irrigation].Apply(16.1);</Action>
-          </Operation>
-          <Operation>
-            <Date>2013-04-18T00:00:00</Date>
-            <Action>[Irrigation].Apply(7.1);</Action>
-          </Operation>
-        </Operations>
-        <Specifications>
-          <string>[SowDateCv]</string>
-        </Specifications>
+          <Operations>
+            <Name>Irrigation_n_Fertiliser</Name>
+            <Operation>
+              <Date>2011-11-17T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-12-22T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 0); </Action>
+            </Operation>
+            <Operation>
+              <Date>2012-10-29T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-11-29T00:00:00</Date>
+              <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 0); </Action>
+            </Operation>
+            <Operation>
+              <Date>2011-11-18T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-12-22T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-12-29T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-01-11T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-01-12T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-01-24T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-02-01T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-02-07T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-03-22T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-05-11T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-10-31T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-06T00:00:00</Date>
+              <Action>[Irrigation].Apply(52);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-13T00:00:00</Date>
+              <Action>[Irrigation].Apply(8.1);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-20T00:00:00</Date>
+              <Action>[Irrigation].Apply(35);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-21T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-27T00:00:00</Date>
+              <Action>[Irrigation].Apply(26);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-01-03T00:00:00</Date>
+              <Action>[Irrigation].Apply(32);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-01-10T00:00:00</Date>
+              <Action>[Irrigation].Apply(34);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-01-24T00:00:00</Date>
+              <Action>[Irrigation].Apply(24.1);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-01-31T00:00:00</Date>
+              <Action>[Irrigation].Apply(40.9);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-02-07T00:00:00</Date>
+              <Action>[Irrigation].Apply(17.5);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-02-14T00:00:00</Date>
+              <Action>[Irrigation].Apply(32.2);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-02-21T00:00:00</Date>
+              <Action>[Irrigation].Apply(26.7);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-02-28T00:00:00</Date>
+              <Action>[Irrigation].Apply(24.7);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-03-07T00:00:00</Date>
+              <Action>[Irrigation].Apply(25.3);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-03-14T00:00:00</Date>
+              <Action>[Irrigation].Apply(19.4);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-04-04T00:00:00</Date>
+              <Action>[Irrigation].Apply(16.1);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-04-18T00:00:00</Date>
+              <Action>[Irrigation].Apply(7.1);</Action>
+            </Operation>
+          </Operations>
+          <Specifications>
+            <string>[SowDateCv].Script.SowingDate = 2012-10-29</string>
+            <string>[Irrigation_n_Fertiliser]</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
       </Factor>
-      <Memo>
-        <Name>Memo</Name>
-        <MemoText><![CDATA[
-2 cultivars (Bri and Riv)
-4 sowing dates
-
-Moved sowing dates of Rivage a day after just to visuslise differences in graphs]]></MemoText>
-      </Memo>
     </Factors>
     <Simulation>
       <Name>P21_Base</Name>
@@ -5081,13 +5737,6 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
         <Fertiliser>
           <Name>fertiliser</Name>
         </Fertiliser>
-        <Operations>
-          <Name>SowDateCv</Name>
-          <Operation>
-            <Date>2011-10-31T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:9, cultivar:"Rivage", depth:10, rowSpacing:500);</Action>
-          </Operation>
-        </Operations>
         <SurfaceOrganicMatter>
           <Name>surface organic matter</Name>
           <ResidueTypes>
@@ -5123,6 +5772,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
+<<<<<<< HEAD
         <Report>
           <Name>Report</Name>
           <ExperimentFactorNames />
@@ -5216,6 +5866,53 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Name>ExtraVariables</Name>
           <Script />
           <Code><![CDATA[using System;
+=======
+        <Folder>
+          <Name>Management</Name>
+          <Manager>
+            <Name>SetSoilParams</Name>
+            <Script />
+            <Code><![CDATA[// Jo Sharp's soil N parameters
+using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Soils.Soil Soil;
+
+		[EventSubscribe("DoInitialSummary")]
+		private void OnDoInitialSummary(object sender, EventArgs e)
+		{
+			Soil.SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };
+			Soil.SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };
+			Soil.SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };
+			Soil.SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };
+			Soil.SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };
+			Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
+			Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
+			Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
+                  
+		}
+
+	}
+}
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>ExtraVariables</Name>
+            <Script />
+            <Code><![CDATA[using System;
+>>>>>>> ef810c7b635b92ea7182744cb6773e9da16ce674
 using Models.Core;
 using System.Collections.Generic;
 using System.Text;
@@ -5386,7 +6083,243 @@ namespace Models
 }
 	  
 ]]></Code>
+<<<<<<< HEAD
         </Manager>
+=======
+          </Manager>
+          <Manager>
+            <Name>SowDateCv</Name>
+            <Script>
+              <InitialRootDepth>5</InitialRootDepth>
+              <CropToSow>Rivage</CropToSow>
+              <SowingDate>2011-10-31</SowingDate>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
+namespace Models
+{
+	[Serializable] 
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant FodderBeet;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
+		
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Sown Crop")]
+		public string CropToSow { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+		
+		
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
+			}
+						
+			
+		}
+	}
+}
+				]]></Code>
+          </Manager>
+          <Operations>
+            <Name>Irrigation_n_Fertiliser</Name>
+            <Operation>
+              <Date>2011-11-17T00:00:00</Date>
+              <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-12-22T00:00:00</Date>
+              <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 0); </Action>
+            </Operation>
+            <Operation>
+              <Date>2012-10-29T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-11-29T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-21T00:00:00</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 0); </Action>
+            </Operation>
+            <Operation>
+              <Date>2011-11-18T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-12-22T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2011-12-29T00:00:00</Date>
+              <Action>[Irrigation].Apply(15);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-01-11T00:00:00</Date>
+              <Action>[Irrigation].Apply(30);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-01-12T00:00:00</Date>
+              <Action>[Irrigation].Apply(25);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-01-24T00:00:00</Date>
+              <Action>[Irrigation].Apply(25);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-02-01T00:00:00</Date>
+              <Action>[Irrigation].Apply(10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-02-07T00:00:00</Date>
+              <Action>[Irrigation].Apply(30);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-03-22T00:00:00</Date>
+              <Action>[Irrigation].Apply(25);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-05-11T00:00:00</Date>
+              <Action>[Irrigation].Apply(30);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-10-31T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-06T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-13T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-20T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-21T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2012-12-27T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-01-03T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-01-10T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-01-24T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-01-31T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-02-07T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-02-14T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-02-21T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-02-28T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-03-07T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-03-14T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-04-04T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2013-04-18T00:00:00</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+          </Operations>
+        </Folder>
+        <Report>
+          <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[FodderBeet].Leaf.Fw</string>
+            <string>[FodderBeet].Leaf.Fn</string>
+            <string>[FodderBeet].Phenology.CurrentPhaseName</string>
+            <string>[FodderBeet].Phenology.Stage</string>
+            <string>[FodderBeet].Phenology.ThermalTime.Value</string>
+            <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value</string>
+            <string>[FodderBeet].Leaf.Live.Wt</string>
+            <string>[FodderBeet].Total.Wt</string>
+            <string>[FodderBeet].Petiole.Live.Wt</string>
+            <string>[FodderBeet].Bulb.Live.Wt</string>
+            <string>[FodderBeet].Leaf.LAI</string>
+            <string>[FodderBeet].Structure.MainStemNodeNo</string>
+            <string>[FodderBeet].Leaf.PlantAppearedLeafNo</string>
+            <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
+            <string>[FodderBeet].Leaf.PlantsenescedLeafNo</string>
+            <string>[FodderBeet].Leaf.CoverGreen</string>
+            <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
+            <string>[FodderBeet].AboveGround.Wt</string>
+            <string>[FodderBeet].Leaf.Photosynthesis.RadnInt.Value</string>
+            <string>[FodderBeet].Leaf.Photosynthesis.RUEact.Value</string>
+            <string>[ExtraVariables].Script.AccumPlantN</string>
+            <string>[FodderBeet].Leaf.Live.N</string>
+            <string>[FodderBeet].Root.Live.N</string>
+            <string>[FodderBeet].Bulb.Live.N</string>
+            <string>[FodderBeet].Petiole.Live.N</string>
+            <string>[FodderBeet].Leaf.Live.NConc</string>
+            <string>[FodderBeet].Root.Live.NConc</string>
+            <string>[ExtraVariables].Script.AccumFert</string>
+            <string>[ExtraVariables].Script.AccumIrrigation as irrigation</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
+        </Report>
+>>>>>>> ef810c7b635b92ea7182744cb6773e9da16ce674
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -6777,11 +7710,11 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
+          <ColourArgb>-2793984</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
+          <Marker>FilledDiamond</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
@@ -6813,6 +7746,96 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
     </Folder>
+    <Folder>
+      <Name>NFert</Name>
+      <Graph>
+        <Name>FertN</Name>
+        <Series>
+          <Name>Simulated</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.AccumFert</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Fertiliser (kgN/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>0</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>50</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+    </Folder>
+    <Folder>
+      <Name>Irrig_amount</Name>
+      <Graph>
+        <Name>Irrig</Name>
+        <Series>
+          <Name>Simulated</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>irrigation</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Fertiliser (kgN/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>0</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>50</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+    </Folder>
   </Experiment>
-  <ExplorerWidth>313</ExplorerWidth>
+  <ExplorerWidth>377</ExplorerWidth>
 </Simulations>
