@@ -2094,12 +2094,12 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
               <double>300</double>
             </Thickness>
             <NO3>
-              <double>217</double>
-              <double>30</double>
-              <double>5</double>
-              <double>5</double>
-              <double>0</double>
-              <double>0</double>
+              <double>7.6</double>
+              <double>7.6</double>
+              <double>3.63</double>
+              <double>0.93</double>
+              <double>0.57</double>
+              <double>0.57</double>
             </NO3>
             <NH4>
               <double>0</double>
@@ -2633,6 +2633,7 @@ namespace Models
             <string>[FodderBeet].Leaf.Live.NConc</string>
             <string>[FodderBeet].Root.Live.NConc</string>
             <string>[ExtraVariables].Script.AccumFert</string>
+            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -3482,7 +3483,7 @@ namespace Models
             <Title />
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
+            <Maximum>40</Maximum>
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
@@ -3847,7 +3848,12 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
+        <DisabledSeries>
+          <string>CvBri_Sep</string>
+          <string>CvBri_Oct</string>
+          <string>CvBri_Nov</string>
+          <string>CvBri_Dec</string>
+        </DisabledSeries>
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
@@ -3898,7 +3904,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Leaf Biomass (g/m2)</Title>
+          <Title>Photo</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -5073,7 +5079,99 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+    </Folder>
+    <Folder>
+      <Name>SoilN</Name>
+      <Graph>
+        <Name>SoilN</Name>
+        <Series>
+          <Name>Simulated</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.SoilNitrogenContent</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Fertiliser (kgN/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>0</Minimum>
+          <Maximum>200</Maximum>
+          <Interval>50</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+    </Folder>
+    <Folder>
+      <Name>SoilN_Riv_SD2</Name>
+      <Graph>
+        <Name>Min_N</Name>
+        <Series>
+          <Name>Simulated</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16711936</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.SoilNitrogenContent</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Bulb Biomass (g/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries>
+          <string>CvRiv_Sep</string>
+          <string>CvRiv_Nov</string>
           <string>CvBri_Sep</string>
           <string>CvBri_Oct</string>
           <string>CvBri_Nov</string>
@@ -5648,20 +5746,20 @@ namespace Models
               <double>300</double>
             </Thickness>
             <NO3>
-              <double>217</double>
-              <double>30</double>
-              <double>5</double>
-              <double>5</double>
-              <double>0</double>
-              <double>0</double>
+              <double>27.3</double>
+              <double>22.8</double>
+              <double>1.2</double>
+              <double>9.2</double>
+              <double>9.2</double>
+              <double>1</double>
             </NO3>
             <NH4>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
+              <double>4.3</double>
+              <double>7.6</double>
+              <double>4.1</double>
+              <double>2.7</double>
+              <double>2.4</double>
+              <double>0.1</double>
             </NH4>
             <NO3Units>kgha</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -5765,6 +5863,7 @@ namespace Models
 	public class Script : Model
 	{
 		[Link] Soils.Soil Soil;
+		[Link] Clock Clock;
 
 		[EventSubscribe("DoInitialSummary")]
 		private void OnDoInitialSummary(object sender, EventArgs e)
@@ -5778,6 +5877,21 @@ namespace Models
 			Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
 			Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
                   
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			
+			DateTime ChangeDate = new DateTime(2012, 10, 29);
+			if (Clock.Today.Date == ChangeDate)
+			{
+				//Soil.InitialNO3N = new double[] { 52, 26, 12, 16, 10, 0.5 };
+				//Soil.InitialNH4N = new double[] { 52, 26, 12, 16, 10, 0.5 };
+				
+			}
+						
+			
 		}
 
 	}
@@ -6186,6 +6300,7 @@ namespace Models
             <string>[FodderBeet].Root.Live.NConc</string>
             <string>[ExtraVariables].Script.AccumFert</string>
             <string>[ExtraVariables].Script.AccumIrrigation as irrigation</string>
+            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -6692,8 +6807,8 @@ namespace Models
           <Title>Leaf_N (g/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
+          <Maximum>12</Maximum>
+          <Interval>2</Interval>
         </Axis>
         <Axis>
           <Type>Bottom</Type>
@@ -6755,8 +6870,8 @@ namespace Models
           <Title>Petiole (g/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
-          <Maximum>7</Maximum>
-          <Interval>1</Interval>
+          <Maximum>12</Maximum>
+          <Interval>2</Interval>
         </Axis>
         <Axis>
           <Type>Bottom</Type>
@@ -7778,6 +7893,51 @@ namespace Models
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>irrigation</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Fertiliser (kgN/ha)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>0</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>50</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+    </Folder>
+    <Folder>
+      <Name>SoilN</Name>
+      <Graph>
+        <Name>SoilN</Name>
+        <Series>
+          <Name>Simulated</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.SoilNitrogenContent</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
