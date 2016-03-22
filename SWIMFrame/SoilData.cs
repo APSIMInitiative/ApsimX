@@ -8,10 +8,10 @@ namespace SWIMFrame
 {
     public class SoilData
     {
-        int n, nsp, nft;
+        public int n, nsp, nft;
         int[] soilloc, pathloc;
         int[,] philoc;
-        double[] x, dx, ths, he;
+        public double[] x, dx, ths, he;
         SoilProps[] sp;
         FluxTable[] ft;
         FluxPath[] fpath;
@@ -252,7 +252,7 @@ namespace SWIMFrame
         /// <param name="q">flux.</param>
         /// <param name="qya">partial derivs of q wrt x(1) and x(2).</param>
         /// <param name="qyb">partial derivs of q wrt x(1) and x(2).</param>
-        private void GetQ(int iq, int[] iS, double[] x, out double q, out double qya, out double qyb)
+        public void GetQ(int iq, int[] iS, double[] x, out double q, out double qya, out double qyb)
         {
             bool vapour;
             int i, j, i2;
@@ -395,7 +395,7 @@ namespace SWIMFrame
         /// <param name="x">S or h-he of layers above and below.</param>
         /// <param name="q">K for x.</param>
         /// <param name="qya">deriv of K wrt x.></param>
-        private void GetK(int iq, int iS, double x, out double q, out double qya)
+        public void GetK(int iq, int iS, double x, out double q, out double qya)
         {
             int i;
             double v;
