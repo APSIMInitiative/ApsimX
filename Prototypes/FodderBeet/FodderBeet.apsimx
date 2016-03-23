@@ -2162,17 +2162,17 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           </ResidueTypes>
           <Pools>
             <Pool>
-              <PoolName>wheat</PoolName>
-              <ResidueType>wheat</ResidueType>
-              <Mass>0</Mass>
+              <PoolName>grass</PoolName>
+              <ResidueType>grass</ResidueType>
+              <Mass>1500</Mass>
               <CNRatio>80</CNRatio>
               <CPRatio>NaN</CPRatio>
               <StandingFraction>0</StandingFraction>
             </Pool>
           </Pools>
-          <PoolName>wheat</PoolName>
-          <type>wheat</type>
-          <mass>0</mass>
+          <PoolName>grass</PoolName>
+          <type>grass</type>
+          <mass>1500</mass>
           <standing_fraction>0</standing_fraction>
           <cpr />
           <cnr>80</cnr>
