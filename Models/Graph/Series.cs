@@ -600,7 +600,14 @@ namespace Models.Graph
 
                 DataView dataView = new DataView(data);
                 if (where != "()")
-                    dataView.RowFilter = where;
+                    try
+                    {
+                        dataView.RowFilter = where;
+                    }
+                    catch (Exception)
+                    {
+
+                    }
 
                 // If the field exists in our data table then return it.
                 if (data != null && data.Columns.Contains(XFieldName) && data.Columns.Contains(YFieldName) && dataView.Count > 0)
