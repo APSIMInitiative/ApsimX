@@ -418,7 +418,7 @@ namespace UserInterface.Presenters
                 {
                     // If the model xml is a soil object then try and convert from old
                     // APSIM format to new.
-                    if (document.DocumentElement.Name == "Soil")
+                    if (document.DocumentElement.Name == "Soil" && XmlUtilities.Attribute(document.DocumentElement, "Name") != "")
                     {
                         XmlDocument newDoc = new XmlDocument();
                         newDoc.AppendChild(newDoc.CreateElement("D"));

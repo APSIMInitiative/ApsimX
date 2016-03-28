@@ -76,8 +76,14 @@ namespace UserInterface.Forms
                 label1.Text = "You are currently using a custom build of APSIM. You cannot upgrade this to a newer version.";
             else
             {
-                label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below.";
                 PopulateUpgradeList();
+                if (upgrades.Length > 0)
+                {
+                    label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below.";
+                    label1.Text = label1.Text + Environment.NewLine + "Select an upgrade below.";
+                }
+                else
+                    label1.Text = "You are currently using version " + version.ToString() + ". You are using the latest version.";
             }
 
             firstNameBox.Text = Utility.Configuration.Settings.FirstName;
@@ -115,7 +121,7 @@ namespace UserInterface.Forms
         private void PopulateUpgradeList()
         {
             Version version = new Version(Application.ProductVersion);
-
+            //version = new Version(0, 0, 0, 652);  
             upgrades = WebUtilities.CallRESTService<Upgrade[]>("http://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
             foreach (Upgrade upgrade in upgrades)
             {
@@ -124,6 +130,8 @@ namespace UserInterface.Forms
                 newItem.SubItems.Add(upgrade.IssueTitle);
                 listView1.Items.Add(newItem);
             }
+            if (listView1.Items.Count > 0)
+                listView1.Items[0].Selected = true;
         }
 
         /// <summary>
@@ -192,7 +200,6 @@ namespace UserInterface.Forms
                             // Delete the old upgrader.
                             if (File.Exists(upgraderFileName))
                                 File.Delete(upgraderFileName);
-
                             // Copy in the new upgrader.
                             File.Copy(sourceUpgraderFileName, upgraderFileName, true);
 
@@ -243,7 +250,6 @@ namespace UserInterface.Forms
             url = addToURL(url, "country", countryBox.Text);
             url = addToURL(url, "email", emailBox.Text);
             url = addToURL(url, "product", "APSIM Next Generation " + version);
-            url = addToURL(url, "ChangeDBPassword", GetValidPassword());
 
             WebUtilities.CallRESTService<object>(url);
         }
@@ -254,14 +260,6 @@ namespace UserInterface.Forms
             if (value == null || value == string.Empty)
                 value = "-";
             return url + "&" + key + "=" + value;
-        }
-
-        /// <summary>Return the valid password for this web service.</summary>
-        private static string GetValidPassword()
-        {
-            string connectionString = File.ReadAllText(@"D:\Websites\ChangeDBPassword.txt");
-            int posPassword = connectionString.IndexOf("Password=");
-            return connectionString.Substring(posPassword + "Password=".Length);
         }
 
         /// <summary>
