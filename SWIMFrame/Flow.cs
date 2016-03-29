@@ -31,10 +31,10 @@ namespace SWIMFrame
          ! For default values, see below. For dimensions, see subroutine readtbls.
          ! Boundary conditions:
          ! botbc    - bottom boundary condn for water; "constant head", "free drainage",
-         !            "seepage", or "zero flux". Constant head means that matric head h
-         !            is specified. Free drainage means zero gradient of matric head,
-         !            i.e. unit hydraulic gradient. Seepage means zero flux when the
-         !            matric head is below zero and an upper limit of zero for the head.
+         !            "seepage", or "0.0 flux". Constant head means that matric head h
+         !            is specified. Free drainage means 0.0 gradient of matric head,
+         !            i.e. unit hydraulic gradient. Seepage means 0.0 flux when the
+         !            matric head is below 0.0 and an upper limit of 0.0 for the head.
          ! h0max    - max pond depth allowed before runoff.
          ! hbot     - matric head at bottom of profile when botbc is "constant head".
          ! Sbot     - degree of satn at bottom (needed when hbot<he).
@@ -149,10 +149,10 @@ namespace SWIMFrame
                 */
             }
 
-            if(S.Length != n)
+            if (S.Length != n)
             {
                 Console.WriteLine("solve: Size of S differs from table data.");
-                Environment.Exit(1);
+                Environment.Exit[1];
             }
 
             //-----set up for boundary conditions
@@ -168,8 +168,8 @@ namespace SWIMFrame
                     xtblbot = hbot - sd.he[sd.n];
                 }
             //-----end set up for boundary conditions
-           //-----initialise
-             t = ts;
+            //-----initialise
+            t = ts;
             nsteps0 = nsteps;
             nsat = 0;
             //initialise saturated regions
@@ -189,8 +189,8 @@ namespace SWIMFrame
             {
                 //set solute info
                 thi = MathUtilities.Multiply(sd.ths, S); //initial th
-                for (int x = 0; x < dwexs.GetLength(0); x++)
-                    for (int y = 0; y < dwexs.GetLength(1); y++)
+                for (int x = 0; x < dwexs.GetLength[0]; x++)
+                    for (int y = 0; y < dwexs.GetLength[1]; y++)
                         dwexs[x, y] = 0; //initial water extracted from layers
 
                 ti = t;
@@ -201,10 +201,10 @@ namespace SWIMFrame
                     initpond = true; //initial pond with different solute concn
                 else
                     initpond = false;
-                for(int x=0;x>c.GetLength(0);x++)
-                    for (int y=0;y<c.GetLength(1);y++)
-                c[x,y] = 0; //temp storage for soln concns
-     }
+                for (int x = 0; x > c.GetLength[0]; x++)
+                    for (int y = 0; y < c.GetLength[1]; y++)
+                        c[x, y] = 0; //temp storage for soln concns
+            }
             //-----end initialise
             //-----solve until tfin
 
@@ -265,7 +265,7 @@ namespace SWIMFrame
                         case "constant head":
                             sd.GetQ(sd.n, new int[] { isat[sd.n], isatbot }, new double[] { (xtbl[sd.n], xtblbot }, out q[sd.n], out qya[sd.n], out qyb[sd.n]);
                             break;
-                        case "zero flux":
+                        case "0.0 flux":
                             q[sd.n] = 0;
                             qya[sd.n] = 0;
                             break;
@@ -285,7 +285,7 @@ namespace SWIMFrame
                             break;
                         default:
                             Console.Out.WriteLine("solve: illegal bottom boundary condn");
-                            Environment.Exit(1);
+                            Environment.Exit[1];
                             break;
                     }
 
@@ -333,7 +333,7 @@ namespace SWIMFrame
                         dt = dSmax / dmax;
                         // if pond going adjust dt
                         if (h0 > 0 && (q[0] - qpme) * dt > h0)
-                            dt = (h0 - half * h0min) / (q[0] - qpme);
+                            dt = (h0 - 0.5 * h0min) / (q[0] - qpme);
                         else //steady state flow
              if (qpme >= q[sd.n])
                         {
@@ -341,7 +341,7 @@ namespace SWIMFrame
                             dt = tfin - t;
                         }
                         else
-                            dt = -(h0 - half * h0min) / (qpme - q[n]) //pond going so adjust dt
+                            dt = -(h0 - 0.5 * h0min) / (qpme - q[n]) //pond going so adjust dt
 }
                     if (dt > dtmax)
                         dt = dtmax //user's limit
@@ -394,7 +394,7 @@ namespace SWIMFrame
                         if (itmp > 20)
                         {
                             Console.Out.WriteLine("solve: too many iterations of equation solution");
-                            Environment.Exit(1);
+                            Environment.Exit[1];
                         }
                         if (ns < 1)
                         {
@@ -432,12 +432,12 @@ namespace SWIMFrame
                         Tri(ns, sd.n, aa, bb, cc, dd, ee, dy);
                         //dy contains dS or, for sat layers, h values
                         iok = 1;
-             if (!again)
+                        if (!again)
                         {
                             //check if time step ok, if not then set fac to make it less
                             iok = 1;
-               for( i = 1;i<=sd.n;i++)
-                 if (isat[i] == 0) //check change in S
+                            for (i = 1; i <= sd.n; i++)
+                                if (isat[i] == 0) //check change in S
                                 {
                                     if (Math.Abs(dy[i]) > dSfac * dSmax)
                                     {
@@ -451,161 +451,386 @@ namespace SWIMFrame
                                         iok = 0;
                                         break;
                                     }
-                       if (S(i) < one.and.S(i) + dy(i) > Smax)
-                        then
-    fac = accel * (half * (one + Smax) - S(i)) / dy(i); iok = 0; exit
-    end if
-                       if (S(i) >= one.and.dy(i) > half * (Smax - one))
-                        then
-    fac = 0.25 * (Smax - one) / dy(i); iok = 0; exit
-    end if
-                     end if
-                   end do
-                            if (iok == 1.and.ns < 1.and.h0 < h0max.and.h0 + dy(0) > h0max + dh0max)
-                                then
-                     !start of runoff
-                 fac = (h0max + half * dh0max - h0) / dy(0); iok = 0
-               end if
-               if (iok == 1.and.ns < 1.and.h0 > zero.and.h0 + dy(0) < h0min)
-                        then
-                 !pond going
-                fac = -(h0 - half * h0min) / dy(0); iok = 0
-               end if
-               if (iok == 0) then !reduce time step
-                 t = t - dt; dt = fac * dt; t = t + dt; rsigdt = 1./ (sig * dt)
-                 nless = nless + 1 !count step size reductions
-                  end if
-                  if (isat(1) /= 0.and.iflux == 1.and.h(1) < zero.and. &
-                    h(1) + dy(1) > zero)
-                        then
-                 !incipient ponding - adjust state of saturated regions
-                 t = t - dt; dt = 1.0e-20 * (tfin - ts); rsigdt = 1./ (sig * dt)
-                 again =.true.; iok = 0
-               end if
-             end if
-           }
-                        !-----end get and solve eqns
-         !-----update unknowns
-          ih0 = 0
-           if (.not.again)
-                then
-  dwoff = zero
-             if (ns < 1)
-                then
-        h0 = h0 + dy(0)
-               if (h0 < zero.and.dy(0) < zero) ih0 = 1 !pond gone
-                    evap = evap + qevap * dt
-               !note that fluxes required are q at sigma of time step
-               dwinfil = (q(0) + sig * (qya(0) * dy(0) + qyb(0) * dy(1))) * dt
-             else
-               dwinfil = (q(0) + sig * qyb(0) * dy(1)) * dt
-               if (maxpond)
-                then
-     evap = evap + qevap * dt
-                 if (qprec > qprecmax) then !set input to maintain pond
-                   qpme = (q(0) + sig * qyb(0) * dy(1))
-                   qprec1 = qpme + qevap
-                   dwoff = zero
-                 else
-                   dwoff = qpme * dt - dwinfil
-                 end if
-                 runoff = runoff + dwoff
-               else
-                evap = evap + qprec1 * dt - dwinfil
-               end if
-             end if
-             infil = infil + dwinfil
-             if (nsol > 0) then !get surface solute balance
-               if (initpond) then !pond concn /= cin
-                 if (h0 > zero)
-                then
-                   if (ns == 1) dy(0) = zero ! if max pond depth
-                   cav = ((two * h0 - dy(0)) * c0 + qprec1 * dt * cin) / (two * h0 + dwoff + dwinfil)
-                   c0 = two * cav - c0
-                 else
-                   cav = ((h0 - dy(0)) * c0 + qprec1 * dt * cin) / (dwoff + dwinfil)
-                   initpond =.false. !pond gone
-                   c0 = cin ! for output if any pond at end
-                   end if
-                   soff = soff + dwoff * cav
-                   sinfil = sinfil + dwinfil * cav
-                 else
-                soff = soff + dwoff * cin
-                 sinfil = sinfil + (qprec1 * dt - dwoff) * cin
-               end if
-             end if
-             if (botbc == "constant head")
-                        then
-drn = drn + (q(n) + sig * qya(n) * dy(n)) * dt
-             else
-               drn = drn + (q(n) + sig * qya(n) * dy(n)) * dt
-             end if
-             if (extraction)
-                    then
-               if (nsol > 0)
-                then
-!dwexs = dwexs + (qwexs + sig * qwexsd * spread(dy(1:n), 2, nex)) * dt
-                 do i = 1,nex
-                    dwexs(:,i)= dwexs(:, i) + (qwexs(:, i) + sig * qwexsd(:, i) * dy(1:n)) * dt
-                 end do
-                end if
-                if (present(wex))
-                    then
-!wex = wex + (qwexs + sig * qwexsd * spread(dy(1:n), 2, nex)) * dt
-                 do i = 1,nex
-                    wex(:,i)= wex(:, i) + (qwexs(:, i) + sig * qwexsd(:, i) * dy(1:n)) * dt
-                 end do
-                end if
-              end if
-            end if
-            do i = 1,n
-             if (isat(i) == 0)
-                then
-               if (.not.again)
-                then
-  S(i) = S(i) + dy(i)
-                 if (S(i) > one.and.dy(i) > zero) then !saturation of layer
-                   isat(i) = 1; h(i) = he(i)
-                 end if
-               end if
-             else
-                    h(i) = h(i) + dy(i)
-               if (i == 1.and.ih0 /= 0.and.h(i) >= he(i)) h(i) = he(i) - one !pond gone
-               if (h(i) < he(i)) then !desaturation of layer
-                 isat(i) = 0; h(i) = he(i)
-               end if
-             end if
-           end do
-                        !-----end update unknowns
-         if (.not.again)
-                exit
-end do
+                                    if (S[i] < 1.0 && S[i] + dy[i] > Smax)
+                                    {
+                                        fac = accel * (0.5 * (1.0 + Smax) - S[i]) / dy[i];
+                                        iok = 0;
+                                        break;
+                                    }
+                                    if (S[i] >= 1.0 && dy[i] > 0.5 * (Smax - 1.0))
+                                    {
+                                        fac = 0.25 * (Smax - 1.0) / dy[i]; iok = 0;
+                                        break;
+                                    }
+                                }
+                        }
+                        if (iok == 1 && ns < 1 && h0 < h0max && h0 + dy[0] > h0max + dh0max)
+                        {
+                            //start of runoff
+                            fac = (h0max + 0.5 * dh0max - h0) / dy[0];
+                            iok = 0;
+                        }
+                        if (iok == 1 && ns < 1 && h0 > 0.0 && h0 + dy[0] < h0min)
+                        {
+                            //pond going
+                            fac = -(h0 - 0.5 * h0min) / dy[0];
+                            iok = 0;
+                        }
+                        if (iok == 0) //reduce time step
+                        {
+                            t = t - dt;
+                            dt = fac * dt;
+                            t = t + dt;
+                            rsigdt = 1.0 / (sig * dt);
+                            nless = nless + 1; //count step size reductions
+                        }
+                        if (isat[1] != 0 && iflux == 1 && h[1] < 0.0 && h[1] + dy[1] > 0.0)
+                        {
+                            //incipient ponding - adjust state of saturated regions
+                            t = t - dt;
+                            dt = 1.0e-20 * (tfin - ts);
+                            rsigdt = 1.0 / (sig * dt);
+                            again = true;
+                            iok = 0;
+                        }
+                    }
+
+                    //-----end get and solve eqns
+                    //-----update unknowns
+                    ih0 = 0;
+                    if (!again)
+                        dwoff = 0.0;
+                    if (ns < 1)
+                    {
+                        h0 = h0 + dy[0];
+                        if (h0 < 0.0 && dy[0] < 0.0)
+                            ih0 = 1; //pond gone
+
+                        evap = evap + qevap * dt;
+                        //note that fluxes required are q at sigma of time step
+                        dwinfil = (q[0] + sig * (qya[0] * dy[0] + qyb[0] * dy[1])) * dt;
+                    }
+                    else
+                    {
+                        dwinfil = (q[0] + sig * qyb[0] * dy[1]) * dt;
+                        if (maxpond)
+                        {
+                            evap = evap + qevap * dt;
+                            if (qprec > qprecmax) // set input to maintain pond
+                            {
+                                qpme = q[0] + sig * qyb[0] * dy[1];
+                                qprec1 = qpme + qevap;
+                                dwoff = 0.0;
+                            }
+                            else
+                                dwoff = qpme * dt - dwinfil;
+
+                            runoff = runoff + dwoff;
+                        }
+                        else
+                            evap = evap + qprec1 * dt - dwinfil;
+                    }
+                    infil = infil + dwinfil;
+                    if (nsol > 0) //get surface solute balance
+                    {
+                        if (initpond) //pond concn != cin
+                        {
+                            if (h0 > 0.0)
+                            {
+                                if (ns == 1) // if max pond depth
+                                {
+                                    dy[0] = 0.0;
+                                    cav = ((2.0 * h0 - dy[0]) * c0 + qprec1 * dt * cin) / (2.0 * h0 + dwoff + dwinfil);
+                                    c0 = 2.0 * cav - c0;
+                                }
+                                else
+                                {
+                                    cav = ((h0 - dy[0]) * c0 + qprec1 * dt * cin) / (dwoff + dwinfil);
+                                    initpond = false; //pond gone
+                                    c0 = cin; // for output if any pond at end
+                                }
+                                soff = soff + dwoff * cav;
+                                sinfil = sinfil + dwinfil * cav;
+                            }
+                            else
+                            {
+                                soff = soff + dwoff * cin;
+                                sinfil = sinfil + (qprec1 * dt - dwoff) * cin;
+                            }
+                        }
+
+                        if (botbc == "constant head")
+                        {
+                            drn = drn + (q[sd.n] + sig * qya[sd.n] * dy[sd.n]) * dt;
+                        }
+                        else
+                        {
+                            drn = drn + (q[sd.n] + sig * qya[sd.n] * dy[sd.n]) * dt;
+                        }
+
+                        if (extraction)
+                        {
+                            if (nsol > 0)
+                            {
+                                //dwexs = dwexs + (qwexs + sig * qwexsd * spread(dy(1:n), 2, nex)) * dt
+                                for (i = 1; i <= nex; i++)
+                                {
+                                    dwexs(:, i) = dwexs(:, i) + (qwexs(:, i) + sig * qwexsd(:, i) * dy(1:n)) * dt;
+                                }
+                            }
+                            if (present(wex))
+                            {
+                                //wex = wex + (qwexs + sig * qwexsd * spread(dy(1:n), 2, nex)) * dt
+                                for (i = 1; i <= nex; i++)
+                                {
+                                    wex(:, i) = wex(:, i) + (qwexs(:, i) + sig * qwexsd(:, i) * dy(1:n)) * dt;
+                                }
+                            }
+                        }
+                    }
+                    for (i = 1; i <= sd.n; i++)
+                    {
+                        if (isat[i] == 0)
+                        {
+                            if (!again)
+                            {
+                                S[i] = S[i] + dy[i];
+                                if (S[i] > 1.0 && dy[i] > 0.0) //saturation of layer
+                                {
+                                    isat[i] = 1;
+                                    h[i] = sd.he[i];
+                                }
+                            }
+                        }
+                        else
+                        {
+                            h[i] = h[i] + dy[i];
+                            if (i == 1 && ih0 != 0 && h[i] >= sd.he[i]) h[i] = sd.he[i] - 1.0; //pond gone
+                            if (h[i] < sd.he[i])  //desaturation of layer
+                            {
+                                isat[i] = 0;
+                                h[i] = sd.he[i];
+                            }
+                        }
+                    } //-----end update unknowns
+                    if (!again)
+                        break;
+                }
                 if (dt <= dtmin)
-                    then
-       write (*, *) "solve: time step = ",dt
-        stop
-       end if
-     !-----end take next time step
-     !remove negative h0 (optional)
-     if (h0 < zero.and.isat(1) == 0)
-                then
-infil = infil + h0
-       S(1) = S(1) + h0 / (ths(1) * dx(1)); h0 = zero
-     end if
-     nsteps = nsteps + 1
-     !solve for solute transport if required
-     if (nwsteps * (nsteps / nwsteps) == nsteps)
-                        then
-call getsolute()
-     end if
-   end do
-                    !-----end solve until tfin
- !finalise solute transport if required
+                {
+                    Console.WriteLine("solve: time step = " + dt);
+                    Environment.Exit(1);
+                }
+                //-----end take next time step
+                //remove negative h0 (optional)
+                if (h0 < 0.0 && isat[1] == 0)
+                {
+                    infil = infil + h0;
+                    S[1] = S[1] + h0 / (sd.ths[1] * sd.dx[1]);
+                    h0 = 0.0;
+                }
+                nsteps = nsteps + 1;
+                //solve for solute transport if required
+                if (nwsteps * (nsteps / nwsteps) == nsteps)
+                {
+                    if (nsol > 0 && t > ti)
+                    {
+                        thf = sd.ths * S; //final th before call
+                        win = infil - infili; //water in at top over time interval
+                        cav = (sinfil - sinfili) / win; //average concn in win
+                        if (extraction)
+                        {
+                            Solute(ti, t, thi, thf, dwexs, win, cav, sd.n, nsol, nex, sd.dx, jt, dsmmax, sm, sdrn, nssteps, c, sex);
+                        }
+                        else
+                        {
+                            Solute(ti, t, thi, thf, dwexs, win, cav, sd.n, nsol, nex, sd.dx, jt, dsmmax, sm, sdrn, nssteps, c);
+                        }
+                        ti = t;
+                        thi = thf;
+                        dwexs = 0;
+                        infili = infil;
+                        sinfili = sinfil; // for next interval
+                    }
+                }
+            }
+            //-----end solve until tfin
+            //finalise solute transport if required
+            if (nsol > 0 && t > ti)
+            {
+                thf = sd.ths * S; //final th before call
+                win = infil - infili; //water in at top over time interval
+                cav = (sinfil - sinfili) / win; //average concn in win
+                if (extraction)
+                {
+                    Solute(ti, t, thi, thf, dwexs, win, cav, sd.n, nsol, nex, sd.dx, jt, dsmmax, sm, sdrn, nssteps, c, sex);
+                }
+                else
+                {
+                    Solute(ti, t, thi, thf, dwexs, win, cav, sd.n, nsol, nex, sd.dx, jt, dsmmax, sm, sdrn, nssteps, c, );
+                }
+                ti = t;
+                thi = thf;
+                dwexs = 0;
+                infili = infil;
+                sinfili = sinfil; // for next interval
+            }
         }
-    }
+
+        /// <summary>
+        /// Solves the ADE from time ti to tf. Diffusion of solute ignored - dispersion
+        /// coeff = dispersivity* abs(pore water velocity).
+        /// </summary>
+        /// <param name="ti">start time (h).</param>
+        /// <param name="tf">finish time.</param>
+        /// <param name="thi">initial layer water contents.</param>
+        /// <param name="thf">initial layer water contents.</param>
+        /// <param name="dwexs">water extracted from layers over period ti to tf.</param>
+        /// <param name="win">water in at top of profile.</param>
+        /// <param name="cav">solute concn in win.</param>
+        /// <param name="n">no. of soil layers.</param>
+        /// <param name="nsol">no. of solutes.</param>
+        /// <param name="nex">no. of water extraction streams.</param>
+        /// <param name="dx">layer thicknesses.</param>
+        /// <param name="jt">layer soil type numbers for solute.</param>
+        /// <param name="dsmmax">max change in sm of any layer to aim for each time step; controls time step size.</param>
+        /// <param name="sm">layer masses of solute per cc.</param>
+        /// <param name="sdrn">cumulative solute drainage.</param>
+        /// <param name="nssteps">cumulative no. of time steps for ADE soln.</param>
+        /// <param name="c"></param>
+        /// <param name="sex">cumulative solute extractions in water extraction streams.</param>
+        private void Solute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win, double[] cav, int n, int nsol, int nex, double[] dx, int[] jt, double dsmmax, ref double sm, ref double sdrn, ref int nssteps, ref double[,] c, ref double[,,] sex)
+        {
+            sexs = 0.0; qsexsd = 0.0 !so unused elements won't need to be set
+ sig = half; rsig = one / sig
+ tfin = tf
+ dz = half * (dx(1:n - 1) + dx(2:n))
+ !get average water fluxes
+ dwex = sum(dwexs, 2) !total changes in sink water extraction since last call
+ r = one / (tf - ti); qw(0) = r * win; tht = r * (thf - thi)
+ do i = 1,n
+     qw(i) = qw(i - 1) - dx(i) * tht(i) - r * dwex(i)
+   end do
+                !get constant coefficients
+ do i = 1,n - 1
+   v1 = half * qw(i)
+   v2 = half * (dis(jt(i)) + dis(jt(i + 1))) * abs(qw(i)) / dz(i)
+   coef1(i) = v1 + v2; coef2(i) = v1 - v2
+ end do
+                do j = 1,ns
+                    t = ti
+   if (qw(0) > zero)
+                then
+  q(0) = qw(0) * cin(j)
+   else
+     q(0) = zero
+   end if
+   qyb(0) = zero
+   do
+                    while (t < tfin)
+                        !get fluxes
+     do i = 1,n
+       !get c and csm = dc / dsm(with theta constant)
+       k = jt(i)
+       th = thi(i) + (t - ti) * tht(i)
+       if (isotype(k, j) == "no".or.sm(i, j) < zero) then !handle sm < 0 here
+                csm(i) = one / th
+                c(i, j) = csm(i) * sm(i, j)
+       else if (isotype(k, j) == "li")
+                then
+csm(i) = one / (th + bd(k) * isopar(k, j) % p(1))
+         c(i, j) = csm(i) * sm(i, j)
+       else
+         do it = 1,itmax !get c from sm using Newton's method and bisection
+           if (c(i, j) < zero) c(i, j) = zero !c and sm are >= 0
+           call isosub(isotype(k, j), c(i, j), dsmmax, isopar(k, j) % p(:),f,fc)
+           csm(i) = one / (th + bd(k) * fc)
+           dm = sm(i, j) - (bd(k) * f + th * c(i, j))
+           dc = dm * csm(i)
+           if (sm(i, j) >= zero.and.c(i, j) + dc < zero)
+                then
+c(i, j)= half * c(i, j)
+           else
+             c(i, j) = c(i, j) + dc
+           end if
+           if (abs(dm) < eps * (sm(i, j) + 10.0 * dsmmax))
+                    exit
+           if (it == itmax)
+                then
+   write (*, *) "solute: too many iterations getting c"
+             stop
+           end if
+         end do
+                    end if
+                  end do
+                    q(1:n - 1) = coef1 * c(1:n - 1, j) + coef2 * c(2:n, j)
+                  qya(1:n - 1) = coef1 * csm(1:n - 1)
+     qyb(1:n - 1) = coef2 * csm(2:n)
+     q(n) = qw(n) * c(n, j)
+     qya(n) = qw(n) * csm(n)
+     !get time step
+     dmax = maxval(abs(q(1:n) - q(0:n - 1)) / dx)
+     if (dmax == zero)
+                then
+  dt = tfin - t
+     elseif(dmax < zero) then
+        write (*, *) "solute: errors in fluxes prevent continuation"
+       stop
+     else
+       dt = dsmmax / dmax
+     end if
+     if (t + 1.1 * dt > tfin)
+                    then
+   dt = tfin - t; t = tfin
+     else
+       t = t + dt
+     end if
+     sigdt = sig * dt; rsigdt = one / sigdt
+     !adjust q for change in theta
+     q(1:n - 1) = q(1:n - 1) - sigdt * (qya(1:n - 1) * tht(1:n - 1) * c(1:n - 1, j) + &
+      qyb(1:n - 1) * tht(2:n) * c(2:n, j))
+     q(n) = q(n) - sigdt * qya(n) * tht(n) * c(n, j)
+     !get and solve eqns
+     aa(2:n) = qya(1:n - 1); cc(1:n - 1) = -qyb(1:n - 1)
+     if (present(sex)) then !get extraction
+     call ssinks(t, ti, tf, j, dwexs, c(1:n, j), qsexs, qsexsd)
+       qsex = sum(qsexs, 2)
+       qsexd = sum(qsexsd, 2)
+       bb(1:n) = qyb(0:n - 1) - qya(1:n) - qsexd * csm - dx * rsigdt
+       dd(1:n) = -(q(0:n - 1) - q(1:n) - qsex) * rsig
+     else
+       bb(1:n) = qyb(0:n - 1) - qya(1:n) - dx * rsigdt
+       dd(1:n) = -(q(0:n - 1) - q(1:n)) * rsig
+     end if
+     call tri(1, n, aa, bb, cc, dd, ee, dy)
+     !update unknowns
+    sdrn(j) = sdrn(j) + (q(n) + sig * qya(n) * dy(n)) * dt
+     sm(:,j)= sm(:, j) + dy(1:n)
+     if (present(sex))
+                then
+!sex(:,:, j) = sex(:,:, j) + (qsexs + sig * qsexsd * spread(csm * dy(1:n), 2, nex)) * dt
+       do i = 1,nex
+          sex(:,i,j)= sex(:, i, j) + (qsexs(:, i) + sig * qsexsd(:, i) * csm * dy(1:n)) * dt
+       end do
+                end if
+                nssteps(j) = nssteps(j) + 1
+              end do
+                end do
+        }
 
         private void Tri(int ns, int n, double[] aa, double[] bb, double[] cc, double[] dd, double[] ee, double[] dy)
         {
-            throw new NotImplementedException();
+            dy(ns) = dd(ns) !decomposition and forward substitution
+ do i = ns,n - 1
+   ee(i) = cc(i) / bb(i)
+   dy(i) = dy(i) / bb(i)
+   bb(i + 1) = bb(i + 1) - aa(i + 1) * ee(i)
+   dy(i + 1) = dd(i + 1) - aa(i + 1) * dy(i)
+ end do
+                dy(n) = dy(n) / bb(n) !back substitution
+ do i = n - 1,ns,-1
+   dy(i) = dy(i) - ee(i) * dy(i + 1)
+ end do
         }
     }
+}
