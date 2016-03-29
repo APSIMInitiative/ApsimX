@@ -145,7 +145,7 @@ namespace SWIMFrame
                 /*
                   qwexs=0.0 ! so unused elements won't need to be set
                   qwexsd=0.0
-                  C# arrays are automatically zeroed so we don't need these lines.
+                  C# arrays are automatically 0.0ed so we don't need these lines.
                 */
             }
 
@@ -285,7 +285,7 @@ namespace SWIMFrame
                             break;
                         default:
                             Console.Out.WriteLine("solve: illegal bottom boundary condn");
-                            Environment.Exit[1];
+                            Environment.Exit(1);
                             break;
                     }
 
@@ -504,7 +504,7 @@ namespace SWIMFrame
                     {
                         h0 = h0 + dy[0];
                         if (h0 < 0.0 && dy[0] < 0.0)
-                            ih0 = 1; //pond gone
+                            ih0 = 1; //pond g1.0
 
                         evap = evap + qevap * dt;
                         //note that fluxes required are q at sigma of time step
@@ -546,7 +546,7 @@ namespace SWIMFrame
                                 else
                                 {
                                     cav = ((h0 - dy[0]) * c0 + qprec1 * dt * cin) / (dwoff + dwinfil);
-                                    initpond = false; //pond gone
+                                    initpond = false; //pond g1.0
                                     c0 = cin; // for output if any pond at end
                                 }
                                 soff = soff + dwoff * cav;
@@ -605,7 +605,7 @@ namespace SWIMFrame
                         else
                         {
                             h[i] = h[i] + dy[i];
-                            if (i == 1 && ih0 != 0 && h[i] >= sd.he[i]) h[i] = sd.he[i] - 1.0; //pond gone
+                            if (i == 1 && ih0 != 0 && h[i] >= sd.he[i]) h[i] = sd.he[i] - 1.0; //pond g1.0
                             if (h[i] < sd.he[i])  //desaturation of layer
                             {
                                 isat[i] = 0;
@@ -701,136 +701,188 @@ namespace SWIMFrame
         /// <param name="sex">cumulative solute extractions in water extraction streams.</param>
         private void Solute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win, double[] cav, int n, int nsol, int nex, double[] dx, int[] jt, double dsmmax, ref double sm, ref double sdrn, ref int nssteps, ref double[,] c, ref double[,,] sex)
         {
-            sexs = 0.0; qsexsd = 0.0 !so unused elements won't need to be set
- sig = half; rsig = one / sig
- tfin = tf
- dz = half * (dx(1:n - 1) + dx(2:n))
- !get average water fluxes
- dwex = sum(dwexs, 2) !total changes in sink water extraction since last call
- r = one / (tf - ti); qw(0) = r * win; tht = r * (thf - thi)
- do i = 1,n
-     qw(i) = qw(i - 1) - dx(i) * tht(i) - r * dwex(i)
-   end do
-                !get constant coefficients
- do i = 1,n - 1
-   v1 = half * qw(i)
-   v2 = half * (dis(jt(i)) + dis(jt(i + 1))) * abs(qw(i)) / dz(i)
-   coef1(i) = v1 + v2; coef2(i) = v1 - v2
- end do
-                do j = 1,ns
-                    t = ti
-   if (qw(0) > zero)
-                then
-  q(0) = qw(0) * cin(j)
-   else
-     q(0) = zero
-   end if
-   qyb(0) = zero
-   do
-                    while (t < tfin)
-                        !get fluxes
-     do i = 1,n
-       !get c and csm = dc / dsm(with theta constant)
-       k = jt(i)
-       th = thi(i) + (t - ti) * tht(i)
-       if (isotype(k, j) == "no".or.sm(i, j) < zero) then !handle sm < 0 here
-                csm(i) = one / th
-                c(i, j) = csm(i) * sm(i, j)
-       else if (isotype(k, j) == "li")
-                then
-csm(i) = one / (th + bd(k) * isopar(k, j) % p(1))
-         c(i, j) = csm(i) * sm(i, j)
-       else
-         do it = 1,itmax !get c from sm using Newton's method and bisection
-           if (c(i, j) < zero) c(i, j) = zero !c and sm are >= 0
-           call isosub(isotype(k, j), c(i, j), dsmmax, isopar(k, j) % p(:),f,fc)
-           csm(i) = one / (th + bd(k) * fc)
-           dm = sm(i, j) - (bd(k) * f + th * c(i, j))
-           dc = dm * csm(i)
-           if (sm(i, j) >= zero.and.c(i, j) + dc < zero)
-                then
-c(i, j)= half * c(i, j)
-           else
-             c(i, j) = c(i, j) + dc
-           end if
-           if (abs(dm) < eps * (sm(i, j) + 10.0 * dsmmax))
-                    exit
-           if (it == itmax)
-                then
-   write (*, *) "solute: too many iterations getting c"
-             stop
-           end if
-         end do
-                    end if
-                  end do
-                    q(1:n - 1) = coef1 * c(1:n - 1, j) + coef2 * c(2:n, j)
-                  qya(1:n - 1) = coef1 * csm(1:n - 1)
-     qyb(1:n - 1) = coef2 * csm(2:n)
-     q(n) = qw(n) * c(n, j)
-     qya(n) = qw(n) * csm(n)
-     !get time step
-     dmax = maxval(abs(q(1:n) - q(0:n - 1)) / dx)
-     if (dmax == zero)
-                then
-  dt = tfin - t
-     elseif(dmax < zero) then
-        write (*, *) "solute: errors in fluxes prevent continuation"
-       stop
-     else
-       dt = dsmmax / dmax
-     end if
-     if (t + 1.1 * dt > tfin)
-                    then
-   dt = tfin - t; t = tfin
-     else
-       t = t + dt
-     end if
-     sigdt = sig * dt; rsigdt = one / sigdt
-     !adjust q for change in theta
-     q(1:n - 1) = q(1:n - 1) - sigdt * (qya(1:n - 1) * tht(1:n - 1) * c(1:n - 1, j) + &
-      qyb(1:n - 1) * tht(2:n) * c(2:n, j))
-     q(n) = q(n) - sigdt * qya(n) * tht(n) * c(n, j)
-     !get and solve eqns
-     aa(2:n) = qya(1:n - 1); cc(1:n - 1) = -qyb(1:n - 1)
-     if (present(sex)) then !get extraction
-     call ssinks(t, ti, tf, j, dwexs, c(1:n, j), qsexs, qsexsd)
-       qsex = sum(qsexs, 2)
-       qsexd = sum(qsexsd, 2)
-       bb(1:n) = qyb(0:n - 1) - qya(1:n) - qsexd * csm - dx * rsigdt
-       dd(1:n) = -(q(0:n - 1) - q(1:n) - qsex) * rsig
-     else
-       bb(1:n) = qyb(0:n - 1) - qya(1:n) - dx * rsigdt
-       dd(1:n) = -(q(0:n - 1) - q(1:n)) * rsig
-     end if
-     call tri(1, n, aa, bb, cc, dd, ee, dy)
-     !update unknowns
-    sdrn(j) = sdrn(j) + (q(n) + sig * qya(n) * dy(n)) * dt
-     sm(:,j)= sm(:, j) + dy(1:n)
-     if (present(sex))
-                then
-!sex(:,:, j) = sex(:,:, j) + (qsexs + sig * qsexsd * spread(csm * dy(1:n), 2, nex)) * dt
-       do i = 1,nex
-          sex(:,i,j)= sex(:, i, j) + (qsexs(:, i) + sig * qsexsd(:, i) * csm * dy(1:n)) * dt
-       end do
-                end if
-                nssteps(j) = nssteps(j) + 1
-              end do
-                end do
-        }
+            int itmax = 20; //max iterations for finding c from sm
+            double eps = 0.00001; // for stopping
+            int i, it, j, k;
+            double dc, dm, dmax, dt, f, fc, r, rsig, rsigdt, sig, sigdt, t, tfin, th, v1, v2;
+            double[] dz = new double[n - 1 + 1];
+            double[] coef1 = new double[n - 1 + 1];
+            double[] coef2 = new double[n - 1 + 1];
+            double[] csm = new double[n + 1];
+            double[] tht = new double[n + 1];
+            double[] dwex = new double[n + 1];
+            double[] qsex = new double[n + 1];
+            double[] qsexd = new double[n + 1];
+            double[,] sexs = new double[n + 1, nex + 1];
+            double[,] qsexsd = new double[n + 1, nex + 1];
+            double[] aa = new double[n]; // these are 0 based
+            double[] bb = new double[n];
+            double[] cc = new double[n];
+            double[] dd = new double[n];
+            double[] dy = new double[n];
+            double[] ee = new double[n];
+            double[] q = new double[n];
+            double[] qw = new double[n];
+            double[] qya = new double[n];
+            double[] qyb = new double[n];
 
-        private void Tri(int ns, int n, double[] aa, double[] bb, double[] cc, double[] dd, double[] ee, double[] dy)
-        {
-            dy(ns) = dd(ns) !decomposition and forward substitution
- do i = ns,n - 1
-   ee(i) = cc(i) / bb(i)
-   dy(i) = dy(i) / bb(i)
-   bb(i + 1) = bb(i + 1) - aa(i + 1) * ee(i)
-   dy(i + 1) = dd(i + 1) - aa(i + 1) * dy(i)
- end do
-                dy(n) = dy(n) / bb(n) !back substitution
- do i = n - 1,ns,-1
-   dy(i) = dy(i) - ee(i) * dy(i + 1)
- end do
+            sig = 0.5;
+            rsig = 1.0 / sig;
+            tfin = tf;
+            dz = 0.5 * (dx(1:n - 1) + dx(2:n));
+            //get average water fluxes
+            dwex = sum(dwexs, 2); //total changes in sink water extraction since last call
+            r = 1.0 / (tf - ti);
+            qw[0] = r * win;
+            tht = r * (thf - thi);
+            for (i = 1; i <= n; i++)
+                qw[i] = qw[i - 1] - dx[i] * tht[i] - r * dwex[i];
+
+            //get constant coefficients
+            for (i = 1; i <= n - 1; i++)
+            {
+                v1 = 0.5 * qw[i];
+                v2 = 0.5 * (dis(jt[i]) + dis(jt[i + 1])) * abs(qw[i]) / dz[i];
+                coef1[i] = v1 + v2; coef2[i] = v1 - v2;
+            }
+            for (j = 1j <= ns; j++)
+            {
+                t = ti;
+                if (qw[0] > 0.0)
+                    q[0] = qw[0] * cin[j];
+                else
+                    q[0] = 0.0;
+
+                qyb[0] = 0.0;
+
+                while (t < tfin)
+                //get fluxes
+                {
+                    for (i = 1; i <= n; i++)
+                        //get c and csm = dc / dsm(with theta constant)
+                        k = jt[i];
+                    th = thi[i] + (t - ti) * tht[i];
+                    if (isotype[k, j] == "no" || sm[i, j] < 0.0) //handle sm < 0 here
+                    {
+                        csm[i] = 1.0 / th;
+                        c[i, j] = csm[i] * sm[i, j];
+                    }
+                    else if (isotype[k, j] == "li")
+                    {
+                        csm[i] = 1.0 / (th + bd[k] * isopar[k, j].p[1]);
+                        c[i, j] = csm[i] * sm[i, j];
+                    }
+                    else
+                    {
+                        for (it = 1; it <= itmax; it++) //get c from sm using Newton's method and bisection
+                        {
+                            if (c[i, j] < 0.0)
+                                c[i, j] = 0.0; //c and sm are >= 0
+                            isosub(isotype[k, j], c[i, j], dsmmax, isopar[k, j].p, f, fc);
+                            csm[i] = 1.0 / (th + bd[k] * fc);
+                            dm = sm[i, j] - (bd[k] * f + th * c[i, j]);
+                            dc = dm * csm[i];
+                            if (sm[i, j] >= 0.0 && c[i, j] + dc < 0.0)
+                                c[i, j] = 0.5 * c[i, j];
+                            else
+                                c[i, j] = c[i, j] + dc;
+                            if (Math.Abs(dm) < eps * (sm[i, j] + 10.0 * dsmmax))
+                                break;
+                            if (it == itmax)
+                            {
+                                Console.WriteLine("solute: too many iterations getting c");
+                                Environment.Exit(1);
+                            }
+                        }
+                    }
+                }
+                q(1:n - 1) = coef1 * c(1:n - 1, j) + coef2 * c(2:n, j);
+                qya(1:n - 1) = coef1 * csm(1:n - 1);
+                qyb(1:n - 1) = coef2 * csm(2:n);
+                q[n] = qw[n] * c[n, j];
+                qya[n] = qw[n] * csm[n];
+                //get time step
+                dmax = maxval(abs(q(1:n) - q(0:n - 1)) / dx);
+                if (dmax == 0.0)
+                {
+                    dt = tfin - t;
+                }
+                else if (dmax < 0.0)
+                {
+                    Console.WriteLine("solute: errors in fluxes prevent continuation");
+                    Environment.Exit(1);
+                }
+                else
+                    dt = dsmmax / dmax;
+
+                if (t + 1.1 * dt > tfin)
+                {
+                    dt = tfin - t;
+                    t = tfin;
+                }
+                else
+                    t = t + dt;
+
+                sigdt = sig * dt; rsigdt = 1.0 / sigdt;
+                //adjust q for change in theta
+                q(1:n - 1) = q(1:n - 1) - sigdt * (qya(1:n - 1) * tht(1:n - 1) * c(1:n - 1, j) + qyb(1:n - 1) * tht(2:n) * c(2:n, j));
+                q(n) = q(n) - sigdt * qya(n) * tht(n) * c(n, j);
+                //get and solve eqns
+                aa(2:n) = qya(1:n - 1); cc(1:n - 1) = -qyb(1:n - 1);
+                if (present(sex))  //get extraction
+                {
+                    ssinks(t, ti, tf, j, dwexs, c(1:n, j), qsexs, qsexsd);
+                    qsex = sum(qsexs, 2);
+                    qsexd = sum(qsexsd, 2);
+                    bb(1:n) = qyb(0:n - 1) - qya(1:n) - qsexd * csm - dx * rsigdt;
+                    dd(1:n) = -(q(0:n - 1) - q(1:n) - qsex) * rsig;
+                }
+                else
+                {
+                    bb(1:n) = qyb(0:n - 1) - qya(1:n) - dx * rsigdt;
+                    dd(1:n) = -(q(0:n - 1) - q(1:n)) * rsig;
+                }
+
+                tri(1, n, aa, bb, cc, dd, ee, dy);
+                //update unknowns
+                sdrn(j) = sdrn(j) + (q(n) + sig * qya(n) * dy(n)) * dt;
+                sm(:, j) = sm(:, j) + dy(1:n);
+                if (present(sex))
+                {
+                    //sex(:,:, j) = sex(:,:, j) + (qsexs + sig * qsexsd * spread(csm * dy(1:n), 2, nex)) * dt
+                    for (i = 1; i <= nex; i++)
+                        sex(:, i, j) = sex(:, i, j) + (qsexs(:, i) + sig * qsexsd(:, i) * csm * dy(1:n)) * dt;
+                }
+                nssteps(j) = nssteps(j) + 1;
+            }
         }
+    }
+
+    /// <summary>
+    /// Solves tridiag set of linear eqns. Coeff arrays aa and cc left intact.
+    /// </summary>
+    /// <param name="ns">start index for eqns.</param>
+    /// <param name="n">end index.</param>
+    /// <param name="aa">coeffs below diagonal; ns+1:n used.</param>
+    /// <param name="bb">coeffs on diagonal; ns:n used.</param>
+    /// <param name="cc">coeffs above diagonal; ns:n-1 used.</param>
+    /// <param name="dd">rhs coeffs; ns:n used.</param>
+    /// <param name="ee">work space.</param>
+    /// <param name="dy">solution in ns:n.</param>
+    private void Tri(int ns, int n, double[] aa, ref double[] bb, double[] cc, double[] dd, ref double[] ee, ref double[] dy)
+    {
+        int i;
+        dy[ns] = dd[ns]; //decomposition and forward substitution
+        for (i = ns; i <= n - 1; i++)
+        {
+            ee[i] = cc[i] / bb[i];
+            dy[i] = dy[i] / bb[i];
+            bb[i + 1] = bb[i + 1] - aa[i + 1] * ee[i];
+            dy[i + 1] = dd[i + 1] - aa[i + 1] * dy[i];
+        }
+        dy[n] = dy[n] / bb[n]; //back substitution
+        for (i = n - 1; i >= ns; i--)
+            dy[i] = dy[i] - ee[i] * dy[i + 1];
+
     }
 }
