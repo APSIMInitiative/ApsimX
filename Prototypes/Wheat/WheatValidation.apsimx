@@ -25574,7 +25574,7 @@ namespace Models
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <FileName>C:\APSIMX\Prototypes\Wheat\Konya.met</FileName>
+          <FileName>Konya.met</FileName>
         </Weather>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
