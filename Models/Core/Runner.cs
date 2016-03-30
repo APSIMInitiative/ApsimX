@@ -110,7 +110,10 @@
                     store.RemoveUnwantedSimulations(simulations);
 
                     if (model is Simulation)
-                        simulationsToRun = new Simulation[1] { model as Simulation };
+                    {
+                        simulationsToRun = new Simulation[1] { Apsim.Clone(model as Simulation) as Simulation };
+                        Simulations.CallOnLoaded(simulationsToRun[0]);
+                    }
                     else
                         simulationsToRun = Simulations.FindAllSimulationsToRun(model);
                 }
@@ -214,7 +217,7 @@
                 // For each .apsimx file - read it in and create a job for each simulation it contains.
                 string workingDirectory = Directory.GetCurrentDirectory();
                 string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string apsimExe = Path.Combine(binDirectory, "Model.exe");
+                string apsimExe = Path.Combine(binDirectory, "Models.exe");
                 List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
                 foreach (string apsimxFileName in files)
                 {

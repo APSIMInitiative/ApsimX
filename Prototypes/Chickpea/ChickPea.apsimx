@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Replacements>
@@ -34,11 +34,17 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
                 <XFieldName>[XYPairs].X</XFieldName>
                 <YFieldName>[XYPairs].Y</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
@@ -70,11 +76,17 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
                 <XFieldName>[XYPairs].X</XFieldName>
                 <YFieldName>[XYPairs].Y</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
@@ -106,11 +118,17 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
                 <XFieldName>[XYPairs].X</XFieldName>
                 <YFieldName>[XYPairs].Y</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
@@ -142,11 +160,17 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
                 <XFieldName>[XYPairs].X</XFieldName>
                 <YFieldName>[XYPairs].Y</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
@@ -178,11 +202,17 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
                 <XFieldName>[XYPairs].X</XFieldName>
                 <YFieldName>[XYPairs].Y</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
@@ -214,11 +244,17 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
                 <XFieldName>[XYPairs].X</XFieldName>
                 <YFieldName>[XYPairs].Y</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
@@ -293,11 +329,17 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -329,11 +371,17 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -365,11 +413,17 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -401,11 +455,17 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -437,11 +497,17 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -473,11 +539,17 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -509,11 +581,17 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -545,11 +623,17 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -581,11 +665,17 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -617,11 +707,17 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -653,11 +749,17 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -689,11 +791,17 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -751,11 +859,17 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                     <XAxis>Bottom</XAxis>
                     <YAxis>Left</YAxis>
                     <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                     <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
                     <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
                     <XFieldName>[XYPairs].X</XFieldName>
                     <YFieldName>[XYPairs].Y</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
                     <CumulativeX>false</CumulativeX>
                   </Series>
@@ -787,11 +901,17 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
                     <XAxis>Bottom</XAxis>
                     <YAxis>Left</YAxis>
                     <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                     <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
                     <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
                     <XFieldName>[XYPairs].X</XFieldName>
                     <YFieldName>[XYPairs].Y</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
                     <CumulativeX>false</CumulativeX>
                   </Series>
@@ -968,7 +1088,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <SetEvent>Maturity</SetEvent>
           <ReSetEvent>never</ReSetEvent>
         </OnEventFunction>
-        <Emerged>false</Emerged>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -1013,11 +1132,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
                 <XFieldName>[XYPairs].X</XFieldName>
                 <YFieldName>[XYPairs].Y</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
@@ -1049,11 +1174,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
                 <XFieldName>[XYPairs].X</XFieldName>
                 <YFieldName>[XYPairs].Y</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
@@ -1085,11 +1216,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
                 <XFieldName>[XYPairs].X</XFieldName>
                 <YFieldName>[XYPairs].Y</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
@@ -1121,11 +1258,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
                 <XFieldName>[XYPairs].X</XFieldName>
                 <YFieldName>[XYPairs].Y</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
@@ -1179,11 +1322,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1215,11 +1364,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1251,11 +1406,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1287,11 +1448,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1323,11 +1490,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1359,11 +1532,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1395,11 +1574,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1431,11 +1616,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1488,11 +1679,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1524,11 +1721,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1560,11 +1763,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1596,11 +1805,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1649,11 +1864,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1685,11 +1906,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1721,11 +1948,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -1937,11 +2170,17 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
                 <XFieldName>[XYPairs].X</XFieldName>
                 <YFieldName>[XYPairs].Y</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
@@ -1988,11 +2227,17 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
                 <XFieldName>[XYPairs].X</XFieldName>
                 <YFieldName>[XYPairs].Y</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
@@ -2492,11 +2737,17 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -2528,11 +2779,17 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -2586,11 +2843,17 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -2622,11 +2885,17 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -2658,11 +2927,17 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -2694,11 +2969,17 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -2730,11 +3011,17 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -2766,11 +3053,17 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -2826,11 +3119,17 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -2862,11 +3161,17 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -2898,11 +3203,17 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -2934,11 +3245,17 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -2970,11 +3287,17 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -3031,11 +3354,17 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -3100,11 +3429,17 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -3136,11 +3471,17 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -3172,11 +3513,17 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -3241,11 +3588,17 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -3300,11 +3653,17 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -3399,11 +3758,17 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -3467,11 +3832,17 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
                 <XFieldName>[XYPairs].X</XFieldName>
                 <YFieldName>[XYPairs].Y</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
@@ -3503,11 +3874,17 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
                 <XFieldName>[XYPairs].X</XFieldName>
                 <YFieldName>[XYPairs].Y</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
@@ -3539,11 +3916,17 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
                 <XFieldName>[XYPairs].X</XFieldName>
                 <YFieldName>[XYPairs].Y</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
@@ -3596,11 +3979,17 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -3651,11 +4040,17 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -3704,11 +4099,17 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -3757,11 +4158,17 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
                   <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                   <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
@@ -3858,13 +4265,12 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
+        <Albedo>0</Albedo>
+        <Gsmax>0</Gsmax>
+        <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.3</KDead>
-        <GsMax>0.03</GsMax>
-        <R50>200</R50>
-        <Emissivity>0.96</Emissivity>
-        <Albido>0.26</Albido>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -4034,27 +4440,63 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
-    <Model xsi:type="ExcelInput">
+    <ExcelInput>
       <Name>Observed</Name>
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>ObservedHarvestData</string>
       </SheetNames>
-    </Model>
-    <Model xsi:type="ExcelInput">
+    </ExcelInput>
+    <ExcelInput>
       <Name>ObservedTimeseries</Name>
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>ObservedTimeseriesData</string>
       </SheetNames>
-    </Model>
+    </ExcelInput>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
+      <Tests>
+        <Name>Tests</Name>
+        <AcceptedStats>
+          <RegrStats>
+            <Name>FloweringDAS</Name>
+            <n>35</n>
+            <Slope>0.6791168264743187</Slope>
+            <Intercept>4.0697828671809475</Intercept>
+            <SEslope>0.11339798526106223</SEslope>
+            <SEintercept>10.06024991518429</SEintercept>
+            <R2>0.52080586091864323</R2>
+            <RMSE>27.468620480670523</RMSE>
+            <NSE>-1.0808325218801902</NSE>
+            <ME>-23.734285714285729</ME>
+            <MAE>23.848571428571443</MAE>
+            <RSR>1.4217524974875848</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>GrainWt</Name>
+            <n>23</n>
+            <Slope>0.038307038949780908</Slope>
+            <Intercept>221.70182403249419</Intercept>
+            <SEslope>0.11470839498266924</SEslope>
+            <SEintercept>26.122719170590763</SEintercept>
+            <R2>0.0052825933871601949</R2>
+            <RMSE>84.947528849619488</RMSE>
+            <NSE>-0.24160820050850873</NSE>
+            <ME>15.330111965509472</ME>
+            <MAE>72.005804417056169</MAE>
+            <RSR>1.0897821962525394</RSR>
+          </RegrStats>
+        </AcceptedStats>
+        <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
+        <POName>PredictedObserved</POName>
+      </Tests>
       <PredictedTableName>HarvestReport</PredictedTableName>
       <ObservedTableName>ObservedHarvestData</ObservedTableName>
       <FieldNameUsedForMatch>Stage</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Folder>
     <Name>SE Queensland</Name>
@@ -4147,6 +4589,11 @@ A selection of data from Kenya has been included from the work of Keating et al 
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -4158,11 +4605,6 @@ A selection of data from Kenya has been included from the work of Keating et al 
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -4226,6 +4668,8 @@ A selection of data from Kenya has been included from the work of Keating et al 
           </Arbitrator>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -4594,6 +5038,8 @@ A selection of data from Kenya has been included from the work of Keating et al 
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
@@ -4673,12 +5119,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
           <XFieldName>Observed.GrainWt</XFieldName>
           <YFieldName>Predicted.GrainWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -4826,6 +5278,11 @@ namespace Models
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -4837,11 +5294,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -4905,6 +5357,8 @@ namespace Models
           </Arbitrator>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -5263,6 +5717,8 @@ namespace Models
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
@@ -5334,39 +5790,43 @@ namespace Models
         <Name>MSLeafNo</Name>
         <Series>
           <Name>Nodes</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Chickpea.Structure.MainStemNodeNo</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
           <Name>Series2</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>Circle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>ObservedTimeseriesData</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>MSLeaves</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -5394,39 +5854,43 @@ namespace Models
         <Name>MSDeafLeafNo</Name>
         <Series>
           <Name>Nodes</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Chickpea.Leaf.DeadCohortNo</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
           <Name>Series2</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>Circle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>ObservedTimeseriesData</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>MSDeadLeaves</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -5454,39 +5918,43 @@ namespace Models
         <Name>TotalLeaves</Name>
         <Series>
           <Name>Nodes</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Chickpea.Structure.PlantTotalNodeNo</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
           <Name>Series2</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>Circle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>ObservedTimeseriesData</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>TotalLeaves</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -5514,39 +5982,43 @@ namespace Models
         <Name>LAI</Name>
         <Series>
           <Name>Observed</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>ObservedTimeseriesData</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
           <Name>Predicted</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Chickpea.Leaf.LAI</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -5574,39 +6046,43 @@ namespace Models
         <Name>Biomass</Name>
         <Series>
           <Name>Observed</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>ObservedTimeseriesData</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>Biomass</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
           <Name>Predicted</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Chickpea.AboveGround.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -5634,39 +6110,43 @@ namespace Models
         <Name>Leaf Mass</Name>
         <Series>
           <Name>Observed</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>ObservedTimeseriesData</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>LeafWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
           <Name>Predicted</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Chickpea.Leaf.Live.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -5694,39 +6174,43 @@ namespace Models
         <Name>Stem Mass</Name>
         <Series>
           <Name>Observed</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>ObservedTimeseriesData</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>StemWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
           <Name>Predicted</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Chickpea.Stem.Live.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -5904,6 +6388,11 @@ namespace Models
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -5915,11 +6404,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -5983,6 +6467,8 @@ namespace Models
           </Arbitrator>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -6333,6 +6819,8 @@ namespace Models
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
@@ -6524,6 +7012,11 @@ namespace Models
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -6535,11 +7028,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -6603,6 +7091,8 @@ namespace Models
           </Arbitrator>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -6953,6 +7443,8 @@ namespace Models
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
@@ -7022,41 +7514,6 @@ namespace Models
       </Simulation>
       <Graph>
         <Name>GrainWt</Name>
-        <Series>
-          <Name>Series1</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.GrainWt</XFieldName>
-          <YFieldName>Predicted.GrainWt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -7074,12 +7531,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>PredictedObserved</TableName>
         <XFieldName>Observed.GrainWt</XFieldName>
         <YFieldName>Predicted.GrainWt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -7209,7 +7672,7 @@ namespace Models
         </Memo>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Prototypes\Chickpea\Herm8889.met</FileName>
+          <FileName>Herm8889.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
@@ -7226,6 +7689,11 @@ namespace Models
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -7237,11 +7705,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -7305,6 +7768,8 @@ namespace Models
           </Arbitrator>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -7655,6 +8120,8 @@ namespace Models
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
@@ -7726,20 +8193,22 @@ namespace Models
         <Name>GrainWt</Name>
         <Series>
           <Name>Series1</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
           <XFieldName>Observed.GrainWt</XFieldName>
           <YFieldName>Predicted.GrainWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -7857,6 +8326,11 @@ namespace Models
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -7868,11 +8342,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -7936,6 +8405,8 @@ namespace Models
           </Arbitrator>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -8286,6 +8757,8 @@ namespace Models
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
@@ -8357,20 +8830,22 @@ namespace Models
         <Name>GrainWt</Name>
         <Series>
           <Name>Series1</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>HarvestReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>GrainWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -8454,6 +8929,11 @@ namespace Models
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -8465,11 +8945,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -8533,6 +9008,8 @@ namespace Models
           </Arbitrator>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -8883,6 +9360,8 @@ namespace Models
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
@@ -8954,20 +9433,22 @@ namespace Models
         <Name>GrainWt</Name>
         <Series>
           <Name>Series1</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>HarvestReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>GrainWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -9114,6 +9595,11 @@ The data presented for the trials done in Emerald and Biloela were obtained from
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -9125,11 +9611,6 @@ The data presented for the trials done in Emerald and Biloela were obtained from
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -9180,6 +9661,8 @@ The data presented for the trials done in Emerald and Biloela were obtained from
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -9445,6 +9928,8 @@ The data presented for the trials done in Emerald and Biloela were obtained from
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
@@ -9594,6 +10079,11 @@ namespace Models
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -9605,11 +10095,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -9660,6 +10145,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -9925,6 +10412,8 @@ namespace Models
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
@@ -10005,12 +10494,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>PredictedObserved</TableName>
         <XFieldName>Observed.GrainWt</XFieldName>
         <YFieldName>Predicted.GrainWt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -10093,7 +10588,7 @@ Several minimal datasets are available with only flowering dates for a ranges of
         <Name>Beverley</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Prototypes\Chickpea\Beverley.met</FileName>
+          <FileName>Beverley.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
@@ -10110,6 +10605,11 @@ Several minimal datasets are available with only flowering dates for a ranges of
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -10121,11 +10621,6 @@ Several minimal datasets are available with only flowering dates for a ranges of
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -10184,6 +10679,8 @@ Several minimal datasets are available with only flowering dates for a ranges of
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -10204,6 +10701,8 @@ Several minimal datasets are available with only flowering dates for a ranges of
           </Report>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
@@ -10669,12 +11168,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
           <XFieldName>Observed.GrainWt</XFieldName>
           <YFieldName>Predicted.GrainWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -10766,6 +11271,11 @@ namespace Models
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -10777,11 +11287,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -10840,6 +11345,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -10860,6 +11367,8 @@ namespace Models
           </Report>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
@@ -11325,12 +11834,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
           <XFieldName>Observed.GrainWt</XFieldName>
           <YFieldName>Predicted.GrainWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -11415,6 +11930,11 @@ namespace Models
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -11426,11 +11946,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -11489,6 +12004,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -11509,6 +12026,8 @@ namespace Models
           </Report>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
@@ -11974,12 +12493,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
           <XFieldName>Observed.GrainWt</XFieldName>
           <YFieldName>Predicted.GrainWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -12064,6 +12589,11 @@ namespace Models
           <Name>Field</Name>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
             <air_pressure>1010</air_pressure>
             <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
@@ -12075,11 +12605,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.23</soil_albedo>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -12138,6 +12663,8 @@ namespace Models
           </Operations>
           <Report>
             <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Soil].SoilWater.SW</string>
@@ -12158,6 +12685,8 @@ namespace Models
           </Report>
           <Report>
             <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
@@ -12623,12 +13152,18 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
           <XFieldName>Observed.GrainWt</XFieldName>
           <YFieldName>Predicted.GrainWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -12665,12 +13200,18 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>PredictedObserved</TableName>
         <XFieldName>Observed.FloweringDAS</XFieldName>
         <YFieldName>Predicted.FloweringDAS</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -12714,12 +13255,18 @@ Simulation results for the combined datasets from the various growing regions ar
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16776961</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.GrainWt</XFieldName>
       <YFieldName>Predicted.GrainWt</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -12755,12 +13302,18 @@ Simulation results for the combined datasets from the various growing regions ar
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16776961</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
       <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.FloweringDAS</XFieldName>
       <YFieldName>Predicted.FloweringDAS</YFieldName>
       <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
@@ -12784,5 +13337,1733 @@ Simulation results for the combined datasets from the various growing regions ar
     <DisabledSeries />
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
+  <Folder>
+    <Name>NewZealand</Name>
+    <Experiment>
+      <Name>Lincoln98</Name>
+      <Factors>
+        <Name>Factors</Name>
+        <Factor>
+          <Name>Sowing</Name>
+          <Operations>
+            <Name>1</Name>
+            <Operation>
+              <Date>1998-11-03T00:00:00</Date>
+              <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:150);</Action>
+            </Operation>
+          </Operations>
+          <Operations>
+            <Name>2</Name>
+            <Operation>
+              <Date>1998-12-07T00:00:00</Date>
+              <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:150);</Action>
+            </Operation>
+          </Operations>
+          <Specifications>
+            <string>[Sowing]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Irrigation</Name>
+          <Operations>
+            <Name>Nil</Name>
+          </Operations>
+          <Operations>
+            <Name>Full</Name>
+          </Operations>
+          <Specifications>
+            <string>[IrrigationSchedule]</string>
+          </Specifications>
+        </Factor>
+      </Factors>
+      <Simulation>
+        <Name>Lincoln 98</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
+]]></MemoText>
+        </Memo>
+        <Weather>
+          <Name>Weather</Name>
+          <FileName>Lincoln.met</FileName>
+        </Weather>
+        <Clock>
+          <Name>clock</Name>
+          <StartDate>1998-11-01T00:00:00</StartDate>
+          <EndDate>1999-03-01T00:00:00</EndDate>
+        </Clock>
+        <Summary>
+          <Name>summaryfile</Name>
+        </Summary>
+        <SoilArbitrator>
+          <Name>Soil Arbitrator</Name>
+        </SoilArbitrator>
+        <Zone>
+          <Name>Field</Name>
+          <MicroClimate>
+            <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
+          </MicroClimate>
+          <Irrigation>
+            <Name>Irrigation</Name>
+          </Irrigation>
+          <Fertiliser>
+            <Name>Fertiliser</Name>
+          </Fertiliser>
+          <SurfaceOrganicMatter>
+            <Name>SurfaceOrganicMatter</Name>
+            <ResidueTypes>
+              <Name>ResidueTypesList</Name>
+              <LoadFromResource>ResidueTypes</LoadFromResource>
+            </ResidueTypes>
+            <Pools>
+              <Pool>
+                <PoolName>maize</PoolName>
+                <ResidueType>maize</ResidueType>
+                <Mass>500</Mass>
+                <CNRatio>65</CNRatio>
+                <CPRatio>NaN</CPRatio>
+                <StandingFraction>0</StandingFraction>
+              </Pool>
+            </Pools>
+            <PoolName>maize</PoolName>
+            <type>maize</type>
+            <mass>500</mass>
+            <standing_fraction>0</standing_fraction>
+            <cpr />
+            <cnr>65</cnr>
+            <CriticalResidueWeight>2000</CriticalResidueWeight>
+            <OptimumDecompTemp>20</OptimumDecompTemp>
+            <MaxCumulativeEOS>20</MaxCumulativeEOS>
+            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+            <TotalLeachRain>25</TotalLeachRain>
+            <MinRainToLeach>10</MinRainToLeach>
+            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+            <DefaultCPRatio>0</DefaultCPRatio>
+            <DefaultStandingFraction>0</DefaultStandingFraction>
+            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
+          </SurfaceOrganicMatter>
+          <Operations>
+            <Name>Sowing</Name>
+          </Operations>
+          <Operations>
+            <Name>IrrigationSchedule</Name>
+          </Operations>
+          <Report>
+            <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
+            <VariableNames>
+              <string>[Clock].Today</string>
+              <string>[Soil].SoilWater.SW</string>
+              <string>[Soil].SoilWater.Eo</string>
+              <string>[Soil].SoilWater.Es</string>
+              <string>[Soil].SoilWater.Drainage</string>
+              <string>[Soil].SoilWater.Runoff</string>
+              <string>[Soil].SoilWater.pond</string>
+              <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+              <string>[Soil].NO3N</string>
+              <string>[MicroClimate].net_radn</string>
+              <string>[MicroClimate].peta</string>
+              <string>[MicroClimate].petr</string>
+              <string>[Chickpea].AboveGround.Wt</string>
+              <string>[Chickpea].Leaf.LAI</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Clock].DoReport</string>
+            </EventNames>
+          </Report>
+          <Report>
+            <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
+            <VariableNames>
+              <string>[Clock].Today</string>
+              <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
+              <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+              <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Chickpea].Harvesting</string>
+            </EventNames>
+          </Report>
+          <Manager>
+            <Name>Harvesting</Name>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{      
+		[Link] Plant Chickpea;          
+		[Link] Zone zone;			
+					
+        
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+		}	   
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+        if (Chickpea.Phenology.CurrentPhaseName=="ReadyForHarvesting")
+           {
+           Chickpea.Harvest();
+           Chickpea.EndCrop();
+           }
+		}
+		
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
+			
+		}
+	}
+}
+	   ]]></Code>
+          </Manager>
+          <Plant>
+            <Name>Chickpea</Name>
+            <CropType>Chickpea</CropType>
+          </Plant>
+          <Soil>
+            <Name>Iversen 12</Name>
+            <InitialWater>
+              <Name>Initial water</Name>
+              <PercentMethod>FilledFromTop</PercentMethod>
+              <FractionFull>0.87</FractionFull>
+              <DepthWetSoil>NaN</DepthWetSoil>
+            </InitialWater>
+            <Water>
+              <Name>Water</Name>
+              <SoilCrop>
+                <Name>ChickpeaSoil</Name>
+                <LL>
+                  <double>0.165</double>
+                  <double>0.169</double>
+                  <double>0.173</double>
+                  <double>0.14</double>
+                  <double>0.114</double>
+                  <double>0.107</double>
+                  <double>0.106</double>
+                  <double>0.119</double>
+                  <double>0.181</double>
+                  <double>0.176</double>
+                  <double>0.167</double>
+                  <double>0.152</double>
+                  <double>0.164</double>
+                  <double>0.177</double>
+                </LL>
+                <KL>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.08</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.02</double>
+                  <double>0.01</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                </XF>
+              </SoilCrop>
+              <Thickness>
+                <double>200</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+              </Thickness>
+              <BD>
+                <double>1.2</double>
+                <double>1.3</double>
+                <double>1.4</double>
+                <double>1.4</double>
+                <double>1.4</double>
+                <double>1.45</double>
+                <double>1.45</double>
+                <double>1.45</double>
+                <double>1.5</double>
+                <double>1.5</double>
+                <double>1.5</double>
+                <double>1.55</double>
+                <double>1.55</double>
+                <double>1.55</double>
+              </BD>
+              <AirDry>
+                <double>0.08</double>
+                <double>0.169</double>
+                <double>0.173</double>
+                <double>0.14</double>
+                <double>0.114</double>
+                <double>0.107</double>
+                <double>0.106</double>
+                <double>0.119</double>
+                <double>0.181</double>
+                <double>0.176</double>
+                <double>0.167</double>
+                <double>0.152</double>
+                <double>0.164</double>
+                <double>0.177</double>
+              </AirDry>
+              <LL15>
+                <double>0.165</double>
+                <double>0.169</double>
+                <double>0.173</double>
+                <double>0.14</double>
+                <double>0.114</double>
+                <double>0.107</double>
+                <double>0.106</double>
+                <double>0.119</double>
+                <double>0.181</double>
+                <double>0.176</double>
+                <double>0.167</double>
+                <double>0.152</double>
+                <double>0.164</double>
+                <double>0.177</double>
+              </LL15>
+              <DUL>
+                <double>0.348</double>
+                <double>0.358</double>
+                <double>0.335</double>
+                <double>0.317</double>
+                <double>0.318</double>
+                <double>0.329</double>
+                <double>0.336</double>
+                <double>0.356</double>
+                <double>0.362</double>
+                <double>0.352</double>
+                <double>0.333</double>
+                <double>0.303</double>
+                <double>0.328</double>
+                <double>0.353</double>
+              </DUL>
+              <SAT>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+              </SAT>
+            </Water>
+            <SoilWater>
+              <Name>SoilWater</Name>
+              <residueinterception>0</residueinterception>
+              <SummerDate>21-Sep</SummerDate>
+              <SummerU>6</SummerU>
+              <SummerCona>3.5</SummerCona>
+              <WinterDate>23-Mar</WinterDate>
+              <WinterU>6</WinterU>
+              <WinterCona>2.5</WinterCona>
+              <DiffusConst>88</DiffusConst>
+              <DiffusSlope>35</DiffusSlope>
+              <Salb>0.13</Salb>
+              <CN2Bare>73</CN2Bare>
+              <CNRed>20</CNRed>
+              <CNCov>0.8</CNCov>
+              <slope>NaN</slope>
+              <discharge_width>NaN</discharge_width>
+              <catchment_area>NaN</catchment_area>
+              <max_pond>0</max_pond>
+              <Thickness>
+                <double>200</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+              </Thickness>
+              <SWCON>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+              </SWCON>
+            </SoilWater>
+            <SoilNitrogen>
+              <Name>SoilNitrogen</Name>
+              <fom_type>
+                <string>default</string>
+                <string>manure</string>
+                <string>mucuna</string>
+                <string>lablab</string>
+                <string>shemp</string>
+                <string>stable</string>
+              </fom_type>
+              <fract_carb>
+                <double>0.2</double>
+                <double>0.3</double>
+                <double>0.54</double>
+                <double>0.57</double>
+                <double>0.45</double>
+                <double>0</double>
+              </fract_carb>
+              <fract_cell>
+                <double>0.7</double>
+                <double>0.3</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.47</double>
+                <double>0.1</double>
+              </fract_cell>
+              <fract_lign>
+                <double>0.1</double>
+                <double>0.4</double>
+                <double>0.09</double>
+                <double>0.06</double>
+                <double>0.08</double>
+                <double>0.9</double>
+              </fract_lign>
+              <wfpsN2N2O_x>
+                <double>22</double>
+                <double>88</double>
+              </wfpsN2N2O_x>
+              <wfpsN2N2O_y>
+                <double>0.1</double>
+                <double>1</double>
+              </wfpsN2N2O_y>
+            </SoilNitrogen>
+            <SoilOrganicMatter>
+              <Name>SoilOrganicMatter</Name>
+              <RootCN>40</RootCN>
+              <RootWt>1000</RootWt>
+              <SoilCN>11</SoilCN>
+              <EnrACoeff>7.4</EnrACoeff>
+              <EnrBCoeff>0.2</EnrBCoeff>
+              <Thickness>
+                <double>200</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+              </Thickness>
+              <Depth>
+                <string>0-20</string>
+                <string>20-30</string>
+                <string>30-40</string>
+                <string>40-50</string>
+                <string>50-60</string>
+                <string>60-70</string>
+                <string>70-80</string>
+                <string>80-90</string>
+                <string>90-100</string>
+                <string>100-110</string>
+                <string>110-120</string>
+                <string>120-130</string>
+                <string>130-140</string>
+                <string>140-150</string>
+              </Depth>
+              <OC>
+                <double>2.7</double>
+                <double>1</double>
+                <double>0.45</double>
+                <double>0.3</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </OC>
+              <FBiom>
+                <double>0.03</double>
+                <double>0.02</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+              </FBiom>
+              <FInert>
+                <double>0.4</double>
+                <double>0.6</double>
+                <double>0.7</double>
+                <double>0.8</double>
+                <double>0.9</double>
+                <double>0.9</double>
+                <double>0.9</double>
+                <double>0.9</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </FInert>
+              <OCUnits>Total</OCUnits>
+            </SoilOrganicMatter>
+            <Analysis>
+              <Name>Analysis</Name>
+              <Thickness>
+                <double>200</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+              </Thickness>
+              <PH>
+                <double>6</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+              </PH>
+              <PHUnits>Water</PHUnits>
+              <BoronUnits>HotWater</BoronUnits>
+            </Analysis>
+            <Sample>
+              <Name>Initial nitrogen</Name>
+              <Thickness>
+                <double>200</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+              </Thickness>
+              <NO3>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+              </NO3>
+              <NH4>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+              </NH4>
+              <NO3Units>ppm</NO3Units>
+              <NH4Units>ppm</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
+            <RecordNumber>0</RecordNumber>
+            <SoilType>Aquic Haplustept (US), Mottled Inmature Pallic (NZ)</SoilType>
+            <Site>Lincoln University: Iversen Field Paddock 12</Site>
+            <NearestTown>Lincoln</NearestTown>
+            <Region>South East Queensland</Region>
+            <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
+            <Latitude>0</Latitude>
+            <Longitude>0</Longitude>
+          </Soil>
+          <Area>1</Area>
+          <Slope>0</Slope>
+        </Zone>
+        <Area>0</Area>
+        <Slope>0</Slope>
+      </Simulation>
+      <Graph>
+        <Name>AboveGroundWt</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Chickpea.AboveGround.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedTimeseriesData</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Biomass</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>LAI</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Chickpea.Leaf.LAI</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedTimeseriesData</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>LAI</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Folder>
+        <Name>SoilWaterGraphs</Name>
+        <Graph>
+          <Name>SW20_30</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[Sowing]=1</Filter>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>ObservedTimeseriesData</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>sw_0-30</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[Sowing]=1</Filter>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>SW30_40</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[Sowing]=1</Filter>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>ObservedTimeseriesData</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>sw_30-40</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[Sowing]=1</Filter>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+      </Folder>
+    </Experiment>
+    <Experiment>
+      <Name>Lincoln99</Name>
+      <Factors>
+        <Name>Factors</Name>
+        <Factor>
+          <Name>Sowing</Name>
+          <Operations>
+            <Name>1</Name>
+            <Operation>
+              <Date>1999-10-18T00:00:00</Date>
+              <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:150);</Action>
+            </Operation>
+          </Operations>
+          <Operations>
+            <Name>2</Name>
+            <Operation>
+              <Date>1999-11-22T00:00:00</Date>
+              <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:150);</Action>
+            </Operation>
+          </Operations>
+          <Specifications>
+            <string>[Sowing]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Irrigation</Name>
+          <Operations>
+            <Name>Nil</Name>
+          </Operations>
+          <Operations>
+            <Name>Full</Name>
+          </Operations>
+          <Specifications>
+            <string>[IrrigationSchedule]</string>
+          </Specifications>
+        </Factor>
+      </Factors>
+      <Simulation>
+        <Name>Lincoln 99</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
+]]></MemoText>
+        </Memo>
+        <Weather>
+          <Name>Weather</Name>
+          <FileName>Lincoln.met</FileName>
+        </Weather>
+        <Clock>
+          <Name>clock</Name>
+          <StartDate>1999-10-01T00:00:00</StartDate>
+          <EndDate>2000-05-01T00:00:00</EndDate>
+        </Clock>
+        <Summary>
+          <Name>summaryfile</Name>
+        </Summary>
+        <SoilArbitrator>
+          <Name>Soil Arbitrator</Name>
+        </SoilArbitrator>
+        <Zone>
+          <Name>Field</Name>
+          <MicroClimate>
+            <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>1</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
+          </MicroClimate>
+          <Irrigation>
+            <Name>Irrigation</Name>
+          </Irrigation>
+          <Fertiliser>
+            <Name>Fertiliser</Name>
+          </Fertiliser>
+          <SurfaceOrganicMatter>
+            <Name>SurfaceOrganicMatter</Name>
+            <ResidueTypes>
+              <Name>ResidueTypesList</Name>
+              <LoadFromResource>ResidueTypes</LoadFromResource>
+            </ResidueTypes>
+            <Pools>
+              <Pool>
+                <PoolName>maize</PoolName>
+                <ResidueType>maize</ResidueType>
+                <Mass>500</Mass>
+                <CNRatio>65</CNRatio>
+                <CPRatio>NaN</CPRatio>
+                <StandingFraction>0</StandingFraction>
+              </Pool>
+            </Pools>
+            <PoolName>maize</PoolName>
+            <type>maize</type>
+            <mass>500</mass>
+            <standing_fraction>0</standing_fraction>
+            <cpr />
+            <cnr>65</cnr>
+            <CriticalResidueWeight>2000</CriticalResidueWeight>
+            <OptimumDecompTemp>20</OptimumDecompTemp>
+            <MaxCumulativeEOS>20</MaxCumulativeEOS>
+            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+            <TotalLeachRain>25</TotalLeachRain>
+            <MinRainToLeach>10</MinRainToLeach>
+            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+            <DefaultCPRatio>0</DefaultCPRatio>
+            <DefaultStandingFraction>0</DefaultStandingFraction>
+            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
+          </SurfaceOrganicMatter>
+          <Operations>
+            <Name>Sowing</Name>
+          </Operations>
+          <Operations>
+            <Name>IrrigationSchedule</Name>
+          </Operations>
+          <Report>
+            <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
+            <VariableNames>
+              <string>[Clock].Today</string>
+              <string>[Soil].SoilWater.SW</string>
+              <string>[Soil].SoilWater.Eo</string>
+              <string>[Soil].SoilWater.Es</string>
+              <string>[Soil].SoilWater.Drainage</string>
+              <string>[Soil].SoilWater.Runoff</string>
+              <string>[Soil].SoilWater.pond</string>
+              <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+              <string>[Soil].NO3N</string>
+              <string>[MicroClimate].net_radn</string>
+              <string>[MicroClimate].peta</string>
+              <string>[MicroClimate].petr</string>
+              <string>[Chickpea].AboveGround.Wt</string>
+              <string>[Chickpea].Leaf.LAI</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Clock].DoReport</string>
+            </EventNames>
+          </Report>
+          <Report>
+            <Name>HarvestReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
+            <VariableNames>
+              <string>[Clock].Today</string>
+              <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
+              <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+              <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Chickpea].Harvesting</string>
+            </EventNames>
+          </Report>
+          <Manager>
+            <Name>Harvesting</Name>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{      
+		[Link] Plant Chickpea;          
+		[Link] Zone zone;			
+					
+        
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+		}	   
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+        if (Chickpea.Phenology.CurrentPhaseName=="ReadyForHarvesting")
+           {
+           Chickpea.Harvest();
+           Chickpea.EndCrop();
+           }
+		}
+		
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
+			
+		}
+	}
+}
+	   ]]></Code>
+          </Manager>
+          <Plant>
+            <Name>Chickpea</Name>
+            <CropType>Chickpea</CropType>
+          </Plant>
+          <Soil>
+            <Name>Iversen 12</Name>
+            <InitialWater>
+              <Name>Initial water</Name>
+              <PercentMethod>FilledFromTop</PercentMethod>
+              <FractionFull>0.87</FractionFull>
+              <DepthWetSoil>NaN</DepthWetSoil>
+            </InitialWater>
+            <Water>
+              <Name>Water</Name>
+              <SoilCrop>
+                <Name>ChickpeaSoil</Name>
+                <LL>
+                  <double>0.165</double>
+                  <double>0.169</double>
+                  <double>0.173</double>
+                  <double>0.14</double>
+                  <double>0.114</double>
+                  <double>0.107</double>
+                  <double>0.106</double>
+                  <double>0.119</double>
+                  <double>0.181</double>
+                  <double>0.176</double>
+                  <double>0.167</double>
+                  <double>0.152</double>
+                  <double>0.164</double>
+                  <double>0.177</double>
+                </LL>
+                <KL>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.08</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.02</double>
+                  <double>0.01</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                </XF>
+              </SoilCrop>
+              <Thickness>
+                <double>200</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+              </Thickness>
+              <BD>
+                <double>1.2</double>
+                <double>1.3</double>
+                <double>1.4</double>
+                <double>1.4</double>
+                <double>1.4</double>
+                <double>1.45</double>
+                <double>1.45</double>
+                <double>1.45</double>
+                <double>1.5</double>
+                <double>1.5</double>
+                <double>1.5</double>
+                <double>1.55</double>
+                <double>1.55</double>
+                <double>1.55</double>
+              </BD>
+              <AirDry>
+                <double>0.08</double>
+                <double>0.169</double>
+                <double>0.173</double>
+                <double>0.14</double>
+                <double>0.114</double>
+                <double>0.107</double>
+                <double>0.106</double>
+                <double>0.119</double>
+                <double>0.181</double>
+                <double>0.176</double>
+                <double>0.167</double>
+                <double>0.152</double>
+                <double>0.164</double>
+                <double>0.177</double>
+              </AirDry>
+              <LL15>
+                <double>0.165</double>
+                <double>0.169</double>
+                <double>0.173</double>
+                <double>0.14</double>
+                <double>0.114</double>
+                <double>0.107</double>
+                <double>0.106</double>
+                <double>0.119</double>
+                <double>0.181</double>
+                <double>0.176</double>
+                <double>0.167</double>
+                <double>0.152</double>
+                <double>0.164</double>
+                <double>0.177</double>
+              </LL15>
+              <DUL>
+                <double>0.348</double>
+                <double>0.358</double>
+                <double>0.335</double>
+                <double>0.317</double>
+                <double>0.318</double>
+                <double>0.329</double>
+                <double>0.336</double>
+                <double>0.356</double>
+                <double>0.362</double>
+                <double>0.352</double>
+                <double>0.333</double>
+                <double>0.303</double>
+                <double>0.328</double>
+                <double>0.353</double>
+              </DUL>
+              <SAT>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.37</double>
+              </SAT>
+            </Water>
+            <SoilWater>
+              <Name>SoilWater</Name>
+              <residueinterception>0</residueinterception>
+              <SummerDate>21-Sep</SummerDate>
+              <SummerU>6</SummerU>
+              <SummerCona>3.5</SummerCona>
+              <WinterDate>23-Mar</WinterDate>
+              <WinterU>6</WinterU>
+              <WinterCona>2.5</WinterCona>
+              <DiffusConst>88</DiffusConst>
+              <DiffusSlope>35</DiffusSlope>
+              <Salb>0.13</Salb>
+              <CN2Bare>73</CN2Bare>
+              <CNRed>20</CNRed>
+              <CNCov>0.8</CNCov>
+              <slope>NaN</slope>
+              <discharge_width>NaN</discharge_width>
+              <catchment_area>NaN</catchment_area>
+              <max_pond>0</max_pond>
+              <Thickness>
+                <double>200</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+              </Thickness>
+              <SWCON>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+              </SWCON>
+            </SoilWater>
+            <SoilNitrogen>
+              <Name>SoilNitrogen</Name>
+              <fom_type>
+                <string>default</string>
+                <string>manure</string>
+                <string>mucuna</string>
+                <string>lablab</string>
+                <string>shemp</string>
+                <string>stable</string>
+              </fom_type>
+              <fract_carb>
+                <double>0.2</double>
+                <double>0.3</double>
+                <double>0.54</double>
+                <double>0.57</double>
+                <double>0.45</double>
+                <double>0</double>
+              </fract_carb>
+              <fract_cell>
+                <double>0.7</double>
+                <double>0.3</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.47</double>
+                <double>0.1</double>
+              </fract_cell>
+              <fract_lign>
+                <double>0.1</double>
+                <double>0.4</double>
+                <double>0.09</double>
+                <double>0.06</double>
+                <double>0.08</double>
+                <double>0.9</double>
+              </fract_lign>
+              <wfpsN2N2O_x>
+                <double>22</double>
+                <double>88</double>
+              </wfpsN2N2O_x>
+              <wfpsN2N2O_y>
+                <double>0.1</double>
+                <double>1</double>
+              </wfpsN2N2O_y>
+            </SoilNitrogen>
+            <SoilOrganicMatter>
+              <Name>SoilOrganicMatter</Name>
+              <RootCN>40</RootCN>
+              <RootWt>1000</RootWt>
+              <SoilCN>11</SoilCN>
+              <EnrACoeff>7.4</EnrACoeff>
+              <EnrBCoeff>0.2</EnrBCoeff>
+              <Thickness>
+                <double>200</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+              </Thickness>
+              <Depth>
+                <string>0-20</string>
+                <string>20-30</string>
+                <string>30-40</string>
+                <string>40-50</string>
+                <string>50-60</string>
+                <string>60-70</string>
+                <string>70-80</string>
+                <string>80-90</string>
+                <string>90-100</string>
+                <string>100-110</string>
+                <string>110-120</string>
+                <string>120-130</string>
+                <string>130-140</string>
+                <string>140-150</string>
+              </Depth>
+              <OC>
+                <double>2.7</double>
+                <double>1</double>
+                <double>0.45</double>
+                <double>0.3</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </OC>
+              <FBiom>
+                <double>0.03</double>
+                <double>0.02</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+              </FBiom>
+              <FInert>
+                <double>0.4</double>
+                <double>0.6</double>
+                <double>0.7</double>
+                <double>0.8</double>
+                <double>0.9</double>
+                <double>0.9</double>
+                <double>0.9</double>
+                <double>0.9</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </FInert>
+              <OCUnits>Total</OCUnits>
+            </SoilOrganicMatter>
+            <Analysis>
+              <Name>Analysis</Name>
+              <Thickness>
+                <double>200</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+              </Thickness>
+              <PH>
+                <double>6</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+                <double>NaN</double>
+              </PH>
+              <PHUnits>Water</PHUnits>
+              <BoronUnits>HotWater</BoronUnits>
+            </Analysis>
+            <Sample>
+              <Name>Initial nitrogen</Name>
+              <Thickness>
+                <double>200</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+              </Thickness>
+              <NO3>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+                <double>15.491</double>
+              </NO3>
+              <NH4>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+                <double>0.093</double>
+              </NH4>
+              <NO3Units>ppm</NO3Units>
+              <NH4Units>ppm</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
+            <RecordNumber>0</RecordNumber>
+            <SoilType>Aquic Haplustept (US), Mottled Inmature Pallic (NZ)</SoilType>
+            <Site>Lincoln University: Iversen Field Paddock 12</Site>
+            <NearestTown>Lincoln</NearestTown>
+            <Region>South East Queensland</Region>
+            <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
+            <Latitude>0</Latitude>
+            <Longitude>0</Longitude>
+          </Soil>
+          <Area>1</Area>
+          <Slope>0</Slope>
+        </Zone>
+        <Area>0</Area>
+        <Slope>0</Slope>
+      </Simulation>
+      <Graph>
+        <Name>AboveGroundWt</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Chickpea.AboveGround.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedTimeseriesData</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Biomass</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>LAI</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Chickpea.Leaf.LAI</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedTimeseriesData</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>LAI</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+    </Experiment>
+  </Folder>
   <ExplorerWidth>359</ExplorerWidth>
 </Simulations>

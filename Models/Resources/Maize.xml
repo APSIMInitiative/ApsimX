@@ -1812,7 +1812,7 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
   <Memo>
     <Name>Future Development Needs</Name>
     <MemoText>
-      <![CDATA[#Future Development requirements
+      <![CDATA[##Future Development requirements
 
 * Phenology not responding to stress events.  Requires better data sets for quantifying the effects of water and nitrogen on leaf apperance and the timing of development stages.
 * Phosphorus response
@@ -1858,6 +1858,373 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
     <Command>[Grain].MaximumGrainsPerCob.Value = 405</Command>
     <Command>[Grain].MaximumPotentialGrainSize.Value = 0.375</Command>
   </Cultivar>
+  <Cultivar>
+    <Name>Makueni</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety Makueni Composite is a kenyan variety with similar phenology but slightly higher cob size than Katumani composite.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 150</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 115</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 120</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 530</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 432</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.375</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>NSCM_41</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 230</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 450</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.375</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>sc401</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 230</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 450</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.375</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>r201</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety r201 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 230</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 450</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.375</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>sc501</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety sc501 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 250</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 468</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>sr52</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety sr52 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 250</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 468</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>Melkassa</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety Melkassa is a local early-medium maturing Ethiopian variety.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 230</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 160</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 387</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.33</Command>
+  </Cultivar>
+
+
+  <Cultivar>
+    <Name>r215</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety r215 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 250</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 468</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+  </Cultivar>
+
+  <Cultivar>
+    <Name>mh18</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety mh18 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 260</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 486</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+  </Cultivar>
+
+  <Cultivar>
+    <Name>CG4141</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety CG4141 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 233</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 468</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>sc601</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety sc601 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 280</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 560</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 495</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>sc625</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety sc625 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 280</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 570</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>sc623</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety sc623 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 280</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+  </Cultivar>
+
+
+  <Cultivar>
+    <Name>mh12</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety mh12 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 290</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 570</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>mh16</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety mh16 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 290</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 570</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>mh17</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety mh17 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 290</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 570</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>mh19</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety mh19 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 290</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 570</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>malawi_local</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety malawi_local is a Malawian medium-late maturing local variety.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 280</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 600</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 360</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.217</Command>
+  </Cultivar>
+  
   <Cultivar>
     <Name>Dekalb_XL82</Name>
     <Command>[Phenology].Juvenile.Target.Value = 211</Command>

@@ -550,7 +550,8 @@ namespace Models.Graph
                if (posCloseBracket == -1)
                        throw new Exception("Invalid filter column name: " + Filter);
                FilterName = Filter.Substring(1, posCloseBracket - 1);
-               fieldNames.Add(FilterName);
+               if (!fieldNames.Contains(FilterName))
+                    fieldNames.Add(FilterName);
             }
             else if ((Filter != null) && (Filter != ""))
               throw new Exception("Column name to filter on must be within square brackets.  e.g [ColumToFilter]");
@@ -599,7 +600,14 @@ namespace Models.Graph
 
                 DataView dataView = new DataView(data);
                 if (where != "()")
-                    dataView.RowFilter = where;
+                    try
+                    {
+                        dataView.RowFilter = where;
+                    }
+                    catch (Exception)
+                    {
+
+                    }
 
                 // If the field exists in our data table then return it.
                 if (data != null && data.Columns.Contains(XFieldName) && data.Columns.Contains(YFieldName) && dataView.Count > 0)
