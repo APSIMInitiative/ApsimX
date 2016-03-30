@@ -199,9 +199,11 @@ namespace Models
             //Merge overwrites rows, so add the correct data back in
             foreach(DataRow row in Table.Rows)
             {
+                string t = "Name = '" + row["Name"] + "' AND Variable = '" + row["Variable"] + "' AND Test = '" + row["Test"] + "'";
                 DataRow[] rowAccepted = AcceptedTable.Select("Name = '" + row["Name"] + "' AND Variable = '" + row["Variable"] + "' AND Test = '" + row["Test"] + "'");
-                if(string.IsNullOrEmpty(rowAccepted["Accepted"].ToString()))
-                    row["Accepted"] = ? 0 : Convert.ToInt32(rowAccepted["Accepted"]);
+                DataRow[] rowCurrent = CurrentTable.Select("Name = '" + row["Name"] + "' AND Variable = '" + row["Variable"] + "' AND Test = '" + row["Test"] + "'");
+                row["Accepted"] = string.IsNullOrEmpty(rowAccepted[0]["Accepted"].ToString()) ? string.Empty : rowAccepted[0]["Accepted"];
+                row["Current"] = string.IsNullOrEmpty(rowCurrent[0]["Current"].ToString()) ? string.Empty : rowCurrent[0]["Current"];
             }
 
             if (accept)
