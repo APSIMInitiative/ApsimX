@@ -52,6 +52,39 @@ namespace SWIMFrame
         }
 
         /// <summary>
+        /// Populate an array with a value.
+        /// http://stackoverflow.com/questions/1014005/how-to-populate-instantiate-a-c-sharp-array-with-a-single-value
+        /// </summary>
+        /// <typeparam name="T">the class type that the method belongs to</typeparam>
+        /// <param name="arr">The array to fill.</param>
+        /// <param name="value">The value to fill with.</param>
+        public static T[] Populate<T>(this T[] arr, T value)
+        {
+            for (int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = value;
+            }
+            return arr;
+        }
+
+        /// <summary>
+        /// Populate a 2D array.
+        /// </summary>
+        /// <typeparam name="T">the class type that the method belongs to</typeparam>
+        /// <param name="arr">The 2D array to populate.</param>
+        /// <param name="value">The value to fill with.</param>
+        /// <returns></returns>
+        public static T[,] Populate2D<T>(this T[,] arr, T value)
+        {
+            for (int x = 0; x > arr.GetLength(0); x++)
+                for (int y = 0; y < arr.GetLength(1); y++)
+                {
+                arr[x,y] = value;
+            }
+            return arr;
+        }
+
+        /// <summary>
         /// Returns a row or column from the given 2D array.
         /// </summary>
         /// <param name="m">The array.</param>

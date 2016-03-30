@@ -102,7 +102,7 @@ namespace SWIMFrame
         /// <param name="wex">cumulative water extractions from layers.</param>
         /// <param name="sex">cumulative solute extractions from layers.</param>
         public void Solve(double ts, double tfin, double qprec, double qevap, int nsol, int nex,
-                          ref double h0, ref double[] S, ref double evap, ref double runoff, ref double infil, ref double drn, ref int[] nsteps, int[] jt, double[] cin,
+                          ref double h0, ref double[] S, ref double evap, ref double runoff, ref double infil, ref double drn, ref int nsteps, int[] jt, double[] cin,
                           ref double c0, ref double sm, ref double soff, ref double sinfil, ref double sdrn, ref int nssteps, ref double wex, ref double sex)
         {
             bool again, extraction, initpond, maxpond;
@@ -145,14 +145,14 @@ namespace SWIMFrame
                 /*
                   qwexs=0.0 ! so unused elements won't need to be set
                   qwexsd=0.0
-                  C# arrays are automatically 0.0ed so we don't need these lines.
+                  C# arrays are automatically zeroed so we don't need these lines.
                 */
             }
 
-            if (S.Length != n)
+            if (S.Length != sd.n)
             {
                 Console.WriteLine("solve: Size of S differs from table data.");
-                Environment.Exit[1];
+                Environment.Exit(1);
             }
 
             //-----set up for boundary conditions
@@ -189,8 +189,8 @@ namespace SWIMFrame
             {
                 //set solute info
                 thi = MathUtilities.Multiply(sd.ths, S); //initial th
-                for (int x = 0; x < dwexs.GetLength[0]; x++)
-                    for (int y = 0; y < dwexs.GetLength[1]; y++)
+                for (int x = 0; x < dwexs.GetLength(0); x++)
+                    for (int y = 0; y < dwexs.GetLength(1); y++)
                         dwexs[x, y] = 0; //initial water extracted from layers
 
                 ti = t;
@@ -201,8 +201,8 @@ namespace SWIMFrame
                     initpond = true; //initial pond with different solute concn
                 else
                     initpond = false;
-                for (int x = 0; x > c.GetLength[0]; x++)
-                    for (int y = 0; y < c.GetLength[1]; y++)
+                for (int x = 0; x > c.GetLength(0); x++)
+                    for (int y = 0; y < c.GetLength(1); y++)
                         c[x, y] = 0; //temp storage for soln concns
             }
             //-----end initialise
@@ -856,33 +856,33 @@ namespace SWIMFrame
                 nssteps(j) = nssteps(j) + 1;
             }
         }
-    }
 
-    /// <summary>
-    /// Solves tridiag set of linear eqns. Coeff arrays aa and cc left intact.
-    /// </summary>
-    /// <param name="ns">start index for eqns.</param>
-    /// <param name="n">end index.</param>
-    /// <param name="aa">coeffs below diagonal; ns+1:n used.</param>
-    /// <param name="bb">coeffs on diagonal; ns:n used.</param>
-    /// <param name="cc">coeffs above diagonal; ns:n-1 used.</param>
-    /// <param name="dd">rhs coeffs; ns:n used.</param>
-    /// <param name="ee">work space.</param>
-    /// <param name="dy">solution in ns:n.</param>
-    private void Tri(int ns, int n, double[] aa, ref double[] bb, double[] cc, double[] dd, ref double[] ee, ref double[] dy)
-    {
-        int i;
-        dy[ns] = dd[ns]; //decomposition and forward substitution
-        for (i = ns; i <= n - 1; i++)
+        /// <summary>
+        /// Solves tridiag set of linear eqns. Coeff arrays aa and cc left intact.
+        /// </summary>
+        /// <param name="ns">start index for eqns.</param>
+        /// <param name="n">end index.</param>
+        /// <param name="aa">coeffs below diagonal; ns+1:n used.</param>
+        /// <param name="bb">coeffs on diagonal; ns:n used.</param>
+        /// <param name="cc">coeffs above diagonal; ns:n-1 used.</param>
+        /// <param name="dd">rhs coeffs; ns:n used.</param>
+        /// <param name="ee">work space.</param>
+        /// <param name="dy">solution in ns:n.</param>
+        private void Tri(int ns, int n, double[] aa, ref double[] bb, double[] cc, double[] dd, ref double[] ee, ref double[] dy)
         {
-            ee[i] = cc[i] / bb[i];
-            dy[i] = dy[i] / bb[i];
-            bb[i + 1] = bb[i + 1] - aa[i + 1] * ee[i];
-            dy[i + 1] = dd[i + 1] - aa[i + 1] * dy[i];
-        }
-        dy[n] = dy[n] / bb[n]; //back substitution
-        for (i = n - 1; i >= ns; i--)
-            dy[i] = dy[i] - ee[i] * dy[i + 1];
+            int i;
+            dy[ns] = dd[ns]; //decomposition and forward substitution
+            for (i = ns; i <= n - 1; i++)
+            {
+                ee[i] = cc[i] / bb[i];
+                dy[i] = dy[i] / bb[i];
+                bb[i + 1] = bb[i + 1] - aa[i + 1] * ee[i];
+                dy[i + 1] = dd[i + 1] - aa[i + 1] * dy[i];
+            }
+            dy[n] = dy[n] / bb[n]; //back substitution
+            for (i = n - 1; i >= ns; i--)
+                dy[i] = dy[i] - ee[i] * dy[i + 1];
 
+        }
     }
 }
