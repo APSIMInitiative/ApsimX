@@ -145,22 +145,64 @@ namespace Models
 
             double accepted;
             double current;
-            double difference;
-            for (int i = 0; i < columnNames.Count; i++)
+         //   double difference;
+            /*    for (int i = 0; i < columnNames.Count; i++)
+                    for (int j = 1; j < statNames.Count; j++) //start at 1; we don't want Name field.
+                    {
+                        accepted = Convert.ToDouble(AcceptedStats[i].GetType().GetField(statNames[j]).GetValue(AcceptedStats[i]));
+                        current = Convert.ToDouble(stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]));
+                        difference = current - accepted;
+
+                        Table.Rows.Add(PO.Name,
+                            columnNames[i],
+                            statNames[j],
+                            accepted,
+                            current,
+                            difference,
+                            Math.Abs(difference) > Math.Abs(accepted) * 0.01 ? "FAIL" : " ");
+                    }*/
+            DataTable AcceptedTable = Table.Copy();
+            DataTable CurrentTable = Table.Copy();
+
+            //accepted table
+            for (int i = 0; i < AcceptedStats.Count(); i++)
                 for (int j = 1; j < statNames.Count; j++) //start at 1; we don't want Name field.
                 {
                     accepted = Convert.ToDouble(AcceptedStats[i].GetType().GetField(statNames[j]).GetValue(AcceptedStats[i]));
-                    current = Convert.ToDouble(stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]));
-                    difference = current - accepted;
-
-                    Table.Rows.Add(PO.Name,
-                        columnNames[i],
-                        statNames[j],
-                        accepted,
-                        current,
-                        difference,
-                        Math.Abs(difference) > Math.Abs(accepted) * 0.01 ? "FAIL" : " ");
+                    AcceptedTable.Rows.Add(PO.Name,
+                                    columnNames[i],
+                                    statNames[j],
+                                    accepted,
+                                    null,
+                                    null,
+                                    null);
                 }
+
+            //current table
+            for (int i = 0; i < stats.Count(); i++)
+                for (int j = 1; j < statNames.Count; j++) //start at 1; we don't want Name field.
+                {
+                    current = Convert.ToDouble(stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]));
+                    CurrentTable.Rows.Add(PO.Name,
+                                    columnNames[i],
+                                    statNames[j],
+                                    null,
+                                    current,
+                                    null,
+                                    null);
+                }
+
+            //Merge the tables
+            Table = AcceptedTable.Copy();
+            Table.Merge(CurrentTable);
+
+            //Merge overwrites rows, so add the correct data back in
+            foreach(DataRow row in Table.Rows)
+            {
+                DataRow[] rowAccepted = AcceptedTable.Select("Name = '" + row["Name"] + "' AND Variable = '" + row["Variable"] + "' AND Test = '" + row["Test"] + "'");
+                if(string.IsNullOrEmpty(rowAccepted["Accepted"].ToString()))
+                    row["Accepted"] = ? 0 : Convert.ToInt32(rowAccepted["Accepted"]);
+            }
 
             if (accept)
                 AcceptedStats = stats;
