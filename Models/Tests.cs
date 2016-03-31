@@ -145,22 +145,6 @@ namespace Models
 
             double accepted;
             double current;
-         //   double difference;
-            /*    for (int i = 0; i < columnNames.Count; i++)
-                    for (int j = 1; j < statNames.Count; j++) //start at 1; we don't want Name field.
-                    {
-                        accepted = Convert.ToDouble(AcceptedStats[i].GetType().GetField(statNames[j]).GetValue(AcceptedStats[i]));
-                        current = Convert.ToDouble(stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]));
-                        difference = current - accepted;
-
-                        Table.Rows.Add(PO.Name,
-                            columnNames[i],
-                            statNames[j],
-                            accepted,
-                            current,
-                            difference,
-                            Math.Abs(difference) > Math.Abs(accepted) * 0.01 ? "FAIL" : " ");
-                    }*/
             DataTable AcceptedTable = Table.Copy();
             DataTable CurrentTable = Table.Copy();
 
@@ -170,7 +154,7 @@ namespace Models
                 {
                     accepted = Convert.ToDouble(AcceptedStats[i].GetType().GetField(statNames[j]).GetValue(AcceptedStats[i]));
                     AcceptedTable.Rows.Add(PO.Name,
-                                    columnNames[i],
+                                    AcceptedStats[i].Name,
                                     statNames[j],
                                     accepted,
                                     null,
@@ -184,7 +168,7 @@ namespace Models
                 {
                     current = Convert.ToDouble(stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]));
                     CurrentTable.Rows.Add(PO.Name,
-                                    columnNames[i],
+                                    stats[i].Name,
                                     statNames[j],
                                     null,
                                     current,
@@ -192,19 +176,40 @@ namespace Models
                                     null);
                 }
 
-            //Merge the tables
+            //Merge the tables.
             Table = AcceptedTable.Copy();
             Table.Merge(CurrentTable);
 
             //Merge overwrites rows, so add the correct data back in
             foreach(DataRow row in Table.Rows)
             {
-                string t = "Name = '" + row["Name"] + "' AND Variable = '" + row["Variable"] + "' AND Test = '" + row["Test"] + "'";
                 DataRow[] rowAccepted = AcceptedTable.Select("Name = '" + row["Name"] + "' AND Variable = '" + row["Variable"] + "' AND Test = '" + row["Test"] + "'");
-                DataRow[] rowCurrent = CurrentTable.Select("Name = '" + row["Name"] + "' AND Variable = '" + row["Variable"] + "' AND Test = '" + row["Test"] + "'");
-                row["Accepted"] = string.IsNullOrEmpty(rowAccepted[0]["Accepted"].ToString()) ? string.Empty : rowAccepted[0]["Accepted"];
-                row["Current"] = string.IsNullOrEmpty(rowCurrent[0]["Current"].ToString()) ? string.Empty : rowCurrent[0]["Current"];
+                DataRow[] rowCurrent  = CurrentTable.Select ("Name = '" + row["Name"] + "' AND Variable = '" + row["Variable"] + "' AND Test = '" + row["Test"] + "'");
+
+                if (rowAccepted.Count() == 0)
+                    row["Accepted"] = DBNull.Value;
+                else
+                    row["Accepted"] = rowAccepted[0]["Accepted"];
+
+                if (rowCurrent.Count() == 0)
+                    row["Current"] = DBNull.Value;
+                else
+                    row["Current"] = rowCurrent[0]["Current"];
+
+                if (row["Accepted"] != DBNull.Value && row["Current"] != DBNull.Value)
+                {
+                    row["Difference"] = Convert.ToDouble(row["Current"]) - Convert.ToDouble(row["Accepted"]);
+                    row["Fail?"] = Math.Abs(Convert.ToDouble(row["Difference"])) > Math.Abs(Convert.ToDouble(row["Accepted"])) * 0.01 ? sigIdent : " ";
+                }
+                else
+                {
+                    row["Difference"] = DBNull.Value;
+                    row["Fail?"] = sigIdent;
+                }
             }
+            //Tables could be large so free the memory.
+            AcceptedTable = null;
+            CurrentTable = null;
 
             if (accept)
                 AcceptedStats = stats;
@@ -232,61 +237,6 @@ namespace Models
         private void OnAllSimulationsCompleted(object sender, EventArgs e)
         {
             Test();
-        }
-
-        /// <summary>
-        /// Convert a data table to a string.
-        /// http://stackoverflow.com/questions/1104121/how-to-convert-a-datatable-to-a-string-in-c
-        /// Modified for multi-platform line breaks and explicit typing.
-        /// </summary>
-        /// <param name="dataTable"></param>
-        /// <returns></returns>
-        public static string ConvertDataTableToString(DataTable dataTable)
-        {
-            StringBuilder output = new StringBuilder();
-
-            int[] columnsWidths = new int[dataTable.Columns.Count];
-            int length;
-            string text;
-
-            // Get column widths
-            foreach (DataRow row in dataTable.Rows)
-            {
-                for (int i = 0; i < dataTable.Columns.Count; i++)
-                {
-                    length = row[i].ToString().Length;
-                    if (columnsWidths[i] < length)
-                        columnsWidths[i] = length;
-                }
-            }
-
-            // Get Column Titles
-            for (int i = 0; i < dataTable.Columns.Count; i++)
-            {
-                length = dataTable.Columns[i].ColumnName.Length;
-                if (columnsWidths[i] < length)
-                    columnsWidths[i] = length;
-            }
-
-            // Write Column titles
-            for (int i = 0; i < dataTable.Columns.Count; i++)
-            {
-                text = dataTable.Columns[i].ColumnName;
-                output.Append("|" + PadCenter(text, columnsWidths[i] + 2));
-            }
-            output.Append("|" + Environment.NewLine + new string('=', output.Length) + Environment.NewLine);
-
-            // Write Rows
-            foreach (DataRow row in dataTable.Rows)
-            {
-                for (int i = 0; i < dataTable.Columns.Count; i++)
-                {
-                    text = row[i].ToString();
-                    output.Append("|" + PadCenter(text, columnsWidths[i] + 2));
-                }
-                output.Append("|" + Environment.NewLine);
-            }
-            return output.ToString();
         }
 
         private static string PadCenter(string text, int maxLength)
