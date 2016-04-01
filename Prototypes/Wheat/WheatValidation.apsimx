@@ -222,7 +222,7 @@ The model consists of:
           <Name>Maturing</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>35</Value>
+            <Value>200</Value>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
