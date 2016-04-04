@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using APSIM.Shared.Utilities;
-
+using MathNet.Numerics.LinearAlgebra;
 namespace SWIMFrame
 {
     class Flow
@@ -103,7 +103,7 @@ namespace SWIMFrame
         /// <param name="sex">cumulative solute extractions from layers.</param>
         public void Solve(double ts, double tfin, double qprec, double qevap, int nsol, int nex,
                           ref double h0, ref double[] S, ref double evap, ref double runoff, ref double infil, ref double drn, ref int nsteps, int[] jt, double[] cin,
-                          ref double c0, ref double sm, ref double soff, ref double sinfil, ref double sdrn, ref int nssteps, ref double wex, ref double sex)
+                          ref double c0, ref double sm, ref double soff, ref double sinfil, ref double sdrn, ref int nssteps, ref double[,] wex, ref double[,,] sex)
         {
             bool again, extraction, initpond, maxpond;
             int i, iflux, ih0, iok, isatbot, itmp, j, ns, nsat, nsatlast, nsteps0;
@@ -138,7 +138,16 @@ namespace SWIMFrame
              ! beginning of a time step and their partial derivs wrt S or h of upper and
              ! lower layers or boundaries are stored in q, qya and qyb.
             */
+            isatbot = 0;
+            xtblbot = 0;
+            dt = 0.0;
+            fac = 0.0;
+            initpond = false;
             extraction = false;
+            dwoff = 0.0;
+            ti = 0.0;
+            infili = 0.0;
+
             if (nex > 0)
             {
                 extraction = true;
@@ -263,7 +272,7 @@ namespace SWIMFrame
                     switch (botbc)
                     {
                         case "constant head":
-                            sd.GetQ(sd.n, new int[] { isat[sd.n], isatbot }, new double[] { (xtbl[sd.n], xtblbot }, out q[sd.n], out qya[sd.n], out qyb[sd.n]);
+                            sd.GetQ(sd.n, new int[] { isat[sd.n], isatbot }, new double[] { xtbl[sd.n], xtblbot }, out q[sd.n], out qya[sd.n], out qyb[sd.n]);
                             break;
                         case "0.0 flux":
                             q[sd.n] = 0;
@@ -280,7 +289,7 @@ namespace SWIMFrame
                             }
                             else
                             {
-                                sd.GetQ(sd.n, new int[] { isat[n], 1 }, new double[] { xtbl[sd.n], -sd.he[sd.n] }, out q[sd.n], out qya[sd.n], out qyb[sd.n]);
+                                sd.GetQ(sd.n, new int[] { isat[sd.n], 1 }, new double[] { xtbl[sd.n], -sd.he[sd.n] }, out q[sd.n], out qya[sd.n], out qyb[sd.n]);
                             }
                             break;
                         default:
@@ -341,10 +350,10 @@ namespace SWIMFrame
                             dt = tfin - t;
                         }
                         else
-                            dt = -(h0 - 0.5 * h0min) / (qpme - q[n]) //pond going so adjust dt
+                            dt = -(h0 - 0.5 * h0min) / (qpme - q[sd.n]); //pond going so adjust dt
 }
                     if (dt > dtmax)
-                        dt = dtmax //user's limit
+                        dt = dtmax; //user's limit
            // if initial step, improve h where S>= 1
            if (nsteps == nsteps0 && nsat > 0 && iflux == 1)
                     {
@@ -394,7 +403,7 @@ namespace SWIMFrame
                         if (itmp > 20)
                         {
                             Console.Out.WriteLine("solve: too many iterations of equation solution");
-                            Environment.Exit[1];
+                            Environment.Exit(1);
                         }
                         if (ns < 1)
                         {
@@ -429,7 +438,7 @@ namespace SWIMFrame
                             }
                         }
 
-                        Tri(ns, sd.n, aa, bb, cc, dd, ee, dy);
+                        Tri(ns, sd.n, aa, ref bb, cc, dd, ref ee, ref dy);
                         //dy contains dS or, for sat layers, h values
                         iok = 1;
                         if (!again)
@@ -540,24 +549,31 @@ namespace SWIMFrame
                                 if (ns == 1) // if max pond depth
                                 {
                                     dy[0] = 0.0;
-                                    cav = ((2.0 * h0 - dy[0]) * c0 + qprec1 * dt * cin) / (2.0 * h0 + dwoff + dwinfil);
-                                    c0 = 2.0 * cav - c0;
                                 }
-                                else
+                                for (int x = 1; x < cin.Length; x++)
                                 {
-                                    cav = ((h0 - dy[0]) * c0 + qprec1 * dt * cin) / (dwoff + dwinfil);
-                                    initpond = false; //pond g1.0
-                                    c0 = cin; // for output if any pond at end
+                                    cav[x] = ((2.0 * h0 - dy[0]) * c0 + qprec1 * dt * cin[x]) / (2.0 * h0 + dwoff + dwinfil);
                                 }
-                                soff = soff + dwoff * cav;
-                                sinfil = sinfil + dwinfil * cav;
+                                c0 = 2.0 * cav[1] - c0; //This needs to be tested from FORTRAN; no example in original code.
                             }
                             else
                             {
-                                soff = soff + dwoff * cin;
-                                sinfil = sinfil + (qprec1 * dt - dwoff) * cin;
+                                for (int x = 1; x < cin.Length; x++)
+                                {
+                                    cav[x] = ((h0 - dy[0]) * c0 + qprec1 * dt * cin[x]) / (dwoff + dwinfil);
+                                }
+                                initpond = false; //pond g1.0
+                                c0 = cin[1]; // for output if any pond at end
                             }
+                            soff = soff + dwoff * cav[1];
+                            sinfil = sinfil + dwinfil * cav[1];
                         }
+                        else
+                        {
+                            soff = soff + dwoff * cin[1];
+                            sinfil = sinfil + (qprec1 * dt - dwoff) * cin[1];
+                        }
+                    }
 
                         if (botbc == "constant head")
                         {
@@ -568,26 +584,42 @@ namespace SWIMFrame
                             drn = drn + (q[sd.n] + sig * qya[sd.n] * dy[sd.n]) * dt;
                         }
 
-                        if (extraction)
+                    if (extraction)
+                    {
+
+                        Matrix<double> dwexsM = Matrix<double>.Build.DenseOfArray(dwexs);
+                        Matrix<double> qwexsM = Matrix<double>.Build.DenseOfArray(qwexs);
+                        Matrix<double> qwexsdM = Matrix<double>.Build.DenseOfArray(qwexsd);
+                        Matrix<double> wexM = Matrix<double>.Build.DenseOfArray(wex);
+                        Vector<double> wexV;
+                        Vector<double> dwexsV;
+                        Vector<double> qwexsV;
+                        Vector<double> qwexsdV;
+                        if (nsol > 0)
                         {
-                            if (nsol > 0)
+                            //dwexs = dwexs + (qwexs + sig * qwexsd * spread(dy(1:n), 2, nex)) * dt
+                            for (i = 1; i <= nex; i++)
                             {
-                                //dwexs = dwexs + (qwexs + sig * qwexsd * spread(dy(1:n), 2, nex)) * dt
-                                for (i = 1; i <= nex; i++)
-                                {
-                                    dwexs(:, i) = dwexs(:, i) + (qwexs(:, i) + sig * qwexsd(:, i) * dy(1:n)) * dt;
-                                }
+                                dwexsV = dwexsM.Column(i);
+                                qwexsV = qwexsM.Column(i);
+                                qwexsdV = qwexsdM.Column(i);
+                                dwexsV = dwexsV + (qwexsV + sig * qwexsdV * Vector<double>.Build.DenseOfArray(dy.Slice(1,sd.n))) * dt;
+                                dwexsM.Column(i, dwexsV);
                             }
-                            if (present(wex))
-                            {
-                                //wex = wex + (qwexs + sig * qwexsd * spread(dy(1:n), 2, nex)) * dt
-                                for (i = 1; i <= nex; i++)
-                                {
-                                    wex(:, i) = wex(:, i) + (qwexs(:, i) + sig * qwexsd(:, i) * dy(1:n)) * dt;
-                                }
-                            }
+                            dwexs = dwexsM.ToArray();
                         }
+
+                        //wex = wex + (qwexs + sig * qwexsd * spread(dy(1:n), 2, nex)) * dt
+                        for (i = 1; i <= nex; i++)
+                        {
+                            qwexsV = qwexsM.Column(i);
+                            qwexsdV = qwexsdM.Column(i);
+                            wexV = wexM.Column(i);
+                            wexV = wexV + (qwexsV + sig * qwexsdV * Vector<double>.Build.DenseOfArray(dy.Slice(1, sd.n))) * dt;
+                        }
+                        wex = wexM.ToArray();
                     }
+                    
                     for (i = 1; i <= sd.n; i++)
                     {
                         if (isat[i] == 0)
@@ -635,22 +667,16 @@ namespace SWIMFrame
                 {
                     if (nsol > 0 && t > ti)
                     {
-                        thf = sd.ths * S; //final th before call
+                        thf = MathUtilities.Multiply(sd.ths, S); //final th before call
                         win = infil - infili; //water in at top over time interval
-                        cav = (sinfil - sinfili) / win; //average concn in win
-                        if (extraction)
-                        {
-                            Solute(ti, t, thi, thf, dwexs, win, cav, sd.n, nsol, nex, sd.dx, jt, dsmmax, sm, sdrn, nssteps, c, sex);
-                        }
-                        else
-                        {
-                            Solute(ti, t, thi, thf, dwexs, win, cav, sd.n, nsol, nex, sd.dx, jt, dsmmax, sm, sdrn, nssteps, c);
-                        }
+                        for(int x=1;x<=cav.Length;x++)
+                            cav[x] = (sinfil - sinfili[x]) / win; //average concn in win
+                            Solute(ti, t, thi, thf, dwexs, win, cav, sd.n, nsol, nex, sd.dx, jt, dsmmax, ref sm, ref sdrn, ref nssteps, ref c, ref sex, extraction);
                         ti = t;
                         thi = thf;
-                        dwexs = 0;
+                        dwexs.Populate2D(0);
                         infili = infil;
-                        sinfili = sinfil; // for next interval
+                        sinfili.Populate(sinfil); // for next interval
                     }
                 }
             }
@@ -658,22 +684,16 @@ namespace SWIMFrame
             //finalise solute transport if required
             if (nsol > 0 && t > ti)
             {
-                thf = sd.ths * S; //final th before call
+                thf = MathUtilities.Multiply(sd.ths, S); //final th before call
                 win = infil - infili; //water in at top over time interval
-                cav = (sinfil - sinfili) / win; //average concn in win
-                if (extraction)
-                {
-                    Solute(ti, t, thi, thf, dwexs, win, cav, sd.n, nsol, nex, sd.dx, jt, dsmmax, sm, sdrn, nssteps, c, sex);
-                }
-                else
-                {
-                    Solute(ti, t, thi, thf, dwexs, win, cav, sd.n, nsol, nex, sd.dx, jt, dsmmax, sm, sdrn, nssteps, c, );
-                }
+                for(int x=1;x<cav.Length;x++)
+                cav[x] = (sinfil - sinfili[x]) / win; //average concn in win
+                Solute(ti, t, thi, thf, dwexs, win, cav, sd.n, nsol, nex, sd.dx, jt, dsmmax, ref sm, ref sdrn, ref nssteps, ref c, ref sex, extraction);
                 ti = t;
                 thi = thf;
-                dwexs = 0;
+                dwexs.Populate2D(0);
                 infili = infil;
-                sinfili = sinfil; // for next interval
+                sinfili.Populate(sinfil); // for next interval
             }
         }
 
@@ -699,7 +719,7 @@ namespace SWIMFrame
         /// <param name="nssteps">cumulative no. of time steps for ADE soln.</param>
         /// <param name="c"></param>
         /// <param name="sex">cumulative solute extractions in water extraction streams.</param>
-        private void Solute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win, double[] cav, int n, int nsol, int nex, double[] dx, int[] jt, double dsmmax, ref double sm, ref double sdrn, ref int nssteps, ref double[,] c, ref double[,,] sex)
+        private void Solute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win, double[] cav, int n, int nsol, int nex, double[] dx, int[] jt, double dsmmax, ref double sm, ref double sdrn, ref int nssteps, ref double[,] c, ref double[,,] sex, bool extraction)
         {
             int itmax = 20; //max iterations for finding c from sm
             double eps = 0.00001; // for stopping
@@ -729,7 +749,8 @@ namespace SWIMFrame
             sig = 0.5;
             rsig = 1.0 / sig;
             tfin = tf;
-            dz = 0.5 * (dx(1:n - 1) + dx(2:n));
+            for(int x=1;x<= n;x++)
+                dz[x] = 0.5 * (dx[x - 1] + dx[x + 1]); //TEST
             //get average water fluxes
             dwex = sum(dwexs, 2); //total changes in sink water extraction since last call
             r = 1.0 / (tf - ti);
@@ -843,13 +864,12 @@ namespace SWIMFrame
                     dd(1:n) = -(q(0:n - 1) - q(1:n)) * rsig;
                 }
 
-                tri(1, n, aa, bb, cc, dd, ee, dy);
+                Tri(1, n, aa, ref bb, cc, dd, ref ee, ref dy);
                 //update unknowns
                 sdrn(j) = sdrn(j) + (q(n) + sig * qya(n) * dy(n)) * dt;
                 sm(:, j) = sm(:, j) + dy(1:n);
-                if (present(sex))
+                if (extraction)
                 {
-                    //sex(:,:, j) = sex(:,:, j) + (qsexs + sig * qsexsd * spread(csm * dy(1:n), 2, nex)) * dt
                     for (i = 1; i <= nex; i++)
                         sex(:, i, j) = sex(:, i, j) + (qsexs(:, i) + sig * qsexsd(:, i) * csm * dy(1:n)) * dt;
                 }
