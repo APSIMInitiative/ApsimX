@@ -1822,16 +1822,16 @@ The model consists of:
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
             <n>402</n>
-            <Slope>0.8322318590954344</Slope>
-            <Intercept>10.868210434585592</Intercept>
-            <SEslope>0.025971642196815185</SEslope>
-            <SEintercept>1.523636894059206</SEintercept>
-            <R2>0.71965422354377906</R2>
-            <RMSE>13.934243988986326</RMSE>
-            <NSE>0.69586737845951219</NSE>
-            <ME>1.9856619251330112</ME>
-            <MAE>6.9779499946415857</MAE>
-            <RSR>0.55079585395197517</RSR>
+            <Slope>0.700382954768249</Slope>
+            <Intercept>15.608513976019069</Intercept>
+            <SEslope>0.037652328350227658</SEslope>
+            <SEintercept>2.2088890716611349</SEintercept>
+            <R2>0.46381347717120491</R2>
+            <RMSE>20.479458526578107</RMSE>
+            <NSE>0.34304878000476147</NSE>
+            <ME>-0.25482529793631159</ME>
+            <MAE>9.5528869829173679</MAE>
+            <RSR>0.80951653039349669</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
