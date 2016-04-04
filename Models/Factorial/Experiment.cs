@@ -166,18 +166,12 @@ namespace Models.Factorial
             List<List<FactorValue>> allValues = new List<List<FactorValue>>();
             if (Factors != null)
             {
-                bool doFullFactorial = true;
                 foreach (Factor factor in Factors.factors)
                 {
                     List<FactorValue> factorValues = factor.CreateValues();
-                    if (factor.Specifications.Count > 1)
-                        doFullFactorial = false;
                     allValues.Add(factorValues);
                 }
-                if (doFullFactorial)
-                    return MathUtilities.AllCombinationsOf<FactorValue>(allValues.ToArray());
-                else
-                    return allValues;
+                return MathUtilities.AllCombinationsOf<FactorValue>(allValues.ToArray());
             }
             return null;
         }
