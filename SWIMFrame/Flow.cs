@@ -671,7 +671,7 @@ namespace SWIMFrame
                         win = infil - infili; //water in at top over time interval
                         for(int x=1;x<=cav.Length;x++)
                             cav[x] = (sinfil - sinfili[x]) / win; //average concn in win
-                            Solute(ti, t, thi, thf, dwexs, win, cav, sd.n, nsol, nex, sd.dx, jt, dsmmax, ref sm, ref sdrn, ref nssteps, ref c, ref sex, extraction);
+                            Solute(ti, t, thi, thf, dwexs, win, cav, sd.n, nsol, nex, sd.dx, jt, dsmmax, ref sm, ref sdrn, ref nssteps, ref c, ref sex, extraction, );
                         ti = t;
                         thi = thf;
                         dwexs.Populate2D(0);
@@ -719,7 +719,7 @@ namespace SWIMFrame
         /// <param name="nssteps">cumulative no. of time steps for ADE soln.</param>
         /// <param name="c"></param>
         /// <param name="sex">cumulative solute extractions in water extraction streams.</param>
-        private void Solute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win, double[] cav, int n, int nsol, int nex, double[] dx, int[] jt, double dsmmax, ref double sm, ref double sdrn, ref int nssteps, ref double[,] c, ref double[,,] sex, bool extraction)
+        private void Solute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win, double[] cav, int n, int nsol, int nex, double[] dx, int[] jt, double dsmmax, ref double sm, ref double sdrn, ref int nssteps, ref double[,] c, ref double[,,] sex, bool extraction, double[] dis)
         {
             int itmax = 20; //max iterations for finding c from sm
             double eps = 0.00001; // for stopping
