@@ -4475,17 +4475,17 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           </RegrStats>
           <RegrStats>
             <Name>GrainWt</Name>
-            <n>23</n>
-            <Slope>0.038307038949780908</Slope>
-            <Intercept>221.70182403249419</Intercept>
-            <SEslope>0.11470839498266924</SEslope>
-            <SEintercept>26.122719170590763</SEintercept>
-            <R2>0.0052825933871601949</R2>
-            <RMSE>84.947528849619488</RMSE>
-            <NSE>-0.24160820050850873</NSE>
-            <ME>15.330111965509472</ME>
-            <MAE>72.005804417056169</MAE>
-            <RSR>1.0897821962525394</RSR>
+            <n>114</n>
+            <Slope>-0.13979632740841708</Slope>
+            <Intercept>359.87802558787251</Intercept>
+            <SEslope>0.060473460529965446</SEslope>
+            <SEintercept>15.601942111168649</SEintercept>
+            <R2>0.0455408572515853</R2>
+            <RMSE>176.66930824685946</RMSE>
+            <NSE>-1.4209484514915354</NSE>
+            <ME>95.824541857600479</ME>
+            <MAE>151.22398421537704</MAE>
+            <RSR>1.549100403965531</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
