@@ -752,10 +752,18 @@ namespace SWIMFrame
             for(int x=1;x<= n;x++)
                 dz[x] = 0.5 * (dx[x - 1] + dx[x + 1]); //TEST
             //get average water fluxes
-            dwex = sum(dwexs, 2); //total changes in sink water extraction since last call
+            //dwex = sum(dwexs, 2) !total changes in sink water extraction since last call
+            Matrix<double> dwexsM = Matrix<double>.Build.DenseOfArray(dwexs);
+            for(int x=0;x<dwexs.GetLength(1);x++)
+            {
+                dwex[x] = MathUtilities.Sum(dwexsM.Column(x));
+            }
+
             r = 1.0 / (tf - ti);
             qw[0] = r * win;
-            tht = r * (thf - thi);
+
+            for (int x = 0; x < thf.Length; x++)
+                tht[x] = r * (thf[x] - thi[x]);
             for (i = 1; i <= n; i++)
                 qw[i] = qw[i - 1] - dx[i] * tht[i] - r * dwex[i];
 
@@ -763,7 +771,7 @@ namespace SWIMFrame
             for (i = 1; i <= n - 1; i++)
             {
                 v1 = 0.5 * qw[i];
-                v2 = 0.5 * (dis(jt[i]) + dis(jt[i + 1])) * abs(qw[i]) / dz[i];
+                v2 = 0.5 * (dis(jt[i]) + dis(jt[i + 1])) * Math.Abs(qw[i]) / dz[i];
                 coef1[i] = v1 + v2; coef2[i] = v1 - v2;
             }
             for (j = 1j <= ns; j++)
