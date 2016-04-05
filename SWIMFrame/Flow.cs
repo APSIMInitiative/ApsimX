@@ -101,7 +101,7 @@ namespace SWIMFrame
         /// <param name="nssteps">cumulative no. of time steps for ADE soln.</param>
         /// <param name="wex">cumulative water extractions from layers.</param>
         /// <param name="sex">cumulative solute extractions from layers.</param>
-        public void Solve(double ts, double tfin, double qprec, double qevap, int nsol, int nex,
+        public void Solve(SolProps sol, double ts, double tfin, double qprec, double qevap, int nsol, int nex,
                           ref double h0, ref double[] S, ref double evap, ref double runoff, ref double infil, ref double drn, ref int nsteps, int[] jt, double[] cin,
                           ref double c0, ref double sm, ref double soff, ref double sinfil, ref double sdrn, ref int nssteps, ref double[,] wex, ref double[,,] sex)
         {
@@ -719,7 +719,7 @@ namespace SWIMFrame
         /// <param name="nssteps">cumulative no. of time steps for ADE soln.</param>
         /// <param name="c"></param>
         /// <param name="sex">cumulative solute extractions in water extraction streams.</param>
-        private void Solute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win, double[] cav, int n, int nsol, int nex, double[] dx, int[] jt, double dsmmax, ref double sm, ref double sdrn, ref int nssteps, ref double[,] c, ref double[,,] sex, bool extraction, double[] dis)
+        private void Solute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win, double[] cav, int n, int nsol, int nex, double[] dx, int[] jt, double dsmmax, ref double[,] sm, ref double sdrn, ref int nssteps, ref double[,] c, ref double[,,] sex, bool extraction, double[] dis)
         {
             int itmax = 20; //max iterations for finding c from sm
             double eps = 0.00001; // for stopping
@@ -774,7 +774,8 @@ namespace SWIMFrame
                 v2 = 0.5 * (dis(jt[i]) + dis(jt[i + 1])) * Math.Abs(qw[i]) / dz[i];
                 coef1[i] = v1 + v2; coef2[i] = v1 - v2;
             }
-            for (j = 1j <= ns; j++)
+
+            for (j = 1; j <= ns; j++)
             {
                 t = ti;
                 if (qw[0] > 0.0)
@@ -788,39 +789,41 @@ namespace SWIMFrame
                 //get fluxes
                 {
                     for (i = 1; i <= n; i++)
+                    {
                         //get c and csm = dc / dsm(with theta constant)
                         k = jt[i];
-                    th = thi[i] + (t - ti) * tht[i];
-                    if (isotype[k, j] == "no" || sm[i, j] < 0.0) //handle sm < 0 here
-                    {
-                        csm[i] = 1.0 / th;
-                        c[i, j] = csm[i] * sm[i, j];
-                    }
-                    else if (isotype[k, j] == "li")
-                    {
-                        csm[i] = 1.0 / (th + bd[k] * isopar[k, j].p[1]);
-                        c[i, j] = csm[i] * sm[i, j];
-                    }
-                    else
-                    {
-                        for (it = 1; it <= itmax; it++) //get c from sm using Newton's method and bisection
+                        th = thi[i] + (t - ti) * tht[i];
+                        if (sp.isotype[k, j] == "no" || sm[i, j] < 0.0) //handle sm < 0 here
                         {
-                            if (c[i, j] < 0.0)
-                                c[i, j] = 0.0; //c and sm are >= 0
-                            isosub(isotype[k, j], c[i, j], dsmmax, isopar[k, j].p, f, fc);
-                            csm[i] = 1.0 / (th + bd[k] * fc);
-                            dm = sm[i, j] - (bd[k] * f + th * c[i, j]);
-                            dc = dm * csm[i];
-                            if (sm[i, j] >= 0.0 && c[i, j] + dc < 0.0)
-                                c[i, j] = 0.5 * c[i, j];
-                            else
-                                c[i, j] = c[i, j] + dc;
-                            if (Math.Abs(dm) < eps * (sm[i, j] + 10.0 * dsmmax))
-                                break;
-                            if (it == itmax)
+                            csm[i] = 1.0 / th;
+                            c[i, j] = csm[i] * sm[i, j];
+                        }
+                        else if (isotype[k, j] == "li")
+                        {
+                            csm[i] = 1.0 / (th + bd[k] * isopar[k, j].p[1]);
+                            c[i, j] = csm[i] * sm[i, j];
+                        }
+                        else
+                        {
+                            for (it = 1; it <= itmax; it++) //get c from sm using Newton's method and bisection
                             {
-                                Console.WriteLine("solute: too many iterations getting c");
-                                Environment.Exit(1);
+                                if (c[i, j] < 0.0)
+                                    c[i, j] = 0.0; //c and sm are >= 0
+                                isosub(isotype[k, j], c[i, j], dsmmax, isopar[k, j].p, f, fc);
+                                csm[i] = 1.0 / (th + bd[k] * fc);
+                                dm = sm[i, j] - (bd[k] * f + th * c[i, j]);
+                                dc = dm * csm[i];
+                                if (sm[i, j] >= 0.0 && c[i, j] + dc < 0.0)
+                                    c[i, j] = 0.5 * c[i, j];
+                                else
+                                    c[i, j] = c[i, j] + dc;
+                                if (Math.Abs(dm) < eps * (sm[i, j] + 10.0 * dsmmax))
+                                    break;
+                                if (it == itmax)
+                                {
+                                    Console.WriteLine("solute: too many iterations getting c");
+                                    Environment.Exit(1);
+                                }
                             }
                         }
                     }
@@ -831,7 +834,11 @@ namespace SWIMFrame
                 q[n] = qw[n] * c[n, j];
                 qya[n] = qw[n] * csm[n];
                 //get time step
-                dmax = maxval(abs(q(1:n) - q(0:n - 1)) / dx);
+                double[] absQ = new double[n];
+                for (int x = 0; x < n; x++)
+                    absQ[x] = Math.Abs(q[n + 1] - q[n] / dx[x]);
+
+                dmax = MathUtilities.Max(absQ);
                 if (dmax == 0.0)
                 {
                     dt = tfin - t;
@@ -858,7 +865,7 @@ namespace SWIMFrame
                 q(n) = q(n) - sigdt * qya(n) * tht(n) * c(n, j);
                 //get and solve eqns
                 aa(2:n) = qya(1:n - 1); cc(1:n - 1) = -qyb(1:n - 1);
-                if (present(sex))  //get extraction
+                if (extraction)  //get extraction
                 {
                     ssinks(t, ti, tf, j, dwexs, c(1:n, j), qsexs, qsexsd);
                     qsex = sum(qsexs, 2);
