@@ -83,7 +83,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="startYear"></param>
         /// <param name="showYears"></param>
-        public void GraphRefreshValueChanged(decimal startYear, decimal showYears)
+        public void GraphRefreshValueChanged(int tabIndex, decimal startYear, decimal showYears)
         {
             try
             {
@@ -93,7 +93,7 @@ namespace UserInterface.Presenters
                 if (showYears > 1)
                     endDate = endDate.AddYears(Convert.ToInt16(showYears) - 1);
 
-                this.DisplayDetailedGraphs(data, startDate, endDate, false);
+                this.DisplayDetailedGraphs(data, tabIndex, startDate, endDate, false);
             }
             catch (Exception)
             {
@@ -272,16 +272,53 @@ namespace UserInterface.Presenters
             {
                 //By default, only do one year (the first year)
                 DateTime endDate = new DateTime(dataFirstDate.Year, 12, 31);
-                DisplayDetailedGraphs(table, dataFirstDate, endDate, true);
+                //by default, assume if not passed in, then we are displaying first tab (tab 0)
+                DisplayDetailedGraphs(table, 0, dataFirstDate, endDate, true);
             }
         }
-
 
         /// <summary>This refreshes data being displayed on the graphs, based on the value of the startYear and showYear values  </summary>
         /// <param name="table"></param>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
-        private void DisplayDetailedGraphs(DataTable table, DateTime startDate, DateTime endDate, Boolean updateYears)
+        private void DisplayDetailedGraphs(DataTable table, int tabIndex, DateTime startDate, DateTime endDate, Boolean updateYears)
+        {
+            try
+            {
+                if (table != null && table.Rows.Count > 0)
+                {
+                    switch (tabIndex)
+                    {
+                        case 2:     //Daily Rain
+                            DisplayGraphDailyRain(table, startDate, endDate, true);
+                            break;
+                        case 3:     //Monthly Rain
+                            DisplayGraphMonthlyRain(table, startDate, endDate, true);
+                            break;
+                        case 4:     //Temperature
+                            DisplayGraphTemperature(table, startDate, endDate, true);
+                            break;
+                        case 5:     //Radiation
+                            DisplayGraphRadiation(table, startDate, endDate, true);
+                            break;
+                    }
+
+                    if (updateYears == true)
+                        this.SetGraphControlsDefaultValues();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Unable to display Detailed Graphs due to insufficient data: " + e.Message.ToString());
+            }
+
+        }
+
+        /// <summary>This refreshes data being displayed on the graphs, based on the value of the startYear and showYear values  </summary>
+        /// <param name="table"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        private void DisplayGraphDailyRain(DataTable table, DateTime startDate, DateTime endDate, Boolean updateYears)
         {
             try
             {
@@ -291,11 +328,6 @@ namespace UserInterface.Presenters
                     // graph the daily values for rainfall, temperature and radiation
                     DateTime[] dailyDates = DataTableUtilities.GetColumnAsDates(table, "Date", startDate, endDate);
                     double[] dailyRain = DataTableUtilities.GetColumnAsDoubles(table, "rain", startDate, endDate);
-                    double[] dailyMaxTemp = DataTableUtilities.GetColumnAsDoubles(table, "maxt", startDate, endDate);
-                    double[] dailyMinTemp = DataTableUtilities.GetColumnAsDoubles(table, "mint", startDate, endDate);
-                    double[] dailyRadn = DataTableUtilities.GetColumnAsDoubles(table, "radn", startDate, endDate);
-                    double[] dailyMaxRadn = DataTableUtilities.GetColumnAsDoubles(table, "Qmax", startDate, endDate);
-                    double[] monthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", startDate, endDate);
 
                     String rainMessage = string.Empty ;
                     if (dailyRain.Length != 0)
@@ -304,20 +336,92 @@ namespace UserInterface.Presenters
                         rainMessage = "Total Rainfall for the year " + startDate.Year.ToString()
                                     + " is " + totalYearlyRainfall.ToString() + "mm.";
 
-                        this.PopulateRainfallGraph(rainMessage, dailyDates, dailyRain);
-                        this.PopulateTemperatureGraph("Temperature", dailyDates, dailyMaxTemp, dailyMinTemp);
-                        this.PopulateRadiationGraph("Radiation", dailyDates, dailyRain, dailyRadn, dailyMaxRadn);
 
+                        this.PopulateRainfallGraph(rainMessage, dailyDates, dailyRain);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Unable to display Detailed Graphs due to insufficient data: " + e.Message.ToString());
+            }
+
+        }
+
+        /// <summary>This refreshes data being displayed on the graphs, based on the value of the startYear and showYear values  </summary>
+        /// <param name="table"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        private void DisplayGraphMonthlyRain(DataTable table, DateTime startDate, DateTime endDate, Boolean updateYears)
+        {
+            try
+            {
+                if (table != null && table.Rows.Count > 0)
+                {
+                    double[] monthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", startDate, endDate);
+
+                    if (monthlyRainfall.Length != 0)
+                    {
                         double[] avgMonthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", dataFirstDate, dataLastDate);
                         this.PopulateMonthlyRainfallGraph("Monthly Rainfall", 
                                                         monthsToDisplay, 
                                                         monthlyRainfall, 
                                                         avgMonthlyRainfall);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Unable to display Detailed Graphs due to insufficient data: " + e.Message.ToString());
+            }
 
-                        //this is only done if first time displaying this data
-                        if (updateYears == true)
-                            this.SetGraphControlsDefaultValues();
+        }
 
+        /// <summary>This refreshes data being displayed on the graphs, based on the value of the startYear and showYear values  </summary>
+        /// <param name="table"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        private void DisplayGraphTemperature(DataTable table, DateTime startDate, DateTime endDate, Boolean updateYears)
+        {
+            try
+            {
+                if (table != null && table.Rows.Count > 0)
+                {
+                    DateTime[] dailyDates = DataTableUtilities.GetColumnAsDates(table, "Date", startDate, endDate);
+                    double[] dailyMaxTemp = DataTableUtilities.GetColumnAsDoubles(table, "maxt", startDate, endDate);
+                    double[] dailyMinTemp = DataTableUtilities.GetColumnAsDoubles(table, "mint", startDate, endDate);
+
+                    if (dailyMaxTemp.Length != 0)
+                    {
+                        this.PopulateTemperatureGraph("Temperature", dailyDates, dailyMaxTemp, dailyMinTemp);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Unable to display Detailed Graphs due to insufficient data: " + e.Message.ToString());
+            }
+
+        }
+
+        /// <summary>This refreshes data being displayed on the graphs, based on the value of the startYear and showYear values  </summary>
+        /// <param name="table"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        private void DisplayGraphRadiation(DataTable table, DateTime startDate, DateTime endDate, Boolean updateYears)
+        {
+            try
+            {
+                if (table != null && table.Rows.Count > 0)
+                {
+                    DateTime[] dailyDates = DataTableUtilities.GetColumnAsDates(table, "Date", startDate, endDate);
+                    double[] dailyRain = DataTableUtilities.GetColumnAsDoubles(table, "rain", startDate, endDate);
+                    double[] dailyRadn = DataTableUtilities.GetColumnAsDoubles(table, "radn", startDate, endDate);
+                    double[] dailyMaxRadn = DataTableUtilities.GetColumnAsDoubles(table, "Qmax", startDate, endDate);
+
+                    if (dailyRadn.Length != 0)
+                    {
+                        this.PopulateRadiationGraph("Radiation", dailyDates, dailyRain, dailyRadn, dailyMaxRadn);
                     }
                 }
             }
