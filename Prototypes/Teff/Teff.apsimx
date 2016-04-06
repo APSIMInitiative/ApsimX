@@ -10808,7 +10808,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
         <Name>Mekelle2004</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>C:\ApsimX\Prototypes\Teff\mekelleGY.met</FileName>
+          <FileName>mekelleGY.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
