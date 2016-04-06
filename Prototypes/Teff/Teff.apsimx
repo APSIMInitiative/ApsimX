@@ -10899,6 +10899,14 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
           </Operations>
           <Operations>
             <Name>IrrigationRate</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Note that the timing and volume of this supplemental irrigation are not known.  The authors simply inform the reader that supplemental irrigation was applied at stem elongation to avoid terminal water stress.]]></MemoText>
+            </Memo>
+            <Operation>
+              <Date>2004-08-05T00:00:00</Date>
+              <Action>[Irrigation].Apply(amount:30, depth:0,efficiency:1, willRunoff:false);</Action>
+            </Operation>
           </Operations>
           <Report>
             <Name>Report</Name>
