@@ -79,6 +79,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Flow.cs" />
     <Compile Include="Fluxes.cs" />
+    <Compile Include="Input.cs" />
     <Compile Include="ISink.cs" />
     <Compile Include="MVG.cs" />
     <Compile Include="Program.cs" />
