@@ -298,7 +298,8 @@
                 p.WaitForExit();
                 if (p.ExitCode > 0)
                 {
-                    ErrorMessage = stdout;
+                    ErrorMessage = "Error in file: " + arguments + Environment.NewLine;
+                    ErrorMessage += stdout;
                     throw new Exception(ErrorMessage);
                 }
             }

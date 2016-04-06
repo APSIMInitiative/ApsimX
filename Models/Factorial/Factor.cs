@@ -109,6 +109,10 @@ namespace Models.Factorial
             return factorValues;
         }
 
+        /// <summary>Convert a PathValuesPair to a new FactorValue.</summary>
+        /// <param name="factorValues"></param>
+        /// <param name="fixedValues"></param>
+        /// <param name="combination"></param>
         private void PathValuesPairToFactorValue(List<FactorValue> factorValues, List<PathValuesPair> fixedValues, List<PathValuesPair> combination)
         {
             List<string> pathsForFactor = new List<string>();
@@ -123,15 +127,18 @@ namespace Models.Factorial
 
             // Add in rest.
             string factorName = Name;
-            foreach (PathValuesPair pathValue in combination)
+            if (combination != null)
             {
-                pathsForFactor.Add(pathValue.path);
-                valuesForFactor.Add(pathValue.value);
+                foreach (PathValuesPair pathValue in combination)
+                {
+                    pathsForFactor.Add(pathValue.path);
+                    valuesForFactor.Add(pathValue.value);
 
-                if (pathValue.value is IModel)
-                    factorName += (pathValue.value as IModel).Name;
-                else
-                    factorName += pathValue.value.ToString();
+                    if (pathValue.value is IModel)
+                        factorName += (pathValue.value as IModel).Name;
+                    else
+                        factorName += pathValue.value.ToString();
+                }
             }
 
             factorValues.Add(new FactorValue(this, factorName, pathsForFactor, valuesForFactor));
