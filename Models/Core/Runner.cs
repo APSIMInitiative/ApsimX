@@ -149,7 +149,8 @@
                     }
                     catch (Exception err)
                     {
-                        ErrorMessage += err.ToString() + Environment.NewLine;
+                        ErrorMessage += "Error in file: " + simulations.FileName + Environment.NewLine;
+                        ErrorMessage += err.ToString() + Environment.NewLine + Environment.NewLine;
                     }
                 }
 
