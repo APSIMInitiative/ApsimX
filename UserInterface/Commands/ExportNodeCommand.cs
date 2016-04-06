@@ -129,8 +129,6 @@ namespace UserInterface.Commands
         /// <returns>True if something was written to index.</returns>
         private void AddValidationTags(List<AutoDocumentation.ITag> tags, IModel modelToExport, int headingLevel, string workingDirectory)
         {
-            int savedIndex = tags.Count;
-
             // Look for child models that are a folder or simulation etc
             // that we need to recurse down through.
             foreach (Model child in modelToExport.Children)
@@ -141,6 +139,7 @@ namespace UserInterface.Commands
                 {
                     if (Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
                     {
+                        tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel));
                         string childFolderPath = Path.Combine(workingDirectory, child.Name);
                         AddValidationTags(tags, child, headingLevel + 1, workingDirectory);
                     }
@@ -148,10 +147,6 @@ namespace UserInterface.Commands
                         child.Document(tags, headingLevel, 0);
                 }
             }
-
-            bool somethingAdded = savedIndex != tags.Count;
-            if (somethingAdded && modelToExport.Name != "Simulations")
-                tags.Insert(savedIndex, new AutoDocumentation.Heading(modelToExport.Name, headingLevel));
         }
 
         #region PDF
@@ -194,13 +189,16 @@ namespace UserInterface.Commands
 
             // Document model description.
             tags.Add(new AutoDocumentation.Heading("Model description", 1));
-            ExplorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 2);
+            ExplorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 1);
 
             // Document model validation.
-            tags.Add(new AutoDocumentation.Heading("Validation", 1));
             AddValidationTags(tags, ExplorerPresenter.ApsimXFile, 1, workingDirectory);
 
+            // Move cultivars to end.
+            MoveCultivarsToEnd(tags);
 
+            // Strip all blank sections i.e. two headings with nothing between them.
+            StripEmptySections(tags);
 
             // Scan for citations.
             ScanForCitations(tags);
@@ -223,6 +221,69 @@ namespace UserInterface.Commands
 
             // Remove temporary working directory.
             Directory.Delete(workingDirectory, true);
+        }
+
+        /// <summary>Strip all blank sections i.e. two headings with nothing between them.</summary>
+        /// <param name="tags"></param>
+        private void StripEmptySections(List<AutoDocumentation.ITag> tags)
+        {
+            bool tagsRemoved;
+            do
+            {
+                tagsRemoved = false;
+                for (int i = 0; i < tags.Count - 1; i++)
+                {
+                    AutoDocumentation.Heading thisTag = tags[i] as AutoDocumentation.Heading;
+                    AutoDocumentation.Heading nextTag = tags[i + 1] as AutoDocumentation.Heading;
+                    if (thisTag != null && nextTag != null && thisTag.headingLevel >= nextTag.headingLevel)
+                    {
+                        // Need to renumber headings after this tag until we get to the same heading
+                        // level that thisTag is on.
+                        tags.RemoveAt(i);
+                        i--;
+                        tagsRemoved = true;
+                    }
+                }
+            }
+            while (tagsRemoved);
+        }
+
+        /// <summary>Move cultivars to the end of the tags.</summary>
+        /// <param name="tags">tags</param>
+        private void MoveCultivarsToEnd(List<AutoDocumentation.ITag> tags)
+        {
+            for (int i = 0; i < tags.Count; i++)
+            {
+                if (tags[i] is AutoDocumentation.Heading)
+                {
+                    AutoDocumentation.Heading heading = tags[i] as AutoDocumentation.Heading;
+                    if (heading.text == "Cultivars")
+                    {
+                        int cultivarHeadingLevel = heading.headingLevel;
+                        heading.headingLevel = 1;
+
+                        bool stopMovingTags;
+                        do
+                        {
+                            AutoDocumentation.ITag thisTag = tags[i];
+                            tags.Remove(thisTag);
+                            tags.Add(thisTag);
+                            thisTag = tags[i];
+                            if (thisTag is AutoDocumentation.Heading)
+                            {
+                                AutoDocumentation.Heading thisTagAsHeading = thisTag as AutoDocumentation.Heading;
+                                stopMovingTags = thisTagAsHeading.headingLevel <= cultivarHeadingLevel;
+                                if (!stopMovingTags)
+                                    thisTagAsHeading.headingLevel = 2;
+                            }
+                            else
+                                stopMovingTags = false;
+                        }
+                        while (!stopMovingTags);
+                        return;
+                    }
+                }
+            }
         }
 
         /// <summary>Creates the PDF syles.</summary>
@@ -335,6 +396,9 @@ namespace UserInterface.Commands
                     AutoDocumentation.Heading heading = tag as AutoDocumentation.Heading;
                     if (heading.headingLevel > 0 && heading.headingLevel <= 6)
                     {
+                        if (heading.headingLevel == 1)
+                            section.AddPageBreak();
+
                         Paragraph para = section.AddParagraph(heading.text, "Heading" + heading.headingLevel);
                         if (heading.headingLevel == 1)
                             para.Format.OutlineLevel = OutlineLevel.Level1;
@@ -364,6 +428,8 @@ namespace UserInterface.Commands
                     GraphView graphView = new GraphView();
                     graphView.BackColor = System.Drawing.Color.White;
                     graphView.FontSize = 12;
+                    graphView.Width = 500;
+                    graphView.Height = 500;
                     graphPresenter.Attach(tag, graphView, ExplorerPresenter);
                     string PNGFileName = graphPresenter.ExportToPDF(workingDirectory);
                     section.AddImage(PNGFileName);

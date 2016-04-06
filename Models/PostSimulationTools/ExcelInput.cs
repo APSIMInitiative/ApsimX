@@ -27,7 +27,7 @@ namespace Models.PostSimulationTools
         /// <summary>
         /// Gets or sets the file name to read from.
         /// </summary>
-        [Description("EXCEL file name")]
+        [Description("EXCEL file name (must be .xlsx)")]
         [Display(DisplayType=DisplayAttribute.DisplayTypeEnum.FileName)]
         public string FileName
         {
@@ -90,10 +90,7 @@ namespace Models.PostSimulationTools
                 // Create a reader.
                 IExcelDataReader excelReader;
                 if (Path.GetExtension(fullFileName).Equals(".xls", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    // Reading from a binary Excel file ('97-2003 format; *.xls)
-                    excelReader = ExcelReaderFactory.CreateBinaryReader(stream);
-                }
+                    throw new Exception("EXCEL file must be in .xlsx format. Filename: " + fullFileName);
                 else
                 {
                     // Reading from a OpenXml Excel file (2007 format; *.xlsx)

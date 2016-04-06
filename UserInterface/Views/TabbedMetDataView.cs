@@ -6,11 +6,15 @@ using UserInterface.Interfaces;
 // This is the view used by the WeatherFile component
 namespace UserInterface.Views
 {
-    /// <summary>
-    /// A delegate for a button click
-    /// </summary>
-    /// <param name="FileName">Name of the file.</param>
-    public delegate void BrowseDelegate(string FileName);
+    /// <summary>A delegate for a button click</summary>
+    /// <param name="fileName">Name of the file.</param>
+    public delegate void BrowseDelegate(string fileName);
+
+    ///// <summary>A delegate for a numericUpDown click event</summary>
+    ///// <param name="startYear">the start year for the data being displayed in the graph</param>
+    ///// <param name="showYears">the number of years of data to be used/displayed in the graph</param>
+    public delegate void GraphRefreshDelegate(int tabIndex, decimal startYear, decimal showYears);
+
 
     /// <summary>
     /// An interface for a weather data view
@@ -20,6 +24,9 @@ namespace UserInterface.Views
         /// <summary>Occurs when browse button is clicked</summary>
         event BrowseDelegate BrowseClicked;
 
+        /// <summary>Occurs when the start year numericUpDown is clicked</summary>
+        event GraphRefreshDelegate GraphRefreshClicked;
+
         /// <summary>Gets or sets the filename.</summary>
         string Filename { get; set; }
 
@@ -27,11 +34,39 @@ namespace UserInterface.Views
         string Summarylabel { set; }
 
         /// <summary>Gets the graph.</summary>
-        IGraphView Graph { get; }
+        IGraphView GraphSummary { get; }
+
+        /// <summary>Gets the Rainfall graph.</summary>
+        IGraphView GraphRainfall { get; }
+
+        /// <summary>Gets the Monthly Rainfall graph.</summary>
+        IGraphView GraphMonthlyRainfall { get; }
+
+        /// <summary>Gets the Temperature graph.</summary>
+        IGraphView GraphTemperature { get; }
+
+        /// <summary>Gets the Radiation graph.</summary>
+        IGraphView GraphRadiation { get; }
+
+        /// <summary>sets the Graph Year</summary>
+        decimal GraphStartYearValue { get; set; }
+
+        /// <summary>set the minimum value for the 'Start Year' NumericUpDown control </summary>
+        decimal GraphStartYearMinValue { get; set; }
+
+        /// <summary>set the maximum value for the graph 'Start Year' NumericUpDown control  </summary>
+        decimal GraphStartYearMaxValue { get; set; }
+
+        /// <summary>sets/gets the value of 'Show Years' NumericUpDown control </summary>
+        decimal GraphShowYearsValue { get; set; }
+
+        /// <summary>set the maximum value for the 'Show Years' NumericUpDown control  </summary>
+        decimal GraphShowYearsMaxValue { set; }
 
         /// <summary>Populates the data grid</summary>
         /// <param name="Data">The data</param>
         void PopulateData(DataTable Data);
+
     }
 
     /// <summary>
@@ -41,6 +76,10 @@ namespace UserInterface.Views
     {
         /// <summary>Occurs when browse button is clicked</summary>
         public event BrowseDelegate BrowseClicked;
+
+        /// <summary>Occurs when start year or show Years numericUpDowns are clicked</summary>
+        public event GraphRefreshDelegate GraphRefreshClicked;
+
 
         /// <summary>Initializes a new instance of the <see cref="TabbedMetDataView"/> class.</summary>
         public TabbedMetDataView()
@@ -52,8 +91,8 @@ namespace UserInterface.Views
         /// <value>The filename.</value>
         public string Filename
         {
-            get { return label1.Text; }
-            set { label1.Text = value;}
+            get { return FileNameControl.Text; }
+            set { FileNameControl.Text = value;}
         }
 
         /// <summary>Sets the summarylabel.</summary>
@@ -65,15 +104,64 @@ namespace UserInterface.Views
 
         /// <summary>Gets the graph.</summary>
         /// <value>The graph.</value>
-        public IGraphView Graph { get { return graphView1; } }
+        public IGraphView GraphSummary { get { return graphViewSummary; } }
+
+        /// <summary>/// Gets the Rainfall Graph/// </summary>
+        /// <value>The Rainfall Graph</value>
+        public IGraphView GraphRainfall { get { return graphViewRainfall; } }
+
+        /// <summary>/// Gets the Monthly Rainfall Graph/// </summary>
+        /// <value>The Rainfall Graph</value>
+        public IGraphView GraphMonthlyRainfall { get { return graphViewMonthlyRainfall; } }
+
+        /// <summary>/// Gets the Temperature Graph/// </summary>
+        /// <value>The Temperature Graph</value>
+        public IGraphView GraphTemperature { get { return graphViewTemperature; } }
+
+        /// <summary>/// Gets the Radiation Graph/// </summary>
+        /// <value>The Radiation Graph</value>
+        public IGraphView GraphRadiation { get { return graphViewRadiation; } }
+
+        /// <summary>Sets the Graph Year</summary>
+        public decimal GraphStartYearValue 
+        {
+            get { return GraphStartYearControl.Value; }
+            set { GraphStartYearControl.Value = Convert.ToDecimal(value); }
+        }
+
+        /// <summary>set the minimum value for the graph 'Year to display' </summary>
+        public decimal GraphStartYearMinValue
+        {
+            get { return GraphStartYearControl.Minimum;  }
+            set { GraphStartYearControl.Minimum = Convert.ToDecimal(value); }
+        }
+
+        /// <summary>set the maximum value for the graph 'Year to display' </summary>
+        public decimal GraphStartYearMaxValue
+        {
+            get { return GraphStartYearControl.Maximum; }
+            set { GraphStartYearControl.Maximum = Convert.ToDecimal(value); }
+        }
+
+        /// <summary>Gets and sets the Graph Year</summary>
+        public decimal GraphShowYearsValue
+        {
+            get { return GraphShowYearsControl.Value; }
+            set { GraphShowYearsControl.Value = Convert.ToDecimal(value); }
+        }
+
+        /// <summary>set the maximum value for the graph 'Year to display' </summary>
+        public decimal GraphShowYearsMaxValue
+        {
+            set { GraphShowYearsControl.Maximum = Convert.ToDecimal(value); }
+        }
 
         /// <summary>Populates the data.</summary>
         /// <param name="Data">The data.</param>
-        public void PopulateData(DataTable Data)
+        public void PopulateData(DataTable data)
         {
             //fill the grid with data
-            dataGridView1.DataSource = Data;
-            
+            dataGridView1.DataSource = data;
         }
 
         /// <summary>Handles the Click event of the button1 control.</summary>
@@ -82,12 +170,57 @@ namespace UserInterface.Views
         private void OnButton1Click(object sender, EventArgs e)
         {
             
-            openFileDialog1.FileName = label1.Text;
+            openFileDialog1.FileName = FileNameControl.Text;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                label1.Text = openFileDialog1.FileName;
+                FileNameControl.Text = openFileDialog1.FileName;
                 if (BrowseClicked != null)
-                    BrowseClicked.Invoke(label1.Text);    //reload the grid with data
+                    BrowseClicked.Invoke(FileNameControl.Text);    //reload the grid with data
+            }
+        }
+
+        /// <summary>Handles the change event for the GraphStartYear NumericUpDown </summary>
+        /// <param name="sender">The source of the event</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void uxGraphStartYear_ValueChanged(object sender, EventArgs e)
+        {
+            if (GraphRefreshClicked != null)
+            {
+                int selectedTabIndex = tabControl1.SelectedIndex;
+                GraphRefreshClicked.Invoke(selectedTabIndex, GraphStartYearControl.Value, GraphShowYearsControl.Value);
+            }
+        }
+
+        /// <summary>Handles the change event for the GraphShowYears NumericUpDown </summary>
+        /// <param name="sender">The source of the event</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void uxGraphShowYears_ValueChanged(object sender, EventArgs e)
+        {
+            if (GraphRefreshClicked != null)
+            {
+                int selectedTabIndex = tabControl1.SelectedIndex;
+                GraphRefreshClicked.Invoke(selectedTabIndex, (int)GraphStartYearControl.Value, (int)GraphShowYearsControl.Value);
+            }
+        }
+
+        /// <summary>
+        /// Handles the selection change between tabs, so that we can adjust the height of the Browse Panel,
+        /// showing/or hiding information that is not relevant.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            TabControl tc = (TabControl)sender;
+            if (tc.SelectedIndex == 0 || tc.SelectedIndex == 1)
+            {
+                BrowsePanelControl.Height = 41;
+                GraphRefreshClicked.Invoke(tc.SelectedIndex, GraphStartYearControl.Value, GraphShowYearsControl.Value);
+            }
+            else
+            {
+                BrowsePanelControl.Height = 68;
+                GraphRefreshClicked.Invoke(tc.SelectedIndex, GraphStartYearControl.Value, GraphShowYearsControl.Value);
             }
         }
     }

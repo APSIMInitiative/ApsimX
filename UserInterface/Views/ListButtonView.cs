@@ -22,6 +22,11 @@ namespace UserInterface.Views
 
         /// <summary>The button.</summary>
         IButtonView Button { get; }
+
+        /// <summary>
+        /// Property to set/clear the wait cursor of the view
+        /// </summary>
+        bool WaitCursor { get; set; }
     }
 
 
@@ -39,5 +44,25 @@ namespace UserInterface.Views
 
         /// <summary>The button.</summary>
         public IButtonView Button { get { return buttonView1; } }
+
+        public bool WaitCursor
+        {
+            get
+            {
+                return Cursor.Current == Cursors.WaitCursor;
+            }
+            set
+            {
+                if (value == true)
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                }
+                else
+                {
+                    Cursor.Current = Cursors.Default;
+                }
+            }
+        }
+
     }
 }

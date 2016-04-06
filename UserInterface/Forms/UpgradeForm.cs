@@ -6,7 +6,6 @@
 namespace UserInterface.Forms
 {
     using APSIM.Shared.Utilities;
-    using global::UserInterface.BuildService;
     using global::UserInterface.Presenters;
     using System;
     using System.Collections.Generic;
@@ -26,6 +25,15 @@ namespace UserInterface.Forms
     /// </summary>
     public partial class UpgradeForm : Form
     {
+        public class Upgrade
+        {
+            public DateTime ReleaseDate { get; set; }
+            public int issueNumber { get; set; }
+            public string IssueTitle { get; set; }
+            public string IssueURL { get; set; }
+            public string ReleaseURL { get; set; }
+        }
+
         /// <summary>
         /// A list of potential upgrades available.
         /// </summary>
@@ -68,8 +76,14 @@ namespace UserInterface.Forms
                 label1.Text = "You are currently using a custom build of APSIM. You cannot upgrade this to a newer version.";
             else
             {
-                label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below.";
                 PopulateUpgradeList();
+                if (upgrades.Length > 0)
+                {
+                    label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below.";
+                    label1.Text = label1.Text + Environment.NewLine + "Select an upgrade below.";
+                }
+                else
+                    label1.Text = "You are currently using version " + version.ToString() + ". You are using the latest version.";
             }
 
             firstNameBox.Text = Utility.Configuration.Settings.FirstName;
@@ -85,13 +99,13 @@ namespace UserInterface.Forms
 
             WebClient web = new WebClient();
 
-            string tempLicenseFileName = Path.Combine(Path.GetTempPath(), "APSIMLicense.rtf");
+            string tempLicenseFileName = Path.Combine(Path.GetTempPath(), "APSIM_NonCommercial_RD_licence.htm");
             if (File.Exists(tempLicenseFileName))
                 File.Delete(tempLicenseFileName);
 
             try
             {
-                web.DownloadFile(@"https://www.apsim.info/ProductRegistration/APSIMDisclaimer.rtf", tempLicenseFileName);
+                web.DownloadFile(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.rtf", tempLicenseFileName);
                 htmlView1.SetContents(File.ReadAllText(tempLicenseFileName), false);
             }
             catch (Exception)
@@ -107,17 +121,17 @@ namespace UserInterface.Forms
         private void PopulateUpgradeList()
         {
             Version version = new Version(Application.ProductVersion);
-            using (BuildService.BuildProviderClient buildService = new BuildService.BuildProviderClient())
+            //version = new Version(0, 0, 0, 652);  
+            upgrades = WebUtilities.CallRESTService<Upgrade[]>("http://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
+            foreach (Upgrade upgrade in upgrades)
             {
-                upgrades = buildService.GetUpgradesSinceIssue(version.Revision);
-                foreach (Upgrade upgrade in upgrades)
-                {
-                    string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
-                    ListViewItem newItem = new ListViewItem(versionNumber);
-                    newItem.SubItems.Add(upgrade.IssueTitle);
-                    listView1.Items.Add(newItem);
-                }
+                string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
+                ListViewItem newItem = new ListViewItem(versionNumber);
+                newItem.SubItems.Add(upgrade.IssueTitle);
+                listView1.Items.Add(newItem);
             }
+            if (listView1.Items.Count > 0)
+                listView1.Items[0].Selected = true;
         }
 
         /// <summary>
@@ -186,7 +200,6 @@ namespace UserInterface.Forms
                             // Delete the old upgrader.
                             if (File.Exists(upgraderFileName))
                                 File.Delete(upgraderFileName);
-
                             // Copy in the new upgrader.
                             File.Copy(sourceUpgraderFileName, upgraderFileName, true);
 
@@ -224,15 +237,30 @@ namespace UserInterface.Forms
         /// </summary>
         private void WriteUpgradeRegistration(string version)
         {
-            using (BuildService.BuildProviderClient buildService = new BuildService.BuildProviderClient())
-            {
-                buildService.RegisterUpgrade(firstNameBox.Text, lastNameBox.Text, organisationBox.Text,
-                                             address1Box.Text, address2Box.Text, cityBox.Text,
-                                             stateBox.Text, postcodeBox.Text, countryBox.Text,
-                                             emailBox.Text, version);
-            }
+            string url = "http://www.apsim.info/APSIM.Registration.Service/Registration.svc/Add";
+            url += "?firstName=" + firstNameBox.Text;
+
+            url = addToURL(url, "lastName", lastNameBox.Text);
+            url = addToURL(url, "organisation", organisationBox.Text);
+            url = addToURL(url, "address1", address1Box.Text);
+            url = addToURL(url, "address2", address2Box.Text);
+            url = addToURL(url, "city", cityBox.Text);
+            url = addToURL(url, "state", stateBox.Text);
+            url = addToURL(url, "postcode", postcodeBox.Text);
+            url = addToURL(url, "country", countryBox.Text);
+            url = addToURL(url, "email", emailBox.Text);
+            url = addToURL(url, "product", "APSIM Next Generation " + version);
+
+            WebUtilities.CallRESTService<object>(url);
         }
 
+        /// <summary>Add a key / value pair to url if not empty</summary>
+        private string addToURL(string url, string key, string value)
+        {
+            if (value == null || value == string.Empty)
+                value = "-";
+            return url + "&" + key + "=" + value;
+        }
 
         /// <summary>
         /// Form is closing - save personal details.
