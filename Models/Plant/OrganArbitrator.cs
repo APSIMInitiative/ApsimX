@@ -496,6 +496,32 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Gets the n supply relative to N demand.</summary>
+        /// <value>The n supply.</value>
+        [XmlIgnore]
+        public double FDM
+        {
+            get
+            {
+                if (Plant.IsAlive)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (DM != null)
+                        {
+                            if ((Plant.Phenology.Emerged == true) && (DM.TotalPlantDemand > 0) && (DM.TotalPlantSupply > 0))
+                                return DM.TotalPlantSupply / DM.TotalPlantDemand;
+                            else return 1;
+                        }
+                        else return 1;
+                    }
+                    else
+                        return DM.TotalPlantSupply / DM.TotalPlantDemand;
+                }
+                else
+                    return 1;
+            }
+        }
         /// <summary>Gets the delta wt.</summary>
         /// <value>The delta wt.</value>
         public double DeltaWt
