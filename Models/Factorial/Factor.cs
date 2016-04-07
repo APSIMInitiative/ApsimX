@@ -141,7 +141,8 @@ namespace Models.Factorial
                 }
             }
 
-            factorValues.Add(new FactorValue(this, factorName, pathsForFactor, valuesForFactor));
+            if (pathsForFactor.Count > 0)
+                factorValues.Add(new FactorValue(this, factorName, pathsForFactor, valuesForFactor));
         }
 
         /// <summary>
