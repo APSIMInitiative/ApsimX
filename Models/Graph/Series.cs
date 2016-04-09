@@ -579,8 +579,14 @@ namespace Models.Graph
             // If the table name is null then use reflection to get data from other models.
             if (TableName == null)
             {
-                definition.x = GetDataFromModels(XFieldName);
-                definition.y = GetDataFromModels(YFieldName);
+                if (!String.IsNullOrEmpty(XFieldName))
+                    definition.x = GetDataFromModels(XFieldName);
+                if (!String.IsNullOrEmpty(YFieldName))
+                    definition.y = GetDataFromModels(YFieldName);
+                if (!String.IsNullOrEmpty(X2FieldName))
+                    definition.x2 = GetDataFromModels(X2FieldName);
+                if (!String.IsNullOrEmpty(Y2FieldName))
+                    definition.y2 = GetDataFromModels(Y2FieldName);
             }
             else
             {
