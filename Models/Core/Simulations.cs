@@ -148,7 +148,7 @@ namespace Models.Core
 
         /// <summary>Call Loaded event in specified model and all children</summary>
         /// <param name="model">The model.</param>
-        private static void CallOnLoaded(IModel model)
+        public static void CallOnLoaded(IModel model)
         {
             // Call OnLoaded in all models.
             Apsim.CallEventHandler(model, "Loaded", null);

@@ -10,7 +10,6 @@ namespace UserInterface.Presenters
     using System.IO;
     using System.Reflection;
     using System.Runtime.Serialization;
-    using System.Windows.Forms;
     using System.Xml;
     using APSIM.Shared.Utilities;
     using Commands;
@@ -410,7 +409,7 @@ namespace UserInterface.Presenters
                 {
                     NodePath = null,
                     ModelType = newModel.GetType(),
-                    Xml = System.Windows.Forms.Clipboard.GetText()
+                    Xml = GetClipboardText()
                 };
                 this.OnAllowDrop(null, allowDropArgs);
 
@@ -419,7 +418,7 @@ namespace UserInterface.Presenters
                 {
                     // If the model xml is a soil object then try and convert from old
                     // APSIM format to new.
-                    if (document.DocumentElement.Name == "Soil")
+                    if (document.DocumentElement.Name == "Soil" && XmlUtilities.Attribute(document.DocumentElement, "Name") != "")
                     {
                         XmlDocument newDoc = new XmlDocument();
                         newDoc.AppendChild(newDoc.CreateElement("D"));
@@ -486,6 +485,24 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Get whatever text is currently on the clipboard
+        /// </summary>
+        /// <returns></returns>
+        public string GetClipboardText()
+        {
+            return view.GetClipboardText();
+        }
+
+        /// <summary>
+        /// Place text on the clipboard
+        /// </summary>
+        /// <param name="text"></param>
+        public void SetClipboardText(string text)
+        {
+            view.SetClipboardText(text);
+        }
+
+        /// <summary>
         /// The view wants us to return a list of menu descriptions for the
         /// main menu.
         /// </summary>
@@ -514,7 +531,7 @@ namespace UserInterface.Presenters
             string labelToolTip = null;
 
             // Get assembly title.
-            Version version = new Version(Application.ProductVersion);
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
             if (version.Major > 0)
             {
                 labelText = "Official Build";
@@ -541,7 +558,7 @@ namespace UserInterface.Presenters
                 if (contextMenuAttr != null)
                 {
                     bool ok = true;
-                    if (contextMenuAttr.AppliesTo != null)
+                    if (contextMenuAttr.AppliesTo != null && selectedModel != null)
                     {
                         ok = false;
                         foreach (Type t in contextMenuAttr.AppliesTo)
@@ -626,7 +643,7 @@ namespace UserInterface.Presenters
             if (obj != null)
             {
                 string xml = Apsim.Serialise(obj);
-                Clipboard.SetText(xml);
+                SetClipboardText(xml);
 
                 DragObject dragObject = new DragObject();
                 dragObject.NodePath = e.NodePath;
@@ -740,7 +757,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnShortcutKeyPress(object sender, KeysArgs e)
         {
-            if (e.Keys == Keys.F5)
+            if (e.Keys == System.Windows.Forms.Keys.F5)
             {
                 ContextMenu contextMenu = new ContextMenu(this);
                 contextMenu.RunAPSIM(sender, null);
@@ -863,21 +880,21 @@ namespace UserInterface.Presenters
         /// <param name="presenterName">The presenter name.</param>
         public void ShowInRightHandPanel(object model, string viewName, string presenterName)
         {
-            object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName);
-            this.currentRightHandPresenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName) as IPresenter;
-            if (newView != null && this.currentRightHandPresenter != null)
+            try
             {
-                try
+                object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName);
+                this.currentRightHandPresenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName) as IPresenter;
+                if (newView != null && this.currentRightHandPresenter != null)
                 {
                     this.view.AddRightHandView(newView);
                     this.currentRightHandPresenter.Attach(model, newView, this);
                 }
-                catch (Exception err)
-                {
-                    string message = err.Message;
-                    message += "\r\n" + err.StackTrace;
-                    this.ShowMessage(message, DataStore.ErrorLevel.Error);
-                }
+            }
+            catch (Exception err)
+            {
+                string message = err.Message;
+                message += "\r\n" + err.StackTrace;
+                this.ShowMessage(message, DataStore.ErrorLevel.Error);
             }
         }
 

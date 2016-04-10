@@ -388,7 +388,7 @@ namespace Importer
             }
             catch (Exception exp)
             {
-                throw new Exception("Cannot import " + compNode.Name + " :Error - " + exp.Message + "\n");
+                throw new Exception("Cannot import " + compNode.Name + " :Error - " + exp.ToString() + "\n");
             }
             return newNode; 
         }
@@ -676,7 +676,7 @@ namespace Importer
         {
             // Try using the pre built serialization assembly first.
             string binDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
-            string deserializerFileName = Path.Combine(binDirectory, "Model.XmlSerializers.dll");
+            string deserializerFileName = Path.Combine(binDirectory, "Models.XmlSerializers.dll");
 
             newObject.Name = objName;
             string newObjxml = XmlUtilities.Serialise(newObject, false, deserializerFileName);
