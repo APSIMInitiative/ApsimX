@@ -558,24 +558,10 @@ The model consists of:
           <Name>MainStemFinalNodeNumber</Name>
           <OnEventFunction>
             <Name>FinalLeafNumber</Name>
-            <AddFunction>
+            <Constant>
               <Name>PreEventValue</Name>
-              <Constant>
-                <Name>PrimordiaAtEmergence</Name>
-                <Value>2</Value>
-              </Constant>
-              <DivideFunction>
-                <Name>PrimordiaDuringJuvenilePhase</Name>
-                <VariableReference>
-                  <Name>JuvenilePhaseDuration</Name>
-                  <VariableName>[Phenology].Vegetative.Target.Value</VariableName>
-                </VariableReference>
-                <Constant>
-                  <Name>ApproximatePlastochron</Name>
-                  <Value>30</Value>
-                </Constant>
-              </DivideFunction>
-            </AddFunction>
+              <Value>26</Value>
+            </Constant>
             <VariableReference>
               <Name>PostEventValue</Name>
               <VariableName>[Structure].MainStemPrimordiaNo</VariableName>
