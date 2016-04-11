@@ -579,8 +579,14 @@ namespace Models.Graph
             // If the table name is null then use reflection to get data from other models.
             if (TableName == null)
             {
-                definition.x = GetDataFromModels(XFieldName);
-                definition.y = GetDataFromModels(YFieldName);
+                if (!String.IsNullOrEmpty(XFieldName))
+                    definition.x = GetDataFromModels(XFieldName);
+                if (!String.IsNullOrEmpty(YFieldName))
+                    definition.y = GetDataFromModels(YFieldName);
+                if (!String.IsNullOrEmpty(X2FieldName))
+                    definition.x2 = GetDataFromModels(X2FieldName);
+                if (!String.IsNullOrEmpty(Y2FieldName))
+                    definition.y2 = GetDataFromModels(Y2FieldName);
             }
             else
             {
@@ -600,7 +606,14 @@ namespace Models.Graph
 
                 DataView dataView = new DataView(data);
                 if (where != "()")
-                    dataView.RowFilter = where;
+                    try
+                    {
+                        dataView.RowFilter = where;
+                    }
+                    catch (Exception)
+                    {
+
+                    }
 
                 // If the field exists in our data table then return it.
                 if (data != null && data.Columns.Contains(XFieldName) && data.Columns.Contains(YFieldName) && dataView.Count > 0)

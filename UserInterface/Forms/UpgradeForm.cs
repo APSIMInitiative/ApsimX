@@ -200,7 +200,6 @@ namespace UserInterface.Forms
                             // Delete the old upgrader.
                             if (File.Exists(upgraderFileName))
                                 File.Delete(upgraderFileName);
-
                             // Copy in the new upgrader.
                             File.Copy(sourceUpgraderFileName, upgraderFileName, true);
 
@@ -251,7 +250,6 @@ namespace UserInterface.Forms
             url = addToURL(url, "country", countryBox.Text);
             url = addToURL(url, "email", emailBox.Text);
             url = addToURL(url, "product", "APSIM Next Generation " + version);
-            url = addToURL(url, "ChangeDBPassword", GetValidPassword());
 
             WebUtilities.CallRESTService<object>(url);
         }
@@ -262,14 +260,6 @@ namespace UserInterface.Forms
             if (value == null || value == string.Empty)
                 value = "-";
             return url + "&" + key + "=" + value;
-        }
-
-        /// <summary>Return the valid password for this web service.</summary>
-        private static string GetValidPassword()
-        {
-            string connectionString = File.ReadAllText(@"D:\Websites\ChangeDBPassword.txt");
-            int posPassword = connectionString.IndexOf("Password=");
-            return connectionString.Substring(posPassword + "Password=".Length);
         }
 
         /// <summary>
