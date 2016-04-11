@@ -1406,20 +1406,33 @@ The model consists of:
             <X>
               <double>3</double>
               <double>4</double>
-              <double>5.3</double>
+              <double>5</double>
             </X>
             <Y>
               <double>0.06</double>
-              <double>0.06</double>
-              <double>0.025</double>
+              <double>0.02</double>
+              <double>0.015</double>
             </Y>
           </XYPairs>
           <XProperty>[Phenology].Stage</XProperty>
         </LinearInterpolationFunction>
-        <Constant>
+        <LinearInterpolationFunction>
           <Name>MinimumNConc</Name>
-          <Value>0.006</Value>
-        </Constant>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>3</double>
+              <double>4</double>
+              <double>5</double>
+            </X>
+            <Y>
+              <double>0.015</double>
+              <double>0.01</double>
+              <double>0.005</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].Stage</XProperty>
+        </LinearInterpolationFunction>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
           <Start>Emergence</Start>
@@ -17532,7 +17545,7 @@ Simulation results for the combined datasets from the various countries are show
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.Wheat.AboveGround.N</XFieldName>
       <YFieldName>Predicted.Wheat.AboveGround.N</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
+      <ShowInLegend>true</ShowInLegend>
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
@@ -17634,7 +17647,7 @@ Simulation results for the combined datasets from the various countries are show
     <Caption />
     <Axis>
       <Type>Bottom</Type>
-      <Title>Observed Yield</Title>
+      <Title />
       <Inverted>false</Inverted>
       <Minimum>NaN</Minimum>
       <Maximum>NaN</Maximum>
@@ -17642,7 +17655,7 @@ Simulation results for the combined datasets from the various countries are show
     </Axis>
     <Axis>
       <Type>Left</Type>
-      <Title>Predicted Yield</Title>
+      <Title />
       <Inverted>false</Inverted>
       <Minimum>NaN</Minimum>
       <Maximum>NaN</Maximum>
@@ -17681,7 +17694,7 @@ Simulation results for the combined datasets from the various countries are show
     </Series>
     <Axis>
       <Type>Bottom</Type>
-      <Title>Observed Grain Number</Title>
+      <Title />
       <Inverted>false</Inverted>
       <Minimum>NaN</Minimum>
       <Maximum>NaN</Maximum>
@@ -17689,7 +17702,7 @@ Simulation results for the combined datasets from the various countries are show
     </Axis>
     <Axis>
       <Type>Left</Type>
-      <Title>Predicted Grain Number</Title>
+      <Title />
       <Inverted>false</Inverted>
       <Minimum>NaN</Minimum>
       <Maximum>NaN</Maximum>
@@ -21283,7 +21296,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>LeafAppearance</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Structure.MainStemNodeNo</YFieldName>
+            <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -25703,7 +25716,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>TimeSeries</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Eucalyptus.AboveGround.Wt</YFieldName>
+        <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
