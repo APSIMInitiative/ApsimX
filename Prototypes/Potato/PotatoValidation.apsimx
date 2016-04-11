@@ -1162,127 +1162,124 @@ The duration of a potato crop is determined by the number of leaves that the mai
       <ExperimentFactorValues />
       <VariableNames>
         <string>[Clock].Today</string>
-        <string>[ExtraVariables].Script.AccumTtemerg</string>
-        <string>Potato.Phenology.CurrentPhaseName</string>
-        <string>Potato.Phenology.Stage</string>
-        <string>Potato.Phenology.Stage</string>
-        <string>[ExtraVariables].Script.AccumPlantN</string>
-        <string>[ExtraVariables].Script.AccumMineralisation</string>
         <string>[ExtraVariables].Script.AccumDenit</string>
-        <string>[ExtraVariables].Script.AccumFert</string>
-        <string>[ExtraVariables].Script.AccumLeach</string>
         <string>[ExtraVariables].Script.AccumDetach</string>
-        <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-        <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-        <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-        <string>Potato.Root.NSupplyUptake</string>
-        <string>[Soil].SoilWater.Eo</string>
-        <string>[Soil].SoilWater.Es</string>
-        <string>[ExtraVariables].Script.SWC</string>
-        <string>[ExtraVariables].Script.DUL</string>
-        <string>[Soil].SoilWater.Drainage</string>
-        <string>[Soil].SoilWater.Runoff</string>
-        <string>[ExtraVariables].Script.OutFlowLat</string>
-        <string>[Soil].SoilWater.pond</string>
+        <string>[ExtraVariables].Script.AccumDrainage</string>
         <string>[ExtraVariables].Script.AccumEO</string>
         <string>[ExtraVariables].Script.AccumEP</string>
         <string>[ExtraVariables].Script.AccumES</string>
-        <string>[ExtraVariables].Script.AccumDrainage</string>
-        <string>[ExtraVariables].Script.AccumRunoff</string>
-        <string>[ExtraVariables].Script.AccumRainfall</string>
+        <string>[ExtraVariables].Script.AccumFert</string>
         <string>[ExtraVariables].Script.AccumIrrigation</string>
+        <string>[ExtraVariables].Script.AccumLeach</string>
+        <string>[ExtraVariables].Script.AccumMineralisation</string>
         <string>[ExtraVariables].Script.AccumOutflowLat</string>
-        <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-        <string>Potato.AboveGround.Wt</string>
-        <string>Potato.BelowGround.Wt</string>
-        <string>Potato.Total.Wt</string>
-        <string>Potato.TotalDead.Wt</string>
-        <string>Potato.TotalLive.Wt</string>
-        <string>Potato.Leaf.Dead.Wt</string>
-        <string>Potato.Leaf.Live.Wt</string>
-        <string>Potato.Stem.Dead.Wt</string>
-        <string>Potato.Stem.Live.Wt</string>
-        <string>Potato.Tuber.Dead.Wt</string>
-        <string>Potato.Tuber.Live.Wt</string>
-        <string>Potato.Root.Dead.Wt</string>
-        <string>Potato.Root.Live.Wt</string>
-        <string>Potato.AboveGround.N</string>
-        <string>Potato.BelowGround.N</string>
-        <string>Potato.Total.N</string>
-        <string>Potato.TotalLive.N</string>
-        <string>Potato.TotalDead.N</string>
-        <string>Potato.Leaf.Dead.N</string>
-        <string>Potato.Leaf.Live.N</string>
-        <string>Potato.Stem.Dead.N</string>
-        <string>Potato.Stem.Live.N</string>
-        <string>Potato.Tuber.Dead.N</string>
-        <string>Potato.Tuber.Live.N</string>
-        <string>Potato.Root.Live.N</string>
-        <string>Potato.Root.Dead.N</string>
-        <string>Potato.Leaf.Live.NConc</string>
-        <string>Potato.Leaf.Dead.NConc</string>
-        <string>Potato.Stem.Live.NConc</string>
-        <string>Potato.Stem.Dead.NConc</string>
-        <string>Potato.Tuber.Live.NConc</string>
-        <string>Potato.Tuber.Dead.NConc</string>
-        <string>Potato.Root.Live.NConc</string>
-        <string>Potato.Root.Dead.NConc</string>
-        <string>Potato.Root.WaterSupply</string>
-        <string>Potato.Root.WaterUptake</string>
-        <string>Potato.Leaf.Transpiration</string>
-        <string>Potato.Leaf.WaterDemand</string>
-        <string>Potato.Root.Depth</string>
-        <string>Potato.Leaf.CoverGreen</string>
-        <string>Potato.Leaf.CoverTotal</string>
-        <string>Potato.Leaf.CoverDead</string>
-        <string>Potato.Leaf.LAI</string>
-        <string>Potato.Leaf.LAIDead</string>
-        <string>Potato.Structure.Height</string>
-        <string>Potato.Leaf.Fn</string>
-        <string>Potato.Leaf.Fw</string>
-        <string>Potato.Leaf.Photosynthesis.FT.Value</string>
-        <string>Potato.Leaf.Photosynthesis.FVPD.Value</string>
-        <string>Potato.Structure.PlantTotalNodeNo</string>
-        <string>Potato.Structure.TotalStemPopn</string>
-        <string>Potato.Leaf.PlantAppearedGreenLeafNo</string>
-        <string>Potato.Leaf.ExpandingCohortNo</string>
-        <string>Potato.Leaf.AppearedCohortNo</string>
-        <string>Potato.Leaf.DeadCohortNo</string>
-        <string>Potato.Structure.MainStemNodeNo</string>
-        <string>Potato.Leaf.SenescingCohortNo</string>
-        <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
-        <string>Potato.Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-        <string>Potato.Stem.MinimumNConc.Value</string>
-        <string>Potato.Tuber.MinimumNConc.Value</string>
-        <string>Potato.Root.MinimumNConc.Value</string>
-        <string>Potato.Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-        <string>Potato.Stem.MaximumNConc.Value</string>
-        <string>Potato.Tuber.MaximumNConc.Value</string>
-        <string>Potato.Root.MaximumNConc.Value</string>
-        <string>Potato.Stem.Live.StructuralWt</string>
-        <string>Potato.Stem.Live.NonStructuralWt</string>
-        <string>Potato.Leaf.SpecificArea</string>
-        <string>Potato.Leaf.ExpandedCohortNo</string>
-        <string>[Soil].SoilWater.SWmm</string>
-        <string>[Soil].NO3N</string>
+        <string>[ExtraVariables].Script.AccumPlantN</string>
+        <string>[ExtraVariables].Script.AccumRainfall</string>
+        <string>[ExtraVariables].Script.AccumRunoff</string>
+        <string>[ExtraVariables].Script.AccumTtemerg</string>
+        <string>[ExtraVariables].Script.BiomN</string>
+        <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
+        <string>[ExtraVariables].Script.DeltaSoilOMN</string>
+        <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
+        <string>[ExtraVariables].Script.DltNMinRes</string>
+        <string>[ExtraVariables].Script.DltNMinTot</string>
+        <string>[ExtraVariables].Script.DUL</string>
+        <string>[ExtraVariables].Script.FomN</string>
+        <string>[ExtraVariables].Script.HumN</string>
+        <string>[ExtraVariables].Script.OutFlowLat</string>
+        <string>[ExtraVariables].Script.MineralN</string>
         <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-        <string>Potato.Arbitrator.NDemand</string>
+        <string>[ExtraVariables].Script.SoilWaterDeficit</string>
+        <string>[ExtraVariables].Script.SWC</string>
         <string>[MicroClimate].net_radn</string>
         <string>[MicroClimate].peta</string>
         <string>[MicroClimate].petr</string>
-        <string>[ExtraVariables].Script.FomN</string>
-        <string>[ExtraVariables].Script.HumN</string>
-        <string>[ExtraVariables].Script.BiomN</string>
-        <string>[ExtraVariables].Script.DltNMinRes</string>
-        <string>[ExtraVariables].Script.DltNMinTot</string>
-        <string>[PotatoPlantAndHarvest].Script.FinalTag</string>
-        <string>Potato.Tuber.LiveFWt</string>
-        <string>Potato.Tuber.DryMatterContent.Value</string>
-        <string>[Potato].Arbitrator.NO3NSupply</string>
-        <string>[Potato].Arbitrator.NH4NSupply</string>
+        <string>[Potato].AboveGround.N</string>
+        <string>[Potato].Arbitrator.NDemand</string>
+        <string>[Potato].Arbitrator.TotalPotentialNO3Uptake</string>
+        <string>[Potato].Arbitrator.DMDemand</string>
+        <string>[Potato].Arbitrator.DMSupply</string>
+        <string>[Potato].Arbitrator.DMSinkLimitation</string>
+        <string>[Potato].Arbitrator.DMNutrientLimitation</string>
+        <string>[Potato].BelowGround.N</string>
+        <string>[Potato].Leaf.AppearedCohortNo</string>
+        <string>[Potato].Leaf.CoverDead</string>
+        <string>[Potato].Leaf.CoverGreen</string>
+        <string>[Potato].Leaf.CoverTotal</string>
+        <string>[Potato].Leaf.Dead.N</string>
+        <string>[Potato].Leaf.Dead.NConc</string>
+        <string>[Potato].Leaf.DeadCohortNo</string>
+        <string>[Potato].Leaf.ExpandedCohortNo</string>
+        <string>[Potato].Leaf.ExpandingCohortNo</string>
+        <string>[Potato].Leaf.Fn</string>
+        <string>[Potato].Leaf.Fw</string>
+        <string>[Potato].Leaf.LAI</string>
+        <string>[Potato].Leaf.LAIDead</string>
+        <string>[Potato].Leaf.LeafCohortParameters.MaximumNConc.Value</string>
+        <string>[Potato].Leaf.LeafCohortParameters.MinimumNConc.Value</string>
+        <string>[Potato].Leaf.Live.N</string>
+        <string>[Potato].Leaf.Live.Wt</string>
+        <string>[Potato].Leaf.Live.NConc</string>
+        <string>[Potato].Leaf.Photosynthesis.FT.Value</string>
+        <string>[Potato].Leaf.Photosynthesis.FVPD.Value</string>
+        <string>[Potato].Leaf.PlantAppearedGreenLeafNo</string>
+        <string>[Potato].Leaf.SenescingCohortNo</string>
+        <string>[Potato].Leaf.SpecificArea</string>
+        <string>[Potato].Leaf.Transpiration</string>
+        <string>[Potato].Leaf.WaterDemand</string>
+        <string>[Potato].Phenology.CurrentPhaseName</string>
+        <string>[Potato].Phenology.Stage</string>
+        <string>[Potato].Phenology.Stage</string>
+        <string>[Potato].Root.Dead.N</string>
+        <string>[Potato].Root.Dead.NConc</string>
+        <string>[Potato].Root.Dead.Wt</string>
+        <string>[Potato].Root.Depth</string>
+        <string>[Potato].Root.Live.N</string>
+        <string>[Potato].Root.Live.NConc</string>
+        <string>[Potato].Root.Live.Wt</string>
+        <string>[Potato].Root.MaximumNConc.Value</string>
+        <string>[Potato].Root.MinimumNConc.Value</string>
         <string>[Potato].Root.NUptake</string>
+        <string>[Potato].Root.WaterSupply</string>
+        <string>[Potato].Root.WaterUptake</string>
+        <string>[Potato].Stem.Dead.N</string>
+        <string>[Potato].Stem.Dead.NConc</string>
+        <string>[Potato].Stem.Live.N</string>
+        <string>[Potato].Stem.Live.NConc</string>
+        <string>[Potato].Stem.Live.NonStructuralWt</string>
+        <string>[Potato].Stem.Live.StructuralWt</string>
+        <string>[Potato].Stem.Live.Wt</string>
+        <string>[Potato].Stem.MaximumNConc.Value</string>
+        <string>[Potato].Stem.MinimumNConc.Value</string>
+        <string>[Potato].Structure.Height</string>
+        <string>[Potato].Structure.MainStemNodeNo</string>
+        <string>[Potato].Structure.PlantTotalNodeNo</string>
+        <string>[Potato].Structure.PrimaryBudTotalNodeNo</string>
+        <string>[Potato].Structure.TotalStemPopn</string>
+        <string>[Potato].Total.N</string>
+        <string>[Potato].TotalDead.N</string>
+        <string>[Potato].TotalLive.N</string>
+        <string>[Potato].TotalLive.Wt</string>
+        <string>[Potato].Tuber.Dead.N</string>
+        <string>[Potato].Tuber.Dead.NConc</string>
+        <string>[Potato].Tuber.Dead.Wt</string>
+        <string>[Potato].Tuber.DryMatterContent.Value</string>
+        <string>[Potato].Tuber.Live.N</string>
+        <string>[Potato].Tuber.Live.NConc</string>
+        <string>[Potato].Tuber.Live.Wt</string>
+        <string>[Potato].Tuber.LiveFWt</string>
+        <string>[Potato].Tuber.MaximumNConc.Value</string>
+        <string>[Potato].Tuber.MinimumNConc.Value</string>
+        <string>[PotatoPlantAndHarvest].Script.FinalTag</string>
         <string>[PotatoPlantAndHarvest].Script.Harvested</string>
         <string>[PotatoPlantAndHarvest].Script.ReadyForHarvest</string>
+        <string>[Soil].NO3N</string>
+        <string>[Soil].SoilWater.Drainage</string>
+        <string>[Soil].SoilWater.Eo</string>
+        <string>[Soil].SoilWater.Es</string>
+        <string>[Soil].SoilWater.pond</string>
+        <string>[Soil].SoilWater.Runoff</string>
+        <string>[Soil].SoilWater.SWmm</string>
         <string>[Weather].MaxT</string>
         <string>[Weather].MinT</string>
       </VariableNames>
@@ -31578,12 +31575,12 @@ namespace Models
             <SoilCrop>
               <Name>PotatoSoil</Name>
               <LL>
-                <double>0.13</double>
-                <double>0.13</double>
-                <double>0.1</double>
                 <double>0.15</double>
-                <double>0.3</double>
-                <double>0.3</double>
+                <double>0.26</double>
+                <double>0.1</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
               </LL>
               <KL>
                 <double>0.1</double>
@@ -33609,7 +33606,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <CultivarName>RussetBurbank</CultivarName>
               <RowSpace>370</RowSpace>
               <RowWidth>860</RowWidth>
-              <PlantingDepth>170</PlantingDepth>
+              <PlantingDepth>120</PlantingDepth>
               <StemNumberPerSeedTuber>2</StemNumberPerSeedTuber>
               <SetFinalLeafNumber>0</SetFinalLeafNumber>
               <HarvestDate>2007-03-22</HarvestDate>
@@ -33781,15 +33778,15 @@ namespace Models
 {
 	[Serializable] 
 	public class Script : Model
-	{      
+	{
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;   
+		[Link] Weather Met;
 		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;  
+		[Link] Irrigation Irrig;
 		[Link] Plant Potato;
-        [Link] Zone zone;
+		[Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
@@ -33835,20 +33832,20 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 	
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
 			InitialDay = true;
-		}	   
+		}
 		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
@@ -33856,7 +33853,7 @@ namespace Models
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
 			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            int layers = Soil.Thickness.Length;
+			int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
 				InitialSurfaceOMN = SOM.N;
@@ -33867,8 +33864,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -33880,14 +33877,14 @@ namespace Models
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
 			AccumEP -= (double)zone.Get("Potato.Leaf.Transpiration");
-			SoilWaterDeficit =  (SWC - DUL);
+			SoilWaterDeficit = (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
 			
 			//!!!!!! Thermal time calculation !!!!!!
 			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
 			if (Potato.Phenology.Stage >= 3)
-			AccumTtemerg += Potato.Phenology.ThermalTime.Value;
+				AccumTtemerg += Potato.Phenology.ThermalTime.Value;
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]
@@ -33895,7 +33892,7 @@ namespace Models
 		{
 			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
@@ -33914,130 +33911,7 @@ namespace Models
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
-            <string>[Clock].Today</string>
-            <string>[ExtraVariables].Script.AccumTtemerg</string>
-            <string>Potato.Phenology.CurrentPhaseName</string>
-            <string>Potato.Phenology.Stage</string>
-            <string>Potato.Phenology.Stage</string>
-            <string>[ExtraVariables].Script.AccumPlantN</string>
-            <string>[ExtraVariables].Script.AccumMineralisation</string>
-            <string>[ExtraVariables].Script.AccumDenit</string>
-            <string>[ExtraVariables].Script.AccumFert</string>
-            <string>[ExtraVariables].Script.AccumLeach</string>
-            <string>[ExtraVariables].Script.AccumDetach</string>
-            <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-            <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-            <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>Potato.Root.NSupplyUptake</string>
-            <string>[Soil].SoilWater.Eo</string>
-            <string>[Soil].SoilWater.Es</string>
-            <string>[ExtraVariables].Script.SWC</string>
-            <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.Drainage</string>
-            <string>[Soil].SoilWater.Runoff</string>
-            <string>[ExtraVariables].Script.OutFlowLat</string>
-            <string>[Soil].SoilWater.pond</string>
-            <string>[ExtraVariables].Script.AccumEO</string>
-            <string>[ExtraVariables].Script.AccumEP</string>
-            <string>[ExtraVariables].Script.AccumES</string>
-            <string>[ExtraVariables].Script.AccumDrainage</string>
-            <string>[ExtraVariables].Script.AccumRunoff</string>
-            <string>[ExtraVariables].Script.AccumRainfall</string>
-            <string>[ExtraVariables].Script.AccumIrrigation</string>
-            <string>[ExtraVariables].Script.AccumOutflowLat</string>
-            <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>Potato.AboveGround.Wt</string>
-            <string>Potato.BelowGround.Wt</string>
-            <string>Potato.Total.Wt</string>
-            <string>Potato.TotalDead.Wt</string>
-            <string>Potato.TotalLive.Wt</string>
-            <string>Potato.Leaf.Dead.Wt</string>
-            <string>Potato.Leaf.Live.Wt</string>
-            <string>Potato.Stem.Dead.Wt</string>
-            <string>Potato.Stem.Live.Wt</string>
-            <string>Potato.Tuber.Dead.Wt</string>
-            <string>Potato.Tuber.Live.Wt</string>
-            <string>Potato.Root.Dead.Wt</string>
-            <string>Potato.Root.Live.Wt</string>
-            <string>Potato.AboveGround.N</string>
-            <string>Potato.BelowGround.N</string>
-            <string>Potato.Total.N</string>
-            <string>Potato.TotalLive.N</string>
-            <string>Potato.TotalDead.N</string>
-            <string>Potato.Leaf.Dead.N</string>
-            <string>Potato.Leaf.Live.N</string>
-            <string>Potato.Stem.Dead.N</string>
-            <string>Potato.Stem.Live.N</string>
-            <string>Potato.Tuber.Dead.N</string>
-            <string>Potato.Tuber.Live.N</string>
-            <string>Potato.Root.Live.N</string>
-            <string>Potato.Root.Dead.N</string>
-            <string>Potato.Leaf.Live.NConc</string>
-            <string>Potato.Leaf.Dead.NConc</string>
-            <string>Potato.Stem.Live.NConc</string>
-            <string>Potato.Stem.Dead.NConc</string>
-            <string>Potato.Tuber.Live.NConc</string>
-            <string>Potato.Tuber.Dead.NConc</string>
-            <string>Potato.Root.Live.NConc</string>
-            <string>Potato.Root.Dead.NConc</string>
-            <string>Potato.Root.WaterSupply</string>
-            <string>Potato.Root.WaterUptake</string>
-            <string>Potato.Leaf.Transpiration</string>
-            <string>Potato.Leaf.WaterDemand</string>
-            <string>Potato.Root.Depth</string>
-            <string>Potato.Leaf.CoverGreen</string>
-            <string>Potato.Leaf.CoverTotal</string>
-            <string>Potato.Leaf.CoverDead</string>
-            <string>Potato.Leaf.LAI</string>
-            <string>Potato.Leaf.LAIDead</string>
-            <string>Potato.Structure.Height</string>
-            <string>Potato.Leaf.Fn</string>
-            <string>Potato.Leaf.Fw</string>
-            <string>Potato.Leaf.Photosynthesis.FT.Value</string>
-            <string>Potato.Leaf.Photosynthesis.FVPD.Value</string>
-            <string>Potato.Structure.PlantTotalNodeNo</string>
-            <string>Potato.Structure.TotalStemPopn</string>
-            <string>Potato.Leaf.PlantAppearedGreenLeafNo</string>
-            <string>Potato.Leaf.ExpandingCohortNo</string>
-            <string>Potato.Leaf.AppearedCohortNo</string>
-            <string>Potato.Leaf.DeadCohortNo</string>
-            <string>Potato.Structure.MainStemNodeNo</string>
-            <string>Potato.Leaf.SenescingCohortNo</string>
-            <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
-            <string>Potato.Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-            <string>Potato.Stem.MinimumNConc.Value</string>
-            <string>Potato.Tuber.MinimumNConc.Value</string>
-            <string>Potato.Root.MinimumNConc.Value</string>
-            <string>Potato.Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-            <string>Potato.Stem.MaximumNConc.Value</string>
-            <string>Potato.Tuber.MaximumNConc.Value</string>
-            <string>Potato.Root.MaximumNConc.Value</string>
-            <string>Potato.Stem.Live.StructuralWt</string>
-            <string>Potato.Stem.Live.NonStructuralWt</string>
-            <string>Potato.Leaf.SpecificArea</string>
-            <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.SWmm</string>
-            <string>[Soil].NO3N</string>
-            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>Potato.Arbitrator.NDemand</string>
-            <string>[MicroClimate].net_radn</string>
-            <string>[MicroClimate].peta</string>
-            <string>[MicroClimate].petr</string>
-            <string>[ExtraVariables].Script.FomN</string>
-            <string>[ExtraVariables].Script.HumN</string>
-            <string>[ExtraVariables].Script.BiomN</string>
-            <string>[ExtraVariables].Script.DltNMinRes</string>
-            <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[PotatoPlantAndHarvest].Script.FinalTag</string>
-            <string>Potato.Tuber.LiveFWt</string>
-            <string>Potato.Tuber.DryMatterContent.Value</string>
-            <string>[Potato].Arbitrator.NO3NSupply</string>
-            <string>[Potato].Arbitrator.NH4NSupply</string>
-            <string>[Potato].Root.NUptake</string>
-            <string>[PotatoPlantAndHarvest].Script.Harvested</string>
-            <string>[PotatoPlantAndHarvest].Script.ReadyForHarvest</string>
-            <string>[Weather].MaxT</string>
-            <string>[Weather].MinT</string>
+            <string />
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -37027,11 +36901,140 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Leaf Area Index (m2/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>TempStress</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Potato.Leaf.Photosynthesis.FT.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Leaf Area Index (m2/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>NitrogenStress</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Potato.Leaf.Fw</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Leaf Area Index (m2/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>NSupply</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Potato.Arbitrator.TotalPotentialNO3Uptake</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
         <Series>
           <Name>Predicted1</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
+          <YAxis>Right</YAxis>
           <ColourArgb>-990142</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
@@ -37042,11 +37045,281 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Leaf.Fn</YFieldName>
+          <YFieldName>Potato.Arbitrator.NDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Leaf Area Index (m2/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SoilN</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>ExtraVariables.Script.MineralN</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Leaf Area Index (m2/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>DM</Name>
+        <Series>
+          <Name>Demand</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Potato.Arbitrator.DMDemand</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Name] = 'GlenRoy_0607Fertiliser0'</Filter>
+        </Series>
+        <Series>
+          <Name>Supply</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Potato.Arbitrator.DMSupply</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Name] = 'GlenRoy_0607Fertiliser0'</Filter>
+        </Series>
+        <Series>
+          <Name>NutrientLimitation</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Potato.Arbitrator.DMNutrientLimitation</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Name] = 'GlenRoy_0607Fertiliser0'</Filter>
+        </Series>
+        <Series>
+          <Name>SinkLimitation</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Potato.Arbitrator.DMSinkLimitation</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Name] = 'GlenRoy_0607Fertiliser0'</Filter>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Leaf Area Index (m2/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Met</Name>
+        <Series>
+          <Name>Max</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weather.MaxT</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Name] = 'GlenRoy_0607Fertiliser0'</Filter>
+        </Series>
+        <Series>
+          <Name>Min</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weather.MinT</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Name] = 'GlenRoy_0607Fertiliser0'</Filter>
+        </Series>
+        <Series>
+          <Name>Leaves</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Potato.Leaf.ExpandingCohortNo</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Name] = 'GlenRoy_0607Fertiliser0'</Filter>
+        </Series>
+        <Series>
+          <Name>SinkLimitation</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Potato.Arbitrator.DMSinkLimitation</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Name] = 'GlenRoy_0607Fertiliser0'</Filter>
         </Series>
         <Axis>
           <Type>Bottom</Type>
@@ -37258,5 +37531,5 @@ namespace Models
     <DisabledSeries />
     <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
-  <ExplorerWidth>352</ExplorerWidth>
+  <ExplorerWidth>260</ExplorerWidth>
 </Simulations>
