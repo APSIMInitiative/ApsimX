@@ -258,22 +258,6 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Export the data store to comma separated values
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Export to CSV",
-                     AppliesTo = new Type[] { typeof(DataStore) })]
-        public void ExportDataStoreToCSV(object sender, EventArgs e)
-        {
-            DataStore dataStore = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as DataStore;
-            if (dataStore != null)
-            {
-                dataStore.WriteToTextFiles();
-            }
-        }
-
-        /// <summary>
         /// Export the data store to EXCEL format
         /// </summary>
         /// <param name="sender">Sender of the event</param>

@@ -260,13 +260,16 @@ namespace Models.PMF.Organs
             /// <summary>The cell division stress</summary>
             [Link(IsOptional = true)]
             public IFunction CellDivisionStress = null;
+            /// <summary>The cell division stress</summary>
+            [Link(IsOptional = true)]
+            public IFunction LeafSizeShapeParameter = null;
         }
         #endregion
 
         #region Parameters
         // DeanH: I have removed DroughtInducedSenAcceleration - it can be incorported into the ThermalTime function
         // in the XML. No need for it to be in leaf.
-        
+
         // Hamish:  We need to put this back in.  putting it in tt will acellerate development.  
         // the response it was capturing in leaf was where leaf area senescence is acellerated but other development processes are not.
 
