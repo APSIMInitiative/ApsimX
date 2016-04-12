@@ -12,14 +12,10 @@ namespace Models.Core
     /// </summary>
     public interface ICrop
     {
-        /// <summary>
-        /// Is the plant alive?
-        /// </summary>
+        /// <summary> Is the plant alive?</summary>
         bool IsAlive { get; }
 
-        /// <summary>
-        /// Gets a list of cultivar names
-        /// </summary>
+        /// <summary>Gets a list of cultivar names</summary>
         string[] CultivarNames { get; }
 
         /// <summary>Sows the plant</summary>
@@ -30,5 +26,14 @@ namespace Models.Core
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
         void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1);
+
+        /// <summary>Returns true if the crop is ready for harvesting</summary>
+        bool IsReadyForHarvesting { get; }
+
+        /// <summary>Harvest the crop</summary>
+        void Harvest();
+
+        /// <summary>End the crop</summary>
+        void EndCrop();
     }
 }
