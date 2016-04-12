@@ -172,6 +172,12 @@ namespace UserInterface.Presenters
                 OnClick = this.OnStandardToolboxClick
             });
 
+            e.Descriptions.Add(new PopulateStartPageArgs.Description()
+            {
+                Name = "Management toolbox",
+                ResourceNameForImage = "UserInterface.Resources.Toolboxes.Toolbox.png",
+                OnClick = this.OnManagementToolboxClick
+            });
 
             e.Descriptions.Add(new PopulateStartPageArgs.Description()
             {
@@ -247,6 +253,18 @@ namespace UserInterface.Presenters
         public void OnStandardToolboxClick(object sender, EventArgs e)
         {
             Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("UserInterface.Resources.Toolboxes.StandardToolbox.apsimx");
+            StreamReader streamReader = new StreamReader(s);
+            this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd());
+        }
+
+        /// <summary>
+        /// Event handler invoked when user clicks on 'Management toolbox'
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
+        public void OnManagementToolboxClick(object sender, EventArgs e)
+        {
+            Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("UserInterface.Resources.Toolboxes.ManagementToolbox.apsimx");
             StreamReader streamReader = new StreamReader(s);
             this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd());
         }

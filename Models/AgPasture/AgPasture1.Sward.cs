@@ -220,13 +220,23 @@ namespace Models.AgPasture1
 				Sowing.Invoke(this, new EventArgs());
 		}
 
-		#endregion
 
-		#region Model parameters  ------------------------------------------------------------------------------------------
+        /// <summary>Returns true if the crop is ready for harvesting</summary>
+        public bool IsReadyForHarvesting { get { return false; } }
 
-		/// <summary>Gets the reference to the species present in the sward.</summary>
-		/// <value>Pasture species.</value>
-		[XmlIgnore]
+        /// <summary>Harvest the crop</summary>
+        public void Harvest() { }
+
+        /// <summary>End the crop</summary>
+        public void EndCrop() { }
+
+        #endregion
+
+        #region Model parameters  ------------------------------------------------------------------------------------------
+
+        /// <summary>Gets the reference to the species present in the sward.</summary>
+        /// <value>Pasture species.</value>
+        [XmlIgnore]
 		public PastureSpecies[] mySward { get; private set; }
 
 		/// <summary>The number of species in the sward</summary>
