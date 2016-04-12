@@ -453,17 +453,29 @@ namespace UserInterface.Presenters
         /// <param name="dataStore">The data store.</param>
         private void PopulateFieldNames(DataStore dataStore)
         {
-            if (this.seriesView.DataSource != null && this.seriesView.DataSource.SelectedValue != string.Empty)
+            Graph parentGraph = series.Parent as Graph;
+            if (this.seriesView.DataSource != null && 
+                this.seriesView.DataSource.SelectedValue != string.Empty && 
+                this.seriesView.DataSource.SelectedValue != null &&
+                parentGraph != null)
             {
-                DataTable data = dataStore.RunQuery("SELECT * FROM " + this.seriesView.DataSource.SelectedValue + " LIMIT 1");
+                DataTable data = parentGraph.GetBaseData(this.seriesView.DataSource.SelectedValue);
                 if (data != null)
                 {
-                    string[] fieldNames = DataTableUtilities.GetColumnNames(data);
-                    Array.Sort(fieldNames);
-                    this.seriesView.X.Values = fieldNames;
-                    this.seriesView.Y.Values = fieldNames;
-                    this.seriesView.X2.Values = fieldNames;
-                    this.seriesView.Y2.Values = fieldNames;
+
+                    List<string> fieldNames = new List<string>();
+                    foreach (DataColumn column in data.Columns)
+                    {
+                        if (column.DataType.Name != "Object")
+                            fieldNames.Add(column.ColumnName);
+                    }
+
+                    fieldNames.Sort();
+
+                    this.seriesView.X.Values = fieldNames.ToArray();
+                    this.seriesView.Y.Values = fieldNames.ToArray();
+                    this.seriesView.X2.Values = fieldNames.ToArray();
+                    this.seriesView.Y2.Values = fieldNames.ToArray();
                 }
             }
 
