@@ -22,8 +22,6 @@ namespace Models.Graph
     [Serializable]
     public class Series : Model, IGraphable
     {
-        [NonSerialized]
-        private DataTable data = null;
 
         /// <summary>Constructor for a series</summary>
         public Series()
@@ -556,17 +554,6 @@ namespace Models.Graph
             else if ((Filter != null) && (Filter != ""))
               throw new Exception("Column name to filter on must be within square brackets.  e.g [ColumToFilter]");
             fieldNames.Add("ZoneName");
-
-            // Get all data.
-            DataStore dataStore = new DataStore(this);
-            data = dataStore.GetFilteredData(TableName, fieldNames.ToArray(), filter);
-            if (data == null)
-            {
-                fieldNames.Remove("ZoneName");
-                data = dataStore.GetFilteredData(TableName, fieldNames.ToArray(), filter);
-            }
-            dataStore.Disconnect();
-
             // filter data for each definition.
             foreach (SeriesDefinition definition in definitions)
                 GetData(definition);
@@ -590,48 +577,58 @@ namespace Models.Graph
             }
             else
             {
-                string FilterExpression = "";
-                if (Filter != null && Filter != string.Empty)
+                Graph parentGraph = Parent as Graph;
+                if (parentGraph != null)
                 {
-                    FilterExpression = Filter.Replace("[", "");
-                    FilterExpression = FilterExpression.Replace("]", "");
-                }
-                string where = "(";
-                if (Filter != null && Filter != string.Empty)
-                    where += "(";
-                where += definition.Filter;
-                if (Filter != null && Filter != string.Empty)
-                    where += ") AND (" + FilterExpression + ")";
-                where += ")";
-
-                DataView dataView = new DataView(data);
-                if (where != "()")
-                    try
+                    DataTable data = parentGraph.GetBaseData(TableName);
+                    string FilterExpression = "";
+                    if (Filter != null && Filter != string.Empty)
                     {
-                        dataView.RowFilter = where;
+                        FilterExpression = Filter.Replace("[", "");
+                        FilterExpression = FilterExpression.Replace("]", "");
                     }
-                    catch (Exception)
+                    string where = "(";
+                    if (Filter != null && Filter != string.Empty)
+                        where += "(";
+                    where += definition.Filter;
+                    if (Filter != null && Filter != string.Empty)
+                        where += ") AND (" + FilterExpression + ")";
+                    where += ")";
+
+                    DataView dataView = new DataView(data);
+                    if (where != "()")
+                        try
+                        {
+                            dataView.RowFilter = where;
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+
+                    // If the field exists in our data table then return it.
+                    if (data != null &&
+                        XFieldName != null &&
+                        YFieldName != null &&
+                        data.Columns.Contains(XFieldName) && 
+                        data.Columns.Contains(YFieldName) && 
+                        dataView.Count > 0)
                     {
+                        definition.x = GetDataFromTable(dataView, XFieldName);
+                        definition.y = GetDataFromTable(dataView, YFieldName);
+                        if (Cumulative)
+                            definition.y = MathUtilities.Cumulative(definition.y as IEnumerable<double>);
+                        if (CumulativeX)
+                            definition.x = MathUtilities.Cumulative(definition.x as IEnumerable<double>);
 
+                        if (X2FieldName != null && Y2FieldName != null &&
+                            data.Columns.Contains(X2FieldName) && data.Columns.Contains(Y2FieldName))
+                        {
+                            definition.x2 = GetDataFromTable(dataView, X2FieldName);
+                            definition.y2 = GetDataFromTable(dataView, Y2FieldName);
+                        }
+                        definition.simulationNamesForEachPoint = (IEnumerable<string>)GetDataFromTable(dataView, "SimulationName");
                     }
-
-                // If the field exists in our data table then return it.
-                if (data != null && data.Columns.Contains(XFieldName) && data.Columns.Contains(YFieldName) && dataView.Count > 0)
-                {
-                    definition.x = GetDataFromTable(dataView, XFieldName);
-                    definition.y = GetDataFromTable(dataView, YFieldName);
-                    if (Cumulative)
-                        definition.y = MathUtilities.Cumulative(definition.y as IEnumerable<double>);
-                    if (CumulativeX)
-                        definition.x = MathUtilities.Cumulative(definition.x as IEnumerable<double>);
-
-                    if (X2FieldName != null && Y2FieldName != null &&
-                        data.Columns.Contains(X2FieldName) && data.Columns.Contains(Y2FieldName))
-                    {
-                        definition.x2 = GetDataFromTable(dataView, X2FieldName);
-                        definition.y2 = GetDataFromTable(dataView, Y2FieldName);
-                    }
-                    definition.simulationNamesForEachPoint = (IEnumerable<string>) GetDataFromTable(dataView, "SimulationName");
                 }
             }
         }
