@@ -1096,9 +1096,11 @@ namespace Models.PMF.Organs
         {
             double OneLessShape = 1 - LeafSizeShape;
             double alpha = -Math.Log((1 / OneLessShape - 1) / (MaxArea / (MaxArea * LeafSizeShape) - 1)) / GrowthDuration;
-            double leafsize = MaxArea / (1 + (MaxArea / (MaxArea * LeafSizeShape) - 1) * Math.Exp(-alpha * TT));
-            return leafsize;
-
+            double LeafSize = MaxArea / (1 + (MaxArea / (MaxArea * LeafSizeShape) - 1) * Math.Exp(-alpha * TT));
+            double y0 = MaxArea / (1 + (MaxArea / (MaxArea * LeafSizeShape) - 1) * Math.Exp(-alpha * 0));
+            double yDiffprop = y0 / (MaxArea/2);
+            double ScaledLeafSize = (LeafSize - y0) / (1 - yDiffprop);
+            return ScaledLeafSize;
         }
         /// <summary>Fractions the senescing.</summary>
         /// <param name="TT">The tt.</param>
