@@ -171,7 +171,13 @@ namespace Models.PMF
                     //Else if the crop is in the grown returen true
             }
         }
-        
+
+        /// <summary>Returns true if the crop is ready for harvesting</summary>
+        public bool IsReadyForHarvesting { get { return Phenology.CurrentPhaseName == "ReadyForHarvesting"; } }
+
+        /// <summary>Harvest the crop</summary>
+        public void Harvest() { Harvest(null); }
+
         #endregion
 
         #region Class Events
@@ -265,7 +271,7 @@ namespace Models.PMF
         }
         
         /// <summary>Harvest the crop.</summary>
-        public void Harvest(RemovalFractions ManagerRemovalData = null)
+        public void Harvest(RemovalFractions ManagerRemovalData)
         {
             // Invoke a harvesting event.
             if (Harvesting != null)
