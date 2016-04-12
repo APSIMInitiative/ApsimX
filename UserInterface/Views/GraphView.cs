@@ -371,7 +371,7 @@ namespace UserInterface.Views
             double interval)
         {
             OxyPlot.Axes.Axis oxyAxis = this.GetAxis(axisType);
-            if (oxyAxis != null && !double.IsNaN(minimum) && !double.IsNaN(maximum))
+            if (oxyAxis != null)
             {
                 oxyAxis.Title = title;
                 oxyAxis.MinorTickSize = 0;
