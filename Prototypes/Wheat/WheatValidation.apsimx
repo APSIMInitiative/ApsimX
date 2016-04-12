@@ -22411,7 +22411,7 @@ namespace Models
         <YAxis>Left</YAxis>
         <ColourArgb>-2793984</ColourArgb>
         <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -22465,8 +22465,8 @@ namespace Models
         <Line>None</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>PreVsObsLeafNumber</TableName>
-        <XFieldName>Observed.Wheat.Structure.MainStemNodeNo</XFieldName>
-        <YFieldName>Predicted.Wheat.Structure.MainStemNodeNo</YFieldName>
+        <XFieldName>Observed.Wheat.Leaf.AppearedCohortNo</XFieldName>
+        <YFieldName>Predicted.Wheat.Leaf.AppearedCohortNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -22502,7 +22502,7 @@ namespace Models
         <ColourArgb>-1663232</ColourArgb>
         <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -22530,11 +22530,77 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>LeafAppearance</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Wheat.Structure.MainStemNodeNo</YFieldName>
+        <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>ZadokTimeSeries</Name>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-1663232</ColourArgb>
+        <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter>[TOS]=1</Filter>
+      </Series>
+      <Series>
+        <Name>Observed</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-1663232</ColourArgb>
+        <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Zadok</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter />
       </Series>
       <Axis>
         <Type>Bottom</Type>
@@ -26784,7 +26850,7 @@ namespace Models
         <TableName>LeafAppearance</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -26848,7 +26914,7 @@ namespace Models
         <TableName>TimeSeries</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -26869,7 +26935,7 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
+      <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
@@ -26912,7 +26978,7 @@ namespace Models
         <TableName>TimeSeries</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Leaf.LAI</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -26933,7 +26999,7 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
+      <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
@@ -26955,7 +27021,7 @@ namespace Models
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
+        <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -26999,7 +27065,7 @@ namespace Models
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
+        <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -27021,7 +27087,7 @@ namespace Models
         <TableName>TimeSeries</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
+        <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
