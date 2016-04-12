@@ -1923,5 +1923,19 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
         <Command>[Grain].MaxGrainSize = 0.045</Command>
         <Command>[Phenology].StartGrainFillToEndGrainFill.Target.Value = 580</Command>
       </Cultivar>
+      <Cultivar>
+        <Name>Xenos</Name>
+        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+        <Command>[Phenology].Vernalisation.PhotopSens = 4.6</Command>
+        <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.Value = 380</Command>
+        <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 520.0</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Capo</Name>
+        <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
+        <Command>[Phenology].Vernalisation.PhotopSens = 4.9</Command>
+        <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.Value = 380</Command>
+        <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 520.0</Command>
+      </Cultivar>
     </Plant15>
   
