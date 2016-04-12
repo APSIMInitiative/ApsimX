@@ -261,15 +261,18 @@ namespace UserInterface.Views
             Color colour,
             bool showOnLegend)
         {
-            ColumnXYSeries series = new ColumnXYSeries();
-            if (showOnLegend)
-                series.Title = title;
-            series.FillColor = ConverterExtensions.ToOxyColor(colour);
-            series.StrokeColor = ConverterExtensions.ToOxyColor(colour);
-            series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
-            series.XAxisKey = xAxisType.ToString();
-            series.YAxisKey = yAxisType.ToString();
-            this.plot1.Model.Series.Add(series);
+            if (x != null && y != null)
+            {
+                ColumnXYSeries series = new ColumnXYSeries();
+                if (showOnLegend)
+                    series.Title = title;
+                series.FillColor = ConverterExtensions.ToOxyColor(colour);
+                series.StrokeColor = ConverterExtensions.ToOxyColor(colour);
+                series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
+                series.XAxisKey = xAxisType.ToString();
+                series.YAxisKey = yAxisType.ToString();
+                this.plot1.Model.Series.Add(series);
+            }
         }
 
         /// <summary>
@@ -368,7 +371,7 @@ namespace UserInterface.Views
             double interval)
         {
             OxyPlot.Axes.Axis oxyAxis = this.GetAxis(axisType);
-            if (oxyAxis != null)
+            if (oxyAxis != null && !double.IsNaN(minimum) && !double.IsNaN(maximum))
             {
                 oxyAxis.Title = title;
                 oxyAxis.MinorTickSize = 0;
