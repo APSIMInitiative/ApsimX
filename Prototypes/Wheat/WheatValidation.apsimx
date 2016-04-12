@@ -1125,7 +1125,7 @@ The model consists of:
           </LinearInterpolationFunction>
           <Constant>
             <Name>LeafSizeShapeParameter</Name>
-            <Value>0.01</Value>
+            <Value>0.3</Value>
           </Constant>
         </LeafCohortParameters>
         <RUEModel>
@@ -18611,6 +18611,7 @@ namespace Models
 		[XmlIgnore] public double AppearedLeafNoYesterday { get; set; }
 		[XmlIgnore] public double MostRecentlyExpandedLeafSize { get; set; }
 		[XmlIgnore] public double MostRecentlyAppearedLeafMaxSize { get; set; }
+		[XmlIgnore] public double TTSinceSowing { get; set; }
         
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
@@ -18622,6 +18623,7 @@ namespace Models
 			AppearedLeafNoYesterday = 0;
 			MostRecentlyExpandedLeafSize = 0;
 			MostRecentlyAppearedLeafMaxSize = 0;
+			TTSinceSowing = 0;
 		}
 		
 		[EventSubscribe("DoManagement")]
@@ -18671,6 +18673,7 @@ namespace Models
 			//Leaf number variable
 			ExpandedLeafNoYesterday = (double)zone.Get("Wheat.Leaf.ExpandedCohortNo");
 			AppearedLeafNoYesterday = (double)zone.Get("Wheat.Leaf.AppearedCohortNo");
+			TTSinceSowing += (double)zone.Get("Wheat.Phenology.ThermalTime.Value");
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]
@@ -18742,6 +18745,7 @@ namespace Models
             <string>[ExtraVariables].Script.BiomN</string>
             <string>[ExtraVariables].Script.DltNMinRes</string>
             <string>[ExtraVariables].Script.DltNMinTot</string>
+            <string>[ExtraVariables].Script.TTSinceSowing</string>
             <string>[Soil].SoilWater.SW</string>
             <string>[Soil].SoilWater.Eo</string>
             <string>[Soil].SoilWater.Es</string>
@@ -21922,7 +21926,7 @@ namespace Models
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
+            <XFieldName>ExtraVariables.Script.TTSinceSowing</XFieldName>
             <YFieldName>Wheat.Leaf.CohortArea4</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -21931,7 +21935,7 @@ namespace Models
           </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>Leaf Tips (n)</Title>
+            <Title>Leaf area (mm2)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
