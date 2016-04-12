@@ -470,8 +470,8 @@ The model consists of:
                   <double>2</double>
                 </X>
                 <Y>
-                  <double>0</double>
-                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
                   <double>1</double>
                 </Y>
               </XYPairs>
@@ -487,7 +487,7 @@ The model consists of:
                   <double>1</double>
                 </X>
                 <Y>
-                  <double>0</double>
+                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                 </Y>
@@ -954,36 +954,32 @@ The model consists of:
             </XYPairs>
             <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
           </LinearInterpolationFunction>
-          <MultiplyFunction>
+          <VariableReference>
             <Name>GrowthDuration</Name>
+            <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+          </VariableReference>
+          <MultiplyFunction>
+            <Name>LagDuration</Name>
+            <Constant>
+              <Name>Multiplier</Name>
+              <Value>4</Value>
+            </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value</VariableName>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
             </VariableReference>
-            <LinearInterpolationFunction>
-              <Name>NumberOfExpandingLeaves</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>1</double>
-                </X>
-                <Y>
-                  <double>1</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Structure].RelativeNodeApperance</XProperty>
-            </LinearInterpolationFunction>
           </MultiplyFunction>
-          <Constant>
-            <Name>LagDuration</Name>
-            <Value>900</Value>
-          </Constant>
-          <Constant>
+          <MultiplyFunction>
             <Name>SenescenceDuration</Name>
-            <Value>200</Value>
-          </Constant>
+            <Constant>
+              <Name>Multiplier</Name>
+              <Value>1</Value>
+            </Constant>
+            <VariableReference>
+              <Name>Phyllochron</Name>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+            </VariableReference>
+          </MultiplyFunction>
           <Constant>
             <Name>DetachmentLagDuration</Name>
             <Value>1000000</Value>
@@ -1433,20 +1429,33 @@ The model consists of:
             <X>
               <double>3</double>
               <double>4</double>
-              <double>5.3</double>
+              <double>5</double>
             </X>
             <Y>
               <double>0.06</double>
-              <double>0.06</double>
-              <double>0.025</double>
+              <double>0.02</double>
+              <double>0.015</double>
             </Y>
           </XYPairs>
           <XProperty>[Phenology].Stage</XProperty>
         </LinearInterpolationFunction>
-        <Constant>
+        <LinearInterpolationFunction>
           <Name>MinimumNConc</Name>
-          <Value>0.006</Value>
-        </Constant>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>3</double>
+              <double>4</double>
+              <double>5</double>
+            </X>
+            <Y>
+              <double>0.015</double>
+              <double>0.01</double>
+              <double>0.003</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].Stage</XProperty>
+        </LinearInterpolationFunction>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
           <Start>Emergence</Start>
@@ -1535,7 +1544,7 @@ The model consists of:
         <Name>Wakanui</Name>
         <Command>[Phenology].Vernalisation.VernSens = 4</Command>
         <Command>[Phenology].Vernalisation.PhotopSens = 3</Command>
-        <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
+        <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
       </Cultivar>
       <Cultivar>
         <Name>GattonHartog</Name>
@@ -4019,16 +4028,16 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Grain.Protein</Name>
             <n>108</n>
-            <Slope>2.3162848597803657E-14</Slope>
-            <Intercept>12.561999999999685</Intercept>
-            <SEslope>2.4513730008003241E-08</SEslope>
-            <SEintercept>3.1897843872876286E-07</SEintercept>
-            <R2>8.43769498715119E-15</R2>
-            <RMSE>2.4223105972665091</RMSE>
-            <NSE>-0.0086842187010429672</NSE>
-            <ME>-0.22475925925925966</ME>
-            <MAE>1.8770555555555553</MAE>
-            <RSR>0.99967222128524036</RSR>
+            <Slope>0.071971840082601518</Slope>
+            <Intercept>11.126774295866309</Intercept>
+            <SEslope>0.017789038510738646</SEslope>
+            <SEintercept>0.23147516631653764</SEintercept>
+            <R2>0.13376703577797711</R2>
+            <RMSE>2.3983646536143697</RMSE>
+            <NSE>0.011160063750322191</NSE>
+            <ME>-0.73969837081081569</ME>
+            <MAE>2.0231910708479433</MAE>
+            <RSR>0.98978988220431541</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
@@ -4124,44 +4133,44 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Leaf.AppearedCohortNo</Name>
             <n>325</n>
-            <Slope>1.0508736288191014</Slope>
-            <Intercept>1.6142863214190086</Intercept>
-            <SEslope>0.0334383555906816</SEslope>
-            <SEintercept>0.29388552479518021</SEintercept>
-            <R2>0.75356085699413844</R2>
-            <RMSE>2.5522892913520869</RMSE>
-            <NSE>-0.011326119470310703</NSE>
-            <ME>2.0423603114157189</ME>
-            <MAE>2.1300236774125021</MAE>
-            <RSR>1.0040987734257112</RSR>
+            <Slope>0.910902894717135</Slope>
+            <Intercept>2.425801694545787</Intercept>
+            <SEslope>0.038782731901105358</SEslope>
+            <SEintercept>0.34007030452708109</SEintercept>
+            <R2>0.63071143553616094</R2>
+            <RMSE>2.4439184094100295</RMSE>
+            <NSE>0.066120073076145869</NSE>
+            <ME>1.6777427541544931</ME>
+            <MAE>1.846119297582002</MAE>
+            <RSR>0.964886755130169</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Leaf.DeadCohortNo</Name>
+            <n>17</n>
+            <Slope>1.0537779359335295</Slope>
+            <Intercept>0.47614418130048275</Intercept>
+            <SEslope>0.096532613090925382</SEslope>
+            <SEintercept>0.82276004061220342</SEintercept>
+            <R2>0.88819767983120568</R2>
+            <RMSE>1.8636843058627455</RMSE>
+            <NSE>0.8175912377191904</NSE>
+            <ME>0.86987193020330345</ME>
+            <MAE>1.3713737668456136</MAE>
+            <RSR>0.41434144746551821</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.ExpandedCohortNo</Name>
             <n>99</n>
-            <Slope>1.2052918093319847</Slope>
-            <Intercept>-0.28871307298281224</Intercept>
-            <SEslope>0.02583881808240289</SEslope>
-            <SEintercept>0.24467459331197455</SEintercept>
-            <R2>0.957323261286202</R2>
-            <RMSE>1.8965423855885002</RMSE>
-            <NSE>0.700984537726662</NSE>
-            <ME>1.5201618548894627</ME>
-            <MAE>1.6341918031279077</MAE>
-            <RSR>0.54405432088032979</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>Wheat.Leaf.SenescingCohortNo</Name>
-            <n>10</n>
-            <Slope>0.75165475428580331</Slope>
-            <Intercept>-1.7427563039282505</Intercept>
-            <SEslope>0.21262950847487858</SEslope>
-            <SEintercept>1.1573572216244983</SEintercept>
-            <R2>0.60969020081085157</R2>
-            <RMSE>3.3586218025307035</RMSE>
-            <NSE>-0.83712007098846053</NSE>
-            <ME>-2.9463157894736844</ME>
-            <MAE>2.9463157894736844</MAE>
-            <RSR>1.2858491606287321</RSR>
+            <Slope>1.0611865957834823</Slope>
+            <Intercept>-0.42690010331496</Intercept>
+            <SEslope>0.010811531634976024</SEslope>
+            <SEintercept>0.10182218855796262</SEintercept>
+            <R2>0.99003191199842111</R2>
+            <RMSE>0.43828603580100678</RMSE>
+            <NSE>0.98392091614421828</NSE>
+            <ME>0.1091393034763026</ME>
+            <MAE>0.30907139114147447</MAE>
+            <RSR>0.12616128117350234</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4262,16 +4271,16 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Grain.Protein</Name>
             <n>6</n>
-            <Slope>0</Slope>
-            <Intercept>12.562</Intercept>
-            <SEslope>0</SEslope>
-            <SEintercept>0</SEintercept>
-            <R2>NaN</R2>
-            <RMSE>3.5239628261376419</RMSE>
-            <NSE>-1.8296450753933908</NSE>
-            <ME>2.8336666666666659</ME>
-            <MAE>3.2463333333333328</MAE>
-            <RSR>1.5355902978424374</RSR>
+            <Slope>-0.00940546438648097</Slope>
+            <Intercept>12.349573284783316</Intercept>
+            <SEslope>0.046678462357876767</SEslope>
+            <SEintercept>0.46451312968591446</SEintercept>
+            <R2>0.010048044053602045</R2>
+            <RMSE>3.3029420363362809</RMSE>
+            <NSE>-1.4858288996565077</NSE>
+            <ME>2.5297404587434995</ME>
+            <MAE>3.1016102874705664</MAE>
+            <RSR>1.4392790150096297</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
@@ -6320,6 +6329,7 @@ namespace Models
             <string>Wheat.Grain.Number</string>
             <string>Wheat.Grain.Live.Wt</string>
             <string>Wheat.Grain.Live.N</string>
+            <string>Wheat.Grain.Live.NConc</string>
             <string>Wheat.Leaf.LAI</string>
             <string>Wheat.Leaf.Live.Wt</string>
             <string>Wheat.Leaf.Live.N</string>
@@ -7274,7 +7284,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Grain.Live.N</YFieldName>
+          <YFieldName>Wheat.Grain.Live.NConc</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7295,7 +7305,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Grain.Live.N</YFieldName>
+          <YFieldName>Wheat.Grain.Live.Nconc</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -17570,7 +17580,7 @@ Simulation results for the combined datasets from the various countries are show
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.Wheat.AboveGround.N</XFieldName>
       <YFieldName>Predicted.Wheat.AboveGround.N</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
+      <ShowInLegend>true</ShowInLegend>
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
@@ -17672,7 +17682,7 @@ Simulation results for the combined datasets from the various countries are show
     <Caption />
     <Axis>
       <Type>Bottom</Type>
-      <Title>Observed Yield</Title>
+      <Title />
       <Inverted>false</Inverted>
       <Minimum>NaN</Minimum>
       <Maximum>NaN</Maximum>
@@ -17680,7 +17690,7 @@ Simulation results for the combined datasets from the various countries are show
     </Axis>
     <Axis>
       <Type>Left</Type>
-      <Title>Predicted Yield</Title>
+      <Title />
       <Inverted>false</Inverted>
       <Minimum>NaN</Minimum>
       <Maximum>NaN</Maximum>
@@ -17719,7 +17729,7 @@ Simulation results for the combined datasets from the various countries are show
     </Series>
     <Axis>
       <Type>Bottom</Type>
-      <Title>Observed Grain Number</Title>
+      <Title />
       <Inverted>false</Inverted>
       <Minimum>NaN</Minimum>
       <Maximum>NaN</Maximum>
@@ -17727,7 +17737,7 @@ Simulation results for the combined datasets from the various countries are show
     </Axis>
     <Axis>
       <Type>Left</Type>
-      <Title>Predicted Grain Number</Title>
+      <Title />
       <Inverted>false</Inverted>
       <Minimum>NaN</Minimum>
       <Maximum>NaN</Maximum>
@@ -21337,48 +21347,6 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <Series>
-            <Name>VegetativePrimordia</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Leaf.InitialisedCohortNo</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Stage</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Right</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Phenology.Stage</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
           <Axis>
             <Type>Left</Type>
             <Title>Leaf Tips (n)</Title>
@@ -21389,13 +21357,6 @@ namespace Models
           </Axis>
           <Axis>
             <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Right</Type>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -21469,69 +21430,6 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>StartSenesced</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Leaf.SenescingCohortNo</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>LeafAppearance</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Leaf.SenescingCohortNo</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Senesced leaves (n)</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
           <Name>FullySenesced</Name>
           <Series>
             <Name>Predicted</Name>
@@ -21567,7 +21465,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>EndSenes</TableName>
+            <TableName>LeafAppearance</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.DeadCohortNo</YFieldName>
             <ShowInLegend>false</ShowInLegend>
@@ -23199,6 +23097,7 @@ namespace Models
 	
 		[Link] Plant Wheat;
 		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
 			
 		[Description("Time of Sowing")]
 		public int TOS { get; set; }
@@ -23213,6 +23112,7 @@ namespace Models
 			    (Clock.Today.DayOfYear == 211) && (TOS == 2))
 			{
 				Wheat.Sow(population: 100, cultivar: Cultivar, depth: 30, rowSpacing: 250);
+				Fertiliser.Apply(Amount: 120, Type: Fertiliser.Types.UreaN);
 			}
 		}
 
@@ -23312,6 +23212,7 @@ namespace Models
             <string>[Wheat].Leaf.AppearedCohortNo</string>
             <string>[Wheat].Leaf.ExpandedCohortNo</string>
             <string>[Wheat].Leaf.SenescingCohortNo</string>
+            <string>[Wheat].Leaf.DeadCohortNo</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -23425,7 +23326,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Wheat.Leaf.SenescingCohortNo</YFieldName>
+        <YFieldName>Wheat.Leaf.DeadCohortNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -23446,7 +23347,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>LeafAppearance</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Wheat.Leaf.SenescingCohortNo</YFieldName>
+        <YFieldName>Wheat.Leaf.DeadCohortNo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -23527,6 +23428,70 @@ namespace Models
       <Axis>
         <Type>Left</Type>
         <Title>Leaf Number</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Stress</Name>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Leaf.Fn</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Predicted1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Leaf.Fw</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -25856,7 +25821,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>TimeSeries</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Eucalyptus.AboveGround.Wt</YFieldName>
+        <YFieldName>Wheat.AboveGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
