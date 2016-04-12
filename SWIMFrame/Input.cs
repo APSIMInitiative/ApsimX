@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using APSIM.Shared.Utilities;
+using MathNet.Numerics.LinearAlgebra;
 namespace SWIMFrame
 {
     /// <summary>
@@ -40,6 +41,8 @@ namespace SWIMFrame
 
         public static void Setup()
         {
+            SoilData sd = new SoilData();
+            SolProps sp = new SolProps();
             jt = new int[n];
             sidx = new int[n];
             //set a list of soil layers(cm).
@@ -47,7 +50,7 @@ namespace SWIMFrame
             for (int c = 1; c <= n; c++)
                 sidx[c] = c < 5 ? 103 : 109; //soil ident of layers
                                              //set required soil hydraulic params
-            gettbls(n, x, sidx);
+            sd.GetTables(n, sidx, x);
             bd = new double[] { 1.3, 1.3 };
             dis = new double[] { 20.0, 20.0 };
             //set isotherm type and params for solute 2 here
@@ -57,38 +60,43 @@ namespace SWIMFrame
             isopar[1, 2] = 0.5;
             isopar[2, 1] = 1.0;
             isopar[1, 2] = 0.01;
+            Matrix<double> isoparM = Matrix<double>.Build.DenseOfArray(isopar);
             for (j = 1; j <= nt; j++) //set params
             {
-                solpar(j, bd[j], dis[j]);
+               sp.Solpar(j, bd[j], dis[j]);
                 //set isotherm type and params
-                setiso(j, 2, isotype[j], isopar(j,:));
+                sp.Setiso(j, 2, isotype[j], isoparM.Column(j).ToArray());
             }
             //initialise for run
             ts = 0.0; //start time
                       //dSmax controls time step.Use 0.05 for a fast but fairly accurate solution.
                       //Use 0.001 to get many steps to test execution time per step.
-            dSmax = 0.01; //0.01 ensures very good accuracy
+            Flow.dSmax = 0.01; //0.01 ensures very good accuracy
             for (int c = 1; c <= n; c++)
                 jt[c] = c < 5 ? 1 : 2; //!4 layers of type 1, rest of type2
             h0 = 0.0; //pond depth initially zero
             h1 = -1000.0;
             h2 = -400.0; //initial matric heads
-            Sofh(h1, 1, S1); //solve uses degree of satn
-            Sofh(h2, 5, S2);
+            double Sh = 0; //not used for this call but required as C# does not have 'present' operator
+            sd.Sofh(h1, 1, out S1, out Sh); //solve uses degree of satn
+            sd.Sofh(h2, 5, out S2, out Sh);
             for (int c = 1; c <= n; c++)
                 S[c] = c < 5 ? S1 : S2;
-            wpi = sum(ths * S * dx); //water in profile initially
+            wpi = MathUtilities.Sum(Vector<double>.Build.DenseOfArray(sd.ths) * Vector<double>.Build.DenseOfArray(S) * Vector<double>.Build.DenseOfArray(sd.dx)); //water in profile initially
             nsteps = 0; //no.of time steps for water soln(cumulative)
             win = 0.0; //water input(total precip)
             evap = 0.0;
             runoff = 0.0;
-            nfil = 0.0;
+            infil = 0.0;
             drn = 0.0;
-            sm = 0.0;
-            sm(1,:) = 1000.0 / dx[1]; //initial solute concn(mass units per cc of soil)
-            spi = sum(sm * spread(dx, 2, ns), 1); //solute in profile initially
-            dsmmax = 0.1 * sm[1, 1]; //solute stepsize control param
-            nwsteps = 10;
+            Extensions.Populate2D(sm, 0.0);
+            Matrix<double> smM = Matrix<double>.Build.DenseOfArray(sm);
+            double[] dxtemp = new double[smM.Column(1).Count];
+            dxtemp.Populate(1000.0 / sd.dx[1]);
+            smM.Column(1, Vector<double>.Build.DenseOfArray(dxtemp)); //initial solute concn(mass units per cc of soil)
+            spi = sum(sm * spread(sd.dx, 2, ns), 1); //solute in profile initially
+            Flow.dsmmax = 0.1 * sm[1, 1]; //solute stepsize control param
+            Flow.nwsteps = 10;
             MathUtilities.Zero(c0);
             MathUtilities.Zero(cin); //no solute input
             Extensions.Populate(nssteps, 0); //no.of time steps for solute soln(cumulative)
@@ -127,6 +135,12 @@ namespace SWIMFrame
             write(2, "(6g16.6)") sp,sdrn;
             write(2, "(6g16.6)") sp - spi,sp - spi + sdrn; //solute balance
             write(2, "(10f8.3)") sm;
+        }
+
+        private double[] Spread(double[] source, int dim, int ncopies)
+        {
+
+            for()
         }
     }
 }

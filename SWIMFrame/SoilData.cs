@@ -426,7 +426,7 @@ namespace SWIMFrame
 
         // Returns S and, if required, Sh given h and soil layer no. il.
         // note in FORTRAN Sh is optional -JF
-        private void Sofh(double h, int il, out double S, out double Sh)
+        public void Sofh(double h, int il, out double S, out double Sh)
         {
             int i, j;
             double d, lnh;
