@@ -639,63 +639,72 @@ namespace UserInterface.Views
                 int rowIndex = this.Grid.CurrentCell.RowIndex;
                 int columnIndex = this.Grid.CurrentCell.ColumnIndex;
                 List<IGridCell> cellsChanged = new List<IGridCell>();
-                foreach (string line in lines)
+                if (lines.Length > 0 && this.Grid.CurrentCell.IsInEditMode)
                 {
-                    if (rowIndex < this.Grid.RowCount && line.Length > 0)
+                    DataGridViewTextBoxEditingControl dText = (DataGridViewTextBoxEditingControl)Grid.EditingControl;
+                    dText.Paste(text);
+                    cellsChanged.Add(this.GetCell(columnIndex , rowIndex));
+                }
+                else
+                {
+                    foreach (string line in lines)
                     {
-                        string[] words = line.Split('\t');
-                        for (int i = 0; i < words.GetLength(0); ++i)
+                        if (rowIndex < this.Grid.RowCount && line.Length > 0)
                         {
-                            if (columnIndex + i < this.Grid.ColumnCount)
+                            string[] words = line.Split('\t');
+                            for (int i = 0; i < words.GetLength(0); ++i)
                             {
-                                DataGridViewCell cell = this.Grid[columnIndex + i, rowIndex];
-                                if (!cell.ReadOnly)
+                                if (columnIndex + i < this.Grid.ColumnCount)
                                 {
-                                    if (cell.Value == null || cell.Value.ToString() != words[i])
+                                    DataGridViewCell cell = this.Grid[columnIndex + i, rowIndex];
+                                    if (!cell.ReadOnly)
                                     {
-                                        // We are pasting a new value for this cell. Put the new
-                                        // value into the cell.
-                                        if (words[i] == string.Empty)
+                                        if (cell.Value == null || cell.Value.ToString() != words[i])
                                         {
-                                            cell.Value = null;
-                                        }
-                                        else
-                                        {
-                                            cell.Value = Convert.ChangeType(words[i], this.DataSource.Columns[columnIndex + i].DataType);
-                                        }
+                                            // We are pasting a new value for this cell. Put the new
+                                            // value into the cell.
+                                            if (words[i] == string.Empty)
+                                            {
+                                                cell.Value = null;
+                                            }
+                                            else
+                                            {
+                                                cell.Value = Convert.ChangeType(words[i], this.DataSource.Columns[columnIndex + i].DataType);
+                                            }
 
-                                        // Make sure there are enough rows in the data source.
-                                        while (this.DataSource.Rows.Count <= rowIndex)
-                                        {
-                                            this.DataSource.Rows.Add(this.DataSource.NewRow());
-                                        }
+                                            // Make sure there are enough rows in the data source.
+                                            while (this.DataSource.Rows.Count <= rowIndex)
+                                            {
+                                                this.DataSource.Rows.Add(this.DataSource.NewRow());
+                                            }
 
-                                        // Put the new value into the data source.
-                                        if (cell.Value == null)
-                                        {
-                                            this.DataSource.Rows[rowIndex][columnIndex + i] = DBNull.Value;
-                                        }
-                                        else
-                                        {
-                                            this.DataSource.Rows[rowIndex][columnIndex + i] = cell.Value;
-                                        }
+                                            // Put the new value into the data source.
+                                            if (cell.Value == null)
+                                            {
+                                                this.DataSource.Rows[rowIndex][columnIndex + i] = DBNull.Value;
+                                            }
+                                            else
+                                            {
+                                                this.DataSource.Rows[rowIndex][columnIndex + i] = cell.Value;
+                                            }
 
-                                        // Put a cell into the cells changed member.
-                                        cellsChanged.Add(this.GetCell(columnIndex + i, rowIndex));
+                                            // Put a cell into the cells changed member.
+                                            cellsChanged.Add(this.GetCell(columnIndex + i, rowIndex));
+                                        }
                                     }
                                 }
+                                else
+                                {
+                                    break;
+                                }
                             }
-                            else
-                            { 
-                                break; 
-                            }
-                        }
 
-                        rowIndex++;
-                    }
-                    else
-                    { 
-                        break; 
+                            rowIndex++;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
 
