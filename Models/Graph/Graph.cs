@@ -216,9 +216,13 @@ namespace Models.Graph
                             simulationNames.AddRange(experiment.Names());
 
                         // Look for simulations if we didn't find any experiments.
-                        if (simulationNames.Count == 0)
-                            foreach (Simulation simulation in Apsim.ChildrenRecursively(parentOfGraph, typeof(Simulation)))
+                        foreach (Simulation simulation in Apsim.ChildrenRecursively(parentOfGraph, typeof(Simulation)))
+                        {
+                            if (simulation.Parent is Experiment)
+                            { }
+                            else
                                 simulationNames.Add(simulation.Name);
+                        }
                     }
 
                     // convert simulationNames to a filter.
