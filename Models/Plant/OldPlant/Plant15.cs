@@ -137,6 +137,15 @@ namespace Models.PMF.OldPlant
         public string CropType { get; set; }
 
 
+        /// <summary>Returns true if the crop is ready for harvesting</summary>
+        public bool IsReadyForHarvesting { get { return Phenology.CurrentPhaseName == "ReadyForHarvesting"; } }
+
+        /// <summary>Harvest the crop</summary>
+        public void Harvest() { }
+
+        /// <summary>End the crop</summary>
+        public void EndCrop() { }
+
         /// <summary>The cultivar definition</summary>
         private Cultivar cultivarDefinition;
 

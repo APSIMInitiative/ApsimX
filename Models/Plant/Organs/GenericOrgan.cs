@@ -441,7 +441,7 @@ namespace Models.PMF.Organs
                         SurfaceOrganicMatter.Add(DetachedWt * 10, DetachedN * 10, 0, Plant.CropType, Name);
                 }
 
-                if ((DryMatterContent != null) && (Live.Wt != 0))
+                if (DryMatterContent != null) 
                     LiveFWt = Live.Wt / DryMatterContent.Value;
             }
         }

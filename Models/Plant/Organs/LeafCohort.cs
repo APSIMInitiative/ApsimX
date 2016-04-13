@@ -142,6 +142,9 @@ namespace Models.PMF.Organs
         /// <summary>The maximum area</summary>
         [XmlIgnore]
         public double MaxArea = 0;
+        /// <summary>The maximum area</summary>
+        [XmlIgnore]
+        public double LeafSizeShape = 0.01;
         /// <summary>Gets or sets the cover above.</summary>
         /// <value>The cover above.</value>
         [XmlIgnore]
@@ -835,6 +838,9 @@ namespace Models.PMF.Organs
             if (LeafCohortParameters.DMRetranslocationFactor != null)
                 DMRetranslocationFactor = LeafCohortParameters.DMRetranslocationFactor.Value;
             else DMRetranslocationFactor = 0;
+            if (LeafCohortParameters.LeafSizeShapeParameter != null)
+                LeafSizeShape = LeafCohortParameters.LeafSizeShapeParameter.Value;
+            else LeafSizeShape = 0.01;
         }
         /// <summary>Does the potential growth.</summary>
         /// <param name="TT">The tt.</param>
@@ -1088,10 +1094,13 @@ namespace Models.PMF.Organs
         /// <returns>Average leaf size (mm2/leaf)</returns>
         protected double SizeFunction(double TT)
         {
-            double alpha = -Math.Log((1 / 0.99 - 1) / (MaxArea / (MaxArea * 0.01) - 1)) / GrowthDuration;
-            double leafsize = MaxArea / (1 + (MaxArea / (MaxArea * 0.01) - 1) * Math.Exp(-alpha * TT));
-            return leafsize;
-
+            double OneLessShape = 1 - LeafSizeShape;
+            double alpha = -Math.Log((1 / OneLessShape - 1) / (MaxArea / (MaxArea * LeafSizeShape) - 1)) / GrowthDuration;
+            double LeafSize = MaxArea / (1 + (MaxArea / (MaxArea * LeafSizeShape) - 1) * Math.Exp(-alpha * TT));
+            double y0 = MaxArea / (1 + (MaxArea / (MaxArea * LeafSizeShape) - 1) * Math.Exp(-alpha * 0));
+            double yDiffprop = y0 / (MaxArea/2);
+            double ScaledLeafSize = (LeafSize - y0) / (1 - yDiffprop);
+            return ScaledLeafSize;
         }
         /// <summary>Fractions the senescing.</summary>
         /// <param name="TT">The tt.</param>

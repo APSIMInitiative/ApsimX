@@ -149,7 +149,8 @@
                     }
                     catch (Exception err)
                     {
-                        ErrorMessage += err.ToString() + Environment.NewLine;
+                        ErrorMessage += "Error in file: " + simulations.FileName + Environment.NewLine;
+                        ErrorMessage += err.ToString() + Environment.NewLine + Environment.NewLine;
                     }
                 }
 
@@ -297,7 +298,8 @@
                 p.WaitForExit();
                 if (p.ExitCode > 0)
                 {
-                    ErrorMessage = stdout;
+                    ErrorMessage = "Error in file: " + arguments + Environment.NewLine;
+                    ErrorMessage += stdout;
                     throw new Exception(ErrorMessage);
                 }
             }
