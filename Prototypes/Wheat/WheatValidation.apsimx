@@ -1646,8 +1646,7 @@ The model consists of:
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -4641,7 +4640,7 @@ VShort duration variety released in New Zealand by Pioneer
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>300</MaximumResultsPerPage>
+    <MaximumResultsPerPage>600</MaximumResultsPerPage>
   </DataStore>
   <Folder>
     <Name>SE Queensland</Name>
@@ -25575,14 +25574,14 @@ namespace Models
             <Name>5May</Name>
             <Operation>
               <Date>1992-05-05T00:00:00</Date>
-              <Action>[Wheat].Sow(population:300, cultivar:"Batten", depth:20, rowSpacing:150);</Action>
+              <Action>[Wheat].Sow(population:300, cultivar:"BattenWinter", depth:20, rowSpacing:150);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>5Aug</Name>
             <Operation>
               <Date>1992-08-05T00:00:00</Date>
-              <Action>[Wheat].Sow(population:300, cultivar:"Batten", depth:20, rowSpacing:150);</Action>
+              <Action>[Wheat].Sow(population:300, cultivar:"BattenWinter", depth:20, rowSpacing:150);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -25590,7 +25589,7 @@ namespace Models
           </Specifications>
         </Factor>
         <Factor>
-          <Name>Irrig</Name>
+          <Name>Irr</Name>
           <Operations>
             <Name>Nil</Name>
           </Operations>
@@ -26222,32 +26221,131 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>Wheat.Zadok.Stage</string>
-              <string>Wheat.Phenology.CurrentStageName</string>
-              <string>Wheat.AboveGround.Wt</string>
-              <string>Wheat.AboveGround.N</string>
-              <string>Wheat.Grain.Wt</string>
-              <string>Wheat.Grain.Protein</string>
-              <string>Wheat.Grain.Size</string>
-              <string>Wheat.Grain.Number</string>
-              <string>Wheat.Grain.Live.Wt</string>
-              <string>Wheat.Grain.Live.N</string>
-              <string>Wheat.Leaf.LAI</string>
-              <string>Wheat.Leaf.Live.Wt</string>
-              <string>Wheat.Leaf.Live.N</string>
-              <string>Wheat.Spike.Wt</string>
-              <string>Wheat.Spike.N</string>
-              <string>Wheat.Stem.Live.Wt</string>
-              <string>Wheat.Stem.Live.N</string>
-              <string>Wheat.Root.Depth</string>
-              <string>Wheat.Root.WaterUptake</string>
-              <string>Wheat.Leaf.Fw</string>
-              <string>Wheat.Leaf.Fn</string>
-              <string>Wheat.Total.Wt</string>
+              <string>[ExtraVariables].Script.AccumPlantN</string>
+              <string>[ExtraVariables].Script.AccumMineralisation</string>
+              <string>[ExtraVariables].Script.AccumDenit</string>
+              <string>[ExtraVariables].Script.AccumFert</string>
+              <string>[ExtraVariables].Script.AccumLeach</string>
+              <string>[ExtraVariables].Script.AccumDetach</string>
+              <string>[ExtraVariables].Script.DeltaSoilOMN</string>
+              <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
+              <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
+              <string>[ExtraVariables].Script.SWC</string>
+              <string>[ExtraVariables].Script.DUL</string>
+              <string>[ExtraVariables].Script.OutFlowLat</string>
+              <string>[ExtraVariables].Script.AccumEO</string>
+              <string>[ExtraVariables].Script.AccumEP</string>
+              <string>[ExtraVariables].Script.AccumES</string>
+              <string>[ExtraVariables].Script.AccumDrainage</string>
+              <string>[ExtraVariables].Script.AccumRunoff</string>
+              <string>[ExtraVariables].Script.AccumRainfall</string>
+              <string>[ExtraVariables].Script.AccumIrrigation</string>
+              <string>[ExtraVariables].Script.AccumOutflowLat</string>
+              <string>[ExtraVariables].Script.SoilWaterDeficit</string>
+              <string>[ExtraVariables].Script.SoilNitrogenContent</string>
+              <string>[ExtraVariables].Script.FomN</string>
+              <string>[ExtraVariables].Script.HumN</string>
+              <string>[ExtraVariables].Script.BiomN</string>
+              <string>[ExtraVariables].Script.DltNMinRes</string>
+              <string>[ExtraVariables].Script.DltNMinTot</string>
+              <string>[ExtraVariables].Script.TTSinceSowing</string>
+              <string>[Soil].SoilWater.SW</string>
+              <string>[Soil].SoilWater.Eo</string>
+              <string>[Soil].SoilWater.Es</string>
+              <string>[Soil].SoilWater.Drainage</string>
+              <string>[Soil].SoilWater.Runoff</string>
+              <string>[Soil].SoilWater.pond</string>
+              <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+              <string>[Soil].NO3N</string>
+              <string>[MicroClimate].net_radn</string>
+              <string>[MicroClimate].peta</string>
+              <string>[MicroClimate].petr</string>
+              <string>[Wheat].Grain.Live.Wt</string>
+              <string>[Wheat].Stem.Live.Wt</string>
+              <string>[Wheat].EarLive.Wt</string>
+              <string>[Wheat].Leaf.Live.Wt</string>
+              <string>[Wheat].Root.Live.Wt</string>
+              <string>[Wheat].Spike.Live.Wt</string>
+              <string>[Wheat].HeadLive.N</string>
+              <string>[Wheat].Grain.Live.N</string>
+              <string>[Wheat].Stem.Live.N</string>
+              <string>[Wheat].Leaf.Live.N</string>
+              <string>[Wheat].Root.Live.N</string>
+              <string>[Wheat].Spike.Live.N</string>
+              <string>[Wheat].Root.WaterSupply</string>
+              <string>[Wheat].Root.WaterUptake</string>
+              <string>[Wheat].Leaf.Transpiration</string>
+              <string>[Wheat].Leaf.WaterDemand</string>
+              <string>[Wheat].Root.Depth</string>
+              <string>[Wheat].Leaf.CoverTotal</string>
+              <string>[Wheat].Leaf.CoverDead</string>
+              <string>[Wheat].Leaf.LAI</string>
+              <string>[Wheat].Leaf.Height</string>
+              <string>[Wheat].Leaf.CohortParameters.MaxArea.Value</string>
+              <string>[Wheat].Leaf.Fw</string>
+              <string>[Wheat].Leaf.Photosynthesis.FVPD.Value</string>
+              <string>[Wheat].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Wheat].Leaf.Fn</string>
+              <string>[Wheat].Phenology.CurrentPhaseName</string>
+              <string>[Wheat].Phenology.Stage</string>
+              <string>[Wheat].AboveGroundLive.N</string>
+              <string>[Wheat].AboveGroundLive.Wt</string>
+              <string>[Wheat].Total.N</string>
+              <string>[Wheat].Total.Wt</string>
+              <string>[Wheat].Arbitrator.NDemand</string>
+              <string>[Wheat].Phenology.Stage</string>
+              <string>[Wheat].Leaf.ExpandedCohortNo</string>
+              <string>[Wheat].Leaf.AppearedCohortNo</string>
+              <string>[Wheat].Leaf.DeadCohortNo</string>
+              <string>[Wheat].Leaf.InitialisedCohortNo</string>
+              <string>[Wheat].Structure.MainStemFinalNodeNo</string>
+              <string>[Wheat].Structure.MainStemNodeNo</string>
+              <string>[Wheat].Structure.MainStemPrimordiaNo</string>
+              <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
+              <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
+              <string>[Wheat].Arbitrator.NDemand</string>
+              <string>[Wheat].Arbitrator.DMSupply</string>
+              <string>[Wheat].Arbitrator.DMDemand</string>
+              <string>[Wheat].Arbitrator.DMAllocated</string>
+              <string>[Wheat].Arbitrator.DMSinkLimitation</string>
+              <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
+              <string>[Wheat].Leaf.CohortParameters.GrowthDuration.Value</string>
+              <string>[Wheat].Leaf.CohortParameters.LagDuration.Value</string>
+              <string>[Wheat].Leaf.CohortParameters.SenescenceDuration.Value</string>
+              <string>[Wheat].Structure.MainStemNodeAppearanceRate.Value</string>
+              <string>[Wheat].Structure.Height</string>
+              <string>[Wheat].Stem.DMDemandFunction.PotentialDMAccumulation.Value</string>
+              <string>[Wheat].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</string>
+              <string>[Wheat].Structure.MainStemPrimordiaNo</string>
+              <string>[Wheat].Grain.NumberFunction.Value</string>
+              <string>[ExtraVariables].Script.LeafAppearedPosition</string>
+              <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
+              <string>[ExtraVariables].Script.LeafExpandedPosition</string>
+              <string>[ExtraVariables].Script.MostRecentlyExpandedLeafSize</string>
+              <string>[Wheat].Leaf.DeadCohortNo</string>
+              <string>[Phenology].ThermalTime.Value</string>
+              <string>[Wheat].Leaf.SenescingCohortNo</string>
+              <string>[Wheat].Stem.MaximumNConc.Value</string>
+              <string>[Wheat].Stem.MinimumNConc.Value</string>
+              <string>[Wheat].Stem.Live.NConc</string>
+              <string>[Wheat].Leaf.Live.NConc</string>
+              <string>[Wheat].Grain.Live.NConc</string>
+              <string>[Wheat].Spike.Live.NConc</string>
+              <string>[Wheat].Leaf.Dead.NConc</string>
+              <string>[Wheat].Leaf.Photosynthesis.RueAct</string>
+              <string>[Wheat].Stem.Live.StructuralWt</string>
+              <string>[Wheat].Phenology.Zadok.Stage</string>
+              <string>[Wheat].Structure.TotalStemPopn</string>
+              <string>[Wheat].Structure.MainStemPopn</string>
+              <string>[Wheat].Leaf.CohortArea[4]</string>
+              <string>[Wheat].Arbitrator.FN</string>
+              <string>[Wheat].Leaf.SpecificArea</string>
+              <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
+              <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
+              <string>[Wheat].Leaf.CohortSLA[1:10]</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
-              <string />
             </EventNames>
           </Report>
           <Area>1</Area>
@@ -26264,14 +26362,14 @@ namespace Models
         <Graph>
           <Name>AboveGroundWt</Name>
           <Series>
-            <Name>Predicted</Name>
+            <Name>PredictedDry</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8388608</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
@@ -26283,7 +26381,29 @@ namespace Models
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
-            <Filter />
+            <Filter>[Irrig] = 'Nil'</Filter>
+          </Series>
+          <Series>
+            <Name>PredictedWet</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Thin</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[Irrig] = 'Some'</Filter>
           </Series>
           <Series>
             <Name>Observed</Name>
@@ -26329,14 +26449,14 @@ namespace Models
         <Graph>
           <Name>SoilWaterProfile</Name>
           <Series>
-            <Name>Predicted</Name>
+            <Name>PredictedDry</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8388608</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
@@ -26348,6 +26468,29 @@ namespace Models
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
+            <Filter>[Irrig]='Nil'</Filter>
+          </Series>
+          <Series>
+            <Name>PredictedWet</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Thin</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>ProfileWater</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[Irrig]='Some'</Filter>
           </Series>
           <Series>
             <Name>Observed</Name>
@@ -28829,6 +28972,47 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
         </Folder>
+        <Graph>
+          <Name>Graph</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Bar</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>0</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Wheat.AboveGround.Wt</XFieldName>
+            <YFieldName>Clock.Today</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
       </Folder>
     </Experiment>
     <Graph>
