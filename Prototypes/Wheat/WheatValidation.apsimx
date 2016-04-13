@@ -512,21 +512,19 @@ The model consists of:
                 <Name>XYPairs</Name>
                 <X>
                   <double>0</double>
-                  <double>0.98</double>
-                  <double>0.99</double>
+                  <double>0.7</double>
                   <double>1</double>
                 </X>
                 <Y>
                   <double>0</double>
                   <double>0</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
+                  <double>0.1</double>
                 </Y>
               </XYPairs>
               <XProperty>[Leaf].CoverGreen</XProperty>
             </LinearInterpolationFunction>
-            <Start>Emergence</Start>
-            <End>StartGrainFill</End>
+            <Start>TerminalSpikelet</Start>
+            <End>Flowering</End>
           </PhaseLookupValue>
         </PhaseLookup>
         <PhaseLookup>
