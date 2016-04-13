@@ -496,54 +496,66 @@ The model consists of:
             </LinearInterpolationFunction>
           </MinimumFunction>
         </MultiplyFunction>
-        <PhaseLookup>
-          <Name>ShadeInducedBranchMortality</Name>
-          <PhaseLookupValue>
-            <Name>Vegetative</Name>
-            <LinearInterpolationFunction>
-              <Name>ShadeInducedBranchMortality</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>0.7</double>
-                  <double>1</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0.1</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Leaf].CoverGreen</XProperty>
-            </LinearInterpolationFunction>
-            <Start>TerminalSpikelet</Start>
-            <End>Flowering</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
-        <PhaseLookup>
-          <Name>DroughtInducedBranchMortality</Name>
-          <PhaseLookupValue>
-            <Name>Vegetative</Name>
-            <LinearInterpolationFunction>
-              <Name>DroughtInducedBranchMortality</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0.1</double>
-                  <double>0.6</double>
-                </X>
-                <Y>
-                  <double>0.1</double>
-                  <double>0</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
-            </LinearInterpolationFunction>
-            <Start>Emergence</Start>
-            <End>StartGrainFill</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
+        <MovingAverageFunction>
+          <Name>AverageTT</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <NumberOfDays>5</NumberOfDays>
+          <InitialValue>15</InitialValue>
+        </MovingAverageFunction>
+        <AddFunction>
+          <Name>BranchMortality</Name>
+          <PhaseLookup>
+            <Name>ShadeInducedBranchMortality</Name>
+            <PhaseLookupValue>
+              <Name>Vegetative</Name>
+              <LinearInterpolationFunction>
+                <Name>ShadeInducedBranchMortality</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.7</double>
+                    <double>1</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0.1</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Leaf].CoverGreen</XProperty>
+              </LinearInterpolationFunction>
+              <Start>TerminalSpikelet</Start>
+              <End>Flowering</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
+          <PhaseLookup>
+            <Name>DroughtInducedBranchMortality</Name>
+            <PhaseLookupValue>
+              <Name>Vegetative</Name>
+              <LinearInterpolationFunction>
+                <Name>DroughtInducedBranchMortality</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0.1</double>
+                    <double>0.6</double>
+                  </X>
+                  <Y>
+                    <double>0.1</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
+              </LinearInterpolationFunction>
+              <Start>Emergence</Start>
+              <End>StartGrainFill</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
+        </AddFunction>
         <VariableReference>
           <Name>ThermalTime</Name>
           <VariableName>[Phenology].ThermalTime.Value</VariableName>
@@ -6677,6 +6689,8 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
+              <string>Wheat.Phenology.ThermalTime</string>
+              <string>Wheat.Structure.AverageTT</string>
               <string>Wheat.Zadok.Stage</string>
               <string>Wheat.Phenology.CurrentStageName</string>
               <string>Wheat.AboveGround.Wt</string>
@@ -7693,6 +7707,70 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
       </Folder>
+      <Graph>
+        <Name>AverageTT</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Wheat.Phenology.ThermalTime</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Wheat.Structure.AverageTT</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
     </Experiment>
     <Experiment>
       <Name>APS14</Name>

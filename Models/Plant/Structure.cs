@@ -232,14 +232,11 @@ namespace Models.PMF
         [Link]
         [Units("/node")]
         IFunction BranchingRate = null;
-        /// <summary>The shade induced branch mortality</summary>
-        [Link(IsOptional = true)]
-        [Units("0-1")]
-        IFunction ShadeInducedBranchMortality = null;
-        /// <summary>The drought induced branch mortality</summary>
-        [Link(IsOptional = true)]
-        [Units("0-1")]
-        IFunction DroughtInducedBranchMortality = null;
+        /// <summary>The branch mortality</summary>
+        [Link]
+        [Units("/d")]
+        IFunction BranchMortality = null;
+
         /// <summary>The plant mortality</summary>
         [Link(IsOptional = true)]
         IFunction PlantMortality = null;
@@ -417,10 +414,7 @@ namespace Models.PMF
 
             //Reduce stem number incase of mortality
             double PropnMortality = 0;
-            if (DroughtInducedBranchMortality != null)
-                PropnMortality = DroughtInducedBranchMortality.Value;
-            if (ShadeInducedBranchMortality != null)
-                PropnMortality += ShadeInducedBranchMortality.Value;
+            PropnMortality = BranchMortality.Value;
             {
                 double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
                 TotalStemPopn -= DeltaPopn;
