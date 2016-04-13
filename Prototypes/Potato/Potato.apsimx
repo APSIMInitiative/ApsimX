@@ -274,7 +274,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </LinearInterpolationFunction>
         </MultiplyFunction>
         <Constant>
-          <Name>ShadeInducedBranchMortality</Name>
+          <Name>BranchMortality</Name>
           <Value>0</Value>
         </Constant>
         <Constant>

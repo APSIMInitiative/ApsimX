@@ -702,7 +702,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </LinearInterpolationFunction>
         </MultiplyFunction>
         <Constant>
-          <Name>ShadeInducedBranchMortality</Name>
+          <Name>BranchMortality</Name>
           <Value>0</Value>
         </Constant>
         <Constant>
