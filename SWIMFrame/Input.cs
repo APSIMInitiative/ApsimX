@@ -42,7 +42,7 @@ namespace SWIMFrame
         public static void Setup()
         {
             SoilData sd = new SoilData();
-            SolProps sp = new SolProps();
+            SolProps solProps = new SolProps();
             jt = new int[n];
             sidx = new int[n];
             //set a list of soil layers(cm).
@@ -63,9 +63,9 @@ namespace SWIMFrame
             Matrix<double> isoparM = Matrix<double>.Build.DenseOfArray(isopar);
             for (j = 1; j <= nt; j++) //set params
             {
-               sp.Solpar(j, bd[j], dis[j]);
+                solProps.Solpar(j, bd[j], dis[j]);
                 //set isotherm type and params
-                sp.Setiso(j, 2, isotype[j], isoparM.Column(j).ToArray());
+                solProps.Setiso(j, 2, isotype[j], isoparM.Column(j).ToArray());
             }
             //initialise for run
             ts = 0.0; //start time
@@ -94,14 +94,16 @@ namespace SWIMFrame
             double[] dxtemp = new double[smM.Column(1).Count];
             dxtemp.Populate(1000.0 / sd.dx[1]);
             smM.Column(1, Vector<double>.Build.DenseOfArray(dxtemp)); //initial solute concn(mass units per cc of soil)
-            spi = sum(sm * spread(sd.dx, 2, ns), 1); //solute in profile initially
+            smM.Multiply(Vector<double>.Build.DenseOfArray(sd.dx)); //solute in profile initially
+            spi = smM.ColumnSums().ToArray();
+            sm = smM.ToArray();
             Flow.dsmmax = 0.1 * sm[1, 1]; //solute stepsize control param
             Flow.nwsteps = 10;
             MathUtilities.Zero(c0);
             MathUtilities.Zero(cin); //no solute input
             Extensions.Populate(nssteps, 0); //no.of time steps for solute soln(cumulative)
             MathUtilities.Zero(soff);
-            MathUtilities.Zero(sinfil)0;
+            MathUtilities.Zero(sinfil);
             MathUtilities.Zero(sdrn);
             qprec = 1.0; //precip at 1 cm / h for first 24 h
             ti = ts;
@@ -110,23 +112,26 @@ namespace SWIMFrame
             for (j = 1; j <= 100; j++)
             {
                 tf = ti + 24.0;
-                solve(ti, tf, qprec, qevap, ns, nex, h0, S, evap, runoff, infil, drn, nsteps, jt, cin, c0, sm, soff, sinfil, sdrn, nssteps);
+                Flow.Solve(ti, tf, qprec, qevap, ns, nex, h0, S, evap, runoff, infil, drn, nsteps, jt, cin, c0, sm, soff, sinfil, sdrn, nssteps);
                 win = win + qprec * (tf - ti);
                 if (j == 1)
                 {
-                    write(2, "(f10.1,i10,10f10.4)") tf,nsteps,h0; //max depth of pond
-                    write(2, "(10f8.4)") S;
+                    Console.WriteLine(tf + " " + nsteps + " " + h0); //max depth of pond
+                    Console.WriteLine(S);
                 }
                 ti = tf;
                 qprec = 0.0;
             }
             win = win + qprec * (tf - ti);
-            wp = sum(ths * S * dx); //!water in profile
-            sp = sum(sm * spread(dx, 2, ns), 1); //solute in profile
+            wp = MathUtilities.Sum(MathUtilities.Multiply(MathUtilities.Multiply(sd.ths,S), sd.dx)); //!water in profile
+            smM = Matrix<double>.Build.DenseOfArray(sm);
+            smM.Multiply(Vector<double>.Build.DenseOfArray(sd.dx));
+            sp = smM.ColumnSums().ToArray();
+            double hS = 0; //hS is not used used here, but is a required parameter
             for (j = 1; j <= n; j++)
-                hofS(S[j], j, h[j]);
+                sd.hofS(S[j], j, out h[j], out hS);
 
-            write(2, "(f10.1,i10,10f10.4)") tf,nsteps,h0; //max depth of pond
+         /* write(2, "(f10.1,i10,10f10.4)") tf,nsteps,h0; //max depth of pond
             write(2, "(10f8.4)") S;
             write(2, "(5e16.4)") h;
             write(2, "(5g16.6)") wp,evap,infil,drn;
@@ -134,13 +139,22 @@ namespace SWIMFrame
             write(2, "(g16.6,12i5)") tf,nssteps;
             write(2, "(6g16.6)") sp,sdrn;
             write(2, "(6g16.6)") sp - spi,sp - spi + sdrn; //solute balance
-            write(2, "(10f8.3)") sm;
+            write(2, "(10f8.3)") sm;*/
         }
 
-        private double[] Spread(double[] source, int dim, int ncopies)
+        /// <summary>
+        /// Implements a cut down versions of FORTRAN spread.
+        /// The source array is copied n times by appending into a new array.
+        /// </summary>
+        /// <param name="source">The array to copy.</param>
+        /// <param name="n">The number of times to copy the array.</param>
+        /// <returns>A 1-indexed array of length (source.length * n)</returns>
+        private static double[] Spread(double[] source, int n)
         {
-
-            for()
+            double[] res = new double[(source.Length - 1) * n];
+            for(int i=0;i< n;i++)
+                Array.Copy(source, 1, res, n * source.Length + 1, source.Length - 1);
+            return res;
         }
     }
 }

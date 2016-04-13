@@ -463,7 +463,7 @@ namespace SWIMFrame
 
         // Returns h and, if required, hS given S and soil layer no. il.
         // note in FORTRAN hS is optional -JF
-        private void hofS(double S, int il, out double h, out double hS)
+        public void hofS(double S, int il, out double h, out double hS)
         {
             int i, j;
             double d, lnh;

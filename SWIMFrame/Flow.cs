@@ -6,7 +6,7 @@ using APSIM.Shared.Utilities;
 using MathNet.Numerics.LinearAlgebra;
 namespace SWIMFrame
 {
-    class Flow
+    public static class Flow
     {
         /*
          ! This module allows solution of the equation of continuity for water transport
@@ -66,14 +66,14 @@ namespace SWIMFrame
          ! nless    - no. of step size reductions.         
          */
 
-        double dSfac = 1.25, h0min = -0.02, Smax = 1.001, dh0max = 0.0;
-        string botbc = "free drainage"; // bottom boundary conditions
-        double h0max = 1.0e10, qprecmax = 1.0e10, hbot = 0.0, Sbot = 1.0; // boundary parameters
-        double dSmax = 0.05, dSmaxr = 0.5, dtmax = 1.0e10, dtmin = 0.0, dsmmax = 1.0; // solution parameters
-        int nwsteps = 10;
-        bool debug = false;
-        int nless;
-        SoilData sd = new SoilData();
+        public static double dSfac = 1.25, h0min = -0.02, Smax = 1.001, dh0max = 0.0;
+        public static string botbc = "free drainage"; // bottom boundary conditions
+        public static double h0max = 1.0e10, qprecmax = 1.0e10, hbot = 0.0, Sbot = 1.0; // boundary parameters
+        public static double dSmax = 0.05, dSmaxr = 0.5, dtmax = 1.0e10, dtmin = 0.0, dsmmax = 1.0; // solution parameters
+        public static int nwsteps = 10;
+        public static bool debug = false;
+        public static int nless;
+        public static SoilData sd = new SoilData();
 
         /// <summary>
         /// Solves the equation of continuity from time ts to tfin.
@@ -101,12 +101,12 @@ namespace SWIMFrame
         /// <param name="nssteps">cumulative no. of time steps for ADE soln.</param>
         /// <param name="wex">cumulative water extractions from layers.</param>
         /// <param name="sex">cumulative solute extractions from layers.</param>
-        public void Solve(SolProps sol, double ts, double tfin, double qprec, double qevap, int nsol, int nex,
+        public static void Solve(SolProps sol, double ts, double tfin, double qprec, double qevap, int nsol, int nex,
                           ref double h0, ref double[] S, ref double evap, ref double runoff, ref double infil, ref double drn, ref int nsteps, int[] jt, double[] cin,
                           ref double c0, ref double sm, ref double soff, ref double sinfil, ref double sdrn, ref int nssteps, ref double[,] wex, ref double[,,] sex)
         {
             bool again, extraction, initpond, maxpond;
-            int i, iflux, ih0, iok, isatbot, itmp, j, ns, nsat, nsatlast, nsteps0;
+            int i, iflux, ih0, iok, isatbot, itmp, ns, nsat, nsatlast, nsteps0;
             int[] isat = new int[S.Length];
             double accel, dmax, dt, dwinfil, dwoff, fac, infili, qpme, qprec1, rsig, rsigdt, sig, t, ti, win, xtblbot;
             double[] dSdt = new double[S.Length + 1];
@@ -719,12 +719,12 @@ namespace SWIMFrame
         /// <param name="nssteps">cumulative no. of time steps for ADE soln.</param>
         /// <param name="c"></param>
         /// <param name="sex">cumulative solute extractions in water extraction streams.</param>
-        private void Solute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win, double[] cav, int n, int nsol, int nex, double[] dx, int[] jt, double dsmmax, ref double[,] sm, ref double sdrn, ref int nssteps, ref double[,] c, ref double[,,] sex, bool extraction, double[] dis)
+        private static void Solute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win, double[] cin, int n, int ns, int nex, double[] dx, int[] jt, double dsmmax, ref double[,] sm, ref double[] sdrn, ref int[] nssteps, ref double[,] c, ref double[,,] sex, bool extraction, SolProps solProps)
         {
             int itmax = 20; //max iterations for finding c from sm
             double eps = 0.00001; // for stopping
             int i, it, j, k;
-            double dc, dm, dmax, dt, f, fc, r, rsig, rsigdt, sig, sigdt, t, tfin, th, v1, v2;
+            double dc, dm, dmax, dt=0, f=0, fc=0, r, rsig, rsigdt, sig, sigdt, t, tfin, th, v1, v2;
             double[] dz = new double[n - 1 + 1];
             double[] coef1 = new double[n - 1 + 1];
             double[] coef2 = new double[n - 1 + 1];
@@ -733,7 +733,7 @@ namespace SWIMFrame
             double[] dwex = new double[n + 1];
             double[] qsex = new double[n + 1];
             double[] qsexd = new double[n + 1];
-            double[,] sexs = new double[n + 1, nex + 1];
+            double[,] qsexs = new double[n + 1, nex + 1];
             double[,] qsexsd = new double[n + 1, nex + 1];
             double[] aa = new double[n]; // these are 0 based
             double[] bb = new double[n];
@@ -742,7 +742,7 @@ namespace SWIMFrame
             double[] dy = new double[n];
             double[] ee = new double[n];
             double[] q = new double[n];
-            double[] qw = new double[n];
+            double[] qw = new double[n]; 
             double[] qya = new double[n];
             double[] qyb = new double[n];
 
@@ -771,7 +771,7 @@ namespace SWIMFrame
             for (i = 1; i <= n - 1; i++)
             {
                 v1 = 0.5 * qw[i];
-                v2 = 0.5 * (dis(jt[i]) + dis(jt[i + 1])) * Math.Abs(qw[i]) / dz[i];
+                v2 = 0.5 * (solProps.dis[jt[i]] + solProps.dis[jt[i + 1]]) * Math.Abs(qw[i]) / dz[i];
                 coef1[i] = v1 + v2; coef2[i] = v1 - v2;
             }
 
@@ -793,14 +793,14 @@ namespace SWIMFrame
                         //get c and csm = dc / dsm(with theta constant)
                         k = jt[i];
                         th = thi[i] + (t - ti) * tht[i];
-                        if (sp.isotype[k, j] == "no" || sm[i, j] < 0.0) //handle sm < 0 here
+                        if (solProps.isotype[k, j] == "no" || sm[i, j] < 0.0) //handle sm < 0 here
                         {
                             csm[i] = 1.0 / th;
                             c[i, j] = csm[i] * sm[i, j];
                         }
-                        else if (isotype[k, j] == "li")
+                        else if (solProps.isotype[k, j] == "li")
                         {
-                            csm[i] = 1.0 / (th + bd[k] * isopar[k, j].p[1]);
+                            csm[i] = 1.0 / (th + solProps.bd[k] * solProps.isopar[k, j].p[1]);
                             c[i, j] = csm[i] * sm[i, j];
                         }
                         else
@@ -809,9 +809,9 @@ namespace SWIMFrame
                             {
                                 if (c[i, j] < 0.0)
                                     c[i, j] = 0.0; //c and sm are >= 0
-                                isosub(isotype[k, j], c[i, j], dsmmax, isopar[k, j].p, f, fc);
-                                csm[i] = 1.0 / (th + bd[k] * fc);
-                                dm = sm[i, j] - (bd[k] * f + th * c[i, j]);
+                                solProps.Isosub(solProps.isotype[k, j], c[i, j], dsmmax, solProps.isopar[k, j].p, f, fc);
+                                csm[i] = 1.0 / (th + solProps.bd[k] * fc);
+                                dm = sm[i, j] - (solProps.bd[k] * f + th * c[i, j]);
                                 dc = dm * csm[i];
                                 if (sm[i, j] >= 0.0 && c[i, j] + dc < 0.0)
                                     c[i, j] = 0.5 * c[i, j];
@@ -828,9 +828,12 @@ namespace SWIMFrame
                         }
                     }
                 }
-                q(1:n - 1) = coef1 * c(1:n - 1, j) + coef2 * c(2:n, j);
-                qya(1:n - 1) = coef1 * csm(1:n - 1);
-                qyb(1:n - 1) = coef2 * csm(2:n);
+                for (int x = 1; x <= n - 1; x++)
+                {
+                    q[x] = coef1[x] * c[x, j] + coef2[x] * c[x+1, j];
+                    qya[x] = coef1[x] * csm[x];
+                    qyb[x] = coef2[x] * csm[x+1];
+                }
                 q[n] = qw[n] * c[n, j];
                 qya[n] = qw[n] * csm[n];
                 //get time step
@@ -861,34 +864,69 @@ namespace SWIMFrame
 
                 sigdt = sig * dt; rsigdt = 1.0 / sigdt;
                 //adjust q for change in theta
-                q(1:n - 1) = q(1:n - 1) - sigdt * (qya(1:n - 1) * tht(1:n - 1) * c(1:n - 1, j) + qyb(1:n - 1) * tht(2:n) * c(2:n, j));
-                q(n) = q(n) - sigdt * qya(n) * tht(n) * c(n, j);
+                for (int x = 1; x <= n - 1; x++)
+                    q[x] = q[x] - sigdt * (qya[x] * tht[x] * c[x, j] + qyb[x] * tht[x + 1] * c[x, j]);
+                q[n] = q[n] - sigdt * qya[n] * tht[n] * c[n, j];
                 //get and solve eqns
-                aa(2:n) = qya(1:n - 1); cc(1:n - 1) = -qyb(1:n - 1);
+                for (int x = 1; x <= n - 1; x++)
+                {
+                    aa[x + 1] = qya[x];
+                    cc[x] = -qyb[x];
+                }
+                Matrix<double> qsexsM = Matrix<double>.Build.DenseOfArray(qsexs);
+                Matrix<double> qsexsdM = Matrix<double>.Build.DenseOfArray(qsexsd);
                 if (extraction)  //get extraction
                 {
-                    ssinks(t, ti, tf, j, dwexs, c(1:n, j), qsexs, qsexsd);
-                    qsex = sum(qsexs, 2);
-                    qsexd = sum(qsexsd, 2);
-                    bb(1:n) = qyb(0:n - 1) - qya(1:n) - qsexd * csm - dx * rsigdt;
-                    dd(1:n) = -(q(0:n - 1) - q(1:n) - qsex) * rsig;
+                    double[] ctemp = new double[n-1];
+                    for (int x = 1; x <= n; x++)
+                        ctemp[x] = c[x, j];
+
+                    qsexs = qsexsM.ToArray();
+                    qsexsd = qsexsdM.ToArray();
+                    ssinks(t, ti, tf, j, dwexs, ctemp, qsexs, qsexsd);
+                    qsex = qsexsM.ColumnSums().ToArray();
+                    qsexd = qsexsdM.ColumnSums().ToArray();
+                    for (int x = 1; x <= n; x++)
+                    {
+                        bb[x] = qyb[x-1] - qya[x] - qsexd[x] * csm[x] - sd.dx[x] * rsigdt;
+                        dd[x] = -(q[x-1] - q[x] - qsex[x]) * rsig;
+                    }
                 }
                 else
                 {
-                    bb(1:n) = qyb(0:n - 1) - qya(1:n) - dx * rsigdt;
-                    dd(1:n) = -(q(0:n - 1) - q(1:n)) * rsig;
+                    for (int x = 1; x <= n; x++)
+                    {
+                        bb[x] = qyb[x-1] - qya[x] - sd.dx[x] * rsigdt;
+                        dd[x] = -(q[x-1] - q[x]) * rsig;
+                    }
                 }
 
                 Tri(1, n, aa, ref bb, cc, dd, ref ee, ref dy);
                 //update unknowns
-                sdrn(j) = sdrn(j) + (q(n) + sig * qya(n) * dy(n)) * dt;
-                sm(:, j) = sm(:, j) + dy(1:n);
+                Matrix<double> smM = Matrix<double>.Build.DenseOfArray(sm);
+                qsexsM = Matrix<double>.Build.DenseOfArray(qsexs);
+                qsexsdM = Matrix<double>.Build.DenseOfArray(qsexsd);
+                sdrn[j] = sdrn[j] + (q[n] + sig * qya[n] * dy[n]) * dt;
+                smM.SetRow(j,  smM.Row(j) + Vector<double>.Build.DenseOfArray(dy.Slice(1,n)));
+                sm = smM.ToArray();
                 if (extraction)
                 {
+                    Matrix<double> sexM = Matrix<double>.Build.Dense(sex.GetLength(0), sex.GetLength(1));
+                    for (int x = 0; x < sex.GetLength(0); x++)
+                        for (int y = 0; y < sex.GetLength(1); y++)
+                            sexM[x, y] = sex[x, y, j];
+
+                    Vector<double> dysub = Vector<double>.Build.DenseOfArray(dy.Slice(1, n));
                     for (i = 1; i <= nex; i++)
-                        sex(:, i, j) = sex(:, i, j) + (qsexs(:, i) + sig * qsexsd(:, i) * csm * dy(1:n)) * dt;
+                    {
+                       sexM.SetColumn(i, sexM.Column(i) + (qsexsM.Column(i) + sig * qsexsdM.Column(i) * Vector<double>.Build.DenseOfArray(csm) * dysub) * dt);
+                    }
+
+                    for (int x = 0; x < sex.GetLength(0); x++)
+                        for (int y = 0; y < sex.GetLength(1); y++)
+                            sex[x, y, j] = sexM[x, y];
                 }
-                nssteps(j) = nssteps(j) + 1;
+                nssteps[j] = nssteps[j] + 1;
             }
         }
 
@@ -903,7 +941,7 @@ namespace SWIMFrame
         /// <param name="dd">rhs coeffs; ns:n used.</param>
         /// <param name="ee">work space.</param>
         /// <param name="dy">solution in ns:n.</param>
-        private void Tri(int ns, int n, double[] aa, ref double[] bb, double[] cc, double[] dd, ref double[] ee, ref double[] dy)
+        private static void Tri(int ns, int n, double[] aa, ref double[] bb, double[] cc, double[] dd, ref double[] ee, ref double[] dy)
         {
             int i;
             dy[ns] = dd[ns]; //decomposition and forward substitution
