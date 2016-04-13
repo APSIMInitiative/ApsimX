@@ -116,7 +116,7 @@ namespace Models
         private void OnLoaded()
         {
             HasDeserialised = true;
-            if (Script == null)
+            if (Script == null && Code != string.Empty)
                 RebuildScriptModel();
         }
 
