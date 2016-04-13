@@ -300,6 +300,10 @@ namespace Models.PMF
             else if (RemovingBiomass != null)
                 RemovingBiomass.Invoke(this, allData);
 
+            // Reset the phenology if necessary.
+            if (removalData != null && removalData.SetPhenologyStage != 0)
+                Phenology.ReSetToStage(removalData.SetPhenologyStage);
+
             // Remove the biomass
             foreach (IOrgan organ in Organs)
                 organ.DoRemoveBiomass(allData.removalData[organ.Name]);

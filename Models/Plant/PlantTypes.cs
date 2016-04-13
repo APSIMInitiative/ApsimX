@@ -206,7 +206,7 @@
         /// <summary>
         /// The Phenological stage that biomass removal resets phenology to.
         ///</summary>
-        public double PhenologyStageSet { get; set; }
+        public double SetPhenologyStage { get; set; }
 
         /// <summary>
         /// Method to set the FractionRemoved for specified Organ
