@@ -442,64 +442,6 @@ namespace Models.PMF.Organs
 
         #endregion
 
-        #region Biomass Removal
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on harvest.
-        /// </summary>
-        public override OrganBiomassRemovalType HarvestDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0,
-                    FractionToResidue = 0.3
-                };
-            }
-        }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Cutting
-        /// </summary>
-        public override OrganBiomassRemovalType CutDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0.8,
-                    FractionToResidue = 0
-                };
-            }
-        }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Cutting
-        /// </summary>
-        public override OrganBiomassRemovalType PruneDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0,
-                    FractionToResidue = 0.6
-                };
-            }
-        }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Cutting
-        /// </summary>
-        public override OrganBiomassRemovalType GrazeDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0.6,
-                    FractionToResidue = 0.1
-                };
-            }
-        }
-        #endregion
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>

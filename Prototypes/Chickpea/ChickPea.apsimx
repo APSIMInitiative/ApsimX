@@ -2140,8 +2140,30 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
             <VariableName>[Shell].PodNumber.Value</VariableName>
           </VariableReference>
         </MultiplyFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>1</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>1</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.8</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <BiomassRemovalDefaults />
         <RipeStage />
       </ReproductiveOrgan>
       <Root>
@@ -2363,8 +2385,30 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
           <Start>Emergence</Start>
           <End>EndGrainFill</End>
         </PhaseBasedSwitch>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.3</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.15</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <BiomassRemovalDefaults />
         <InitialDM>0.2</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <KNO3_yProperty>
@@ -2540,8 +2584,30 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
           <Start>Emergence</Start>
           <End>EndGrainFill</End>
         </PhaseBasedSwitch>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <BiomassRemovalDefaults />
       </Nodule>
       <GenericAboveGroundOrgan>
         <Name>Shell</Name>
@@ -2669,8 +2735,30 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
             <End>HarvestRipe</End>
           </PhaseLookupValue>
         </MultiplyFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0.5</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <Leaf>
         <Name>Leaf</Name>
@@ -4257,8 +4345,30 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.3</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <BiomassRemovalDefaults />
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -4348,8 +4458,30 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Name>StructuralFraction</Name>
           <Value>0.7</Value>
         </Constant>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0.5</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>

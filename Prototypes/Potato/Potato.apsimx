@@ -434,8 +434,29 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0.5</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
       </GenericAboveGroundOrgan>
       <Root>
         <Name>Root</Name>
@@ -567,8 +588,29 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </XYPairs>
           <XProperty>[Leaf].FractionDied</XProperty>
         </LinearInterpolationFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.3</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.15</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
         <InitialDM>5</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <KNO3_yProperty>
@@ -971,8 +1013,29 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </Propertys>
           <ArraySize>[Leaf].MaxNodeNo</ArraySize>
         </ArrayBiomass>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.3</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
         <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
         <StartFractionExpanded>0.83819041077407885</StartFractionExpanded>
         <FractionNextleafExpanded>0.92664093062319453</FractionNextleafExpanded>
@@ -1044,8 +1107,29 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0.5</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
