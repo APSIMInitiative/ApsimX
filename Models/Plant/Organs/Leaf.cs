@@ -1065,6 +1065,14 @@ namespace Models.PMF.Organs
             return 1 - Math.Exp(-ExtinctionCoeff.Value * LAIabove);
         }
 
+        /// <summary>
+        /// remove biomass from the leaf.
+        /// </summary>
+        /// <param name="value">The biomass removal fractions</param>
+        public override void DoRemoveBiomass(OrganBiomassRemovalType value)
+        {
+            // TODO: Need to implement this.
+        }
         #endregion
 
         #region Arbitrator methods

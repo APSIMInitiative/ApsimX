@@ -588,6 +588,11 @@
       <ResourceName>Slurp</ResourceName>
       <CropType>Slurp</CropType>
     </Plant>
+    <Plant>
+      <Name>SCUM</Name>
+      <ResourceName>SCUM</ResourceName>
+      <CropType>SCUM</CropType>
+    </Plant>
     <Folder>
       <Name>Wheat cultivars</Name>
       <Folder>

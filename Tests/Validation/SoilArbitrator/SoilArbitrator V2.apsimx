@@ -727,8 +727,29 @@ This is important in SLURP as it is set for each species to represent their diff
               </Memo>
               <XProperty>[Root].LayerMidPointDepth</XProperty>
             </LinearInterpolationFunction>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <Folder>
+              <Name>BiomassRemovalDefaults</Name>
+              <OrganBiomassRemovalType>
+                <Name>Harvest</Name>
+                <FractionRemoved>0.5</FractionRemoved>
+                <FractionToResidue>0.1</FractionToResidue>
+              </OrganBiomassRemovalType>
+              <OrganBiomassRemovalType>
+                <Name>Cut</Name>
+                <FractionRemoved>0.8</FractionRemoved>
+                <FractionToResidue>0</FractionToResidue>
+              </OrganBiomassRemovalType>
+              <OrganBiomassRemovalType>
+                <Name>Prune</Name>
+                <FractionRemoved>0</FractionRemoved>
+                <FractionToResidue>0.6</FractionToResidue>
+              </OrganBiomassRemovalType>
+              <OrganBiomassRemovalType>
+                <Name>Graze</Name>
+                <FractionRemoved>0.6</FractionRemoved>
+                <FractionToResidue>0.2</FractionToResidue>
+              </OrganBiomassRemovalType>
+            </Folder>
             <InitialDM>50</InitialDM>
             <SpecificRootLength>40000</SpecificRootLength>
             <KNO3_yProperty>
@@ -847,8 +868,30 @@ This is important in SLURP as it is set for each species to represent their diff
               <Value>400</Value>
               <Units>mm</Units>
             </Constant>
-            <FractionRemoved>0</FractionRemoved>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0.5</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
             <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+
             <BiomassYesterday>0</BiomassYesterday>
             <LAI>0</LAI>
             <Height>0</Height>
@@ -1028,8 +1071,30 @@ This is important in SLURP as it is set for each species to represent their diff
               </Memo>
               <XProperty>[Root].LayerMidPointDepth</XProperty>
             </LinearInterpolationFunction>
-            <FractionRemoved>0</FractionRemoved>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0.5</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
             <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+
             <InitialDM>50</InitialDM>
             <SpecificRootLength>40000</SpecificRootLength>
             <KNO3_yProperty>
@@ -1148,8 +1213,30 @@ This is important in SLURP as it is set for each species to represent their diff
               <Value>400</Value>
               <Units>mm</Units>
             </Constant>
-            <FractionRemoved>0</FractionRemoved>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0.5</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
             <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+
             <BiomassYesterday>0</BiomassYesterday>
             <LAI>0</LAI>
             <Height>0</Height>
