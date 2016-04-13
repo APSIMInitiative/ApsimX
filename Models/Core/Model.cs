@@ -137,6 +137,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Phen.VernalisationCW))]
         [XmlElement(typeof(Models.PMF.Phen.ZadokPMF))]
         [XmlElement(typeof(Models.PMF.Functions.AccumulateFunction))]
+        [XmlElement(typeof(Models.PMF.Functions.MovingAverageFunction))]
         [XmlElement(typeof(Models.PMF.Functions.AddFunction))]
         [XmlElement(typeof(Models.PMF.Functions.AgeCalculatorFunction))]
         [XmlElement(typeof(Models.PMF.Functions.AirTemperatureFunction))]

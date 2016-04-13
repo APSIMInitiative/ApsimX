@@ -502,6 +502,15 @@ The model consists of:
             </LinearInterpolationFunction>
           </MinimumFunction>
         </MultiplyFunction>
+		<MovingAverage>
+		   <Name>AverageTT</Name>
+		   <InitialValue>1.0</InitialValue>
+		   <NumberOfDays>5</NumberOfDays>
+		<VariableReference>
+          <Name>ThermalTime</Name>
+          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+        </VariableReference>
+		</MovingAverage>
         <AddFunction>
           <Name>BranchMortality</Name>
           <PhaseLookup>
