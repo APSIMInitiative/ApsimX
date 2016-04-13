@@ -778,8 +778,30 @@ The model consists of:
             <End>EndGrainFill</End>
           </PhaseLookupValue>
         </PhaseLookup>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>1</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>1</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.8</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <BiomassRemovalDefaults />
         <RipeStage>Ripe</RipeStage>
       </ReproductiveOrgan>
       <Root>
@@ -881,8 +903,30 @@ The model consists of:
           <Start>Germination</Start>
           <End>Maturity</End>
         </PhaseBasedSwitch>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.3</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.15</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <BiomassRemovalDefaults />
         <InitialDM>0.2</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <KNO3_yProperty>
@@ -1317,8 +1361,30 @@ The model consists of:
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.3</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <BiomassRemovalDefaults />
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -1399,8 +1465,30 @@ The model consists of:
             <VariableName>[Structure].TotalStemPopn</VariableName>
           </VariableReference>
         </MultiplyFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0.5</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -1509,10 +1597,55 @@ The model consists of:
           <Name>NRetranslocationFactor</Name>
           <Value>0.5</Value>
         </Constant>
-        <Constant>
+        <PhaseLookup>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0.5</Value>
-        </Constant>
+          <PhaseLookupValue>
+            <Name>VegetativeGrowth</Name>
+            <Constant>
+              <Name>DMRetranslocationFactor</Name>
+              <Value>0</Value>
+            </Constant>
+            <Start>Emergence</Start>
+            <End>Flowering</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>ReproductiveGrowth</Name>
+            <Constant>
+              <Name>DMRetranslocationFactor</Name>
+              <Value>0.5</Value>
+            </Constant>
+            <Start>Flowering</Start>
+            <End>EndGrainFill</End>
+          </PhaseLookupValue>
+        </PhaseLookup>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <Memo>
+              <Name>memo</Name>
+              <MemoText><![CDATA[]]></MemoText>
+            </Memo>
+            <PhaseLookupValue>
+              <Name>PreStemElongation</Name>
+              <Constant>
+                <Name>StemFraction</Name>
+                <Value>0.4</Value>
+              </Constant>
+              <Start>Emergence</Start>
+              <End>TerminalSpikelet</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>StemElongation</Name>
+              <Constant>
+                <Name>StemFraction</Name>
+                <Value>0.6</Value>
+              </Constant>
+              <Start>TerminalSpikelet</Start>
+              <End>Flowering</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
+        </PartitionFractionDemandFunction>
         <FractionRemoved>0</FractionRemoved>
         <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
@@ -2357,8 +2490,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <VariableName>[Maize].Population</VariableName>
           </VariableReference>
         </DivideFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <BiomassRemovalDefaults />
         <RipeStage />
       </ReproductiveOrgan>
       <Root>
@@ -2507,8 +2639,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
           <Start>Germination</Start>
           <End>Maturity</End>
         </PhaseBasedSwitch>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <BiomassRemovalDefaults />
         <InitialDM>0.2</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <KNO3_yProperty>
@@ -3040,8 +3171,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
           </VariableReference>
         </MinimumFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <BiomassRemovalDefaults />
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -3129,8 +3259,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>DMRetranslocationFactor</Name>
           <Value>0.1</Value>
         </Constant>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Rachis</Name>
@@ -3238,8 +3367,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </XYPairs>
           <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
         </LinearInterpolationFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -3372,8 +3500,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>

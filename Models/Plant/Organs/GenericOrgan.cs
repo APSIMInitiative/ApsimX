@@ -356,8 +356,6 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            FractionRemoved = 0;
-            FractionToResidue = 0;
             if (data.Plant == Plant)
                 Clear();
         }
