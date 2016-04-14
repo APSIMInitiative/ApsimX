@@ -669,11 +669,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
           <Value>0</Value>
         </Constant>
         <Constant>
-          <Name>ShadeInducedBranchMortality</Name>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>DroughtInducedBranchMortality</Name>
+          <Name>BranchMortality</Name>
           <Value>0</Value>
         </Constant>
         <InitialiseStage>Emergence</InitialiseStage>
