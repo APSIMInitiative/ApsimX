@@ -304,7 +304,7 @@
           </Memo>
         </MultiplyFunction>
         <Constant>
-          <Name>ShadeInducedBranchMortality</Name>
+          <Name>BranchMortality</Name>
           <Value>0</Value>
         </Constant>
         <PhaseLookup>
