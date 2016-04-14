@@ -1,9 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Folder>
     <Name>SimpleIntercrop</Name>
@@ -28,6 +29,8 @@
         <Name>Field</Name>
         <Report>
           <Name>Intercrop</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Slurp1.Root.Depth</string>
@@ -51,7 +54,6 @@
           <EventNames>
             <string>[Clock].EndOfDay</string>
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -594,6 +596,11 @@ namespace Models
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -605,11 +612,6 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Plant>
           <Name>Slurp1</Name>
@@ -750,6 +752,7 @@ This is important in SLURP as it is set for each species to represent their diff
                 <FractionToResidue>0.2</FractionToResidue>
               </OrganBiomassRemovalType>
             </Folder>
+            <BiomassRemovalDefaults />
             <InitialDM>50</InitialDM>
             <SpecificRootLength>40000</SpecificRootLength>
             <KNO3_yProperty>
@@ -799,10 +802,13 @@ This is important in SLURP as it is set for each species to represent their diff
                     <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                     <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                     <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
                     <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
                     <XFieldName>[XYPairs].X</XFieldName>
                     <YFieldName>[XYPairs].Y</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
                     <CumulativeX>false</CumulativeX>
                   </Series>
@@ -848,7 +854,11 @@ This is important in SLURP as it is set for each species to represent their diff
               </Constant>
             </PartitionFractionDemandFunction>
             <Constant>
-              <Name>NConc</Name>
+              <Name>MaximumNConc</Name>
+              <Value>0.05</Value>
+            </Constant>
+            <Constant>
+              <Name>MinimumNConc</Name>
               <Value>0.05</Value>
             </Constant>
             <Constant>
@@ -868,31 +878,34 @@ This is important in SLURP as it is set for each species to represent their diff
               <Value>400</Value>
               <Units>mm</Units>
             </Constant>
-        <Folder>
-          <Name>BiomassRemovalDefaults</Name>
-          <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionRemoved>0.5</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
-          </OrganBiomassRemovalType>
-        </Folder>
-
+            <Folder>
+              <Name>BiomassRemovalDefaults</Name>
+              <OrganBiomassRemovalType>
+                <Name>Harvest</Name>
+                <FractionRemoved>0.5</FractionRemoved>
+                <FractionToResidue>0.1</FractionToResidue>
+              </OrganBiomassRemovalType>
+              <OrganBiomassRemovalType>
+                <Name>Cut</Name>
+                <FractionRemoved>0.8</FractionRemoved>
+                <FractionToResidue>0</FractionToResidue>
+              </OrganBiomassRemovalType>
+              <OrganBiomassRemovalType>
+                <Name>Prune</Name>
+                <FractionRemoved>0</FractionRemoved>
+                <FractionToResidue>0.6</FractionToResidue>
+              </OrganBiomassRemovalType>
+              <OrganBiomassRemovalType>
+                <Name>Graze</Name>
+                <FractionRemoved>0.6</FractionRemoved>
+                <FractionToResidue>0.2</FractionToResidue>
+              </OrganBiomassRemovalType>
+            </Folder>
+            <BiomassRemovalDefaults />
             <BiomassYesterday>0</BiomassYesterday>
+            <Albedo>0</Albedo>
+            <Gsmax>0</Gsmax>
+            <R50>0</R50>
             <LAI>0</LAI>
             <Height>0</Height>
             <FRGR>0</FRGR>
@@ -1071,30 +1084,30 @@ This is important in SLURP as it is set for each species to represent their diff
               </Memo>
               <XProperty>[Root].LayerMidPointDepth</XProperty>
             </LinearInterpolationFunction>
-        <Folder>
-          <Name>BiomassRemovalDefaults</Name>
-          <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionRemoved>0.5</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
-          </OrganBiomassRemovalType>
-        </Folder>
-
+            <Folder>
+              <Name>BiomassRemovalDefaults</Name>
+              <OrganBiomassRemovalType>
+                <Name>Harvest</Name>
+                <FractionRemoved>0.5</FractionRemoved>
+                <FractionToResidue>0.1</FractionToResidue>
+              </OrganBiomassRemovalType>
+              <OrganBiomassRemovalType>
+                <Name>Cut</Name>
+                <FractionRemoved>0.8</FractionRemoved>
+                <FractionToResidue>0</FractionToResidue>
+              </OrganBiomassRemovalType>
+              <OrganBiomassRemovalType>
+                <Name>Prune</Name>
+                <FractionRemoved>0</FractionRemoved>
+                <FractionToResidue>0.6</FractionToResidue>
+              </OrganBiomassRemovalType>
+              <OrganBiomassRemovalType>
+                <Name>Graze</Name>
+                <FractionRemoved>0.6</FractionRemoved>
+                <FractionToResidue>0.2</FractionToResidue>
+              </OrganBiomassRemovalType>
+            </Folder>
+            <BiomassRemovalDefaults />
             <InitialDM>50</InitialDM>
             <SpecificRootLength>40000</SpecificRootLength>
             <KNO3_yProperty>
@@ -1144,10 +1157,13 @@ This is important in SLURP as it is set for each species to represent their diff
                     <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                     <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                     <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
                     <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
                     <XFieldName>[XYPairs].X</XFieldName>
                     <YFieldName>[XYPairs].Y</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
                     <CumulativeX>false</CumulativeX>
                   </Series>
@@ -1193,7 +1209,11 @@ This is important in SLURP as it is set for each species to represent their diff
               </Constant>
             </PartitionFractionDemandFunction>
             <Constant>
-              <Name>NConc</Name>
+              <Name>MaximumNConc</Name>
+              <Value>0.05</Value>
+            </Constant>
+            <Constant>
+              <Name>MinimumNConc</Name>
               <Value>0.05</Value>
             </Constant>
             <Constant>
@@ -1213,31 +1233,34 @@ This is important in SLURP as it is set for each species to represent their diff
               <Value>400</Value>
               <Units>mm</Units>
             </Constant>
-        <Folder>
-          <Name>BiomassRemovalDefaults</Name>
-          <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionRemoved>0.5</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
-          </OrganBiomassRemovalType>
-        </Folder>
-
+            <Folder>
+              <Name>BiomassRemovalDefaults</Name>
+              <OrganBiomassRemovalType>
+                <Name>Harvest</Name>
+                <FractionRemoved>0.5</FractionRemoved>
+                <FractionToResidue>0.1</FractionToResidue>
+              </OrganBiomassRemovalType>
+              <OrganBiomassRemovalType>
+                <Name>Cut</Name>
+                <FractionRemoved>0.8</FractionRemoved>
+                <FractionToResidue>0</FractionToResidue>
+              </OrganBiomassRemovalType>
+              <OrganBiomassRemovalType>
+                <Name>Prune</Name>
+                <FractionRemoved>0</FractionRemoved>
+                <FractionToResidue>0.6</FractionToResidue>
+              </OrganBiomassRemovalType>
+              <OrganBiomassRemovalType>
+                <Name>Graze</Name>
+                <FractionRemoved>0.6</FractionRemoved>
+                <FractionToResidue>0.2</FractionToResidue>
+              </OrganBiomassRemovalType>
+            </Folder>
+            <BiomassRemovalDefaults />
             <BiomassYesterday>0</BiomassYesterday>
+            <Albedo>0</Albedo>
+            <Gsmax>0</Gsmax>
+            <R50>0</R50>
             <LAI>0</LAI>
             <Height>0</Height>
             <FRGR>0</FRGR>
@@ -1460,11 +1483,14 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Intercrop</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Slurp1.Leaf.WaterDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -1478,11 +1504,14 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Intercrop</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Slurp2.Leaf.WaterDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -1496,11 +1525,14 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Intercrop</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Slurp1.Root.WaterUptake</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -1514,11 +1546,14 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Intercrop</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Slurp2.Root.WaterUptake</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -1553,11 +1588,14 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Intercrop</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Slurp1.Leaf.WaterDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -1571,11 +1609,14 @@ namespace Models
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Intercrop</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Slurp2.Leaf.WaterDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
