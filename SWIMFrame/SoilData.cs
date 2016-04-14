@@ -35,7 +35,6 @@ namespace SWIMFrame
             int[] isoil = new int[nin + 1];
             int[,] isid = new int[nin + 1 + 1, 2 + 1];
             int[] jt = new int[nin + 1]; //0-based FORTRAN array
-            int loc;
             double[,] dz = new double[nin + 1 + 1, 2 + 1];
             double[] hdx = new double[nin + 1]; //0-based FORTRAN array
             double x1;

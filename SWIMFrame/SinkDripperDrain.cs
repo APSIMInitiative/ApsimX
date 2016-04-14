@@ -12,9 +12,9 @@ namespace SWIMFrame
      * accumulates total water extraction for each layer while the solute transport
      * routine calculates solute extraction.
     */
-    class SinkDripperDrain : ISink
+    public class SinkDripperDrain : ISink
     {
-        public int nex = 1;
+        public int nex { get; set; }
         public bool drip;
 
         int idrip;

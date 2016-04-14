@@ -42,6 +42,7 @@ namespace SWIMFrame
         public static void Setup()
         {
             SoilData sd = new SoilData();
+            Flow.sink = new SinkDripperDrain(); //set the type of sink to use
             SolProps solProps = new SolProps();
             jt = new int[n];
             sidx = new int[n];
@@ -108,11 +109,13 @@ namespace SWIMFrame
             qprec = 1.0; //precip at 1 cm / h for first 24 h
             ti = ts;
             qevap = 0.05;// potential evap rate from soil surface
+            double[,] wex = new double[1,1]; //unused option params in FORTRAN... must be a better way of doing this
+            double[,,] sex=new double[1,1,1];
 
             for (j = 1; j <= 100; j++)
             {
                 tf = ti + 24.0;
-                Flow.Solve(ti, tf, qprec, qevap, ns, nex, h0, S, evap, runoff, infil, drn, nsteps, jt, cin, c0, sm, soff, sinfil, sdrn, nssteps);
+                Flow.Solve(solProps, ti, tf, qprec, qevap, ns, Flow.sink.nex, ref h0, ref S, ref evap, ref runoff, ref infil, ref drn, ref nsteps, jt, cin, ref c0, ref sm, ref soff, ref sinfil, ref sdrn, ref nssteps, ref wex,ref sex);
                 win = win + qprec * (tf - ti);
                 if (j == 1)
                 {

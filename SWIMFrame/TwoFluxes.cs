@@ -124,7 +124,7 @@ namespace SWIMFrame
                 double[] hFind= new double[n[i] + 1];
                 for (int x = 1; x <= n[i] + 1; x++)
                     hFind[x - n[i] + 1] = h[i, x];
-                ii = Find(he[j], hFind, n[i]);
+                ii = Find(he[j], hFind);
                 for (k = 1; k <= n[i] - ii; k++)
                 {
                     h[j, n[j] + k] = h[i, ii + k];//test these
@@ -523,7 +523,7 @@ namespace SWIMFrame
                     double[] phiiFind = new double[ni + 1];
                     for (int x = 1; x <= ni; x++)
                         phiiFind[x] = phii[1, x];
-                    ii = Find(phia, phiiFind, ni);
+                    ii = Find(phia, phiiFind);
                     v = phia - phii[1, ii];
                  /*   Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(coq);
                     printMatrix = printMatrix.RemoveRow(0);

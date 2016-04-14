@@ -10,7 +10,8 @@ namespace SWIMFrame
         public string[,] isotype;   // adsorption isotherm code for soil types.
         public double[] bd;         // bulk densities for soil types.
         public double[] dis;        // dispersivities for soil types.
-        public double[,] isopar;    // adsorption isotherm params for soil types.
+        public List<double>[,] isopar;    // adsorption isotherm params for soil types.
+        int np;
 
         /// <summary>
         /// Allocate soil solute parameters
@@ -22,7 +23,7 @@ namespace SWIMFrame
             isotype = new string[nt + 1, ns + 1];
             bd = new double[nt + 1];
             dis = new double[nt + 1];
-            isopar = new double[nt + 1, ns + 1];
+            isopar = new List<double>[nt + 1, ns + 1];
         }
 
         /// <summary>
@@ -48,13 +49,12 @@ namespace SWIMFrame
         /// <param name="isoparji">Isotherm parameters.</param>
         public void Setiso(int j, int isol, string isotypeji, double[] isoparji)
         {
-            int np;
             isotype[j, isol] = isotypeji;
             np = isoparji.Length - 1; // -1 to ignore 0th element
             if (isotypeji == "Fr")
-                isopar = new double[isopar.GetLength(0), np + 2 + 1]; //check these
+                isopar = new List<double>[isopar.GetLength(0), np + 2 + 1]; //check these
             else
-                isopar = new double[isopar.GetLength(0), np + 1];
+                isopar = new List<double>[isopar.GetLength(0), np + 1];
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace SWIMFrame
         /// <param name="p">Isotherm parameters.</param>
         /// <param name="f">Adsorbed mass per gram of soil.</param>
         /// <param name="fd">Derivitive of f wrt c.</param>
-        public void Isosub(string iso, double c, double dsmmax, double[] p, out double[] pout, out double f, out double fd)
+        public void Isosub(string iso, double c, double dsmmax, ref List<double> p, out double f, out double fd)
         {
             double x;
             f = 0;
@@ -108,7 +108,6 @@ namespace SWIMFrame
                     Environment.Exit(1);
                     break;
             }
-            pout = p;
         }
     }
 }
