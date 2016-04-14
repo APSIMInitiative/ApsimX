@@ -94,11 +94,11 @@ namespace Models.PMF.Organs
         /// <summary>The maximum n conc</summary>
         [Link(IsOptional = true)]
         [Units("g/g")]
-        IFunction MaximumNConc = null;
+        public IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
         [Units("g/g")]
         [Link(IsOptional = true)]
-        IFunction MinimumNConc = null;
+        public IFunction MinimumNConc = null;
         #endregion
 
         #region States
