@@ -4702,6 +4702,10 @@ VShort duration variety released in New Zealand by Pioneer
     <Name>SE Queensland</Name>
     <Experiment>
       <Name>APS26</Name>
+      <Memo>
+        <Name>Memo</Name>
+        <MemoText><![CDATA[This trial was conducted at Gatton in 1995 using the local variety, Hartog.  It consisted of 4 Nitrogen rates (0,40,80,160) with two irrigation rates (minimal amount for establishment, fully irrigated).  Yields ranged from 1.4 t/ha to 5.4 t/ha.]]></MemoText>
+      </Memo>
       <Factors>
         <Name>Factors</Name>
         <Factor>
@@ -9396,6 +9400,10 @@ namespace Models
     </Experiment>
     <Experiment>
       <Name>APS2</Name>
+      <Memo>
+        <Name>Memo</Name>
+        <MemoText><![CDATA[This simple experiment was conducted to investigate the impact of time of sowing on canopy development and growth of wheat.  Wheat (cv. Hartog) was sown at Gatton on 30th of May and 30th of July in 1991.  Data were collected on canopy development, biomass accumulation and yield.]]></MemoText>
+      </Memo>
       <Factors>
         <Name>Factors</Name>
         <Factor>
@@ -10184,6 +10192,10 @@ namespace Models
     </Experiment>
     <Experiment>
       <Name>GattonRowSpacing</Name>
+      <Memo>
+        <Name>Memo</Name>
+        <MemoText><![CDATA[This simple experiment was conducted to investigate the light interception and subsequent growth of wheat under different populations invoked using row spacing.  Wheat was sown at Gatton on 22nd of June 2011 at 25cm row spacing.  Soon after emergence, alternate rows were removed from selected plots to produce half populations at 50cm row spacing.  A zero N treatment was used to identfy the inherent fertility of the site to assist in model parameterisation.  Data were collected on light interception,  canopy development, biomass accumulation and yield.]]></MemoText>
+      </Memo>
       <Factors>
         <Name>Factors</Name>
         <Factor>
@@ -34082,6 +34094,10 @@ namespace Models
     </Folder>
     <Folder>
       <Name>YarrabahCreek</Name>
+      <Memo>
+        <Name>Memo</Name>
+        <MemoText><![CDATA[This trial was conducted on a Vertosol soil on the Liverpool Plains, central-eastern Australia in 2001.  Hybrid Mercury was sown on 19th of June and biomass, leaf area, phenology, soil water (Neutron Moisture Meter) and water use (Bowen Ratio method) were monitored.  More information can be found in [Young2008].]]></MemoText>
+      </Memo>
       <Simulation>
         <Name>YarrabahCreek</Name>
         <Clock>
