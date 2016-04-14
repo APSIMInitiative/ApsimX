@@ -237,7 +237,12 @@ This is important in SLURP as it is set for each species to represent their diff
           </Constant>
         </PartitionFractionDemandFunction>
         <Constant>
-          <Name>NConc</Name>
+          <Name>MaximumNConc</Name>
+          <Value>0.05</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
           <Value>0.05</Value>
           <Units>g/g</Units>
         </Constant>

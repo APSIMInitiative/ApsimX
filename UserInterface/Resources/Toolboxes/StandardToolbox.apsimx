@@ -565,6 +565,7 @@
         <![CDATA[]]>
       </MemoText>
     </Memo>
+    <Map />
   </Folder>
   <Folder>
     <Name>Crops</Name>
