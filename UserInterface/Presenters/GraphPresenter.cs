@@ -239,7 +239,7 @@ namespace UserInterface.Presenters
         {
             AxisPresenter AxisPresenter = new AxisPresenter();
             currentPresenter = AxisPresenter;
-            AxisView A = new AxisView();
+            MapView A = new MapView();
             graphView.ShowEditorPanel(A);
             AxisPresenter.Attach(GetAxis(axisType), A, explorerPresenter);
         }

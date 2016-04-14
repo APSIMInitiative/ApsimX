@@ -20,6 +20,8 @@ using UserInterface.Classes;
 using MigraDoc.DocumentObjectModel.Fields;
 using Models.Agroforestry;
 using Models.Zones;
+using System.Windows.Forms;
+using System.Threading;
 
 namespace UserInterface.Commands
 {
@@ -143,7 +145,7 @@ namespace UserInterface.Commands
                         string childFolderPath = Path.Combine(workingDirectory, child.Name);
                         AddValidationTags(tags, child, headingLevel + 1, workingDirectory);
                     }
-                    else if (child.Name != "TitlePage" && (child is Memo || child is Graph))
+                    else if (child.Name != "TitlePage" && (child is Memo || child is Graph || child is Map))
                         child.Document(tags, headingLevel, 0);
                 }
             }
@@ -437,6 +439,27 @@ namespace UserInterface.Commands
                     if (caption != null)
                         section.AddParagraph(caption);
                     graphPresenter.Detach();
+                }
+                else if (tag is Map)
+                {
+                    Form f = new Form();
+                    f.Width = 1100;
+                    f.Height = 600;
+                    MapPresenter mapPresenter = new MapPresenter();
+                    MapView mapView = new MapView();
+                    mapView.BackColor = System.Drawing.Color.White;
+                    mapView.Parent = f;
+                    (mapView as Control).Dock = DockStyle.Fill; 
+                    f.Show(); 
+
+                    mapPresenter.Attach(tag, mapView, ExplorerPresenter);
+
+                    Application.DoEvents();
+                    string PNGFileName = mapPresenter.ExportToPDF(workingDirectory);
+                    section.AddImage(PNGFileName);
+                    mapPresenter.Detach();
+
+                    f.Close();
                 }
             }
         }
