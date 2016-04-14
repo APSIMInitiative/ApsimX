@@ -170,10 +170,17 @@ namespace Models.AgPasture1
 			get { return null; }
 		}
 
+        /// <summary>Returns true if the crop is ready for harvesting</summary>
+        public bool IsReadyForHarvesting { get { return false; } }
 
+        /// <summary>Harvest the crop</summary>
+        public void Harvest() { }
 
-		/// <summary>The intercepted solar radiation</summary>
-		public double interceptedRadn;
+        /// <summary>End the crop</summary>
+        public void EndCrop() { }
+
+        /// <summary>The intercepted solar radiation</summary>
+        public double interceptedRadn;
 		/// <summary>Light profile (energy available for each canopy layer)</summary>
 		private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
 

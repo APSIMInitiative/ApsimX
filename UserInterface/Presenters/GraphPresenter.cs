@@ -51,7 +51,7 @@ namespace UserInterface.Presenters
             explorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
             this.graphView.AddContextAction("Copy graph to clipboard", false, CopyGraphToClipboard);
             this.graphView.AddContextAction("Include in auto-documentation?", graph.IncludeInDocumentation, IncludeInDocumentationClicked);
-
+            this.graph.ClearBaseData();
             DrawGraph();
         }
 
@@ -239,7 +239,7 @@ namespace UserInterface.Presenters
         {
             AxisPresenter AxisPresenter = new AxisPresenter();
             currentPresenter = AxisPresenter;
-            AxisView A = new AxisView();
+            MapView A = new MapView();
             graphView.ShowEditorPanel(A);
             AxisPresenter.Attach(GetAxis(axisType), A, explorerPresenter);
         }

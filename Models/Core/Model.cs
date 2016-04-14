@@ -137,6 +137,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Phen.VernalisationCW))]
         [XmlElement(typeof(Models.PMF.Phen.ZadokPMF))]
         [XmlElement(typeof(Models.PMF.Functions.AccumulateFunction))]
+        [XmlElement(typeof(Models.PMF.Functions.MovingAverageFunction))]
         [XmlElement(typeof(Models.PMF.Functions.AddFunction))]
         [XmlElement(typeof(Models.PMF.Functions.AgeCalculatorFunction))]
         [XmlElement(typeof(Models.PMF.Functions.AirTemperatureFunction))]
@@ -204,12 +205,14 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.OldPlant.SWStress))]
         [XmlElement(typeof(Models.PMF.SimpleTree))]
         [XmlElement(typeof(Models.PMF.Cultivar))]
+        [XmlElement(typeof(Models.PMF.OrganBiomassRemovalType))]
         [XmlElement(typeof(Alias))]
         [XmlElement(typeof(Models.Zones.CircularZone))]
         [XmlElement(typeof(Models.Zones.RectangularZone))]
         [XmlElement(typeof(Models.Aqua.PondWater))]
         [XmlElement(typeof(Models.Aqua.FoodInPond))]
         [XmlElement(typeof(Models.Aqua.Prawns))]
+        [XmlElement(typeof(Map))]
         public List<Model> Children { get; set; }
 
         /// <summary>
