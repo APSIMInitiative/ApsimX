@@ -4683,17 +4683,17 @@ VShort duration variety released in New Zealand by Pioneer
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Spike.Live.Wt</Name>
-            <n>201</n>
-            <Slope>-0.086856909723271744</Slope>
-            <Intercept>108.68309175341511</Intercept>
-            <SEslope>0.033471994874920905</SEslope>
-            <SEintercept>16.033850024714877</SEintercept>
-            <R2>0.032729576543259364</R2>
-            <RMSE>454.08656825735358</RMSE>
-            <NSE>-1.787999405654547</NSE>
-            <ME>-319.90934942682509</ME>
-            <MAE>367.13392844331128</MAE>
-            <RSR>1.6655716021370322</RSR>
+            <n>64</n>
+            <Slope>0.95187354733681662</Slope>
+            <Intercept>43.246845075283318</Intercept>
+            <SEslope>0.12757898223769015</SEslope>
+            <SEintercept>26.231039504343229</SEintercept>
+            <R2>0.473090707468968</R2>
+            <RMSE>133.81629490216014</RMSE>
+            <NSE>-0.088091461123044557</NSE>
+            <ME>35.514065565569986</ME>
+            <MAE>112.80062790808181</MAE>
+            <RSR>1.0349347960345121</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Live.N</Name>
