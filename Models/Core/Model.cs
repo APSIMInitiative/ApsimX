@@ -212,6 +212,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.Aqua.PondWater))]
         [XmlElement(typeof(Models.Aqua.FoodInPond))]
         [XmlElement(typeof(Models.Aqua.Prawns))]
+        [XmlElement(typeof(Map))]
         public List<Model> Children { get; set; }
 
         /// <summary>

@@ -98,6 +98,14 @@
     <Reference Include="DocumentFormat.OpenXml">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
+    <Reference Include="GMap.NET.Core, Version=1.7.0.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
+      <HintPath>..\packages\GMap.NET.WindowsForms.1.7.1\lib\net40\GMap.NET.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GMap.NET.WindowsForms, Version=1.7.0.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
+      <HintPath>..\packages\GMap.NET.WindowsForms.1.7.1\lib\net40\GMap.NET.WindowsForms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net40\HtmlAgilityPack.dll</HintPath>
       <Private>True</Private>
@@ -194,6 +202,7 @@
     <Compile Include="Interfaces\ISupplementView.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\FolderPresenter.cs" />
+    <Compile Include="Presenters\MapPresenter.cs" />
     <Compile Include="Presenters\TreeProxyPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
@@ -296,6 +305,12 @@
     </Compile>
     <Compile Include="Views\ListButtonView.Designer.cs">
       <DependentUpon>ListButtonView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MapView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\MapView.Designer.cs">
+      <DependentUpon>MapView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\TreeProxyView.cs">
       <SubType>UserControl</SubType>
@@ -479,6 +494,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ListButtonView.resx">
       <DependentUpon>ListButtonView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\MapView.resx">
+      <DependentUpon>MapView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\TreeProxyView.resx">
       <DependentUpon>TreeProxyView.cs</DependentUpon>
@@ -728,6 +746,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Map.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\MovingAverageFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\OrganBiomassRemovalType.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SCUM.png" />

@@ -322,6 +322,24 @@ namespace Models
         }
 
         /// <summary>
+        /// Gets the longitude
+        /// </summary>
+        public double Longitude
+        {
+            get
+            {
+                if (this.reader == null || this.reader.Constant("Longitude") == null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return this.reader.ConstantAsDouble("Longitude");
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the average temperature
         /// </summary>
         public double Tav
@@ -540,7 +558,7 @@ namespace Models
         /// Open the weather data file.
         /// </summary>
         /// <returns>True if the file was successfully opened</returns>
-        private bool OpenDataFile()
+        public bool OpenDataFile()
         {
             if (System.IO.File.Exists(this.FullFileName))
             {
@@ -589,6 +607,16 @@ namespace Models
             else
             {
                 return false;
+            }
+        }
+
+        /// <summary>Close the datafile.</summary>
+        public void CloseDataFile()
+        {
+            if (reader != null)
+            {
+                reader.Close();
+                reader = null;
             }
         }
 
