@@ -613,8 +613,11 @@ namespace Models
         /// <summary>Close the datafile.</summary>
         public void CloseDataFile()
         {
-            reader.Close();
-            reader = null;
+            if (reader != null)
+            {
+                reader.Close();
+                reader = null;
+            }
         }
 
         /// <summary>
