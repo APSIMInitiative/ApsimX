@@ -26414,7 +26414,116 @@ namespace Models
       <Folder>
         <Name>Graphs</Name>
         <Graph>
-          <Name>AboveGroundWt</Name>
+          <Name>GrainBiomass</Name>
+          <Series>
+            <Name>PredictedDry</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[Irr] = 'Nil'</Filter>
+          </Series>
+          <Series>
+            <Name>ObservedDry</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Grain.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[SimulationName] LIKE '%Nil%'</Filter>
+          </Series>
+          <Series>
+            <Name>PredictedWet</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Thin</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[Irr] = 'Some'</Filter>
+          </Series>
+          <Series>
+            <Name>ObservedWet</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Grain.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[SimulationName] LIKE '%Some%'</Filter>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Grain Biomass (g/m2)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>AboveGroundWeight</Name>
           <Series>
             <Name>PredictedDry</Name>
             <Type>Scatter</Type>
@@ -26436,6 +26545,28 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
             <Filter>[Irr] = 'Nil'</Filter>
+          </Series>
+          <Series>
+            <Name>ObservedDry</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[SimulationName] LIKE '%Nil%'</Filter>
           </Series>
           <Series>
             <Name>PredictedWet</Name>
@@ -26460,16 +26591,16 @@ namespace Models
             <Filter>[Irr] = 'Some'</Filter>
           </Series>
           <Series>
-            <Name>Observed</Name>
+            <Name>ObservedWet</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
+            <MarkerSize>Small</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>Observed</TableName>
@@ -26479,156 +26610,7 @@ namespace Models
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
-            <Filter />
-          </Series>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Above Ground Biomass (g/m2)</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>SoilWaterProfile</Name>
-          <Series>
-            <Name>PredictedDry</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
-            <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>ProfileWater</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-            <Filter>[Irrig]='Nil'</Filter>
-          </Series>
-          <Series>
-            <Name>PredictedWet</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
-            <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Thin</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>ProfileWater</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-            <Filter>[Irrig]='Some'</Filter>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>SoilWater</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>ProfileWater</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Volumetric soil water (mm)</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>BottomLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>GrainBiomass</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Observed</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Grain.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
+            <Filter>[SimulationName] LIKE '%Some%'</Filter>
           </Series>
           <Axis>
             <Type>Left</Type>
@@ -26646,69 +26628,6 @@ namespace Models
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>ZadokScore</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Zadok</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Volumetric soil water (mm)</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>BottomLeft</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
