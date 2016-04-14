@@ -869,9 +869,11 @@ namespace Models.Soils
         }
 
         /// <summary>Gets or sets the nitrate N for each layer (kg/ha)</summary>
+        [XmlIgnore]
         public double[] NO3N { get { return SoilNitrogen.NO3; } set { SoilNitrogen.NO3 = value; } }
 
         /// <summary>Gets the ammonia N for each layer (kg/ha)</summary>
+        [XmlIgnore]
         public double[] NH4N { get { return SoilNitrogen.NH4; } }
 
         /// <summary>Gets the temperature of each layer</summary>

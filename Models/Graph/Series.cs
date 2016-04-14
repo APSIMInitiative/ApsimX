@@ -154,10 +154,14 @@ namespace Models.Graph
                         foreach (Experiment experiment in Apsim.ChildrenRecursively(parentOfGraph, typeof(Experiment)))
                             experiments.Add(experiment);
 
-                        // Look for simulations if we didn't find any experiments.
-                        if (experiments.Count == 0)
-                            foreach (Simulation simulation in Apsim.ChildrenRecursively(parentOfGraph, typeof(Simulation)))
+                        // Look for simulations
+                        foreach (Simulation simulation in Apsim.ChildrenRecursively(parentOfGraph, typeof(Simulation)))
+                        {
+                            if (simulation.Parent is Experiment)
+                                { }
+                            else
                                 simulations.Add(simulation);
+                        }
                     }
 
                     // Now create series definitions for each experiment found.
@@ -580,7 +584,11 @@ namespace Models.Graph
                 Graph parentGraph = Parent as Graph;
                 if (parentGraph != null)
                 {
+
                     DataTable data = parentGraph.GetBaseData(TableName);
+
+                    string[] names = DataTableUtilities.GetColumnAsStrings(data, "SimulationName");
+
                     string FilterExpression = "";
                     if (Filter != null && Filter != string.Empty)
                     {

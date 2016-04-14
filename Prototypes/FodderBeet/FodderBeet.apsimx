@@ -291,7 +291,7 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
           <Value>0</Value>
         </Constant>
         <Constant>
-          <Name>ShadeInducedBranchMortality</Name>
+          <Name>BranchMortality</Name>
           <Value>0</Value>
         </Constant>
         <LinearInterpolationFunction>

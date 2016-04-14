@@ -282,6 +282,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
         </MultiplyFunction>
         <InitialiseStage>Emergence</InitialiseStage>
         <PrimaryBudNo>2.2</PrimaryBudNo>
+		<Constant>
+          <Name>BranchMortality</Name>
+          <Value>0</Value>
+        </Constant>
       </Structure>
       <GenericAboveGroundOrgan>
         <Name>Tuber</Name>

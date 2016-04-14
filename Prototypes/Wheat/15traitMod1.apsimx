@@ -455,6 +455,9 @@ The model consists of:
             <XProperty>[Leaf].CoverGreen</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
+
+	<AddFunction>
+      <Name>BranchMortality</Name>
         <PhaseLookup>
           <Name>ShadeInducedBranchMortality</Name>
           <PhaseLookupValue>
@@ -505,6 +508,7 @@ The model consists of:
             <End>StartGrainFill</End>
           </PhaseLookupValue>
         </PhaseLookup>
+	    </AddFunction>
         <VariableReference>
           <Name>ThermalTime</Name>
           <VariableName>[Phenology].ThermalTime.Value</VariableName>
