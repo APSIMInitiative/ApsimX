@@ -556,7 +556,7 @@ namespace Models.Graph
                     fieldNames.Add(FilterName);
             }
             else if ((Filter != null) && (Filter != ""))
-              throw new Exception("Column name to filter on must be within square brackets.  e.g [ColumToFilter]");
+              throw new Exception("Column name to filter on must be within square brackets.  e.g [ColumnToFilter]");
             fieldNames.Add("ZoneName");
             // filter data for each definition.
             foreach (SeriesDefinition definition in definitions)
