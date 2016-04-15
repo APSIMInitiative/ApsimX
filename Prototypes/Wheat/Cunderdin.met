@@ -1,6 +1,6 @@
 [weather.met.weather]
-latitude  =   -31.40
-!longitude =  130.
+latitude  =   -31.65
+longitude =  117.238
 amp = 13.8   ! temperature amplitude (oC) - difference between highest and
              ! lowest mean monthly air temperatures
 tav = 18.2   ! mean annual air temperature (oC)
