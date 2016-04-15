@@ -755,18 +755,35 @@ namespace UserInterface.Views
         private void OnDeleteClick(object sender, EventArgs e)
         {
             List<IGridCell> cellsChanged = new List<IGridCell>();
-            foreach (DataGridViewCell cell in this.Grid.SelectedCells)
+
+            if (this.Grid.CurrentCell.IsInEditMode)
             {
-                // Save change in data source
-                if (cell.RowIndex < this.DataSource.Rows.Count)
+                DataGridViewTextBoxEditingControl dText = (DataGridViewTextBoxEditingControl)Grid.EditingControl;
+                string newText;
+                int savedSelectionStart = dText.SelectionStart;
+                if (dText.SelectionLength == 0)
+                    newText = dText.Text.Remove(dText.SelectionStart, 1);
+                else
+                    newText = dText.Text.Remove(dText.SelectionStart, dText.SelectionLength);
+                dText.Text = newText;
+                dText.SelectionStart = savedSelectionStart;
+                cellsChanged.Add(this.GetCell(Grid.CurrentCell.ColumnIndex, Grid.CurrentCell.RowIndex));
+            }
+            else
+            {
+                foreach (DataGridViewCell cell in this.Grid.SelectedCells)
                 {
-                    this.DataSource.Rows[cell.RowIndex][cell.ColumnIndex] = DBNull.Value;
+                    // Save change in data source
+                    if (cell.RowIndex < this.DataSource.Rows.Count)
+                    {
+                        this.DataSource.Rows[cell.RowIndex][cell.ColumnIndex] = DBNull.Value;
 
-                    // Delete cell in grid.
-                    this.Grid[cell.ColumnIndex, cell.RowIndex].Value = null;
+                        // Delete cell in grid.
+                        this.Grid[cell.ColumnIndex, cell.RowIndex].Value = null;
 
-                    // Put a cell into the cells changed member.
-                    cellsChanged.Add(this.GetCell(cell.ColumnIndex, cell.RowIndex));
+                        // Put a cell into the cells changed member.
+                        cellsChanged.Add(this.GetCell(cell.ColumnIndex, cell.RowIndex));
+                    }
                 }
             }
 
