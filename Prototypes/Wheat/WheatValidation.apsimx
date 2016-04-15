@@ -6667,7 +6667,7 @@ namespace Models
             <Name>IrrigationSchedule</Name>
             <Operation>
               <Date>1992-06-17T00:00:00</Date>
-              <Action>[Wheat].Sow(population:121.61, cultivar:"GattonHartog", depth:30, rowSpacing:250);</Action>
+              <Action>[Wheat].Sow(population:121.61, cultivar:"Hartog", depth:30, rowSpacing:250);</Action>
             </Operation>
             <Operation>
               <Date>1992-06-24T00:00:00</Date>
@@ -6767,6 +6767,7 @@ namespace Models
               <string>Wheat.Leaf.Dead.Wt</string>
               <string>Wheat.Leaf.Dead.N</string>
               <string>Wheat.Leaf.Dead.NConc</string>
+              <string>Wheat.Leaf.SpecificArea</string>
               <string>Wheat.Spike.Wt</string>
               <string>Wheat.Spike.N</string>
               <string>Wheat.Stem.Live.Wt</string>
@@ -6900,6 +6901,70 @@ namespace Models
             <TableName>TimeSeries</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>Date</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>SpecificLeafArea</Name>
+          <Series>
+            <Name>PredictedTLNo</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Leaf.SpecificArea</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>ObservedTLNo</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Leaf.SpecificArea</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
