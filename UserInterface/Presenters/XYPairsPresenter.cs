@@ -128,7 +128,7 @@ namespace UserInterface.Presenters
             {
                 string propertyName = xProperty.GetValue(xyPairs.Parent, null).ToString();
                 IVariable variable = Apsim.GetVariableObject(xyPairs, propertyName);
-                if (variable.Units != null)
+                if (variable != null && variable.Units != null)
                     return propertyName + " (" + variable.Units + ")";
                 return propertyName;
             }
