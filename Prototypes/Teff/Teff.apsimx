@@ -1157,7 +1157,12 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <ArraySize>[Leaf].MaxNodeNo</ArraySize>
         </ArrayBiomass>
         <LeafCohortParameters>
-          <Name>CohortParameters</Name>
+        <Constant>
+		  <Name>SenessingLeafRelativeSize</Name>
+		  <Value>1</Value>
+		  <Units>0-1</Units>
+		</Constant>
+		  <Name>CohortParameters</Name>
           <Constant>
             <Name>NReallocationFactor</Name>
             <Value>0.05</Value>
