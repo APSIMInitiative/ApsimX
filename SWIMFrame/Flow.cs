@@ -551,20 +551,23 @@ namespace SWIMFrame
                                 {
                                     dy[0] = 0.0;
                                 }
-                                for (int x = 1; x < cin.Length; x++)
+                                for (int x = 1; x < cav.Length; x++)
                                 {
-                                    cav[x] = ((2.0 * h0 - dy[0]) * c0 + qprec1 * dt * cin[x]) / (2.0 * h0 + dwoff + dwinfil);
+                                    cav[x] = ((2.0 * h0 - dy[0]) * c0[x] + qprec1 * dt * cin[x]) / (2.0 * h0 + dwoff + dwinfil);
                                 }
-                                c0 = 2.0 * cav[1] - c0; //This needs to be tested from FORTRAN; no example in original code.
+                                for (int x = 1; x < c0.Length; x++)
+                                {
+                                    c0[x] = 2.0 * cav[x] - c0[x]; //This needs to be tested from FORTRAN; no example in original code.
+                                }
                             }
                             else
                             {
-                                for (int x = 1; x < cin.Length; x++)
+                                for (int x = 1; x < cav.Length; x++)
                                 {
-                                    cav[x] = ((h0 - dy[0]) * c0 + qprec1 * dt * cin[x]) / (dwoff + dwinfil);
+                                    cav[x] = ((h0 - dy[0]) * c0[x] + qprec1 * dt * cin[x]) / (dwoff + dwinfil);
                                 }
                                 initpond = false; //pond gone
-                                c0 = cin[1]; // for output if any pond at end
+                                c0 = cin; // for output if any pond at end
                             }
                             soff = MathUtilities.Add(soff, MathUtilities.Multiply_Value(cav, dwoff));
                             sinfil = MathUtilities.Add(sinfil, MathUtilities.Multiply_Value(cav, dwinfil));
@@ -741,7 +744,7 @@ namespace SWIMFrame
             double[] dy = new double[n];
             double[] ee = new double[n];
             double[] q = new double[n];
-            double[] qw = new double[n]; 
+            double[] qw = new double[n];    
             double[] qya = new double[n];
             double[] qyb = new double[n];
 

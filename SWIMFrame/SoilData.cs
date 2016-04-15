@@ -41,6 +41,9 @@ namespace SWIMFrame
 
             n = nin;
             x = xin;
+            soilloc = new int[n + 1];
+            pathloc = new int[n]; //0 based in FORTRAN
+            philoc = new int[n, 2 + 1]; //0 based in FORTRAN
             dx = MathUtilities.Subtract(x.Slice(2, n), x.Slice(1, n - 1));
 
             //  Set up locations in soil, path, S and phi arrays.
@@ -129,6 +132,12 @@ namespace SWIMFrame
             }
 
             //Set up S and phi arrays to get phi from S.
+            S = new double[nphi + 1, ns + 1];
+            rdS = new double[ns + 1];
+            phi = new double[nphi + 1, ns + 1];
+            dphidS = new double[nphi - 1 + 1, ns + 1];
+            K = new double[nphi + 1, ns + 1];
+            dKdS = new double[nphi - 1 + 1, ns + 1];
             for (i = 1; i <= ns; i++)
             {
                 nc = sp[i].nc;

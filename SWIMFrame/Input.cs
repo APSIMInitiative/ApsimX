@@ -30,7 +30,6 @@ namespace SWIMFrame
         static int[] nssteps; //ns
         static double drn, evap, h0, h1, h2, infil, qevap, qprec, runoff;
         static double S1, S2, ti, tf, ts, win, wp, wpi;
-        static double now, start;
         static double[] bd, dis; //nt
         static double[] c0, cin, sdrn, sinfil, soff, sp, spi;//ns
         static double[] h, S, x;//n
@@ -41,9 +40,12 @@ namespace SWIMFrame
 
         public static void Setup()
         {
+            cin = new double[ns+1];
+            h = new double[n+1];
+            isotype = new string[nt+1];
+            isopar = new double[nt+1, 2+1];
             SoilData sd = new SoilData();
             Flow.sink = new SinkDripperDrain(); //set the type of sink to use
-            SolProps solProps = new SolProps();
             jt = new int[n];
             sidx = new int[n];
             //set a list of soil layers(cm).
@@ -52,6 +54,7 @@ namespace SWIMFrame
                 sidx[c] = c < 5 ? 103 : 109; //soil ident of layers
                                              //set required soil hydraulic params
             sd.GetTables(n, sidx, x);
+            SolProps solProps = new SolProps(nt, ns);
             bd = new double[] { 1.3, 1.3 };
             dis = new double[] { 20.0, 20.0 };
             //set isotherm type and params for solute 2 here
