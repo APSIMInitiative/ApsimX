@@ -2809,7 +2809,12 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
         </VariableReference>
         <LeafCohortParameters>
           <Name>LeafCohortParameters</Name>
-          <LinearInterpolationFunction>
+          <Constant>
+		  <Name>SenessingLeafRelativeSize</Name>
+		  <Value>1</Value>
+		  <Units>0-1</Units>
+		</Constant>
+		  <LinearInterpolationFunction>
             <Name>GrowthDuration</Name>
             <Memo>
               <Name>Memo</Name>

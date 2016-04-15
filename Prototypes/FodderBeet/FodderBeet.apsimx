@@ -458,7 +458,12 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
         </MultiplyFunction>
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
-          <LinearInterpolationFunction>
+		<Constant>
+		  <Name>SenessingLeafRelativeSize</Name>
+		  <Value>1</Value>
+		  <Units>0-1</Units>
+		</Constant>          
+		  <LinearInterpolationFunction>
             <Name>MaxArea</Name>
             <XYPairs>
               <Name>XYPairs</Name>

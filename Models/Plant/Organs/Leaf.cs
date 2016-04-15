@@ -260,9 +260,12 @@ namespace Models.PMF.Organs
             /// <summary>The cell division stress</summary>
             [Link(IsOptional = true)]
             public IFunction CellDivisionStress = null;
-            /// <summary>The cell division stress</summary>
+            /// <summary>The Shape of the sigmoidal function of leaf area increase</summary>
             [Link(IsOptional = true)]
             public IFunction LeafSizeShapeParameter = null;
+            /// <summary>The size of leaves on senessing tillers relative to the dominant tillers in that cohort</summary>
+            [Link(IsOptional = true)]
+            public IFunction SenessingLeafRelativeSize = null;
         }
         #endregion
 
