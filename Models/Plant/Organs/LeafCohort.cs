@@ -145,6 +145,9 @@ namespace Models.PMF.Organs
         /// <summary>The maximum area</summary>
         [XmlIgnore]
         public double LeafSizeShape = 0.01;
+        /// <summary>The size of senessing leaves relative to the other leaves in teh cohort</summary>
+        [XmlIgnore]
+        public double SenessingLeafRelativeSize = 1;
         /// <summary>Gets or sets the cover above.</summary>
         /// <value>The cover above.</value>
         [XmlIgnore]
@@ -888,7 +891,8 @@ namespace Models.PMF.Organs
                 CoverAbove = Leaf.CoverAboveCohort(Rank); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
                 if (LeafCohortParameters.ShadeInducedSenescenceRate != null)
                     ShadeInducedSenRate = LeafCohortParameters.ShadeInducedSenescenceRate.Value;
-                SenescedFrac = FractionSenescing(_ThermalTime, PropnStemMortality);
+                SenessingLeafRelativeSize = LeafCohortParameters.SenessingLeafRelativeSize.Value;
+                SenescedFrac = FractionSenescing(_ThermalTime, PropnStemMortality, SenessingLeafRelativeSize);
 
                 // Doing leaf mass growth in the cohort
                 Biomass LiveBiomass = new Biomass(Live);
@@ -1105,9 +1109,10 @@ namespace Models.PMF.Organs
         /// <summary>Fractions the senescing.</summary>
         /// <param name="TT">The tt.</param>
         /// <param name="StemMortality">The stem mortality.</param>
+        /// <param name="SenessingLeafRelativeSize">The relative size of senessing tillers leaves relative to the other leaves in the cohort</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Bad Fraction Senescing</exception>
-        public double FractionSenescing(double TT, double StemMortality)
+        public double FractionSenescing(double TT, double StemMortality, double SenessingLeafRelativeSize)
         {
             //Calculate fraction of leaf area senessing based on age and shading.  This is used to to calculate change in leaf area and Nreallocation supply.
             if (IsAppeared)
@@ -1140,7 +1145,7 @@ namespace Models.PMF.Organs
                 if (LiveArea > 0)
                 {
                     FracSenShade = Math.Min(MaxLiveArea * ShadeInducedSenRate, LiveArea) / LiveArea;
-                    FracSenShade += StemMortality;
+                    FracSenShade += StemMortality * SenessingLeafRelativeSize;
                     FracSenShade = Math.Min(FracSenShade, 1.0);
                 }
 
