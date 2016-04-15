@@ -22,6 +22,7 @@ using Models.Agroforestry;
 using Models.Zones;
 using System.Windows.Forms;
 using System.Threading;
+using Models.PostSimulationTools;
 
 namespace UserInterface.Commands
 {
@@ -44,7 +45,9 @@ namespace UserInterface.Commands
                                                                     typeof(Zone),
                                                                     typeof(AgroforestrySystem),
                                                                     typeof(CircularZone),
-                                                                    typeof(RectangularZone)};
+                                                                    typeof(RectangularZone),
+                                                                    typeof(DataStore),
+                                                                    typeof(PredictedObserved)};
 
         /// <summary>A .bib file instance.</summary>
         private BibTeX bibTeX;
@@ -141,11 +144,14 @@ namespace UserInterface.Commands
                 {
                     if (Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
                     {
-                        tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel));
+                        if (child is DataStore)
+                            tags.Add(new AutoDocumentation.Heading("Validation statistics", headingLevel));
+                        else
+                            tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel));
                         string childFolderPath = Path.Combine(workingDirectory, child.Name);
                         AddValidationTags(tags, child, headingLevel + 1, workingDirectory);
                     }
-                    else if (child.Name != "TitlePage" && (child is Memo || child is Graph || child is Map))
+                    else if (child.Name != "TitlePage" && (child is Memo || child is Graph || child is Map || child is Tests))
                         child.Document(tags, headingLevel, 0);
                 }
             }
@@ -293,11 +299,15 @@ namespace UserInterface.Commands
         public void CreatePDFSyles(Document document)
         {
             Style style = document.Styles.AddStyle("GraphAndTable", "Normal");
-            style.Font.Size = 8;
+            style.Font.Size = 7;
             style.ParagraphFormat.SpaceAfter = Unit.FromCentimeter(0);
 
             Style xyStyle = document.Styles.AddStyle("GraphAndTable", "Normal");
             xyStyle.Font = new MigraDoc.DocumentObjectModel.Font("Courier New");
+
+            Style tableStyle = document.Styles.AddStyle("Table", "Normal");
+            tableStyle.Font.Size = 8;
+            tableStyle.ParagraphFormat.SpaceAfter = Unit.FromCentimeter(0);
         }
 
         /// <summary>Creates the graph.</summary>
@@ -368,6 +378,39 @@ namespace UserInterface.Commands
             Paragraph spacing = section.AddParagraph();
         }
 
+        /// <summary>Creates the table.</summary>
+        /// <param name="section">The section.</param>
+        /// <param name="tableObj">The table to convert to html.</param>
+        /// <param name="workingDirectory">The working directory.</param>
+        private void CreateTable(Section section, AutoDocumentation.Table tableObj, string workingDirectory)
+        {
+            // Create a 2 column, 1 row table. Image in first cell, X/Y data in second cell.
+            Table table = section.AddTable();
+            table.Style = "Table";
+            table.Rows.LeftIndent = "1cm";
+
+            foreach (List<string> column in tableObj.data)
+            {
+                Column column1 = table.AddColumn();
+                column1.Width = "1.4cm";
+                column1.Format.Alignment = ParagraphAlignment.Right;
+            }
+
+            for (int rowIndex = 0; rowIndex < tableObj.data[0].Count; rowIndex++)
+            {
+                Row row = table.AddRow();
+                for (int columnIndex = 0; columnIndex < tableObj.data.Count; columnIndex++)
+                {
+                    string cellText = tableObj.data[columnIndex][rowIndex];
+                    row.Cells[columnIndex].AddParagraph(cellText);
+                }
+                
+            }
+
+            
+        }
+
+
         /// <summary>
         /// Adds fixed-width text to a MigraDoc paragraph
         /// </summary>
@@ -423,6 +466,10 @@ namespace UserInterface.Commands
                 else if (tag is AutoDocumentation.GraphAndTable)
                 {
                     CreateGraphPDF(section, tag as AutoDocumentation.GraphAndTable, workingDirectory);
+                }
+                else if (tag is AutoDocumentation.Table)
+                {
+                    CreateTable(section, tag as AutoDocumentation.Table, workingDirectory);
                 }
                 else if (tag is Graph)
                 {
