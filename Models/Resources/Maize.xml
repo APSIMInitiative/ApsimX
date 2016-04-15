@@ -911,6 +911,11 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
     </ArrayBiomass>
     <LeafCohortParameters>
       <Name>CohortParameters</Name>
+		<Constant>
+		  <Name>SenessingLeafRelativeSize</Name>
+		  <Value>1</Value>
+		  <Units>0-1</Units>
+		</Constant>
       <BellCurveFunction>
         <Name>MaxArea</Name>
         <Memo>

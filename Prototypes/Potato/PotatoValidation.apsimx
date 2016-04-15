@@ -634,7 +634,12 @@ The duration of a potato crop is determined by the number of leaves that the mai
         </LeafCohort>
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
-          <LinearInterpolationFunction>
+		<Constant>
+		  <Name>SenessingLeafRelativeSize</Name>
+		  <Value>1</Value>
+		  <Units>0-1</Units>
+		</Constant>          
+		  <LinearInterpolationFunction>
             <Name>MaxArea</Name>
             <XYPairs>
               <Name>XYPairs</Name>

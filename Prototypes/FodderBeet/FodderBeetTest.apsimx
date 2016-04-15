@@ -701,6 +701,11 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <Name>InitialNConc</Name>
             <Value>0</Value>
           </Constant>
+          <Constant>
+            <Name>SenessingLeafRelativeSize</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
         </LeafCohortParameters>
         <MinimumFunction>
           <Name>FRGRFunction</Name>
@@ -743,6 +748,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <FractionToResidue>0.1</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <BiomassRemovalDefaults />
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -866,10 +872,11 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.</FractionRemoved>
+            <FractionRemoved>0</FractionRemoved>
             <FractionToResidue>0.15</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <BiomassRemovalDefaults />
         <InitialDM>5</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <KNO3_yProperty>
@@ -978,6 +985,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <FractionToResidue>0.2</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Petiole</Name>
@@ -1075,6 +1083,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <FractionToResidue>0.2</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
