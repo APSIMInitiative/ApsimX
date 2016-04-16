@@ -853,6 +853,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\CircularZone.png" />
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
     <EmbeddedResource Include="Resources\MenuImages\Upgrade.png" />
+    <EmbeddedResource Include="Resources\AIBanner.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
   <ItemGroup>
