@@ -152,11 +152,11 @@ namespace UserInterface.Commands
             /// <returns>The found value or string.Empty if not found.</returns>
             private string Get(string keyword)
             {
-                string stringToFind = keyword + " = {";
+                string stringToFind = keyword + " = ";
                 int posKeyWord = contents.IndexOf(stringToFind, StringComparison.InvariantCultureIgnoreCase);
                 if (posKeyWord == -1)
                 {
-                    stringToFind = keyword + "={";
+                    stringToFind = keyword + "=";
                     posKeyWord = contents.IndexOf(stringToFind, StringComparison.InvariantCultureIgnoreCase);
                 }                
                 if (posKeyWord != -1)
@@ -171,6 +171,7 @@ namespace UserInterface.Commands
                     text = text.Replace("}", "");
                     text = text.Replace("--", "-");
                     text = text.Replace(@"\&", " and ");
+                    text = text.Replace("\"", "");
                     return text;
                 }
 
