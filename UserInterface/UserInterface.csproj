@@ -746,6 +746,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CultivarFolder.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Map.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\MovingAverageFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\OrganBiomassRemovalType.png" />

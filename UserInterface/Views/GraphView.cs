@@ -139,7 +139,7 @@ namespace UserInterface.Views
             this.plot1.Model.LegendBackground = OxyColors.White;
 
             if (this.LeftRightPadding != 0)
-                this.plot1.Model.Padding = new OxyThickness(0, 0, this.LeftRightPadding, 0);
+                this.plot1.Model.Padding = new OxyThickness(10, 10, this.LeftRightPadding, 10);
 
             foreach (OxyPlot.Axes.Axis axis in this.plot1.Model.Axes)
                 this.FormatAxisTickLabels(axis);

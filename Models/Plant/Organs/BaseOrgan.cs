@@ -163,11 +163,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Biomass removal
-        /// <summary>
-        /// Defaults for biomass removal.
-        /// </summary>
-        public List<OrganBiomassRemovalType> BiomassRemovalDefaults { get; set; }
-
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="value">Biomass to remove</param>
         virtual public void DoRemoveBiomass(OrganBiomassRemovalType value)
