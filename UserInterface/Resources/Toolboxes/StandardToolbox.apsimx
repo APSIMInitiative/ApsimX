@@ -594,6 +594,8 @@
       <ResourceName>SCUM</ResourceName>
       <CropType>SCUM</CropType>
     </Plant>
+    <CultivarFolder >
+    </CultivarFolder>
     <Folder>
       <Name>Wheat cultivars</Name>
       <Folder>

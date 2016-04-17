@@ -38,12 +38,12 @@ namespace UserInterface.Views
         /// <summary>Show the map</summary>
         public void ShowMap(List<Models.Map.Coordinate> coordinates)
         {
+            mapControl.ScaleMode = ScaleModes.Fractional;
             mapControl.MapProvider = GMap.NET.MapProviders.GoogleMapProvider.Instance;
             mapControl.MinZoom = 1;
             mapControl.MaxZoom = 17;
-            mapControl.Zoom = 2;
-            mapControl.ScaleMode = ScaleModes.Fractional;
-
+            mapControl.Zoom = 1.4; //2;
+            
             var overlayOne = new GMapOverlay("OverlayOne");
             mapControl.Overlays.Add(overlayOne);
 

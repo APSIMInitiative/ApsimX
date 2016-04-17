@@ -126,7 +126,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Plant.IsAlive)
+                if (Plant != null && Plant.IsAlive)
                     return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover));
                 else
                     return 0;
@@ -428,7 +428,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Structure.MainStemNodeNo >= Structure.MainStemFinalNodeNo)
+                if (Structure != null && Structure.MainStemNodeNo >= Structure.MainStemFinalNodeNo)
                     return true;
                 else
                     return false;
@@ -862,13 +862,16 @@ namespace Models.PMF.Organs
             get
             {
                 double F = 1;
-                double FunctionalNConc = (CohortParameters.CriticalNConc.Value - (CohortParameters.MinimumNConc.Value * CohortParameters.StructuralFraction.Value)) * (1 / (1 - CohortParameters.StructuralFraction.Value));
-                if (FunctionalNConc == 0)
-                    F = 1;
-                else
+                if (CohortParameters != null)
                 {
-                    F = Live.MetabolicNConc / FunctionalNConc;
-                    F = Math.Max(0.0, Math.Min(F, 1.0));
+                    double FunctionalNConc = (CohortParameters.CriticalNConc.Value - (CohortParameters.MinimumNConc.Value * CohortParameters.StructuralFraction.Value)) * (1 / (1 - CohortParameters.StructuralFraction.Value));
+                    if (FunctionalNConc == 0)
+                        F = 1;
+                    else
+                    {
+                        F = Live.MetabolicNConc / FunctionalNConc;
+                        F = Math.Max(0.0, Math.Min(F, 1.0));
+                    }
                 }
                 return F;
             }

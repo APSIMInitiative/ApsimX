@@ -23,11 +23,6 @@ namespace Models.PMF.Interfaces
         void DoPlantEnding();
 
         /// <summary>
-        /// Defaults for biomass removal.
-        /// </summary>
-        List<OrganBiomassRemovalType> BiomassRemovalDefaults { get; set; }
-
-        /// <summary>
         /// Biomass removal logic for this organ.
         /// </summary>
         /// <param name="biomassToRemove">Biomass to remove</param>

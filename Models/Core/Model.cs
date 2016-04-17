@@ -205,6 +205,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.OldPlant.SWStress))]
         [XmlElement(typeof(Models.PMF.SimpleTree))]
         [XmlElement(typeof(Models.PMF.Cultivar))]
+        [XmlElement(typeof(Models.PMF.CultivarFolder))]
         [XmlElement(typeof(Models.PMF.OrganBiomassRemovalType))]
         [XmlElement(typeof(Alias))]
         [XmlElement(typeof(Models.Zones.CircularZone))]
