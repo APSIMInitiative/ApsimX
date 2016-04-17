@@ -1787,6 +1787,19 @@ The model consists of:
           <string>[Grain].Live</string>
         </Propertys>
       </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>EarLive</Name>
+        <Memo>
+          <Name>memo</Name>
+          <MemoText><![CDATA[
+The EarLive composite biomass object includes the Live pools of all organs within the Ear to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
+]]></MemoText>
+        </Memo>
+        <Propertys>
+          <string>[Spike].Live</string>
+          <string>[Grain].Live</string>
+        </Propertys>
+      </CompositeBiomass>
       <Cultivar>
         <Name>Wakanui</Name>
         <Command>[Phenology].Vernalisation.VernSens = 4</Command>
@@ -21613,6 +21626,7 @@ namespace Models
               <string>[Wheat].Leaf.Photosynthesis.FT.Value</string>
               <string>[Wheat].Leaf.Fn</string>
               <string>[Wheat].Phenology.CurrentPhaseName</string>
+              <string>[Wheat].Phenology.CurrentStageName</string>
               <string>[Wheat].Phenology.Stage</string>
               <string>[Wheat].AboveGroundLive.N</string>
               <string>[Wheat].AboveGroundLive.Wt</string>
@@ -21669,6 +21683,7 @@ namespace Models
               <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
               <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
               <string>[Wheat].Leaf.CohortSLA[1:10]</string>
+              <string>[Wheat].EarLive.Wt</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -21946,6 +21961,27 @@ namespace Models
           <CumulativeX>false</CumulativeX>
           <Filter />
         </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Observed</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
         <Axis>
           <Type>Left</Type>
           <Title>Above Ground Biomass (g/m2)</Title>
@@ -22027,6 +22063,70 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>EarWt</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Wheat.EarLive.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Observed</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Wheat.Spike.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Above Ground Biomass (g/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
     </Experiment>
     <Experiment>
@@ -22295,7 +22395,7 @@ namespace Models
         <Clock>
           <Name>clock</Name>
           <StartDate>2013-02-01T00:00:00</StartDate>
-          <EndDate>2014-02-01T00:00:00</EndDate>
+          <EndDate>2014-04-01T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
@@ -23076,9 +23176,10 @@ namespace Models
               <string>[Wheat].Leaf.Photosynthesis.FT.Value</string>
               <string>[Wheat].Leaf.Fn</string>
               <string>[Wheat].Phenology.CurrentPhaseName</string>
+              <string>[Wheat].Phenology.CurrentStageName</string>
               <string>[Wheat].Phenology.Stage</string>
-              <string>[Wheat].AboveGroundLive.N</string>
-              <string>[Wheat].AboveGroundLive.Wt</string>
+              <string>[Wheat].AboveGround.N</string>
+              <string>[Wheat].AboveGround.Wt</string>
               <string>[Wheat].Total.N</string>
               <string>[Wheat].Total.Wt</string>
               <string>[Wheat].Arbitrator.NDemand</string>
@@ -38873,5 +38974,5 @@ Simulation results for the combined datasets from the various countries are show
     <DisabledSeries />
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
-  <ExplorerWidth>350</ExplorerWidth>
+  <ExplorerWidth>286</ExplorerWidth>
 </Simulations>
