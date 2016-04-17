@@ -32,8 +32,8 @@ namespace Models.PMF.Functions
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             // add a heading.
-            if (headingLevel > 0)
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            //if (headingLevel > 0)
+            //    tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
             // write memos.
             foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
@@ -49,7 +49,7 @@ namespace Models.PMF.Functions
 
             if (description != string.Empty)
                 tags.Add(new AutoDocumentation.Paragraph(description, indent));
-            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + Value + units + "</i>.", indent));
+            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + Value + units + "</i>", indent));
         }
     }
 }

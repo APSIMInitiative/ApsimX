@@ -862,7 +862,6 @@ The model consists of:
             <FractionToResidue>0.2</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <BiomassRemovalDefaults />
         <RipeStage>Ripe</RipeStage>
       </ReproductiveOrgan>
       <Root>
@@ -931,7 +930,7 @@ The model consists of:
           <PhaseLookupValue>
             <Name>PreEmergence</Name>
             <Constant>
-              <Name>Function</Name>
+              <Name>Value</Name>
               <Value>0</Value>
             </Constant>
             <Start>Germination</Start>
@@ -940,7 +939,7 @@ The model consists of:
           <PhaseLookupValue>
             <Name>PreFlowering</Name>
             <Constant>
-              <Name>Function</Name>
+              <Name>Value</Name>
               <Value>0.2</Value>
             </Constant>
             <Start>Emergence</Start>
@@ -949,7 +948,7 @@ The model consists of:
           <PhaseLookupValue>
             <Name>PostFlowering</Name>
             <Constant>
-              <Name>Function</Name>
+              <Name>Value</Name>
               <Value>0</Value>
             </Constant>
             <Start>Emergence</Start>
@@ -969,7 +968,7 @@ The model consists of:
           <PhaseLookupValue>
             <Name>PreEmergence</Name>
             <Constant>
-              <Name>Function</Name>
+              <Name>Value</Name>
               <Value>5</Value>
             </Constant>
             <Start>Germination</Start>
@@ -978,7 +977,7 @@ The model consists of:
           <PhaseLookupValue>
             <Name>PostEmergence</Name>
             <Constant>
-              <Name>Function</Name>
+              <Name>Value</Name>
               <Value>20</Value>
             </Constant>
             <Start>Emergence</Start>
@@ -1013,7 +1012,6 @@ The model consists of:
             <FractionToResidue>0.15</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <BiomassRemovalDefaults />
         <InitialDM>0.2</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <KNO3_yProperty>
@@ -1565,7 +1563,6 @@ The model consists of:
             <FractionToResidue>0.1</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <BiomassRemovalDefaults />
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -1669,7 +1666,6 @@ The model consists of:
             <FractionToResidue>0.2</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -1779,7 +1775,6 @@ The model consists of:
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -1854,163 +1849,172 @@ The model consists of:
           <string>[Spike].Dead</string>
         </Propertys>
       </CompositeBiomass>
-      <Cultivar>
-        <Name>Wakanui</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 4</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3</Command>
-        <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>GattonHartog</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>h45</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 1.5</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Rongotea</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Hartog</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Gamenya</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 1.6</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 2.0</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Spear</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 580</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Gutha</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Wilgoyne</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 1.4</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 1.8</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 580</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>BattenWinter</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Bolac</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>EGAGregory</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 2.7</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Kelallac</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Mckellar</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Kennedy</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Derrimut</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Janz</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Gladius</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Ventura</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Young</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 2.3</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Yitpi</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Ruby</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 2.3</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Wyalkatchem</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 2.3</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Wedgetail</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 3.9</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.9</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>H46</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 1.5</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Mercury</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 2.5</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Gregory</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 2.7</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Livingston</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 2.3</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>ega_gregory</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 2.7</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>hartog1</Name>
-        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
-      </Cultivar>
+      <CultivarFolder>
+        <Name>Cultivars</Name>
+        <CultivarFolder>
+          <Name>New Zealand</Name>
+          <Cultivar>
+            <Name>Wakanui</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 4</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Rongotea</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
+          </Cultivar>
+        </CultivarFolder>
+        <CultivarFolder>
+          <Name>Australia</Name>
+          <Cultivar>
+            <Name>GattonHartog</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>h45</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 1.5</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Hartog</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Gamenya</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.6</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 2.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Spear</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
+            <Command>[Phenology].GrainFilling.Target.Value = 580</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Gutha</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Wilgoyne</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.4</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 1.8</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
+            <Command>[Phenology].GrainFilling.Target.Value = 580</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>BattenWinter</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Bolac</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>EGAGregory</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 2.7</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Kelallac</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Mckellar</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Kennedy</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Derrimut</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Janz</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Gladius</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Ventura</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Young</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 2.3</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Yitpi</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Ruby</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 2.3</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Wyalkatchem</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 2.3</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Wedgetail</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 3.9</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.9</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>H46</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 1.5</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Mercury</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 2.5</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Gregory</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 2.7</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Livingston</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 2.3</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>ega_gregory</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 2.7</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>hartog1</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+          </Cultivar>
+        </CultivarFolder>
+      </CultivarFolder>
       <CropType>Wheat</CropType>
     </Plant>
     <Plant>
@@ -2627,7 +2631,6 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <VariableName>[Maize].Population</VariableName>
           </VariableReference>
         </DivideFunction>
-        <BiomassRemovalDefaults />
         <RipeStage />
       </ReproductiveOrgan>
       <Root>
@@ -2776,7 +2779,6 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
           <Start>Germination</Start>
           <End>Maturity</End>
         </PhaseBasedSwitch>
-        <BiomassRemovalDefaults />
         <InitialDM>0.2</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <KNO3_yProperty>
@@ -3308,7 +3310,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
           </VariableReference>
         </MinimumFunction>
-        <BiomassRemovalDefaults />
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -3396,7 +3397,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>DMRetranslocationFactor</Name>
           <Value>0.1</Value>
         </Constant>
-        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Rachis</Name>
@@ -3504,7 +3504,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </XYPairs>
           <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
         </LinearInterpolationFunction>
-        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -3637,7 +3636,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>

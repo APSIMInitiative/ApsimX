@@ -118,7 +118,7 @@ namespace Models.PMF
             get
             {
                 List<Cultivar> cultivars = new List<Cultivar>();
-                foreach (Model model in Apsim.Children(this, typeof(Cultivar)))
+                foreach (Model model in Apsim.ChildrenRecursively(this, typeof(Cultivar)))
                 {
                     cultivars.Add(model as Cultivar);
                 }
@@ -343,21 +343,8 @@ namespace Models.PMF
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
-                if (child is Cultivar)
-                {
-                }
-                else
-                    child.Document(tags, headingLevel + 1, indent);
-            }
-
-            // now write all cultivars in a list.
-            tags.Add(new AutoDocumentation.Heading("Cultivars", headingLevel+1));
-            tags.Add(new AutoDocumentation.Paragraph("The section below lists each of the cultivars currently included in the model and each of the parameters that they differ from the base model", indent));
-            foreach (IModel child in Apsim.Children(this, typeof(Cultivar)))
-                child.Document(tags, headingLevel+2, indent);
+                child.Document(tags, headingLevel + 1, indent);
         }
     }
 }
