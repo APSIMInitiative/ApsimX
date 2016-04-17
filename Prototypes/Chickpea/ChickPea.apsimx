@@ -3868,45 +3868,45 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
         <AcceptedStats>
           <RegrStats>
             <Name>FloweringDAS</Name>
-            <n>59</n>
-            <Slope>0.6325154081541271</Slope>
-            <Intercept>8.5547882647533484</Intercept>
-            <SEslope>0.059362553637661263</SEslope>
-            <SEintercept>4.5699313615584494</SEintercept>
-            <R2>0.66575125741553609</R2>
-            <RMSE>22.424650324688631</RMSE>
-            <NSE>-0.075730779814047189</NSE>
-            <ME>-18.596779661016956</ME>
-            <MAE>18.664576271186448</MAE>
-            <RSR>1.0283472442382744</RSR>
+            <n>46</n>
+            <Slope>0.81329674547481789</Slope>
+            <Intercept>16.230684702352612</Intercept>
+            <SEslope>0.067935351634228008</SEslope>
+            <SEintercept>5.4723677586403037</SEintercept>
+            <R2>0.7651076771287838</R2>
+            <RMSE>11.310497539426466</RMSE>
+            <NSE>0.75581110319808265</NSE>
+            <ME>1.811159420289842</ME>
+            <MAE>8.2801449275362327</MAE>
+            <RSR>0.48875396931750309</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainWt</Name>
-            <n>114</n>
-            <Slope>-0.13743629474328195</Slope>
-            <Intercept>362.7209378140505</Intercept>
-            <SEslope>0.060315425351608158</SEslope>
-            <SEintercept>15.561169585788909</SEintercept>
-            <R2>0.044304477118498942</R2>
-            <RMSE>178.25909850192423</RMSE>
-            <NSE>-1.4647151628922441</NSE>
-            <ME>99.214196367431427</ME>
-            <MAE>152.84812558220935</MAE>
-            <RSR>1.563040260020778</RSR>
+            <n>103</n>
+            <Slope>-0.086601122317594745</Slope>
+            <Intercept>384.41511112306239</Intercept>
+            <SEslope>0.055998474534454529</SEslope>
+            <SEintercept>13.022807031983644</SEintercept>
+            <R2>0.023131790505730221</R2>
+            <RMSE>187.38075223128709</RMSE>
+            <NSE>-3.3211877217489842</NSE>
+            <ME>151.4739110350109</ME>
+            <MAE>164.43854921548635</MAE>
+            <RSR>2.0686310552868177</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
-            <n>24</n>
-            <Slope>0.28820446606133571</Slope>
-            <Intercept>87.3451551331303</Intercept>
-            <SEslope>0.085688012536386415</SEslope>
-            <SEintercept>9.0977745118177289</SEintercept>
-            <R2>0.33958862646084831</R2>
-            <RMSE>17.073274192921129</RMSE>
-            <NSE>-0.42915086012052384</NSE>
-            <ME>12.458333333333329</ME>
-            <MAE>12.754999999999996</MAE>
-            <RSR>1.1703003493187132</RSR>
+            <n>16</n>
+            <Slope>0.44628819974415268</Slope>
+            <Intercept>88.870277319774914</Intercept>
+            <SEslope>0.15162591639509104</SEslope>
+            <SEintercept>17.256134625605927</SEintercept>
+            <R2>0.38226150231598044</R2>
+            <RMSE>27.0252055958877</RMSE>
+            <NSE>-7.9016833083341922</NSE>
+            <ME>26.053749999999994</ME>
+            <MAE>26.053749999999994</MAE>
+            <RSR>2.8888281536919611</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
