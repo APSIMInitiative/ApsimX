@@ -93,7 +93,7 @@ Robertson et al (2002) described early post-emergent chickpea development in ter
               </X>
               <Y>
                 <double>33</double>
-                <double>16</double>
+                <double>12</double>
               </Y>
             </XYPairs>
             <XProperty>[Phenology].Photoperiod.Value</XProperty>
@@ -350,6 +350,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <SetEvent>Maturity</SetEvent>
           <ReSetEvent>never</ReSetEvent>
         </OnEventFunction>
+        <AddFunction>
+          <Name>FinalNodeNo</Name>
+          <VariableReference>
+            <Name>NodeAtFirstFlower</Name>
+            <VariableName>[Phenology].NFF.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>FloweringNodes</Name>
+            <VariableName>[Phenology].FN.Value</VariableName>
+          </VariableReference>
+        </AddFunction>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -357,19 +368,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>ThermalTime</Name>
           <VariableName>[Phenology].ThermalTime.Value</VariableName>
         </VariableReference>
-        <PhaseLookupValue>
-          <Name>MainStemPrimordiaInitiationRate</Name>
-          <Constant>
-            <Name>Function</Name>
-            <Value>46</Value>
-          </Constant>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
-          <Start>Emergence</Start>
-          <End>EndFlowering</End>
-        </PhaseLookupValue>
         <Constant>
           <Name>DroughtInducedBranchMortality</Name>
           <Value>0</Value>
@@ -576,346 +574,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Potential_Branching_Rate</Name>
             <XYPairs>
               <Name>XYPairs</Name>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>Potential_Branching_Rate</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>Potential_Branching_Rate</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>Potential_Branching_Rate</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>Potential_Branching_Rate</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>Potential_Branching_Rate</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>Potential_Branching_Rate</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>Potential_Branching_Rate</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>Potential_Branching_Rate</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
               <X>
                 <double>0</double>
-                <double>7</double>
+                <double>6</double>
                 <double>8</double>
+                <double>10</double>
                 <double>30</double>
                 <double>31</double>
               </X>
@@ -923,7 +586,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>0</double>
                 <double>0</double>
                 <double>1</double>
-                <double>2</double>
+                <double>1</double>
+                <double>1</double>
                 <double>0</double>
               </Y>
             </XYPairs>
@@ -1262,32 +926,56 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>BranchMortality</Name>
           <Value>0</Value>
         </Constant>
+        <VariableReference>
+          <Name>MainStemPrimordiaInitiationRate</Name>
+          <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+        </VariableReference>
         <PhaseLookup>
           <Name>MainStemNodeAppearanceRate</Name>
           <PhaseLookupValue>
-            <Name>Vegetative</Name>
+            <Name>PreEmergence</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>46</Value>
+              <Value>0</Value>
             </Constant>
-            <Start>Emergence</Start>
-            <End>StartFlowering</End>
+            <Start>Germination</Start>
+            <End>Emergence</End>
           </PhaseLookupValue>
           <PhaseLookupValue>
-            <Name>Flowering</Name>
-            <Constant>
-              <Name>Function</Name>
-              <Value>46</Value>
-            </Constant>
-            <Start>StartFlowering</Start>
+            <Name>CanopyDevelopment</Name>
+            <LinearInterpolationFunction>
+              <Name>MainStemNodeAppearanceRate</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>1</double>
+                  <double>2</double>
+                  <double>3</double>
+                  <double>4</double>
+                  <double>30</double>
+                </X>
+                <Y>
+                  <double>20</double>
+                  <double>20</double>
+                  <double>20</double>
+                  <double>50</double>
+                  <double>50</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Structure].MainStemNodeNo</XProperty>
+            </LinearInterpolationFunction>
+            <Start>Emergence</Start>
             <End>EndFlowering</End>
           </PhaseLookupValue>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[
-Robertson et al (2002) used a constant phyllochron of 46 degree days.
-]]></MemoText>
-          </Memo>
+          <PhaseLookupValue>
+            <Name>Reproductive</Name>
+            <Constant>
+              <Name>Function</Name>
+              <Value>0</Value>
+            </Constant>
+            <Start>EndFlowering</Start>
+            <End>Maturity</End>
+          </PhaseLookupValue>
         </PhaseLookup>
         <InitialiseStage>Emergence</InitialiseStage>
         <PrimaryBudNo>0</PrimaryBudNo>
@@ -2374,307 +2062,28 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
               <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
             </VariableReference>
           </MultiplyFunction>
-          <LinearInterpolationFunction>
+          <MultiplyFunction>
             <Name>LagDuration</Name>
-            <Memo>
-              <Name>Memo</Name>
-              <MemoText><![CDATA[
-]]></MemoText>
-            </Memo>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>LagDuration</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>LagDuration</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>LagDuration</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>LagDuration</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>LagDuration</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <X>
-                <double>1</double>
-                <double>4.5</double>
-                <double>4.75</double>
-                <double>5</double>
-                <double>6</double>
-              </X>
-              <Y>
-                <double>460</double>
-                <double>460</double>
-                <double>460</double>
-                <double>460</double>
-                <double>460</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Phenology].Stage</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
+            <Constant>
+              <Name>Multiplier</Name>
+              <Value>20</Value>
+            </Constant>
+            <VariableReference>
+              <Name>Phyllochron</Name>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+            </VariableReference>
+          </MultiplyFunction>
+          <MultiplyFunction>
             <Name>SenescenceDuration</Name>
-            <Memo>
-              <Name>Memo</Name>
-              <MemoText><![CDATA[]]></MemoText>
-            </Memo>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>SenescenceDuration</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[XYPairs].X</XFieldName>
-                  <YFieldName>[XYPairs].Y</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <X>
-                <double>1</double>
-                <double>5</double>
-                <double>5.5</double>
-                <double>6</double>
-              </X>
-              <Y>
-                <double>80</double>
-                <double>80</double>
-                <double>40</double>
-                <double>10</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Phenology].Stage</XProperty>
-          </LinearInterpolationFunction>
+            <Constant>
+              <Name>Multiplier</Name>
+              <Value>2</Value>
+            </Constant>
+            <VariableReference>
+              <Name>Phyllochron</Name>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+            </VariableReference>
+          </MultiplyFunction>
           <Constant>
             <Name>DetachmentLagDuration</Name>
             <Value>46</Value>
@@ -3735,9 +3144,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <string>[Grain].Dead</string>
         </Propertys>
       </CompositeBiomass>
-      <Cultivar>
-        <Name>Amethyst</Name>
-      </Cultivar>
       <Memo>
         <Name>References</Name>
         <MemoText><![CDATA[
@@ -3749,8 +3155,35 @@ Robertson, M.J., Carberry, P.S., Huth, N.I., Turpin, J.E., Probert, M.E., Poulto
 
 Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinum L.). Field Crops Research , 46, 41-59.]]></MemoText>
       </Memo>
+      <Cultivar>
+        <Name>Amethyst</Name>
+      </Cultivar>
+      <Cultivar>
+        <Name>Hashem</Name>
+        <Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.X = 11, 17</Command>
+        <Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.Y = 44, 12</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+      </Cultivar>
       <CropType>Chickpea</CropType>
     </Plant>
+    <Report>
+      <Name>HarvestReport</Name>
+      <ExperimentFactorNames />
+      <ExperimentFactorValues />
+      <VariableNames>
+        <string>[Clock].Today</string>
+        <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
+        <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
+        <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+        <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
+        <string>[Chickpea].AboveGround.Wt</string>
+        <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
+      </VariableNames>
+      <EventNames>
+        <string>[Chickpea].Harvesting</string>
+      </EventNames>
+    </Report>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
@@ -3774,46 +3207,74 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
         <Name>Tests</Name>
         <AcceptedStats>
           <RegrStats>
+            <Name>Chickpea.AboveGround.Wt</Name>
+            <n>64</n>
+            <Slope>0.268212443782214</Slope>
+            <Intercept>954.89373668971825</Intercept>
+            <SEslope>0.06358300196324497</SEslope>
+            <SEintercept>50.883276063434828</SEintercept>
+            <R2>0.22300010195443754</R2>
+            <RMSE>483.78471813932487</RMSE>
+            <NSE>-1.7666417612439278</NSE>
+            <ME>409.31757381466633</ME>
+            <MAE>434.51947248211042</MAE>
+            <RSR>1.6502766385441237</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Chickpea.Phenology.FinalNodeNo.Value</Name>
+            <n>24</n>
+            <Slope>0.854321597490486</Slope>
+            <Intercept>4.2553968104894118</Intercept>
+            <SEslope>0.18936478891764477</SEslope>
+            <SEintercept>6.3787832011797558</SEintercept>
+            <R2>0.48056540582095653</R2>
+            <RMSE>2.2474031334335365</RMSE>
+            <NSE>0.1185303936881541</NSE>
+            <ME>-0.63939751383026744</ME>
+            <MAE>1.6201442271259001</MAE>
+            <RSR>0.91909831141660381</RSR>
+          </RegrStats>
+          <RegrStats>
             <Name>FloweringDAS</Name>
-            <n>46</n>
-            <Slope>0.81329674547481789</Slope>
-            <Intercept>16.230684702352612</Intercept>
-            <SEslope>0.067935351634228008</SEslope>
-            <SEintercept>5.4723677586403037</SEintercept>
-            <R2>0.7651076771287838</R2>
-            <RMSE>11.310497539426466</RMSE>
-            <NSE>0.75581110319808265</NSE>
-            <ME>1.811159420289842</ME>
-            <MAE>8.2801449275362327</MAE>
-            <RSR>0.48875396931750309</RSR>
+            <n>242</n>
+            <Slope>0.829938846516995</Slope>
+            <Intercept>10.951225084772702</Intercept>
+            <SEslope>0.014814755621520211</SEslope>
+            <SEintercept>1.7382335402885818</SEintercept>
+            <R2>0.92895968070856072</R2>
+            <RMSE>13.390748699554441</RMSE>
+            <NSE>0.87413363132787769</NSE>
+            <ME>-7.941639118457303</ME>
+            <MAE>10.37111570247934</MAE>
+            <RSR>0.35404273712458395</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainWt</Name>
-            <n>103</n>
-            <Slope>-0.0844620709874299</Slope>
-            <Intercept>529.44560731312083</Intercept>
-            <SEslope>0.067423825314639321</SEslope>
-            <SEintercept>15.679846169568066</SEintercept>
-            <R2>0.015299577053726865</R2>
-            <RMSE>318.54941802167639</RMSE>
-            <NSE>-11.488400247769102</NSE>
-            <ME>296.96296848887141</ME>
-            <MAE>297.56075131727647</MAE>
-            <RSR>3.5166964104713148</RSR>
+            <n>281</n>
+            <Slope>-0.47273901910778487</Slope>
+            <Intercept>952.99591985160873</Intercept>
+            <SEslope>0.07212985456572478</SEslope>
+            <SEintercept>15.154329701908297</SEintercept>
+            <R2>0.13341901723159255</R2>
+            <RMSE>715.89946863287685</RMSE>
+            <NSE>-43.9825982187543</NSE>
+            <ME>686.48485134720443</ME>
+            <MAE>686.48485134720443</MAE>
+            <RSR>6.6949621207327965</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
-            <n>16</n>
-            <Slope>0.44628819974415268</Slope>
-            <Intercept>88.870277319774914</Intercept>
-            <SEslope>0.15162591639509104</SEslope>
-            <SEintercept>17.256134625605927</SEintercept>
-            <R2>0.38226150231598044</R2>
-            <RMSE>27.0252055958877</RMSE>
-            <NSE>-7.9016833083341922</NSE>
-            <ME>26.053749999999994</ME>
-            <MAE>26.053749999999994</MAE>
-            <RSR>2.8888281536919611</RSR>
+            <n>179</n>
+            <Slope>0.68667746302196042</Slope>
+            <Intercept>55.0354676759959</Intercept>
+            <SEslope>0.015146470613431733</SEslope>
+            <SEintercept>2.5986543868852818</SEintercept>
+            <R2>0.92071083813297983</R2>
+            <RMSE>18.45702249360955</RMSE>
+            <NSE>0.856088680705675</NSE>
+            <ME>3.4860335195530721</ME>
+            <MAE>15.480446927374302</MAE>
+            <RSR>0.37829531512235082</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -3838,6 +3299,53 @@ Simulation results for the combined datasets from the various growing regions ar
     <Map>
       <Name>Map</Name>
     </Map>
+    <Graph>
+      <Name>FloweringDate</Name>
+      <Series>
+        <Name>Series1</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.FloweringDAS</XFieldName>
+        <YFieldName>Predicted.FloweringDAS</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
     <Graph>
       <Name>GrainWt</Name>
       <Series>
@@ -3886,7 +3394,7 @@ Simulation results for the combined datasets from the various growing regions ar
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>FloweringDate</Name>
+      <Name>Biomass</Name>
       <Series>
         <Name>Series1</Name>
         <Regression>
@@ -3905,9 +3413,9 @@ Simulation results for the combined datasets from the various growing regions ar
         <Line>None</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.FloweringDAS</XFieldName>
-        <YFieldName>Predicted.FloweringDAS</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
+        <XFieldName>Observed.Chickpea.AboveGround.Wt</XFieldName>
+        <YFieldName>Predicted.Chickpea.AboveGround.Wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -4480,6 +3988,7 @@ A selection of data from Kenya has been included from the work of Keating et al 
                 <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
                 <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
+                <string>[Chickpea].AboveGround.Wt</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -5356,7 +4865,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
@@ -5377,7 +4886,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>Circle</Marker>
@@ -5420,7 +4929,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
@@ -5441,7 +4950,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
@@ -11940,7 +11449,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
           <Clock>
             <Name>clock</Name>
             <StartDate>1998-11-01T00:00:00</StartDate>
-            <EndDate>1999-03-01T00:00:00</EndDate>
+            <EndDate>1999-04-15T00:00:00</EndDate>
           </Clock>
           <Summary>
             <Name>summaryfile</Name>
@@ -17904,6 +17413,53 @@ namespace Models
           </Graph>
         </Folder>
       </Experiment>
+      <Graph>
+        <Name>FloweringDate</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FloweringDAS</XFieldName>
+          <YFieldName>Predicted.FloweringDAS</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
     </Folder>
     <Folder>
       <Name>New South Wales</Name>
@@ -27936,7 +27492,7 @@ namespace Models
               <Name>S1PD1</Name>
               <Script>
                 <SowDate>5-Jan</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>15</Population>
@@ -27994,7 +27550,7 @@ namespace Models
               <Name>S1PD2</Name>
               <Script>
                 <SowDate>5-Jan</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>30</Population>
@@ -28052,7 +27608,7 @@ namespace Models
               <Name>S1PD3</Name>
               <Script>
                 <SowDate>5-Jan</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>45</Population>
@@ -28110,7 +27666,7 @@ namespace Models
               <Name>S1PD4</Name>
               <Script>
                 <SowDate>5-Jan</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>60</Population>
@@ -28168,7 +27724,7 @@ namespace Models
               <Name>S2PD1</Name>
               <Script>
                 <SowDate>6-mar</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>15</Population>
@@ -28226,7 +27782,7 @@ namespace Models
               <Name>S2PD2</Name>
               <Script>
                 <SowDate>6-mar</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>30</Population>
@@ -28284,7 +27840,7 @@ namespace Models
               <Name>S2PD3</Name>
               <Script>
                 <SowDate>6-mar</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>45</Population>
@@ -28342,7 +27898,7 @@ namespace Models
               <Name>S2PD4</Name>
               <Script>
                 <SowDate>6-mar</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>60</Population>
@@ -28400,7 +27956,7 @@ namespace Models
               <Name>S3PD1</Name>
               <Script>
                 <SowDate>28-apr</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>15</Population>
@@ -28458,7 +28014,7 @@ namespace Models
               <Name>S3PD2</Name>
               <Script>
                 <SowDate>28-apr</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>30</Population>
@@ -28516,7 +28072,7 @@ namespace Models
               <Name>S3PD3</Name>
               <Script>
                 <SowDate>28-apr</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>45</Population>
@@ -28574,7 +28130,7 @@ namespace Models
               <Name>S3PD4</Name>
               <Script>
                 <SowDate>28-apr</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>60</Population>
@@ -28757,6 +28313,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
                 <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
                 <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
+                <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -28920,7 +28477,7 @@ namespace Models
               <Name>SowingRule</Name>
               <Script>
                 <SowDate>24-Jul</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>750</RowSpacing>
                 <Population>6</Population>
@@ -29620,7 +29177,7 @@ namespace Models
               <Name>S1PD1</Name>
               <Script>
                 <SowDate>6-dec</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>300</RowSpacing>
                 <Population>15</Population>
@@ -29678,7 +29235,7 @@ namespace Models
               <Name>S1PD2</Name>
               <Script>
                 <SowDate>6-dec</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>300</RowSpacing>
                 <Population>30</Population>
@@ -29736,7 +29293,7 @@ namespace Models
               <Name>S1PD3</Name>
               <Script>
                 <SowDate>6-dec</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>300</RowSpacing>
                 <Population>45</Population>
@@ -29794,7 +29351,7 @@ namespace Models
               <Name>S1PD4</Name>
               <Script>
                 <SowDate>6-dec</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>300</RowSpacing>
                 <Population>60</Population>
@@ -29852,7 +29409,7 @@ namespace Models
               <Name>S2PD1</Name>
               <Script>
                 <SowDate>20-jan</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>300</RowSpacing>
                 <Population>15</Population>
@@ -29910,7 +29467,7 @@ namespace Models
               <Name>S2PD2</Name>
               <Script>
                 <SowDate>20-jan</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>300</RowSpacing>
                 <Population>30</Population>
@@ -29968,7 +29525,7 @@ namespace Models
               <Name>S2PD3</Name>
               <Script>
                 <SowDate>20-jan</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>300</RowSpacing>
                 <Population>45</Population>
@@ -30026,7 +29583,7 @@ namespace Models
               <Name>S2PD4</Name>
               <Script>
                 <SowDate>20-jan</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>300</RowSpacing>
                 <Population>60</Population>
@@ -30084,7 +29641,7 @@ namespace Models
               <Name>S3PD1</Name>
               <Script>
                 <SowDate>21-mar</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>300</RowSpacing>
                 <Population>15</Population>
@@ -30142,7 +29699,7 @@ namespace Models
               <Name>S3PD2</Name>
               <Script>
                 <SowDate>21-mar</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>300</RowSpacing>
                 <Population>30</Population>
@@ -30200,7 +29757,7 @@ namespace Models
               <Name>S3PD3</Name>
               <Script>
                 <SowDate>21-mar</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>300</RowSpacing>
                 <Population>45</Population>
@@ -30258,7 +29815,7 @@ namespace Models
               <Name>S3PD4</Name>
               <Script>
                 <SowDate>21-mar</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>300</RowSpacing>
                 <Population>60</Population>
@@ -30441,6 +29998,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
                 <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
                 <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
+                <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -30604,7 +30162,7 @@ namespace Models
               <Name>SowingRule</Name>
               <Script>
                 <SowDate>24-Jul</SowDate>
-                <CultivarName>Amethyst</CultivarName>
+                <CultivarName>Hashem</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>750</RowSpacing>
                 <Population>6</Population>
@@ -31304,63 +30862,63 @@ namespace Models
               <Name>1</Name>
               <Operation>
                 <Date>2001-12-12T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>2</Name>
               <Operation>
                 <Date>2002-01-02T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>3</Name>
               <Operation>
                 <Date>2002-02-13T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>4</Name>
               <Operation>
                 <Date>2002-03-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>5</Name>
               <Operation>
                 <Date>2002-04-16T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>6</Name>
               <Operation>
                 <Date>2002-05-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>7</Name>
               <Operation>
                 <Date>2002-09-22T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>8</Name>
               <Operation>
                 <Date>2002-10-14T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>9</Name>
               <Operation>
                 <Date>2002-11-02T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Specifications>
@@ -31452,7 +31010,7 @@ namespace Models
               <Name>SowingRule</Name>
               <Operation>
                 <Date>1992-05-07T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:40, cultivar:"Amethyst", depth:50, rowSpacing:150);</Action>
+                <Action> [Chickpea].Sow(population:40, cultivar:"Hashem", depth:50, rowSpacing:150);</Action>
               </Operation>
             </Operations>
             <Report>
@@ -31489,6 +31047,7 @@ namespace Models
                 <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
                 <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
+                <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -32254,63 +31813,63 @@ namespace Models
               <Name>1</Name>
               <Operation>
                 <Date>2001-12-12T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>2</Name>
               <Operation>
                 <Date>2002-01-02T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>3</Name>
               <Operation>
                 <Date>2002-02-13T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>4</Name>
               <Operation>
                 <Date>2002-03-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>5</Name>
               <Operation>
                 <Date>2002-04-16T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>6</Name>
               <Operation>
                 <Date>2002-05-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>7</Name>
               <Operation>
                 <Date>2002-09-15T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>8</Name>
               <Operation>
                 <Date>2002-10-14T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>9</Name>
               <Operation>
                 <Date>2002-11-02T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Specifications>
@@ -32402,7 +31961,7 @@ namespace Models
               <Name>SowingRule</Name>
               <Operation>
                 <Date>1992-05-07T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:40, cultivar:"Amethyst", depth:50, rowSpacing:150);</Action>
+                <Action> [Chickpea].Sow(population:40, cultivar:"Hashem", depth:50, rowSpacing:150);</Action>
               </Operation>
             </Operations>
             <Report>
@@ -32439,6 +31998,7 @@ namespace Models
                 <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
                 <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
+                <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -33194,6 +32754,190 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
       </Experiment>
+      <Graph>
+        <Name>FloweringDate</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FloweringDAS</XFieldName>
+          <YFieldName>Predicted.FloweringDAS</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>FloweringVsLeafNo</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Chickpea.Phenology.FinalNodeNo.Value</XFieldName>
+          <YFieldName>FloweringDAS</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>FinalNodeNumber</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.Chickpea.Phenology.FinalNodeNo.Value</XFieldName>
+          <YFieldName>Predicted.Chickpea.Phenology.FinalNodeNo.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Biomass</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.Chickpea.AboveGround.Wt</XFieldName>
+          <YFieldName>Predicted.Chickpea.AboveGround.Wt</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
     </Folder>
   </Folder>
   <ExplorerWidth>346</ExplorerWidth>
