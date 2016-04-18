@@ -660,6 +660,8 @@ namespace Models
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
         private void ProcessMonthlyTAVAMP(out double tav, out double amp)
         {
+            int savedPosition = reader.GetCurrentPosition();
+
             // init return values
             tav = 0;
             amp = 0;
@@ -733,7 +735,7 @@ namespace Models
             tav = yearlySumMeans / nyears;  // calc the ave of the yearly ave means
             amp = yearlySumAmp / nyears;    // calc the ave of the yearly amps
 
-            this.reader.SeekToDate(start.AddDays(1)); // goto start of data set
+            reader.SeekToPosition(savedPosition);
         }
 
         /// <summary>
