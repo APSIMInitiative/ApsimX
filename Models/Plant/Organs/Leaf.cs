@@ -1079,6 +1079,11 @@ namespace Models.PMF.Organs
         {
             foreach (LeafCohort L in Leaves)
                 L.DoBiomassRemoval(value);
+
+            double TotalFracRemoved = value.FractionRemoved + value.FractionToResidue;
+            double PcToResidue = value.FractionToResidue / TotalFracRemoved * 100;
+            double PcRemoved = value.FractionRemoved / TotalFracRemoved * 100;
+            Summary.WriteMessage(this, "Removing " + TotalFracRemoved * 100 + "% of " + Name + " Biomass from " + Plant.Name + ".  Of this " + PcRemoved + "% is removed from the system and " + PcToResidue + "% is returned to the surface organic matter");
         }
 
         /// <summary>

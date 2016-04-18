@@ -294,27 +294,27 @@ namespace Models.PMF
                 allData.removalData.Add(organ.Name, biomassRemoved);
             }
 
+            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType + "ing"));
+
             // Invoke an event.
             if (biomassRemoveType == "Harvest" && Harvesting != null)
                 Harvesting.Invoke(this, new EventArgs());
             else if (RemovingBiomass != null)
                 RemovingBiomass.Invoke(this, allData);
-
-            // Reset the phenology if necessary.
-            if (removalData != null && removalData.SetPhenologyStage != 0)
-                Phenology.ReSetToStage(removalData.SetPhenologyStage);
-
-            // Reduce plant and stem population if thinning proportion specified
-            if (removalData != null && removalData.SetThinningProportion != 0)
-                Structure.doThin(removalData.SetThinningProportion);
-
+            
             // Remove the biomass
             foreach (IOrgan organ in Organs)
             {
                 organ.DoRemoveBiomass(allData.removalData[organ.Name]);
             }
 
-            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " due to " + biomassRemoveType));
+            // Reset the phenology if SetPhenologyStage specified.
+            if (removalData != null && removalData.SetPhenologyStage != 0)
+                Phenology.ReSetToStage(removalData.SetPhenologyStage);
+
+            // Reduce plant and stem population if thinning proportion specified
+            if (removalData != null && removalData.SetThinningProportion != 0)
+                Structure.doThin(removalData.SetThinningProportion);
         }
         
         /// <summary>End the crop.</summary>
