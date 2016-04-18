@@ -261,12 +261,11 @@ namespace UserInterface.Presenters
             view.ShowProgress(percent);
         }
 
-        /// <summary>
-        /// Close the APSIMX user interface
-        /// </summary>
-        public void Close()
+        /// <summary>Show the wait cursor</summary>
+        /// <param name="wait">If true will show the wait cursor otherwise the normal cursor.</param>
+        public void ShowWaitCursor(bool wait)
         {
-            this.view.Close();
+            view.ShowWaitCursor(wait);
         }
 
         /// <summary>A helper function that asks user for a folder.</summary>

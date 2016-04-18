@@ -855,6 +855,34 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
     <EmbeddedResource Include="Resources\MenuImages\Upgrade.png" />
     <EmbeddedResource Include="Resources\AIBanner.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Wheat.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Pasture.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Canola.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Canopy.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Chickpea.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Cotton.png" />
+    <EmbeddedResource Include="Resources\LargeImages\forestry.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Bean.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Grass.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Horsegram.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Lucerne.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Lupin.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Maize.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Millet.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Oats.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Oilpalm.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Peanut.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Potato.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Rice.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Slurp.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Sorghum.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Soybean.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Sugar.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Swim.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Arbitrator.png" />
+    <EmbeddedResource Include="Resources\LargeImages\BiomassRemoval.png" />
+    <EmbeddedResource Include="Resources\LargeImages\EGrandis.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Fieldpea.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
   <ItemGroup>

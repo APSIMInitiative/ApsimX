@@ -182,7 +182,7 @@ namespace Utility
                     instance.PreviousFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 }
 
-                instance.FilesInHistory = 10;
+                instance.FilesInHistory = 20;
                 instance.ConfigurationFile = ConfigurationFile;
                 return instance;
             }

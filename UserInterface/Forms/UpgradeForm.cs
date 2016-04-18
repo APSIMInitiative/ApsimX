@@ -7,6 +7,7 @@ namespace UserInterface.Forms
 {
     using APSIM.Shared.Utilities;
     using global::UserInterface.Presenters;
+    using Views;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -42,15 +43,15 @@ namespace UserInterface.Forms
         /// <summary>
         /// Our explorer presenter.
         /// </summary>
-        private ExplorerPresenter explorerPresenter;
+        private ITabbedExplorerView tabbedExplorerView;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public UpgradeForm(ExplorerPresenter explorerPresenter)
+        public UpgradeForm(ITabbedExplorerView explorerPresenter)
         {
             InitializeComponent();
-            this.explorerPresenter = explorerPresenter;
+            this.tabbedExplorerView = explorerPresenter;
         }
 
         /// <summary>
@@ -171,8 +172,6 @@ namespace UserInterface.Forms
                     {
                         Cursor.Current = Cursors.WaitCursor;
 
-                        explorerPresenter.Save();
-
                         WebClient web = new WebClient();
 
                         string tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
@@ -220,7 +219,7 @@ namespace UserInterface.Forms
 
                             // Shutdown the user interface
                             Close();
-                            explorerPresenter.Close();
+                            tabbedExplorerView.Close();
                         }
                     }
                 }
