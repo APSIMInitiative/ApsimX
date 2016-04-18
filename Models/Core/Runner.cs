@@ -111,8 +111,17 @@
 
                     if (model is Simulation)
                     {
-                        simulationsToRun = new Simulation[1] { Apsim.Clone(model as Simulation) as Simulation };
-                        Simulations.CallOnLoaded(simulationsToRun[0]);
+                        if (model.Parent == null)
+                        {
+                            // model is already a cloned simulation, probably from user running a single 
+                            // simulation from an experiment.
+                            simulationsToRun = new Simulation[1] { model as Simulation };
+                        }
+                        else
+                        {
+                            simulationsToRun = new Simulation[1] { Apsim.Clone(model as Simulation) as Simulation };
+                            Simulations.CallOnLoaded(simulationsToRun[0]);
+                        }
                     }
                     else
                         simulationsToRun = Simulations.FindAllSimulationsToRun(model);
