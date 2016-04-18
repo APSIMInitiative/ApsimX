@@ -172,7 +172,11 @@ namespace Models.PMF.Organs
                     throw new Exception("The sum of FractionToResidue and FractionRemoved sent with your " + "!!!!PLACE HOLDER FOR EVENT SENDER!!!!" + " is greater than 1.  Had this execption not triggered you would be removing more biomass from " + Name + " than there is to remove");
             if (RemainFrac < 1)
             {
-                Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name + " removing " + value.FractionRemoved * 100 + "% and returning " + value.FractionToResidue * 100 + "% to the surface organic matter");
+                double TotalFracRemoved = value.FractionRemoved + value.FractionToResidue;
+                double PcToResidue = value.FractionToResidue / TotalFracRemoved * 100;
+                double PcRemoved = value.FractionRemoved / TotalFracRemoved * 100;
+                Summary.WriteMessage(this, "Removing " + TotalFracRemoved * 100 + "% of " + Name + " Biomass from " + Plant.Name + ".  Of this " + PcRemoved + "% is removed from the system and " + PcToResidue + "% is returned to the surface organic matter");
+
                 SurfaceOrganicMatter.Add(Wt * 10 * value.FractionToResidue, N * 10 * value.FractionToResidue, 0, Plant.CropType, Name);
                 if (Live.StructuralWt > 0)
                     Live.StructuralWt *= RemainFrac;

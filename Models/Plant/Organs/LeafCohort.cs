@@ -1048,6 +1048,57 @@ namespace Models.PMF.Organs
                 }
             }
         }
+        /// <summary>Removes leaf area and biomass on thinning event</summary>
+        /// <param name="value">The fraction.</param>
+        virtual public void DoBiomassRemoval(OrganBiomassRemovalType value)
+        {
+            if (IsInitialised)
+            {
+                LiveArea *= (1 - (value.FractionToResidue + value.FractionRemoved));
+
+                double WtToResidue = 0;
+
+                WtToResidue += Dead.StructuralWt * value.FractionToResidue;
+                Dead.StructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                WtToResidue += Live.StructuralWt * value.FractionToResidue;
+                Live.StructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
+
+                WtToResidue += Dead.NonStructuralWt * value.FractionToResidue;
+                Dead.NonStructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                WtToResidue += Live.NonStructuralWt * value.FractionToResidue;
+                Live.NonStructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
+
+                WtToResidue += Dead.MetabolicWt * value.FractionToResidue;
+                Dead.MetabolicWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                WtToResidue += Live.MetabolicWt * value.FractionToResidue;
+                Live.MetabolicWt *= (1 - (value.FractionToResidue + value.FractionRemoved)); ;
+
+                double NToResidue = 0;
+
+                NToResidue += Dead.StructuralN * value.FractionToResidue;
+                Dead.StructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                NToResidue += Live.StructuralN * value.FractionToResidue;
+                Live.StructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
+
+                NToResidue += Dead.NonStructuralN * value.FractionToResidue;
+                Dead.NonStructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                NToResidue += Live.NonStructuralN * value.FractionToResidue;
+                Live.NonStructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
+
+                NToResidue += Dead.MetabolicN * value.FractionToResidue;
+                Dead.MetabolicN *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                NToResidue += Live.MetabolicN * value.FractionToResidue;
+                Live.MetabolicN *= (1 - (value.FractionToResidue + value.FractionRemoved)); ;
+
+                SurfaceOrganicMatter.Add(WtToResidue * 10, NToResidue * 10, 0, Plant.CropType, Name);
+            }
+        }
+        /// <summary>Removes leaves for cohort due to thin event.  </summary>
+        /// <param name="ProportionRemoved">The fraction.</param>
+        virtual public void DoThin(double ProportionRemoved)
+        {
+            CohortPopulation *= (1- ProportionRemoved);;
+        }
         /// <summary>Does the kill.</summary>
         /// <param name="fraction">The fraction.</param>
         virtual public void DoKill(double fraction)
