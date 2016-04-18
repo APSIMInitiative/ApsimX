@@ -304,9 +304,9 @@ namespace Models.PMF
             if (removalData != null && removalData.SetPhenologyStage != 0)
                 Phenology.ReSetToStage(removalData.SetPhenologyStage);
 
-            // Reduce plant and stem population if thin event
-            if (biomassRemoveType == "Thin")
-                Structure.doThin(allData.removalData["Leaf"].FractionRemoved);
+            // Reduce plant and stem population if thinning proportion specified
+            if (removalData != null && removalData.SetThinningProportion != 0)
+                Structure.doThin(removalData.SetThinningProportion);
 
             // Remove the biomass
             foreach (IOrgan organ in Organs)

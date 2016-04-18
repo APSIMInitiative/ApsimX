@@ -221,6 +221,10 @@
         /// The list of BiomassRemovalTypes for each organ
         ///</summary>
         private Dictionary<string, OrganBiomassRemovalType> removalValues = new Dictionary<string, OrganBiomassRemovalType>();
+        /// <summary>
+        /// The Phenological stage that biomass removal resets phenology to.
+        ///</summary>
+        public double SetThinningProportion { get; set; }
 
         /// <summary>
         /// The Phenological stage that biomass removal resets phenology to.

@@ -1078,9 +1078,20 @@ namespace Models.PMF.Organs
         public override void DoRemoveBiomass(OrganBiomassRemovalType value)
         {
             foreach (LeafCohort L in Leaves)
-                L.DoBiomassRemoval(value.FractionRemoved);
+                L.DoBiomassRemoval(value);
+        }
+
+        /// <summary>
+        /// remove population elements from the leaf.
+        /// </summary>
+        /// <param name="ProportionRemoved">The proportion of stems removed by thinning</param>
+        public void DoThin(double ProportionRemoved)
+        {
+            foreach (LeafCohort L in Leaves)
+                L.DoThin(ProportionRemoved);
         }
         #endregion
+
 
         #region Arbitrator methods
 

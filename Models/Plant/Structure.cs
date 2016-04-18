@@ -497,6 +497,7 @@ namespace Models.PMF
         {
             Plant.Population *= (1-ProportionRemoved);
             TotalStemPopn *= (1-ProportionRemoved);
+            Leaf.DoThin(ProportionRemoved);
         }
         #endregion
 

@@ -36377,11 +36377,17 @@ namespace Models
 			if (Clock.Today.Date == NibblingDate)
 			{
 				//Harvest with manager specified removal fractions
-				Remove.SetFractionRemoved("Grain", ProportionNibbled);
-				Remove.SetFractionRemoved("Leaf", ProportionNibbled);
-				Remove.SetFractionToResidue("Spike", ProportionNibbled);
+				Remove.SetFractionRemoved("Grain", 0);
+				Remove.SetFractionRemoved("Leaf", 0);
+				Remove.SetFractionRemoved("Stem", 0);
+				Remove.SetFractionRemoved("Spike", 0);
+				Remove.SetFractionRemoved("Root", 0);
+				Remove.SetFractionToResidue("Grain", ProportionNibbled);
+				Remove.SetFractionToResidue("Leaf", ProportionNibbled);
 				Remove.SetFractionToResidue("Stem", ProportionNibbled);
+				Remove.SetFractionToResidue("Spike", ProportionNibbled);
 				Remove.SetFractionToResidue("Root", 0);
+				Remove.SetThinningProportion = ProportionNibbled;
 				Wheat.RemoveBiomass("Thin", Remove);
 			}
 		}
@@ -36606,23 +36612,49 @@ namespace Models
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries>
-            <string>Damage0.00Stage2002-10-11</string>
-            <string>Damage0.05Stage2002-10-11</string>
-            <string>Damage0.10Stage2002-10-11</string>
-            <string>Damage0.25Stage2002-10-11</string>
-            <string>Damage0.50Stage2002-10-11</string>
-            <string>Damage0.00Stage2002-10-31</string>
-            <string>Damage0.05Stage2002-10-31</string>
-            <string>Damage0.10Stage2002-10-31</string>
-            <string>Damage0.25Stage2002-10-31</string>
-            <string>Damage0.50Stage2002-10-31</string>
-            <string>Damage0.00Stage2002-12-13</string>
-            <string>Damage0.05Stage2002-12-13</string>
-            <string>Damage0.10Stage2002-12-13</string>
-            <string>Damage0.25Stage2002-12-13</string>
-            <string>Damage0.50Stage2002-12-13</string>
-          </DisabledSeries>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Grain</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Grain.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
       </Experiment>
