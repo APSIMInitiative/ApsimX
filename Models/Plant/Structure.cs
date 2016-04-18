@@ -490,7 +490,14 @@ namespace Models.PMF
                 _Height = HeightModel.Value;
             }
         }
-        
+
+        /// <summary>Called when crop recieves a remove biomass event from manager</summary>
+        /// /// <param name="ProportionRemoved">The cultivar.</param>
+        public void doThin(double ProportionRemoved)
+        {
+            Plant.Population *= (1-ProportionRemoved);
+            TotalStemPopn *= (1-ProportionRemoved);
+        }
         #endregion
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

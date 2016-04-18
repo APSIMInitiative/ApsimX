@@ -304,9 +304,15 @@ namespace Models.PMF
             if (removalData != null && removalData.SetPhenologyStage != 0)
                 Phenology.ReSetToStage(removalData.SetPhenologyStage);
 
+            // Reduce plant and stem population if thin event
+            if (biomassRemoveType == "Thin")
+                Structure.doThin(allData.removalData["Leaf"].FractionRemoved);
+
             // Remove the biomass
             foreach (IOrgan organ in Organs)
+            {
                 organ.DoRemoveBiomass(allData.removalData[organ.Name]);
+            }
 
             Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " due to " + biomassRemoveType));
         }

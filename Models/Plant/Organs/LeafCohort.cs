@@ -1048,7 +1048,37 @@ namespace Models.PMF.Organs
                 }
             }
         }
-        /// <summary>Does the kill.</summary>
+        /// <summary>Removes leaf area and biomass on thinning event</summary>
+        /// <param name="fraction">The fraction.</param>
+        virtual public void DoBiomassRemoval(double fraction)
+        {
+            if (IsInitialised)
+            {
+                double change;
+                change = LiveArea * fraction;
+                LiveArea -= change;
+                DeadArea += change;
+
+                change = Live.StructuralWt * fraction;
+                Live.StructuralWt -= change;
+                Dead.StructuralWt += change;
+
+                change = Live.NonStructuralWt * fraction;
+                Live.NonStructuralWt -= change;
+                Dead.NonStructuralWt += change;
+
+                change = Live.StructuralN * fraction;
+                Live.StructuralN -= change;
+                Dead.StructuralN += change;
+
+                change = Live.NonStructuralN * fraction;
+                Live.NonStructuralN -= change;
+                Dead.NonStructuralN += change;
+
+                CohortPopulation *= fraction;
+            }
+        }
+		        /// <summary>Does the kill.</summary>
         /// <param name="fraction">The fraction.</param>
         virtual public void DoKill(double fraction)
         {

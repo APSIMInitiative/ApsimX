@@ -1077,7 +1077,8 @@ namespace Models.PMF.Organs
         /// <param name="value">The biomass removal fractions</param>
         public override void DoRemoveBiomass(OrganBiomassRemovalType value)
         {
-            // TODO: Need to implement this.
+            foreach (LeafCohort L in Leaves)
+                L.DoBiomassRemoval(value.FractionRemoved);
         }
         #endregion
 

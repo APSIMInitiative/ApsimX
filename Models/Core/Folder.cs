@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Factorial;
+using Models.PMF.Interfaces;
 namespace Models.Core
 {
     /// <summary>
@@ -16,6 +17,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Folder))]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Experiment))]
+    [ValidParent(ParentType = typeof(IOrgan))]
     public class Folder : Model
     {
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
