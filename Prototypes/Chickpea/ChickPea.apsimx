@@ -1881,6 +1881,7 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
             <FractionToResidue>0</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <NFixationOption>Majic</NFixationOption>
       </Nodule>
       <GenericAboveGroundOrgan>
         <Name>Shell</Name>
@@ -3789,16 +3790,16 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>GrainWt</Name>
             <n>103</n>
-            <Slope>-0.086601122317594745</Slope>
-            <Intercept>384.41511112306239</Intercept>
-            <SEslope>0.055998474534454529</SEslope>
-            <SEintercept>13.022807031983644</SEintercept>
-            <R2>0.023131790505730221</R2>
-            <RMSE>187.38075223128709</RMSE>
-            <NSE>-3.3211877217489842</NSE>
-            <ME>151.4739110350109</ME>
-            <MAE>164.43854921548635</MAE>
-            <RSR>2.0686310552868177</RSR>
+            <Slope>-0.0844620709874299</Slope>
+            <Intercept>529.44560731312083</Intercept>
+            <SEslope>0.067423825314639321</SEslope>
+            <SEintercept>15.679846169568066</SEintercept>
+            <R2>0.015299577053726865</R2>
+            <RMSE>318.54941802167639</RMSE>
+            <NSE>-11.488400247769102</NSE>
+            <ME>296.96296848887141</ME>
+            <MAE>297.56075131727647</MAE>
+            <RSR>3.5166964104713148</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
@@ -23510,7 +23511,7 @@ namespace Models
           </Memo>
           <Weather>
             <Name>Weather</Name>
-            <FileName>Gorgan .met</FileName>
+            <FileName>Gorgan.met</FileName>
           </Weather>
           <Clock>
             <Name>clock</Name>
@@ -24214,7 +24215,7 @@ namespace Models
           </Memo>
           <Weather>
             <Name>Weather</Name>
-            <FileName>Gorgan .met</FileName>
+            <FileName>Gorgan.met</FileName>
           </Weather>
           <Clock>
             <Name>clock</Name>
