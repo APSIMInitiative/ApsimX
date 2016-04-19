@@ -192,6 +192,25 @@
         /// </summary>
         [Description("Fraction of biomass to remove from plant (and send to surface organic matter")]
         public double FractionToResidue { get; set; }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            double totalPercent = (FractionRemoved + FractionToResidue) * 100;
+
+            string text = "If a **" + Name.ToLower() + "** is performed and no fractions are specified then " + totalPercent + "% of " +
+                           Parent.Parent.Name.ToLower() + " biomass will be removed";
+            if (FractionToResidue == 0)
+                text += " with none of it going to the surface organic matter pool";
+            else if (FractionRemoved == 0)
+                text += " with all of it going to the surface organic matter pool";
+            else
+                text += " with " + (FractionToResidue * 100) + "% of it going to the surface organic matter pool";
+            tags.Add(new AutoDocumentation.Paragraph(text, indent));
+        }
     }
 
     ///<summary>Data structure to hold removal and residue returns fractions for all plant organs</summary>
@@ -202,6 +221,10 @@
         /// The list of BiomassRemovalTypes for each organ
         ///</summary>
         private Dictionary<string, OrganBiomassRemovalType> removalValues = new Dictionary<string, OrganBiomassRemovalType>();
+        /// <summary>
+        /// The Phenological stage that biomass removal resets phenology to.
+        ///</summary>
+        public double SetThinningProportion { get; set; }
 
         /// <summary>
         /// The Phenological stage that biomass removal resets phenology to.

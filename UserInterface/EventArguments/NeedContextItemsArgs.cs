@@ -12,8 +12,8 @@ namespace UserInterface.EventArguments
     using ICSharpCode.NRefactory.CSharp;
     using ICSharpCode.NRefactory;
     using System.Reflection;
-using Models.Core;
-using System.Text;
+    using Models.Core;
+    using System.Text;
     using APSIM.Shared.Utilities;
 
     /// <summary>
@@ -126,18 +126,13 @@ using System.Text;
         /// <summary>
         /// The view is asking for variable names for its intellisense.
         /// </summary>
-        public static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods, bool events)
+        private static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods, bool events)
         {
             List<ContextItem> allItems = ExamineTypeForContextItems(o.GetType(), properties, methods, events);
 
             // add in the child models.
             if (o != null && o is IModel)
             {
-                // See if object is under replacements.
-                IModel replacementModel =  Apsim.Get(o as IModel, ".Simulations.Replacements." + (o as IModel).Name) as IModel;
-                if (replacementModel != null)
-                    o = replacementModel;
-
                 foreach (IModel model in (o as IModel).Children)
                 {
                     if (allItems.Find(m => m.Name == model.Name) == null)
@@ -156,6 +151,35 @@ using System.Text;
                 allItems.Sort(delegate(ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
             }
             return allItems;
+        }
+
+        /// <summary>The view is asking for variable names.</summary>
+        public static List<ContextItem> ExamineModelForNames(IModel relativeTo, string objectName, bool properties, bool methods, bool events)
+        {
+            if (objectName == string.Empty)
+                objectName = ".";
+
+            object o = null;
+            IModel replacementModel = Apsim.Get(relativeTo, ".Simulations.Replacements") as IModel;
+            if (replacementModel != null)
+                o = Apsim.Get(replacementModel, objectName) as IModel;
+            
+            if (o == null)
+                o = Apsim.Get(relativeTo, objectName);
+            
+            if (o == null && relativeTo.Parent is Replacements)
+            {
+                // Model 'relativeTo' could be under replacements. Look for the first simulation and try that.
+                IModel simulation = Apsim.Find(relativeTo.Parent.Parent, typeof(Simulation));
+                o = Apsim.Get(simulation, objectName) as IModel;
+            }
+
+            if (o != null)
+            {
+                return NeedContextItemsArgs.ExamineObjectForContextItems(o, properties, methods, events);
+            }
+
+            return new List<ContextItem>();
         }
 
 

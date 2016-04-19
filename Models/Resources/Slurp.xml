@@ -114,22 +114,36 @@ This is important in SLURP as it is set for each species to represent their diff
         <FractionToResidue>0</FractionToResidue>
         <InitialDM>50</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
-        <KNO3_yProperty>
-          <double>0.02</double>
-          <double>0.02</double>
-        </KNO3_yProperty>
-        <KNO3_xRootLength>
-          <double>0</double>
-          <double>0.003</double>
-        </KNO3_xRootLength>
-        <KNH4_yProperty>
-          <double>0</double>
-          <double>0</double>
-        </KNH4_yProperty>
-        <KNH4_xRootLength>
-          <double>0</double>
-          <double>0.003</double>
-        </KNH4_xRootLength>
+        <LinearInterpolationFunction>
+          <Name>KNO3</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0.0</double>
+              <double>0.003</double>
+            </X>
+            <Y>
+              <double>0.02</double>
+              <double>0.02</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDenisty</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>KNH4</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.003</double>
+            </X>
+            <Y>
+              <double>0.00</double>
+              <double>0.00</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDenisty</XProperty>
+        </LinearInterpolationFunction>        
         <NuptakeSupply>0</NuptakeSupply>
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
@@ -237,7 +251,12 @@ This is important in SLURP as it is set for each species to represent their diff
           </Constant>
         </PartitionFractionDemandFunction>
         <Constant>
-          <Name>NConc</Name>
+          <Name>MaximumNConc</Name>
+          <Value>0.05</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
           <Value>0.05</Value>
           <Units>g/g</Units>
         </Constant>

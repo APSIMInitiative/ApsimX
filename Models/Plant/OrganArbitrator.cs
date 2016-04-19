@@ -476,7 +476,7 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.IsAlive)
+                if (Plant != null && Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
@@ -503,7 +503,7 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.IsAlive)
+                if (Plant != null && Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {

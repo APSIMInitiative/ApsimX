@@ -457,6 +457,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <FractionToResidue>0.2</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <Root>
         <Name>Root</Name>
@@ -611,24 +612,39 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <FractionToResidue>0.15</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <BiomassRemovalDefaults />
         <InitialDM>5</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
-        <KNO3_yProperty>
-          <double>0.02</double>
-          <double>0.02</double>
-        </KNO3_yProperty>
-        <KNO3_xRootLength>
-          <double>0</double>
-          <double>0.003</double>
-        </KNO3_xRootLength>
-        <KNH4_yProperty>
-          <double>0</double>
-          <double>0</double>
-        </KNH4_yProperty>
-        <KNH4_xRootLength>
-          <double>0</double>
-          <double>0.003</double>
-        </KNH4_xRootLength>
+        <LinearInterpolationFunction>
+          <Name>KNO3</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.003</double>
+            </X>
+            <Y>
+              <double>0.02</double>
+              <double>0.02</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDenisty</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>KNH4</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.003</double>
+            </X>
+            <Y>
+              <double>0.00</double>
+              <double>0.00</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDenisty</XProperty>
+        </LinearInterpolationFunction>        
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <Leaf>
@@ -839,6 +855,11 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Name>NonStructuralFraction</Name>
             <Value>0.2</Value>
           </Constant>
+          <Constant>
+            <Name>SenessingLeafRelativeSize</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -1036,6 +1057,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <FractionToResidue>0.1</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <BiomassRemovalDefaults />
         <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
         <StartFractionExpanded>0.83819041077407885</StartFractionExpanded>
         <FractionNextleafExpanded>0.92664093062319453</FractionNextleafExpanded>
@@ -1130,6 +1152,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <FractionToResidue>0.2</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -1868,6 +1891,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.AccumPlantN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -1888,6 +1912,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.AccumMineralisation</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -1908,6 +1933,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.AccumDenit</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -1928,6 +1954,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.AccumFert</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -1948,6 +1975,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.AccumLeach</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -1968,6 +1996,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.DeltaSoilOMN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -1988,6 +2017,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.DeltaSurfaceOMN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2008,6 +2038,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.DeltaSoilMineralN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2050,6 +2081,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.AccumEO</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2070,6 +2102,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.AccumEP</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2090,6 +2123,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.AccumES</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2110,6 +2144,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.AccumDrainage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2130,6 +2165,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.AccumRunoff</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2150,6 +2186,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.AccumRainfall</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2170,6 +2207,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.AccumIrrigation</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2190,6 +2228,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.AccumOutflowLat</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2210,6 +2249,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ExtraVariables.Script.SoilWaterDeficit</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2251,6 +2291,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2271,6 +2312,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Stem.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2291,6 +2333,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Tuber.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2311,6 +2354,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Root.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2331,6 +2375,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2351,6 +2396,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Stem.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2371,6 +2417,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Tuber.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2391,6 +2438,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Root.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2411,6 +2459,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2431,6 +2480,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.BelowGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2451,6 +2501,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Total.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2492,6 +2543,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.Live.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2512,6 +2564,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Stem.Live.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2532,6 +2585,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Tuber.Live.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2552,6 +2606,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Root.Live.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2572,6 +2627,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.Dead.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2592,6 +2648,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Stem.Dead.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2612,6 +2669,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Tuber.Dead.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2632,6 +2690,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Root.Dead.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2652,6 +2711,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.AboveGround.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2672,6 +2732,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.BelowGround.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2692,6 +2753,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Total.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2712,6 +2774,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.TotalLive.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2753,6 +2816,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.Photosynthesis.FT.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2773,6 +2837,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.Fn</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2793,6 +2858,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.Fw</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2813,6 +2879,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.Photosynthesis.FVPD.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2854,6 +2921,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Root.WaterSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2874,6 +2942,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Root.WaterUptake</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2894,6 +2963,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.WaterDemand</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2914,6 +2984,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.Transpiration</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2934,6 +3005,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>SoilWater.Eo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2954,6 +3026,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Root.Depth</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -2974,6 +3047,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Structure.Height</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3023,6 +3097,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.CoverDead</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3043,6 +3118,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.CoverGreen</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3063,6 +3139,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.CoverTotal</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3083,6 +3160,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.LAI</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3103,6 +3181,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.LAIDead</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3152,6 +3231,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.SenescingCohortNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3172,6 +3252,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Structure.TotalStemPopn</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3192,6 +3273,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.ExpandingCohortNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3212,6 +3294,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Structure.PlantTotalNodeNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3232,6 +3315,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.DeadCohortNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3252,6 +3336,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.AppearedCohortNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3272,6 +3357,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.PlantAppearedGreenLeafNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3292,6 +3378,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.ExpandedCohortNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3333,6 +3420,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.Live.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3353,6 +3441,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.Dead.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3373,6 +3462,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.CohortParameters.MaximumNConc.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3393,6 +3483,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.CohortParameters.MinimumNConc.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3413,6 +3504,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Phenology.Stage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3461,6 +3553,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Stem.Live.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3481,6 +3574,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Stem.Dead.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3501,6 +3595,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Stem.MaximumNConc.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3521,6 +3616,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Stem.MinimumNConc.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3541,6 +3637,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Phenology.Stage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3589,6 +3686,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Tuber.Live.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3609,6 +3707,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Tuber.Dead.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3629,6 +3728,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Tuber.MinimumNConc.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3649,6 +3749,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Tuber.MaximumNConc.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3669,6 +3770,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Phenology.Stage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3717,6 +3819,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Root.Live.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3737,6 +3840,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Root.Dead.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3757,6 +3861,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Root.MinimumNConc.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3777,6 +3882,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Root.MaximumNConc.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3818,6 +3924,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.ExpandedCohortNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3838,6 +3945,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.AppearedCohortNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3858,6 +3966,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.DeadCohortNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3878,6 +3987,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Leaf.InitialisedCohortNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3898,6 +4008,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Structure.MainStemFinalNodeNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3918,6 +4029,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Structure.MainStemNodeNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3959,6 +4071,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Arbitrator.DMSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3979,6 +4092,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Arbitrator.DMDemand</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3999,6 +4113,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Arbitrator.DMAllocated</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -4019,6 +4134,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Arbitrator.DMSinkLimitation</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -4039,6 +4155,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Arbitrator.DMNutrientLimitation</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -4080,6 +4197,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Arbitrator.NSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -4100,6 +4218,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Arbitrator.NDemand</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -4120,6 +4239,7 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Potato.Arbitrator.NAllocated</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>

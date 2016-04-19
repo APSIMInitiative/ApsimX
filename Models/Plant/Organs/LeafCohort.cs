@@ -145,6 +145,9 @@ namespace Models.PMF.Organs
         /// <summary>The maximum area</summary>
         [XmlIgnore]
         public double LeafSizeShape = 0.01;
+        /// <summary>The size of senessing leaves relative to the other leaves in teh cohort</summary>
+        [XmlIgnore]
+        public double SenessingLeafRelativeSize = 1;
         /// <summary>Gets or sets the cover above.</summary>
         /// <value>The cover above.</value>
         [XmlIgnore]
@@ -888,7 +891,8 @@ namespace Models.PMF.Organs
                 CoverAbove = Leaf.CoverAboveCohort(Rank); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
                 if (LeafCohortParameters.ShadeInducedSenescenceRate != null)
                     ShadeInducedSenRate = LeafCohortParameters.ShadeInducedSenescenceRate.Value;
-                SenescedFrac = FractionSenescing(_ThermalTime, PropnStemMortality);
+                SenessingLeafRelativeSize = LeafCohortParameters.SenessingLeafRelativeSize.Value;
+                SenescedFrac = FractionSenescing(_ThermalTime, PropnStemMortality, SenessingLeafRelativeSize);
 
                 // Doing leaf mass growth in the cohort
                 Biomass LiveBiomass = new Biomass(Live);
@@ -1044,6 +1048,57 @@ namespace Models.PMF.Organs
                 }
             }
         }
+        /// <summary>Removes leaf area and biomass on thinning event</summary>
+        /// <param name="value">The fraction.</param>
+        virtual public void DoBiomassRemoval(OrganBiomassRemovalType value)
+        {
+            if (IsInitialised)
+            {
+                LiveArea *= (1 - (value.FractionToResidue + value.FractionRemoved));
+
+                double WtToResidue = 0;
+
+                WtToResidue += Dead.StructuralWt * value.FractionToResidue;
+                Dead.StructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                WtToResidue += Live.StructuralWt * value.FractionToResidue;
+                Live.StructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
+
+                WtToResidue += Dead.NonStructuralWt * value.FractionToResidue;
+                Dead.NonStructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                WtToResidue += Live.NonStructuralWt * value.FractionToResidue;
+                Live.NonStructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
+
+                WtToResidue += Dead.MetabolicWt * value.FractionToResidue;
+                Dead.MetabolicWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                WtToResidue += Live.MetabolicWt * value.FractionToResidue;
+                Live.MetabolicWt *= (1 - (value.FractionToResidue + value.FractionRemoved)); ;
+
+                double NToResidue = 0;
+
+                NToResidue += Dead.StructuralN * value.FractionToResidue;
+                Dead.StructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                NToResidue += Live.StructuralN * value.FractionToResidue;
+                Live.StructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
+
+                NToResidue += Dead.NonStructuralN * value.FractionToResidue;
+                Dead.NonStructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                NToResidue += Live.NonStructuralN * value.FractionToResidue;
+                Live.NonStructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
+
+                NToResidue += Dead.MetabolicN * value.FractionToResidue;
+                Dead.MetabolicN *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                NToResidue += Live.MetabolicN * value.FractionToResidue;
+                Live.MetabolicN *= (1 - (value.FractionToResidue + value.FractionRemoved)); ;
+
+                SurfaceOrganicMatter.Add(WtToResidue * 10, NToResidue * 10, 0, Plant.CropType, Name);
+            }
+        }
+        /// <summary>Removes leaves for cohort due to thin event.  </summary>
+        /// <param name="ProportionRemoved">The fraction.</param>
+        virtual public void DoThin(double ProportionRemoved)
+        {
+            CohortPopulation *= (1- ProportionRemoved);;
+        }
         /// <summary>Does the kill.</summary>
         /// <param name="fraction">The fraction.</param>
         virtual public void DoKill(double fraction)
@@ -1105,9 +1160,10 @@ namespace Models.PMF.Organs
         /// <summary>Fractions the senescing.</summary>
         /// <param name="TT">The tt.</param>
         /// <param name="StemMortality">The stem mortality.</param>
+        /// <param name="SenessingLeafRelativeSize">The relative size of senessing tillers leaves relative to the other leaves in the cohort</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Bad Fraction Senescing</exception>
-        public double FractionSenescing(double TT, double StemMortality)
+        public double FractionSenescing(double TT, double StemMortality, double SenessingLeafRelativeSize)
         {
             //Calculate fraction of leaf area senessing based on age and shading.  This is used to to calculate change in leaf area and Nreallocation supply.
             if (IsAppeared)
@@ -1140,7 +1196,7 @@ namespace Models.PMF.Organs
                 if (LiveArea > 0)
                 {
                     FracSenShade = Math.Min(MaxLiveArea * ShadeInducedSenRate, LiveArea) / LiveArea;
-                    FracSenShade += StemMortality;
+                    FracSenShade += StemMortality * SenessingLeafRelativeSize;
                     FracSenShade = Math.Min(FracSenShade, 1.0);
                 }
 

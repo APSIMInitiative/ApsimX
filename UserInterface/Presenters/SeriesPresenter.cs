@@ -353,6 +353,8 @@ namespace UserInterface.Presenters
             seriesView.MarkerSize.Values = sizes.ToArray();
             seriesView.MarkerSize.SelectedValue = series.MarkerSize.ToString();
 
+            this.seriesView.SeriesType.Values = new string[] { "Scatter", "Bar", "Area" };
+
             // Populate other controls.
             this.seriesView.SeriesType.SelectedValue = series.Type.ToString();
             this.seriesView.XOnTop.IsChecked = series.XAxis == Axis.AxisType.Top;
