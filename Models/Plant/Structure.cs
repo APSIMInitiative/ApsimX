@@ -232,14 +232,11 @@ namespace Models.PMF
         [Link]
         [Units("/node")]
         IFunction BranchingRate = null;
-        /// <summary>The shade induced branch mortality</summary>
-        [Link(IsOptional = true)]
-        [Units("0-1")]
-        IFunction ShadeInducedBranchMortality = null;
-        /// <summary>The drought induced branch mortality</summary>
-        [Link(IsOptional = true)]
-        [Units("0-1")]
-        IFunction DroughtInducedBranchMortality = null;
+        /// <summary>The branch mortality</summary>
+        [Link]
+        [Units("/d")]
+        IFunction BranchMortality = null;
+
         /// <summary>The plant mortality</summary>
         [Link(IsOptional = true)]
         IFunction PlantMortality = null;
@@ -367,6 +364,9 @@ namespace Models.PMF
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
+            //Fixme.  I have added the line below so If this value is set from a manager it updates.  Need to review if MaximumNodeNumber and MainStemFinalNodeNumber are both needed to fix this
+            //MaximumNodeNumber = (int)_MainStemFinalNodeNo;
+
             if (Phenology.OnDayOf(InitialiseStage) == false) // We have no leaves set up and nodes have just started appearing - Need to initialise Leaf cohorts
                 if (MainStemPrimordiaInitiationRate.Value > 0.0)
                 {
@@ -414,10 +414,7 @@ namespace Models.PMF
 
             //Reduce stem number incase of mortality
             double PropnMortality = 0;
-            if (DroughtInducedBranchMortality != null)
-                PropnMortality = DroughtInducedBranchMortality.Value;
-            if (ShadeInducedBranchMortality != null)
-                PropnMortality += ShadeInducedBranchMortality.Value;
+            PropnMortality = BranchMortality.Value;
             {
                 double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
                 TotalStemPopn -= DeltaPopn;
@@ -493,7 +490,15 @@ namespace Models.PMF
                 _Height = HeightModel.Value;
             }
         }
-        
+
+        /// <summary>Called when crop recieves a remove biomass event from manager</summary>
+        /// /// <param name="ProportionRemoved">The cultivar.</param>
+        public void doThin(double ProportionRemoved)
+        {
+            Plant.Population *= (1-ProportionRemoved);
+            TotalStemPopn *= (1-ProportionRemoved);
+            Leaf.DoThin(ProportionRemoved);
+        }
         #endregion
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

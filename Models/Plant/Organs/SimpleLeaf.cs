@@ -38,7 +38,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SimpleLeaf : BaseOrgan, AboveGround, ICanopy
+    public class SimpleLeaf : GenericOrgan, AboveGround, ICanopy
     {
         #region Canopy interface
 
@@ -114,9 +114,7 @@ namespace Models.PMF.Organs
         /// <summary>The nitrogen demand switch</summary>
         [Link(IsOptional = true)]
         IFunction NitrogenDemandSwitch = null;
-        /// <summary>The n conc</summary>
-        [Link]
-        IFunction NConc = null;
+
         /// <summary>The lai function</summary>
         [Link(IsOptional = true)]
         IFunction LAIFunction = null;
@@ -195,7 +193,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double MaxNContent = Live.Wt * NConc.Value;
+                double MaxNContent = Live.Wt * MaximumNConc.Value;
                 return Live.N / MaxNContent;
             } 
         }
@@ -289,13 +287,13 @@ namespace Models.PMF.Organs
                         NDeficit = 0;
                 }
 
-                if (NConc == null)
+                if (MaximumNConc == null)
                     NDeficit = 0;
                 else
                 {
                     double DMDemandTot = DMDemand.Structural + DMDemand.NonStructural + DMDemand.Metabolic;
-                    StructuralDemand = NConc.Value * DMDemandTot * _StructuralFraction;
-                    NDeficit = Math.Max(0.0, NConc.Value * (Live.Wt + DMDemandTot) - Live.N) - StructuralDemand;
+                    StructuralDemand = MaximumNConc.Value * DMDemandTot * _StructuralFraction;
+                    NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + DMDemandTot) - Live.N) - StructuralDemand;
                 }
                 if (Math.Round(StructuralDemand,8) < 0)
                     throw new Exception(this.Name + " organ is returning a negative structural N Demand.  Check your parameterisation");
@@ -328,18 +326,7 @@ namespace Models.PMF.Organs
 
             }
         }
-        /// <summary>Gets or sets the minimum nconc.</summary>
-        /// <value>The minimum nconc.</value>
-        public override double MinNconc
-        {
-            get
-            {
-                if (StructuralFraction != null)
-                    return NConc.Value * StructuralFraction.Value;
-                else
-                    return NConc.Value;
-            }
-        }
+
         #endregion
 
         #region Events
@@ -348,7 +335,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private new void OnSimulationCommencing(object sender, EventArgs e)
         {
             Clear();
         }
@@ -370,7 +357,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, SowPlant2Type data)
+        private new void OnPlantSowing(object sender, SowPlant2Type data)
         {
             if (data.Plant == Plant)
             {
@@ -395,8 +382,9 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoPotentialPlantGrowth")]
-        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        private new void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
+            base.OnDoPotentialPlantGrowth(sender, e);
             if (Plant.IsEmerged)
             {
                 FRGR = FRGRFunction.Value;
@@ -442,64 +430,6 @@ namespace Models.PMF.Organs
 
         #endregion
 
-        #region Biomass Removal
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on harvest.
-        /// </summary>
-        public override OrganBiomassRemovalType HarvestDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0,
-                    FractionToResidue = 0.3
-                };
-            }
-        }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Cutting
-        /// </summary>
-        public override OrganBiomassRemovalType CutDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0.8,
-                    FractionToResidue = 0
-                };
-            }
-        }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Cutting
-        /// </summary>
-        public override OrganBiomassRemovalType PruneDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0,
-                    FractionToResidue = 0.6
-                };
-            }
-        }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Cutting
-        /// </summary>
-        public override OrganBiomassRemovalType GrazeDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0.6,
-                    FractionToResidue = 0.1
-                };
-            }
-        }
-        #endregion
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
@@ -545,7 +475,7 @@ namespace Models.PMF.Organs
             }
 
             tags.Add(new AutoDocumentation.Heading("Nitrogen Demands", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand from " + this.Name + " is the product of Total DM demand and a Nitrogen concentration of " + NConc.Value * 100 + "%", indent));
+            tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand from " + this.Name + " is the product of Total DM demand and a Nitrogen concentration of " + MaximumNConc.Value * 100 + "%", indent));
             if (NitrogenDemandSwitch != null)
             {
                 tags.Add(new AutoDocumentation.Paragraph("The Nitrogen demand swith is a multiplier applied to nitrogen demand so it can be turned off at certain phases.  For the " + Name + " Organ it is set as:", indent));

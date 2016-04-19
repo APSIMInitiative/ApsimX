@@ -387,6 +387,16 @@ namespace UserInterface.Views
                 progressBarUpdate();
         }
 
+        /// <summary>Show the wait cursor</summary>
+        /// <param name="wait">If true will show the wait cursor otherwise the normal cursor.</param>
+        public void ShowWaitCursor(bool wait)
+        {
+            if (wait)
+                Cursor.Current = Cursors.WaitCursor;
+            else
+                Cursor.Current = Cursors.Default;
+        }
+
         /// <summary>
         /// A helper function that asks user for a SaveAs name and returns their new choice.
         /// </summary>

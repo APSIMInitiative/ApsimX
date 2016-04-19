@@ -11710,6 +11710,12 @@ namespace Models
             
             }
 
+        /// <summary>Returns true if the crop is ready for harvesting</summary>
+        public bool IsReadyForHarvesting { get { return false; } }
+
+        /// <summary>Harvest the crop</summary>
+        public void Harvest() { HarvestCrop(); }
+
         /// <summary>
         /// Gets a list of cultivar names
         /// </summary>

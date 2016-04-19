@@ -39,8 +39,9 @@ namespace Models.PMF.Functions
         {
             get
             {
-                return MetData.CalculateDayLength(Twilight);
-                    
+                if (MetData != null)
+                    return MetData.CalculateDayLength(Twilight);
+                return 0;                    
             }
         }
 

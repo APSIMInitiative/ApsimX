@@ -11,6 +11,8 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Views;
+    using System.IO;
+    using System.Reflection;
 
     /// <summary>This presenter lets the user add a model.</summary>
     public class AddModelPresenter : IPresenter
@@ -40,10 +42,9 @@ namespace UserInterface.Presenters
             allowableChildModels = Apsim.GetAllowableChildModels(this.model);
 
             this.view.List.Values = allowableChildModels.Select(m => m.Name).ToArray();
-            this.view.Button.Value = "Add";
+            this.view.AddButton("Add", null, this.OnAddButtonClicked);
 
             // Trap events from the view.
-            this.view.Button.Clicked += this.OnAddButtonClicked;
             this.view.List.DoubleClicked += this.OnAddButtonClicked;
         }
 
@@ -51,7 +52,6 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             // Trap events from the view.
-            this.view.Button.Clicked -= this.OnAddButtonClicked;
             this.view.List.DoubleClicked -= this.OnAddButtonClicked;
         }
 
@@ -63,17 +63,21 @@ namespace UserInterface.Presenters
             Type selectedModelType = allowableChildModels.Find(m => m.Name == view.List.SelectedValue);
             if (selectedModelType != null)
             {
-                view.WaitCursor = true;
+                explorerPresenter.ShowWaitCursor(true);
                 try
                 {
+                    // Use the pre built serialization assembly.
+                    string binDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
+                    string deserializerFileName = Path.Combine(binDirectory, "Models.XmlSerializers.dll");
+
                     object child = Activator.CreateInstance(selectedModelType, true);
-                    string childXML = XmlUtilities.Serialise(child, false);
+                    string childXML = XmlUtilities.Serialise(child, false, deserializerFileName);
                     this.explorerPresenter.Add(childXML, Apsim.FullPath(model));
                     this.explorerPresenter.HideRightHandPanel();
                 }
                 finally
                 {
-                    view.WaitCursor = false;
+                    explorerPresenter.ShowWaitCursor(false);
                 }
             }
         }

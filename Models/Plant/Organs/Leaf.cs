@@ -126,7 +126,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Plant.IsAlive)
+                if (Plant != null && Plant.IsAlive)
                     return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover));
                 else
                     return 0;
@@ -260,13 +260,19 @@ namespace Models.PMF.Organs
             /// <summary>The cell division stress</summary>
             [Link(IsOptional = true)]
             public IFunction CellDivisionStress = null;
+            /// <summary>The Shape of the sigmoidal function of leaf area increase</summary>
+            [Link(IsOptional = true)]
+            public IFunction LeafSizeShapeParameter = null;
+            /// <summary>The size of leaves on senessing tillers relative to the dominant tillers in that cohort</summary>
+            [Link(IsOptional = true)]
+            public IFunction SenessingLeafRelativeSize = null;
         }
         #endregion
 
         #region Parameters
         // DeanH: I have removed DroughtInducedSenAcceleration - it can be incorported into the ThermalTime function
         // in the XML. No need for it to be in leaf.
-        
+
         // Hamish:  We need to put this back in.  putting it in tt will acellerate development.  
         // the response it was capturing in leaf was where leaf area senescence is acellerated but other development processes are not.
 
@@ -422,7 +428,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Structure.MainStemNodeNo >= Structure.MainStemFinalNodeNo)
+                if (Structure != null && Structure.MainStemNodeNo >= Structure.MainStemFinalNodeNo)
                     return true;
                 else
                     return false;
@@ -856,13 +862,16 @@ namespace Models.PMF.Organs
             get
             {
                 double F = 1;
-                double FunctionalNConc = (CohortParameters.CriticalNConc.Value - (CohortParameters.MinimumNConc.Value * CohortParameters.StructuralFraction.Value)) * (1 / (1 - CohortParameters.StructuralFraction.Value));
-                if (FunctionalNConc == 0)
-                    F = 1;
-                else
+                if (CohortParameters != null)
                 {
-                    F = Live.MetabolicNConc / FunctionalNConc;
-                    F = Math.Max(0.0, Math.Min(F, 1.0));
+                    double FunctionalNConc = (CohortParameters.CriticalNConc.Value - (CohortParameters.MinimumNConc.Value * CohortParameters.StructuralFraction.Value)) * (1 / (1 - CohortParameters.StructuralFraction.Value));
+                    if (FunctionalNConc == 0)
+                        F = 1;
+                    else
+                    {
+                        F = Live.MetabolicNConc / FunctionalNConc;
+                        F = Math.Max(0.0, Math.Min(F, 1.0));
+                    }
                 }
                 return F;
             }
@@ -1062,7 +1071,32 @@ namespace Models.PMF.Organs
             return 1 - Math.Exp(-ExtinctionCoeff.Value * LAIabove);
         }
 
+        /// <summary>
+        /// remove biomass from the leaf.
+        /// </summary>
+        /// <param name="value">The biomass removal fractions</param>
+        public override void DoRemoveBiomass(OrganBiomassRemovalType value)
+        {
+            foreach (LeafCohort L in Leaves)
+                L.DoBiomassRemoval(value);
+
+            double TotalFracRemoved = value.FractionRemoved + value.FractionToResidue;
+            double PcToResidue = value.FractionToResidue / TotalFracRemoved * 100;
+            double PcRemoved = value.FractionRemoved / TotalFracRemoved * 100;
+            Summary.WriteMessage(this, "Removing " + TotalFracRemoved * 100 + "% of " + Name + " Biomass from " + Plant.Name + ".  Of this " + PcRemoved + "% is removed from the system and " + PcToResidue + "% is returned to the surface organic matter");
+        }
+
+        /// <summary>
+        /// remove population elements from the leaf.
+        /// </summary>
+        /// <param name="ProportionRemoved">The proportion of stems removed by thinning</param>
+        public void DoThin(double ProportionRemoved)
+        {
+            foreach (LeafCohort L in Leaves)
+                L.DoThin(ProportionRemoved);
+        }
         #endregion
+
 
         #region Arbitrator methods
 

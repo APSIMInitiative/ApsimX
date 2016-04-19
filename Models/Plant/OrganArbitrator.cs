@@ -476,26 +476,52 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.IsAlive)
+                if (Plant != null && Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
                         if (N != null)
                         {
                             if ((Plant.Phenology.Emerged == true) && (N.TotalPlantDemand > 0) && (N.TotalPlantSupply > 0))
-                                return Math.Min(1, N.TotalPlantSupply / N.TotalPlantDemand);
+                                return N.TotalPlantSupply / N.TotalPlantDemand;
                             else return 1;
                         }
                         else return 1;
                     }
                     else
-                        return Math.Min(1, N.TotalPlantSupply / N.TotalPlantDemand);
+                        return N.TotalPlantSupply / N.TotalPlantDemand;
                 }
                 else
                     return 1;
             }
         }
 
+        /// <summary>Gets the n supply relative to N demand.</summary>
+        /// <value>The n supply.</value>
+        [XmlIgnore]
+        public double FDM
+        {
+            get
+            {
+                if (Plant != null && Plant.IsAlive)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (DM != null)
+                        {
+                            if ((Plant.Phenology.Emerged == true) && (DM.TotalPlantDemand > 0) && (DM.TotalPlantSupply > 0))
+                                return DM.TotalPlantSupply / DM.TotalPlantDemand;
+                            else return 1;
+                        }
+                        else return 1;
+                    }
+                    else
+                        return DM.TotalPlantSupply / DM.TotalPlantDemand;
+                }
+                else
+                    return 1;
+            }
+        }
         /// <summary>Gets the delta wt.</summary>
         /// <value>The delta wt.</value>
         public double DeltaWt

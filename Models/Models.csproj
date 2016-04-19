@@ -143,6 +143,9 @@
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Interfaces\IWeather.cs" />
+    <Compile Include="Map.cs" />
+    <Compile Include="Plant\CultivarFolder.cs" />
+    <Compile Include="Plant\Functions\MovingAverage.cs" />
     <Compile Include="Plant\Functions\HoldFunction.cs" />
     <Compile Include="Plant\Functions\DeltaFunction.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\FillingRateFunction.cs" />
