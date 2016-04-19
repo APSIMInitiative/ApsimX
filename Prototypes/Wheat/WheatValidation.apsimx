@@ -2089,6 +2089,16 @@ The EarLive composite biomass object includes the Live pools of all organs withi
             <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
           </Cultivar>
         </CultivarFolder>
+        <CultivarFolder>
+          <Name>Turkey</Name>
+          <Cultivar>
+            <Name>Konya</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 2.7</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+            <Command>[Grain].NumberFunction.GrainsPerGramGrowth.Value = 10</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.Value = 0.050</Command>
+          </Cultivar>
+        </CultivarFolder>
       </CultivarFolder>
       <CropType>Wheat</CropType>
     </Plant>
@@ -4348,86 +4358,86 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>137</n>
-            <Slope>0.96124966243650689</Slope>
-            <Intercept>134.09330997723805</Intercept>
-            <SEslope>0.041961907102061206</SEslope>
-            <SEintercept>53.99927925016592</SEintercept>
-            <R2>0.7953806033951728</R2>
-            <RMSE>291.54102622959658</RMSE>
-            <NSE>0.736001380139184</NSE>
-            <ME>89.336036077551753</ME>
-            <MAE>238.5196107649675</MAE>
-            <RSR>0.51192931410064269</RSR>
+            <Slope>0.95191985476711261</Slope>
+            <Intercept>132.41656675084869</Intercept>
+            <SEslope>0.039190011695339443</SEslope>
+            <SEintercept>50.432226071296739</SEintercept>
+            <R2>0.81379239608417286</R2>
+            <RMSE>270.94290648336107</RMSE>
+            <NSE>0.77198791247835674</NSE>
+            <ME>76.883212343315122</ME>
+            <MAE>224.10990666966143</MAE>
+            <RSR>0.47576019769934097</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Live.N</Name>
             <n>111</n>
-            <Slope>1.0808150685652618</Slope>
-            <Intercept>-0.398583705495426</Intercept>
-            <SEslope>0.053195099049949006</SEslope>
-            <SEintercept>0.49866558256413085</SEintercept>
-            <R2>0.791115257050071</R2>
-            <RMSE>2.2101308738416021</RMSE>
-            <NSE>0.67950486502107887</NSE>
-            <ME>0.29017704110056469</ME>
-            <MAE>1.6252955130777846</MAE>
-            <RSR>0.56356702478103926</RSR>
+            <Slope>0.95714189981597919</Slope>
+            <Intercept>0.1302622627505432</Intercept>
+            <SEslope>0.045177457696051873</SEslope>
+            <SEintercept>0.42350599327983923</SEintercept>
+            <R2>0.80460981535257825</R2>
+            <RMSE>1.8638359748004798</RMSE>
+            <NSE>0.77207034208554792</NSE>
+            <ME>-0.23500349281327118</ME>
+            <MAE>1.4180583243735712</MAE>
+            <RSR>0.47526438702356016</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Live.NConc</Name>
             <n>70</n>
-            <Slope>-0.52533628569664959</Slope>
-            <Intercept>0.031046658286689194</Intercept>
-            <SEslope>0.108801878355738</SEslope>
-            <SEintercept>0.0023749426012678789</SEintercept>
-            <R2>0.25531034839334821</R2>
-            <RMSE>0.00728719957025235</RMSE>
-            <NSE>-2.3080554736496532</NSE>
-            <ME>-0.0016829130921593263</ME>
-            <MAE>0.00632310016857895</MAE>
-            <RSR>1.8057678528293166</RSR>
+            <Slope>-0.420449817363407</Slope>
+            <Intercept>0.029378878321691195</Intercept>
+            <SEslope>0.088868951343327951</SEslope>
+            <SEintercept>0.0019398438856468604</SEintercept>
+            <R2>0.247650388516088</R2>
+            <RMSE>0.0064977271970476543</RMSE>
+            <NSE>-1.6301129792034939</NSE>
+            <ME>-0.0011001144902019469</ME>
+            <MAE>0.0055713205164028305</MAE>
+            <RSR>1.6101366204901506</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
             <n>121</n>
-            <Slope>1.6822411765619547</Slope>
-            <Intercept>2062.5246371814319</Intercept>
-            <SEslope>0.14798743115586652</SEslope>
-            <SEintercept>1562.0996762849909</SEintercept>
-            <R2>0.52058492045218019</R2>
-            <RMSE>10928.141941669395</RMSE>
-            <NSE>-7.7730749176991285</NSE>
-            <ME>8809.7693541786666</ME>
-            <MAE>9149.4964407237348</MAE>
-            <RSR>2.9496728914090093</RSR>
+            <Slope>0.72186241072927515</Slope>
+            <Intercept>6365.7373944877036</Intercept>
+            <SEslope>0.075522340969855134</SEslope>
+            <SEintercept>797.18543297802694</SEintercept>
+            <R2>0.43430416156656937</R2>
+            <RMSE>4833.2841076828636</RMSE>
+            <NSE>-0.71610490348522915</NSE>
+            <ME>3615.0057701340079</ME>
+            <MAE>3999.7477172587546</MAE>
+            <RSR>1.3045774098659146</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Protein</Name>
             <n>101</n>
-            <Slope>-0.0764152068696772</Slope>
-            <Intercept>12.752565211223828</Intercept>
-            <SEslope>0.086692791741671188</SEslope>
-            <SEintercept>1.1190545555418381</SEintercept>
-            <R2>0.0077868781823470234</R2>
-            <RMSE>3.49248055583799</RMSE>
-            <NSE>-1.0348233390660124</NSE>
-            <ME>-0.88987849033724087</ME>
-            <MAE>3.0125978339577455</MAE>
-            <RSR>1.419393029901403</RSR>
+            <Slope>-0.029175355130228748</Slope>
+            <Intercept>12.384487420175512</Intercept>
+            <SEslope>0.070558355874500531</SEslope>
+            <SEintercept>0.91078679076554037</SEintercept>
+            <R2>0.0017240537815438328</R2>
+            <RMSE>3.1206154252916516</RMSE>
+            <NSE>-0.62457295209172514</NSE>
+            <ME>-0.65924027132500151</ME>
+            <MAE>2.7150866191312155</MAE>
+            <RSR>1.2682618307660076</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>151</n>
-            <Slope>1.4057076717590635</Slope>
-            <Intercept>-115.2102566329387</Intercept>
-            <SEslope>0.097273970369291</SEslope>
-            <SEintercept>40.437637757686112</SEintercept>
-            <R2>0.58360330928680826</R2>
-            <RMSE>201.96845298434658</RMSE>
-            <NSE>-0.64162911048831028</NSE>
-            <ME>40.850517110702881</ME>
-            <MAE>152.64035559305549</MAE>
-            <RSR>1.2770111176198942</RSR>
+            <Slope>1.1713337954011633</Slope>
+            <Intercept>-61.882893258356944</Intercept>
+            <SEslope>0.075157803531131745</SEslope>
+            <SEintercept>31.243754339595785</SEintercept>
+            <R2>0.61979319621928353</R2>
+            <RMSE>147.17028199738047</RMSE>
+            <NSE>0.12833780420392271</NSE>
+            <ME>4.0228968954448376</ME>
+            <MAE>116.28899039519396</MAE>
+            <RSR>0.9305318900891707</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
@@ -17668,7 +17678,7 @@ private void OnDoManagement(object sender, EventArgs e)
               <Name>CropSchedule</Name>
               <Operation>
                 <Date>2009-11-12T00:00:00</Date>
-                <Action>[Wheat].Sow(population:120, cultivar:"Gregory", depth:50, rowSpacing:135);</Action>
+                <Action>[Wheat].Sow(population:120, cultivar:"Konya", depth:50, rowSpacing:135);</Action>
               </Operation>
               <Operation>
                 <Date>2009-11-12T00:00:00</Date>
@@ -18663,7 +18673,7 @@ namespace Models
               <Name>CropSchedule</Name>
               <Operation>
                 <Date>2011-11-16T00:00:00</Date>
-                <Action>[Wheat].Sow(population:120, cultivar:"Gregory", depth:50, rowSpacing:135);</Action>
+                <Action>[Wheat].Sow(population:120, cultivar:"Konya", depth:50, rowSpacing:135);</Action>
               </Operation>
               <Operation>
                 <Date>2011-11-16T00:00:00</Date>
@@ -19283,7 +19293,7 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>Grain N</Name>
+        <Name>Grain Protein</Name>
         <Series>
           <Name>Series 0</Name>
           <Regression>
@@ -39400,7 +39410,7 @@ Simulation results for the combined datasets from the various countries are show
       <TableName>PredictedObserved</TableName>
       <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
       <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
-      <ShowInLegend>true</ShowInLegend>
+      <ShowInLegend>false</ShowInLegend>
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
