@@ -1870,7 +1870,6 @@ The EarLive composite biomass object includes the Live pools of all organs withi
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
             <Command>[Leaf].ExtinctionCoeff.PotentialExtinctionCoeff.XYPairs.Y = 0.9,0.9</Command>
             <Command>[Phenology].EarlyReproductive.Target.Multiplier.Value = 5</Command>
-            <Command>[Leaf].CohortParameters.SenescenceDuration.Multiplier.Value = 30</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rongotea</Name>
@@ -23996,6 +23995,9 @@ namespace Models
                 <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
                 <string>[Wheat].Leaf.CohortSLA[1:10]</string>
                 <string>[Wheat].Leaf.SLAI</string>
+                <string>[Wheat].Leaf.CohortParameters.LagDuration.Value</string>
+                <string>[Wheat].Leaf.CohortParameters.SenescenceDuration.Value</string>
+                <string>[Wheat].Leaf.CoverGreen</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -26142,7 +26144,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
+                <YFieldName>Wheat.Grain.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -26760,7 +26762,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Leaf.CoverTotal</YFieldName>
+                <YFieldName>Wheat.Leaf.CoverGreen</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -27127,29 +27129,8 @@ namespace Models
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Grain number (grains/m2)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-            </Graph>
-            <Graph>
-              <Name>PlantNumber</Name>
               <Series>
-                <Name>Predicted</Name>
+                <Name>Predicted1</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -27165,27 +27146,6 @@ namespace Models
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Structure.MainStemPopn</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledCircle</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>TimeSeries</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
@@ -40106,5 +40066,5 @@ Simulation results for the combined datasets from the various countries are show
     <DisabledSeries />
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
-  <ExplorerWidth>350</ExplorerWidth>
+  <ExplorerWidth>353</ExplorerWidth>
 </Simulations>
