@@ -710,28 +710,41 @@ The model consists of:
         <MultiplyFunction>
           <Name>NumberFunction</Name>
           <Constant>
-            <Name>GrainsPerGramGrowth</Name>
-            <Value>20</Value>
+            <Name>GrainsPerStem</Name>
+            <Value>22</Value>
             <Units>/g</Units>
           </Constant>
           <VariableReference>
-            <Name>GrowthRate</Name>
-            <VariableName>[Grain].GrowthGrainDevelopment.Value</VariableName>
+            <Name>StemMass</Name>
+            <VariableName>[StemPlusSpike].Wt</VariableName>
           </VariableReference>
         </MultiplyFunction>
         <ExpressionFunction>
           <Name>Protein</Name>
           <Expression>([Grain].Live.N + [Grain].Dead.N)/([Grain].Live.Wt + [Grain].Dead.Wt) * 100 * 5.71</Expression>
         </ExpressionFunction>
-        <AccumulateFunction>
-          <Name>GrowthGrainDevelopment</Name>
-          <VariableReference>
-            <Name>DailyBiomassProduction</Name>
-            <VariableName>[Arbitrator].DMSupply</VariableName>
-          </VariableReference>
-          <StartStageName>TerminalSpikelet</StartStageName>
-          <EndStageName>StartGrainFill</EndStageName>
-        </AccumulateFunction>
+        <DivideFunction>
+          <Name>GrowthRateGrainDevelopment</Name>
+          <AccumulateFunction>
+            <Name>GrowthGrainDevelopment</Name>
+            <VariableReference>
+              <Name>DailyBiomassProduction</Name>
+              <VariableName>[Arbitrator].DMSupply</VariableName>
+            </VariableReference>
+            <StartStageName>FlagLeaf</StartStageName>
+            <EndStageName>StartGrainFill</EndStageName>
+          </AccumulateFunction>
+          <AccumulateFunction>
+            <Name>DaysGrainDevelopment</Name>
+            <Constant>
+              <Name>LenthOfADay</Name>
+              <Value>1</Value>
+              <Units>days/day</Units>
+            </Constant>
+            <StartStageName>FlagLeaf</StartStageName>
+            <EndStageName>StartGrainFill</EndStageName>
+          </AccumulateFunction>
+        </DivideFunction>
         <Constant>
           <Name>InitialGrainProportion</Name>
           <Value>0.05</Value>
@@ -1870,7 +1883,6 @@ The EarLive composite biomass object includes the Live pools of all organs withi
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
             <Command>[Leaf].ExtinctionCoeff.PotentialExtinctionCoeff.XYPairs.Y = 0.9,0.9</Command>
             <Command>[Phenology].EarlyReproductive.Target.Multiplier.Value = 5</Command>
-            <Command>[Leaf].CohortParameters.SenescenceDuration.Multiplier.Value = 30</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rongotea</Name>
@@ -2033,7 +2045,7 @@ The EarLive composite biomass object includes the Live pools of all organs withi
             <Name>Konya</Name>
             <Command>[Phenology].Vernalisation.VernSens = 2.7</Command>
             <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
-            <Command>[Grain].NumberFunction.GrainsPerGramGrowth.Value = 10</Command>
+            <Command>[Grain].NumberFunction.GrainsPerGramGrowth.Value = 500</Command>
             <Command>[Grain].MaximumPotentialGrainSize.Value = 0.050</Command>
           </Cultivar>
         </CultivarFolder>
@@ -4912,101 +4924,6 @@ The map below shows the location of the experimental sites used in the validatio
       <Name>Map</Name>
     </Map>
     <Graph>
-      <Name>Harvest Yield</Name>
-      <Series>
-        <Name>Series 0</Name>
-        <Regression>
-          <Name>Regression</Name>
-          <ForEachSeries>false</ForEachSeries>
-        </Regression>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
-        <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Caption />
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Observed Yield</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Predicted Yield</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>Harvest Biomass N</Name>
-      <Series>
-        <Name>Series 0</Name>
-        <Regression>
-          <Name>Regression</Name>
-          <ForEachSeries>false</ForEachSeries>
-        </Regression>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.Wheat.AboveGround.N</XFieldName>
-        <YFieldName>Predicted.Wheat.AboveGround.N</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
-    <Graph>
       <Name>Harvest Biomass</Name>
       <Series>
         <Name>Series 0</Name>
@@ -5028,53 +4945,6 @@ The map below shows the location of the experimental sites used in the validatio
         <TableName>PredictedObserved</TableName>
         <XFieldName>Observed.Wheat.AboveGround.Wt</XFieldName>
         <YFieldName>Predicted.Wheat.AboveGround.Wt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>Harvest Grain N</Name>
-      <Series>
-        <Name>Series 0</Name>
-        <Regression>
-          <Name>Regression</Name>
-          <ForEachSeries>false</ForEachSeries>
-        </Regression>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.Wheat.Grain.Live.N</XFieldName>
-        <YFieldName>Predicted.Wheat.Grain.Live.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -5170,6 +5040,148 @@ The map below shows the location of the experimental sites used in the validatio
         <TableName>PredictedObserved</TableName>
         <XFieldName>Observed.Wheat.Grain.Number</XFieldName>
         <YFieldName>Predicted.Wheat.Grain.Number</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Harvest Yield</Name>
+      <Series>
+        <Name>Series 0</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
+        <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Caption />
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed Yield</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted Yield</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Harvest Biomass N</Name>
+      <Series>
+        <Name>Series 0</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.Wheat.AboveGround.N</XFieldName>
+        <YFieldName>Predicted.Wheat.AboveGround.N</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Harvest Grain N</Name>
+      <Series>
+        <Name>Series 0</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.Wheat.Grain.Live.N</XFieldName>
+        <YFieldName>Predicted.Wheat.Grain.Live.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -19431,7 +19443,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-1663232</ColourArgb>
+          <ColourArgb>-16776961</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -19447,9 +19459,10 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <Caption />
         <Axis>
           <Type>Bottom</Type>
-          <Title />
+          <Title>Observed Yield</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -19457,7 +19470,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title />
+          <Title>Predicted Yield</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
