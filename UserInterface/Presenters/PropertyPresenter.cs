@@ -431,7 +431,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnFileBrowseClick(object sender, GridCellsChangedArgs e)
         {
-            string fileName = explorerPresenter.AskUserForFile("Select file");
+            string fileName = explorerPresenter.MainPresenter.AskUserForOpenFileName("*.*");
             if (fileName != null)
             {
                 e.ChangedCells[0].Value = fileName;

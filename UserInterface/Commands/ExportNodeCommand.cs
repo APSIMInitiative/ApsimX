@@ -204,6 +204,8 @@ namespace UserInterface.Commands
                 introductionPage.Document(tags, 1, 0);
             }
 
+            AddUserDocumentation(tags);
+
             // Document model description.
             tags.Add(new AutoDocumentation.Heading("Model description", 1));
             ExplorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 1);
@@ -238,6 +240,15 @@ namespace UserInterface.Commands
 
             // Remove temporary working directory.
             Directory.Delete(workingDirectory, true);
+        }
+
+        /// <summary>Add user documentation, based on the example.</summary>
+        /// <param name="tags">The tags to add to.</param>
+        private void AddUserDocumentation(List<AutoDocumentation.ITag> tags)
+        {
+            tags.Add(new AutoDocumentation.Heading("User documentation", 1));
+            
+
         }
 
         /// <summary>Adds a software availability section</summary>
