@@ -461,7 +461,7 @@ The model consists of:
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Structure].PercentWSC.Value</XProperty>
+              <XProperty>[Stem].PercentWSC.Value</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>Nitrogen</Name>
@@ -552,86 +552,25 @@ The model consists of:
             <End>Flowering</End>
           </PhaseLookupValue>
         </PhaseLookup>
-        <MinimumFunction>
-          <Name>StressFactors</Name>
-          <LinearInterpolationFunction>
-            <Name>WaterStress</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>Shading</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.6</double>
-                <double>0.7</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Leaf].CoverGreen</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>Nitrogen</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>1.5</double>
-                <double>2</double>
-              </X>
-              <Y>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Arbitrator].FN</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>Biomass</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0.4</double>
-                <double>0.8</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Arbitrator].FDM</XProperty>
-          </LinearInterpolationFunction>
-        </MinimumFunction>
-        <DivideFunction>
-          <Name>PercentWSC</Name>
-          <VariableReference>
-            <Name>WSC</Name>
-            <VariableName>[Stem].Live.NonStructuralWt</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>StemWt</Name>
-            <VariableName>[Stem].Live.Wt</VariableName>
-          </VariableReference>
-        </DivideFunction>
+        <OnEventFunction>
+          <Name>ReproductiveNodes</Name>
+          <SubtractFunction>
+            <Name>PostEventValue</Name>
+            <VariableReference>
+              <Name>VegetativePrimordia</Name>
+              <VariableName>[Structure].MainStemPrimordiaNo</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>AppearedLeaves</Name>
+              <VariableName>[Structure].MainStemNodeNo</VariableName>
+            </VariableReference>
+          </SubtractFunction>
+          <Constant>
+            <Name>PreEventValue</Name>
+            <Value>0</Value>
+          </Constant>
+          <SetEvent>TerminalSpikelet</SetEvent>
+        </OnEventFunction>
         <InitialiseStage>Emergence</InitialiseStage>
         <PrimaryBudNo>1</PrimaryBudNo>
       </Structure>
@@ -1389,21 +1328,6 @@ The model consists of:
               </XYPairs>
               <XProperty>[Phenology].Stage</XProperty>
             </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>NitrogenFactor</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0.8</double>
-                  <double>1</double>
-                </X>
-                <Y>
-                  <double>0.4</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Leaf].Fn</XProperty>
-            </LinearInterpolationFunction>
           </MultiplyFunction>
           <Constant>
             <Name>SenessingLeafRelativeSize</Name>
@@ -1476,7 +1400,7 @@ The model consists of:
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>0.3</double>
+                <double>1</double>
               </X>
               <Y>
                 <double>0</double>
@@ -1598,9 +1522,9 @@ The model consists of:
         <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
-        <Albedo>0.26</Albedo>
-        <Gsmax>0.011</Gsmax>
-        <R50>200</R50>
+        <Albedo>0.2</Albedo>
+        <Gsmax>0.015</Gsmax>
+        <R50>150</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.3</KDead>
@@ -1837,6 +1761,17 @@ The model consists of:
             <FractionToResidue>0.05</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <DivideFunction>
+          <Name>PercentWSC</Name>
+          <VariableReference>
+            <Name>WSC</Name>
+            <VariableName>[Stem].Live.NonStructuralWt</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>StemWt</Name>
+            <VariableName>[Stem].Live.Wt</VariableName>
+          </VariableReference>
+        </DivideFunction>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -1933,6 +1868,9 @@ The EarLive composite biomass object includes the Live pools of all organs withi
             <Command>[Phenology].Vernalisation.VernSens = 4</Command>
             <Command>[Phenology].Vernalisation.PhotopSens = 3</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
+            <Command>[Leaf].ExtinctionCoeff.PotentialExtinctionCoeff.XYPairs.Y = 0.9,0.9</Command>
+            <Command>[Phenology].EarlyReproductive.Target.Multiplier.Value = 5</Command>
+            <Command>[Leaf].CohortParameters.SenescenceDuration.Multiplier.Value = 30</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rongotea</Name>
@@ -4334,100 +4272,100 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
             <n>28</n>
-            <Slope>1.0757149466117693</Slope>
-            <Intercept>0.16468095474119515</Intercept>
-            <SEslope>0.11926022191672735</SEslope>
-            <SEintercept>1.3638627006325921</SEintercept>
-            <R2>0.75782086371682034</R2>
-            <RMSE>3.7008096894193261</RMSE>
-            <NSE>0.60038711196786732</NSE>
-            <ME>0.90849883980941348</ME>
-            <MAE>2.8444275093125242</MAE>
-            <RSR>0.62075840644637448</RSR>
+            <Slope>1.0768420133018151</Slope>
+            <Intercept>-0.060916078554440034</Intercept>
+            <SEslope>0.12190841031781922</SEslope>
+            <SEintercept>1.3941474454238516</SEintercept>
+            <R2>0.75006132019970506</R2>
+            <RMSE>3.7319199165660364</RMSE>
+            <NSE>0.593640317232462</NSE>
+            <ME>0.69397402407762621</ME>
+            <MAE>2.7696445514770232</MAE>
+            <RSR>0.62597670639921721</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>137</n>
-            <Slope>0.96124966243650689</Slope>
-            <Intercept>134.09330997723805</Intercept>
-            <SEslope>0.041961907102061206</SEslope>
-            <SEintercept>53.99927925016592</SEintercept>
-            <R2>0.7953806033951728</R2>
-            <RMSE>291.54102622959658</RMSE>
-            <NSE>0.736001380139184</NSE>
-            <ME>89.336036077551753</ME>
-            <MAE>238.5196107649675</MAE>
-            <RSR>0.51192931410064269</RSR>
+            <Slope>1.0297495357728923</Slope>
+            <Intercept>-125.94526041680138</Intercept>
+            <SEslope>0.034906964816793687</SEslope>
+            <SEintercept>44.920526045994905</SEintercept>
+            <R2>0.86570371031738891</R2>
+            <RMSE>248.26098811942705</RMSE>
+            <NSE>0.80856591829292845</NSE>
+            <ME>-91.5840598519246</ME>
+            <MAE>174.6069436315384</MAE>
+            <RSR>0.43593205048896821</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Live.N</Name>
             <n>111</n>
-            <Slope>1.0808150685652618</Slope>
-            <Intercept>-0.398583705495426</Intercept>
-            <SEslope>0.053195099049949006</SEslope>
-            <SEintercept>0.49866558256413085</SEintercept>
-            <R2>0.791115257050071</R2>
-            <RMSE>2.2101308738416021</RMSE>
-            <NSE>0.67950486502107887</NSE>
-            <ME>0.29017704110056469</ME>
-            <MAE>1.6252955130777846</MAE>
-            <RSR>0.56356702478103926</RSR>
+            <Slope>1.1064029878167958</Slope>
+            <Intercept>-2.1623264403722136</Intercept>
+            <SEslope>0.04995870001162396</SEslope>
+            <SEintercept>0.46832668216390877</SEintercept>
+            <R2>0.81816996971464162</R2>
+            <RMSE>2.4279884409562356</RMSE>
+            <NSE>0.61320692648389152</NSE>
+            <ME>-1.2554881164084255</ME>
+            <MAE>1.9848540254606246</MAE>
+            <RSR>0.6191190929313839</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Live.NConc</Name>
             <n>70</n>
-            <Slope>-0.52533628569664959</Slope>
-            <Intercept>0.031046658286689194</Intercept>
-            <SEslope>0.108801878355738</SEslope>
-            <SEintercept>0.0023749426012678789</SEintercept>
-            <R2>0.25531034839334821</R2>
-            <RMSE>0.00728719957025235</RMSE>
-            <NSE>-2.3080554736496532</NSE>
-            <ME>-0.0016829130921593263</ME>
-            <MAE>0.00632310016857895</MAE>
-            <RSR>1.8057678528293166</RSR>
+            <Slope>-0.28154206023663653</Slope>
+            <Intercept>0.029242777961398656</Intercept>
+            <SEslope>0.11191832980975663</SEslope>
+            <SEintercept>0.0024429689390001422</SEintercept>
+            <R2>0.085139320044238409</R2>
+            <RMSE>0.0065635262647411336</RMSE>
+            <NSE>-1.6836502285693107</NSE>
+            <ME>0.0017443681164149864</ME>
+            <MAE>0.0050414426517600246</MAE>
+            <RSR>1.6264416276525811</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
             <n>121</n>
-            <Slope>1.6822411765619547</Slope>
-            <Intercept>2062.5246371814319</Intercept>
-            <SEslope>0.14798743115586652</SEslope>
-            <SEintercept>1562.0996762849909</SEintercept>
-            <R2>0.52058492045218019</R2>
-            <RMSE>10928.141941669395</RMSE>
-            <NSE>-7.7730749176991285</NSE>
-            <ME>8809.7693541786666</ME>
-            <MAE>9149.4964407237348</MAE>
-            <RSR>2.9496728914090093</RSR>
+            <Slope>1.5555878689635281</Slope>
+            <Intercept>-1199.0836537159339</Intercept>
+            <SEslope>0.10920965445923161</SEslope>
+            <SEintercept>1152.7760468947001</SEintercept>
+            <R2>0.63031191754883165</R2>
+            <RMSE>6478.7385857491208</RMSE>
+            <NSE>-2.0834726235145928</NSE>
+            <ME>4295.5822246803727</ME>
+            <MAE>5074.6651906599491</MAE>
+            <RSR>1.7487107761697354</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Protein</Name>
             <n>101</n>
-            <Slope>-0.0764152068696772</Slope>
-            <Intercept>12.752565211223828</Intercept>
-            <SEslope>0.086692791741671188</SEslope>
-            <SEintercept>1.1190545555418381</SEintercept>
-            <R2>0.0077868781823470234</R2>
-            <RMSE>3.49248055583799</RMSE>
-            <NSE>-1.0348233390660124</NSE>
-            <ME>-0.88987849033724087</ME>
-            <MAE>3.0125978339577455</MAE>
-            <RSR>1.419393029901403</RSR>
+            <Slope>0.11999466029821131</Slope>
+            <Intercept>12.673381463593831</Intercept>
+            <SEslope>0.097329063928214943</SEslope>
+            <SEintercept>1.2563505014354972</SEintercept>
+            <R2>0.015121202917157794</R2>
+            <RMSE>3.5460948243145949</RMSE>
+            <NSE>-1.0977774169983987</NSE>
+            <ME>1.5202286399099836</ME>
+            <MAE>2.9093632459837604</MAE>
+            <RSR>1.4411826197823683</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>151</n>
-            <Slope>1.4057076717590635</Slope>
-            <Intercept>-115.2102566329387</Intercept>
-            <SEslope>0.097273970369291</SEslope>
-            <SEintercept>40.437637757686112</SEintercept>
-            <R2>0.58360330928680826</R2>
-            <RMSE>201.96845298434658</RMSE>
-            <NSE>-0.64162911048831028</NSE>
-            <ME>40.850517110702881</ME>
-            <MAE>152.64035559305549</MAE>
-            <RSR>1.2770111176198942</RSR>
+            <Slope>1.1997284478817634</Slope>
+            <Intercept>-161.54636404505385</Intercept>
+            <SEslope>0.073950872051227828</SEslope>
+            <SEintercept>30.742022398384613</SEintercept>
+            <R2>0.63852149591604568</R2>
+            <RMSE>168.56925582326733</RMSE>
+            <NSE>-0.14357514060518084</NSE>
+            <ME>-84.718198632507026</ME>
+            <MAE>142.59495129085548</MAE>
+            <RSR>1.0658338497641928</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
@@ -4437,10 +4375,10 @@ VShort duration variety released in New Zealand by Pioneer
             <SEslope>NaN</SEslope>
             <SEintercept>NaN</SEintercept>
             <R2>NaN</R2>
-            <RMSE>0.022797708679464849</RMSE>
+            <RMSE>3.382704456632001</RMSE>
             <NSE>-INF</NSE>
-            <ME>0.0163626260138947</ME>
-            <MAE>0.0163626260138947</MAE>
+            <ME>2.7481593645012139</ME>
+            <MAE>2.7481593645012139</MAE>
             <RSR>INF</RSR>
           </RegrStats>
           <RegrStats>
@@ -4451,10 +4389,10 @@ VShort duration variety released in New Zealand by Pioneer
             <SEslope>NaN</SEslope>
             <SEintercept>NaN</SEintercept>
             <R2>NaN</R2>
-            <RMSE>1.1310163039450745</RMSE>
+            <RMSE>163.40436800607475</RMSE>
             <NSE>-INF</NSE>
-            <ME>0.91755272719053171</ME>
-            <MAE>0.91755272719053171</MAE>
+            <ME>162.51193222792816</ME>
+            <MAE>162.51193222792816</MAE>
             <RSR>INF</RSR>
           </RegrStats>
           <RegrStats>
@@ -4474,58 +4412,58 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Spike.Live.N</Name>
             <n>7</n>
-            <Slope>-0.029242509982709695</Slope>
-            <Intercept>1.3720049133450782</Intercept>
-            <SEslope>0.013058774943114866</SEslope>
-            <SEintercept>0.29785026505401141</SEintercept>
-            <R2>0.500722098730727</R2>
-            <RMSE>22.192329605259609</RMSE>
-            <NSE>-7.0888823328540607</NSE>
-            <ME>-20.686919057374134</ME>
-            <MAE>20.686919057374134</MAE>
-            <RSR>2.6331212873460479</RSR>
+            <Slope>0.00944826923091329</Slope>
+            <Intercept>0.54180165288080417</Intercept>
+            <SEslope>0.016169656442970321</SEslope>
+            <SEintercept>0.36880461439534046</SEintercept>
+            <R2>0.063921257999878023</R2>
+            <RMSE>22.086408347111274</RMSE>
+            <NSE>-7.0118521205960764</NSE>
+            <ME>-20.68789407593891</ME>
+            <MAE>20.68789407593891</MAE>
+            <RSR>2.6205537234816956</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Spike.Live.Wt</Name>
             <n>13</n>
-            <Slope>0.00973679946071207</Slope>
-            <Intercept>130.72030024879098</Intercept>
-            <SEslope>0.0020996370746383525</SEslope>
-            <SEintercept>1.732475309176124</SEintercept>
-            <R2>0.66159286411210927</R2>
-            <RMSE>708.1134424076098</RMSE>
-            <NSE>-1.7940616687873412</NSE>
-            <ME>-570.46721347274593</ME>
-            <MAE>570.46721347274593</MAE>
-            <RSR>1.6059681964819204</RSR>
+            <Slope>-0.035916117078314595</Slope>
+            <Intercept>154.22585230778671</Intercept>
+            <SEslope>0.028375801803130103</SEslope>
+            <SEintercept>23.413749259721836</SEintercept>
+            <R2>0.12712777915915763</R2>
+            <RMSE>727.83727914795782</RMSE>
+            <NSE>-1.9518813802172592</NSE>
+            <ME>-579.28766830232689</ME>
+            <MAE>579.28766830232689</MAE>
+            <RSR>1.6507009364930427</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Live.Wt</Name>
             <n>12</n>
-            <Slope>0.84503400200608481</Slope>
-            <Intercept>14.723111768282365</Intercept>
-            <SEslope>0.052463450676154037</SEslope>
-            <SEintercept>34.367600305950866</SEintercept>
-            <R2>0.96288579884926406</R2>
-            <RMSE>98.197881238132908</RMSE>
-            <NSE>0.85761627740021</NSE>
-            <ME>-78.437322486986389</ME>
-            <MAE>80.277658801042236</MAE>
-            <RSR>0.36127332088481268</RSR>
+            <Slope>1.3110113871552631</Slope>
+            <Intercept>-139.44495639452384</Intercept>
+            <SEslope>0.11885070278069429</SEslope>
+            <SEintercept>77.856362793628151</SEintercept>
+            <R2>0.92405674267155646</R2>
+            <RMSE>135.55742083218843</RMSE>
+            <NSE>0.72866694605591431</NSE>
+            <ME>47.52480639728239</ME>
+            <MAE>104.62999024728725</MAE>
+            <RSR>0.49872032855640824</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.TotalStemPopn</Name>
             <n>9</n>
-            <Slope>-0.1664751932171484</Slope>
-            <Intercept>487.54125374405322</Intercept>
-            <SEslope>0.082706361857710034</SEslope>
-            <SEintercept>60.632589777772068</SEintercept>
-            <R2>0.36660469400093032</R2>
-            <RMSE>410.9021824409698</RMSE>
-            <NSE>-3.20149282212173</NSE>
-            <ME>-335.01782002458663</ME>
-            <MAE>340.62785374206732</MAE>
-            <RSR>1.9325269173624533</RSR>
+            <Slope>0.10554172725939333</Slope>
+            <Intercept>292.33233449368117</Intercept>
+            <SEslope>0.10314546909056382</SEslope>
+            <SEintercept>75.616636668936223</SEintercept>
+            <R2>0.13011096573617065</R2>
+            <RMSE>386.86523263845891</RMSE>
+            <NSE>-2.7243126603747889</NSE>
+            <ME>-338.40955579977685</ME>
+            <MAE>338.40955579977685</MAE>
+            <RSR>1.8194779862794073</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4552,16 +4490,16 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
             <n>402</n>
-            <Slope>0.76487903493828269</Slope>
-            <Intercept>8.3055865235213</Intercept>
-            <SEslope>0.034471786477766414</SEslope>
-            <SEintercept>2.0223012962998856</SEintercept>
-            <R2>0.55173627406942949</R2>
-            <RMSE>18.865580037286552</RMSE>
-            <NSE>0.44251073522664297</NSE>
-            <ME>-4.1429830707381754</ME>
-            <MAE>9.565448893302289</MAE>
-            <RSR>0.74572278733957365</RSR>
+            <Slope>0.90140372514278433</Slope>
+            <Intercept>2.9243187869612726</Intercept>
+            <SEslope>0.018167359666961546</SEslope>
+            <SEintercept>1.0657955028973924</SEintercept>
+            <R2>0.86022846575621881</R2>
+            <RMSE>9.7857949912335815</RMSE>
+            <NSE>0.85000098390886747</NSE>
+            <ME>-2.2958987677455958</ME>
+            <MAE>6.1158828266002532</MAE>
+            <RSR>0.38681505168530972</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4593,16 +4531,16 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Leaf.DeadCohortNo</Name>
             <n>17</n>
-            <Slope>1.1017322683000312</Slope>
-            <Intercept>-0.59554662944699821</Intercept>
-            <SEslope>0.10002474728228221</SEslope>
-            <SEintercept>0.85252395538780068</SEintercept>
-            <R2>0.88996587373753688</R2>
-            <RMSE>1.7541308357148879</RMSE>
-            <NSE>0.83840609852877923</NSE>
-            <ME>0.14927215716573883</ME>
-            <MAE>1.4076367389060884</MAE>
-            <RSR>0.38998509952979826</RSR>
+            <Slope>0.38753677410424192</Slope>
+            <Intercept>0.86858525262628117</Intercept>
+            <SEslope>0.11562444827977662</SEslope>
+            <SEintercept>0.9854822397983497</SEintercept>
+            <R2>0.4282184478465203</R2>
+            <RMSE>4.9023271190038988</RMSE>
+            <NSE>-0.26213431578224022</NSE>
+            <ME>-3.6154798761609905</ME>
+            <MAE>3.7017543859649114</MAE>
+            <RSR>1.0899041796122382</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.ExpandedCohortNo</Name>
@@ -4634,16 +4572,16 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>ET</Name>
             <n>123</n>
-            <Slope>1.058680469103584</Slope>
-            <Intercept>-0.6680950016442111</Intercept>
-            <SEslope>0.039830362561977</SEslope>
-            <SEintercept>0.15450429526744311</SEintercept>
-            <R2>0.85377330652857952</R2>
-            <RMSE>0.81212051418323616</RMSE>
-            <NSE>0.71312438113443277</NSE>
-            <ME>-0.45857985274896806</ME>
-            <MAE>0.65202042952354822</MAE>
-            <RSR>0.53342599932977508</RSR>
+            <Slope>1.1261445492944096</Slope>
+            <Intercept>-0.60104537030897376</Intercept>
+            <SEslope>0.042198972412559412</SEslope>
+            <SEintercept>0.16369227077628554</SEintercept>
+            <R2>0.85477177872839449</R2>
+            <RMSE>0.74475341517344884</RMSE>
+            <NSE>0.75874424344299374</NSE>
+            <ME>-0.15065370794703659</ME>
+            <MAE>0.56236291722161169</MAE>
+            <RSR>0.48917719452352715</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4661,198 +4599,198 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
             <n>84</n>
-            <Slope>0.95383523301710471</Slope>
-            <Intercept>0.33614290437953276</Intercept>
-            <SEslope>0.058423726028741081</SEslope>
-            <SEintercept>0.55338163541021468</SEintercept>
-            <R2>0.764735299067322</R2>
-            <RMSE>3.310151292861776</RMSE>
-            <NSE>0.71797438503823052</NSE>
-            <ME>0.00689786380344942</ME>
-            <MAE>2.3497669171248052</MAE>
-            <RSR>0.52789029841872026</RSR>
+            <Slope>0.938893821178531</Slope>
+            <Intercept>0.48781629904712975</Intercept>
+            <SEslope>0.060348568045615981</SEslope>
+            <SEintercept>0.57161347880001367</SEintercept>
+            <R2>0.74694999150002794</R2>
+            <RMSE>3.4278804492831934</RMSE>
+            <NSE>0.6975565377325933</NSE>
+            <ME>0.05200978164440162</ME>
+            <MAE>2.4121720746617488</MAE>
+            <RSR>0.5466652950933153</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>150</n>
-            <Slope>0.79191000893883479</Slope>
-            <Intercept>15.402723641468697</Intercept>
-            <SEslope>0.014570606999874445</SEslope>
-            <SEintercept>17.792223038735024</SEintercept>
-            <R2>0.952287369113028</R2>
-            <RMSE>283.89388612565529</RMSE>
-            <NSE>0.882460002548566</NSE>
-            <ME>-171.34649447096777</ME>
-            <MAE>193.48062560716042</MAE>
-            <RSR>0.34169635272918036</RSR>
+            <Slope>0.97205211730341068</Slope>
+            <Intercept>-33.276402163157741</Intercept>
+            <SEslope>0.024283442810376692</SEslope>
+            <SEintercept>29.652603397669811</SEintercept>
+            <R2>0.91544569581962731</R2>
+            <RMSE>252.55414153159</RMSE>
+            <NSE>0.90697866095760216</NSE>
+            <ME>-58.358075793255431</ME>
+            <MAE>146.1247887889883</MAE>
+            <RSR>0.303975651627092</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Live.N</Name>
             <n>166</n>
-            <Slope>1.3530038647195244</Slope>
-            <Intercept>0.58217622293064863</Intercept>
-            <SEslope>0.066372190823444061</SEslope>
-            <SEintercept>0.515990851320237</SEintercept>
-            <R2>0.71702298654363616</R2>
-            <RMSE>4.9364628129805812</RMSE>
-            <NSE>-0.27038338598661449</NSE>
-            <ME>2.84955194396374</ME>
-            <MAE>3.9279568352480356</MAE>
-            <RSR>1.1237128076260587</RSR>
+            <Slope>1.335130144270104</Slope>
+            <Intercept>0.39706040034891465</Intercept>
+            <SEslope>0.063510461243468833</SEslope>
+            <SEintercept>0.49374318608725293</SEintercept>
+            <R2>0.72934312082146047</R2>
+            <RMSE>4.6199701058425884</RMSE>
+            <NSE>-0.11270847711496956</NSE>
+            <ME>2.5496315998401586</ME>
+            <MAE>3.753624797656836</MAE>
+            <RSR>1.0516679200202976</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Live.NConc</Name>
             <n>167</n>
-            <Slope>0.27382278470009663</Slope>
-            <Intercept>0.016976888514876991</Intercept>
-            <SEslope>0.22984227516608324</SEslope>
-            <SEintercept>0.0039249805957702229</SEintercept>
-            <R2>0.0085285579906657638</R2>
-            <RMSE>0.010755465073480897</RMSE>
-            <NSE>-10.532371865254261</NSE>
-            <ME>0.0047912173989549788</ME>
-            <MAE>0.0097830426182589844</MAE>
-            <RSR>3.385751873114839</RSR>
+            <Slope>0.25691863449685087</Slope>
+            <Intercept>0.017774414375587015</Intercept>
+            <SEslope>0.23709416245534393</SEslope>
+            <SEintercept>0.0040488199411321387</SEintercept>
+            <R2>0.0070661985882383149</R2>
+            <RMSE>0.011257074906468325</RMSE>
+            <NSE>-11.633141519087502</NSE>
+            <ME>0.0053050819018987472</ME>
+            <MAE>0.010252274933931606</MAE>
+            <RSR>3.5436554523656763</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
             <n>19</n>
-            <Slope>1.3335134404184859</Slope>
-            <Intercept>-1977.23537783746</Intercept>
-            <SEslope>0.20858490079388792</SEslope>
-            <SEintercept>2590.783866294541</SEintercept>
-            <R2>0.706249786600473</R2>
-            <RMSE>4861.2166694153138</RMSE>
-            <NSE>0.00830679071872198</NSE>
-            <ME>1831.9204563320652</ME>
-            <MAE>3995.4455864348693</MAE>
-            <RSR>0.96927747825141464</RSR>
+            <Slope>1.0802687664451807</Slope>
+            <Intercept>-370.63568092623245</Intercept>
+            <SEslope>0.21013931473396286</SEslope>
+            <SEintercept>2610.0908752974065</SEintercept>
+            <R2>0.60853909828721486</R2>
+            <RMSE>4282.568499105746</RMSE>
+            <NSE>0.23034513517165434</NSE>
+            <ME>546.13768695541535</ME>
+            <MAE>3420.8908841501566</MAE>
+            <RSR>0.85390088069278081</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Protein</Name>
             <n>6</n>
-            <Slope>0.23369792752418309</Slope>
-            <Intercept>11.473841645170971</Intercept>
-            <SEslope>0.28666702940679406</SEslope>
-            <SEintercept>2.852720339984459</SEintercept>
-            <R2>0.14247566478398632</R2>
-            <RMSE>4.49133113780304</RMSE>
-            <NSE>-3.5964176129848253</NSE>
-            <ME>4.0189996501020655</ME>
-            <MAE>4.0269015672708992</MAE>
-            <RSR>1.9571274896696655</RSR>
+            <Slope>0.080785412289766823</Slope>
+            <Intercept>13.199781567310454</Intercept>
+            <SEslope>0.33708196110339006</SEslope>
+            <SEintercept>3.35441633686075</SEintercept>
+            <R2>0.014156080976004959</R2>
+            <RMSE>4.8813845938317373</RMSE>
+            <NSE>-4.4294442789211947</NSE>
+            <ME>4.2573556532027332</ME>
+            <MAE>4.2685366457956668</MAE>
+            <RSR>2.1270958838522054</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>50</n>
-            <Slope>0.76781983190189251</Slope>
-            <Intercept>-7.0384959960540812</Intercept>
-            <SEslope>0.0648418149876618</SEslope>
-            <SEintercept>20.932610492815407</SEintercept>
-            <R2>0.744978563167276</R2>
-            <RMSE>135.74869311950079</RMSE>
-            <NSE>0.69191858241219972</NSE>
-            <ME>-55.963042360215972</ME>
-            <MAE>79.12915525783832</MAE>
-            <RSR>0.54947228250025881</RSR>
+            <Slope>0.6222032593375123</Slope>
+            <Intercept>0.31493368916287068</Intercept>
+            <SEslope>0.066104072323246929</SEslope>
+            <SEintercept>21.340099721063108</SEintercept>
+            <R2>0.64859564896973332</R2>
+            <RMSE>165.44111852249293</RMSE>
+            <NSE>0.54240517457236581</NSE>
+            <ME>-79.293649189289212</ME>
+            <MAE>96.502637100968386</MAE>
+            <RSR>0.66965881530752769</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CoverTotal</Name>
             <n>102</n>
-            <Slope>0.19637729995546316</Slope>
-            <Intercept>0.54866738098438983</Intercept>
-            <SEslope>0.08289423830051143</SEslope>
-            <SEintercept>0.066905819967134447</SEintercept>
-            <R2>0.053139779714063251</R2>
-            <RMSE>0.40722608495520746</RMSE>
-            <NSE>-0.34302196811527663</NSE>
-            <ME>-0.035256982339154141</ME>
-            <MAE>0.29470505251436069</MAE>
-            <RSR>1.153193429601006</RSR>
+            <Slope>0.25476864127776488</Slope>
+            <Intercept>0.70093167661234179</Intercept>
+            <SEslope>0.057665315742733807</SEslope>
+            <SEintercept>0.046542984319906687</SEintercept>
+            <R2>0.16331452837863614</R2>
+            <RMSE>0.367498560192904</RMSE>
+            <NSE>-0.093762985960945455</NSE>
+            <ME>0.15943534176950522</ME>
+            <MAE>0.1709794597105839</MAE>
+            <RSR>1.0406919906638641</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Dead.N</Name>
             <n>24</n>
-            <Slope>4.9803509592779323</Slope>
-            <Intercept>-0.24002251712140277</Intercept>
-            <SEslope>0.48056408139750523</SEslope>
-            <SEintercept>0.20836762039705806</SEintercept>
-            <R2>0.82998876792709042</R2>
-            <RMSE>1.7146620845032248</RMSE>
-            <NSE>-29.791629748044947</NSE>
-            <ME>0.97066756632563478</ME>
-            <MAE>0.97066756632563478</MAE>
-            <RSR>5.4321860401876654</RSR>
+            <Slope>5.1781932579967025</Slope>
+            <Intercept>-0.20811231300952726</Intercept>
+            <SEslope>0.49399769369139035</SEslope>
+            <SEintercept>0.21419229588856273</SEintercept>
+            <R2>0.83317784509366544</R2>
+            <RMSE>1.8190487567569706</RMSE>
+            <NSE>-33.654869387403743</NSE>
+            <ME>1.0627548029644693</ME>
+            <MAE>1.0627548029644693</MAE>
+            <RSR>5.7628913312903896</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Dead.Wt</Name>
             <n>24</n>
-            <Slope>1.8726084538229808</Slope>
-            <Intercept>15.607218171124274</Intercept>
-            <SEslope>0.19058462398535153</SEslope>
-            <SEintercept>11.48051373432517</SEintercept>
-            <R2>0.81441244777834487</R2>
-            <RMSE>73.5979165823307</RMSE>
-            <NSE>-2.8398336877163031</NSE>
-            <ME>56.703440477629108</ME>
-            <MAE>56.763353142219529</MAE>
-            <RSR>1.9182910669121074</RSR>
+            <Slope>2.1862957398683274</Slope>
+            <Intercept>20.228603911662503</Intercept>
+            <SEslope>0.20180150898458313</SEslope>
+            <SEintercept>12.156200993859402</SEintercept>
+            <R2>0.84215044405228756</R2>
+            <RMSE>95.07875798695396</RMSE>
+            <NSE>-5.4083817264336664</NSE>
+            <ME>76.098190360544621</ME>
+            <MAE>76.098190360544621</MAE>
+            <RSR>2.4781779236296972</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
             <n>219</n>
-            <Slope>0.9922119043612101</Slope>
-            <Intercept>0.6242265620048868</Intercept>
-            <SEslope>0.069711234357774</SEslope>
-            <SEintercept>0.30877440976991877</SEintercept>
-            <R2>0.48282003300598431</R2>
-            <RMSE>2.8144214664279961</RMSE>
-            <NSE>-0.10425112378334944</NSE>
-            <ME>0.59675119139234334</ME>
-            <MAE>1.9709854270905274</MAE>
-            <RSR>1.0484316292486586</RSR>
+            <Slope>1.2889290088174714</Slope>
+            <Intercept>0.42623799634196491</Intercept>
+            <SEslope>0.046994708206721074</SEslope>
+            <SEintercept>0.2081553055619027</SEintercept>
+            <R2>0.7761147070580936</R2>
+            <RMSE>2.4750970581804492</RMSE>
+            <NSE>0.14596818698601743</NSE>
+            <ME>1.4455412979650608</ME>
+            <MAE>1.7429549329668872</MAE>
+            <RSR>0.92202609744523134</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.N</Name>
             <n>200</n>
-            <Slope>1.1838934523016802</Slope>
-            <Intercept>-0.20020687803831994</Intercept>
-            <SEslope>0.044645269159494537</SEslope>
-            <SEintercept>0.19221544083553316</SEintercept>
-            <R2>0.780291160067031</R2>
-            <RMSE>1.8482761974416191</RMSE>
-            <NSE>0.54953710431637282</NSE>
-            <ME>0.40838942182135241</ME>
-            <MAE>1.2740931422671844</MAE>
-            <RSR>0.66948531067171979</RSR>
+            <Slope>1.2838398526329802</Slope>
+            <Intercept>0.18560318827103028</Intercept>
+            <SEslope>0.04729216284263877</SEslope>
+            <SEintercept>0.20361135905326791</SEintercept>
+            <R2>0.78822601775871992</R2>
+            <RMSE>2.2879742262050922</RMSE>
+            <NSE>0.30971642638496388</NSE>
+            <ME>1.124972599759138</ME>
+            <MAE>1.6271394850702288</MAE>
+            <RSR>0.82875337450110032</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.Wt</Name>
             <n>257</n>
-            <Slope>0.55070206425832646</Slope>
-            <Intercept>61.27710255948088</Intercept>
-            <SEslope>0.054192228793669861</SEslope>
-            <SEintercept>9.7008568038223082</SEintercept>
-            <R2>0.28823930610859971</R2>
-            <RMSE>108.09678128351932</RMSE>
-            <NSE>0.048961272041221693</NSE>
-            <ME>-1.876805702688731</ME>
-            <MAE>72.964170056850421</MAE>
-            <RSR>0.97331299598909771</RSR>
+            <Slope>1.0003511375706704</Slope>
+            <Intercept>61.931917986704775</Intercept>
+            <SEslope>0.045419982484365906</SEslope>
+            <SEintercept>8.13055221977544</SEintercept>
+            <R2>0.65544143125178045</R2>
+            <RMSE>101.51396822478928</RMSE>
+            <NSE>0.16126592508049886</NSE>
+            <ME>61.981274345061692</ME>
+            <MAE>74.2506393334532</MAE>
+            <RSR>0.91404076397486345</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.SpecificArea</Name>
             <n>77</n>
-            <Slope>0.182165148270083</Slope>
-            <Intercept>19602.140975953411</Intercept>
-            <SEslope>0.080201247717115925</SEslope>
-            <SEintercept>1571.7059517958055</SEintercept>
-            <R2>0.06435997436064</R2>
-            <RMSE>6221.5749575904138</RMSE>
-            <NSE>-0.95766079235936852</NSE>
-            <ME>3993.0421725573187</ME>
-            <MAE>5295.4067806520543</MAE>
-            <RSR>1.3900491452552428</RSR>
+            <Slope>0.010495453678773211</Slope>
+            <Intercept>23804.81808821658</Intercept>
+            <SEslope>0.05250413896452133</SEslope>
+            <SEintercept>1028.9249862485772</SEintercept>
+            <R2>0.0005325038628661849</R2>
+            <RMSE>6902.6628543669467</RMSE>
+            <NSE>-1.4097394671100529</NSE>
+            <ME>4919.2518919763806</ME>
+            <MAE>5892.5520549423709</MAE>
+            <RSR>1.5422205255265464</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
@@ -4871,72 +4809,72 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Spike.Live.N</Name>
             <n>68</n>
-            <Slope>-0.0072437456211324565</Slope>
-            <Intercept>0.89699077712372577</Intercept>
-            <SEslope>0.005703865791508376</SEslope>
-            <SEintercept>0.068976127974675616</SEintercept>
-            <R2>0.023853861324743875</R2>
-            <RMSE>11.453849265685578</RMSE>
-            <NSE>-1.8421861893588254</NSE>
-            <ME>-9.1794359938476</ME>
-            <MAE>9.1794359938476</MAE>
-            <RSR>1.6734363846985521</RSR>
+            <Slope>0.011643362992096267</Slope>
+            <Intercept>0.589240847138703</Intercept>
+            <SEslope>0.0057843524978583973</SEslope>
+            <SEintercept>0.069949443540011022</SEintercept>
+            <R2>0.057839976745789112</R2>
+            <RMSE>11.473837282097458</RMSE>
+            <NSE>-1.8521145954193861</NSE>
+            <ME>-9.2982400329457846</ME>
+            <MAE>9.2982400329457846</MAE>
+            <RSR>1.6763566845161688</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Spike.Live.Wt</Name>
             <n>132</n>
-            <Slope>0.10826431211777175</Slope>
-            <Intercept>61.919905829986568</Intercept>
-            <SEslope>0.010233663013080581</SEslope>
-            <SEintercept>4.8347806079491917</SEintercept>
-            <R2>0.46263268525652212</R2>
-            <RMSE>378.09394518432822</RMSE>
-            <NSE>-0.516035283832909</NSE>
-            <ME>-258.2407829636029</ME>
-            <MAE>263.60789929579408</MAE>
-            <RSR>1.2266010631196664</RSR>
+            <Slope>0.085621088695167144</Slope>
+            <Intercept>57.146502323137504</Intercept>
+            <SEslope>0.013426445381300724</SEslope>
+            <SEintercept>6.3431752325857635</SEintercept>
+            <R2>0.23828159123461823</R2>
+            <RMSE>393.15141560286696</RMSE>
+            <NSE>-0.63919096402299136</NSE>
+            <ME>-271.14380391876227</ME>
+            <MAE>275.13109685686334</MAE>
+            <RSR>1.275450058081139</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Live.N</Name>
             <n>244</n>
-            <Slope>0.8494756100182701</Slope>
-            <Intercept>1.4184149830308561</Intercept>
-            <SEslope>0.041846275267971425</SEslope>
-            <SEintercept>0.16577778427395609</SEintercept>
-            <R2>0.63001826028450647</R2>
-            <RMSE>1.7772725929540396</RMSE>
-            <NSE>0.38553477734393782</NSE>
-            <ME>0.92941614436836528</ME>
-            <MAE>1.4068753175555719</MAE>
-            <RSR>0.78227036410898843</RSR>
+            <Slope>0.76176937202662631</Slope>
+            <Intercept>1.3311119469503066</Intercept>
+            <SEslope>0.036336882352732164</SEslope>
+            <SEintercept>0.14395182857457151</SEintercept>
+            <R2>0.64489716224953919</R2>
+            <RMSE>1.4982541584246218</RMSE>
+            <NSE>0.563323114789605</NSE>
+            <ME>0.55718753226272488</ME>
+            <MAE>1.1921734970250071</MAE>
+            <RSR>0.65945979850539671</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Live.Wt</Name>
             <n>307</n>
-            <Slope>0.629336558347305</Slope>
-            <Intercept>50.738048985605644</Intercept>
-            <SEslope>0.017367729232491396</SEslope>
-            <SEintercept>11.83346389795779</SEintercept>
-            <R2>0.81150099788237329</R2>
-            <RMSE>234.21569768902538</RMSE>
-            <NSE>0.52791871245242683</NSE>
-            <ME>-167.93213898385818</ME>
-            <MAE>179.00184741260551</MAE>
-            <RSR>0.68596177990023632</RSR>
+            <Slope>0.69277562597623188</Slope>
+            <Intercept>15.323671576179095</Intercept>
+            <SEslope>0.029289056196218521</SEslope>
+            <SEintercept>19.956033656651524</SEintercept>
+            <R2>0.64718142633781439</R2>
+            <RMSE>262.49084803063516</RMSE>
+            <NSE>0.407056763301369</NSE>
+            <ME>-165.92110216529349</ME>
+            <MAE>200.17929356028594</MAE>
+            <RSR>0.76877293494514543</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.TotalStemPopn</Name>
             <n>61</n>
-            <Slope>0.13182585210928557</Slope>
-            <Intercept>249.73355098480641</Intercept>
-            <SEslope>0.035737475393493215</SEslope>
-            <SEintercept>31.26590392636291</SEintercept>
-            <R2>0.18740303502875644</R2>
-            <RMSE>537.43254568339933</RMSE>
-            <NSE>-2.3021082186382986</NSE>
-            <ME>-465.09633452739524</ME>
-            <MAE>465.92404442013827</MAE>
-            <RSR>1.8022139986753174</RSR>
+            <Slope>1.3319837779977342</Slope>
+            <Intercept>-517.21564520949573</Intercept>
+            <SEslope>0.13371007632352569</SEslope>
+            <SEintercept>116.9799028691089</SEintercept>
+            <R2>0.6271393968862724</R2>
+            <RMSE>401.71841571619024</RMSE>
+            <NSE>-0.84495959349830074</NSE>
+            <ME>-243.8696505209949</ME>
+            <MAE>364.84646707422769</MAE>
+            <RSR>1.3471133412822485</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -6017,6 +5955,11 @@ namespace Models
                 <string>[Wheat].Total.Wt</string>
                 <string>sum([Soil].SoilWater.SWmm[2:7]) as TotalSoilWater</string>
                 <string>[Soil].SoilWater.SW</string>
+                <string>[Wheat].Leaf.Photosynthesis.FW.Value</string>
+                <string>[Wheat].Leaf.CohortParameters.ExpansionStress.Value</string>
+                <string>[Wheat].Structure.TotalStemPopn</string>
+                <string>[Wheat].Structure.BranchingRate.StressFactors.Nitrogen.Value</string>
+                <string>[Wheat].Structure.BranchingRate.StressFactors.WSC.Value</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -6730,6 +6673,285 @@ namespace Models
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>BottomLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>GrainWt</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Grain.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>FW photo</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Leaf.Photosynthesis.FW.Value</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>FW expansion</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Leaf.CohortParameters.ExpansionStress.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>StemNumber</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>BranchStressWSC</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Structure.BranchingRate.StressFactors.WSC.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>BranchStressN</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Structure.BranchingRate.StressFactors.Nitrogen.Value</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
@@ -23746,6 +23968,7 @@ namespace Models
                 <string>[Wheat].Stem.DMDemandFunction.PotentialDMAccumulation.Value</string>
                 <string>[Wheat].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</string>
                 <string>[Wheat].Structure.MainStemPrimordiaNo</string>
+                <string>[Wheat].Structure.ReproductiveNodes.Value</string>
                 <string>[Wheat].Grain.NumberFunction.Value</string>
                 <string>[ExtraVariables].Script.LeafAppearedPosition</string>
                 <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
@@ -23772,6 +23995,7 @@ namespace Models
                 <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
                 <string>[Wheat].Leaf.CohortSLA[1:10]</string>
+                <string>[Wheat].Leaf.SLAI</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -26101,8 +26325,8 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
@@ -26123,8 +26347,8 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <ColourArgb>-16736653</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
@@ -26139,6 +26363,90 @@ namespace Models
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
                 <Filter />
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>FN</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-8388608</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Arbitrator.FN</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Actual Radiation Use Efficiency (g/MJ)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>0</Minimum>
+                <Maximum>10</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>ReproductiveNodes</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-8388608</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Structure.ReproductiveNodes.Value</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
               </Series>
               <Axis>
                 <Type>Left</Type>
@@ -26201,6 +26509,27 @@ namespace Models
                 <TableName>LeafAppearance</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Predicted1</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-8388608</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.InitialisedCohortNo</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -26563,48 +26892,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
             <Graph>
-              <Name>Height</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>Report</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Structure.Height</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Leaf Ligules (n)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-            </Graph>
-            <Graph>
               <Name>Tillers</Name>
               <Series>
                 <Name>Predicted</Name>
@@ -26664,6 +26951,69 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>BottomRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>SLA</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-8388608</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.SpecificArea</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Observed</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16776961</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.SpecificArea</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Leaf Area Index (m2/m2)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries />
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -34338,7 +34688,7 @@ namespace Models
                 <string>[Wheat].Phenology.Zadok.Stage</string>
                 <string>[Wheat].Leaf.AppearedCohortNo</string>
                 <string>[Wheat].Structure.MainStemNodeNo</string>
-                <string>([Wheat].Leaf.Transpiration + [Soil].SoilWater.Es) as ET</string>
+                <string>([Wheat].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET</string>
                 <string>sum([Soil].SoilWater.SWmm[2:10]) as TotalSoilWater</string>
                 <string>[Soil].SoilWater.SW</string>
               </VariableNames>
@@ -39756,5 +40106,5 @@ Simulation results for the combined datasets from the various countries are show
     <DisabledSeries />
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
-  <ExplorerWidth>286</ExplorerWidth>
+  <ExplorerWidth>350</ExplorerWidth>
 </Simulations>
