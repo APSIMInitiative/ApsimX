@@ -81,6 +81,7 @@ namespace Models.AgPasture1
 		#endregion
 
         #region Canopy interface
+
         /// <summary>Canopy type</summary>
         [Description("Generic type of crop")]
         public string CanopyType
@@ -114,7 +115,7 @@ namespace Models.AgPasture1
         [Units("mm")]
         public double Height
         {
-            get { return Math.Max(20.0, HeightFromMass.Value(AboveGroundWt)); } //speciesInSward.Max(mySpecies => mySpecies.Height); }
+            get { return Math.Max(20.0, HeightFromMass.Value(AboveGroundWt)); }
         }
 
         /// <summary>Gets the canopy depth (mm)</summary>

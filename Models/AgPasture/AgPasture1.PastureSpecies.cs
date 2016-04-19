@@ -51,14 +51,12 @@ namespace Models.AgPasture1
 		[Link(IsOptional=true)]
 		private Arbitrator.Arbitrator myApsimArbitrator = null;
 
-	    ///// <summary>The summary</summary>
-	    //[Link] private ISummary Summary = null;
-
         //- Events  ---------------------------------------------------------------------------------------------------
 
         /// <summary>Reference to a NewCrop event</summary>
         /// <param name="Data">Data about crop type</param>
         public delegate void NewCropDelegate(PMF.NewCropType Data);
+
 		/// <summary>Event to be invoked to tell other models about the existence of this species</summary>
 		public event NewCropDelegate NewCrop;
 
@@ -68,24 +66,28 @@ namespace Models.AgPasture1
 		/// <summary>Reference to a FOM incorporation event</summary>
 		/// <param name="Data">The data with soil FOM to be added.</param>
 		public delegate void FOMLayerDelegate(Soils.FOMLayerType Data);
+
 		/// <summary>Occurs when plant is depositing senesced roots.</summary>
 		public event FOMLayerDelegate IncorpFOM;
 
 		/// <summary>Reference to a BiomassRemoved event</summary>
 		/// <param name="Data">The data about biomass deposited by this plant to the soil surface.</param>
 		public delegate void BiomassRemovedDelegate(PMF.BiomassRemovedType Data);
+
 		/// <summary>Occurs when plant is depositing litter.</summary>
 		public event BiomassRemovedDelegate BiomassRemoved;
 
 		/// <summary>Reference to a WaterChanged event</summary>
 		/// <param name="Data">The changes in the amount of water for each soil layer.</param>
 		public delegate void WaterChangedDelegate(PMF.WaterChangedType Data);
+
 		/// <summary>Occurs when plant takes up water.</summary>
 		public event WaterChangedDelegate WaterChanged;
 
 		/// <summary>Reference to a NitrogenChanged event</summary>
 		/// <param name="Data">The changes in the soil N for each soil layer.</param>
 		public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
+
 		/// <summary>Occurs when the plant takes up soil N.</summary>
 		public event NitrogenChangedDelegate NitrogenChanged;
 
