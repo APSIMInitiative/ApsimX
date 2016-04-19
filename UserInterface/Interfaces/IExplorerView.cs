@@ -255,6 +255,10 @@ namespace UserInterface.Interfaces
         /// </summary>
         /// <param name="percent"></param>
         void ShowProgress(int percent);
+
+        /// <summary>Show the wait cursor</summary>
+        /// <param name="wait">If true will show the wait cursor otherwise the normal cursor.</param>
+        void ShowWaitCursor(bool wait);
     }
 
 

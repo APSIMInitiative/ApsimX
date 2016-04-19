@@ -73,25 +73,13 @@ namespace UserInterface.Presenters
         /// <summary>The view is asking for variable names.</summary>
         void OnNeedVariableNames(object Sender, NeedContextItemsArgs e)
         {
-            if (e.ObjectName == "")
-                e.ObjectName = ".";
-            object o = Apsim.Get(report, e.ObjectName);
-
-            if (o != null)
-            {
-                e.AllItems.AddRange(NeedContextItemsArgs.ExamineObjectForContextItems(o, true, true, true));
-            }
+            e.AllItems.AddRange(NeedContextItemsArgs.ExamineModelForNames(report, e.ObjectName, true, true, false));
         }
 
         /// <summary>The view is asking for event names.</summary>
         void OnNeedEventNames(object Sender, NeedContextItemsArgs e)
         {
-            object o = Apsim.Get(report, e.ObjectName);
-
-            if (o != null)
-            {
-                e.AllItems.AddRange(NeedContextItemsArgs.ExamineObjectForContextItems(o, false, false, true));
-            }
+            e.AllItems.AddRange(NeedContextItemsArgs.ExamineModelForNames(report, e.ObjectName, false, false, true));
         }
 
         /// <summary>The variable names have changed in the view.</summary>

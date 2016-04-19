@@ -28,42 +28,41 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listBoxView1 = new ListBoxView();
-            this.buttonView1 = new ButtonView();
+            this.listBoxView1 = new Views.ListBoxView();
+            this.buttonPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.SuspendLayout();
             // 
             // listBoxView1
             // 
-            this.listBoxView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxView1.AutoSize = true;
+            this.listBoxView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBoxView1.IsVisible = true;
-            this.listBoxView1.Location = new System.Drawing.Point(3, 17);
+            this.listBoxView1.Location = new System.Drawing.Point(0, 0);
+            this.listBoxView1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.listBoxView1.Name = "listBoxView1";
             this.listBoxView1.SelectedValue = null;
-            this.listBoxView1.Size = new System.Drawing.Size(335, 530);
+            this.listBoxView1.Size = new System.Drawing.Size(340, 455);
             this.listBoxView1.TabIndex = 0;
             this.listBoxView1.Values = new string[0];
             // 
-            // buttonView1
+            // buttonPanel
             // 
-            this.buttonView1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonView1.IsVisible = true;
-            this.buttonView1.Location = new System.Drawing.Point(347, 17);
-            this.buttonView1.Name = "buttonView1";
-            this.buttonView1.Size = new System.Drawing.Size(97, 36);
-            this.buttonView1.TabIndex = 1;
-            this.buttonView1.Value = "button1";
+            this.buttonPanel.AutoSize = true;
+            this.buttonPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonPanel.Location = new System.Drawing.Point(0, 0);
+            this.buttonPanel.Name = "buttonPanel";
+            this.buttonPanel.Size = new System.Drawing.Size(340, 0);
+            this.buttonPanel.TabIndex = 2;
             // 
             // ListButtonView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.buttonView1);
             this.Controls.Add(this.listBoxView1);
+            this.Controls.Add(this.buttonPanel);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "ListButtonView";
-            this.Size = new System.Drawing.Size(454, 560);
+            this.Size = new System.Drawing.Size(340, 455);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -72,6 +71,6 @@
         #endregion
 
         private ListBoxView listBoxView1;
-        private ButtonView buttonView1;
+        private System.Windows.Forms.FlowLayoutPanel buttonPanel;
     }
 }

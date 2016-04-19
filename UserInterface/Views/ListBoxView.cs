@@ -5,8 +5,13 @@
 // -----------------------------------------------------------------------
 namespace UserInterface.Views
 {
+    using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
     using System.Windows.Forms;
 
     /// <summary>An interface for a list box</summary>
@@ -57,9 +62,88 @@ namespace UserInterface.Views
             }
             set
             {
-                listBox1.Items.Clear();
-                listBox1.Items.AddRange(value);
+                PopulateListView(value);
             }
+        }
+
+        /// <summary>Populate the list view with items.</summary>
+        /// <param name="values"></param>
+        private void PopulateListView(string[] values)
+        {
+            listBox1.Items.Clear();
+            foreach (string st in values)
+            {
+                ListViewItem newItem;
+                int posLastSlash = st.LastIndexOfAny("\\/".ToCharArray());
+                if (posLastSlash != -1)
+                    newItem = AddFileNameListItem(st);
+                else
+                {
+                    newItem = new ListViewItem(st);
+                    listBox1.View = View.List;
+                }
+                listBox1.Items.Add(newItem);
+            }
+        }
+
+        /// <summary>
+        /// Add a list item based on a file name
+        /// </summary>
+        /// <param name="fileName">The filename.</param>
+        private ListViewItem AddFileNameListItem(string fileName)
+        {
+
+            List<string> resourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
+            List<string> largeImageNames = resourceNames.FindAll(r => r.Contains(".LargeImages."));
+
+            ListViewItem newItem = new ListViewItem();
+
+            // A filename was detected so add the path as a sub item.
+            int posLastSlash = fileName.LastIndexOfAny("\\/".ToCharArray());
+
+            newItem.Text = fileName.Substring(posLastSlash + 1);
+            newItem.SubItems.Add(fileName.Substring(0, posLastSlash));
+
+            // Add column headers so the subitems will appear.
+            if (listBox1.Columns.Count == 0)
+            {
+                listBox1.Columns.AddRange(new ColumnHeader[] { new ColumnHeader(), new ColumnHeader(), new ColumnHeader() });
+                imageList1.Images.Add(Properties.Resources.apsim_logo32);
+            }
+
+            // Add an image index.
+            foreach (string largeImageName in largeImageNames)
+            {
+                string shortImageName = StringUtilities.GetAfter(largeImageName, ".LargeImages.").Replace(".png", "").ToLower();
+                if (newItem.Text.ToLower().Contains(shortImageName))
+                {
+                    newItem.ImageIndex = AddImage(imageList1, largeImageName);
+                    break;
+                }
+            }
+
+            if (newItem.ImageIndex == -1)
+                newItem.ImageIndex = 0;
+
+            // Initialize the tile size.
+            listBox1.TileSize = new Size(400, 45);
+
+            return newItem;
+        }
+
+        /// <summary>Add an image to an image list if it doesn't already exist.</summary>
+        /// <param name="imageList">The image list to add to.</param>
+        /// <param name="resourceName">The resource name of the image to add.</param>
+        private static int AddImage(ImageList imageList, string resourceName)
+        {
+            int imageIndex = imageList.Images.IndexOfKey(resourceName);
+            if (imageIndex == -1)
+            {
+                imageList.Images.Add(resourceName, new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName)));
+                imageIndex = imageList.Images.IndexOfKey(resourceName);
+            }
+
+            return imageIndex;
         }
 
         /// <summary>Gets or sets the selected value.</summary>
@@ -67,9 +151,12 @@ namespace UserInterface.Views
         {
             get
             {
-                if (listBox1.SelectedItem == null)
+                if (listBox1.SelectedItems.Count == 0)
                     return null;
-                return listBox1.SelectedItem.ToString();
+                string name = listBox1.SelectedItems[0].Text;
+                if (listBox1.SelectedItems[0].SubItems.Count > 1)
+                    name = Path.Combine(listBox1.SelectedItems[0].SubItems[1].Text, name);
+                return name;
             }
             set
             {
@@ -97,10 +184,12 @@ namespace UserInterface.Views
         /// <summary>User has double clicked the list box.</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnDoubleClick(object sender, EventArgs e)
+        private void OnDoubleClick(object sender, MouseEventArgs e)
         {
             if (DoubleClicked != null)
                 DoubleClicked.Invoke(this, e);
         }
+
+
     }
 }
