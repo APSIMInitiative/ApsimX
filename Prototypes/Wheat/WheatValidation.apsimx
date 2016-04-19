@@ -1598,8 +1598,8 @@ The model consists of:
         <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
-        <Albedo>0.26</Albedo>
-        <Gsmax>0.011</Gsmax>
+        <Albedo>0.2</Albedo>
+        <Gsmax>0.012</Gsmax>
         <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
