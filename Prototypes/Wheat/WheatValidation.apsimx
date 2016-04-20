@@ -4313,100 +4313,100 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
             <n>27</n>
-            <Slope>1.1775607837943136</Slope>
-            <Intercept>-0.57103162535729091</Intercept>
-            <SEslope>0.10038755670345081</SEslope>
-            <SEintercept>1.1122299378997906</SEintercept>
-            <R2>0.846245006809538</R2>
-            <RMSE>3.2360636184071043</RMSE>
-            <NSE>0.678320498257297</NSE>
-            <ME>1.1153074985439013</ME>
-            <MAE>2.4696312887524252</MAE>
-            <RSR>0.55656576082490272</RSR>
+            <Slope>1.2109594854554417</Slope>
+            <Intercept>0.0056545423473650658</Intercept>
+            <SEslope>0.085628143287816635</SEslope>
+            <SEintercept>0.94870507480145561</SEintercept>
+            <R2>0.88888801944089091</R2>
+            <RMSE>3.384231790826985</RMSE>
+            <NSE>0.64818894092166213</NSE>
+            <ME>2.00918947995879</ME>
+            <MAE>2.6398161645324807</MAE>
+            <RSR>0.58204898406681738</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>159</n>
-            <Slope>0.96667198324153025</Slope>
-            <Intercept>-101.40104533237877</Intercept>
-            <SEslope>0.034840513008344808</SEslope>
-            <SEintercept>47.160136920438127</SEintercept>
-            <R2>0.83060356637480837</R2>
-            <RMSE>294.39233693631826</RMSE>
-            <NSE>0.75017201039178261</NSE>
-            <ME>-142.01924796648063</ME>
-            <MAE>213.88754596833064</MAE>
-            <RSR>0.49825369480873472</RSR>
+            <Slope>0.960048912843699</Slope>
+            <Intercept>-67.632466709321761</Intercept>
+            <SEslope>0.033778026152504768</SEslope>
+            <SEintercept>45.721954147825663</SEintercept>
+            <R2>0.8372764710140409</R2>
+            <RMSE>276.09034182276031</RMSE>
+            <NSE>0.78026941098951319</NSE>
+            <ME>-116.32247323828503</ME>
+            <MAE>195.1399575994854</MAE>
+            <RSR>0.46727789977751333</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Live.N</Name>
             <n>127</n>
-            <Slope>0.94236739448204732</Slope>
-            <Intercept>-2.4258101824491254</Intercept>
-            <SEslope>0.052861717371419238</SEslope>
-            <SEintercept>0.51380585558213254</SEintercept>
-            <R2>0.717707410472495</R2>
-            <RMSE>3.8090898964943647</RMSE>
-            <NSE>0.13300766477118964</NSE>
-            <ME>-2.933957398575576</ME>
-            <MAE>3.2182936997915967</MAE>
-            <RSR>0.92745114368779347</RSR>
+            <Slope>0.94593558388130694</Slope>
+            <Intercept>-2.1703422091993421</Intercept>
+            <SEslope>0.050816573097343956</SEslope>
+            <SEintercept>0.49392744156567286</SEintercept>
+            <R2>0.73489275269925769</R2>
+            <RMSE>3.5295317244014335</RMSE>
+            <NSE>0.25559892273447504</NSE>
+            <ME>-2.6470286663760514</ME>
+            <MAE>2.9702582176803771</MAE>
+            <RSR>0.85938329717320239</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Live.NConc</Name>
             <n>86</n>
-            <Slope>1.0984049671675724</Slope>
-            <Intercept>-0.0074320124289458476</Intercept>
-            <SEslope>0.11795236386811898</SEslope>
-            <SEintercept>0.0025088219026681052</SEintercept>
-            <R2>0.50796189208060727</R2>
-            <RMSE>0.0069341614653347415</RMSE>
-            <NSE>-1.9554032749108554</NSE>
-            <ME>-0.0053769393825581057</ME>
-            <MAE>0.006077193482304016</MAE>
-            <RSR>1.7091044791209888</RSR>
+            <Slope>1.0837719008760816</Slope>
+            <Intercept>-0.0067537932292029458</Intercept>
+            <SEslope>0.11776435500008968</SEslope>
+            <SEintercept>0.0025048229936972333</SEintercept>
+            <R2>0.50205433873743643</R2>
+            <RMSE>0.0066415621822917348</RMSE>
+            <NSE>-1.7112485708014904</NSE>
+            <ME>-0.0050043147171890566</ME>
+            <MAE>0.0058325593450410367</MAE>
+            <RSR>1.6369857741072094</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
             <n>120</n>
-            <Slope>0.93860211602773358</Slope>
-            <Intercept>-258.34651957241113</Intercept>
-            <SEslope>0.050787560216118945</SEslope>
-            <SEintercept>532.00218727060565</SEintercept>
-            <R2>0.74322446316718382</R2>
-            <RMSE>2193.6532912784519</RMSE>
-            <NSE>0.6356663178304397</NSE>
-            <ME>-861.54336219106654</ME>
-            <MAE>1660.4314995079224</MAE>
-            <RSR>0.60108033419126328</RSR>
+            <Slope>0.956116222276314</Slope>
+            <Intercept>-206.67487989824804</Intercept>
+            <SEslope>0.047055641587967476</SEslope>
+            <SEintercept>492.91015637871061</SEintercept>
+            <R2>0.77771724886429938</R2>
+            <RMSE>1970.5860982475292</RMSE>
+            <NSE>0.70599536557850306</NSE>
+            <ME>-637.80628789698346</ME>
+            <MAE>1474.6851889203824</MAE>
+            <RSR>0.53995795743864883</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Protein</Name>
             <n>101</n>
-            <Slope>0.87275578018964817</Slope>
-            <Intercept>0.072301684631003837</Intercept>
-            <SEslope>0.1424750554200041</SEslope>
-            <SEintercept>1.8391074576756725</SEintercept>
-            <R2>0.27485216329090889</R2>
-            <RMSE>3.8100076931892053</RMSE>
-            <NSE>-1.4216446846637911</NSE>
-            <ME>-1.5403865178703526</ME>
-            <MAE>3.2404035972868743</MAE>
-            <RSR>1.548440507290356</RSR>
+            <Slope>0.88566715884909486</Slope>
+            <Intercept>0.33730434209111948</Intercept>
+            <SEslope>0.14090458622286103</SEslope>
+            <SEintercept>1.8188354065155494</SEintercept>
+            <R2>0.28524255472486415</R2>
+            <RMSE>3.6189149682754378</RMSE>
+            <NSE>-1.1848190515364419</NSE>
+            <ME>-1.1117455586221428</ME>
+            <MAE>3.0339102363963928</MAE>
+            <RSR>1.470777746547401</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>172</n>
-            <Slope>1.207648774163302</Slope>
-            <Intercept>-153.67833991164929</Intercept>
-            <SEslope>0.0597978834605353</SEslope>
-            <SEintercept>27.357727447164645</SEintercept>
-            <R2>0.705810402808544</R2>
-            <RMSE>165.37991371301482</RMSE>
-            <NSE>0.2211116127362307</NSE>
-            <ME>-67.012786721715841</ME>
-            <MAE>137.66287311816933</MAE>
-            <RSR>0.87997725334668986</RSR>
+            <Slope>1.2269236860709281</Slope>
+            <Intercept>-149.61093410996824</Intercept>
+            <SEslope>0.057142411527607309</SEslope>
+            <SEintercept>26.142840344470038</SEintercept>
+            <R2>0.7305940967310669</R2>
+            <RMSE>155.93042443344584</RMSE>
+            <NSE>0.30757708993370492</NSE>
+            <ME>-54.900686652550363</ME>
+            <MAE>129.45056607318574</MAE>
+            <RSR>0.82969705041833564</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
@@ -4416,10 +4416,10 @@ VShort duration variety released in New Zealand by Pioneer
             <SEslope>NaN</SEslope>
             <SEintercept>NaN</SEintercept>
             <R2>NaN</R2>
-            <RMSE>0.056279741825792179</RMSE>
+            <RMSE>0.056623874859966589</RMSE>
             <NSE>-INF</NSE>
-            <ME>0.026223532985442874</ME>
-            <MAE>0.026223532985442874</MAE>
+            <ME>0.026356364315874251</ME>
+            <MAE>0.026356364315874251</MAE>
             <RSR>INF</RSR>
           </RegrStats>
           <RegrStats>
@@ -4453,72 +4453,72 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Spike.Live.N</Name>
             <n>7</n>
-            <Slope>-0.0012820098947647109</Slope>
-            <Intercept>0.61233197338863643</Intercept>
-            <SEslope>0.0070974422563796083</SEslope>
-            <SEintercept>0.16188157514597365</SEintercept>
-            <R2>0.0064831230282311747</R2>
-            <RMSE>22.263624836195039</RMSE>
-            <NSE>-7.1409386151251866</NSE>
-            <ME>-20.847337167063582</ME>
-            <MAE>20.847337167063582</MAE>
-            <RSR>2.6415804709289126</RSR>
+            <Slope>-0.00185990683271401</Slope>
+            <Intercept>0.62149578402255057</Intercept>
+            <SEslope>0.007198241134642948</SEslope>
+            <SEintercept>0.16418064016077522</SEintercept>
+            <R2>0.013176470363395199</R2>
+            <RMSE>22.268234180030667</RMSE>
+            <NSE>-7.1443098783335532</NSE>
+            <ME>-20.850558955055348</ME>
+            <MAE>20.850558955055348</MAE>
+            <RSR>2.6421273698615697</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Spike.Live.Wt</Name>
             <n>29</n>
-            <Slope>-0.0021420655459482318</Slope>
-            <Intercept>114.01816429601597</Intercept>
-            <SEslope>0.017949872499388765</SEslope>
-            <SEintercept>10.212965054520632</SEintercept>
-            <R2>0.00052716917066197855</R2>
-            <RMSE>494.58126605110789</RMSE>
-            <NSE>-0.61405154806279039</NSE>
-            <ME>-301.81382823807053</ME>
-            <MAE>301.81382823807053</MAE>
-            <RSR>1.2483567591556475</RSR>
+            <Slope>-0.0015856512332469805</Slope>
+            <Intercept>114.26836184104445</Intercept>
+            <SEslope>0.017884735521999814</SEslope>
+            <SEintercept>10.175903973788548</SEintercept>
+            <R2>0.00029104498013099445</R2>
+            <RMSE>494.10722814948633</RMSE>
+            <NSE>-0.6109590130598459</NSE>
+            <ME>-301.33275038147769</ME>
+            <MAE>301.33275038147769</MAE>
+            <RSR>1.2471602552457641</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Live.N</Name>
             <n>16</n>
-            <Slope>0.80277341899729049</Slope>
-            <Intercept>1.1310731210010372</Intercept>
-            <SEslope>0.20279968729302114</SEslope>
-            <SEintercept>0.37569867470210466</SEintercept>
-            <R2>0.5281328113874254</R2>
-            <RMSE>0.99953566858616749</RMSE>
-            <NSE>-0.698756084977731</NSE>
-            <ME>0.79847514546259313</ME>
-            <MAE>0.81216011600669447</MAE>
-            <RSR>1.2619761604985345</RSR>
+            <Slope>0.80854693375321462</Slope>
+            <Intercept>1.1794677124245665</Intercept>
+            <SEslope>0.20285083479681332</SEslope>
+            <SEintercept>0.37579342854342235</SEintercept>
+            <R2>0.53157749537902488</R2>
+            <RMSE>1.046008594712653</RMSE>
+            <NSE>-0.86039403434403394</NSE>
+            <ME>0.85660604783264382</ME>
+            <MAE>0.86352557533042251</MAE>
+            <RSR>1.3206511300103185</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Live.Wt</Name>
             <n>28</n>
-            <Slope>0.8796494735211503</Slope>
-            <Intercept>-72.249646644703887</Intercept>
-            <SEslope>0.1708159391191659</SEslope>
-            <SEintercept>110.81769840413898</SEintercept>
-            <R2>0.50494415694327421</R2>
-            <RMSE>241.0786092127145</RMSE>
-            <NSE>-0.21868719208188669</NSE>
-            <ME>-145.77124270945416</ME>
-            <MAE>186.8855786023403</MAE>
-            <RSR>1.0840491914611317</RSR>
+            <Slope>0.88116909979471258</Slope>
+            <Intercept>-67.87036090903365</Intercept>
+            <SEslope>0.16781967846312565</SEslope>
+            <SEintercept>108.87385925520795</SEintercept>
+            <R2>0.51465141371810041</R2>
+            <RMSE>235.2110747199699</RMSE>
+            <NSE>-0.16008663850709959</NSE>
+            <ME>-140.46362410875187</ME>
+            <MAE>181.8462700525059</MAE>
+            <RSR>1.0576648679265714</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.TotalStemPopn</Name>
             <n>9</n>
-            <Slope>0.084434315801345722</Slope>
-            <Intercept>319.72940186724315</Intercept>
-            <SEslope>0.091763675724302968</SEslope>
-            <SEintercept>67.272567450909932</SEintercept>
-            <R2>0.10789787860685962</R2>
-            <RMSE>377.17848718633161</RMSE>
-            <NSE>-2.5401409896452813</NSE>
-            <ME>-325.8967250731173</ME>
-            <MAE>325.8967250731173</MAE>
-            <RSR>1.7739199505039132</RSR>
+            <Slope>-0.16592826732783322</Slope>
+            <Intercept>533.42157051477159</Intercept>
+            <SEslope>0.11453233197525942</SEslope>
+            <SEintercept>83.964422385001114</SEintercept>
+            <R2>0.23067329429638239</R2>
+            <RMSE>376.4250711360786</RMSE>
+            <NSE>-2.5260122136939192</NSE>
+            <ME>-288.75182951168233</ME>
+            <MAE>320.34619274170564</MAE>
+            <RSR>1.7703765358925878</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4545,16 +4545,16 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
             <n>402</n>
-            <Slope>0.91293062709975048</Slope>
-            <Intercept>1.9840354061673011</Intercept>
-            <SEslope>0.018395026999804144</SEslope>
-            <SEintercept>1.0791516990617451</SEintercept>
-            <R2>0.86028925874005924</R2>
-            <RMSE>9.9068304231101632</RMSE>
-            <NSE>0.84626751681333412</NSE>
-            <ME>-2.6258859072842262</ME>
-            <MAE>6.3366491619766183</MAE>
-            <RSR>0.39159936679502078</RSR>
+            <Slope>0.91246588614471325</Slope>
+            <Intercept>2.0216259628083435</Intercept>
+            <SEslope>0.018380856036525853</SEslope>
+            <SEintercept>1.0783203537693857</SEintercept>
+            <R2>0.860352100306576</R2>
+            <RMSE>9.8992921718295275</RMSE>
+            <NSE>0.846501382366031</NSE>
+            <ME>-2.6129012385977659</ME>
+            <MAE>6.3236644932901545</MAE>
+            <RSR>0.39130139314430074</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4627,16 +4627,16 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>ET</Name>
             <n>123</n>
-            <Slope>1.1263617417348872</Slope>
-            <Intercept>-0.584074499797778</Intercept>
-            <SEslope>0.041521982293692014</SEslope>
-            <SEintercept>0.16106618669141504</SEintercept>
-            <R2>0.8587879692718996</R2>
-            <RMSE>0.73074247030309536</RMSE>
-            <NSE>0.76773628085089762</NSE>
-            <ME>-0.13290736465587233</ME>
-            <MAE>0.55559199751935273</MAE>
-            <RSR>0.47997437038782703</RSR>
+            <Slope>1.1260310017024333</Slope>
+            <Intercept>-0.584313650751699</Intercept>
+            <SEslope>0.041574453806906657</SEslope>
+            <SEintercept>0.16126972674602111</SEintercept>
+            <R2>0.85841000945492019</R2>
+            <RMSE>0.73170011885729469</RMSE>
+            <NSE>0.76712711203756623</NSE>
+            <ME>-0.13432740336007459</ME>
+            <MAE>0.55605044795623515</MAE>
+            <RSR>0.48060338372773043</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4654,100 +4654,100 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
             <n>84</n>
-            <Slope>0.80159325382270219</Slope>
-            <Intercept>0.81294183134810893</Intercept>
-            <SEslope>0.080456205882607656</SEslope>
-            <SEintercept>0.76207030630527806</SEintercept>
-            <R2>0.54761957395445715</R2>
-            <RMSE>4.7449283998069829</RMSE>
-            <NSE>0.42050166339758377</NSE>
-            <ME>-0.60208615352002615</ME>
-            <MAE>2.7668952476381405</MAE>
-            <RSR>0.75670307709230245</RSR>
+            <Slope>0.82275355116798332</Slope>
+            <Intercept>1.0332565914385556</Intercept>
+            <SEslope>0.080675169472742378</SEslope>
+            <SEintercept>0.76414429983223042</SEintercept>
+            <R2>0.55915478005283048</R2>
+            <RMSE>4.6913438377342986</RMSE>
+            <NSE>0.4335163290192291</NSE>
+            <ME>-0.23085710503665335</ME>
+            <MAE>2.6925551857391539</MAE>
+            <RSR>0.74815761558297955</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>462</n>
-            <Slope>0.86585965063189163</Slope>
-            <Intercept>-7.4014870691038368</Intercept>
-            <SEslope>0.018237195207889471</SEslope>
-            <SEintercept>23.971885157750567</SEintercept>
-            <R2>0.830516576963772</R2>
-            <RMSE>329.56470457464826</RMSE>
-            <NSE>0.77920883070177493</NSE>
-            <ME>-156.52390036951979</ME>
-            <MAE>235.83352268034798</MAE>
-            <RSR>0.4693754002228665</RSR>
+            <Slope>0.86926696310914042</Slope>
+            <Intercept>2.8250364192987263</Intercept>
+            <SEslope>0.018075917451499755</SEslope>
+            <SEintercept>23.759893576227029</SEintercept>
+            <R2>0.83409237936908465</R2>
+            <RMSE>320.39493220170357</RMSE>
+            <NSE>0.79132443984137013</NSE>
+            <ME>-142.50950349425432</ME>
+            <MAE>227.17697972502805</MAE>
+            <RSR>0.45631555031248694</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Live.N</Name>
             <n>166</n>
-            <Slope>0.90745524250634158</Slope>
-            <Intercept>-0.5181017206817069</Intercept>
-            <SEslope>0.047424728211065484</SEslope>
-            <SEintercept>0.36868944025597788</SEintercept>
-            <R2>0.69064458003110052</R2>
-            <RMSE>2.9115957218689528</RMSE>
-            <NSE>0.55805806682813563</NSE>
-            <ME>-1.1125250605415651</ME>
-            <MAE>2.3193381678367553</MAE>
-            <RSR>0.66278173810812269</RSR>
+            <Slope>0.94366096368674268</Slope>
+            <Intercept>-0.53956765465239176</Intercept>
+            <SEslope>0.04805629420560234</SEslope>
+            <SEintercept>0.37359936218476975</SEintercept>
+            <R2>0.70159846459244435</R2>
+            <RMSE>2.8528183571986281</RMSE>
+            <NSE>0.57572122452651631</NSE>
+            <ME>-0.90143837576922</ME>
+            <MAE>2.2774727112590369</MAE>
+            <RSR>0.64940193966117121</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Live.NConc</Name>
             <n>167</n>
-            <Slope>0.70634605350416635</Slope>
-            <Intercept>-0.00012505421665271257</Intercept>
-            <SEslope>0.18468675383330041</SEslope>
-            <SEintercept>0.003153866818311347</SEintercept>
-            <R2>0.081431279453659688</R2>
-            <RMSE>0.00910215334982857</RMSE>
-            <NSE>-7.2594008761789031</NSE>
-            <ME>-0.005052736245911878</ME>
-            <MAE>0.007547157723992782</MAE>
-            <RSR>2.8652998771336975</RSR>
+            <Slope>0.76720470538089147</Slope>
+            <Intercept>-0.00092088377185348472</Intercept>
+            <SEslope>0.18917929377930257</SEslope>
+            <SEintercept>0.0032305852205332152</SEintercept>
+            <R2>0.09064138958596013</R2>
+            <RMSE>0.0091148577637745615</RMSE>
+            <NSE>-7.2824732355948054</NSE>
+            <ME>-0.0048273226380069574</ME>
+            <MAE>0.0075462034290818842</MAE>
+            <RSR>2.8692991456935037</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
             <n>19</n>
-            <Slope>0.72220375908000933</Slope>
-            <Intercept>-112.17072909084254</Intercept>
-            <SEslope>0.1848028406270881</SEslope>
-            <SEintercept>2295.39250501727</SEintercept>
-            <R2>0.47323117541904192</R2>
-            <RMSE>5144.4054808436294</RMSE>
-            <NSE>-0.1106002501743788</NSE>
-            <ME>-3284.9639169245238</ME>
-            <MAE>3378.801576418145</MAE>
-            <RSR>1.0257424654504459</RSR>
+            <Slope>0.77749102802253522</Slope>
+            <Intercept>29.229716517638735</Intercept>
+            <SEslope>0.19562607875750329</SEslope>
+            <SEintercept>2429.8253936042142</SEintercept>
+            <R2>0.48163843911509208</R2>
+            <RMSE>4795.1512361498335</RMSE>
+            <NSE>0.035078461386382043</NSE>
+            <ME>-2512.1111892626791</ME>
+            <MAE>2689.2931903475746</MAE>
+            <RSR>0.95610469849073509</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Protein</Name>
             <n>6</n>
-            <Slope>1.5410684907411902</Slope>
-            <Intercept>-8.9026449221227679</Intercept>
-            <SEslope>0.20448201416695136</SEslope>
-            <SEintercept>2.0348695215565917</SEintercept>
-            <R2>0.93420844837787187</R2>
-            <RMSE>3.9065030747296916</RMSE>
-            <NSE>-2.4773280922646448</NSE>
-            <ME>-3.6389502880288895</ME>
-            <MAE>3.6389502880288895</MAE>
-            <RSR>1.7022847617894421</RSR>
+            <Slope>1.5183850557211425</Slope>
+            <Intercept>-8.6169149892236874</Intercept>
+            <SEslope>0.20873079043369758</SEslope>
+            <SEintercept>2.0771505278560305</SEintercept>
+            <R2>0.929721563768888</R2>
+            <RMSE>3.8362566759142647</RMSE>
+            <NSE>-2.3533944603651178</NSE>
+            <ME>-3.5738923721498397</ME>
+            <MAE>3.5738923721498397</MAE>
+            <RSR>1.6716744251311613</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>251</n>
-            <Slope>1.0663650621916594</Slope>
-            <Intercept>-22.877175653924496</Intercept>
-            <SEslope>0.037171270881272173</SEslope>
-            <SEintercept>14.632585410642921</SEintercept>
-            <R2>0.76772271465260333</R2>
-            <RMSE>149.22095582769163</RMSE>
-            <NSE>0.65142454285545237</NSE>
-            <ME>-2.8482201117449284</ME>
-            <MAE>105.25884782835767</MAE>
-            <RSR>0.58922551735590534</RSR>
+            <Slope>1.0846037495381207</Slope>
+            <Intercept>-19.661810335139137</Intercept>
+            <SEslope>0.03565830215922635</SEslope>
+            <SEintercept>14.037000607538415</SEintercept>
+            <R2>0.78793505347057446</R2>
+            <RMSE>143.93220199148391</RMSE>
+            <NSE>0.675695399251058</NSE>
+            <ME>5.871575489272316</ME>
+            <MAE>101.86234721651891</MAE>
+            <RSR>0.56834193101226915</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CoverTotal</Name>
@@ -4766,86 +4766,86 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Leaf.Dead.N</Name>
             <n>24</n>
-            <Slope>4.9879972706544109</Slope>
-            <Intercept>1.2029956652854541</Intercept>
-            <SEslope>0.871893201517079</SEslope>
-            <SEintercept>0.37804388357982988</SEintercept>
-            <R2>0.59801550986175567</R2>
-            <RMSE>2.9920835994591126</RMSE>
-            <NSE>-92.761173448192082</NSE>
-            <ME>2.416011501776171</ME>
-            <MAE>2.416011501776171</MAE>
-            <RSR>9.4791591340081833</RSR>
+            <Slope>4.9895678812040574</Slope>
+            <Intercept>1.2478617145676409</Intercept>
+            <SEslope>0.89430063636901758</SEslope>
+            <SEintercept>0.38775951581294</SEintercept>
+            <R2>0.58590996802181539</R2>
+            <RMSE>3.0427048253333542</RMSE>
+            <NSE>-95.960586362514334</NSE>
+            <ME>2.4613552784338748</ME>
+            <MAE>2.4613552784338748</MAE>
+            <RSR>9.63953120907562</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Dead.Wt</Name>
             <n>24</n>
-            <Slope>1.7828087805752719</Slope>
-            <Intercept>10.280238350652695</Intercept>
-            <SEslope>0.21464656517536918</SEslope>
-            <SEintercept>12.929966688765786</SEintercept>
-            <R2>0.75820484527800769</R2>
-            <RMSE>67.209680834769443</RMSE>
-            <NSE>-2.2021748305408511</NSE>
-            <ME>47.1472702124956</ME>
-            <MAE>47.230121811106017</MAE>
-            <RSR>1.7517850550990313</RSR>
+            <Slope>1.8136924490614341</Slope>
+            <Intercept>10.487786912644936</Intercept>
+            <SEslope>0.21370301866445446</SEslope>
+            <SEintercept>12.873128952063777</SEintercept>
+            <R2>0.76602904757850465</R2>
+            <RMSE>68.801417406112748</RMSE>
+            <NSE>-2.3556460399653694</NSE>
+            <ME>48.809310878234072</ME>
+            <MAE>48.875081518123416</MAE>
+            <RSR>1.793272833387829</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
             <n>219</n>
-            <Slope>1.2147810731534392</Slope>
-            <Intercept>-0.034355422837722749</Intercept>
-            <SEslope>0.049235884690085385</SEslope>
-            <SEintercept>0.21808222698592228</SEintercept>
-            <R2>0.73720572881933966</R2>
-            <RMSE>2.1511779146517318</RMSE>
-            <NSE>0.35487742190295657</NSE>
-            <ME>0.72336377568608468</ME>
-            <MAE>1.4157026984440269</MAE>
-            <RSR>0.80135935316202156</RSR>
+            <Slope>1.2095382436160826</Slope>
+            <Intercept>0.0080813178135148434</Intercept>
+            <SEslope>0.049120854720935421</SEslope>
+            <SEintercept>0.21757272071828337</SEintercept>
+            <R2>0.73643543006294165</R2>
+            <RMSE>2.1515591076157481</RMSE>
+            <NSE>0.35464876766246789</NSE>
+            <ME>0.74730450764942136</ME>
+            <MAE>1.4169457085010662</MAE>
+            <RSR>0.80150135561797531</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.N</Name>
             <n>200</n>
-            <Slope>1.1987395362177928</Slope>
-            <Intercept>0.52138515448754585</Intercept>
-            <SEslope>0.0482559136558259</SEslope>
-            <SEintercept>0.20776068530664033</SEintercept>
-            <R2>0.75708206722952442</R2>
-            <RMSE>2.2773676532781533</RMSE>
-            <NSE>0.31610161412376914</NSE>
-            <ME>1.1791146432980133</ME>
-            <MAE>1.5906726085169165</MAE>
-            <RSR>0.82491144612427925</RSR>
+            <Slope>1.2129849357896319</Slope>
+            <Intercept>0.57665890461569091</Intercept>
+            <SEslope>0.048181845784376981</SEslope>
+            <SEintercept>0.20744179399227863</SEintercept>
+            <R2>0.76195854929761986</R2>
+            <RMSE>2.3392678581343236</RMSE>
+            <NSE>0.27841883218103824</NSE>
+            <ME>1.2815336145361553</ME>
+            <MAE>1.640416940747685</MAE>
+            <RSR>0.84733302896787122</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.Wt</Name>
             <n>257</n>
-            <Slope>0.79564565327920933</Slope>
-            <Intercept>35.0029031769955</Intercept>
-            <SEslope>0.039686071538772752</SEslope>
-            <SEintercept>7.1041347749264867</SEintercept>
-            <R2>0.61183775776163252</R2>
-            <RMSE>74.0744150488207</RMSE>
-            <NSE>0.553409851259539</NSE>
-            <ME>6.2785876635570235</ME>
-            <MAE>51.019275022146807</MAE>
-            <RSR>0.66697259604990422</RSR>
+            <Slope>0.79673991677433487</Slope>
+            <Intercept>37.791066787712126</Intercept>
+            <SEslope>0.040336072684445425</SEslope>
+            <SEintercept>7.2204903516734538</SEintercept>
+            <R2>0.604750963793864</R2>
+            <RMSE>75.432757423943031</RMSE>
+            <NSE>0.53688095115845</NSE>
+            <ME>9.2205623891004667</ME>
+            <MAE>52.486915182195553</MAE>
+            <RSR>0.67920323114385439</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.SpecificArea</Name>
             <n>77</n>
-            <Slope>0.10047299403439197</Slope>
-            <Intercept>22691.83933790322</Intercept>
-            <SEslope>0.099624174408626462</SEslope>
-            <SEintercept>1952.3375548104534</SEintercept>
-            <R2>0.013380053364404065</R2>
-            <RMSE>7824.768276537563</RMSE>
-            <NSE>-2.0965616974648289</NSE>
-            <ME>5523.5737855847356</ME>
-            <MAE>6660.3700750070129</MAE>
-            <RSR>1.748241004691506</RSR>
+            <Slope>0.095934010428967931</Slope>
+            <Intercept>22752.811483544625</Intercept>
+            <SEslope>0.099085479415832844</SEslope>
+            <SEintercept>1941.7807349295124</SEintercept>
+            <R2>0.012344384600408764</R2>
+            <RMSE>7806.8772917252536</RMSE>
+            <NSE>-2.082417584588883</NSE>
+            <ME>5497.9154294638383</ME>
+            <MAE>6639.9179963532461</MAE>
+            <RSR>1.7442437293527617</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
@@ -4864,72 +4864,72 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Spike.Live.N</Name>
             <n>68</n>
-            <Slope>0.0068195447456056964</Slope>
-            <Intercept>0.4428216589777153</Intercept>
-            <SEslope>0.003481502197887126</SEslope>
-            <SEintercept>0.042101365972370144</SEintercept>
-            <R2>0.054940503382331807</R2>
-            <RMSE>11.648319254887513</RMSE>
-            <NSE>-1.939518029810912</NSE>
-            <ME>-9.4929165089068182</ME>
-            <MAE>9.4929165089068182</MAE>
-            <RSR>1.7018489426180465</RSR>
+            <Slope>0.005278692028655013</Slope>
+            <Intercept>0.48805393020921634</Intercept>
+            <SEslope>0.003735400148831617</SEslope>
+            <SEintercept>0.045171721797173638</SEintercept>
+            <R2>0.02936896385514487</R2>
+            <RMSE>11.63035192918467</RMSE>
+            <NSE>-1.9304567148895311</NSE>
+            <ME>-9.4630988675846162</ME>
+            <MAE>9.4630988675846162</MAE>
+            <RSR>1.6992238708304386</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Spike.Live.Wt</Name>
             <n>132</n>
-            <Slope>0.073460572280811653</Slope>
-            <Intercept>60.057463673625548</Intercept>
-            <SEslope>0.014039704875547749</SEslope>
-            <SEintercept>6.6329028801188556</SEintercept>
-            <R2>0.17396032555491814</R2>
-            <RMSE>397.08516168484664</RMSE>
-            <NSE>-0.67215749998581109</NSE>
-            <ME>-272.5988440238757</ME>
-            <MAE>276.60123681982452</MAE>
-            <RSR>1.2882117994093338</RSR>
+            <Slope>0.074613314240305512</Slope>
+            <Intercept>59.987123519579484</Intercept>
+            <SEslope>0.014065527248624166</SEslope>
+            <SEintercept>6.6451023739307491</SEintercept>
+            <R2>0.1779424277654047</R2>
+            <RMSE>396.606918028853</RMSE>
+            <NSE>-0.66813208065266383</NSE>
+            <ME>-272.25531416602468</ME>
+            <MAE>276.2577069619735</MAE>
+            <RSR>1.2866602956512241</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Live.N</Name>
             <n>244</n>
-            <Slope>0.57928176838654988</Slope>
-            <Intercept>0.79470565580308117</Intercept>
-            <SEslope>0.0425981378650149</SEslope>
-            <SEintercept>0.16875635559525429</SEintercept>
-            <R2>0.43315732546482466</R2>
-            <RMSE>1.8693688354491127</RMSE>
-            <NSE>0.32020304211459993</NSE>
-            <ME>-0.57205442000978257</ME>
-            <MAE>1.339965444337</MAE>
-            <RSR>0.82280672382966835</RSR>
+            <Slope>0.602551061559238</Slope>
+            <Intercept>0.80098547974963208</Intercept>
+            <SEslope>0.043204842651324404</SEslope>
+            <SEintercept>0.17115987118986145</SEintercept>
+            <R2>0.44559176883071172</R2>
+            <RMSE>1.8369714388011258</RMSE>
+            <NSE>0.34356152445950949</NSE>
+            <ME>-0.49018115011521851</ME>
+            <MAE>1.3125423875678044</MAE>
+            <RSR>0.80854693983678072</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Live.Wt</Name>
             <n>307</n>
-            <Slope>0.630445227980937</Slope>
-            <Intercept>-5.1018469657415153</Intercept>
-            <SEslope>0.034789414062978322</SEslope>
-            <SEintercept>23.703690323268805</SEintercept>
-            <R2>0.51847021448284836</R2>
-            <RMSE>329.46432706217934</RMSE>
-            <NSE>0.065882337696795856</NSE>
-            <ME>-223.1179833888713</ME>
-            <MAE>247.76096333676071</MAE>
-            <RSR>0.96492224233950574</RSR>
+            <Slope>0.63588932778312612</Slope>
+            <Intercept>-3.1527710510558222</Intercept>
+            <SEslope>0.034378228283008565</SEslope>
+            <SEintercept>23.423529801562665</SEintercept>
+            <R2>0.52869103814264329</R2>
+            <RMSE>323.72570202462265</RMSE>
+            <NSE>0.098139947425941121</NSE>
+            <ME>-217.95720059054693</ME>
+            <MAE>243.005349031263</MAE>
+            <RSR>0.94811518165235653</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.TotalStemPopn</Name>
             <n>61</n>
-            <Slope>1.3116067173745016</Slope>
-            <Intercept>-497.45175329342896</Intercept>
-            <SEslope>0.13253440614007658</SEslope>
-            <SEintercept>115.95133578091716</SEintercept>
-            <R2>0.62405468989578217</R2>
-            <RMSE>396.44383553440838</RMSE>
-            <NSE>-0.796828862311431</NSE>
-            <ME>-240.88365039976003</ME>
-            <MAE>359.27037034877361</MAE>
-            <RSR>1.3294256848180219</RSR>
+            <Slope>1.287079487019652</Slope>
+            <Intercept>-471.51336872499712</Intercept>
+            <SEslope>0.13531806224110035</SEslope>
+            <SEintercept>118.38669315466409</SEintercept>
+            <R2>0.60526899412098056</R2>
+            <RMSE>396.22870999638252</RMSE>
+            <NSE>-0.79487933572323155</NSE>
+            <ME>-235.14028927113651</ME>
+            <MAE>358.18847264753072</MAE>
+            <RSR>1.3287042877623045</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
