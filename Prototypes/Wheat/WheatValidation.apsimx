@@ -4397,16 +4397,16 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>172</n>
-            <Slope>1.2269236860709281</Slope>
-            <Intercept>-149.61093410996824</Intercept>
-            <SEslope>0.057142411527607309</SEslope>
-            <SEintercept>26.142840344470038</SEintercept>
-            <R2>0.7305940967310669</R2>
-            <RMSE>155.93042443344584</RMSE>
-            <NSE>0.30757708993370492</NSE>
-            <ME>-54.900686652550363</ME>
-            <MAE>129.45056607318574</MAE>
-            <RSR>0.82969705041833564</RSR>
+            <Slope>1.2230179284229616</Slope>
+            <Intercept>-142.95827574472935</Intercept>
+            <SEslope>0.056678164159746421</SEslope>
+            <SEintercept>25.930445653838824</SEintercept>
+            <R2>0.73254571684757774</R2>
+            <RMSE>153.00620403544397</RMSE>
+            <NSE>0.3333040937942916</NSE>
+            <ME>-49.878159014308252</ME>
+            <MAE>124.75213166948554</MAE>
+            <RSR>0.8141374375473347</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
@@ -4438,17 +4438,17 @@ VShort duration variety released in New Zealand by Pioneer
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
-            <n>1</n>
-            <Slope>NaN</Slope>
-            <Intercept>NaN</Intercept>
+            <n>18</n>
+            <Slope>-INF</Slope>
+            <Intercept>INF</Intercept>
             <SEslope>NaN</SEslope>
             <SEintercept>NaN</SEintercept>
-            <R2>NaN</R2>
-            <RMSE>0.2231590532420995</RMSE>
+            <R2>INF</R2>
+            <RMSE>0.28391497078097072</RMSE>
             <NSE>-INF</NSE>
-            <ME>0.2231590532420995</ME>
-            <MAE>0.2231590532420995</MAE>
-            <RSR>NaN</RSR>
+            <ME>0.283537068439891</ME>
+            <MAE>0.283537068439891</MAE>
+            <RSR>INF</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Spike.Live.N</Name>
@@ -4544,17 +4544,17 @@ VShort duration variety released in New Zealand by Pioneer
         <AcceptedStats>
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
-            <n>402</n>
-            <Slope>0.91246588614471325</Slope>
-            <Intercept>2.0216259628083435</Intercept>
-            <SEslope>0.018380856036525853</SEslope>
-            <SEintercept>1.0783203537693857</SEintercept>
-            <R2>0.860352100306576</R2>
-            <RMSE>9.8992921718295275</RMSE>
-            <NSE>0.846501382366031</NSE>
-            <ME>-2.6129012385977659</ME>
-            <MAE>6.3236644932901545</MAE>
-            <RSR>0.39130139314430074</RSR>
+            <n>408</n>
+            <Slope>0.91266074537661179</Slope>
+            <Intercept>1.9704779847454432</Intercept>
+            <SEslope>0.018094567333113241</SEslope>
+            <SEintercept>1.0609750826127742</SEintercept>
+            <R2>0.8623743106014411</R2>
+            <RMSE>9.88135697413552</RMSE>
+            <NSE>0.84858970725614724</NSE>
+            <ME>-2.6454538645936814</ME>
+            <MAE>6.3155878692909564</MAE>
+            <RSR>0.38863760637021066</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -34420,6 +34420,9 @@ namespace Models
             <Name>Weather</Name>
             <FileName>hall2002.met</FileName>
           </Weather>
+          <SoilArbitrator>
+            <Name>Soil Arbitrator</Name>
+          </SoilArbitrator>
           <Zone>
             <Name>paddock</Name>
             <Irrigation>
@@ -35125,7 +35128,7 @@ namespace Models
               <Name>SowingSchedule</Name>
               <Operation>
                 <Date>2002-08-15T00:00:00</Date>
-                <Action>[Wheat].Sow(population:100, cultivar:"Hartog", depth:30, rowSpacing:250);</Action>
+                <Action>[Wheat].Sow(population:100, cultivar:"H45", depth:30, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Manager>
@@ -35333,6 +35336,7 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>Wheat.Zadok.Stage</string>
+                <string>[Wheat].Phenology.Zadok.Stage</string>
                 <string>Wheat.Phenology.CurrentStageName</string>
                 <string>Wheat.AboveGround.Wt</string>
                 <string>Wheat.AboveGround.N</string>
@@ -35432,9 +35436,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <SoilArbitrator>
-            <Name>Soil Arbitrator</Name>
-          </SoilArbitrator>
           <Area>0</Area>
           <Slope>0</Slope>
         </Simulation>
@@ -35787,7 +35788,7 @@ namespace Models
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
             <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
             <MarkerSize>Normal</MarkerSize>
@@ -35839,8 +35840,30 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
+            <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Zadok</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
