@@ -124,8 +124,9 @@ namespace Models
 
             set
             {
-                Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-                this.FileName = PathUtilities.GetRelativePath(value, simulation.FileName);
+
+                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
             }
         }
 
