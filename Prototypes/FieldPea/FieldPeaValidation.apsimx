@@ -1811,6 +1811,20 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <Name>Tests</Name>
         <AcceptedStats>
           <RegrStats>
+            <Name>FieldPea.AboveGround.Wt</Name>
+            <n>138</n>
+            <Slope>0.736118500493635</Slope>
+            <Intercept>92.764651389760957</Intercept>
+            <SEslope>0.025977257114788325</SEslope>
+            <SEintercept>13.71498558079942</SEintercept>
+            <R2>0.85516316825054728</R2>
+            <RMSE>149.46848554221862</RMSE>
+            <NSE>0.838315752119674</NSE>
+            <ME>-6.1706555472679314</ME>
+            <MAE>85.673894574363217</MAE>
+            <RSR>0.400640266193609</RSR>
+          </RegrStats>
+          <RegrStats>
             <Name>FieldPea.Grain.Live.Wt</Name>
             <n>138</n>
             <Slope>0.66372846904843463</Slope>
@@ -1837,6 +1851,20 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <ME>33.375648333300845</ME>
             <MAE>43.719557369875893</MAE>
             <RSR>1.2616730194092958</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>FieldPea.Pod.Wt</Name>
+            <n>138</n>
+            <Slope>0.74466248227720588</Slope>
+            <Intercept>28.959871604665537</Intercept>
+            <SEslope>0.021244821533835664</SEslope>
+            <SEintercept>5.1970237975336149</SEintercept>
+            <R2>0.90033756248524321</R2>
+            <RMSE>75.250363966467617</RMSE>
+            <NSE>0.87328332702672573</NSE>
+            <ME>-2.4729693426404649</ME>
+            <MAE>37.646438420552613</MAE>
+            <RSR>0.35468075252626607</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FieldPea.Shell.Live.Wt</Name>
