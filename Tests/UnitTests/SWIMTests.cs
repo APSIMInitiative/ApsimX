@@ -730,5 +730,88 @@ namespace UnitTests
             for (int i = 0; i < col.Length; i++)
                 Assert.AreEqual(col, res);
         }
+
+        [Test]
+        public void TestSoilSofh()
+        {
+            SoilData sd = new SoilData();
+            double[] h = new double[] { -1000, -400 };
+            int[] il = new int[] { 1, 5 };
+            double[] S = new double[] { 0.20823805891386751, 0.69816014307963947 };
+            double Sout;
+            double Sh = 0; //not used for this test
+
+            for (int i = 0; i < h.Length; i++)
+            {
+                sd.Sofh(h[i], il[i], out Sout, out Sh);
+                Assert.AreEqual(S[i], Sout);
+            }
+        }
+
+        [Test]
+        public void TestSoilhofS()
+        {
+            SoilData sd = new SoilData();
+            int[] il = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            double[] S = new double[] { 0.126003759, 0.274513709, 0.304264222, 0.322428817, 0.753111491, 0.763057761, 0.771020429, 0.777424561, 0.785589565, 0.791658607 };
+            double[] h = new double[] { -4127.089816, -451.3344937, -335.1254433, -283.154451, -249.4598274, -229.4151312, -214.6033187, -203.4151583, -190.0339887, -180.6689122 };
+            double hout = 0; //not used for this test
+            double hs = 0; //not used for this test
+
+            for (int i = 0; i < il.Length; i++)
+            {
+                sd.Sofh(S[i], il[i], out hout, out hs);
+                Assert.AreEqual(h[i], hout);
+            }
+        }
+
+        [Test]
+        public void TestSoilKofS()
+        {
+            //TODO: Find an example that uses this function. Ex4 doesn't.
+        }
+
+        [Test]
+        public void TestGetK()
+        {
+            SoilData sd = new SoilData();
+            int iq = 10;
+            int iS= 0;
+            double[] x = new double[] { 6.981601E-01, 6.981602E-01, 6.981650E-01, 6.981651E-01, 7.925112E-01, 7.920824E-01 };
+            double[] q = new double[] { 1.060510E-04, 1.060510E-04, 1.060658E-04, 1.060659E-04, 1.515951E-03, 1.497711E-03 };
+            double[] qya = new double[] { 3.056834E-03, 3.056834E-03, 3.056834E-03, 3.056834E-03, 4.253065E-02, 4.253065E-02 };
+            double qout;
+            double qyaout;
+
+            for (int i=0;i<x.Length;i++)
+            {
+                sd.GetK(iq, iS, x[i], out qout, out qyaout);
+                Assert.AreEqual(q[i], qout, q[i] * 1E-7);
+                Assert.AreEqual(qya[i], qyaout, qya[i] * 1E-7);
+            }
+        }
+
+        [Test]
+        public void TestGetQ()
+        {
+            SoilData sd = new SoilData();
+            int[] iq = new int[] { 0, 1, 2, 3, 4 };
+            int[] iS = new int[] { 0, 0 };
+            double[][] x = new double[][] { new double[] { 0.000000E+00, 2.082381E-01 }, new double[] { 2.082381E-01, 2.082381E-01 },
+                                            new double[] { 2.082381E-01, 2.082381E-01 }, new double[] { 2.082381E-01, 2.082381E-01 }, new double[]{ 2.082381E-01, 6.981601E-01 } };
+            double[] q = new double[] { -8.423496E-04, 1.490687E-06, 1.490687E-06, 1.490687E-06, -5.630112E-04 };
+            double[] qya = new double[] { 1.067063E-03, 1.882709E-03, 1.882709E-03, 1.882709E-03, 3.662592E-03 };
+            double[] qyb = new double[] { -3.695062E-03, -1.831093E-03, -1.831093E-03, -1.831093E-03, -1.332845E-02 };
+            double qout;
+            double qyaout;
+            double qybout;
+            for (int i = 0; i < x.Length; i++)
+            {
+                sd.GetQ(iq[i], iS, x[i], out qout, out qyaout, out qybout);
+                Assert.AreEqual(q[i], qout, q[i] * 1E-7);
+                Assert.AreEqual(qya[i], qyaout, qya[i] * 1E-7);
+                Assert.AreEqual(qyb[i], qybout, qyb[i] * 1E-7);
+            }
+        }
     }
 }
