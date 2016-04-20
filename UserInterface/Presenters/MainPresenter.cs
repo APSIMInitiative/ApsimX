@@ -34,7 +34,7 @@ namespace UserInterface.Presenters
         private string lastExamplesPath;
 
         /// <summary>A list of presenters for tabs on the left.</summary>
-        private List<ExplorerPresenter> presenters1 = new List<ExplorerPresenter>();
+        public List<ExplorerPresenter> presenters1 = new List<ExplorerPresenter>();
 
         /// <summary>A list of presenters for tabs on the right.</summary>
         private List<ExplorerPresenter> presenters2 = new List<ExplorerPresenter>();
@@ -164,6 +164,21 @@ namespace UserInterface.Presenters
             view.ChangeTabText(currentTabName, newTabName);
         }
 
+        /// <summary>Close the application</summary>
+        public void Close(bool askToSave)
+        {
+            view.Close();
+        }
+
+        /// <summary>Close the tab with the specified name.</summary>
+        /// <param name="tabName">the name of the tab to close.</param>
+        public void CloseTab(string tabName)
+        {
+            presenters1.RemoveAll(p => p.ApsimXFile.FileName == tabName);
+            presenters2.RemoveAll(p => p.ApsimXFile.FileName == tabName);
+            view.CloseTab(tabName);
+        }
+
         /// <summary>Ask the user a question</summary>
         /// <param name="message">The message to show the user.</param>
         public QuestionResponseEnum AskQuestion(string message)
@@ -245,15 +260,16 @@ namespace UserInterface.Presenters
         /// <summary>Open an .apsimx file into the current tab.</summary>
         /// <param name="fileName">The file to open</param>
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
-        public void OpenApsimXFileInTab(string fileName, bool onLeftTabControl)
+        public ExplorerPresenter OpenApsimXFileInTab(string fileName, bool onLeftTabControl)
         {
+            ExplorerPresenter presenter = null;
             if (fileName != null)
             {
                 view.ShowWaitCursor(true);
                 try
                 {
                     Simulations simulations = Simulations.Read(fileName);
-                    CreateNewTab(fileName, simulations, onLeftTabControl);
+                    presenter = CreateNewTab(fileName, simulations, onLeftTabControl);
                     Utility.Configuration.Settings.AddMruFile(fileName);
                 }
 
@@ -264,6 +280,8 @@ namespace UserInterface.Presenters
 
                 view.ShowWaitCursor(false);
             }
+
+            return presenter;
         }
 
         /// <summary>Open an .apsimx file into the current tab.</summary>
@@ -282,7 +300,7 @@ namespace UserInterface.Presenters
         /// <param name="name">Name of the simulation</param>
         /// <param name="simulations">The simulations object to add to tab.</param>
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
-        private void CreateNewTab(string name, Simulations simulations, bool onLeftTabControl)
+        private ExplorerPresenter CreateNewTab(string name, Simulations simulations, bool onLeftTabControl)
         {
             ExplorerView explorerView = new ExplorerView();
             ExplorerPresenter presenter = new ExplorerPresenter(this);
@@ -301,6 +319,8 @@ namespace UserInterface.Presenters
                 presenter.TreeWidth = 250;
             else
                 presenter.TreeWidth = simulations.ExplorerWidth;
+
+            return presenter;
         }
 
         /// <summary>
@@ -371,11 +391,14 @@ namespace UserInterface.Presenters
         /// <summary>Event handler invoked when user clicks on 'Standard toolbox'</summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">Event arguments</param>
-        private void OnStandardToolboxClick(object sender, EventArgs e)
+        public void OnStandardToolboxClick(object sender, EventArgs e)
         {
             Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("UserInterface.Resources.Toolboxes.StandardToolbox.apsimx");
             StreamReader streamReader = new StreamReader(s);
-            bool onLeftTabControl = (sender as Control).Parent.Parent.Name.Contains("1");
+            bool onLeftTabControl = true;
+            if (sender != null)
+                onLeftTabControl = (sender as Control).Parent.Parent.Name.Contains("1");
+
             this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd(), onLeftTabControl);
         }
 

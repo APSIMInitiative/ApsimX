@@ -24,7 +24,8 @@ namespace UserInterface
             try
             {
                 mainPresenter.Attach(mainForm, args);
-                Application.Run(mainForm);
+                if (args.Length == 0 || Path.GetExtension(args[0]) != ".cs")
+                    Application.Run(mainForm);  
             }
             catch (Exception err)
             {

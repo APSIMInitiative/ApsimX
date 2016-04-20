@@ -9,6 +9,7 @@ namespace UserInterface.Interfaces
     using System.Collections.Generic;
     using System.Runtime.Serialization;
     using EventArguments;
+    using System.Drawing;
 
     /// <summary>A structure for holding info about an item in the treeview.</summary>
     public class NodeDescriptionArgs : EventArgs
@@ -188,6 +189,9 @@ namespace UserInterface.Interfaces
         /// Add a view to the right hand panel.
         /// </summary>
         void AddRightHandView(object Control);
+
+        /// <summary>Get a screen shot of the right hand panel.</summary>
+        Image GetScreenshotOfRightHandPanel();
 
         /// <summary>
         /// Get whatever text is currently on the clipboard

@@ -306,6 +306,26 @@ namespace UserInterface.Views
             this.Grid.Columns[number - 1].Frozen = true;
         }
 
+        /// <summary>Get screenshot of grid.</summary>
+        public Image GetScreenshot()
+        {
+            Grid.Dock = DockStyle.None;
+
+            // Resize DataGridView to full height.
+            Grid.AutoSize = true;
+            Application.DoEvents();
+
+            // Create a Bitmap and draw the DataGridView on it.
+            // I've added 20 pixels to account for scroll bars.
+            Bitmap bitmap = new Bitmap(this.Grid.Width, this.Grid.Height);
+            Grid.DrawToBitmap(bitmap, new Rectangle(0, 0, this.Grid.Width, this.Grid.Height));
+
+            // Resize DataGridView back to original height.
+            Grid.Dock = DockStyle.Fill;
+
+            return bitmap;
+        }
+
         /// <summary>
         /// Populate the grid from the DataSource.
         /// </summary>

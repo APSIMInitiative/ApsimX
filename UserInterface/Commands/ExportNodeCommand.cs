@@ -204,7 +204,7 @@ namespace UserInterface.Commands
                 introductionPage.Document(tags, 1, 0);
             }
 
-            AddUserDocumentation(tags);
+            AddUserDocumentation(tags, modelNameToExport);
 
             // Document model description.
             tags.Add(new AutoDocumentation.Heading("Model description", 1));
@@ -244,11 +244,55 @@ namespace UserInterface.Commands
 
         /// <summary>Add user documentation, based on the example.</summary>
         /// <param name="tags">The tags to add to.</param>
-        private void AddUserDocumentation(List<AutoDocumentation.ITag> tags)
+        /// <param name="modelName">Name of model to document.</param>
+        private void AddUserDocumentation(List<AutoDocumentation.ITag> tags, string modelName)
         {
-            tags.Add(new AutoDocumentation.Heading("User documentation", 1));
-            
+            // Look for some instructions on which models in the example file we should write.
+            // Instructions will be in a memo in the validation .apsimx file 
 
+            IModel userDocumentation = Apsim.Get(ExplorerPresenter.ApsimXFile, ".Simulations.UserDocumentation") as IModel;
+            string exampleFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "Examples", modelName + ".apsimx");
+
+            if (userDocumentation != null && userDocumentation.Children.Count > 0 && File.Exists(exampleFileName))
+            {
+                // Write heading.
+                tags.Add(new AutoDocumentation.Heading("User documentation", 1));
+
+                // Open the related example .apsimx file and get its presenter.
+                ExplorerPresenter examplePresenter = ExplorerPresenter.MainPresenter.OpenApsimXFileInTab(exampleFileName, onLeftTabControl:true);
+
+                Memo instructionsMemo = userDocumentation.Children[0] as Memo;
+                string[] instructions = instructionsMemo.MemoText.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                foreach (string instruction in instructions)
+                {
+                    IModel model = Apsim.Find(examplePresenter.ApsimXFile, instruction);
+                    if (model != null)
+                    {
+                        examplePresenter.SelectNode(Apsim.FullPath(model));
+                        Application.DoEvents();
+                        if (model is Memo)
+                            model.Document(tags, 1, 0);
+                        else
+                        {
+                            System.Drawing.Image image;
+
+                            if (model is Manager)
+                                image = (examplePresenter.CurrentPresenter as ManagerPresenter).GetScreenshot();
+                            else
+                                image = examplePresenter.GetScreenhotOfRightHandPanel();
+
+                            if (image != null)
+                            {
+                                string name = "Example" + instruction;
+                                tags.Add(new AutoDocumentation.Image() { name = name, image = image });
+                            }
+                        }
+                    }
+                }
+
+                // Close the tab
+                examplePresenter.MainPresenter.CloseTab(exampleFileName);
+            }
         }
 
         /// <summary>Adds a software availability section</summary>
@@ -568,6 +612,15 @@ namespace UserInterface.Commands
                     mapPresenter.Detach();
 
                     f.Close();
+                }
+                else if (tag is AutoDocumentation.Image)
+                {
+                    AutoDocumentation.Image imageTag = tag as AutoDocumentation.Image;
+                    if (imageTag.image.Width > 700)
+                        imageTag.image = ImageUtilities.ResizeImage(imageTag.image, 700, 500);
+                    string PNGFileName = Path.Combine(workingDirectory, imageTag.name);
+                    imageTag.image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
+                    section.AddImage(PNGFileName);
                 }
             }
         }

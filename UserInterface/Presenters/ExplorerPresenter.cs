@@ -19,6 +19,7 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Core;
     using Views;
+    using System.Drawing;
 
     /// <summary>
     /// This presenter class is responsible for populating the view
@@ -269,7 +270,7 @@ namespace UserInterface.Presenters
 
             /* If the current node path is '.Simulations' (the root node) then
                select the first item in the 'allModels' list. */
-            if (this.view.SelectedNode == ".Standard toolbox")
+            if (this.view.SelectedNode == "")
             {
                 this.view.SelectedNode = Apsim.FullPath(allModels[0]);
                 return true;
@@ -828,6 +829,7 @@ namespace UserInterface.Presenters
                 }
             }
         }
+
         /// <summary>Show a view in the right hand panel.</summary>
         /// <param name="model">The model.</param>
         /// <param name="viewName">The view name.</param>
@@ -850,6 +852,12 @@ namespace UserInterface.Presenters
                 message += "\r\n" + err.StackTrace;
                 MainPresenter.ShowMessage(message, DataStore.ErrorLevel.Error);
             }
+        }
+
+        /// <summary>Get a screen shot of the right hand panel.</summary>
+        public Image GetScreenhotOfRightHandPanel()
+        {
+            return view.GetScreenshotOfRightHandPanel();
         }
 
         #endregion

@@ -35,6 +35,10 @@ namespace UserInterface.Views
         /// <param name="newTabName">New text of the tab.</param>
         void ChangeTabText(string currentTabName, string newTabName);
 
+        /// <summary>Close the tab with the specified name.</summary>
+        /// <param name="tabName">the name of the tab to close.</param>
+        void CloseTab(string tabName);
+
         /// <summary>Gets or set the main window position.</summary>
         Point WindowLocation { get; set; }
 
@@ -201,12 +205,24 @@ namespace UserInterface.Views
 
         /// <summary>Close the application.</summary>
         /// <param name="askToSave">Flag to turn on the request to save</param>
-        public void Close(bool askToSave = true)
+        public void Close(bool askToSave)
         {
-            Form mainForm = this.ParentForm;
-            if (!askToSave)
-                mainForm.DialogResult = DialogResult.Cancel;
-            mainForm.Close();
+            Close();
+        }
+
+        /// <summary>Close the tab with the specified name.</summary>
+        /// <param name="tabName">the name of the tab to close.</param>
+        public void CloseTab(string tabName)
+        {
+            int index1 = tabControl1.TabPages.IndexOfKey(tabName);
+            int index2 = tabControl2.TabPages.IndexOfKey(tabName);
+            tabControl1.TabPages.RemoveByKey(tabName);
+            tabControl2.TabPages.RemoveByKey(tabName);
+
+            if (index1 != -1)
+                tabControl1.SelectedIndex = index1 - 1;
+            if (index2 != -1)
+                tabControl2.SelectedIndex = index2 - 1;
         }
 
         /// <summary>Gets or set the main window position.</summary>
@@ -278,8 +294,7 @@ namespace UserInterface.Views
         /// <param name="message">The message to show the user.</param>
         public QuestionResponseEnum AskQuestion(string message)
         {
-            TabPage page = Parent as TabPage;
-            DialogResult result = MessageBox.Show("Do you want to save changes for " + page.Text + " ?", "", MessageBoxButtons.YesNoCancel);
+            DialogResult result = MessageBox.Show(message, "", MessageBoxButtons.YesNoCancel);
             switch (result)
             {
                 case DialogResult.Cancel: return QuestionResponseEnum.Cancel;
@@ -289,8 +304,6 @@ namespace UserInterface.Views
 
             return QuestionResponseEnum.Cancel;
         }
-
-
 
         /// <summary>Add a status message to the explorer window</summary>
         /// <param name="message">The message.</param>

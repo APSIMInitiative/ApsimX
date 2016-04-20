@@ -283,6 +283,18 @@ namespace UserInterface.Views
                 userControl.Dock = DockStyle.Fill;
             }
         }
+
+        /// <summary>Get a screen shot of the right hand panel.</summary>
+        public Image GetScreenshotOfRightHandPanel()
+        {
+            if (RightHandPanel != null)
+            {
+                var bmp = new Bitmap(RightHandPanel.Width, RightHandPanel.Height);
+                RightHandPanel.DrawToBitmap(bmp, new Rectangle(0, 0, bmp.Width, bmp.Height));
+                return bmp;
+            }
+            return null;
+        }
         
         /// <summary>Gets or sets the width of the tree view.</summary>
         public Int32 TreeWidth

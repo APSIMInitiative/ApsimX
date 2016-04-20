@@ -18,6 +18,7 @@ namespace UserInterface.Presenters
     using Models.Core;
     using Views;
     using APSIM.Shared.Utilities;
+    using System.Drawing;
 
     /// <summary>
     /// Presenter for the Manager component
@@ -199,6 +200,12 @@ namespace UserInterface.Presenters
         {
             if (changedModel == this.manager)
                 this.managerView.Editor.Text = this.manager.Code;
+        }
+
+        /// <summary>Get a screen shot of the manager grid.</summary>
+        public Image GetScreenshot()
+        {
+            return managerView.GridView.GetScreenshot();
         }
     }
 }
