@@ -4443,17 +4443,17 @@ VShort duration variety released in New Zealand by Pioneer
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
-            <n>1</n>
-            <Slope>NaN</Slope>
-            <Intercept>NaN</Intercept>
+            <n>18</n>
+            <Slope>-INF</Slope>
+            <Intercept>INF</Intercept>
             <SEslope>NaN</SEslope>
             <SEintercept>NaN</SEintercept>
-            <R2>NaN</R2>
-            <RMSE>0.2231590532420995</RMSE>
+            <R2>INF</R2>
+            <RMSE>0.28391497078097072</RMSE>
             <NSE>-INF</NSE>
-            <ME>0.2231590532420995</ME>
-            <MAE>0.2231590532420995</MAE>
-            <RSR>NaN</RSR>
+            <ME>0.283537068439891</ME>
+            <MAE>0.283537068439891</MAE>
+            <RSR>INF</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Spike.Live.N</Name>
@@ -4632,16 +4632,16 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>ET</Name>
             <n>123</n>
-            <Slope>1.1263617417348872</Slope>
-            <Intercept>-0.584074499797778</Intercept>
-            <SEslope>0.041521982293692014</SEslope>
-            <SEintercept>0.16106618669141504</SEintercept>
-            <R2>0.8587879692718996</R2>
-            <RMSE>0.73074247030309536</RMSE>
-            <NSE>0.76773628085089762</NSE>
-            <ME>-0.13290736465587233</ME>
-            <MAE>0.55559199751935273</MAE>
-            <RSR>0.47997437038782703</RSR>
+            <Slope>1.1260310017024333</Slope>
+            <Intercept>-0.584313650751699</Intercept>
+            <SEslope>0.041574453806906657</SEslope>
+            <SEintercept>0.16126972674602111</SEintercept>
+            <R2>0.85841000945492019</R2>
+            <RMSE>0.73170011885729469</RMSE>
+            <NSE>0.76712711203756623</NSE>
+            <ME>-0.13432740336007459</ME>
+            <MAE>0.55605044795623515</MAE>
+            <RSR>0.48060338372773043</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -34642,6 +34642,9 @@ namespace Models
             <Name>Weather</Name>
             <FileName>hall2002.met</FileName>
           </Weather>
+          <SoilArbitrator>
+            <Name>Soil Arbitrator</Name>
+          </SoilArbitrator>
           <Zone>
             <Name>paddock</Name>
             <Irrigation>
@@ -35347,7 +35350,7 @@ namespace Models
               <Name>SowingSchedule</Name>
               <Operation>
                 <Date>2002-08-15T00:00:00</Date>
-                <Action>[Wheat].Sow(population:100, cultivar:"Hartog", depth:30, rowSpacing:250);</Action>
+                <Action>[Wheat].Sow(population:100, cultivar:"H45", depth:30, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Manager>
@@ -35555,6 +35558,7 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>Wheat.Zadok.Stage</string>
+                <string>[Wheat].Phenology.Zadok.Stage</string>
                 <string>Wheat.Phenology.CurrentStageName</string>
                 <string>Wheat.AboveGround.Wt</string>
                 <string>Wheat.AboveGround.N</string>
@@ -35654,9 +35658,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <SoilArbitrator>
-            <Name>Soil Arbitrator</Name>
-          </SoilArbitrator>
           <Area>0</Area>
           <Slope>0</Slope>
         </Simulation>
@@ -36063,6 +36064,118 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Harvest Yield</Name>
+          <Series>
+            <Name>Series 0</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObserved</TableName>
+            <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
+            <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Caption />
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>Observed Yield</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Predicted Yield</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Phenology</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Zadok</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
