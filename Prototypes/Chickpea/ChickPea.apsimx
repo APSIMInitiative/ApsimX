@@ -1380,6 +1380,21 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </XYPairs>
           <XProperty>[Root].RootLengthDenisty</XProperty>
         </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>NUptakeSWFactor</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RWC</XProperty>
+        </LinearInterpolationFunction>
         <InitialDM>0.2</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <NuptakeSupply>0</NuptakeSupply>
@@ -2645,16 +2660,16 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>Chickpea.AboveGround.Wt</Name>
             <n>71</n>
-            <Slope>0.04239287177565218</Slope>
-            <Intercept>889.71667731183084</Intercept>
-            <SEslope>0.077512646816942046</SEslope>
-            <SEintercept>61.785829305197552</SEintercept>
-            <R2>0.0043163121286203809</R2>
-            <RMSE>370.81430508173639</RMSE>
-            <NSE>-0.71912681510540244</NSE>
-            <ME>176.06205555340819</ME>
-            <MAE>314.67582787189463</MAE>
-            <RSR>1.3018885364621364</RSR>
+            <Slope>0.042384806361245607</Slope>
+            <Intercept>889.72602628107018</Intercept>
+            <SEslope>0.077510838898247558</SEslope>
+            <SEintercept>61.784388201578423</SEintercept>
+            <R2>0.0043148773902002</R2>
+            <RMSE>370.81547038149927</RMSE>
+            <NSE>-0.719137619980998</NSE>
+            <ME>176.06539379016877</ME>
+            <MAE>314.67916610865512</MAE>
+            <RSR>1.3018926277023666</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chickpea.Phenology.FinalNodeNo.Value</Name>
@@ -2687,16 +2702,16 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>GrainWt</Name>
             <n>288</n>
-            <Slope>1.257059430644037</Slope>
-            <Intercept>198.23011047645332</Intercept>
-            <SEslope>0.085348708643654375</SEslope>
-            <SEintercept>18.688871113349542</SEintercept>
-            <R2>0.43133131675310277</R2>
-            <RMSE>298.0045506244598</RMSE>
-            <NSE>-5.7715829751207917</NSE>
-            <ME>246.20705276425213</ME>
-            <MAE>255.05106432203854</MAE>
-            <RSR>2.5977048589543337</RSR>
+            <Slope>1.2570782105044405</Slope>
+            <Intercept>198.22877458071778</Intercept>
+            <SEslope>0.085346967332025</SEslope>
+            <SEintercept>18.688489817028525</SEintercept>
+            <R2>0.43134865450181881</R2>
+            <RMSE>298.0046846527739</RMSE>
+            <NSE>-5.7715890661959248</NSE>
+            <ME>246.2092218956478</ME>
+            <MAE>255.05323345343422</MAE>
+            <RSR>2.5977060272787837</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
@@ -36749,5 +36764,5 @@ namespace Models
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
-  <ExplorerWidth>346</ExplorerWidth>
+  <ExplorerWidth>304</ExplorerWidth>
 </Simulations>

@@ -4402,16 +4402,16 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>172</n>
-            <Slope>1.250735660621304</Slope>
-            <Intercept>-176.91490753946908</Intercept>
-            <SEslope>0.055089358038201044</SEslope>
-            <SEintercept>25.203561651860539</SEintercept>
-            <R2>0.7519916522733967</R2>
-            <RMSE>159.83288221017085</RMSE>
-            <NSE>0.27248497193909826</NSE>
-            <ME>-72.266349801779583</ME>
-            <MAE>135.74005191048215</MAE>
-            <RSR>0.85046180956328887</RSR>
+            <Slope>1.2468299029733383</Slope>
+            <Intercept>-170.26224917423048</Intercept>
+            <SEslope>0.054884535729338629</SEslope>
+            <SEintercept>25.109854775016725</SEintercept>
+            <R2>0.75221436941005426</R2>
+            <RMSE>156.981372923515</RMSE>
+            <NSE>0.29821197579968495</NSE>
+            <ME>-67.243822163537459</ME>
+            <MAE>131.04161750678196</MAE>
+            <RSR>0.83528908844119221</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
@@ -4549,17 +4549,17 @@ VShort duration variety released in New Zealand by Pioneer
         <AcceptedStats>
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
-            <n>402</n>
-            <Slope>0.88601234853705024</Slope>
-            <Intercept>4.2026142513470361</Intercept>
-            <SEslope>0.018444232374796272</SEslope>
-            <SEintercept>1.0820383522874397</SEintercept>
-            <R2>0.85226706732700752</R2>
-            <RMSE>9.9260347875034185</RMSE>
-            <NSE>0.84567091910319092</NSE>
-            <ME>-1.832505635772606</ME>
-            <MAE>6.324811510946958</MAE>
-            <RSR>0.39235848112472166</RSR>
+            <n>408</n>
+            <Slope>0.88697043633998873</Slope>
+            <Intercept>4.0971453810428855</Intercept>
+            <SEslope>0.0181661816898538</SEslope>
+            <SEintercept>1.0651741909230366</SEintercept>
+            <R2>0.85447591501819653</R2>
+            <RMSE>9.9077545371746378</RMSE>
+            <NSE>0.84777965627431084</NSE>
+            <ME>-1.8765346676924208</ME>
+            <MAE>6.3167180190410424</MAE>
+            <RSR>0.38967583277376866</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4632,16 +4632,16 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>ET</Name>
             <n>123</n>
-            <Slope>1.1260310017024333</Slope>
-            <Intercept>-0.584313650751699</Intercept>
-            <SEslope>0.041574453806906657</SEslope>
-            <SEintercept>0.16126972674602111</SEintercept>
-            <R2>0.85841000945492019</R2>
-            <RMSE>0.73170011885729469</RMSE>
-            <NSE>0.76712711203756623</NSE>
-            <ME>-0.13432740336007459</ME>
-            <MAE>0.55605044795623515</MAE>
-            <RSR>0.48060338372773043</RSR>
+            <Slope>1.1263617417348872</Slope>
+            <Intercept>-0.584074499797778</Intercept>
+            <SEslope>0.041521982293692014</SEslope>
+            <SEintercept>0.16106618669141504</SEintercept>
+            <R2>0.8587879692718996</R2>
+            <RMSE>0.73074247030309536</RMSE>
+            <NSE>0.76773628085089762</NSE>
+            <ME>-0.13290736465587233</ME>
+            <MAE>0.55559199751935273</MAE>
+            <RSR>0.47997437038782703</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
