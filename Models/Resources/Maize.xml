@@ -864,6 +864,21 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <XProperty>[Root].RootLengthDenisty</XProperty>
     </LinearInterpolationFunction>        
     <NuptakeSupply>0</NuptakeSupply>
+    <LinearInterpolationFunction>
+      <Name>NUptakeSWFactor</Name>
+      <XYPairs>
+        <Name>XYPairs</Name>
+        <X>
+          <double>0</double>
+          <double>1</double>
+        </X>
+        <Y>
+          <double>0</double>
+          <double>1</double>
+        </Y>
+      </XYPairs>
+      <XProperty>[Root].RWC</XProperty>
+    </LinearInterpolationFunction>
   </Root>
   <Leaf>
     <Name>Leaf</Name>

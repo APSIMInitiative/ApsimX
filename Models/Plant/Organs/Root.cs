@@ -71,7 +71,11 @@ namespace Models.PMF.Organs
         /// <summary>Link to the KNO3 link</summary>
         [Link]
         LinearInterpolationFunction KNO3 = null;
-
+        /// <summary>
+        /// Soil water factor for N Uptake
+        /// </summary>
+        [Link]
+        LinearInterpolationFunction NUptakeSWFactor = null;
         /// <summary>Link to the KNH4 link</summary>
         [Link]
         LinearInterpolationFunction KNH4 = null;
@@ -486,13 +490,14 @@ namespace Models.PMF.Organs
                 {
                     double kno3 = KNO3.ValueForX(LengthDensity[layer]);
                     double knh4 = KNH4.ValueForX(LengthDensity[layer]);
-                    double swaf = 0;
-                    swaf = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
-                    swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
+                    double RWC = 0;
+                    RWC = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
+                    RWC = Math.Max(0.0, Math.Min(RWC, 1.0));
+                    double SWAF = NUptakeSWFactor.ValueForX(RWC);
                     no3ppm[layer] = Soil.NO3N[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
-                    NO3Supply[layer] = Soil.NO3N[layer] * kno3 * no3ppm[layer] * swaf;
+                    NO3Supply[layer] = Soil.NO3N[layer] * kno3 * no3ppm[layer] * SWAF;
                     nh4ppm[layer] = Soil.NH4N[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
-                    NH4Supply[layer] = Soil.NH4N[layer] * knh4 * nh4ppm[layer] * swaf;
+                    NH4Supply[layer] = Soil.NH4N[layer] * knh4 * nh4ppm[layer] * SWAF;
                 }
                 else
                 {
@@ -796,12 +801,13 @@ namespace Models.PMF.Organs
             {
                 if (LayerLive[layer].Wt > 0)
                 {
-                    double swaf = 0;
-					swaf = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
-                    swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
+                    double RWC = 0;
+					RWC = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
+                    RWC = Math.Max(0.0, Math.Min(RWC, 1.0));
                     double kno3 = KNO3.ValueForX(LengthDensity[layer]);
+                    double SWAF = NUptakeSWFactor.ValueForX(RWC);
                     no3ppm[layer] = NO3[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
-                    NO3Supply[layer] = Math.Min(NO3[layer] * kno3 * no3ppm[layer] * swaf, (MaxDailyNUptake.Value - NO3uptake));
+                    NO3Supply[layer] = Math.Min(NO3[layer] * kno3 * no3ppm[layer] * SWAF, (MaxDailyNUptake.Value - NO3uptake));
                     NO3uptake += NO3Supply[layer];
                 }
                 else
@@ -835,12 +841,13 @@ namespace Models.PMF.Organs
             {
                 if (LayerLive[layer].Wt > 0)
                 {
-                    double swaf = 0;
-                    swaf = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
-                    swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
+                    double RWC = 0;
+                    RWC = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
+                    RWC = Math.Max(0.0, Math.Min(RWC, 1.0));
                     double knh4 = KNH4.ValueForX(LengthDensity[layer]);
+                    double SWAF = NUptakeSWFactor.ValueForX(RWC);
                     NH4ppm[layer] = NH4Supply[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
-                    NH4Supply[layer] = Math.Min(NH4[layer] * knh4 * NH4ppm[layer] * swaf, (MaxDailyNUptake.Value - NH4uptake));
+                    NH4Supply[layer] = Math.Min(NH4[layer] * knh4 * NH4ppm[layer] * SWAF, (MaxDailyNUptake.Value - NH4uptake));
                     NH4uptake += NH4Supply[layer]; 
                 }
                 else

@@ -458,12 +458,12 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
         </MultiplyFunction>
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
-		<Constant>
-		  <Name>SenessingLeafRelativeSize</Name>
-		  <Value>1</Value>
-		  <Units>0-1</Units>
-		</Constant>          
-		  <LinearInterpolationFunction>
+          <Constant>
+            <Name>SenessingLeafRelativeSize</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
+          <LinearInterpolationFunction>
             <Name>MaxArea</Name>
             <XYPairs>
               <Name>XYPairs</Name>
@@ -871,12 +871,10 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.</FractionRemoved>
+            <FractionRemoved>0</FractionRemoved>
             <FractionToResidue>0.15</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <InitialDM>5</InitialDM>
-        <SpecificRootLength>40000</SpecificRootLength>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
@@ -901,12 +899,29 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
               <double>0.003</double>
             </X>
             <Y>
-              <double>0.0</double>
-              <double>0.0</double>
+              <double>0</double>
+              <double>0</double>
             </Y>
           </XYPairs>
           <XProperty>[Root].RootLengthDenisty</XProperty>
         </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>NUptakeSWFactor</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RWC</XProperty>
+        </LinearInterpolationFunction>
+        <InitialDM>5</InitialDM>
+        <SpecificRootLength>40000</SpecificRootLength>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <GenericAboveGroundOrgan>

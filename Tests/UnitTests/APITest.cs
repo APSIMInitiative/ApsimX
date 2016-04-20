@@ -316,7 +316,7 @@ namespace UnitTests
         public void MoveUpDown()
         {
             IExplorerView explorerView = new ExplorerView();
-            ExplorerPresenter explorerPresenter = new ExplorerPresenter();
+            ExplorerPresenter explorerPresenter = new ExplorerPresenter(null);
             CommandHistory commandHistory = new CommandHistory();
 
             explorerPresenter.Attach(simulations, explorerView, null);
