@@ -2871,6 +2871,21 @@ This is important in SLURP as it is set for each species to represent their diff
               </XYPairs>
               <XProperty>[Root].RootLengthDenisty</XProperty>
             </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>NUptakeSWFactor</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Root].RWC</XProperty>
+            </LinearInterpolationFunction>
             <InitialDM>50</InitialDM>
             <SpecificRootLength>40000</SpecificRootLength>
             <NuptakeSupply>0</NuptakeSupply>
@@ -3237,6 +3252,21 @@ This is important in SLURP as it is set for each species to represent their diff
                 </Y>
               </XYPairs>
               <XProperty>[Root].RootLengthDenisty</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>NUptakeSWFactor</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Root].RWC</XProperty>
             </LinearInterpolationFunction>
             <InitialDM>50</InitialDM>
             <SpecificRootLength>40000</SpecificRootLength>
