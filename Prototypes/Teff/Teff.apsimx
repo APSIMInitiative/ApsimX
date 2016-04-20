@@ -1059,12 +1059,12 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0.</FractionRemoved>
+            <FractionRemoved>0</FractionRemoved>
             <FractionToResidue>0.2</FractionToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0.</FractionRemoved>
+            <FractionRemoved>0</FractionRemoved>
             <FractionToResidue>0.3</FractionToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
@@ -1074,12 +1074,10 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.</FractionRemoved>
+            <FractionRemoved>0</FractionRemoved>
             <FractionToResidue>0.15</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <InitialDM>0.2</InitialDM>
-        <SpecificRootLength>40000</SpecificRootLength>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
@@ -1089,7 +1087,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <double>0.003</double>
             </X>
             <Y>
-              <double>0.0</double>
+              <double>0</double>
               <double>0.03</double>
             </Y>
           </XYPairs>
@@ -1104,12 +1102,14 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <double>0.003</double>
             </X>
             <Y>
-              <double>0.0</double>
+              <double>0</double>
               <double>0.0003</double>
             </Y>
           </XYPairs>
           <XProperty>[Root].RootLengthDenisty</XProperty>
-        </LinearInterpolationFunction>        
+        </LinearInterpolationFunction>
+        <InitialDM>0.2</InitialDM>
+        <SpecificRootLength>40000</SpecificRootLength>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <Leaf>
@@ -1171,12 +1171,12 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <ArraySize>[Leaf].MaxNodeNo</ArraySize>
         </ArrayBiomass>
         <LeafCohortParameters>
-        <Constant>
-		  <Name>SenessingLeafRelativeSize</Name>
-		  <Value>1</Value>
-		  <Units>0-1</Units>
-		</Constant>
-		  <Name>CohortParameters</Name>
+          <Name>CohortParameters</Name>
+          <Constant>
+            <Name>SenessingLeafRelativeSize</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
           <Constant>
             <Name>NReallocationFactor</Name>
             <Value>0.05</Value>
@@ -1673,7 +1673,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0.</FractionRemoved>
+            <FractionRemoved>0</FractionRemoved>
             <FractionToResidue>0.3</FractionToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
