@@ -56,6 +56,9 @@ namespace Models.PMF.Organs
         /// <summary>The leaf</summary>
         [Link]
         private Leaf Leaf = null;
+        /// <summary>The clock</summary>
+        [Link]
+        public Clock Clock = null;
 
         [Link]
         private ISurfaceOrganicMatter SurfaceOrganicMatter = null;
@@ -670,7 +673,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return LeafStartNonStructuralNRetranslocationSupply;
+                return LeafStartNonStructuralNRetranslocationSupply + LeafStartMetabolicNRetranslocationSupply;
             }
         }
         /*virtual public double NRetranslocation
