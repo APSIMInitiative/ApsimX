@@ -7,6 +7,7 @@ namespace UserInterface.Forms
 {
     using APSIM.Shared.Utilities;
     using global::UserInterface.Presenters;
+    using Views;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -42,15 +43,15 @@ namespace UserInterface.Forms
         /// <summary>
         /// Our explorer presenter.
         /// </summary>
-        private ExplorerPresenter explorerPresenter;
+        private IMainView tabbedExplorerView;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public UpgradeForm(ExplorerPresenter explorerPresenter)
+        public UpgradeForm(IMainView explorerPresenter)
         {
             InitializeComponent();
-            this.explorerPresenter = explorerPresenter;
+            this.tabbedExplorerView = explorerPresenter;
         }
 
         /// <summary>
@@ -171,8 +172,6 @@ namespace UserInterface.Forms
                     {
                         Cursor.Current = Cursors.WaitCursor;
 
-                        explorerPresenter.Save();
-
                         WebClient web = new WebClient();
 
                         string tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
@@ -200,7 +199,6 @@ namespace UserInterface.Forms
                             // Delete the old upgrader.
                             if (File.Exists(upgraderFileName))
                                 File.Delete(upgraderFileName);
-
                             // Copy in the new upgrader.
                             File.Copy(sourceUpgraderFileName, upgraderFileName, true);
 
@@ -221,7 +219,7 @@ namespace UserInterface.Forms
 
                             // Shutdown the user interface
                             Close();
-                            explorerPresenter.Close();
+                            tabbedExplorerView.Close();
                         }
                     }
                 }
@@ -251,7 +249,6 @@ namespace UserInterface.Forms
             url = addToURL(url, "country", countryBox.Text);
             url = addToURL(url, "email", emailBox.Text);
             url = addToURL(url, "product", "APSIM Next Generation " + version);
-            url = addToURL(url, "ChangeDBPassword", GetValidPassword());
 
             WebUtilities.CallRESTService<object>(url);
         }
@@ -262,14 +259,6 @@ namespace UserInterface.Forms
             if (value == null || value == string.Empty)
                 value = "-";
             return url + "&" + key + "=" + value;
-        }
-
-        /// <summary>Return the valid password for this web service.</summary>
-        private static string GetValidPassword()
-        {
-            string connectionString = File.ReadAllText(@"D:\Websites\ChangeDBPassword.txt");
-            int posPassword = connectionString.IndexOf("Password=");
-            return connectionString.Substring(posPassword + "Password=".Length);
         }
 
         /// <summary>

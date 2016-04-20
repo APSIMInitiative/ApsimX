@@ -3128,7 +3128,7 @@ namespace Models
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			Remove = new RemovalFractions(SCUM.Organs);
+			Remove = new RemovalFractions();
 		}
 		
 		[EventSubscribe("DoManagement")]
@@ -3140,14 +3140,14 @@ namespace Models
 				SCUM.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 			else if (Clock.Today.Date == CutDate)
 			{
-				Remove.SetPhenologyStage(3.5);
+				Remove.SetPhenologyStage = 3.5;
 				Remove.SetFractionRemoved("Stover", 0.5);
 				Remove.SetFractionToResidue("Stover", 0.2);
 				Remove.SetFractionRemoved("Product", 0.8);
 				Remove.SetFractionToResidue("Product", 0.1);
 				Remove.SetFractionRemoved("Root", 0.0);
 				Remove.SetFractionToResidue("Root", 0.2);
-				SCUM.Cut(Remove);
+				SCUM.RemoveBiomass("Cut", Remove);
 			}
 			else if (Clock.Today.Date == EndCropDate)
 				SCUM.EndCrop();
@@ -3162,7 +3162,7 @@ namespace Models
 				Remove.SetFractionRemoved("Stover", 0.1);
 				Remove.SetFractionToResidue("Product", 0.3);
 				Remove.SetFractionToResidue("Stover", 0.7);
-				SCUM.Cut(Remove);
+				SCUM.RemoveBiomass("Cut", Remove);
 			}
 			else if (Clock.Today.Date == EndCropDate2)
 				SCUM.EndCrop();
@@ -3176,7 +3176,7 @@ namespace Models
 				Remove.SetFractionRemoved("Stover", 0.3);
 				Remove.SetFractionToResidue("Product", 0.3);
 				Remove.SetFractionToResidue("Stover", 0.7);
-				SCUM.Cut(Remove);
+				SCUM.RemoveBiomass("Cut", Remove);
 			}
 			else if (Clock.Today.Date == EndCropDate3)
 				SCUM.EndCrop();*/
@@ -12367,7 +12367,7 @@ namespace Models
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			Remove = new RemovalFractions(SCUM.Organs);
+			Remove = new RemovalFractions();
 		}
 		
 		[EventSubscribe("StartOfSimulation")]

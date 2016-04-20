@@ -291,7 +291,7 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
           <Value>0</Value>
         </Constant>
         <Constant>
-          <Name>ShadeInducedBranchMortality</Name>
+          <Name>BranchMortality</Name>
           <Value>0</Value>
         </Constant>
         <LinearInterpolationFunction>
@@ -458,6 +458,11 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
         </MultiplyFunction>
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
+          <Constant>
+            <Name>SenessingLeafRelativeSize</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
           <LinearInterpolationFunction>
             <Name>MaxArea</Name>
             <XYPairs>
@@ -720,8 +725,29 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.3</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -826,26 +852,76 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>StructuralFraction</Name>
           <Value>0.8</Value>
         </Constant>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.3</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.15</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <LinearInterpolationFunction>
+          <Name>KNO3</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.003</double>
+            </X>
+            <Y>
+              <double>0.02</double>
+              <double>0.02</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDenisty</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>KNH4</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.003</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDenisty</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>NUptakeSWFactor</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RWC</XProperty>
+        </LinearInterpolationFunction>
         <InitialDM>5</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
-        <KNO3_yProperty>
-          <double>0.02</double>
-          <double>0.02</double>
-        </KNO3_yProperty>
-        <KNO3_xRootLength>
-          <double>0</double>
-          <double>0.003</double>
-        </KNO3_xRootLength>
-        <KNH4_yProperty>
-          <double>0</double>
-          <double>0</double>
-        </KNH4_yProperty>
-        <KNH4_xRootLength>
-          <double>0</double>
-          <double>0.003</double>
-        </KNH4_xRootLength>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <GenericAboveGroundOrgan>
@@ -913,8 +989,29 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <XProperty>[Structure].MainStemNodeNo</XProperty>
           </LinearInterpolationFunction>
         </PartitionFractionDemandFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0.5</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Petiole</Name>
@@ -989,8 +1086,29 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>NReallocationFactor</Name>
           <Value>0.95</Value>
         </Constant>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0.5</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -1075,86 +1193,86 @@ in file: C:\ApsimX\Prototypes\FodderBeet\Observations\FRNL_N_Uptake.txt</ErrorMe
           <RegrStats>
             <Name>FodderBeet.Bulb.Live.Wt</Name>
             <n>77</n>
-            <Slope>1.2354769178589087</Slope>
-            <Intercept>44.092820561793133</Intercept>
-            <SEslope>0.0428370930555764</SEslope>
-            <SEintercept>56.395444873087548</SEintercept>
-            <R2>0.91729338673589711</R2>
-            <RMSE>426.6345080613014</RMSE>
-            <NSE>0.58484216924722365</NSE>
-            <ME>312.03711198959058</ME>
-            <MAE>324.35828504870335</MAE>
-            <RSR>0.64012980762742944</RSR>
+            <Slope>1.237274682314276</Slope>
+            <Intercept>46.449153129131446</Intercept>
+            <SEslope>0.04285438194709882</SEslope>
+            <SEintercept>56.418205865004175</SEintercept>
+            <R2>0.91745264885968192</R2>
+            <RMSE>430.35435575751359</RMSE>
+            <NSE>0.57757104424540251</NSE>
+            <ME>316.43908337166852</ME>
+            <MAE>328.09223952337305</MAE>
+            <RSR>0.64571113155971094</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Leaf.CoverGreen</Name>
             <n>143</n>
-            <Slope>0.81633883972586707</Slope>
-            <Intercept>0.10141619027329452</Intercept>
-            <SEslope>0.056771056854536942</SEslope>
-            <SEintercept>0.043888765263472622</SEintercept>
-            <R2>0.594559308347615</R2>
-            <RMSE>0.17156752937689715</RMSE>
-            <NSE>0.49247774363303676</NSE>
-            <ME>-0.033504123606999045</ME>
-            <MAE>0.12370031255693539</MAE>
-            <RSR>0.70991066316761453</RSR>
+            <Slope>0.81054789149455386</Slope>
+            <Intercept>0.10776677296433757</Intercept>
+            <SEslope>0.056896907678967386</SEslope>
+            <SEintercept>0.043986058454716093</SEintercept>
+            <R2>0.59005166952537591</R2>
+            <RMSE>0.17187679363428826</RMSE>
+            <NSE>0.4906463952485991</NSE>
+            <ME>-0.031407660577767053</ME>
+            <MAE>0.12461449609860752</MAE>
+            <RSR>0.71119033418028188</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Leaf.LAI</Name>
             <n>77</n>
-            <Slope>1.3472518327200631</Slope>
-            <Intercept>-0.28317592717534934</Intercept>
-            <SEslope>0.12875354820088819</SEslope>
-            <SEintercept>0.29866685666775872</SEintercept>
-            <R2>0.59347651085885156</R2>
-            <RMSE>1.2284535875076887</RMSE>
-            <NSE>-0.571988360947967</NSE>
-            <ME>0.44695486970547277</ME>
-            <MAE>0.96698037310771967</MAE>
-            <RSR>1.2456215025796971</RSR>
+            <Slope>1.3593085933220968</Slope>
+            <Intercept>-0.29420096032426812</Intercept>
+            <SEslope>0.12887949785678113</SEslope>
+            <SEintercept>0.29895901939530728</SEintercept>
+            <R2>0.59729795394629215</R2>
+            <RMSE>1.2379916955503283</RMSE>
+            <NSE>-0.59649397239300184</NSE>
+            <ME>0.4612803499209015</ME>
+            <MAE>0.97646678397808617</MAE>
+            <RSR>1.2552929078266339</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Leaf.Live.Wt</Name>
             <n>77</n>
-            <Slope>1.3503561140659619</Slope>
-            <Intercept>-28.733897698246182</Intercept>
-            <SEslope>0.12219364838748265</SEslope>
-            <SEintercept>17.54522702988849</SEintercept>
-            <R2>0.61952792673492874</R2>
-            <RMSE>64.6181539891248</RMSE>
-            <NSE>-0.34243739149097885</NSE>
-            <ME>17.622311461581468</ME>
-            <MAE>53.182775588817151</MAE>
-            <RSR>1.1510878070996293</RSR>
+            <Slope>1.361978502350051</Slope>
+            <Intercept>-29.443385294536938</Intercept>
+            <SEslope>0.1222613624911052</SEslope>
+            <SEintercept>17.554949788287647</SEintercept>
+            <R2>0.62329960677391338</R2>
+            <RMSE>65.076855905602542</RMSE>
+            <NSE>-0.36156403518787039</NSE>
+            <ME>18.450601687922255</ME>
+            <MAE>53.684874142447811</MAE>
+            <RSR>1.1592589811514231</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Leaf.PlantAppearedGreenLeafNo</Name>
             <n>207</n>
-            <Slope>1.0900947640343481</Slope>
-            <Intercept>-0.92297850355809175</Intercept>
-            <SEslope>0.032318237709940169</SEslope>
-            <SEintercept>0.71420355812607628</SEintercept>
-            <R2>0.84732416970992386</R2>
-            <RMSE>3.032570292359245</RMSE>
-            <NSE>0.75118505517259437</NSE>
-            <ME>0.99120880145227386</ME>
-            <MAE>2.3200480327968633</MAE>
-            <RSR>0.49760721484221077</RSR>
+            <Slope>1.0900616863570789</Slope>
+            <Intercept>-0.92229816941451759</Intercept>
+            <SEslope>0.032320100026067687</SEslope>
+            <SEintercept>0.71424471361285036</SEintercept>
+            <R2>0.84730140846438673</R2>
+            <RMSE>3.0326770225911104</RMSE>
+            <NSE>0.751167540957583</NSE>
+            <ME>0.99118635480066475</ME>
+            <MAE>2.319604639593754</MAE>
+            <RSR>0.49762472795099238</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Petiole.Live.Wt</Name>
             <n>77</n>
-            <Slope>1.0039116594341504</Slope>
-            <Intercept>49.170386801966188</Intercept>
-            <SEslope>0.11721107813998992</SEslope>
-            <SEintercept>13.273825262966211</SEintercept>
-            <R2>0.494469653015311</R2>
-            <RMSE>71.627183709227708</RMSE>
-            <NSE>-0.97721654200241925</NSE>
-            <ME>49.566028293638738</ME>
-            <MAE>56.767892120451108</MAE>
-            <RSR>1.3969747331620916</RSR>
+            <Slope>1.0078523505097077</Slope>
+            <Intercept>49.407664437493068</Intercept>
+            <SEslope>0.11734207093686892</SEslope>
+            <SEintercept>13.288659829152886</SEintercept>
+            <R2>0.49586986948741218</R2>
+            <RMSE>72.110963298824487</RMSE>
+            <NSE>-1.004015509853601</NSE>
+            <ME>50.20188380170287</ME>
+            <MAE>57.242810639481064</MAE>
+            <RSR>1.4064100875637078</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Phenology.AccumulatedThermalTime.Value</Name>
@@ -1175,28 +1293,28 @@ in file: C:\ApsimX\Prototypes\FodderBeet\Observations\FRNL_N_Uptake.txt</ErrorMe
             <n>207</n>
             <Slope>1.0449866368423864</Slope>
             <Intercept>-2.1237553816687793</Intercept>
-            <SEslope>0.0098148525354270558</SEslope>
-            <SEintercept>0.3935951355284078</SEintercept>
-            <R2>0.98223700325304331</R2>
+            <SEslope>0.0098148525354275484</SEslope>
+            <SEintercept>0.39359513552842745</SEintercept>
+            <R2>0.98223700325304164</R2>
             <RMSE>2.565453445915157</RMSE>
             <NSE>0.97739977377529841</NSE>
-            <ME>-0.49119685698966953</ME>
-            <MAE>2.0911783016339514</MAE>
-            <RSR>0.14997015165647892</RSR>
+            <ME>-0.4911968569896657</ME>
+            <MAE>2.0911783016339522</MAE>
+            <RSR>0.14997015165647895</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Total.Wt</Name>
             <n>77</n>
-            <Slope>1.4640541567085705</Slope>
-            <Intercept>6.6392396696005562</Intercept>
-            <SEslope>0.049535968010519363</SEslope>
-            <SEintercept>83.420041205399457</SEintercept>
-            <R2>0.92092946852955426</R2>
-            <RMSE>852.05850209907953</RMSE>
-            <NSE>-0.26067470840411477</NSE>
-            <ME>704.27656394925441</ME>
-            <MAE>704.89614213359891</MAE>
-            <RSR>1.1154829938612565</RSR>
+            <Slope>1.4669266325318493</Slope>
+            <Intercept>11.720994559424526</Intercept>
+            <SEslope>0.049536296963709779</SEslope>
+            <SEintercept>83.420595172341081</SEintercept>
+            <R2>0.92121349350226556</R2>
+            <RMSE>860.74040510210239</RMSE>
+            <NSE>-0.28649644925058415</NSE>
+            <ME>713.67666470117376</ME>
+            <MAE>714.056394784866</MAE>
+            <RSR>1.1268490152440216</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>

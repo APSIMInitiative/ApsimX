@@ -3,6 +3,8 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 //-----------------------------------------------------------------------
+using System.Collections.Generic;
+
 namespace Models.PMF.Interfaces
 {
     /// <summary>
@@ -16,26 +18,6 @@ namespace Models.PMF.Interfaces
         string Name { get; set; }
         
         /// <summary>
-        /// Do Harvest logic for this organ.
-        /// </summary>
-        void DoHarvest();
-
-        /// <summary>
-        /// Do Harvest logic for this organ.
-        /// </summary>
-        void DoCut();
-
-        /// <summary>
-        /// Do Harvest logic for this organ.
-        /// </summary>
-        void DoGraze();
-
-        /// <summary>
-        /// Do Harvest logic for this organ.
-        /// </summary>
-        void DoPrune();
-
-        /// <summary>
         /// Do Plant ending logic for this organ.
         /// </summary>
         void DoPlantEnding();
@@ -43,24 +25,10 @@ namespace Models.PMF.Interfaces
         /// <summary>
         /// Biomass removal logic for this organ.
         /// </summary>
-        OrganBiomassRemovalType RemoveBiomass { set; }
+        /// <param name="biomassToRemove">Biomass to remove</param>
+        void DoRemoveBiomass(OrganBiomassRemovalType biomassToRemove);
 
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Harvest.
-        /// </summary>
-        OrganBiomassRemovalType HarvestDefault { get;}
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Cutting
-        /// </summary>
-        OrganBiomassRemovalType CutDefault { get; }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Grazing
-        /// </summary>
-        OrganBiomassRemovalType GrazeDefault { get; }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Pruning
-        /// </summary>
-        OrganBiomassRemovalType PruneDefault { get; }
+
     }
 
     /// <summary>An above ground interface</summary>

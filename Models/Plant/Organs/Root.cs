@@ -67,6 +67,18 @@ namespace Models.PMF.Organs
         /// <summary>The soil</summary>
         [Link]
         Soils.Soil Soil = null;
+
+        /// <summary>Link to the KNO3 link</summary>
+        [Link]
+        LinearInterpolationFunction KNO3 = null;
+        /// <summary>
+        /// Soil water factor for N Uptake
+        /// </summary>
+        [Link]
+        LinearInterpolationFunction NUptakeSWFactor = null;
+        /// <summary>Link to the KNH4 link</summary>
+        [Link]
+        LinearInterpolationFunction KNH4 = null;
         #endregion
 
         #region Parameters
@@ -76,14 +88,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the length of the specific root.</summary>
         /// <value>The length of the specific root.</value>
         public double SpecificRootLength { get; set; }
-        /// <summary>The KNO3 for each root layer at a given root lenght density (KNO3_xRootLength).  Actual KNO3 us calculated each day for each layer with current root length density of each layer </summary>
-        public double[] KNO3_yProperty { get; set; }
-        /// <summary>Rootlength density that KNO3 is related to </summary>
-        public double[] KNO3_xRootLength { get; set; }
-        /// <summary>The KNH4 for each root layer at a given root lenght density (KNH4_xRootLength).  Actual KNH4 us calculated each day for each layer with current root length density of each layer </summary>
-        public double[] KNH4_yProperty { get; set; }
-        /// <summary>Rootlength density that KNH4 is related to </summary>
-        public double[] KNH4_xRootLength { get; set; }
         
         /// <summary>The nitrogen demand switch</summary>
         [Link]
@@ -484,16 +488,16 @@ namespace Models.PMF.Organs
             {
                 if (LayerLive[layer].Wt > 0)
                 {
-                    bool DidInterpolate = false;
-                    double kno3 = MathUtilities.LinearInterpReal(LengthDensity[layer], KNO3_xRootLength, KNO3_yProperty, out DidInterpolate);
-                    double knh4 = MathUtilities.LinearInterpReal(LengthDensity[layer], KNH4_xRootLength, KNH4_yProperty, out DidInterpolate); 
-                    double swaf = 0;
-                    swaf = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
-                    swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
+                    double kno3 = KNO3.ValueForX(LengthDensity[layer]);
+                    double knh4 = KNH4.ValueForX(LengthDensity[layer]);
+                    double RWC = 0;
+                    RWC = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
+                    RWC = Math.Max(0.0, Math.Min(RWC, 1.0));
+                    double SWAF = NUptakeSWFactor.ValueForX(RWC);
                     no3ppm[layer] = Soil.NO3N[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
-                    NO3Supply[layer] = Soil.NO3N[layer] * kno3 * no3ppm[layer] * swaf;
+                    NO3Supply[layer] = Soil.NO3N[layer] * kno3 * no3ppm[layer] * SWAF;
                     nh4ppm[layer] = Soil.NH4N[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
-                    NH4Supply[layer] = Soil.NH4N[layer] * knh4 * nh4ppm[layer] * swaf;
+                    NH4Supply[layer] = Soil.NH4N[layer] * knh4 * nh4ppm[layer] * SWAF;
                 }
                 else
                 {
@@ -797,13 +801,13 @@ namespace Models.PMF.Organs
             {
                 if (LayerLive[layer].Wt > 0)
                 {
-                    double swaf = 0;
-					swaf = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
-                    swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                    bool DidInterpolate = false;
-                    double kno3 = MathUtilities.LinearInterpReal(LengthDensity[layer], KNO3_xRootLength, KNO3_yProperty, out DidInterpolate);
-					no3ppm[layer] = NO3[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
-                    NO3Supply[layer] = Math.Min(NO3[layer] * kno3 * no3ppm[layer] * swaf, (MaxDailyNUptake.Value - NO3uptake));
+                    double RWC = 0;
+					RWC = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
+                    RWC = Math.Max(0.0, Math.Min(RWC, 1.0));
+                    double kno3 = KNO3.ValueForX(LengthDensity[layer]);
+                    double SWAF = NUptakeSWFactor.ValueForX(RWC);
+                    no3ppm[layer] = NO3[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
+                    NO3Supply[layer] = Math.Min(NO3[layer] * kno3 * no3ppm[layer] * SWAF, (MaxDailyNUptake.Value - NO3uptake));
                     NO3uptake += NO3Supply[layer];
                 }
                 else
@@ -837,13 +841,13 @@ namespace Models.PMF.Organs
             {
                 if (LayerLive[layer].Wt > 0)
                 {
-                    double swaf = 0;
-                    swaf = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
-                    swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                    bool DidInterpolate = false;
-                    double knh4 = MathUtilities.LinearInterpReal(LengthDensity[layer], KNH4_xRootLength, KNH4_yProperty, out DidInterpolate); swaf = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
+                    double RWC = 0;
+                    RWC = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
+                    RWC = Math.Max(0.0, Math.Min(RWC, 1.0));
+                    double knh4 = KNH4.ValueForX(LengthDensity[layer]);
+                    double SWAF = NUptakeSWFactor.ValueForX(RWC);
                     NH4ppm[layer] = NH4Supply[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
-                    NH4Supply[layer] = Math.Min(NH4[layer] * knh4 * NH4ppm[layer] * swaf, (MaxDailyNUptake.Value - NH4uptake));
+                    NH4Supply[layer] = Math.Min(NH4[layer] * knh4 * NH4ppm[layer] * SWAF, (MaxDailyNUptake.Value - NH4uptake));
                     NH4uptake += NH4Supply[layer]; 
                 }
                 else
@@ -1012,111 +1016,50 @@ namespace Models.PMF.Organs
 
         #region Biomass Removal
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
-        [XmlIgnore]
-        public override OrganBiomassRemovalType RemoveBiomass
+        public override void DoRemoveBiomass(OrganBiomassRemovalType value)
         {
-            set
+            double RemainFrac = 1 - (value.FractionToResidue + value.FractionRemoved);
+            if (RemainFrac < 0)
+                throw new Exception("The sum of FractionToResidue and FractionRemoved sent with your " + "Place holder for event sender" + " is greater than 1.  Had this execption not triggered you would be removing more biomass from " + Name + " than there is to remove");
+            if (RemainFrac < 1)
             {
-                double RemainFrac = 1 - (value.FractionToResidue + value.FractionRemoved);
-                if (RemainFrac < 0)
-                    throw new Exception("The sum of FractionToResidue and FractionRemoved sent with your " + "Place holder for event sender" + " is greater than 1.  Had this execption not triggered you would be removing more biomass from " + Name + " than there is to remove");
-                if (RemainFrac < 1)
+                FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.Thickness.Length];
+
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
-                    FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.Thickness.Length];
 
-                    for (int layer = 0; layer < Soil.Thickness.Length; layer++)
-                    {
+                    double DM = (LayerLive[layer].Wt + LayerDead[layer].Wt) * 10.0;
+                    double N = (LayerLive[layer].N + LayerDead[layer].N) * 10.0;
 
-                        double DM = (LayerLive[layer].Wt + LayerDead[layer].Wt) * 10.0;
-                        double N = (LayerLive[layer].N + LayerDead[layer].N) * 10.0;
+                    FOMType fom = new FOMType();
+                    fom.amount = (float)DM;
+                    fom.N = (float)N;
+                    fom.C = (float)(0.40 * DM);
+                    fom.P = 0;
+                    fom.AshAlk = 0;
 
-                        FOMType fom = new FOMType();
-                        fom.amount = (float)DM;
-                        fom.N = (float)N;
-                        fom.C = (float)(0.40 * DM);
-                        fom.P = 0;
-                        fom.AshAlk = 0;
+                    FOMLayerLayerType Layer = new FOMLayerLayerType();
+                    Layer.FOM = fom;
+                    Layer.CNR = 0;
+                    Layer.LabileP = 0;
 
-                        FOMLayerLayerType Layer = new FOMLayerLayerType();
-                        Layer.FOM = fom;
-                        Layer.CNR = 0;
-                        Layer.LabileP = 0;
+                    FOMLayers[layer] = Layer;
 
-                        FOMLayers[layer] = Layer;
+                    if (LayerLive[layer].StructuralWt > 0)
+                        LayerLive[layer].StructuralWt *= RemainFrac;
+                    if (LayerLive[layer].NonStructuralWt > 0)
+                        LayerLive[layer].NonStructuralWt *= RemainFrac;
+                    if (LayerLive[layer].StructuralN > 0)
+                        LayerLive[layer].StructuralN *= RemainFrac;
+                    if (LayerLive[layer].NonStructuralN > 0)
+                        LayerLive[layer].NonStructuralN *= RemainFrac;
 
-                        if (LayerLive[layer].StructuralWt > 0)
-                            LayerLive[layer].StructuralWt *= RemainFrac;
-                        if (LayerLive[layer].NonStructuralWt > 0)
-                            LayerLive[layer].NonStructuralWt *= RemainFrac;
-                        if (LayerLive[layer].StructuralN > 0)
-                            LayerLive[layer].StructuralN *= RemainFrac;
-                        if (LayerLive[layer].NonStructuralN > 0)
-                            LayerLive[layer].NonStructuralN *= RemainFrac;
-
-                    }
-                    Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name + " removing " + FractionRemoved * 100 + "% and returning " + FractionToResidue * 100 + "% to the soil organic matter");
-                    FOMLayerType FomLayer = new FOMLayerType();
-                    FomLayer.Type = Plant.CropType;
-                    FomLayer.Layer = FOMLayers;
-                    IncorpFOM.Invoke(FomLayer);
                 }
-            }
-        }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on harvest.
-        /// </summary>
-        public override OrganBiomassRemovalType HarvestDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0,
-                    FractionToResidue = 0.2
-                };
-            }
-        }
-
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Cutting
-        /// </summary>
-        public override OrganBiomassRemovalType CutDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0,
-                    FractionToResidue = 0.3
-                };
-            }
-        }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Cutting
-        /// </summary>
-        public override OrganBiomassRemovalType PruneDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0,
-                    FractionToResidue = 0.1
-                };
-            }
-        }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Cutting
-        /// </summary>
-        public override OrganBiomassRemovalType GrazeDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0,
-                    FractionToResidue = 0.15
-                };
+                Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name + " removing " + value.FractionRemoved * 100 + "% and returning " + value.FractionToResidue * 100 + "% to the soil organic matter");
+                FOMLayerType FomLayer = new FOMLayerType();
+                FomLayer.Type = Plant.CropType;
+                FomLayer.Layer = FOMLayers;
+                IncorpFOM.Invoke(FomLayer);
             }
         }
         #endregion
@@ -1188,8 +1131,6 @@ namespace Models.PMF.Organs
             tags.Add(new AutoDocumentation.Heading("Nitrogen Uptake", headingLevel + 1));
             tags.Add(new AutoDocumentation.Paragraph("potential N uptake by the root system is calculated for each soil layer that the roots have extended into.", indent));
             tags.Add(new AutoDocumentation.Paragraph("In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controllint the rate of extraction (kNO<sub>3</sub> and kNH<sub>4</sub>), the concentration of of N (ppm) and a soil moisture factor which decreases as the soil dries.", indent));
-            tags.Add(new AutoDocumentation.Paragraph("The KNO<sub>3</sub> and kNH<sub>4</sub> are calculated in relation to root length density in each layer as :", indent));
-            tags.Add(new AutoDocumentation.Paragraph("Need to produce a table of k fractors", indent));
             tags.Add(new AutoDocumentation.Paragraph("Nitrogen uptake demand is limited to the maximum of potential uptake and the plants N demand.  Uptake N demand is then passed to the soil arbitrator which determines how much of their Nitrogen uptake demand each plant instance will be allowed to take up:", indent));
 
             tags.Add(new AutoDocumentation.Heading("Water Uptake", headingLevel + 1));
@@ -1198,7 +1139,7 @@ namespace Models.PMF.Organs
             tags.Add(new AutoDocumentation.Paragraph("The kl values are set in the soil and may be further modified by the crop.  are calculated in relation to root length density in each layer as :", indent));
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 {
-                    if (child.Name == "KLModifier")
+                    if (child.Name == "KLModifier" || child.Name == "KNO3" || child.Name == "KNH4")
                         child.Document(tags, headingLevel + 5, indent + 1);
                 }
                 

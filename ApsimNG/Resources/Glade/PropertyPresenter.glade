@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glade-interface>
+  <!-- interface-requires gtk+ 2.24 -->
+  <!-- interface-naming-policy project-wide -->
+  <widget class="GtkScrolledWindow" id="scrolledwindow1">
+    <property name="visible">True</property>
+    <property name="can_focus">True</property>
+    <property name="hscrollbar_policy">automatic</property>
+    <property name="vscrollbar_policy">automatic</property>
+    <child>
+      <widget class="GtkTreeView" id="gridview">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="headers_clickable">False</property>
+        <property name="enable_grid_lines">both</property>
+      </widget>
+    </child>
+  </widget>
+</glade-interface>
