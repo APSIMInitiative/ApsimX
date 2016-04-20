@@ -621,6 +621,21 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </XYPairs>
           <XProperty>[Root].RootLengthDenisty</XProperty>
         </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>NUptakeSWFactor</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RWC</XProperty>
+        </LinearInterpolationFunction>
         <InitialDM>5</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <NuptakeSupply>0</NuptakeSupply>
