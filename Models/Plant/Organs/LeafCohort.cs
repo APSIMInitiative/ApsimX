@@ -515,8 +515,9 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if ((IsNotSenescing) && (ShadeInducedSenRate == 0.0)) // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions
-                    return Math.Max(0.0, LuxaryNConc * (LiveStart.StructuralWt + LiveStart.MetabolicWt + PotentialStructuralDMAllocation + PotentialMetabolicDMAllocation) - Live.NonStructuralN);//Math.Max(0.0, MaxN - CritN - LeafStartNonStructuralN); //takes the difference between the two above as the maximum nonstructural N conc and subtracts the current nonstructural N conc to give a value
+                if ((IsNotSenescing) && (ShadeInducedSenRate == 0.0) && (NonStructuralFraction > 0)) // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions.  Also if there is 
+                    return Math.Max(0.0, LuxaryNConc * (LiveStart.StructuralWt + LiveStart.MetabolicWt 
+                                    + PotentialStructuralDMAllocation + PotentialMetabolicDMAllocation) - Live.NonStructuralN);//Math.Max(0.0, MaxN - CritN - LeafStartNonStructuralN); //takes the difference between the two above as the maximum nonstructural N conc and subtracts the current nonstructural N conc to give a value
                 else
                     return 0.0;
             }
@@ -669,7 +670,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return LeafStartNonStructuralNRetranslocationSupply + LeafStartMetabolicNRetranslocationSupply;
+                return LeafStartNonStructuralNRetranslocationSupply;
             }
         }
         /*virtual public double NRetranslocation
