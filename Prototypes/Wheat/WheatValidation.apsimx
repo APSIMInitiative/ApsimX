@@ -1004,6 +1004,23 @@ The model consists of:
           </XYPairs>
           <XProperty>[Root].RootLengthDenisty</XProperty>
         </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>NUptakeSWFactor</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.25</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RWC</XProperty>
+        </LinearInterpolationFunction>
         <InitialDM>0.2</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <NuptakeSupply>0</NuptakeSupply>
@@ -5501,17 +5518,23 @@ namespace Models
                     <double>0.23</double>
                     <double>0.23</double>
                     <double>0.18</double>
+                    <double>0.18</double>
+                    <double>0.18</double>
                   </LL>
                   <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
                     <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.04</double>
+                    <double>0.04</double>
                     <double>0.06</double>
                     <double>0.06</double>
                     <double>0.06</double>
                     <double>0.06</double>
                   </KL>
                   <XF>
+                    <double>1</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -5529,6 +5552,8 @@ namespace Models
                   <double>300</double>
                   <double>300</double>
                   <double>300</double>
+                  <double>300</double>
+                  <double>300</double>
                 </Thickness>
                 <BD>
                   <double>1.38</double>
@@ -5538,8 +5563,12 @@ namespace Models
                   <double>1.51</double>
                   <double>1.49</double>
                   <double>1.47</double>
+                  <double>1.47</double>
+                  <double>1.47</double>
                 </BD>
                 <AirDry>
+                  <double>0.1</double>
+                  <double>0.1</double>
                   <double>0.1</double>
                   <double>0.1</double>
                   <double>0.1</double>
@@ -5556,6 +5585,8 @@ namespace Models
                   <double>0.23</double>
                   <double>0.23</double>
                   <double>0.19</double>
+                  <double>0.19</double>
+                  <double>0.19</double>
                 </LL15>
                 <DUL>
                   <double>0.372769778</double>
@@ -5565,6 +5596,8 @@ namespace Models
                   <double>0.36</double>
                   <double>0.35</double>
                   <double>0.33</double>
+                  <double>0.33</double>
+                  <double>0.33</double>
                 </DUL>
                 <SAT>
                   <double>0.44</double>
@@ -5572,6 +5605,8 @@ namespace Models
                   <double>0.44</double>
                   <double>0.43</double>
                   <double>0.42</double>
+                  <double>0.43</double>
+                  <double>0.43</double>
                   <double>0.43</double>
                   <double>0.43</double>
                 </SAT>
@@ -5604,6 +5639,8 @@ namespace Models
                   <double>300</double>
                   <double>300</double>
                   <double>300</double>
+                  <double>300</double>
+                  <double>300</double>
                 </Thickness>
                 <SWCON>
                   <double>0.3</double>
@@ -5614,8 +5651,12 @@ namespace Models
                   <double>0.3</double>
                   <double>0.3</double>
                   <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
                 </SWCON>
                 <KLAT>
+                  <double>0</double>
+                  <double>0</double>
                   <double>0</double>
                   <double>0</double>
                   <double>0</double>
@@ -5685,6 +5726,8 @@ namespace Models
                   <double>300</double>
                   <double>300</double>
                   <double>300</double>
+                  <double>300</double>
+                  <double>300</double>
                 </Thickness>
                 <Depth>
                   <string>0-15</string>
@@ -5695,6 +5738,8 @@ namespace Models
                   <string>90-120</string>
                   <string>120-150</string>
                   <string>150-180</string>
+                  <string>180-210</string>
+                  <string>210-240</string>
                 </Depth>
                 <OC>
                   <double>2.2</double>
@@ -5705,10 +5750,14 @@ namespace Models
                   <double>0.8</double>
                   <double>0.45</double>
                   <double>0.45</double>
+                  <double>0.45</double>
+                  <double>0.45</double>
                 </OC>
                 <FBiom>
                   <double>0.024</double>
                   <double>0.024</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
                   <double>0.01</double>
                   <double>0.01</double>
                   <double>0.01</double>
@@ -5722,6 +5771,8 @@ namespace Models
                   <double>0.7</double>
                   <double>0.85</double>
                   <double>0.9</double>
+                  <double>0.95</double>
+                  <double>0.95</double>
                   <double>0.95</double>
                   <double>0.95</double>
                   <double>0.95</double>
@@ -5739,9 +5790,15 @@ namespace Models
                   <double>300</double>
                   <double>300</double>
                   <double>300</double>
+                  <double>300</double>
+                  <double>300</double>
                 </Thickness>
+                <Texture />
+                <MunsellColour />
                 <PH>
                   <double>7.5</double>
+                  <double>8</double>
+                  <double>8</double>
                   <double>8</double>
                   <double>8</double>
                   <double>8</double>
@@ -5764,6 +5821,8 @@ namespace Models
                   <double>300</double>
                   <double>300</double>
                   <double>300</double>
+                  <double>300</double>
+                  <double>300</double>
                 </Thickness>
                 <SW>
                   <double>0.327449243</double>
@@ -5774,6 +5833,8 @@ namespace Models
                   <double>0.310632221</double>
                   <double>0.306040323</double>
                   <double>0.269446539</double>
+                  <double>0.269</double>
+                  <double>0.269</double>
                 </SW>
                 <NO3Units>ppm</NO3Units>
                 <NH4Units>ppm</NH4Units>
@@ -5792,6 +5853,8 @@ namespace Models
                   <double>300</double>
                   <double>300</double>
                   <double>300</double>
+                  <double>300</double>
+                  <double>300</double>
                 </Thickness>
                 <NO3>
                   <double>1.5</double>
@@ -5801,6 +5864,8 @@ namespace Models
                   <double>0.4</double>
                   <double>0.2</double>
                   <double>0.4</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
                   <double>0.3</double>
                 </NO3>
                 <NH4>
@@ -5812,6 +5877,8 @@ namespace Models
                   <double>0.42</double>
                   <double>0.37</double>
                   <double>0.25</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
                 </NH4>
                 <NO3Units>ppm</NO3Units>
                 <NH4Units>ppm</NH4Units>
@@ -11743,6 +11810,102 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
+            <Manager>
+              <Name>Automatic irrigation based on water deficit</Name>
+              <Script>
+                <FASW>0</FASW>
+                <WaterDeficit>0</WaterDeficit>
+                <AutoIrrigationOn>True</AutoIrrigationOn>
+                <FASWThreshold>0.9</FASWThreshold>
+                <FASWDepth>600</FASWDepth>
+              </Script>
+              <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		public double FASW { get; set; }
+		public double WaterDeficit  { get; set; }
+	
+		[Link] Zone zone;
+		[Link] Irrigation irrigation;
+		[Link] Soil soil;
+		
+		[Description("Auto irrigation on?")]
+		public bool AutoIrrigationOn { get; set; }
+
+		[Description("Threshold fraction available water (0-1)")]
+		public double FASWThreshold { get; set; }
+
+		[Description("Soil depth (mm) to which fraction available water is calculated")]
+		public double FASWDepth { get; set; }
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			CalculateFASW();
+			if (AutoIrrigationOn)
+			{
+				if (FASW < FASWThreshold)
+				{
+					double amount = 10;
+					irrigation.Apply(WaterDeficit, depth: 0);
+				}
+			}
+		}
+		
+		private void CalculateFASW()
+		{
+			double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);
+			double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);
+		
+			int nlayr = GetLayerIndex();
+			double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);
+
+			double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);
+
+			// note that results may be strange if swdep < ll15
+			double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)
+			                  - excess_fr * soil.Water[nlayr])
+			                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)
+			                  - excess_fr * LL15[nlayr]);
+
+
+			double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)
+			                      - excess_fr * DUL[nlayr])
+			                      - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)
+			                      - excess_fr * LL15[nlayr]);
+
+			FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);
+			WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);
+		}
+
+		private int GetLayerIndex()
+		{
+			double[] cumThickness = Soil.ToCumThickness(soil.Thickness);
+			for (int i = 1; i < cumThickness.Length; i++)
+			{
+				if (FASWDepth < cumThickness[i])
+					return i - 1;
+			}
+			
+			return cumThickness.Length - 1;
+		}
+
+	}
+}
+	   ]]></Code>
+            </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -35587,6 +35750,96 @@ namespace Models
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>SurfaceOrganicMatter.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Harvest Yield</Name>
+          <Series>
+            <Name>Series 0</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObserved</TableName>
+            <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
+            <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Caption />
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>Observed Yield</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Predicted Yield</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Phenology</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
