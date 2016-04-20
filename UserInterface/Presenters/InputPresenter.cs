@@ -52,7 +52,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                ExplorerPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                ExplorerPresenter.MainPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
             }
         }
 
