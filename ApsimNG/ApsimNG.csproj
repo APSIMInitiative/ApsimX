@@ -1,0 +1,612 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{83F4BD8A-A0D1-4AA7-9DC7-42AF7D9BACBA}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ApsimNG</RootNamespace>
+    <AssemblyName>ApsimNG</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utility\FindAndReplaceForm.resx">
+      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\MapView.resx">
+      <DependentUpon>MapView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\TreeProxyView.resx">
+      <DependentUpon>TreeProxyView.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="App.config" />
+    <EmbeddedResource Include="Resources\Glade\ExplorerView.glade">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Glade\MainForm.glade">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Glade\TabbedExplorerView.glade">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <EmbeddedResource Include="Resources\Glade\GridView.glade" />
+    <EmbeddedResource Include="Resources\Glade\TabbedMetDataView.glade" />
+    <EmbeddedResource Include="Resources\Glade\GraphView.glade" />
+    <EmbeddedResource Include="Resources\Glade\SummaryView.glade" />
+    <EmbeddedResource Include="Resources\Glade\HTMLView.glade">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Glade\DataStoreView.glade" />
+    <EmbeddedResource Include="Resources\Glade\ProfileView.glade" />
+    <EmbeddedResource Include="Resources\Glade\AxisView.glade" />
+    <EmbeddedResource Include="Resources\Glade\TitleView.glade" />
+    <EmbeddedResource Include="Resources\Glade\LegendView.glade" />
+    <EmbeddedResource Include="Resources\Glade\MemoView.glade" />
+    <EmbeddedResource Include="Resources\Glade\InitialWaterView.glade" />
+    <EmbeddedResource Include="Resources\Glade\SeriesView.glade" />
+    <EmbeddedResource Include="Resources\Glade\SupplementView.glade" />
+    <EmbeddedResource Include="Resources\Glade\InputView.glade" />
+    <EmbeddedResource Include="Resources\Glade\ReportView.glade" />
+    <None Include="Resources\Report.xshd" />
+    <None Include="Resources\SyntaxHighlighting\Report.xshd" />
+    <None Include="Resources\SyntaxHighlighting\Test.xshd" />
+    <EmbeddedResource Include="Resources\Toolboxes\ManagementToolbox.apsimx" />
+    <EmbeddedResource Include="Resources\Toolboxes\StandardToolbox.apsimx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Toolboxes\TrainingToolbox.apsimx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="Resources\Test.xshd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attributes\ContextMenuAttribute.cs" />
+    <Compile Include="Attributes\MainMenuAttribute.cs" />
+    <Compile Include="Classes\GridCell.cs" />
+    <Compile Include="Classes\HtmlToMigraDoc.cs" />
+    <Compile Include="CommandHistory.cs" />
+    <Compile Include="Commands\AddModelCommand.cs" />
+    <Compile Include="Commands\BibTeX.cs" />
+    <Compile Include="Commands\ChangeProperty.cs" />
+    <Compile Include="Commands\DeleteModelCommand.cs" />
+    <Compile Include="Commands\ExportNodeCommand.cs" />
+    <Compile Include="Commands\IExplorerPresenter.cs" />
+    <Compile Include="Commands\MoveModelCommand.cs" />
+    <Compile Include="Commands\MoveModelUpDownCommand.cs" />
+    <Compile Include="Commands\RenameModelCommand.cs" />
+    <Compile Include="Commands\RunCommand.cs" />
+    <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
+    <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
+    <Compile Include="EventArguments\HoverPointArgs.cs" />
+    <Compile Include="EventArguments\KeysArgs.cs" />
+    <Compile Include="EventArguments\LegendClickArgs.cs" />
+    <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
+    <Compile Include="Forms\UpgradeForm.cs" />
+    <Compile Include="Forms\UpgradeForm.Designer.cs">
+      <DependentUpon>UpgradeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\GridColumn.cs" />
+    <Compile Include="Interfaces\ICommand.cs" />
+    <Compile Include="Interfaces\ICultivarView.cs" />
+    <Compile Include="Interfaces\IExplorerView.cs" />
+    <Compile Include="Interfaces\IGraphView.cs" />
+    <Compile Include="Interfaces\IGridCell.cs" />
+    <Compile Include="Interfaces\IGridColumn.cs" />
+    <Compile Include="Interfaces\IGridView.cs" />
+    <Compile Include="Interfaces\IInitialWaterView.cs" />
+    <Compile Include="Interfaces\ISeriesView.cs" />
+    <Compile Include="Interfaces\ISummaryView.cs" />
+    <Compile Include="Interfaces\ISupplementView.cs" />
+    <Compile Include="Interfaces\ITestView.cs" />
+    <Compile Include="MainForm.cs" />
+    <Compile Include="Menus\ContextMenu.cs" />
+    <Compile Include="Menus\MainMenu.cs" />
+    <Compile Include="Presenters\AddModelPresenter.cs" />
+    <Compile Include="Presenters\AxisPresenter.cs" />
+    <Compile Include="Presenters\CultivarPresenter.cs" />
+    <Compile Include="Presenters\DataStorePresenter.cs" />
+    <Compile Include="Presenters\ExperimentPresenter.cs" />
+    <Compile Include="Presenters\ExplorerPresenter.cs" />
+    <Compile Include="Presenters\FactorPresenter.cs" />
+    <Compile Include="Presenters\FolderPresenter.cs" />
+    <Compile Include="Presenters\GraphPresenter.cs" />
+    <Compile Include="Presenters\IExportable.cs" />
+    <Compile Include="Presenters\InitialWaterPresenter.cs" />
+    <Compile Include="Presenters\InputPresenter.cs" />
+    <Compile Include="Presenters\IPresenter.cs" />
+    <Compile Include="Presenters\LegendPresenter.cs" />
+    <Compile Include="Presenters\ManagerPresenter.cs" />
+    <Compile Include="Presenters\MapPresenter.cs" />
+    <Compile Include="Presenters\MemoPresenter.cs" />
+    <Compile Include="Presenters\MetDataPresenter.cs" />
+    <Compile Include="Presenters\OperationsPresenter.cs" />
+    <Compile Include="Presenters\ProfilePresenter.cs" />
+    <Compile Include="Presenters\PropertyPresenter.cs" />
+    <Compile Include="Presenters\ReportPresenter.cs" />
+    <Compile Include="Presenters\SeriesPresenter.cs" />
+    <Compile Include="Presenters\SummaryPresenter.cs" />
+    <Compile Include="Presenters\SupplementPresenter.cs" />
+    <Compile Include="Presenters\TabbedExplorerPresenter.cs" />
+    <Compile Include="Presenters\TitlePresenter.cs" />
+    <Compile Include="Presenters\TreeProxyPresenter.cs" />
+    <Compile Include="Presenters\XYPairsPresenter.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Utility\ColourPickerCell.cs" />
+    <Compile Include="Utility\ColumnXYSeries.cs" />
+    <Compile Include="Utility\Configuration.cs" />
+    <Compile Include="Utility\DataGridViewAutoFilterColumnHeaderCell.cs" />
+    <Compile Include="Utility\DataGridViewAutoFilterTextBoxColumn.cs" />
+    <Compile Include="Utility\DateTimeCellType.cs" />
+    <Compile Include="Utility\Excel.cs" />
+    <Compile Include="Utility\FindAndReplaceForm.cs" />
+    <Compile Include="Utility\FindAndReplaceForm.designer.cs">
+      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utility\Graph.cs" />
+    <Compile Include="Utility\LineSeriesWithTracker.cs" />
+    <Compile Include="Views\AxisView.cs" />
+    <Compile Include="Views\ButtonView.cs" />
+    <Compile Include="Views\CheckBoxView.cs" />
+    <Compile Include="Views\ColourDropDownView.cs" />
+    <Compile Include="Views\DataStoreView.cs" />
+    <Compile Include="Views\DropDownView.cs" />
+    <Compile Include="Views\EditBoxView.cs" />
+    <Compile Include="Views\EditorView.cs" />
+    <Compile Include="Views\ExplorerView.cs" />
+    <Compile Include="Views\FolderView.cs" />
+    <Compile Include="Views\GeneralView.cs" />
+    <Compile Include="Views\GraphView.cs" />
+    <Compile Include="Views\GridView.cs" />
+    <Compile Include="Views\HTMLView.cs" />
+    <Compile Include="Views\InitialWaterView.cs" />
+    <Compile Include="Views\InputView.cs" />
+    <Compile Include="Views\LegendView.cs" />
+    <Compile Include="Views\ListBoxView.cs" />
+    <Compile Include="Views\ListButtonView.cs" />
+    <Compile Include="Views\ManagerView.cs" />
+    <Compile Include="Views\MapView.cs" />
+    <Compile Include="Views\MapView.Designer.cs">
+      <DependentUpon>MapView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MemoView.cs" />
+    <Compile Include="Views\ProfileView.cs" />
+    <Compile Include="Views\ReportView.cs" />
+    <Compile Include="Views\SeriesView.cs" />
+    <Compile Include="Views\SummaryView.cs" />
+    <Compile Include="Views\SupplementView.cs" />
+    <Compile Include="Views\TabbedExplorerView.cs">
+      <SubType>
+      </SubType>
+    </Compile>
+    <Compile Include="Views\TabbedMetDataView.cs" />
+    <Compile Include="Views\TitleView.cs" />
+    <Compile Include="Views\TreeProxyView.cs" />
+    <Compile Include="Views\TreeProxyView.Designer.cs">
+      <DependentUpon>TreeProxyView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\XYPairsView.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Forms\UpgradeForm.resx">
+      <DependentUpon>UpgradeForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Apsim.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\apsim_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\AutoDocumentation.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GraphData.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\hd_bg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\InitialWaterGraph.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Check Soil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Copy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Export to CSV.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Export to EXCEL.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Export to HTML.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Help.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Paste.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Redo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Run APSIM.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Save As.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Split screen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Undo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Upgrade.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\notes.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\PresenterPictures\CircularZone.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Chickpea.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CultivarFolder.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Map.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\MovingAverageFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\OrganBiomassRemovalType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SCUM.png" />
+    <EmbeddedResource Include="Resources\apsim logo32.png" />
+    <EmbeddedResource Include="Resources\AIBanner.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Arbitrator.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Bean.png" />
+    <EmbeddedResource Include="Resources\LargeImages\BiomassRemoval.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Canola.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Canopy.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Chickpea.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Cotton.png" />
+    <EmbeddedResource Include="Resources\LargeImages\EGrandis.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Fieldpea.png" />
+    <EmbeddedResource Include="Resources\LargeImages\forestry.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Grass.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Horsegram.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Lucerne.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Lupin.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Maize.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Millet.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Oats.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Oilpalm.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Pasture.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Peanut.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Potato.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Rice.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Slurp.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Sorghum.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Soybean.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Sugar.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Swim.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Wheat.png" />
+    <Content Include="Resources\TreeViewImages\apsim logo32.png" />
+    <None Include="Resources\window_delete1.png" />
+    <None Include="Resources\Close1.png" />
+    <None Include="Resources\Apsim1.png" />
+    <None Include="Resources\XYPairsGraph1.xml" />
+    <None Include="Resources\WaterGraph1.xml" />
+    <None Include="Resources\InitialWaterGraph1.xml" />
+    <EmbeddedResource Include="Resources\success.wav" />
+    <None Include="Resources\XYPairsGraph.xml" />
+    <None Include="Resources\window_delete.png" />
+    <None Include="Resources\WaterGraph.xml" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Zone.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Zadok.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\XYPairs.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Wheat.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\WeightedTemperatureFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Weather.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Water.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\VariableReference.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\TreeProxy.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\TimeSeriesStats.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Tests.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SurfaceOrganicMatter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SummaryFile.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Summary.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Summariser.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SugarCane.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SubtractFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Structure.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\StageBasedInterpolation.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SplineInterpolationFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilWater.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureWeightedFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureDepthFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilOrganicMatter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogen.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilCropOilPalm.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilCrop.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilArbitrator.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Soil.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Slurp.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Simulations.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Simulation.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SigmoidFunction2.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SigmoidFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Series.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Sample.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RUEModel.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Root.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ReproductiveOrgan.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Report.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Replacements.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Regression.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RectangularZone.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Probability.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\PredictedObserved.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\PowerFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Potato.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Plant.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\PhotoperiodFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\PhotoperiodDeltaFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Phenology.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\PhaseLookupValue.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\PhaseLookup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\PhaseBasedSwitch.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\OrganArbitrator.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Operations.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\OnEventFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\OilPalm.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\NodeNumberPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\MultiplyFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\MinimumFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\MicroClimate.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Memo.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\MaximumFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Manager.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Maize.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Log.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LocalMicroClimate.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LinearInterpolationFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LessThanFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LeafCohort.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LeafAppearancePhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Leaf.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Irrigation.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Input.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\InPhaseTtFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\InitialWater.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\HeightFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Graph.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Grain.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GerminatingPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GenericPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GenericAboveGroundOrgan.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Folder.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\FieldPea.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Fertiliser.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Factors.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Factor.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ExternalVariable.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ExpressionFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ExponentialFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Experiment.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ExcelInput.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\EndPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\EmergingPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\DivideFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\DeltaFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\DataStore.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Cultivar.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Constant.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CompositeBiomass.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Clock.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CircularZone.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Biomass.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\BellCurveFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Axis.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ArrayBiomass.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Analysis.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Alias.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AirTemperatureFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AgroforestrySystem.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AgPasture.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AgeCalculatorFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AddFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AccumulateFunction.png" />
+    <EmbeddedResource Include="Resources\Toolboxes\Toolbox.png" />
+    <EmbeddedResource Include="Resources\Toolboxes\OpenFile.png" />
+    <EmbeddedResource Include="Resources\Toolboxes\OpenExample.png" />
+    <EmbeddedResource Include="Resources\Toolboxes\Import.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">
+      <Project>{e243ae8d-35e3-4397-b180-ef1e8a91ae8c}</Project>
+      <Name>APSIM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Models\Importer\Importer.csproj">
+      <Project>{075f2644-f14e-4010-ba52-35e4b0011835}</Project>
+      <Name>Importer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{a3e10705-f2bb-4182-a19c-7f63222584df}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\atk-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML, Version=0.76.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.76.0\lib\net40-client\ClosedXML.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gdk-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\glade-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\glib-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="gtk-dotnet, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gtk-dotnet.dll</HintPath>
+    </Reference>
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gtk-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.Cecil, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.Cecil.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.CSharp, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.Xml, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.Xml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.TextEditor, Version=3.2.1.6466, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\ICSharpCode.TextEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="MarkdownDeep, Version=1.5.4615.26275, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MarkdownDeep.NET.1.5\lib\.NetFramework 3.5\MarkdownDeep.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MigraDoc.DocumentObjectModel-gdi, Version=1.50.4000.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.4000-beta3b\lib\net20\MigraDoc.DocumentObjectModel-gdi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MigraDoc.Rendering-gdi, Version=1.50.4000.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.4000-beta3b\lib\net20\MigraDoc.Rendering-gdi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MigraDoc.RtfRendering-gdi, Version=1.50.4000.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.4000-beta3b\lib\net20\MigraDoc.RtfRendering-gdi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cairo, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\GtkSharp\2.12\lib\Mono.Cairo\Mono.Cairo.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.TextEditor, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Assemblies\Mono.TextEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot, Version=0.0.1.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Projects\oxyplot\Source\OxyPlot.GtkSharp\bin\Debug\NET45\OxyPlot.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.GtkSharp, Version=0.0.1.0, Culture=neutral, PublicKeyToken=245eacd6b5d2d338, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Projects\oxyplot\Source\OxyPlot.GtkSharp\bin\Debug\NET45\OxyPlot.GtkSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\pango-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp-gdi, Version=1.50.4000.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp-gdi.1.50.4000-beta3b\lib\net20\PdfSharp-gdi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PdfSharp.Charting-gdi, Version=1.50.4000.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp-gdi.1.50.4000-beta3b\lib\net20\PdfSharp.Charting-gdi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+    <Reference Include="webkit-sharp, Version=1.1.15.0, Culture=neutral, PublicKeyToken=eaa1d335d2e19745, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Assemblies\webkit-sharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
