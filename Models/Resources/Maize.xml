@@ -377,14 +377,17 @@ Though tillering is common in some maize varieties under certain agronomic condi
       <Name>BranchingRate</Name>
       <Value>0</Value>
     </Constant>
-    <Constant>
-      <Name>ShadeInducedBranchMortality</Name>
-      <Value>0</Value>
-    </Constant>
-    <Constant>
-      <Name>DroughtInducedBranchMortality</Name>
-      <Value>0</Value>
-    </Constant>
+	<AddFunction>
+      <Name>BranchMortality</Name>
+      <Constant>
+        <Name>ShadeInducedBranchMortality</Name>
+        <Value>0</Value>
+      </Constant>
+      <Constant>
+        <Name>DroughtInducedBranchMortality</Name>
+        <Value>0</Value>
+      </Constant>
+	</AddFunction>
     <InitialiseStage>Emergence</InitialiseStage>
     <PrimaryBudNo>1</PrimaryBudNo>
   </Structure>
@@ -622,8 +625,29 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <VariableName>[Maize].Population</VariableName>
       </VariableReference>
     </DivideFunction>
-    <FractionRemoved>0</FractionRemoved>
-    <FractionToResidue>0</FractionToResidue>
+    <Folder>
+      <Name>BiomassRemovalDefaults</Name>
+      <OrganBiomassRemovalType>
+        <Name>Harvest</Name>
+        <FractionRemoved>1.0</FractionRemoved>
+        <FractionToResidue>0.0</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Cut</Name>
+        <FractionRemoved>1.0</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Prune</Name>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0.8</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Graze</Name>
+        <FractionRemoved>0.6</FractionRemoved>
+        <FractionToResidue>0.2</FractionToResidue>
+      </OrganBiomassRemovalType>
+    </Folder>
     <RipeStage />
   </ReproductiveOrgan>
   <Root>
@@ -784,27 +808,77 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <Start>Germination</Start>
       <End>Maturity</End>
     </PhaseBasedSwitch>
-    <FractionRemoved>0</FractionRemoved>
-    <FractionToResidue>0</FractionToResidue>
+    <Folder>
+      <Name>BiomassRemovalDefaults</Name>
+      <OrganBiomassRemovalType>
+        <Name>Harvest</Name>
+        <FractionRemoved>0.0</FractionRemoved>
+        <FractionToResidue>0.2</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Cut</Name>
+        <FractionRemoved>0.0</FractionRemoved>
+        <FractionToResidue>0.3</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Prune</Name>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0.1</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Graze</Name>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0.15</FractionToResidue>
+      </OrganBiomassRemovalType>
+    </Folder>
     <InitialDM>0.2</InitialDM>
     <SpecificRootLength>40000</SpecificRootLength>
-    <KNO3_yProperty>
-      <double>0.03</double>
-      <double>0.03</double>
-    </KNO3_yProperty>
-    <KNO3_xRootLength>
-      <double>0.003</double>
-      <double>0.003</double>
-    </KNO3_xRootLength>
-    <KNH4_yProperty>
-      <double>0</double>
-      <double>0.0003</double>
-    </KNH4_yProperty>
-    <KNH4_xRootLength>
-      <double>0</double>
-      <double>0.003</double>
-    </KNH4_xRootLength>
+    <LinearInterpolationFunction>
+      <Name>KNO3</Name>
+      <XYPairs>
+        <Name>XYPairs</Name>
+        <X>
+          <double>0.003</double>
+          <double>0.003</double>
+        </X>
+        <Y>
+          <double>0.03</double>
+          <double>0.03</double>
+        </Y>
+      </XYPairs>
+      <XProperty>[Root].RootLengthDenisty</XProperty>
+    </LinearInterpolationFunction>
+    <LinearInterpolationFunction>
+      <Name>KNH4</Name>
+      <XYPairs>
+        <Name>XYPairs</Name>
+        <X>
+          <double>0</double>
+          <double>0.003</double>
+        </X>
+        <Y>
+          <double>0.0</double>
+          <double>0.0003</double>
+        </Y>
+      </XYPairs>
+      <XProperty>[Root].RootLengthDenisty</XProperty>
+    </LinearInterpolationFunction>        
     <NuptakeSupply>0</NuptakeSupply>
+    <LinearInterpolationFunction>
+      <Name>NUptakeSWFactor</Name>
+      <XYPairs>
+        <Name>XYPairs</Name>
+        <X>
+          <double>0</double>
+          <double>1</double>
+        </X>
+        <Y>
+          <double>0</double>
+          <double>1</double>
+        </Y>
+      </XYPairs>
+      <XProperty>[Root].RWC</XProperty>
+    </LinearInterpolationFunction>
   </Root>
   <Leaf>
     <Name>Leaf</Name>
@@ -866,6 +940,11 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
     </ArrayBiomass>
     <LeafCohortParameters>
       <Name>CohortParameters</Name>
+		<Constant>
+		  <Name>SenessingLeafRelativeSize</Name>
+		  <Value>1</Value>
+		  <Units>0-1</Units>
+		</Constant>
       <BellCurveFunction>
         <Name>MaxArea</Name>
         <Memo>
@@ -1321,8 +1400,29 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
       </VariableReference>
     </MinimumFunction>
-    <FractionRemoved>0</FractionRemoved>
-    <FractionToResidue>0</FractionToResidue>
+    <Folder>
+      <Name>BiomassRemovalDefaults</Name>
+      <OrganBiomassRemovalType>
+        <Name>Harvest</Name>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0.3</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Cut</Name>
+        <FractionRemoved>0.8</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Prune</Name>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0.6</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Graze</Name>
+        <FractionRemoved>0.6</FractionRemoved>
+        <FractionToResidue>0.1</FractionToResidue>
+      </OrganBiomassRemovalType>
+    </Folder>
     <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
     <StartFractionExpanded>0</StartFractionExpanded>
     <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -1410,8 +1510,29 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>DMRetranslocationFactor</Name>
       <Value>0.1</Value>
     </Constant>
-    <FractionRemoved>0</FractionRemoved>
-    <FractionToResidue>0</FractionToResidue>
+    <Folder>
+      <Name>BiomassRemovalDefaults</Name>
+      <OrganBiomassRemovalType>
+        <Name>Harvest</Name>
+        <FractionRemoved>0.5</FractionRemoved>
+        <FractionToResidue>0.1</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Cut</Name>
+        <FractionRemoved>0.8</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Prune</Name>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0.6</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Graze</Name>
+        <FractionRemoved>0.6</FractionRemoved>
+        <FractionToResidue>0.2</FractionToResidue>
+      </OrganBiomassRemovalType>
+    </Folder>
   </GenericAboveGroundOrgan>
   <GenericAboveGroundOrgan>
     <Name>Rachis</Name>
@@ -1519,8 +1640,29 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </XYPairs>
       <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
     </LinearInterpolationFunction>
-    <FractionRemoved>0</FractionRemoved>
-    <FractionToResidue>0</FractionToResidue>
+    <Folder>
+      <Name>BiomassRemovalDefaults</Name>
+      <OrganBiomassRemovalType>
+        <Name>Harvest</Name>
+        <FractionRemoved>0.5</FractionRemoved>
+        <FractionToResidue>0.1</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Cut</Name>
+        <FractionRemoved>0.8</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Prune</Name>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0.6</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Graze</Name>
+        <FractionRemoved>0.6</FractionRemoved>
+        <FractionToResidue>0.2</FractionToResidue>
+      </OrganBiomassRemovalType>
+    </Folder>
   </GenericAboveGroundOrgan>
   <GenericAboveGroundOrgan>
     <Name>Stem</Name>
@@ -1653,8 +1795,29 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </PhaseLookupValue>
       </PhaseLookup>
     </PartitionFractionDemandFunction>
-    <FractionRemoved>0</FractionRemoved>
-    <FractionToResidue>0</FractionToResidue>
+    <Folder>
+      <Name>BiomassRemovalDefaults</Name>
+      <OrganBiomassRemovalType>
+        <Name>Harvest</Name>
+        <FractionRemoved>0.5</FractionRemoved>
+        <FractionToResidue>0.1</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Cut</Name>
+        <FractionRemoved>0.8</FractionRemoved>
+        <FractionToResidue>0</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Prune</Name>
+        <FractionRemoved>0</FractionRemoved>
+        <FractionToResidue>0.6</FractionToResidue>
+      </OrganBiomassRemovalType>
+      <OrganBiomassRemovalType>
+        <Name>Graze</Name>
+        <FractionRemoved>0.6</FractionRemoved>
+        <FractionToResidue>0.2</FractionToResidue>
+      </OrganBiomassRemovalType>
+    </Folder>
   </GenericAboveGroundOrgan>
   <CompositeBiomass>
     <Name>AboveGround</Name>
@@ -1812,7 +1975,7 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
   <Memo>
     <Name>Future Development Needs</Name>
     <MemoText>
-      <![CDATA[#Future Development requirements
+      <![CDATA[##Future Development requirements
 
 * Phenology not responding to stress events.  Requires better data sets for quantifying the effects of water and nitrogen on leaf apperance and the timing of development stages.
 * Phosphorus response
@@ -1978,6 +2141,28 @@ The variety sr52 is a Zimbabwean early-medium maturing hybrid.  Photoperiod resp
     <Command>[Grain].MaximumGrainsPerCob.Value = 468</Command>
     <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
   </Cultivar>
+  <Cultivar>
+    <Name>Melkassa</Name>
+    <Memo>
+      <Name>memo</Name>
+      <MemoText>
+        <![CDATA[
+The variety Melkassa is a local early-medium maturing Ethiopian variety.
+]]>
+      </MemoText>
+    </Memo>
+    <Command>[Phenology].Juvenile.Target.Value = 230</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target.Value = 160</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
+    <Command>[Grain].MaximumGrainsPerCob.Value = 387</Command>
+    <Command>[Grain].MaximumPotentialGrainSize.Value = 0.33</Command>
+  </Cultivar>
+
+
   <Cultivar>
     <Name>r215</Name>
     <Memo>

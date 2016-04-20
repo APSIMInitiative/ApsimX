@@ -98,6 +98,12 @@ namespace Models.PMF.OilPalm
             get { return plant_status == "alive"; }
         }
 
+        /// <summary>Returns true if the crop is ready for harvesting</summary>
+        public bool IsReadyForHarvesting { get { return false; } }
+
+        /// <summary>End the crop</summary>
+        public void EndCrop() { }
+
         /// <summary>The plant_status</summary>
         [XmlIgnore]
         public string plant_status = "out";

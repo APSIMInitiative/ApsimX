@@ -114,23 +114,75 @@ This is important in SLURP as it is set for each species to represent their diff
         <FractionToResidue>0</FractionToResidue>
         <InitialDM>50</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
-        <KNO3_yProperty>
-          <double>0.02</double>
-          <double>0.02</double>
-        </KNO3_yProperty>
-        <KNO3_xRootLength>
-          <double>0</double>
-          <double>0.003</double>
-        </KNO3_xRootLength>
-        <KNH4_yProperty>
-          <double>0</double>
-          <double>0</double>
-        </KNH4_yProperty>
-        <KNH4_xRootLength>
-          <double>0</double>
-          <double>0.003</double>
-        </KNH4_xRootLength>
+        <LinearInterpolationFunction>
+          <Name>KNO3</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0.0</double>
+              <double>0.003</double>
+            </X>
+            <Y>
+              <double>0.02</double>
+              <double>0.02</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDenisty</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>KNH4</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.003</double>
+            </X>
+            <Y>
+              <double>0.00</double>
+              <double>0.00</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDenisty</XProperty>
+        </LinearInterpolationFunction>        
         <NuptakeSupply>0</NuptakeSupply>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.3</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.</FractionRemoved>
+            <FractionToResidue>0.15</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <LinearInterpolationFunction>
+          <Name>NUptakeSWFactor</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RWC</XProperty>
+        </LinearInterpolationFunction>        
       </Root>
       <SimpleLeaf>
         <Name>Leaf</Name>
@@ -214,7 +266,12 @@ This is important in SLURP as it is set for each species to represent their diff
           </Constant>
         </PartitionFractionDemandFunction>
         <Constant>
-          <Name>NConc</Name>
+          <Name>MaximumNConc</Name>
+          <Value>0.05</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
           <Value>0.05</Value>
           <Units>g/g</Units>
         </Constant>
@@ -252,6 +309,29 @@ This is important in SLURP as it is set for each species to represent their diff
         <DeltaBiomass>0</DeltaBiomass>
         <LAIDead>0</LAIDead>
         <WaterAllocation>0</WaterAllocation>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.3</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
       </SimpleLeaf>
       <Cultivar>
         <Name>StaticCrop</Name>

@@ -139,7 +139,7 @@ namespace UserInterface.Views
             this.plot1.Model.LegendBackground = OxyColors.White;
 
             if (this.LeftRightPadding != 0)
-                this.plot1.Model.Padding = new OxyThickness(0, 0, this.LeftRightPadding, 0);
+                this.plot1.Model.Padding = new OxyThickness(10, 10, this.LeftRightPadding, 10);
 
             foreach (OxyPlot.Axes.Axis axis in this.plot1.Model.Axes)
                 this.FormatAxisTickLabels(axis);
@@ -261,15 +261,18 @@ namespace UserInterface.Views
             Color colour,
             bool showOnLegend)
         {
-            ColumnXYSeries series = new ColumnXYSeries();
-            if (showOnLegend)
-                series.Title = title;
-            series.FillColor = ConverterExtensions.ToOxyColor(colour);
-            series.StrokeColor = ConverterExtensions.ToOxyColor(colour);
-            series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
-            series.XAxisKey = xAxisType.ToString();
-            series.YAxisKey = yAxisType.ToString();
-            this.plot1.Model.Series.Add(series);
+            if (x != null && y != null)
+            {
+                ColumnXYSeries series = new ColumnXYSeries();
+                if (showOnLegend)
+                    series.Title = title;
+                series.FillColor = ConverterExtensions.ToOxyColor(colour);
+                series.StrokeColor = ConverterExtensions.ToOxyColor(colour);
+                series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
+                series.XAxisKey = xAxisType.ToString();
+                series.YAxisKey = yAxisType.ToString();
+                this.plot1.Model.Series.Add(series);
+            }
         }
 
         /// <summary>

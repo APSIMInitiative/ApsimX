@@ -88,21 +88,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
-            if (Operations.Parent is Factor)
-            {
-            }
-            else
-            {
-                object o = Apsim.Get(Operations, e.ObjectName);
-
-                if (o == null)
-                    o = Apsim.Find(Operations, e.ObjectName);
-
-                if (o != null)
-                {
-                    e.AllItems.AddRange(NeedContextItemsArgs.ExamineObjectForContextItems(o, true, true, false));
-                }
-            }
+            e.AllItems.AddRange(NeedContextItemsArgs.ExamineModelForNames(Operations, e.ObjectName, true, true, false));
         }
 
         /// <summary>

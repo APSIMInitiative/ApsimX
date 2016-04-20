@@ -134,7 +134,6 @@ namespace UserInterface.Views
                 TreeView.SelectedNode = node;
 
                 TreeView.AfterSelect += OnAfterSelect;
-
             }
         }
 
@@ -386,6 +385,16 @@ namespace UserInterface.Views
                 this.BeginInvoke(new Action(progressBarUpdate));
             else
                 progressBarUpdate();
+        }
+
+        /// <summary>Show the wait cursor</summary>
+        /// <param name="wait">If true will show the wait cursor otherwise the normal cursor.</param>
+        public void ShowWaitCursor(bool wait)
+        {
+            if (wait)
+                Cursor.Current = Cursors.WaitCursor;
+            else
+                Cursor.Current = Cursors.Default;
         }
 
         /// <summary>
@@ -717,6 +726,24 @@ namespace UserInterface.Views
                 if (!e.CancelEdit)
                     previouslySelectedNodePath = args.NodePath;
             }
+        }
+
+        /// <summary>
+        /// Get whatever text is currently on the clipboard
+        /// </summary>
+        /// <returns></returns>
+        public string GetClipboardText()
+        {
+            return Clipboard.GetText();
+        }
+
+        /// <summary>
+        /// Place text on the clipboard
+        /// </summary>
+        /// <param name="text"></param>
+        public void SetClipboardText(string text)
+        {
+            Clipboard.SetText(text);
         }
 
         /// <summary>User has closed the status window.</summary>

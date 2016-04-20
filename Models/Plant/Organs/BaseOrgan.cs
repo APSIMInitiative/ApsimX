@@ -163,88 +163,29 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Biomass removal
-        /// <summary>The Fraction of biomass that is removed by defoliation</summary>
-        virtual public double FractionRemoved { get; set; }
-        /// <summary>The Fraction of biomass that is removed by defoliation</summary>
-        virtual public double FractionToResidue { get; set; }
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
-        [XmlIgnore]
-        virtual public OrganBiomassRemovalType RemoveBiomass
+        /// <param name="value">Biomass to remove</param>
+        virtual public void DoRemoveBiomass(OrganBiomassRemovalType value)
         {
-            set
-            {
                 double RemainFrac = 1 - (value.FractionToResidue + value.FractionRemoved);
                 if (RemainFrac < 0)
                     throw new Exception("The sum of FractionToResidue and FractionRemoved sent with your " + "!!!!PLACE HOLDER FOR EVENT SENDER!!!!" + " is greater than 1.  Had this execption not triggered you would be removing more biomass from " + Name + " than there is to remove");
-                if (RemainFrac < 1)
-                {
-                    Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name + " removing " + value.FractionRemoved * 100 + "% and returning " + value.FractionToResidue * 100 + "% to the surface organic matter");
-                    SurfaceOrganicMatter.Add(Wt * 10 * value.FractionToResidue, N * 10 * value.FractionToResidue, 0, Plant.CropType, Name);
-                    if(Live.StructuralWt > 0)
+            if (RemainFrac < 1)
+            {
+                double TotalFracRemoved = value.FractionRemoved + value.FractionToResidue;
+                double PcToResidue = value.FractionToResidue / TotalFracRemoved * 100;
+                double PcRemoved = value.FractionRemoved / TotalFracRemoved * 100;
+                Summary.WriteMessage(this, "Removing " + TotalFracRemoved * 100 + "% of " + Name + " Biomass from " + Plant.Name + ".  Of this " + PcRemoved + "% is removed from the system and " + PcToResidue + "% is returned to the surface organic matter");
+
+                SurfaceOrganicMatter.Add(Wt * 10 * value.FractionToResidue, N * 10 * value.FractionToResidue, 0, Plant.CropType, Name);
+                if (Live.StructuralWt > 0)
                     Live.StructuralWt *= RemainFrac;
-                    if(Live.NonStructuralWt > 0)
+                if (Live.NonStructuralWt > 0)
                     Live.NonStructuralWt *= RemainFrac;
-                    if(Live.StructuralN > 0)
+                if (Live.StructuralN > 0)
                     Live.StructuralN *= RemainFrac;
-                    if(Live.NonStructuralN > 0)
+                if (Live.NonStructuralN > 0)
                     Live.NonStructuralN *= RemainFrac;
-                }
-            }
-        }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on harvest.
-        /// </summary>
-        virtual public OrganBiomassRemovalType HarvestDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0,
-                    FractionToResidue = 0
-                };
-            }
-        }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Cutting
-        /// </summary>
-        virtual public OrganBiomassRemovalType CutDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0,
-                    FractionToResidue = 0
-                };
-            }
-        }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Grazing
-        /// </summary>
-        virtual public OrganBiomassRemovalType GrazeDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0,
-                    FractionToResidue = 0
-                };
-            }
-        }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Pruning
-        /// </summary>
-        virtual public OrganBiomassRemovalType PruneDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0,
-                    FractionToResidue = 0
-                };
             }
         }
         #endregion

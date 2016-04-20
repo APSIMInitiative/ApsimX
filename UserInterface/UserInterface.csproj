@@ -98,6 +98,14 @@
     <Reference Include="DocumentFormat.OpenXml">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
+    <Reference Include="GMap.NET.Core, Version=1.7.0.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
+      <HintPath>..\packages\GMap.NET.WindowsForms.1.7.1\lib\net40\GMap.NET.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GMap.NET.WindowsForms, Version=1.7.0.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
+      <HintPath>..\packages\GMap.NET.WindowsForms.1.7.1\lib\net40\GMap.NET.WindowsForms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net40\HtmlAgilityPack.dll</HintPath>
       <Private>True</Private>
@@ -194,6 +202,7 @@
     <Compile Include="Interfaces\ISupplementView.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\FolderPresenter.cs" />
+    <Compile Include="Presenters\MapPresenter.cs" />
     <Compile Include="Presenters\TreeProxyPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
@@ -204,12 +213,8 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Utility\ColumnXYSeries.cs" />
-    <Compile Include="Utility\DateTimeCellType.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Utility\FindAndReplaceForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Utility\DateTimeCellType.cs" />
+    <Compile Include="Utility\FindAndReplaceForm.cs" />
     <Compile Include="Utility\FindAndReplaceForm.designer.cs">
       <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
     </Compile>
@@ -300,6 +305,12 @@
     </Compile>
     <Compile Include="Views\ListButtonView.Designer.cs">
       <DependentUpon>ListButtonView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MapView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\MapView.Designer.cs">
+      <DependentUpon>MapView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\TreeProxyView.cs">
       <SubType>UserControl</SubType>
@@ -483,6 +494,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ListButtonView.resx">
       <DependentUpon>ListButtonView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\MapView.resx">
+      <DependentUpon>MapView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\TreeProxyView.resx">
       <DependentUpon>TreeProxyView.cs</DependentUpon>
@@ -732,6 +746,12 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Chickpea.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CultivarFolder.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Map.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\MovingAverageFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\OrganBiomassRemovalType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SCUM.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Alias.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LocalMicroClimate.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\TreeProxy.png" />
@@ -835,6 +855,35 @@
     <EmbeddedResource Include="Resources\PresenterPictures\CircularZone.png" />
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
     <EmbeddedResource Include="Resources\MenuImages\Upgrade.png" />
+    <EmbeddedResource Include="Resources\AIBanner.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Wheat.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Pasture.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Canola.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Canopy.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Chickpea.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Cotton.png" />
+    <EmbeddedResource Include="Resources\LargeImages\forestry.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Bean.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Grass.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Horsegram.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Lucerne.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Lupin.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Maize.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Millet.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Oats.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Oilpalm.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Peanut.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Potato.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Rice.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Slurp.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Sorghum.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Soybean.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Sugar.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Swim.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Arbitrator.png" />
+    <EmbeddedResource Include="Resources\LargeImages\BiomassRemoval.png" />
+    <EmbeddedResource Include="Resources\LargeImages\EGrandis.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Fieldpea.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
   <ItemGroup>

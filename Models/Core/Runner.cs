@@ -110,7 +110,19 @@
                     store.RemoveUnwantedSimulations(simulations);
 
                     if (model is Simulation)
-                        simulationsToRun = new Simulation[1] { model as Simulation };
+                    {
+                        if (model.Parent == null)
+                        {
+                            // model is already a cloned simulation, probably from user running a single 
+                            // simulation from an experiment.
+                            simulationsToRun = new Simulation[1] { model as Simulation };
+                        }
+                        else
+                        {
+                            simulationsToRun = new Simulation[1] { Apsim.Clone(model as Simulation) as Simulation };
+                            Simulations.CallOnLoaded(simulationsToRun[0]);
+                        }
+                    }
                     else
                         simulationsToRun = Simulations.FindAllSimulationsToRun(model);
                 }
@@ -146,7 +158,8 @@
                     }
                     catch (Exception err)
                     {
-                        ErrorMessage += err.ToString() + Environment.NewLine;
+                        ErrorMessage += "Error in file: " + simulations.FileName + Environment.NewLine;
+                        ErrorMessage += err.ToString() + Environment.NewLine + Environment.NewLine;
                     }
                 }
 
@@ -214,7 +227,7 @@
                 // For each .apsimx file - read it in and create a job for each simulation it contains.
                 string workingDirectory = Directory.GetCurrentDirectory();
                 string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string apsimExe = Path.Combine(binDirectory, "Model.exe");
+                string apsimExe = Path.Combine(binDirectory, "Models.exe");
                 List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
                 foreach (string apsimxFileName in files)
                 {
@@ -294,7 +307,8 @@
                 p.WaitForExit();
                 if (p.ExitCode > 0)
                 {
-                    ErrorMessage = stdout;
+                    ErrorMessage = "Error in file: " + arguments + Environment.NewLine;
+                    ErrorMessage += stdout;
                     throw new Exception(ErrorMessage);
                 }
             }

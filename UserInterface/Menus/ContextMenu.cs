@@ -64,7 +64,7 @@ namespace UserInterface.Presenters
             if (model != null)
             {
                 // Set the clipboard text.
-                System.Windows.Forms.Clipboard.SetText(Apsim.Serialise(model));
+                this.explorerPresenter.SetClipboardText(Apsim.Serialise(model));
             }
         }
 
@@ -76,7 +76,7 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Paste", ShortcutKey = "Ctrl+V")]
         public void OnPasteClick(object sender, EventArgs e)
         {
-            this.explorerPresenter.Add(System.Windows.Forms.Clipboard.GetText(), this.explorerPresenter.CurrentNodePath);
+            this.explorerPresenter.Add(this.explorerPresenter.GetClipboardText(), this.explorerPresenter.CurrentNodePath);
         }
 
         /// <summary>
@@ -254,22 +254,6 @@ namespace UserInterface.Presenters
             if (dataStore != null)
             {
                 dataStore.DeleteAllTables();
-            }
-        }
-
-        /// <summary>
-        /// Export the data store to comma separated values
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Export to CSV",
-                     AppliesTo = new Type[] { typeof(DataStore) })]
-        public void ExportDataStoreToCSV(object sender, EventArgs e)
-        {
-            DataStore dataStore = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as DataStore;
-            if (dataStore != null)
-            {
-                dataStore.WriteToTextFiles();
             }
         }
 

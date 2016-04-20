@@ -22,8 +22,6 @@ namespace Models.Graph
     [Serializable]
     public class Series : Model, IGraphable
     {
-        [NonSerialized]
-        private DataTable data = null;
 
         /// <summary>Constructor for a series</summary>
         public Series()
@@ -156,10 +154,14 @@ namespace Models.Graph
                         foreach (Experiment experiment in Apsim.ChildrenRecursively(parentOfGraph, typeof(Experiment)))
                             experiments.Add(experiment);
 
-                        // Look for simulations if we didn't find any experiments.
-                        if (experiments.Count == 0)
-                            foreach (Simulation simulation in Apsim.ChildrenRecursively(parentOfGraph, typeof(Simulation)))
+                        // Look for simulations
+                        foreach (Simulation simulation in Apsim.ChildrenRecursively(parentOfGraph, typeof(Simulation)))
+                        {
+                            if (simulation.Parent is Experiment)
+                                { }
+                            else
                                 simulations.Add(simulation);
+                        }
                     }
 
                     // Now create series definitions for each experiment found.
@@ -550,22 +552,12 @@ namespace Models.Graph
                if (posCloseBracket == -1)
                        throw new Exception("Invalid filter column name: " + Filter);
                FilterName = Filter.Substring(1, posCloseBracket - 1);
-               fieldNames.Add(FilterName);
+               if (!fieldNames.Contains(FilterName))
+                    fieldNames.Add(FilterName);
             }
             else if ((Filter != null) && (Filter != ""))
-              throw new Exception("Column name to filter on must be within square brackets.  e.g [ColumToFilter]");
+              throw new Exception("Column name to filter on must be within square brackets.  e.g [ColumnToFilter]");
             fieldNames.Add("ZoneName");
-
-            // Get all data.
-            DataStore dataStore = new DataStore(this);
-            data = dataStore.GetFilteredData(TableName, fieldNames.ToArray(), filter);
-            if (data == null)
-            {
-                fieldNames.Remove("ZoneName");
-                data = dataStore.GetFilteredData(TableName, fieldNames.ToArray(), filter);
-            }
-            dataStore.Disconnect();
-
             // filter data for each definition.
             foreach (SeriesDefinition definition in definitions)
                 GetData(definition);
@@ -578,46 +570,75 @@ namespace Models.Graph
             // If the table name is null then use reflection to get data from other models.
             if (TableName == null)
             {
-                definition.x = GetDataFromModels(XFieldName);
-                definition.y = GetDataFromModels(YFieldName);
+                if (!String.IsNullOrEmpty(XFieldName))
+                    definition.x = GetDataFromModels(XFieldName);
+                if (!String.IsNullOrEmpty(YFieldName))
+                    definition.y = GetDataFromModels(YFieldName);
+                if (!String.IsNullOrEmpty(X2FieldName))
+                    definition.x2 = GetDataFromModels(X2FieldName);
+                if (!String.IsNullOrEmpty(Y2FieldName))
+                    definition.y2 = GetDataFromModels(Y2FieldName);
             }
             else
             {
-                string FilterExpression = "";
-                if (Filter != null && Filter != string.Empty)
+                Graph parentGraph = Parent as Graph;
+                if (parentGraph != null)
                 {
-                    FilterExpression = Filter.Replace("[", "");
-                    FilterExpression = FilterExpression.Replace("]", "");
-                }
-                string where = "(";
-                if (Filter != null && Filter != string.Empty)
-                    where += "(";
-                where += definition.Filter;
-                if (Filter != null && Filter != string.Empty)
-                    where += ") AND (" + FilterExpression + ")";
-                where += ")";
 
-                DataView dataView = new DataView(data);
-                if (where != "()")
-                    dataView.RowFilter = where;
-
-                // If the field exists in our data table then return it.
-                if (data != null && data.Columns.Contains(XFieldName) && data.Columns.Contains(YFieldName) && dataView.Count > 0)
-                {
-                    definition.x = GetDataFromTable(dataView, XFieldName);
-                    definition.y = GetDataFromTable(dataView, YFieldName);
-                    if (Cumulative)
-                        definition.y = MathUtilities.Cumulative(definition.y as IEnumerable<double>);
-                    if (CumulativeX)
-                        definition.x = MathUtilities.Cumulative(definition.x as IEnumerable<double>);
-
-                    if (X2FieldName != null && Y2FieldName != null &&
-                        data.Columns.Contains(X2FieldName) && data.Columns.Contains(Y2FieldName))
+                    DataTable data = parentGraph.GetBaseData(TableName);
+                    if (data != null)
                     {
-                        definition.x2 = GetDataFromTable(dataView, X2FieldName);
-                        definition.y2 = GetDataFromTable(dataView, Y2FieldName);
+                        string[] names = DataTableUtilities.GetColumnAsStrings(data, "SimulationName");
+
+                        string FilterExpression = "";
+                        if (Filter != null && Filter != string.Empty)
+                        {
+                            FilterExpression = Filter.Replace("[", "");
+                            FilterExpression = FilterExpression.Replace("]", "");
+                        }
+                        string where = "(";
+                        if (Filter != null && Filter != string.Empty)
+                            where += "(";
+                        where += definition.Filter;
+                        if (Filter != null && Filter != string.Empty)
+                            where += ") AND (" + FilterExpression + ")";
+                        where += ")";
+
+                        DataView dataView = new DataView(data);
+                        if (where != "()")
+                            try
+                            {
+                                dataView.RowFilter = where;
+                            }
+                            catch (Exception)
+                            {
+
+                            }
+
+                        // If the field exists in our data table then return it.
+                        if (data != null &&
+                            XFieldName != null &&
+                            YFieldName != null &&
+                            data.Columns.Contains(XFieldName) &&
+                            data.Columns.Contains(YFieldName) &&
+                            dataView.Count > 0)
+                        {
+                            definition.x = GetDataFromTable(dataView, XFieldName);
+                            definition.y = GetDataFromTable(dataView, YFieldName);
+                            if (Cumulative)
+                                definition.y = MathUtilities.Cumulative(definition.y as IEnumerable<double>);
+                            if (CumulativeX)
+                                definition.x = MathUtilities.Cumulative(definition.x as IEnumerable<double>);
+
+                            if (X2FieldName != null && Y2FieldName != null &&
+                                data.Columns.Contains(X2FieldName) && data.Columns.Contains(Y2FieldName))
+                            {
+                                definition.x2 = GetDataFromTable(dataView, X2FieldName);
+                                definition.y2 = GetDataFromTable(dataView, Y2FieldName);
+                            }
+                            definition.simulationNamesForEachPoint = (IEnumerable<string>)GetDataFromTable(dataView, "SimulationName");
+                        }
                     }
-                    definition.simulationNamesForEachPoint = (IEnumerable<string>) GetDataFromTable(dataView, "SimulationName");
                 }
             }
         }
