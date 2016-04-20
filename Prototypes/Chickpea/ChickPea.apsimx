@@ -2614,6 +2614,7 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
         <string>[Chickpea].Leaf.Live.MetabolicNConc</string>
         <string>[Chickpea].Leaf.Live.StructuralNConc</string>
         <string>[Chickpea].Leaf.Live.NonStructuralNConc</string>
+        <string>[Chickpea].Leaf.SenescingCohortNo</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -35441,7 +35442,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
     </Weather>
     <Clock>
       <Name>clock</Name>
-      <StartDate>2003-01-01T00:00:00</StartDate>
+      <StartDate>2003-07-24T00:00:00</StartDate>
       <EndDate>2003-12-30T00:00:00</EndDate>
     </Clock>
     <Summary>
@@ -35535,6 +35536,11 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
           <string>[Chickpea].AboveGround.Wt</string>
           <string>[Chickpea].Leaf.LAI</string>
           <string>[Chickpea].Nodule.NFixed</string>
+          <string>[Chickpea].Leaf.SenescingCohortNo</string>
+          <string>[Chickpea].Leaf.CohortArrayLive.MetabolicNConc</string>
+          <string>[Chickpea].Leaf.CohortArrayLive.NonStructuralNConc</string>
+          <string>[Chickpea].Leaf.CohortArrayLive.StructuralNConc</string>
+          <string>[Chickpea].Leaf.</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -36529,6 +36535,27 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <Series>
+        <Name>Predicted1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Chickpea.Leaf.SenescingCohortNo</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -36551,6 +36578,91 @@ namespace Models
     </Graph>
     <Graph>
       <Name>LeafNconc</Name>
+      <Series>
+        <Name>Metabolic</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Chickpea.Leaf.Live.MetabolicNConc</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>NonStructural</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-2793984</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Chickpea.Leaf.Live.NonStructuralNConc</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Structural</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-2793984</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Chickpea.Leaf.Live.StructuralNConc</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>LeafNconc1</Name>
       <Series>
         <Name>Metabolic</Name>
         <Type>Scatter</Type>
