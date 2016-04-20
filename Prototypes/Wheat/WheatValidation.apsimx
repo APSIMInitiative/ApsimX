@@ -36465,14 +36465,14 @@ namespace Models
             <Clock>
               <Name>Clock</Name>
               <StartDate>1992-12-14T00:00:00</StartDate>
-              <EndDate>1993-06-10T00:00:00</EndDate>
+              <EndDate>1993-05-30T00:00:00</EndDate>
             </Clock>
             <Summary>
               <Name>summaryfile</Name>
             </Summary>
             <Weather>
               <Name>Weather</Name>
-              <FileName>Maricopa9296.met</FileName>
+              <FileName>Maricopa9293.met</FileName>
             </Weather>
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
