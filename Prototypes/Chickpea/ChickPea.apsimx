@@ -2643,17 +2643,17 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
         <AcceptedStats>
           <RegrStats>
             <Name>Chickpea.AboveGround.Wt</Name>
-            <n>64</n>
-            <Slope>0.26181623350379468</Slope>
-            <Intercept>992.22781314118765</Intercept>
-            <SEslope>0.062853601858349165</SEslope>
-            <SEintercept>50.299562401730618</SEintercept>
-            <R2>0.21866465232694066</R2>
-            <RMSE>511.936592679004</RMSE>
-            <NSE>-2.0979969359803352</NSE>
-            <ME>441.88302605137335</ME>
-            <MAE>466.36464245213926</MAE>
-            <RSR>1.7463077431700411</RSR>
+            <n>71</n>
+            <Slope>0.04239287177565218</Slope>
+            <Intercept>889.71667731183084</Intercept>
+            <SEslope>0.077512646816942046</SEslope>
+            <SEintercept>61.785829305197552</SEintercept>
+            <R2>0.0043163121286203809</R2>
+            <RMSE>370.81430508173639</RMSE>
+            <NSE>-0.71912681510540244</NSE>
+            <ME>176.06205555340819</ME>
+            <MAE>314.67582787189463</MAE>
+            <RSR>1.3018885364621364</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chickpea.Phenology.FinalNodeNo.Value</Name>
@@ -2685,17 +2685,17 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           </RegrStats>
           <RegrStats>
             <Name>GrainWt</Name>
-            <n>281</n>
-            <Slope>-0.24116899922447743</Slope>
-            <Intercept>913.737971585145</Intercept>
-            <SEslope>0.10062784499866252</SEslope>
-            <SEintercept>21.141697144456632</SEintercept>
-            <R2>0.020172150243847109</R2>
-            <RMSE>724.32300196604888</RMSE>
-            <NSE>-45.047389136485457</NSE>
-            <ME>689.13247673090007</ME>
-            <MAE>689.13247673090007</MAE>
-            <RSR>6.7737374782505393</RSR>
+            <n>288</n>
+            <Slope>1.257059430644037</Slope>
+            <Intercept>198.23011047645332</Intercept>
+            <SEslope>0.085348708643654375</SEslope>
+            <SEintercept>18.688871113349542</SEintercept>
+            <R2>0.43133131675310277</R2>
+            <RMSE>298.0045506244598</RMSE>
+            <NSE>-5.7715829751207917</NSE>
+            <ME>246.20705276425213</ME>
+            <MAE>255.05106432203854</MAE>
+            <RSR>2.5977048589543337</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
