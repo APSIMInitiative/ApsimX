@@ -1074,6 +1074,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.3</KDead>
+        <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -1240,7 +1241,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Name>Nooksac</Name>
         <Command>[Structure].MainStemFinalNodeNumber.Value = 36</Command>
         <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
-        <Command />
       </Cultivar>
       <Cultivar>
         <Name>RedRascal</Name>
@@ -1293,6 +1293,9 @@ The duration of a potato crop is determined by the number of leaves that the mai
         </Alias>
         <Command />
       </Cultivar>
+      <CultivarFolder>
+        <Name>CultivarFolder</Name>
+      </CultivarFolder>
       <CropType>Potato</CropType>
     </Plant>
     <Report>
@@ -1421,6 +1424,8 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <string>[Soil].SoilWater.SWmm</string>
         <string>[Weather].MaxT</string>
         <string>[Weather].MinT</string>
+        <string>[Potato].Leaf.CohortSize[0:30]</string>
+        <string>[Potato].Leaf.CohortSLA[1:10]</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -1466,44 +1471,44 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <RegrStats>
             <Name>Potato.Leaf.LAI</Name>
             <n>146</n>
-            <Slope>1.0065672058352111</Slope>
-            <Intercept>-0.06793763412365994</Intercept>
-            <SEslope>0.051022612282894189</SEslope>
-            <SEintercept>0.16483226399931358</SEintercept>
-            <R2>0.72992673748321479</R2>
-            <RMSE>1.0088023314522794</RMSE>
-            <NSE>0.62416918389049669</NSE>
-            <ME>-0.049680352078382277</ME>
-            <MAE>0.7855533288343971</MAE>
-            <RSR>0.61094732378292682</RSR>
+            <Slope>1.0013242358751413</Slope>
+            <Intercept>-0.056305416591724278</Intercept>
+            <SEslope>0.051704082984047731</SEslope>
+            <SEintercept>0.1670338047181136</SEintercept>
+            <R2>0.72257497549547844</R2>
+            <RMSE>1.0223346400941147</RMSE>
+            <NSE>0.614018592669624</NSE>
+            <ME>-0.052623950154765717</ME>
+            <MAE>0.78787214197081878</MAE>
+            <RSR>0.61914271299999168</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Leaf.Live.Wt</Name>
             <n>234</n>
-            <Slope>0.32485426772026954</Slope>
-            <Intercept>33.893011285612985</Intercept>
-            <SEslope>0.041137929069115085</SEslope>
-            <SEintercept>5.4456034160866364</SEintercept>
-            <R2>0.21184412926926921</R2>
-            <RMSE>80.4299640721135</RMSE>
-            <NSE>-0.1118991185608671</NSE>
-            <ME>-39.150745694144362</ME>
-            <MAE>51.251669770693219</MAE>
-            <RSR>1.0522107264830518</RSR>
+            <Slope>0.3226249742318652</Slope>
+            <Intercept>34.042686235645796</Intercept>
+            <SEslope>0.041123000482745566</SEslope>
+            <SEintercept>5.4436272553325393</SEintercept>
+            <R2>0.20967403062668233</R2>
+            <RMSE>80.573181094986225</RMSE>
+            <NSE>-0.11586243399102036</NSE>
+            <ME>-39.242257148791509</ME>
+            <MAE>51.375292581886605</MAE>
+            <RSR>1.0540843377598954</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Leaf.SpecificArea</Name>
             <n>146</n>
-            <Slope>0.031558899898946086</Slope>
-            <Intercept>30470.240329256689</Intercept>
-            <SEslope>0.059476552829466081</SEslope>
-            <SEintercept>1746.5339932086667</SEintercept>
-            <R2>0.0019513777109340103</R2>
-            <RMSE>6198.3431295034525</RMSE>
-            <NSE>-0.70405656680860851</NSE>
-            <ME>2406.1222379978785</ME>
-            <MAE>4369.7905542988447</MAE>
-            <RSR>1.3009169637175162</RSR>
+            <Slope>0.038528646131114848</Slope>
+            <Intercept>30249.334475884385</Intercept>
+            <SEslope>0.060390277048657848</SEslope>
+            <SEintercept>1773.3655820166489</SEintercept>
+            <R2>0.0028186756074036756</R2>
+            <RMSE>6195.24263172006</RMSE>
+            <NSE>-0.70235220740911308</NSE>
+            <ME>2387.1902385907542</ME>
+            <MAE>4371.3523715720266</MAE>
+            <RSR>1.300266226887026</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Stem.Live.N</Name>
@@ -1522,16 +1527,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <RegrStats>
             <Name>Potato.Stem.Live.Wt</Name>
             <n>243</n>
-            <Slope>0.23228575198158935</Slope>
-            <Intercept>67.06027194725965</Intercept>
-            <SEslope>0.033448533472297565</SEslope>
-            <SEintercept>5.1036321224623364</SEintercept>
-            <R2>0.16674469504525058</R2>
-            <RMSE>88.131121238949675</RMSE>
-            <NSE>0.049810534290466779</NSE>
-            <ME>-27.29958093813838</ME>
-            <MAE>59.403226064629884</MAE>
-            <RSR>0.97276884252872686</RSR>
+            <Slope>0.233878318625069</Slope>
+            <Intercept>66.741164991479508</Intercept>
+            <SEslope>0.033085532048764056</SEslope>
+            <SEintercept>5.0482447696153265</SEintercept>
+            <R2>0.17173406095007671</R2>
+            <RMSE>87.785525643121233</RMSE>
+            <NSE>0.057248030513412984</NSE>
+            <ME>-27.422945331400239</ME>
+            <MAE>59.241147831884092</MAE>
+            <RSR>0.96895424646991168</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.TotalLive.N</Name>
@@ -1550,16 +1555,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <RegrStats>
             <Name>Potato.TotalLive.Wt</Name>
             <n>281</n>
-            <Slope>0.764182259035757</Slope>
-            <Intercept>373.42307592505267</Intercept>
-            <SEslope>0.036471873092061055</SEslope>
-            <SEintercept>39.796299203778396</SEintercept>
-            <R2>0.61142785905917263</R2>
-            <RMSE>488.40899822247121</RMSE>
-            <NSE>0.50992943260246748</NSE>
-            <ME>175.58110512413461</ME>
-            <MAE>298.29373616021167</MAE>
-            <RSR>0.69880365198388239</RSR>
+            <Slope>0.76416287846210651</Slope>
+            <Intercept>374.43610609877805</Intercept>
+            <SEslope>0.036419240409725981</SEslope>
+            <SEintercept>39.738869030976005</SEintercept>
+            <R2>0.612101805849792</R2>
+            <RMSE>488.23950510066294</RMSE>
+            <NSE>0.5102695130590168</NSE>
+            <ME>176.5778757455862</ME>
+            <MAE>298.4828445775907</MAE>
+            <RSR>0.69856114536967828</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.Live.N</Name>
@@ -1578,30 +1583,30 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <RegrStats>
             <Name>Potato.Tuber.Live.Wt</Name>
             <n>295</n>
-            <Slope>0.99244044936842246</Slope>
-            <Intercept>-5.0654497117037636</Intercept>
-            <SEslope>0.016116982514137127</SEslope>
-            <SEintercept>15.430769762671194</SEintercept>
-            <R2>0.928270052030147</R2>
-            <RMSE>162.831293953974</RMSE>
-            <NSE>0.92349914531611743</NSE>
-            <ME>-10.773155960404656</ME>
-            <MAE>115.54266142915546</MAE>
-            <RSR>0.27611868780064625</RSR>
+            <Slope>0.99198825014394154</Slope>
+            <Intercept>-3.7134204000416275</Intercept>
+            <SEslope>0.016152091495370113</SEslope>
+            <SEintercept>15.464383908838627</SEintercept>
+            <R2>0.9279187904538897</R2>
+            <RMSE>163.12806613582032</RMSE>
+            <NSE>0.92322003416667942</NSE>
+            <ME>-9.76255174991819</ME>
+            <MAE>115.85423247755028</MAE>
+            <RSR>0.27662193470999213</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.LiveFWt</Name>
             <n>259</n>
-            <Slope>0.99200601168463853</Slope>
-            <Intercept>20.876838167578171</Intercept>
-            <SEslope>0.019245902493116432</SEslope>
-            <SEintercept>89.605855360696964</SEintercept>
-            <R2>0.91179776299463244</R2>
-            <RMSE>861.10839811311871</RMSE>
-            <NSE>0.90473184969412812</NSE>
-            <ME>-8.919918687969588</ME>
-            <MAE>601.17960161272629</MAE>
-            <RSR>0.30805895476306183</RSR>
+            <Slope>0.99154082790379228</Slope>
+            <Intercept>27.869001680419387</Intercept>
+            <SEslope>0.01926251178327907</SEslope>
+            <SEintercept>89.683185569165474</SEintercept>
+            <R2>0.91158333453593887</R2>
+            <RMSE>861.84713976565979</RMSE>
+            <NSE>0.90456831920321057</NSE>
+            <ME>-3.6616791520225038</ME>
+            <MAE>604.38587520710882</MAE>
+            <RSR>0.30832323738046563</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -1661,16 +1666,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <RegrStats>
             <Name>Potato.TotalLive.Wt</Name>
             <n>35</n>
-            <Slope>0.39467564169991903</Slope>
-            <Intercept>1148.9105268985334</Intercept>
-            <SEslope>0.097674929963758414</SEslope>
-            <SEintercept>116.48280843960485</SEintercept>
-            <R2>0.33099929363029712</R2>
-            <RMSE>771.22980029667019</RMSE>
-            <NSE>-0.37131820067525267</NSE>
-            <ME>547.09220673277173</ME>
-            <MAE>547.09220673277173</MAE>
-            <RSR>1.1541826894629634</RSR>
+            <Slope>0.39081386689469039</Slope>
+            <Intercept>1154.8841025550655</Intercept>
+            <SEslope>0.097399261332340656</SEslope>
+            <SEintercept>116.15405820248508</SEintercept>
+            <R2>0.32790362438805065</R2>
+            <RMSE>773.56300928925043</RMSE>
+            <NSE>-0.37962807616062566</NSE>
+            <ME>549.2263749802446</ME>
+            <MAE>551.93436860086285</MAE>
+            <RSR>1.1576744495441993</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.Live.N</Name>
@@ -1689,30 +1694,30 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <RegrStats>
             <Name>Potato.Tuber.Live.Wt</Name>
             <n>39</n>
-            <Slope>1.0581005750088992</Slope>
-            <Intercept>-5.7003437290238708</Intercept>
-            <SEslope>0.050630794096181535</SEslope>
-            <SEintercept>62.122814308560883</SEintercept>
-            <R2>0.92189832847779218</R2>
-            <RMSE>153.34103409568255</RMSE>
-            <NSE>0.88357126252094043</NSE>
-            <ME>60.63403643492633</ME>
-            <MAE>128.62133980907515</MAE>
-            <RSR>0.33681357638314813</RSR>
+            <Slope>1.050144857247119</Slope>
+            <Intercept>3.8154717971647187</Intercept>
+            <SEslope>0.0534387210815032</SEslope>
+            <SEintercept>65.568075830032669</SEintercept>
+            <R2>0.91256611892192352</R2>
+            <RMSE>159.92429415372445</RMSE>
+            <NSE>0.87335959292584875</NSE>
+            <ME>61.066678405497356</ME>
+            <MAE>132.2963393927036</MAE>
+            <RSR>0.35127370688563214</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.LiveFWt</Name>
             <n>39</n>
-            <Slope>1.0688118069335113</Slope>
-            <Intercept>-83.437746473768129</Intercept>
-            <SEslope>0.052063979747482586</SEslope>
-            <SEintercept>307.597036482875</SEintercept>
-            <R2>0.919290144896389</R2>
-            <RMSE>730.45973896015323</RMSE>
-            <NSE>0.87406148117915028</NSE>
-            <ME>297.63551491049571</ME>
-            <MAE>557.64516495540715</MAE>
-            <RSR>0.35029890954807658</RSR>
+            <Slope>1.0628327852769695</Slope>
+            <Intercept>-48.359937117897061</Intercept>
+            <SEslope>0.053732432221962861</SEslope>
+            <SEintercept>317.45435125504179</SEintercept>
+            <R2>0.91360232892815674</R2>
+            <RMSE>747.71777614390555</RMSE>
+            <NSE>0.86804026796696776</NSE>
+            <ME>299.6020693221821</ME>
+            <MAE>577.31756854022217</MAE>
+            <RSR>0.35857516528670857</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -2463,7 +2468,6 @@ using Models.Core;
 using Models.PMF;
 using APSIM.Shared.Utilities;
 using System.Xml.Serialization;
-using Models.PMF.Interfaces;
         
 namespace Models
 {
@@ -2498,12 +2502,10 @@ namespace Models
 		[XmlIgnore] public bool Harvested { get; set; }
 		[XmlIgnore] public bool ReadyForHarvest { get; set; }
 		
-		[XmlIgnore] private RemovalFractions Remove { get; set; }
 		
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			Remove = new RemovalFractions();
 			FinalTag = "";
 			Harvested = false;
 			ReadyForHarvest = false;
@@ -2519,15 +2521,7 @@ namespace Models
 			
 			if (ReadyForHarvest == true)
 			{
-				//Remove.SetFractionRemoved("Leaf", 0);
-				//Remove.SetFractionToResidue("Leaf", 1);
-				Remove.SetFractionRemoved("Stem", 0);
-				Remove.SetFractionToResidue("Stem", 1);
-				Remove.SetFractionRemoved("Root", 0.0);
-				Remove.SetFractionToResidue("Root", 0.5);
-				Remove.SetFractionRemoved("Tuber", 1);
-				Remove.SetFractionToResidue("Tuber", 0);
-				Potato.RemoveBiomass("Harvest", Remove);
+				Potato.RemoveBiomass("Harvest");
 				Potato.EndCrop();
 				ReadyForHarvest = false;
 				Harvested = true;
@@ -2565,128 +2559,7 @@ namespace Models
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
-            <string>[Clock].Today</string>
-            <string>[ExtraVariables].Script.AccumTtemerg</string>
-            <string>Potato.Phenology.CurrentPhaseName</string>
-            <string>Potato.Phenology.Stage</string>
-            <string>Potato.Phenology.Stage</string>
-            <string>[ExtraVariables].Script.AccumPlantN</string>
-            <string>[ExtraVariables].Script.AccumMineralisation</string>
-            <string>[ExtraVariables].Script.AccumDenit</string>
-            <string>[ExtraVariables].Script.AccumFert</string>
-            <string>[ExtraVariables].Script.AccumLeach</string>
-            <string>[ExtraVariables].Script.AccumDetach</string>
-            <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-            <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-            <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>Potato.Root.NSupplyUptake</string>
-            <string>[Soil].SoilWater.Eo</string>
-            <string>[Soil].SoilWater.Es</string>
-            <string>[ExtraVariables].Script.SWC</string>
-            <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.Drainage</string>
-            <string>[Soil].SoilWater.Runoff</string>
-            <string>[ExtraVariables].Script.OutFlowLat</string>
-            <string>[Soil].SoilWater.pond</string>
-            <string>[ExtraVariables].Script.AccumEO</string>
-            <string>[ExtraVariables].Script.AccumEP</string>
-            <string>[ExtraVariables].Script.AccumES</string>
-            <string>[ExtraVariables].Script.AccumDrainage</string>
-            <string>[ExtraVariables].Script.AccumRunoff</string>
-            <string>[ExtraVariables].Script.AccumRainfall</string>
-            <string>[ExtraVariables].Script.AccumIrrigation</string>
-            <string>[ExtraVariables].Script.AccumOutflowLat</string>
-            <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>Potato.AboveGround.Wt</string>
-            <string>Potato.BelowGround.Wt</string>
-            <string>Potato.Total.Wt</string>
-            <string>Potato.TotalDead.Wt</string>
-            <string>Potato.TotalLive.Wt</string>
-            <string>Potato.Leaf.Dead.Wt</string>
-            <string>Potato.Leaf.Live.Wt</string>
-            <string>Potato.Stem.Dead.Wt</string>
-            <string>Potato.Stem.Live.Wt</string>
-            <string>Potato.Tuber.Dead.Wt</string>
-            <string>Potato.Tuber.Live.Wt</string>
-            <string>Potato.Root.Dead.Wt</string>
-            <string>Potato.Root.Live.Wt</string>
-            <string>Potato.AboveGround.N</string>
-            <string>Potato.BelowGround.N</string>
-            <string>Potato.Total.N</string>
-            <string>Potato.TotalLive.N</string>
-            <string>Potato.TotalDead.N</string>
-            <string>Potato.Leaf.Dead.N</string>
-            <string>Potato.Leaf.Live.N</string>
-            <string>Potato.Stem.Dead.N</string>
-            <string>Potato.Stem.Live.N</string>
-            <string>Potato.Tuber.Dead.N</string>
-            <string>Potato.Tuber.Live.N</string>
-            <string>Potato.Root.Live.N</string>
-            <string>Potato.Root.Dead.N</string>
-            <string>Potato.Leaf.Live.NConc</string>
-            <string>Potato.Leaf.Dead.NConc</string>
-            <string>Potato.Stem.Live.NConc</string>
-            <string>Potato.Stem.Dead.NConc</string>
-            <string>Potato.Tuber.Live.NConc</string>
-            <string>Potato.Tuber.Dead.NConc</string>
-            <string>Potato.Root.Live.NConc</string>
-            <string>Potato.Root.Dead.NConc</string>
-            <string>Potato.Root.WaterSupply</string>
-            <string>Potato.Root.WaterUptake</string>
-            <string>Potato.Leaf.Transpiration</string>
-            <string>Potato.Leaf.WaterDemand</string>
-            <string>Potato.Root.Depth</string>
-            <string>Potato.Leaf.CoverGreen</string>
-            <string>Potato.Leaf.CoverTotal</string>
-            <string>Potato.Leaf.CoverDead</string>
-            <string>Potato.Leaf.LAI</string>
-            <string>Potato.Leaf.LAIDead</string>
-            <string>Potato.Structure.Height</string>
-            <string>Potato.Leaf.Fn</string>
-            <string>Potato.Leaf.Fw</string>
-            <string>Potato.Leaf.Photosynthesis.FT.Value</string>
-            <string>Potato.Leaf.Photosynthesis.FVPD.Value</string>
-            <string>Potato.Structure.PlantTotalNodeNo</string>
-            <string>Potato.Structure.TotalStemPopn</string>
-            <string>Potato.Leaf.PlantAppearedGreenLeafNo</string>
-            <string>Potato.Leaf.ExpandingCohortNo</string>
-            <string>Potato.Leaf.AppearedCohortNo</string>
-            <string>Potato.Leaf.DeadCohortNo</string>
-            <string>Potato.Structure.MainStemNodeNo</string>
-            <string>Potato.Leaf.SenescingCohortNo</string>
-            <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
-            <string>Potato.Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-            <string>Potato.Stem.MinimumNConc.Value</string>
-            <string>Potato.Tuber.MinimumNConc.Value</string>
-            <string>Potato.Root.MinimumNConc.Value</string>
-            <string>Potato.Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-            <string>Potato.Stem.MaximumNConc.Value</string>
-            <string>Potato.Tuber.MaximumNConc.Value</string>
-            <string>Potato.Root.MaximumNConc.Value</string>
-            <string>Potato.Stem.Live.StructuralWt</string>
-            <string>Potato.Stem.Live.NonStructuralWt</string>
-            <string>Potato.Leaf.SpecificArea</string>
-            <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.SWmm</string>
-            <string>[Soil].NO3N</string>
-            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>Potato.Arbitrator.NDemand</string>
-            <string>[MicroClimate].net_radn</string>
-            <string>[MicroClimate].peta</string>
-            <string>[MicroClimate].petr</string>
-            <string>[ExtraVariables].Script.FomN</string>
-            <string>[ExtraVariables].Script.HumN</string>
-            <string>[ExtraVariables].Script.BiomN</string>
-            <string>[ExtraVariables].Script.DltNMinRes</string>
-            <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[PotatoPlantAndHarvest].Script.FinalTag</string>
-            <string>Potato.Tuber.LiveFWt</string>
-            <string>Potato.Tuber.DryMatterContent.Value</string>
-            <string>[Potato].Arbitrator.NO3NSupply</string>
-            <string>[Potato].Arbitrator.NH4NSupply</string>
-            <string>[Potato].Root.NUptake</string>
-            <string>[PotatoPlantAndHarvest].Script.Harvested</string>
-            <string>[PotatoPlantAndHarvest].Script.ReadyForHarvest</string>
+            <string />
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -8471,122 +8344,7 @@ Fertiliser and pesticide were applied to ensure the crop remaind unstressed and 
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
-            <string>[Clock].Today</string>
-            <string>[ExtraVariables].Script.AccumTtemerg</string>
-            <string>Potato.Phenology.CurrentPhaseName</string>
-            <string>Potato.Phenology.Stage</string>
-            <string>[ExtraVariables].Script.AccumPlantN</string>
-            <string>[ExtraVariables].Script.AccumMineralisation</string>
-            <string>[ExtraVariables].Script.AccumDenit</string>
-            <string>[ExtraVariables].Script.AccumFert</string>
-            <string>[ExtraVariables].Script.AccumLeach</string>
-            <string>[ExtraVariables].Script.AccumDetach</string>
-            <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-            <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-            <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>Potato.Root.NSupplyUptake</string>
-            <string>[Soil].SoilWater.Eo</string>
-            <string>[Soil].SoilWater.Es</string>
-            <string>[ExtraVariables].Script.SWC</string>
-            <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.Drainage</string>
-            <string>[Soil].SoilWater.Runoff</string>
-            <string>[ExtraVariables].Script.OutFlowLat</string>
-            <string>[Soil].SoilWater.pond</string>
-            <string>[ExtraVariables].Script.AccumEO</string>
-            <string>[ExtraVariables].Script.AccumEP</string>
-            <string>[ExtraVariables].Script.AccumES</string>
-            <string>[ExtraVariables].Script.AccumDrainage</string>
-            <string>[ExtraVariables].Script.AccumRunoff</string>
-            <string>[ExtraVariables].Script.AccumRainfall</string>
-            <string>[ExtraVariables].Script.AccumIrrigation</string>
-            <string>[ExtraVariables].Script.AccumOutflowLat</string>
-            <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>Potato.AboveGround.Wt</string>
-            <string>Potato.BelowGround.Wt</string>
-            <string>Potato.Total.Wt</string>
-            <string>Potato.TotalDead.Wt</string>
-            <string>Potato.TotalLive.Wt</string>
-            <string>Potato.Leaf.Dead.Wt</string>
-            <string>Potato.Leaf.Live.Wt</string>
-            <string>Potato.Stem.Dead.Wt</string>
-            <string>Potato.Stem.Live.Wt</string>
-            <string>Potato.Tuber.Dead.Wt</string>
-            <string>Potato.Tuber.Live.Wt</string>
-            <string>Potato.Root.Dead.Wt</string>
-            <string>Potato.Root.Live.Wt</string>
-            <string>Potato.AboveGround.N</string>
-            <string>Potato.BelowGround.N</string>
-            <string>Potato.Total.N</string>
-            <string>Potato.TotalLive.N</string>
-            <string>Potato.TotalDead.N</string>
-            <string>Potato.Leaf.Dead.N</string>
-            <string>Potato.Leaf.Live.N</string>
-            <string>Potato.Stem.Dead.N</string>
-            <string>Potato.Stem.Live.N</string>
-            <string>Potato.Tuber.Dead.N</string>
-            <string>Potato.Tuber.Live.N</string>
-            <string>Potato.Root.Live.N</string>
-            <string>Potato.Root.Dead.N</string>
-            <string>Potato.Leaf.Live.NConc</string>
-            <string>Potato.Leaf.Dead.NConc</string>
-            <string>Potato.Stem.Live.NConc</string>
-            <string>Potato.Stem.Dead.NConc</string>
-            <string>Potato.Tuber.Live.NConc</string>
-            <string>Potato.Tuber.Dead.NConc</string>
-            <string>Potato.Root.Live.NConc</string>
-            <string>Potato.Root.Dead.NConc</string>
-            <string>Potato.Root.WaterSupply</string>
-            <string>Potato.Root.WaterUptake</string>
-            <string>Potato.Leaf.Transpiration</string>
-            <string>Potato.Leaf.WaterDemand</string>
-            <string>Potato.Root.Depth</string>
-            <string>Potato.Leaf.CoverGreen</string>
-            <string>Potato.Leaf.CoverTotal</string>
-            <string>Potato.Leaf.CoverDead</string>
-            <string>Potato.Leaf.LAI</string>
-            <string>Potato.Leaf.LAIDead</string>
-            <string>Potato.Structure.Height</string>
-            <string>Potato.Leaf.Fn</string>
-            <string>Potato.Leaf.Fw</string>
-            <string>Potato.Leaf.Photosynthesis.FT.Value</string>
-            <string>Potato.Leaf.Photosynthesis.FVPD.Value</string>
-            <string>Potato.Structure.PlantTotalNodeNo</string>
-            <string>Potato.Structure.TotalStemPopn</string>
-            <string>Potato.Leaf.PlantAppearedGreenLeafNo</string>
-            <string>Potato.Leaf.ExpandingCohortNo</string>
-            <string>Potato.Leaf.AppearedCohortNo</string>
-            <string>Potato.Leaf.DeadCohortNo</string>
-            <string>Potato.Structure.MainStemNodeNo</string>
-            <string>Potato.Leaf.SenescingCohortNo</string>
-            <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
-            <string>Potato.Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-            <string>Potato.Stem.MinimumNConc.Value</string>
-            <string>Potato.Tuber.MinimumNConc.Value</string>
-            <string>Potato.Root.MinimumNConc.Value</string>
-            <string>Potato.Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-            <string>Potato.Stem.MaximumNConc.Value</string>
-            <string>Potato.Tuber.MaximumNConc.Value</string>
-            <string>Potato.Root.MaximumNConc.Value</string>
-            <string>Potato.Stem.Live.StructuralWt</string>
-            <string>Potato.Stem.Live.NonStructuralWt</string>
-            <string>Potato.Leaf.SpecificArea</string>
-            <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.SWmm</string>
-            <string>[Soil].NO3N</string>
-            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>Potato.Arbitrator.NDemand</string>
-            <string>[MicroClimate].net_radn</string>
-            <string>[MicroClimate].peta</string>
-            <string>[MicroClimate].petr</string>
-            <string>[ExtraVariables].Script.FomN</string>
-            <string>[ExtraVariables].Script.HumN</string>
-            <string>[ExtraVariables].Script.BiomN</string>
-            <string>[ExtraVariables].Script.DltNMinRes</string>
-            <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[PotatoHarvestRule].Script.FinalTag</string>
-            <string>Potato.Tuber.LiveFWt</string>
-            <string>Potato.Tuber.DryMatterContent.Value</string>
+            <string />
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -8902,7 +8660,7 @@ namespace Models
 			FinalTag = "";   
 			
 			if (SetFinalLeafNumber > 0)
-				zone.Set("Potato.Structure.MaximumNodeNumber", SetFinalLeafNumber);
+				zone.Set("Potato.Structure.MainStemFinalNodeNumber.Value", SetFinalLeafNumber);
 			if (SetFinalLeafNumber > 80)
 				Summary.WriteWarning(this, "Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in" + this.Name);
 		}
@@ -10336,122 +10094,7 @@ namespace Models
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
-            <string>[Clock].Today</string>
-            <string>[ExtraVariables].Script.AccumTtemerg</string>
-            <string>Potato.Phenology.CurrentPhaseName</string>
-            <string>Potato.Phenology.Stage</string>
-            <string>[ExtraVariables].Script.AccumPlantN</string>
-            <string>[ExtraVariables].Script.AccumMineralisation</string>
-            <string>[ExtraVariables].Script.AccumDenit</string>
-            <string>[ExtraVariables].Script.AccumFert</string>
-            <string>[ExtraVariables].Script.AccumLeach</string>
-            <string>[ExtraVariables].Script.AccumDetach</string>
-            <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-            <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-            <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>Potato.Root.NSupplyUptake</string>
-            <string>[Soil].SoilWater.Eo</string>
-            <string>[Soil].SoilWater.Es</string>
-            <string>[ExtraVariables].Script.SWC</string>
-            <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.Drainage</string>
-            <string>[Soil].SoilWater.Runoff</string>
-            <string>[ExtraVariables].Script.OutFlowLat</string>
-            <string>[Soil].SoilWater.pond</string>
-            <string>[ExtraVariables].Script.AccumEO</string>
-            <string>[ExtraVariables].Script.AccumEP</string>
-            <string>[ExtraVariables].Script.AccumES</string>
-            <string>[ExtraVariables].Script.AccumDrainage</string>
-            <string>[ExtraVariables].Script.AccumRunoff</string>
-            <string>[ExtraVariables].Script.AccumRainfall</string>
-            <string>[ExtraVariables].Script.AccumIrrigation</string>
-            <string>[ExtraVariables].Script.AccumOutflowLat</string>
-            <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>Potato.AboveGround.Wt</string>
-            <string>Potato.BelowGround.Wt</string>
-            <string>Potato.Total.Wt</string>
-            <string>Potato.TotalDead.Wt</string>
-            <string>Potato.TotalLive.Wt</string>
-            <string>Potato.Leaf.Dead.Wt</string>
-            <string>Potato.Leaf.Live.Wt</string>
-            <string>Potato.Stem.Dead.Wt</string>
-            <string>Potato.Stem.Live.Wt</string>
-            <string>Potato.Tuber.Dead.Wt</string>
-            <string>Potato.Tuber.Live.Wt</string>
-            <string>Potato.Root.Dead.Wt</string>
-            <string>Potato.Root.Live.Wt</string>
-            <string>Potato.AboveGround.N</string>
-            <string>Potato.BelowGround.N</string>
-            <string>Potato.Total.N</string>
-            <string>Potato.TotalLive.N</string>
-            <string>Potato.TotalDead.N</string>
-            <string>Potato.Leaf.Dead.N</string>
-            <string>Potato.Leaf.Live.N</string>
-            <string>Potato.Stem.Dead.N</string>
-            <string>Potato.Stem.Live.N</string>
-            <string>Potato.Tuber.Dead.N</string>
-            <string>Potato.Tuber.Live.N</string>
-            <string>Potato.Root.Live.N</string>
-            <string>Potato.Root.Dead.N</string>
-            <string>Potato.Leaf.Live.NConc</string>
-            <string>Potato.Leaf.Dead.NConc</string>
-            <string>Potato.Stem.Live.NConc</string>
-            <string>Potato.Stem.Dead.NConc</string>
-            <string>Potato.Tuber.Live.NConc</string>
-            <string>Potato.Tuber.Dead.NConc</string>
-            <string>Potato.Root.Live.NConc</string>
-            <string>Potato.Root.Dead.NConc</string>
-            <string>Potato.Root.WaterSupply</string>
-            <string>Potato.Root.WaterUptake</string>
-            <string>Potato.Leaf.Transpiration</string>
-            <string>Potato.Leaf.WaterDemand</string>
-            <string>Potato.Root.Depth</string>
-            <string>Potato.Leaf.CoverGreen</string>
-            <string>Potato.Leaf.CoverTotal</string>
-            <string>Potato.Leaf.CoverDead</string>
-            <string>Potato.Leaf.LAI</string>
-            <string>Potato.Leaf.LAIDead</string>
-            <string>Potato.Structure.Height</string>
-            <string>Potato.Leaf.Fn</string>
-            <string>Potato.Leaf.Fw</string>
-            <string>Potato.Leaf.Photosynthesis.FT.Value</string>
-            <string>Potato.Leaf.Photosynthesis.FVPD.Value</string>
-            <string>Potato.Structure.PlantTotalNodeNo</string>
-            <string>Potato.Structure.TotalStemPopn</string>
-            <string>Potato.Leaf.PlantAppearedGreenLeafNo</string>
-            <string>Potato.Leaf.ExpandingCohortNo</string>
-            <string>Potato.Leaf.AppearedCohortNo</string>
-            <string>Potato.Leaf.DeadCohortNo</string>
-            <string>Potato.Structure.MainStemNodeNo</string>
-            <string>Potato.Leaf.SenescingCohortNo</string>
-            <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
-            <string>Potato.Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-            <string>Potato.Stem.MinimumNConc.Value</string>
-            <string>Potato.Tuber.MinimumNConc.Value</string>
-            <string>Potato.Root.MinimumNConc.Value</string>
-            <string>Potato.Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-            <string>Potato.Stem.MaximumNConc.Value</string>
-            <string>Potato.Tuber.MaximumNConc.Value</string>
-            <string>Potato.Root.MaximumNConc.Value</string>
-            <string>Potato.Stem.Live.StructuralWt</string>
-            <string>Potato.Stem.Live.NonStructuralWt</string>
-            <string>Potato.Leaf.SpecificArea</string>
-            <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.SWmm</string>
-            <string>[Soil].NO3N</string>
-            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>Potato.Arbitrator.NDemand</string>
-            <string>[MicroClimate].net_radn</string>
-            <string>[MicroClimate].peta</string>
-            <string>[MicroClimate].petr</string>
-            <string>[ExtraVariables].Script.FomN</string>
-            <string>[ExtraVariables].Script.HumN</string>
-            <string>[ExtraVariables].Script.BiomN</string>
-            <string>[ExtraVariables].Script.DltNMinRes</string>
-            <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[PotatoHarvestRule].Script.FinalTag</string>
-            <string>Potato.Tuber.LiveFWt</string>
-            <string>Potato.Tuber.DryMatterContent.Value</string>
+            <string />
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -16175,122 +15818,7 @@ namespace Models
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
-            <string>[Clock].Today</string>
-            <string>[ExtraVariables].Script.AccumTtemerg</string>
-            <string>Potato.Phenology.CurrentPhaseName</string>
-            <string>Potato.Phenology.Stage</string>
-            <string>[ExtraVariables].Script.AccumPlantN</string>
-            <string>[ExtraVariables].Script.AccumMineralisation</string>
-            <string>[ExtraVariables].Script.AccumDenit</string>
-            <string>[ExtraVariables].Script.AccumFert</string>
-            <string>[ExtraVariables].Script.AccumLeach</string>
-            <string>[ExtraVariables].Script.AccumDetach</string>
-            <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-            <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-            <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>Potato.Root.NSupplyUptake</string>
-            <string>[Soil].SoilWater.Eo</string>
-            <string>[Soil].SoilWater.Es</string>
-            <string>[ExtraVariables].Script.SWC</string>
-            <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.Drainage</string>
-            <string>[Soil].SoilWater.Runoff</string>
-            <string>[ExtraVariables].Script.OutFlowLat</string>
-            <string>[Soil].SoilWater.pond</string>
-            <string>[ExtraVariables].Script.AccumEO</string>
-            <string>[ExtraVariables].Script.AccumEP</string>
-            <string>[ExtraVariables].Script.AccumES</string>
-            <string>[ExtraVariables].Script.AccumDrainage</string>
-            <string>[ExtraVariables].Script.AccumRunoff</string>
-            <string>[ExtraVariables].Script.AccumRainfall</string>
-            <string>[ExtraVariables].Script.AccumIrrigation</string>
-            <string>[ExtraVariables].Script.AccumOutflowLat</string>
-            <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>Potato.AboveGround.Wt</string>
-            <string>Potato.BelowGround.Wt</string>
-            <string>Potato.Total.Wt</string>
-            <string>Potato.TotalDead.Wt</string>
-            <string>Potato.TotalLive.Wt</string>
-            <string>Potato.Leaf.Dead.Wt</string>
-            <string>Potato.Leaf.Live.Wt</string>
-            <string>Potato.Stem.Dead.Wt</string>
-            <string>Potato.Stem.Live.Wt</string>
-            <string>Potato.Tuber.Dead.Wt</string>
-            <string>Potato.Tuber.Live.Wt</string>
-            <string>Potato.Root.Dead.Wt</string>
-            <string>Potato.Root.Live.Wt</string>
-            <string>Potato.AboveGround.N</string>
-            <string>Potato.BelowGround.N</string>
-            <string>Potato.Total.N</string>
-            <string>Potato.TotalLive.N</string>
-            <string>Potato.TotalDead.N</string>
-            <string>Potato.Leaf.Dead.N</string>
-            <string>Potato.Leaf.Live.N</string>
-            <string>Potato.Stem.Dead.N</string>
-            <string>Potato.Stem.Live.N</string>
-            <string>Potato.Tuber.Dead.N</string>
-            <string>Potato.Tuber.Live.N</string>
-            <string>Potato.Root.Live.N</string>
-            <string>Potato.Root.Dead.N</string>
-            <string>Potato.Leaf.Live.NConc</string>
-            <string>Potato.Leaf.Dead.NConc</string>
-            <string>Potato.Stem.Live.NConc</string>
-            <string>Potato.Stem.Dead.NConc</string>
-            <string>Potato.Tuber.Live.NConc</string>
-            <string>Potato.Tuber.Dead.NConc</string>
-            <string>Potato.Root.Live.NConc</string>
-            <string>Potato.Root.Dead.NConc</string>
-            <string>Potato.Root.WaterSupply</string>
-            <string>Potato.Root.WaterUptake</string>
-            <string>Potato.Leaf.Transpiration</string>
-            <string>Potato.Leaf.WaterDemand</string>
-            <string>Potato.Root.Depth</string>
-            <string>Potato.Leaf.CoverGreen</string>
-            <string>Potato.Leaf.CoverTotal</string>
-            <string>Potato.Leaf.CoverDead</string>
-            <string>Potato.Leaf.LAI</string>
-            <string>Potato.Leaf.LAIDead</string>
-            <string>Potato.Structure.Height</string>
-            <string>Potato.Leaf.Fn</string>
-            <string>Potato.Leaf.Fw</string>
-            <string>Potato.Leaf.Photosynthesis.FT.Value</string>
-            <string>Potato.Leaf.Photosynthesis.FVPD.Value</string>
-            <string>Potato.Structure.PlantTotalNodeNo</string>
-            <string>Potato.Structure.TotalStemPopn</string>
-            <string>Potato.Leaf.PlantAppearedGreenLeafNo</string>
-            <string>Potato.Leaf.ExpandingCohortNo</string>
-            <string>Potato.Leaf.AppearedCohortNo</string>
-            <string>Potato.Leaf.DeadCohortNo</string>
-            <string>Potato.Structure.MainStemNodeNo</string>
-            <string>Potato.Leaf.SenescingCohortNo</string>
-            <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
-            <string>Potato.Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-            <string>Potato.Stem.MinimumNConc.Value</string>
-            <string>Potato.Tuber.MinimumNConc.Value</string>
-            <string>Potato.Root.MinimumNConc.Value</string>
-            <string>Potato.Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-            <string>Potato.Stem.MaximumNConc.Value</string>
-            <string>Potato.Tuber.MaximumNConc.Value</string>
-            <string>Potato.Root.MaximumNConc.Value</string>
-            <string>Potato.Stem.Live.StructuralWt</string>
-            <string>Potato.Stem.Live.NonStructuralWt</string>
-            <string>Potato.Leaf.SpecificArea</string>
-            <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.SWmm</string>
-            <string>[Soil].NO3N</string>
-            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>Potato.Arbitrator.NDemand</string>
-            <string>[MicroClimate].net_radn</string>
-            <string>[MicroClimate].peta</string>
-            <string>[MicroClimate].petr</string>
-            <string>[ExtraVariables].Script.FomN</string>
-            <string>[ExtraVariables].Script.HumN</string>
-            <string>[ExtraVariables].Script.BiomN</string>
-            <string>[ExtraVariables].Script.DltNMinRes</string>
-            <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[PotatoHarvestRule].Script.FinalTag</string>
-            <string>Potato.Tuber.LiveFWt</string>
-            <string>Potato.Tuber.DryMatterContent.Value</string>
+            <string />
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -18843,122 +18371,7 @@ namespace Models
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
-            <string>[Clock].Today</string>
-            <string>[ExtraVariables].Script.AccumTtemerg</string>
-            <string>Potato.Phenology.CurrentPhaseName</string>
-            <string>Potato.Phenology.Stage</string>
-            <string>[ExtraVariables].Script.AccumPlantN</string>
-            <string>[ExtraVariables].Script.AccumMineralisation</string>
-            <string>[ExtraVariables].Script.AccumDenit</string>
-            <string>[ExtraVariables].Script.AccumFert</string>
-            <string>[ExtraVariables].Script.AccumLeach</string>
-            <string>[ExtraVariables].Script.AccumDetach</string>
-            <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-            <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-            <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>Potato.Root.NSupplyUptake</string>
-            <string>[Soil].SoilWater.Eo</string>
-            <string>[Soil].SoilWater.Es</string>
-            <string>[ExtraVariables].Script.SWC</string>
-            <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.Drainage</string>
-            <string>[Soil].SoilWater.Runoff</string>
-            <string>[ExtraVariables].Script.OutFlowLat</string>
-            <string>[Soil].SoilWater.pond</string>
-            <string>[ExtraVariables].Script.AccumEO</string>
-            <string>[ExtraVariables].Script.AccumEP</string>
-            <string>[ExtraVariables].Script.AccumES</string>
-            <string>[ExtraVariables].Script.AccumDrainage</string>
-            <string>[ExtraVariables].Script.AccumRunoff</string>
-            <string>[ExtraVariables].Script.AccumRainfall</string>
-            <string>[ExtraVariables].Script.AccumIrrigation</string>
-            <string>[ExtraVariables].Script.AccumOutflowLat</string>
-            <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>Potato.AboveGround.Wt</string>
-            <string>Potato.BelowGround.Wt</string>
-            <string>Potato.Total.Wt</string>
-            <string>Potato.TotalDead.Wt</string>
-            <string>Potato.TotalLive.Wt</string>
-            <string>Potato.Leaf.Dead.Wt</string>
-            <string>Potato.Leaf.Live.Wt</string>
-            <string>Potato.Stem.Dead.Wt</string>
-            <string>Potato.Stem.Live.Wt</string>
-            <string>Potato.Tuber.Dead.Wt</string>
-            <string>Potato.Tuber.Live.Wt</string>
-            <string>Potato.Root.Dead.Wt</string>
-            <string>Potato.Root.Live.Wt</string>
-            <string>Potato.AboveGround.N</string>
-            <string>Potato.BelowGround.N</string>
-            <string>Potato.Total.N</string>
-            <string>Potato.TotalLive.N</string>
-            <string>Potato.TotalDead.N</string>
-            <string>Potato.Leaf.Dead.N</string>
-            <string>Potato.Leaf.Live.N</string>
-            <string>Potato.Stem.Dead.N</string>
-            <string>Potato.Stem.Live.N</string>
-            <string>Potato.Tuber.Dead.N</string>
-            <string>Potato.Tuber.Live.N</string>
-            <string>Potato.Root.Live.N</string>
-            <string>Potato.Root.Dead.N</string>
-            <string>Potato.Leaf.Live.NConc</string>
-            <string>Potato.Leaf.Dead.NConc</string>
-            <string>Potato.Stem.Live.NConc</string>
-            <string>Potato.Stem.Dead.NConc</string>
-            <string>Potato.Tuber.Live.NConc</string>
-            <string>Potato.Tuber.Dead.NConc</string>
-            <string>Potato.Root.Live.NConc</string>
-            <string>Potato.Root.Dead.NConc</string>
-            <string>Potato.Root.WaterSupply</string>
-            <string>Potato.Root.WaterUptake</string>
-            <string>Potato.Leaf.Transpiration</string>
-            <string>Potato.Leaf.WaterDemand</string>
-            <string>Potato.Root.Depth</string>
-            <string>Potato.Leaf.CoverGreen</string>
-            <string>Potato.Leaf.CoverTotal</string>
-            <string>Potato.Leaf.CoverDead</string>
-            <string>Potato.Leaf.LAI</string>
-            <string>Potato.Leaf.LAIDead</string>
-            <string>Potato.Structure.Height</string>
-            <string>Potato.Leaf.Fn</string>
-            <string>Potato.Leaf.Fw</string>
-            <string>Potato.Leaf.Photosynthesis.FT.Value</string>
-            <string>Potato.Leaf.Photosynthesis.FVPD.Value</string>
-            <string>Potato.Structure.PlantTotalNodeNo</string>
-            <string>Potato.Structure.TotalStemPopn</string>
-            <string>Potato.Leaf.PlantAppearedGreenLeafNo</string>
-            <string>Potato.Leaf.ExpandingCohortNo</string>
-            <string>Potato.Leaf.AppearedCohortNo</string>
-            <string>Potato.Leaf.DeadCohortNo</string>
-            <string>Potato.Structure.MainStemNodeNo</string>
-            <string>Potato.Leaf.SenescingCohortNo</string>
-            <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
-            <string>Potato.Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-            <string>Potato.Stem.MinimumNConc.Value</string>
-            <string>Potato.Tuber.MinimumNConc.Value</string>
-            <string>Potato.Root.MinimumNConc.Value</string>
-            <string>Potato.Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-            <string>Potato.Stem.MaximumNConc.Value</string>
-            <string>Potato.Tuber.MaximumNConc.Value</string>
-            <string>Potato.Root.MaximumNConc.Value</string>
-            <string>Potato.Stem.Live.StructuralWt</string>
-            <string>Potato.Stem.Live.NonStructuralWt</string>
-            <string>Potato.Leaf.SpecificArea</string>
-            <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.SWmm</string>
-            <string>[Soil].NO3N</string>
-            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>Potato.Arbitrator.NDemand</string>
-            <string>[MicroClimate].net_radn</string>
-            <string>[MicroClimate].peta</string>
-            <string>[MicroClimate].petr</string>
-            <string>[ExtraVariables].Script.FomN</string>
-            <string>[ExtraVariables].Script.HumN</string>
-            <string>[ExtraVariables].Script.BiomN</string>
-            <string>[ExtraVariables].Script.DltNMinRes</string>
-            <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[PotatoHarvestRule].Script.FinalTag</string>
-            <string>Potato.Tuber.LiveFWt</string>
-            <string>Potato.Tuber.DryMatterContent.Value</string>
+            <string />
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -22938,122 +22351,7 @@ namespace Models
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
-            <string>[Clock].Today</string>
-            <string>[ExtraVariables].Script.AccumTtemerg</string>
-            <string>Potato.Phenology.CurrentPhaseName</string>
-            <string>Potato.Phenology.Stage</string>
-            <string>[ExtraVariables].Script.AccumPlantN</string>
-            <string>[ExtraVariables].Script.AccumMineralisation</string>
-            <string>[ExtraVariables].Script.AccumDenit</string>
-            <string>[ExtraVariables].Script.AccumFert</string>
-            <string>[ExtraVariables].Script.AccumLeach</string>
-            <string>[ExtraVariables].Script.AccumDetach</string>
-            <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-            <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-            <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>Potato.Root.NSupplyUptake</string>
-            <string>[Soil].SoilWater.Eo</string>
-            <string>[Soil].SoilWater.Es</string>
-            <string>[ExtraVariables].Script.SWC</string>
-            <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.Drainage</string>
-            <string>[Soil].SoilWater.Runoff</string>
-            <string>[ExtraVariables].Script.OutFlowLat</string>
-            <string>[Soil].SoilWater.pond</string>
-            <string>[ExtraVariables].Script.AccumEO</string>
-            <string>[ExtraVariables].Script.AccumEP</string>
-            <string>[ExtraVariables].Script.AccumES</string>
-            <string>[ExtraVariables].Script.AccumDrainage</string>
-            <string>[ExtraVariables].Script.AccumRunoff</string>
-            <string>[ExtraVariables].Script.AccumRainfall</string>
-            <string>[ExtraVariables].Script.AccumIrrigation</string>
-            <string>[ExtraVariables].Script.AccumOutflowLat</string>
-            <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>Potato.AboveGround.Wt</string>
-            <string>Potato.BelowGround.Wt</string>
-            <string>Potato.Total.Wt</string>
-            <string>Potato.TotalDead.Wt</string>
-            <string>Potato.TotalLive.Wt</string>
-            <string>Potato.Leaf.Dead.Wt</string>
-            <string>Potato.Leaf.Live.Wt</string>
-            <string>Potato.Stem.Dead.Wt</string>
-            <string>Potato.Stem.Live.Wt</string>
-            <string>Potato.Tuber.Dead.Wt</string>
-            <string>Potato.Tuber.Live.Wt</string>
-            <string>Potato.Root.Dead.Wt</string>
-            <string>Potato.Root.Live.Wt</string>
-            <string>Potato.AboveGround.N</string>
-            <string>Potato.BelowGround.N</string>
-            <string>Potato.Total.N</string>
-            <string>Potato.TotalLive.N</string>
-            <string>Potato.TotalDead.N</string>
-            <string>Potato.Leaf.Dead.N</string>
-            <string>Potato.Leaf.Live.N</string>
-            <string>Potato.Stem.Dead.N</string>
-            <string>Potato.Stem.Live.N</string>
-            <string>Potato.Tuber.Dead.N</string>
-            <string>Potato.Tuber.Live.N</string>
-            <string>Potato.Root.Live.N</string>
-            <string>Potato.Root.Dead.N</string>
-            <string>Potato.Leaf.Live.NConc</string>
-            <string>Potato.Leaf.Dead.NConc</string>
-            <string>Potato.Stem.Live.NConc</string>
-            <string>Potato.Stem.Dead.NConc</string>
-            <string>Potato.Tuber.Live.NConc</string>
-            <string>Potato.Tuber.Dead.NConc</string>
-            <string>Potato.Root.Live.NConc</string>
-            <string>Potato.Root.Dead.NConc</string>
-            <string>Potato.Root.WaterSupply</string>
-            <string>Potato.Root.WaterUptake</string>
-            <string>Potato.Leaf.Transpiration</string>
-            <string>Potato.Leaf.WaterDemand</string>
-            <string>Potato.Root.Depth</string>
-            <string>Potato.Leaf.CoverGreen</string>
-            <string>Potato.Leaf.CoverTotal</string>
-            <string>Potato.Leaf.CoverDead</string>
-            <string>Potato.Leaf.LAI</string>
-            <string>Potato.Leaf.LAIDead</string>
-            <string>Potato.Structure.Height</string>
-            <string>Potato.Leaf.Fn</string>
-            <string>Potato.Leaf.Fw</string>
-            <string>Potato.Leaf.Photosynthesis.FT.Value</string>
-            <string>Potato.Leaf.Photosynthesis.FVPD.Value</string>
-            <string>Potato.Structure.PlantTotalNodeNo</string>
-            <string>Potato.Structure.TotalStemPopn</string>
-            <string>Potato.Leaf.PlantAppearedGreenLeafNo</string>
-            <string>Potato.Leaf.ExpandingCohortNo</string>
-            <string>Potato.Leaf.AppearedCohortNo</string>
-            <string>Potato.Leaf.DeadCohortNo</string>
-            <string>Potato.Structure.MainStemNodeNo</string>
-            <string>Potato.Leaf.SenescingCohortNo</string>
-            <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
-            <string>Potato.Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-            <string>Potato.Stem.MinimumNConc.Value</string>
-            <string>Potato.Tuber.MinimumNConc.Value</string>
-            <string>Potato.Root.MinimumNConc.Value</string>
-            <string>Potato.Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-            <string>Potato.Stem.MaximumNConc.Value</string>
-            <string>Potato.Tuber.MaximumNConc.Value</string>
-            <string>Potato.Root.MaximumNConc.Value</string>
-            <string>Potato.Stem.Live.StructuralWt</string>
-            <string>Potato.Stem.Live.NonStructuralWt</string>
-            <string>Potato.Leaf.SpecificArea</string>
-            <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.SWmm</string>
-            <string>[Soil].NO3N</string>
-            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>Potato.Arbitrator.NDemand</string>
-            <string>[MicroClimate].net_radn</string>
-            <string>[MicroClimate].peta</string>
-            <string>[MicroClimate].petr</string>
-            <string>[ExtraVariables].Script.FomN</string>
-            <string>[ExtraVariables].Script.HumN</string>
-            <string>[ExtraVariables].Script.BiomN</string>
-            <string>[ExtraVariables].Script.DltNMinRes</string>
-            <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[PotatoHarvestRule].Script.FinalTag</string>
-            <string>Potato.Tuber.LiveFWt</string>
-            <string>Potato.Tuber.DryMatterContent.Value</string>
+            <string />
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -27748,6 +27046,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
               </CanopyEnergyBalanceInterceptionlayerType>
             </LightProfile>
             <KDead>0.3</KDead>
+            <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
             <FractionDied>0</FractionDied>
           </Leaf>
           <GenericAboveGroundOrgan>
@@ -28641,130 +27940,7 @@ namespace Models
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
-            <string>Name as ZoneName</string>
-            <string>[Clock].Today</string>
-            <string>[ExtraVariables].Script.AccumTtemerg</string>
-            <string>Potato.Phenology.CurrentPhaseName</string>
-            <string>Potato.Phenology.Stage</string>
-            <string>[ExtraVariables].Script.AccumPlantN</string>
-            <string>[ExtraVariables].Script.AccumMineralisation</string>
-            <string>[ExtraVariables].Script.AccumDenit</string>
-            <string>[ExtraVariables].Script.AccumFert</string>
-            <string>[ExtraVariables].Script.AccumLeach</string>
-            <string>[ExtraVariables].Script.AccumDetach</string>
-            <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-            <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-            <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>Potato.Root.NSupplyUptake</string>
-            <string>[Soil].SoilWater.Eo</string>
-            <string>[Soil].SoilWater.Es</string>
-            <string>[ExtraVariables].Script.SWC</string>
-            <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.Drainage</string>
-            <string>[Soil].SoilWater.Runoff</string>
-            <string>[ExtraVariables].Script.OutFlowLat</string>
-            <string>[Soil].SoilWater.pond</string>
-            <string>[ExtraVariables].Script.AccumEO</string>
-            <string>[ExtraVariables].Script.AccumEP</string>
-            <string>[ExtraVariables].Script.AccumES</string>
-            <string>[ExtraVariables].Script.AccumDrainage</string>
-            <string>[ExtraVariables].Script.AccumRunoff</string>
-            <string>[ExtraVariables].Script.AccumRainfall</string>
-            <string>[ExtraVariables].Script.AccumIrrigation</string>
-            <string>[ExtraVariables].Script.AccumOutflowLat</string>
-            <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>Potato.AboveGround.Wt</string>
-            <string>Potato.BelowGround.Wt</string>
-            <string>Potato.Total.Wt</string>
-            <string>Potato.TotalDead.Wt</string>
-            <string>Potato.TotalLive.Wt</string>
-            <string>Potato.Leaf.Dead.Wt</string>
-            <string>Potato.Leaf.Live.Wt</string>
-            <string>Potato.Stem.Dead.Wt</string>
-            <string>Potato.Stem.Live.Wt</string>
-            <string>Potato.Tuber.Dead.Wt</string>
-            <string>Potato.Tuber.Live.Wt</string>
-            <string>Potato.Root.Dead.Wt</string>
-            <string>Potato.Root.Live.Wt</string>
-            <string>Potato.AboveGround.N</string>
-            <string>Potato.BelowGround.N</string>
-            <string>Potato.Total.N</string>
-            <string>Potato.TotalLive.N</string>
-            <string>Potato.TotalDead.N</string>
-            <string>Potato.Leaf.Dead.N</string>
-            <string>Potato.Leaf.Live.N</string>
-            <string>Potato.Stem.Dead.N</string>
-            <string>Potato.Stem.Live.N</string>
-            <string>Potato.Tuber.Dead.N</string>
-            <string>Potato.Tuber.Live.N</string>
-            <string>Potato.Root.Live.N</string>
-            <string>Potato.Root.Dead.N</string>
-            <string>Potato.Leaf.Live.NConc</string>
-            <string>Potato.Leaf.Dead.NConc</string>
-            <string>Potato.Stem.Live.NConc</string>
-            <string>Potato.Stem.Dead.NConc</string>
-            <string>Potato.Tuber.Live.NConc</string>
-            <string>Potato.Tuber.Dead.NConc</string>
-            <string>Potato.Root.Live.NConc</string>
-            <string>Potato.Root.Dead.NConc</string>
-            <string>Potato.Root.WaterSupply</string>
-            <string>Potato.Root.WaterUptake</string>
-            <string>Potato.Leaf.Transpiration</string>
-            <string>Potato.Leaf.WaterDemand</string>
-            <string>Potato.Root.Depth</string>
-            <string>Potato.Leaf.CoverGreen</string>
-            <string>Potato.Leaf.CoverTotal</string>
-            <string>Potato.Leaf.CoverDead</string>
-            <string>Potato.Leaf.LAI</string>
-            <string>Potato.Leaf.LAIDead</string>
-            <string>Potato.Structure.Height</string>
-            <string>Potato.Leaf.Fn</string>
-            <string>Potato.Leaf.Fw</string>
-            <string>Potato.Leaf.Photosynthesis.FT.Value</string>
-            <string>Potato.Leaf.Photosynthesis.FVPD.Value</string>
-            <string>Potato.Structure.PlantTotalNodeNo</string>
-            <string>Potato.Structure.TotalStemPopn</string>
-            <string>Potato.Leaf.PlantAppearedGreenLeafNo</string>
-            <string>Potato.Leaf.ExpandingCohortNo</string>
-            <string>Potato.Leaf.AppearedCohortNo</string>
-            <string>Potato.Leaf.DeadCohortNo</string>
-            <string>Potato.Structure.MainStemNodeNo</string>
-            <string>Potato.Leaf.SenescingCohortNo</string>
-            <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
-            <string>Potato.Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-            <string>Potato.Stem.MinimumNConc.Value</string>
-            <string>Potato.Tuber.MinimumNConc.Value</string>
-            <string>Potato.Root.MinimumNConc.Value</string>
-            <string>Potato.Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-            <string>Potato.Stem.MaximumNConc.Value</string>
-            <string>Potato.Tuber.MaximumNConc.Value</string>
-            <string>Potato.Root.MaximumNConc.Value</string>
-            <string>Potato.Stem.Live.StructuralWt</string>
-            <string>Potato.Stem.Live.NonStructuralWt</string>
-            <string>Potato.Leaf.SpecificArea</string>
-            <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.SWmm</string>
-            <string>[Soil].NO3N</string>
-            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>Potato.Arbitrator.NDemand</string>
-            <string>[MicroClimate].net_radn</string>
-            <string>[MicroClimate].peta</string>
-            <string>[MicroClimate].petr</string>
-            <string>[ExtraVariables].Script.FomN</string>
-            <string>[ExtraVariables].Script.HumN</string>
-            <string>[ExtraVariables].Script.BiomN</string>
-            <string>[ExtraVariables].Script.DltNMinRes</string>
-            <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[PotatoPlantAndHarvest].Script.FinalTag</string>
-            <string>Potato.Tuber.LiveFWt</string>
-            <string>Potato.Tuber.DryMatterContent.Value</string>
-            <string>[Potato].Arbitrator.NO3NSupply</string>
-            <string>[Potato].Arbitrator.NH4NSupply</string>
-            <string>[Potato].Root.NUptake</string>
-            <string>[PotatoPlantAndHarvest].Script.Harvested</string>
-            <string>[PotatoPlantAndHarvest].Script.ReadyForHarvest</string>
-            <string>[Weather].MaxT</string>
-            <string>[Weather].MinT</string>
+            <string />
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -33223,6 +32399,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <FRGR>0</FRGR>
             <PotentialEP>0</PotentialEP>
             <KDead>0.3</KDead>
+            <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
             <FractionDied>0</FractionDied>
           </Leaf>
           <GenericAboveGroundOrgan>

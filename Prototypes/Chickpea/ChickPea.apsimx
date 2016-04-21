@@ -2345,6 +2345,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.3</KDead>
+        <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -36764,5 +36765,5 @@ namespace Models
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
-  <ExplorerWidth>304</ExplorerWidth>
+  <ExplorerWidth>367</ExplorerWidth>
 </Simulations>

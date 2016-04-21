@@ -490,23 +490,6 @@ The model consists of:
           <Name>MaximumMainStemNodeNumber</Name>
           <Value>18</Value>
         </Constant>
-        <MainStemFinalNodeNumberFunction>
-          <Name>MainStemFinalNodeNumber</Name>
-          <OnEventFunction>
-            <Name>FinalLeafNumber</Name>
-            <Constant>
-              <Name>PreEventValue</Name>
-              <Value>26</Value>
-            </Constant>
-            <VariableReference>
-              <Name>PostEventValue</Name>
-              <VariableName>[Structure].MainStemPrimordiaNo</VariableName>
-            </VariableReference>
-            <SetEvent>TerminalSpikelet</SetEvent>
-            <ReSetEvent />
-          </OnEventFunction>
-          <MaximumMainStemNodeNumber>30</MaximumMainStemNodeNumber>
-        </MainStemFinalNodeNumberFunction>
         <MovingAverageFunction>
           <Name>MeanTillerGrowthRate</Name>
           <DivideFunction>
@@ -570,6 +553,19 @@ The model consists of:
             <Value>0</Value>
           </Constant>
           <SetEvent>TerminalSpikelet</SetEvent>
+        </OnEventFunction>
+        <OnEventFunction>
+          <Name>MainStemFinalNodeNumber</Name>
+          <Constant>
+            <Name>PreEventValue</Name>
+            <Value>26</Value>
+          </Constant>
+          <VariableReference>
+            <Name>PostEventValue</Name>
+            <VariableName>[Structure].MainStemPrimordiaNo</VariableName>
+          </VariableReference>
+          <SetEvent>TerminalSpikelet</SetEvent>
+          <ReSetEvent />
         </OnEventFunction>
         <InitialiseStage>Emergence</InitialiseStage>
         <PrimaryBudNo>1</PrimaryBudNo>
@@ -1560,6 +1556,7 @@ The model consists of:
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.3</KDead>
+        <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -3365,6 +3362,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
+        <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
