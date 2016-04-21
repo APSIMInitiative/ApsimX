@@ -338,7 +338,7 @@ namespace Models.PMF
         /// <value>The main stem final node no.</value>
         [XmlIgnore]
         [Description("Number of leaves that will appear on the mainstem before it terminates")]
-        public double MainStemFinalNodeNo { get { return _MainStemFinalNodeNo; } } 
+        public double MainStemFinalNodeNo { get { return MaximumNodeNumber; } } 
 
         /// <summary>Gets the relative node apperance.</summary>
         /// <value>The relative node apperance.</value>
