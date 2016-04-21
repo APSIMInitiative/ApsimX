@@ -246,7 +246,7 @@
     <Compile Include="Presenters\SeriesPresenter.cs" />
     <Compile Include="Menus\ContextMenu.cs" />
     <Compile Include="Presenters\MetDataPresenter.cs" />
-    <Compile Include="Presenters\TabbedExplorerPresenter.cs" />
+    <Compile Include="Presenters\MainPresenter.cs" />
     <Compile Include="Presenters\ExplorerPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
     <Compile Include="Presenters\DataStorePresenter.cs" />
@@ -431,12 +431,6 @@
       <DependentUpon>ExplorerView.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ICommand.cs" />
-    <Compile Include="MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\GridView.cs">
@@ -453,11 +447,11 @@
     <Compile Include="Views\DataStoreView.Designer.cs">
       <DependentUpon>DataStoreView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\TabbedExplorerView.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="Views\MainView.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\TabbedExplorerView.Designer.cs">
-      <DependentUpon>TabbedExplorerView.cs</DependentUpon>
+    <Compile Include="Views\MainView.Designer.cs">
+      <DependentUpon>MainView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\TabbedMetDataView.cs">
       <SubType>UserControl</SubType>
@@ -540,10 +534,6 @@
     <EmbeddedResource Include="Views\ExplorerView.resx">
       <DependentUpon>ExplorerView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
@@ -567,8 +557,8 @@
     <EmbeddedResource Include="Views\DataStoreView.resx">
       <DependentUpon>DataStoreView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\TabbedExplorerView.resx">
-      <DependentUpon>TabbedExplorerView.cs</DependentUpon>
+    <EmbeddedResource Include="Views\MainView.resx">
+      <DependentUpon>MainView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\TabbedMetDataView.resx">
       <DependentUpon>TabbedMetDataView.cs</DependentUpon>

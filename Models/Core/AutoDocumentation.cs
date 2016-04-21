@@ -220,5 +220,14 @@ namespace Models.Core
             }
         }
 
+        /// <summary>Descibes an image for the tags system.</summary>
+        public class Image : ITag
+        {
+            /// <summary>The image to put into the doc.</summary>
+            public System.Drawing.Image image;
+
+            /// <summary>Unique name for image. Used to save image to temp folder.</summary>
+            public string name;
+        }
     }
 }
