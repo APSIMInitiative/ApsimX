@@ -760,6 +760,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
+        <MaximumMainStemLeafNumber>80</MaximumMainStemLeafNumber>
         <FractionDied>0</FractionDied>
       </Leaf>
       <Root>
