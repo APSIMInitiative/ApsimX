@@ -2659,17 +2659,17 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
         <AcceptedStats>
           <RegrStats>
             <Name>Chickpea.AboveGround.Wt</Name>
-            <n>71</n>
-            <Slope>0.042384806361245607</Slope>
-            <Intercept>889.72602628107018</Intercept>
-            <SEslope>0.077510838898247558</SEslope>
-            <SEintercept>61.784388201578423</SEintercept>
-            <R2>0.0043148773902002</R2>
-            <RMSE>370.81547038149927</RMSE>
-            <NSE>-0.719137619980998</NSE>
-            <ME>176.06539379016877</ME>
-            <MAE>314.67916610865512</MAE>
-            <RSR>1.3018926277023666</RSR>
+            <n>69</n>
+            <Slope>0.055193678311192616</Slope>
+            <Intercept>872.05105270744048</Intercept>
+            <SEslope>0.07833428623009886</SEslope>
+            <SEintercept>62.867698084669037</SEintercept>
+            <R2>0.0073551912192333369</R2>
+            <RMSE>363.46848688467833</RMSE>
+            <NSE>-0.63217394587261277</NSE>
+            <ME>163.03300660005462</ME>
+            <MAE>305.66456942052605</MAE>
+            <RSR>1.2682741229737733</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chickpea.Phenology.FinalNodeNo.Value</Name>
@@ -2687,45 +2687,45 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           </RegrStats>
           <RegrStats>
             <Name>FloweringDAS</Name>
-            <n>242</n>
-            <Slope>0.829938846516995</Slope>
-            <Intercept>10.951225084772702</Intercept>
-            <SEslope>0.014814755621520211</SEslope>
-            <SEintercept>1.7382335402885818</SEintercept>
-            <R2>0.92895968070856072</R2>
-            <RMSE>13.390748699554441</RMSE>
-            <NSE>0.87413363132787769</NSE>
-            <ME>-7.941639118457303</ME>
-            <MAE>10.37111570247934</MAE>
-            <RSR>0.35404273712458395</RSR>
+            <n>267</n>
+            <Slope>0.82382926953727165</Slope>
+            <Intercept>11.696488113166808</Intercept>
+            <SEslope>0.013320626274258512</SEslope>
+            <SEintercept>1.5116283897341973</SEintercept>
+            <R2>0.9352069461343695</R2>
+            <RMSE>12.863521642821905</RMSE>
+            <NSE>0.88747447089626852</NSE>
+            <ME>-7.1193882646691655</ME>
+            <MAE>9.8007865168539343</MAE>
+            <RSR>0.33481948147397878</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainWt</Name>
-            <n>288</n>
-            <Slope>1.2570782105044405</Slope>
-            <Intercept>198.22877458071778</Intercept>
-            <SEslope>0.085346967332025</SEslope>
-            <SEintercept>18.688489817028525</SEintercept>
-            <R2>0.43134865450181881</R2>
-            <RMSE>298.0046846527739</RMSE>
-            <NSE>-5.7715890661959248</NSE>
-            <ME>246.2092218956478</ME>
-            <MAE>255.05323345343422</MAE>
-            <RSR>2.5977060272787837</RSR>
+            <n>311</n>
+            <Slope>1.2434838615964277</Slope>
+            <Intercept>203.13928321999651</Intercept>
+            <SEslope>0.08074110877053009</SEslope>
+            <SEintercept>17.486750965242685</SEintercept>
+            <R2>0.43425969849644797</R2>
+            <RMSE>295.33168865311688</RMSE>
+            <NSE>-6.0927772076584157</NSE>
+            <ME>248.43573478388453</ME>
+            <MAE>256.62568760910153</MAE>
+            <RSR>2.6589416785776852</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
-            <n>183</n>
-            <Slope>0.68678385433225764</Slope>
-            <Intercept>55.04110275920165</Intercept>
-            <SEslope>0.014963020166665729</SEslope>
-            <SEintercept>2.5552361029637942</SEintercept>
-            <R2>0.9208810558745012</R2>
-            <RMSE>18.437820568668204</RMSE>
-            <NSE>0.8553755839714714</NSE>
-            <ME>3.7540983606557372</ME>
-            <MAE>15.486338797814208</MAE>
-            <RSR>0.37925468839973681</RSR>
+            <n>208</n>
+            <Slope>0.690383981814223</Slope>
+            <Intercept>54.225765004816424</Intercept>
+            <SEslope>0.01297470579622083</SEslope>
+            <SEintercept>2.1320948990922708</SEintercept>
+            <R2>0.93217667496759649</R2>
+            <RMSE>18.685329575529405</RMSE>
+            <NSE>0.85612981977635638</NSE>
+            <ME>5.6875</ME>
+            <MAE>16.009615384615387</MAE>
+            <RSR>0.3783893453374132</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -5561,131 +5561,622 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
+        <Graph>
+          <Name>NConcs</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Chickpea.Leaf.Live.NonStructuralNConc</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Predicted1</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Chickpea.Leaf.Live.StructuralNConc</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Predicted11</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Chickpea.Leaf.Live.MetabolicNConc</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
       </Experiment>
       <Experiment>
         <Name>Lawes1993</Name>
         <Factors>
           <Name>Factors</Name>
           <Factor>
-            <Name>Sowing</Name>
-            <Operations>
-              <Name>P1T1</Name>
-              <Operation>
-                <Date>1993-05-25T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:41, cultivar:"Amethyst", depth:50, rowSpacing:700);</Action>
-              </Operation>
-              <Operation>
-                <Date>1993-07-05T00:00:00</Date>
-                <Action>[Irrigation].Apply(amount:52, depth:0,efficiency:1, willRunoff:false);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>P1T2</Name>
-              <Operation>
-                <Date>1993-05-25T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:35, cultivar:"Amethyst", depth:50, rowSpacing:350);</Action>
-              </Operation>
-              <Operation>
-                <Date>1993-07-05T00:00:00</Date>
-                <Action>[Irrigation].Apply(amount:52, depth:0,efficiency:1, willRunoff:false);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>P1T3</Name>
-              <Operation>
-                <Date>1993-05-25T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:20, cultivar:"Amethyst", depth:50, rowSpacing:170);</Action>
-              </Operation>
-              <Operation>
-                <Date>1993-07-05T00:00:00</Date>
-                <Action>[Irrigation].Apply(amount:52, depth:0,efficiency:1, willRunoff:false);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>P1T4</Name>
-              <Operation>
-                <Date>1993-05-25T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:18, cultivar:"Amethyst", depth:50, rowSpacing:350);</Action>
-              </Operation>
-              <Operation>
-                <Date>1993-07-05T00:00:00</Date>
-                <Action>[Irrigation].Apply(amount:52, depth:0,efficiency:1, willRunoff:false);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>P1T5</Name>
-              <Operation>
-                <Date>1993-05-25T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:33, cultivar:"Amethyst", depth:50, rowSpacing:170);</Action>
-              </Operation>
-              <Operation>
-                <Date>1993-07-05T00:00:00</Date>
-                <Action>[Irrigation].Apply(amount:52, depth:0,efficiency:1, willRunoff:false);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>P1T6</Name>
-              <Operation>
-                <Date>1993-05-25T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:79, cultivar:"Amethyst", depth:50, rowSpacing:350);</Action>
-              </Operation>
-              <Operation>
-                <Date>1993-07-05T00:00:00</Date>
-                <Action>[Irrigation].Apply(amount:52, depth:0,efficiency:1, willRunoff:false);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>P1T7</Name>
-              <Operation>
-                <Date>1993-05-25T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:69, cultivar:"Amethyst", depth:50, rowSpacing:700);</Action>
-              </Operation>
-              <Operation>
-                <Date>1993-07-05T00:00:00</Date>
-                <Action>[Irrigation].Apply(amount:52, depth:0,efficiency:1, willRunoff:false);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>P1T8</Name>
-              <Operation>
-                <Date>1993-05-25T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:17, cultivar:"Amethyst", depth:50, rowSpacing:700);</Action>
-              </Operation>
-              <Operation>
-                <Date>1993-07-05T00:00:00</Date>
-                <Action>[Irrigation].Apply(amount:52, depth:0,efficiency:1, willRunoff:false);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>P2T1</Name>
-              <Operation>
-                <Date>1993-07-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:37, cultivar:"Amethyst", depth:50, rowSpacing:700);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>P2T2</Name>
-              <Operation>
-                <Date>1993-07-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:41, cultivar:"Amethyst", depth:50, rowSpacing:350);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>P2T4</Name>
-              <Operation>
-                <Date>1993-07-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:18, cultivar:"Amethyst", depth:50, rowSpacing:350);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>P2T5</Name>
-              <Operation>
-                <Date>1993-07-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:170);</Action>
-              </Operation>
-            </Operations>
+            <Name>SD</Name>
+            <Manager>
+              <Name>1PP20RS17</Name>
+              <Script>
+                <SowDate>25-May</SowDate>
+                <CultivarName>Amethyst</CultivarName>
+                <SowingDepth>50</SowingDepth>
+                <RowSpacing>170</RowSpacing>
+                <Population>20</Population>
+              </Script>
+              <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		[Link] Plant Chickpea;
+		[Link] Soil Soil;
+		Accumulator accumulatedRain;
+		
+		[Description("Sowing date (d-mmm)")]
+		public string SowDate { get; set; }
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set; }
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set; }
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set; }
+		[Description("Plant population (/m2)")]
+		public double Population { get; set; }
+		
+		
+
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+		
+			
+			if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))
+			{
+				Chickpea.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+            </Manager>
+            <Manager>
+              <Name>1PP20RS35</Name>
+              <Script>
+                <SowDate>25-May</SowDate>
+                <CultivarName>Amethyst</CultivarName>
+                <SowingDepth>50</SowingDepth>
+                <RowSpacing>350</RowSpacing>
+                <Population>20</Population>
+              </Script>
+              <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		[Link] Plant Chickpea;
+		[Link] Soil Soil;
+		Accumulator accumulatedRain;
+		
+		[Description("Sowing date (d-mmm)")]
+		public string SowDate { get; set; }
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set; }
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set; }
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set; }
+		[Description("Plant population (/m2)")]
+		public double Population { get; set; }
+		
+		
+
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+		
+			
+			if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))
+			{
+				Chickpea.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+            </Manager>
+            <Manager>
+              <Name>1PP20RS70</Name>
+              <Script>
+                <SowDate>25-May</SowDate>
+                <CultivarName>Amethyst</CultivarName>
+                <SowingDepth>50</SowingDepth>
+                <RowSpacing>700</RowSpacing>
+                <Population>20</Population>
+              </Script>
+              <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		[Link] Plant Chickpea;
+		[Link] Soil Soil;
+		Accumulator accumulatedRain;
+		
+		[Description("Sowing date (d-mmm)")]
+		public string SowDate { get; set; }
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set; }
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set; }
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set; }
+		[Description("Plant population (/m2)")]
+		public double Population { get; set; }
+		
+		
+
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+		
+			
+			if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))
+			{
+				Chickpea.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+            </Manager>
+            <Manager>
+              <Name>1PP45RS17</Name>
+              <Script>
+                <SowDate>25-May</SowDate>
+                <CultivarName>Amethyst</CultivarName>
+                <SowingDepth>50</SowingDepth>
+                <RowSpacing>170</RowSpacing>
+                <Population>45</Population>
+              </Script>
+              <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		[Link] Plant Chickpea;
+		[Link] Soil Soil;
+		Accumulator accumulatedRain;
+		
+		[Description("Sowing date (d-mmm)")]
+		public string SowDate { get; set; }
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set; }
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set; }
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set; }
+		[Description("Plant population (/m2)")]
+		public double Population { get; set; }
+		
+		
+
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+		
+			
+			if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))
+			{
+				Chickpea.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+            </Manager>
+            <Manager>
+              <Name>1PP90RS35</Name>
+              <Script>
+                <SowDate>25-May</SowDate>
+                <CultivarName>Amethyst</CultivarName>
+                <SowingDepth>50</SowingDepth>
+                <RowSpacing>350</RowSpacing>
+                <Population>90</Population>
+              </Script>
+              <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		[Link] Plant Chickpea;
+		[Link] Soil Soil;
+		Accumulator accumulatedRain;
+		
+		[Description("Sowing date (d-mmm)")]
+		public string SowDate { get; set; }
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set; }
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set; }
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set; }
+		[Description("Plant population (/m2)")]
+		public double Population { get; set; }
+		
+		
+
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+		
+			
+			if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))
+			{
+				Chickpea.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+            </Manager>
+            <Manager>
+              <Name>1PP90RS70</Name>
+              <Script>
+                <SowDate>25-May</SowDate>
+                <CultivarName>Amethyst</CultivarName>
+                <SowingDepth>50</SowingDepth>
+                <RowSpacing>700</RowSpacing>
+                <Population>90</Population>
+              </Script>
+              <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		[Link] Plant Chickpea;
+		[Link] Soil Soil;
+		Accumulator accumulatedRain;
+		
+		[Description("Sowing date (d-mmm)")]
+		public string SowDate { get; set; }
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set; }
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set; }
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set; }
+		[Description("Plant population (/m2)")]
+		public double Population { get; set; }
+		
+		
+
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+		
+			
+			if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))
+			{
+				Chickpea.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+            </Manager>
+            <Manager>
+              <Name>2PP20RS17</Name>
+              <Script>
+                <SowDate>21-Jul</SowDate>
+                <CultivarName>Amethyst</CultivarName>
+                <SowingDepth>50</SowingDepth>
+                <RowSpacing>170</RowSpacing>
+                <Population>20</Population>
+              </Script>
+              <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		[Link] Plant Chickpea;
+		[Link] Soil Soil;
+		Accumulator accumulatedRain;
+		
+		[Description("Sowing date (d-mmm)")]
+		public string SowDate { get; set; }
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set; }
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set; }
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set; }
+		[Description("Plant population (/m2)")]
+		public double Population { get; set; }
+		
+		
+
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+		
+			
+			if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))
+			{
+				Chickpea.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+            </Manager>
+            <Manager>
+              <Name>2PP20RS35</Name>
+              <Script>
+                <SowDate>21-Jul</SowDate>
+                <CultivarName>Amethyst</CultivarName>
+                <SowingDepth>50</SowingDepth>
+                <RowSpacing>350</RowSpacing>
+                <Population>20</Population>
+              </Script>
+              <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		[Link] Plant Chickpea;
+		[Link] Soil Soil;
+		Accumulator accumulatedRain;
+		
+		[Description("Sowing date (d-mmm)")]
+		public string SowDate { get; set; }
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set; }
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set; }
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set; }
+		[Description("Plant population (/m2)")]
+		public double Population { get; set; }
+		
+		
+
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+		
+			
+			if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))
+			{
+				Chickpea.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+            </Manager>
+            <Manager>
+              <Name>2PP20RS70</Name>
+              <Script>
+                <SowDate>21-Jul</SowDate>
+                <CultivarName>Amethyst</CultivarName>
+                <SowingDepth>50</SowingDepth>
+                <RowSpacing>700</RowSpacing>
+                <Population>20</Population>
+              </Script>
+              <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		[Link] Plant Chickpea;
+		[Link] Soil Soil;
+		Accumulator accumulatedRain;
+		
+		[Description("Sowing date (d-mmm)")]
+		public string SowDate { get; set; }
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set; }
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set; }
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set; }
+		[Description("Plant population (/m2)")]
+		public double Population { get; set; }
+		
+		
+
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+		
+			
+			if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))
+			{
+				Chickpea.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+            </Manager>
             <Specifications>
-              <string>[Sowing]</string>
+              <string>[SowingRule]</string>
             </Specifications>
           </Factor>
         </Factors>
@@ -6204,6 +6695,64 @@ namespace Models
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
             </Plant>
+            <Manager>
+              <Name>SowingRule</Name>
+              <Script>
+                <SowDate>24-Jul</SowDate>
+                <CultivarName>Amethyst</CultivarName>
+                <SowingDepth>50</SowingDepth>
+                <RowSpacing>750</RowSpacing>
+                <Population>6</Population>
+              </Script>
+              <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		[Link] Plant Chickpea;
+		[Link] Soil Soil;
+		Accumulator accumulatedRain;
+		
+		[Description("Sowing date (d-mmm)")]
+		public string SowDate { get; set; }
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set; }
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set; }
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set; }
+		[Description("Plant population (/m2)")]
+		public double Population { get; set; }
+		
+		
+
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+		
+			
+			if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))
+			{
+				Chickpea.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+            </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -27245,6 +27794,816 @@ namespace Models
         </Graph>
       </Experiment>
       <Experiment>
+        <Name>Terbol_2005</Name>
+        <Factors>
+          <Name>Factors</Name>
+          <Factor>
+            <Name>CV</Name>
+            <Operations>
+              <Name>82_150C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>00_21C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>00_40C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>01_36C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>01_61C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>01_7C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>02_03C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>02_10C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>02_23C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>02_30C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>02_35C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>88_85C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>93_93C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>97_116C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>97_118C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>97_120C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>97_219C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>98_106C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>98_107C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>98_16C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>98_55C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>98_79C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>99_34C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>99_66C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>99_73C</Name>
+              <Operation>
+                <Date>2005-03-09T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Specifications>
+              <string>[SowingRule]</string>
+            </Specifications>
+          </Factor>
+        </Factors>
+        <Simulation>
+          <Name>Terbol_2005</Name>
+          <Memo>
+            <Name>memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Weather>
+            <Name>Weather</Name>
+            <FileName>Terbol.met</FileName>
+          </Weather>
+          <Clock>
+            <Name>clock</Name>
+            <StartDate>2005-03-01T00:00:00</StartDate>
+            <EndDate>2006-09-01T00:00:00</EndDate>
+          </Clock>
+          <Summary>
+            <Name>summaryfile</Name>
+          </Summary>
+          <SoilArbitrator>
+            <Name>Soil Arbitrator</Name>
+          </SoilArbitrator>
+          <Zone>
+            <Name>Field</Name>
+            <MicroClimate>
+              <Name>MicroClimate</Name>
+              <a_interception>0</a_interception>
+              <b_interception>1</b_interception>
+              <c_interception>0</c_interception>
+              <d_interception>0</d_interception>
+              <soil_albedo>0.23</soil_albedo>
+              <air_pressure>1010</air_pressure>
+              <soil_emissivity>0.96</soil_emissivity>
+              <sun_angle>15</sun_angle>
+              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+              <night_interception_fraction>0.5</night_interception_fraction>
+              <windspeed_default>3</windspeed_default>
+              <refheight>2</refheight>
+              <albedo>0.15</albedo>
+              <emissivity>0.96</emissivity>
+              <gsmax>0.01</gsmax>
+              <r50>200</r50>
+            </MicroClimate>
+            <Fertiliser>
+              <Name>Fertiliser</Name>
+            </Fertiliser>
+            <SurfaceOrganicMatter>
+              <Name>SurfaceOrganicMatter</Name>
+              <ResidueTypes>
+                <Name>ResidueTypesList</Name>
+                <LoadFromResource>ResidueTypes</LoadFromResource>
+              </ResidueTypes>
+              <Pools>
+                <Pool>
+                  <PoolName>unknown</PoolName>
+                  <ResidueType>wheat</ResidueType>
+                  <Mass>0</Mass>
+                  <CNRatio>10</CNRatio>
+                  <CPRatio>NaN</CPRatio>
+                  <StandingFraction>0</StandingFraction>
+                </Pool>
+              </Pools>
+              <PoolName>unknown</PoolName>
+              <type>wheat</type>
+              <mass>0</mass>
+              <standing_fraction>0</standing_fraction>
+              <cpr />
+              <cnr>10</cnr>
+              <CriticalResidueWeight>2000</CriticalResidueWeight>
+              <OptimumDecompTemp>20</OptimumDecompTemp>
+              <MaxCumulativeEOS>20</MaxCumulativeEOS>
+              <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+              <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+              <TotalLeachRain>25</TotalLeachRain>
+              <MinRainToLeach>10</MinRainToLeach>
+              <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+              <DefaultCPRatio>0</DefaultCPRatio>
+              <DefaultStandingFraction>0</DefaultStandingFraction>
+              <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+              <FractionFaecesAdded>0.5</FractionFaecesAdded>
+            </SurfaceOrganicMatter>
+            <Operations>
+              <Name>SowingRule</Name>
+              <Operation>
+                <Date>1992-05-07T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:40, cultivar:"Amethyst", depth:50, rowSpacing:150);</Action>
+              </Operation>
+            </Operations>
+            <Report>
+              <Name>Report</Name>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[Clock].Today</string>
+                <string>[Soil].SoilWater.SW</string>
+                <string>[Soil].SoilWater.Eo</string>
+                <string>[Soil].SoilWater.Es</string>
+                <string>[Soil].SoilWater.Drainage</string>
+                <string>[Soil].SoilWater.Runoff</string>
+                <string>[Soil].SoilWater.pond</string>
+                <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+                <string>[Soil].NO3N</string>
+                <string>[MicroClimate].net_radn</string>
+                <string>[MicroClimate].peta</string>
+                <string>[MicroClimate].petr</string>
+                <string>[Chickpea].AboveGround.Wt</string>
+                <string>[Chickpea].Leaf.LAI</string>
+              </VariableNames>
+              <EventNames>
+                <string>[Clock].DoReport</string>
+              </EventNames>
+            </Report>
+            <Report>
+              <Name>HarvestReport</Name>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[Clock].Today</string>
+                <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
+              </VariableNames>
+              <EventNames>
+                <string>[Chickpea].Harvesting</string>
+              </EventNames>
+            </Report>
+            <Manager>
+              <Name>Harvesting</Name>
+              <Script />
+              <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Chickpea;
+		[Link] Zone zone;
+					
+        
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Chickpea.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			{
+				Chickpea.Harvest();
+				Chickpea.EndCrop();
+			}
+		}
+		
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
+			
+		}
+	}
+}
+	   ]]></Code>
+            </Manager>
+            <Plant>
+              <Name>Chickpea</Name>
+              <CropType>Chickpea</CropType>
+            </Plant>
+            <Soil>
+              <Name>WI_VRLB006</Name>
+              <Water>
+                <Name>Water</Name>
+                <SoilCrop>
+                  <Name>ChickpeaSoil</Name>
+                  <LL>
+                    <double>0.2</double>
+                    <double>0.23</double>
+                    <double>0.25</double>
+                    <double>0.28</double>
+                  </LL>
+                  <KL>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.05</double>
+                    <double>0.04</double>
+                  </KL>
+                  <XF>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                  </XF>
+                </SoilCrop>
+                <Thickness>
+                  <double>200</double>
+                  <double>300</double>
+                  <double>600</double>
+                  <double>800</double>
+                </Thickness>
+                <BD>
+                  <double>1.36</double>
+                  <double>1.38</double>
+                  <double>1.4</double>
+                  <double>1.26</double>
+                </BD>
+                <AirDry>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.1</double>
+                </AirDry>
+                <LL15>
+                  <double>0.213</double>
+                  <double>0.215</double>
+                  <double>0.215</double>
+                  <double>0.291</double>
+                </LL15>
+                <DUL>
+                  <double>0.351</double>
+                  <double>0.353</double>
+                  <double>0.353</double>
+                  <double>0.437</double>
+                </DUL>
+                <SAT>
+                  <double>0.471</double>
+                  <double>0.463</double>
+                  <double>0.457</double>
+                  <double>0.508</double>
+                </SAT>
+              </Water>
+              <SoilWater>
+                <Name>SoilWater</Name>
+                <residueinterception>0</residueinterception>
+                <SummerDate>1-Apr</SummerDate>
+                <SummerU>6.86</SummerU>
+                <SummerCona>3</SummerCona>
+                <WinterDate>1-Nov</WinterDate>
+                <WinterU>6.86</WinterU>
+                <WinterCona>3</WinterCona>
+                <DiffusConst>0</DiffusConst>
+                <DiffusSlope>0</DiffusSlope>
+                <Salb>0.13</Salb>
+                <CN2Bare>75</CN2Bare>
+                <CNRed>0</CNRed>
+                <CNCov>0</CNCov>
+                <slope>NaN</slope>
+                <discharge_width>NaN</discharge_width>
+                <catchment_area>NaN</catchment_area>
+                <max_pond>0</max_pond>
+                <Thickness>
+                  <double>200</double>
+                  <double>300</double>
+                  <double>600</double>
+                  <double>800</double>
+                </Thickness>
+                <SWCON>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                </SWCON>
+              </SoilWater>
+              <SoilNitrogen>
+                <Name>SoilNitrogen</Name>
+                <fom_type>
+                  <string>default</string>
+                  <string>manure</string>
+                  <string>mucuna</string>
+                  <string>lablab</string>
+                  <string>shemp</string>
+                  <string>stable</string>
+                </fom_type>
+                <fract_carb>
+                  <double>0.2</double>
+                  <double>0.3</double>
+                  <double>0.54</double>
+                  <double>0.57</double>
+                  <double>0.45</double>
+                  <double>0</double>
+                </fract_carb>
+                <fract_cell>
+                  <double>0.7</double>
+                  <double>0.3</double>
+                  <double>0.37</double>
+                  <double>0.37</double>
+                  <double>0.47</double>
+                  <double>0.1</double>
+                </fract_cell>
+                <fract_lign>
+                  <double>0.1</double>
+                  <double>0.4</double>
+                  <double>0.09</double>
+                  <double>0.06</double>
+                  <double>0.08</double>
+                  <double>0.9</double>
+                </fract_lign>
+                <wfpsN2N2O_x>
+                  <double>22</double>
+                  <double>88</double>
+                </wfpsN2N2O_x>
+                <wfpsN2N2O_y>
+                  <double>0.1</double>
+                  <double>1</double>
+                </wfpsN2N2O_y>
+              </SoilNitrogen>
+              <SoilOrganicMatter>
+                <Name>SoilOrganicMatter</Name>
+                <RootCN>40</RootCN>
+                <RootWt>500</RootWt>
+                <SoilCN>14</SoilCN>
+                <EnrACoeff>0</EnrACoeff>
+                <EnrBCoeff>0</EnrBCoeff>
+                <Thickness>
+                  <double>200</double>
+                  <double>300</double>
+                  <double>600</double>
+                  <double>800</double>
+                </Thickness>
+                <Depth>
+                  <string>0-20</string>
+                  <string>20-50</string>
+                  <string>50-110</string>
+                  <string>110-190</string>
+                </Depth>
+                <OC>
+                  <double>0.33</double>
+                  <double>0.26</double>
+                  <double>0.19</double>
+                  <double>0.19</double>
+                </OC>
+                <FBiom>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                </FBiom>
+                <FInert>
+                  <double>0.4</double>
+                  <double>0.8</double>
+                  <double>0.99</double>
+                  <double>0.99</double>
+                </FInert>
+                <OCUnits>Total</OCUnits>
+              </SoilOrganicMatter>
+              <Analysis>
+                <Name>Analysis</Name>
+                <Thickness>
+                  <double>200</double>
+                  <double>300</double>
+                  <double>600</double>
+                  <double>800</double>
+                </Thickness>
+                <PH>
+                  <double>6.7</double>
+                  <double>6.7</double>
+                  <double>6.8</double>
+                  <double>7.5</double>
+                </PH>
+                <PHUnits>Water</PHUnits>
+                <BoronUnits>HotWater</BoronUnits>
+              </Analysis>
+              <InitialWater>
+                <Name>Initial Water</Name>
+                <PercentMethod>FilledFromTop</PercentMethod>
+                <FractionFull>1</FractionFull>
+                <DepthWetSoil>NaN</DepthWetSoil>
+              </InitialWater>
+              <Sample>
+                <Name>Initial nitrogen</Name>
+                <Thickness>
+                  <double>200</double>
+                  <double>300</double>
+                  <double>600</double>
+                  <double>800</double>
+                </Thickness>
+                <NO3>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                </NO3>
+                <NH4>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                </NH4>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
+                <SWUnits>Volumetric</SWUnits>
+                <OCUnits>Total</OCUnits>
+                <PHUnits>Water</PHUnits>
+              </Sample>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>LL15</Name>
+                  <Type>Area</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-3479297</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].LL15</XFieldName>
+                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
+                  <X2FieldName>[Soil].DUL</X2FieldName>
+                  <Y2FieldName>[Soil].DepthMidPoints</Y2FieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Air dry</Name>
+                  <Type>Scatter</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].AirDry</XFieldName>
+                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
+                  <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>LL15</Name>
+                  <Type>Scatter</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16711681</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].LL15</XFieldName>
+                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
+                  <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>DUL</Name>
+                  <Type>Scatter</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16776961</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].DUL</XFieldName>
+                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
+                  <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>SAT</Name>
+                  <Type>Scatter</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16760704</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].SAT</XFieldName>
+                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
+                  <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>LL15</Name>
+                  <Type>Scatter</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-32768</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].LL15</XFieldName>
+                  <YFieldName>[Soil]l.DepthMidPoints</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Depth (mm)</Title>
+                  <Inverted>true</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Top</Type>
+                  <Title>Volumetric water (mm/mm)</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <RecordNumber>0</RecordNumber>
+              <SoilType>Calcic Vertisol (VRk)</SoilType>
+              <Country>Lebanon</Country>
+              <Latitude>33.675</Latitude>
+              <Longitude>35.842</Longitude>
+              <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
+              <Comments>You will need to add crops to this soil before running simulations.</Comments>
+            </Soil>
+            <Area>1</Area>
+            <Slope>0</Slope>
+          </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
+        </Simulation>
+        <Graph>
+          <Name>AboveGroundWt</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Chickpea.AboveGround.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>ObservedTimeseriesData</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Biomass</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+      </Experiment>
+      <Experiment>
         <Name>Terbol_2006</Name>
         <Factors>
           <Name>Factors</Name>
@@ -31406,6 +32765,134 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
+        <Graph>
+          <Name>NFixation</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Chickpea.Nodule.NFixed</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>true</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>NConcs</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Chickpea.Leaf.Live.NonStructuralNConc</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Predicted1</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Chickpea.Leaf.Live.StructuralNConc</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Predicted11</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Chickpea.Leaf.Live.MetabolicNConc</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
       </Experiment>
       <Experiment>
         <Name>Gorgan04</Name>
@@ -33108,1072 +34595,14 @@ namespace Models
             <Operations>
               <Name>2</Name>
               <Operation>
-                <Date>2002-01-02T00:00:00</Date>
+                <Date>2002-01-15T00:00:00</Date>
                 <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>3</Name>
               <Operation>
-                <Date>2002-02-13T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>4</Name>
-              <Operation>
-                <Date>2002-03-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>5</Name>
-              <Operation>
-                <Date>2002-04-16T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>6</Name>
-              <Operation>
-                <Date>2002-05-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>7</Name>
-              <Operation>
-                <Date>2002-09-22T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>8</Name>
-              <Operation>
-                <Date>2002-10-14T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>9</Name>
-              <Operation>
-                <Date>2002-11-02T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
-              </Operation>
-            </Operations>
-            <Specifications>
-              <string>[SowingRule]</string>
-            </Specifications>
-          </Factor>
-        </Factors>
-        <Simulation>
-          <Name>Soltani_1_9096c</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
-          <Weather>
-            <Name>Weather</Name>
-            <FileName>Gorgan.met</FileName>
-          </Weather>
-          <Clock>
-            <Name>clock</Name>
-            <StartDate>2001-01-01T00:00:00</StartDate>
-            <EndDate>2002-12-31T00:00:00</EndDate>
-          </Clock>
-          <Summary>
-            <Name>summaryfile</Name>
-          </Summary>
-          <SoilArbitrator>
-            <Name>Soil Arbitrator</Name>
-          </SoilArbitrator>
-          <Zone>
-            <Name>Field</Name>
-            <MicroClimate>
-              <Name>MicroClimate</Name>
-              <a_interception>0</a_interception>
-              <b_interception>1</b_interception>
-              <c_interception>0</c_interception>
-              <d_interception>0</d_interception>
-              <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
-              <sun_angle>15</sun_angle>
-              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-              <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
-              <refheight>2</refheight>
-              <albedo>0.15</albedo>
-              <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
-            </MicroClimate>
-            <Fertiliser>
-              <Name>Fertiliser</Name>
-            </Fertiliser>
-            <SurfaceOrganicMatter>
-              <Name>SurfaceOrganicMatter</Name>
-              <ResidueTypes>
-                <Name>ResidueTypesList</Name>
-                <LoadFromResource>ResidueTypes</LoadFromResource>
-              </ResidueTypes>
-              <Pools>
-                <Pool>
-                  <PoolName>unknown</PoolName>
-                  <ResidueType>wheat</ResidueType>
-                  <Mass>0</Mass>
-                  <CNRatio>10</CNRatio>
-                  <CPRatio>NaN</CPRatio>
-                  <StandingFraction>0</StandingFraction>
-                </Pool>
-              </Pools>
-              <PoolName>unknown</PoolName>
-              <type>wheat</type>
-              <mass>0</mass>
-              <standing_fraction>0</standing_fraction>
-              <cpr />
-              <cnr>10</cnr>
-              <CriticalResidueWeight>2000</CriticalResidueWeight>
-              <OptimumDecompTemp>20</OptimumDecompTemp>
-              <MaxCumulativeEOS>20</MaxCumulativeEOS>
-              <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-              <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-              <TotalLeachRain>25</TotalLeachRain>
-              <MinRainToLeach>10</MinRainToLeach>
-              <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-              <DefaultCPRatio>0</DefaultCPRatio>
-              <DefaultStandingFraction>0</DefaultStandingFraction>
-              <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-              <FractionFaecesAdded>0.5</FractionFaecesAdded>
-            </SurfaceOrganicMatter>
-            <Operations>
-              <Name>SowingRule</Name>
-              <Operation>
-                <Date>1992-05-07T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:40, cultivar:"Hashem", depth:50, rowSpacing:150);</Action>
-              </Operation>
-            </Operations>
-            <Report>
-              <Name>Report</Name>
-              <ExperimentFactorNames />
-              <ExperimentFactorValues />
-              <VariableNames>
-                <string>[Clock].Today</string>
-                <string>[Soil].SoilWater.SW</string>
-                <string>[Soil].SoilWater.Eo</string>
-                <string>[Soil].SoilWater.Es</string>
-                <string>[Soil].SoilWater.Drainage</string>
-                <string>[Soil].SoilWater.Runoff</string>
-                <string>[Soil].SoilWater.pond</string>
-                <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
-                <string>[Soil].NO3N</string>
-                <string>[MicroClimate].net_radn</string>
-                <string>[MicroClimate].peta</string>
-                <string>[MicroClimate].petr</string>
-                <string>[Chickpea].AboveGround.Wt</string>
-                <string>[Chickpea].Leaf.LAI</string>
-              </VariableNames>
-              <EventNames>
-                <string>[Clock].DoReport</string>
-              </EventNames>
-            </Report>
-            <Report>
-              <Name>HarvestReport</Name>
-              <ExperimentFactorNames />
-              <ExperimentFactorValues />
-              <VariableNames>
-                <string>[Clock].Today</string>
-                <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
-                <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
-              </VariableNames>
-              <EventNames>
-                <string>[Chickpea].Harvesting</string>
-              </EventNames>
-            </Report>
-            <Manager>
-              <Name>Harvesting</Name>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Plant Chickpea;
-		[Link] Zone zone;
-					
-        
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Chickpea.Phenology.CurrentPhaseName == "ReadyForHarvesting")
-			{
-				Chickpea.Harvest();
-				Chickpea.EndCrop();
-			}
-		}
-		
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			
-		}
-	}
-}
-	   ]]></Code>
-            </Manager>
-            <Plant>
-              <Name>Chickpea</Name>
-              <CropType>Chickpea</CropType>
-            </Plant>
-            <Soil>
-              <Name>WI_SCAF005</Name>
-              <Water>
-                <Name>Water</Name>
-                <SoilCrop>
-                  <Name>ChickpeaSoil</Name>
-                  <LL>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.25</double>
-                    <double>0.34</double>
-                    <double>0.34</double>
-                  </LL>
-                  <KL>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0</double>
-                  </XF>
-                </SoilCrop>
-                <Thickness>
-                  <double>150</double>
-                  <double>200</double>
-                  <double>350</double>
-                  <double>400</double>
-                  <double>600</double>
-                  <double>1000</double>
-                </Thickness>
-                <BD>
-                  <double>1.1</double>
-                  <double>1.3</double>
-                  <double>1.33</double>
-                  <double>1.46</double>
-                  <double>1.46</double>
-                  <double>1.33</double>
-                </BD>
-                <AirDry>
-                  <double>0.05</double>
-                  <double>0.06</double>
-                  <double>0.03</double>
-                  <double>0.05</double>
-                  <double>0.05</double>
-                  <double>0.1</double>
-                </AirDry>
-                <LL15>
-                  <double>0.143</double>
-                  <double>0.165</double>
-                  <double>0.088</double>
-                  <double>0.156</double>
-                  <double>0.156</double>
-                  <double>0.307</double>
-                </LL15>
-                <DUL>
-                  <double>0.339</double>
-                  <double>0.283</double>
-                  <double>0.215</double>
-                  <double>0.295</double>
-                  <double>0.295</double>
-                  <double>0.453</double>
-                </DUL>
-                <SAT>
-                  <double>0.548</double>
-                  <double>0.488</double>
-                  <double>0.475</double>
-                  <double>0.425</double>
-                  <double>0.425</double>
-                  <double>0.485</double>
-                </SAT>
-              </Water>
-              <SoilWater>
-                <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
-                <SummerDate>1-Apr</SummerDate>
-                <SummerU>9.2</SummerU>
-                <SummerCona>3</SummerCona>
-                <WinterDate>1-Nov</WinterDate>
-                <WinterU>9.2</WinterU>
-                <WinterCona>3</WinterCona>
-                <DiffusConst>0</DiffusConst>
-                <DiffusSlope>0</DiffusSlope>
-                <Salb>0.13</Salb>
-                <CN2Bare>75</CN2Bare>
-                <CNRed>0</CNRed>
-                <CNCov>0</CNCov>
-                <slope>NaN</slope>
-                <discharge_width>NaN</discharge_width>
-                <catchment_area>NaN</catchment_area>
-                <max_pond>0</max_pond>
-                <Thickness>
-                  <double>150</double>
-                  <double>200</double>
-                  <double>350</double>
-                  <double>400</double>
-                  <double>600</double>
-                  <double>1000</double>
-                </Thickness>
-                <SWCON>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                </SWCON>
-              </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-                <wfpsN2N2O_x>
-                  <double>22</double>
-                  <double>88</double>
-                </wfpsN2N2O_x>
-                <wfpsN2N2O_y>
-                  <double>0.1</double>
-                  <double>1</double>
-                </wfpsN2N2O_y>
-              </SoilNitrogen>
-              <SoilOrganicMatter>
-                <Name>SoilOrganicMatter</Name>
-                <RootCN>40</RootCN>
-                <RootWt>500</RootWt>
-                <SoilCN>14</SoilCN>
-                <EnrACoeff>0</EnrACoeff>
-                <EnrBCoeff>0</EnrBCoeff>
-                <Thickness>
-                  <double>150</double>
-                  <double>200</double>
-                  <double>350</double>
-                  <double>400</double>
-                  <double>600</double>
-                  <double>1000</double>
-                </Thickness>
-                <Depth>
-                  <string>0-15</string>
-                  <string>15-35</string>
-                  <string>35-70</string>
-                  <string>70-110</string>
-                  <string>110-170</string>
-                  <string>170-270</string>
-                </Depth>
-                <OC>
-                  <double>1.46</double>
-                  <double>0.84</double>
-                  <double>0.6</double>
-                  <double>0.6</double>
-                  <double>0.6</double>
-                  <double>0.6</double>
-                </OC>
-                <FBiom>
-                  <double>0.04</double>
-                  <double>0.02</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                </FBiom>
-                <FInert>
-                  <double>0.4</double>
-                  <double>0.66</double>
-                  <double>0.9</double>
-                  <double>0.99</double>
-                  <double>0.99</double>
-                  <double>0.99</double>
-                </FInert>
-                <OCUnits>Total</OCUnits>
-              </SoilOrganicMatter>
-              <Analysis>
-                <Name>Analysis</Name>
-                <Thickness>
-                  <double>150</double>
-                  <double>200</double>
-                  <double>350</double>
-                  <double>400</double>
-                  <double>600</double>
-                  <double>1000</double>
-                </Thickness>
-                <Texture />
-                <MunsellColour />
-                <PH>
-                  <double>8.6</double>
-                  <double>8.9</double>
-                  <double>8.7</double>
-                  <double>8.9</double>
-                  <double>9.1</double>
-                  <double>9.1</double>
-                </PH>
-                <PHUnits>Water</PHUnits>
-                <BoronUnits>HotWater</BoronUnits>
-              </Analysis>
-              <InitialWater>
-                <Name>Initial Water</Name>
-                <PercentMethod>FilledFromTop</PercentMethod>
-                <FractionFull>1</FractionFull>
-                <DepthWetSoil>NaN</DepthWetSoil>
-              </InitialWater>
-              <Sample>
-                <Name>Initial nitrogen</Name>
-                <Thickness>
-                  <double>150</double>
-                  <double>200</double>
-                  <double>350</double>
-                  <double>400</double>
-                  <double>600</double>
-                  <double>1000</double>
-                </Thickness>
-                <NO3>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                </NO3>
-                <NH4>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                </NH4>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>LL15</Name>
-                  <Type>Area</Type>
-                  <XAxis>Top</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-3479297</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[Soil].LL15</XFieldName>
-                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
-                  <X2FieldName>[Soil].DUL</X2FieldName>
-                  <Y2FieldName>[Soil].DepthMidPoints</Y2FieldName>
-                  <ShowInLegend>false</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Series>
-                  <Name>Air dry</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Top</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[Soil].AirDry</XFieldName>
-                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Series>
-                  <Name>LL15</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Top</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-16711681</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[Soil].LL15</XFieldName>
-                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Series>
-                  <Name>DUL</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Top</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-16776961</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[Soil].DUL</XFieldName>
-                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Series>
-                  <Name>SAT</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Top</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-16760704</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[Soil].SAT</XFieldName>
-                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Series>
-                  <Name>LL15</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Top</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-32768</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[Soil].LL15</XFieldName>
-                  <YFieldName>[Soil]l.DepthMidPoints</YFieldName>
-                  <ShowInLegend>false</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Depth (mm)</Title>
-                  <Inverted>true</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Top</Type>
-                  <Title>Volumetric water (mm/mm)</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>LL15</Name>
-                  <Type>Area</Type>
-                  <XAxis>Top</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-3479297</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[Soil].LL15</XFieldName>
-                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
-                  <X2FieldName>[Soil].DUL</X2FieldName>
-                  <Y2FieldName>[Soil].DepthMidPoints</Y2FieldName>
-                  <ShowInLegend>false</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Series>
-                  <Name>Air dry</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Top</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[Soil].AirDry</XFieldName>
-                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Series>
-                  <Name>LL15</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Top</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-16711681</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[Soil].LL15</XFieldName>
-                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Series>
-                  <Name>DUL</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Top</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-16776961</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[Soil].DUL</XFieldName>
-                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Series>
-                  <Name>SAT</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Top</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-16760704</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[Soil].SAT</XFieldName>
-                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
-                  <ShowInLegend>true</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Series>
-                  <Name>LL15</Name>
-                  <Type>Scatter</Type>
-                  <XAxis>Top</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-32768</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <XFieldName>[Soil].LL15</XFieldName>
-                  <YFieldName>[Soil]l.DepthMidPoints</YFieldName>
-                  <ShowInLegend>false</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Depth (mm)</Title>
-                  <Inverted>true</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Top</Type>
-                  <Title>Volumetric water (mm/mm)</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </Graph>
-              <RecordNumber>0</RecordNumber>
-              <SoilType>Gleyic Solonchak (SCg)</SoilType>
-              <Country>Afganistan</Country>
-              <Latitude>34.333</Latitude>
-              <Longitude>61.433</Longitude>
-              <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
-              <Comments>You will need to add crops to this soil before running simulations.</Comments>
-            </Soil>
-            <Manager>
-              <Name>AutoIrrigate</Name>
-              <Script>
-                <FASW>0</FASW>
-                <WaterDeficit>0</WaterDeficit>
-                <AutoIrrigationOn>True</AutoIrrigationOn>
-                <StartStageName>Sowing</StartStageName>
-                <EndStageName>EndGrainFill</EndStageName>
-                <FASWThreshold>0.9</FASWThreshold>
-                <FASWDepth>600</FASWDepth>
-              </Script>
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		public double FASW { get; set; }
-		public double WaterDeficit  { get; set; }
-	
-		[Link] Plant Chickpea;
-		[Link] Zone zone;
-		[Link] Irrigation irrigation;
-		[Link] Soil soil;
-		
-		[Description("Auto irrigation on?")]
-		public bool AutoIrrigationOn { get; set; }
-		
-		[Description("Irrigation window start stage")]
-		public string StartStageName { get; set; }
-		[Description("Irrigation window end stage")]
-		public string EndStageName { get; set; }
-
-		[Description("Threshold fraction available water (0-1)")]
-		public double FASWThreshold { get; set; }
-
-		[Description("Soil depth (mm) to which fraction available water is calculated")]
-		public double FASWDepth { get; set; }
-
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			CalculateFASW();
-			if (AutoIrrigationOn && Chickpea.Phenology.Between(StartStageName, EndStageName))
-			{
-				if (FASW < FASWThreshold)
-				{
-					double amount = 10;
-					irrigation.Apply(WaterDeficit, depth: 0);
-				}
-			}
-		}
-		
-		private void CalculateFASW()
-		{
-			double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);
-			double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);
-		
-			int nlayr = GetLayerIndex();
-			double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);
-
-			double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);
-
-			// note that results may be strange if swdep < ll15
-			double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)
-			                  - excess_fr * soil.Water[nlayr])
-			                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)
-			                  - excess_fr * LL15[nlayr]);
-
-
-			double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)
-			                      - excess_fr * DUL[nlayr])
-			                      - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)
-			                      - excess_fr * LL15[nlayr]);
-
-			FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);
-			WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);
-		}
-
-		private int GetLayerIndex()
-		{
-			double[] cumThickness = Soil.ToCumThickness(soil.Thickness);
-			for (int i = 1; i < cumThickness.Length; i++)
-			{
-				if (FASWDepth < cumThickness[i])
-					return i - 1;
-			}
-			
-			return cumThickness.Length - 1;
-		}
-
-	}
-}
-	   ]]></Code>
-            </Manager>
-            <Irrigation>
-              <Name>Irrigation</Name>
-            </Irrigation>
-            <Area>1</Area>
-            <Slope>0</Slope>
-          </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
-        </Simulation>
-        <Graph>
-          <Name>AboveGroundWt</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.AboveGround.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>ObservedTimeseriesData</TableName>
-            <XFieldName>Date</XFieldName>
-            <YFieldName>Biomass</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>LAI</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Leaf.LAI</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>ObservedTimeseriesData</TableName>
-            <XFieldName>Date</XFieldName>
-            <YFieldName>LAI</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Graph>
-      </Experiment>
-      <Experiment>
-        <Name>Gorgan0102Hashem</Name>
-        <Factors>
-          <Name>Factors</Name>
-          <Factor>
-            <Name>S</Name>
-            <Operations>
-              <Name>1</Name>
-              <Operation>
-                <Date>2001-12-12T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>2</Name>
-              <Operation>
-                <Date>2002-01-02T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>3</Name>
-              <Operation>
-                <Date>2002-02-13T00:00:00</Date>
+                <Date>2002-02-15T00:00:00</Date>
                 <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
@@ -34215,7 +34644,7 @@ namespace Models
             <Operations>
               <Name>9</Name>
               <Operation>
-                <Date>2002-11-02T00:00:00</Date>
+                <Date>2002-11-12T00:00:00</Date>
                 <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
@@ -34225,7 +34654,7 @@ namespace Models
           </Factor>
         </Factors>
         <Simulation>
-          <Name>Soltani_1_hashem</Name>
+          <Name>Soltani_1_9096c</Name>
           <Memo>
             <Name>memo</Name>
             <MemoText><![CDATA[]]></MemoText>
@@ -35439,148 +35868,211 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-    </Folder>
-  </Folder>
-  <Simulation>
-    <Name>Soltani_isawanker</Name>
-    <Memo>
-      <Name>memo</Name>
-      <MemoText><![CDATA[These simulations are based on data from two years of field trials done in Lincoln, Canterbury, New Zealand from 1998 to 2000. These trials used three cultivars of Kabuli chickpeas. However the results presented here are the average of cultivars for measurements that had no differences among cultivars tested. The experimental design was a split split plot with irrigation as main plot, sowing dates as sub plots and cultivars as sub sub plots.
-The first season, from 1998 until 1999, had two sowing dates (3rd if November and 7th of December) and eight irrigation treatments. Treatments were nil irrigation, full irrigation from emergence to physiological maturity, full from emergence to flowering, half irrigation from emergence to flowering, full from flowering to podding, half from flowering to podding, full from podding to physiological maturity and half from podding to physiological maturity. In these treatments irrigation was applied weekly and the fully irrigated treatment applied the same amount of water lost through evapotranspiration in the previous week. The half irrigation treatment replaced half of the amount lost in the previous week.
-Results from this season include biomass, grain yield, pods per plant, LAI, soil volumetric water content and flowering, podding and physsiological maturity dates.
-The second season, from 1999 to 2000, had two sowing dates (18th of October and 22nd of November) and four irrigation treatments. These were nil irrigation, full from emergence to physiological maturity, full from flowering to podding and full from podding to physiological maturity. The results from this season do not include LAI measurements. 
-More information about the data is available in Anwar, M.R. 2001. Water use of Kabuli chickpea (Cicer arietinum L.) cultivars in Canterbury. (PhD thesis, Lincoln University).]]></MemoText>
-    </Memo>
-    <Weather>
-      <Name>Weather</Name>
-      <FileName>Gorgan.met</FileName>
-    </Weather>
-    <Clock>
-      <Name>clock</Name>
-      <StartDate>2003-07-24T00:00:00</StartDate>
-      <EndDate>2003-12-30T00:00:00</EndDate>
-    </Clock>
-    <Summary>
-      <Name>summaryfile</Name>
-    </Summary>
-    <SoilArbitrator>
-      <Name>Soil Arbitrator</Name>
-    </SoilArbitrator>
-    <Zone>
-      <Name>Field</Name>
-      <MicroClimate>
-        <Name>MicroClimate</Name>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.23</soil_albedo>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
-        <sun_angle>15</sun_angle>
-        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-        <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
-        <refheight>2</refheight>
-        <albedo>0.15</albedo>
-        <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
-      </MicroClimate>
-      <Irrigation>
-        <Name>Irrigation</Name>
-      </Irrigation>
-      <Fertiliser>
-        <Name>Fertiliser</Name>
-      </Fertiliser>
-      <SurfaceOrganicMatter>
-        <Name>SurfaceOrganicMatter</Name>
-        <ResidueTypes>
-          <Name>ResidueTypesList</Name>
-          <LoadFromResource>ResidueTypes</LoadFromResource>
-        </ResidueTypes>
-        <Pools>
-          <Pool>
-            <PoolName>wheat</PoolName>
-            <ResidueType>wheat</ResidueType>
-            <Mass>1500</Mass>
-            <CNRatio>76</CNRatio>
-            <CPRatio>NaN</CPRatio>
-            <StandingFraction>0</StandingFraction>
-          </Pool>
-        </Pools>
-        <PoolName>wheat</PoolName>
-        <type>wheat</type>
-        <mass>1500</mass>
-        <standing_fraction>0</standing_fraction>
-        <cpr />
-        <cnr>76</cnr>
-        <CriticalResidueWeight>2000</CriticalResidueWeight>
-        <OptimumDecompTemp>20</OptimumDecompTemp>
-        <MaxCumulativeEOS>20</MaxCumulativeEOS>
-        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-        <TotalLeachRain>25</TotalLeachRain>
-        <MinRainToLeach>10</MinRainToLeach>
-        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-        <DefaultCPRatio>0</DefaultCPRatio>
-        <DefaultStandingFraction>0</DefaultStandingFraction>
-        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-        <FractionFaecesAdded>0.5</FractionFaecesAdded>
-      </SurfaceOrganicMatter>
-      <Operations>
-        <Name>IrrigationSchedule</Name>
-      </Operations>
-      <Report>
-        <Name>Report</Name>
-        <ExperimentFactorNames />
-        <ExperimentFactorValues />
-        <VariableNames>
-          <string>[Clock].Today</string>
-          <string>[Soil].SoilWater.SW</string>
-          <string>[Soil].SoilWater.Eo</string>
-          <string>[Soil].SoilWater.Es</string>
-          <string>[Soil].SoilWater.Drainage</string>
-          <string>[Soil].SoilWater.Runoff</string>
-          <string>[Soil].SoilWater.pond</string>
-          <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
-          <string>[Soil].NO3N</string>
-          <string>[MicroClimate].net_radn</string>
-          <string>[MicroClimate].peta</string>
-          <string>[MicroClimate].petr</string>
-          <string>[Chickpea].AboveGround.Wt</string>
-          <string>[Chickpea].Leaf.LAI</string>
-          <string>[Chickpea].Nodule.NFixed</string>
-          <string>[Chickpea].Leaf.SenescingCohortNo</string>
-          <string>[Chickpea].Leaf.CohortArrayLive.MetabolicNConc</string>
-          <string>[Chickpea].Leaf.CohortArrayLive.NonStructuralNConc</string>
-          <string>[Chickpea].Leaf.CohortArrayLive.StructuralNConc</string>
-          <string>[Chickpea].Leaf.</string>
-        </VariableNames>
-        <EventNames>
-          <string>[Clock].DoReport</string>
-        </EventNames>
-      </Report>
-      <Report>
-        <Name>HarvestReport</Name>
-        <ExperimentFactorNames />
-        <ExperimentFactorValues />
-        <VariableNames>
-          <string>[Clock].Today</string>
-          <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-          <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-          <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
-          <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-          <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
-        </VariableNames>
-        <EventNames>
-          <string>[Chickpea].Harvesting</string>
-        </EventNames>
-      </Report>
-      <Manager>
-        <Name>Harvesting</Name>
-        <Script />
-        <Code><![CDATA[using System;
+      <Experiment>
+        <Name>Gorgan0102Hashem</Name>
+        <Factors>
+          <Name>Factors</Name>
+          <Factor>
+            <Name>S</Name>
+            <Operations>
+              <Name>1</Name>
+              <Operation>
+                <Date>2001-12-12T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>2</Name>
+              <Operation>
+                <Date>2002-01-15T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>3</Name>
+              <Operation>
+                <Date>2002-02-15T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>4</Name>
+              <Operation>
+                <Date>2002-03-17T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>5</Name>
+              <Operation>
+                <Date>2002-04-16T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>6</Name>
+              <Operation>
+                <Date>2002-05-18T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>7</Name>
+              <Operation>
+                <Date>2002-09-15T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>8</Name>
+              <Operation>
+                <Date>2002-10-14T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>9</Name>
+              <Operation>
+                <Date>2002-11-12T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Hashem", depth:50, rowSpacing:250);</Action>
+              </Operation>
+            </Operations>
+            <Specifications>
+              <string>[SowingRule]</string>
+            </Specifications>
+          </Factor>
+        </Factors>
+        <Simulation>
+          <Name>Soltani_1_hashem</Name>
+          <Memo>
+            <Name>memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Weather>
+            <Name>Weather</Name>
+            <FileName>Gorgan.met</FileName>
+          </Weather>
+          <Clock>
+            <Name>clock</Name>
+            <StartDate>2001-01-01T00:00:00</StartDate>
+            <EndDate>2002-12-31T00:00:00</EndDate>
+          </Clock>
+          <Summary>
+            <Name>summaryfile</Name>
+          </Summary>
+          <SoilArbitrator>
+            <Name>Soil Arbitrator</Name>
+          </SoilArbitrator>
+          <Zone>
+            <Name>Field</Name>
+            <MicroClimate>
+              <Name>MicroClimate</Name>
+              <a_interception>0</a_interception>
+              <b_interception>1</b_interception>
+              <c_interception>0</c_interception>
+              <d_interception>0</d_interception>
+              <soil_albedo>0.23</soil_albedo>
+              <air_pressure>1010</air_pressure>
+              <soil_emissivity>0.96</soil_emissivity>
+              <sun_angle>15</sun_angle>
+              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+              <night_interception_fraction>0.5</night_interception_fraction>
+              <windspeed_default>3</windspeed_default>
+              <refheight>2</refheight>
+              <albedo>0.15</albedo>
+              <emissivity>0.96</emissivity>
+              <gsmax>0.01</gsmax>
+              <r50>200</r50>
+            </MicroClimate>
+            <Fertiliser>
+              <Name>Fertiliser</Name>
+            </Fertiliser>
+            <SurfaceOrganicMatter>
+              <Name>SurfaceOrganicMatter</Name>
+              <ResidueTypes>
+                <Name>ResidueTypesList</Name>
+                <LoadFromResource>ResidueTypes</LoadFromResource>
+              </ResidueTypes>
+              <Pools>
+                <Pool>
+                  <PoolName>unknown</PoolName>
+                  <ResidueType>wheat</ResidueType>
+                  <Mass>0</Mass>
+                  <CNRatio>10</CNRatio>
+                  <CPRatio>NaN</CPRatio>
+                  <StandingFraction>0</StandingFraction>
+                </Pool>
+              </Pools>
+              <PoolName>unknown</PoolName>
+              <type>wheat</type>
+              <mass>0</mass>
+              <standing_fraction>0</standing_fraction>
+              <cpr />
+              <cnr>10</cnr>
+              <CriticalResidueWeight>2000</CriticalResidueWeight>
+              <OptimumDecompTemp>20</OptimumDecompTemp>
+              <MaxCumulativeEOS>20</MaxCumulativeEOS>
+              <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+              <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+              <TotalLeachRain>25</TotalLeachRain>
+              <MinRainToLeach>10</MinRainToLeach>
+              <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+              <DefaultCPRatio>0</DefaultCPRatio>
+              <DefaultStandingFraction>0</DefaultStandingFraction>
+              <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+              <FractionFaecesAdded>0.5</FractionFaecesAdded>
+            </SurfaceOrganicMatter>
+            <Operations>
+              <Name>SowingRule</Name>
+              <Operation>
+                <Date>1992-05-07T00:00:00</Date>
+                <Action> [Chickpea].Sow(population:40, cultivar:"Hashem", depth:50, rowSpacing:150);</Action>
+              </Operation>
+            </Operations>
+            <Report>
+              <Name>Report</Name>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[Clock].Today</string>
+                <string>[Soil].SoilWater.SW</string>
+                <string>[Soil].SoilWater.Eo</string>
+                <string>[Soil].SoilWater.Es</string>
+                <string>[Soil].SoilWater.Drainage</string>
+                <string>[Soil].SoilWater.Runoff</string>
+                <string>[Soil].SoilWater.pond</string>
+                <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+                <string>[Soil].NO3N</string>
+                <string>[MicroClimate].net_radn</string>
+                <string>[MicroClimate].peta</string>
+                <string>[MicroClimate].petr</string>
+                <string>[Chickpea].AboveGround.Wt</string>
+                <string>[Chickpea].Leaf.LAI</string>
+              </VariableNames>
+              <EventNames>
+                <string>[Clock].DoReport</string>
+              </EventNames>
+            </Report>
+            <Report>
+              <Name>HarvestReport</Name>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[Clock].Today</string>
+                <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
+                <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
+              </VariableNames>
+              <EventNames>
+                <string>[Chickpea].Harvesting</string>
+              </EventNames>
+            </Report>
+            <Manager>
+              <Name>Harvesting</Name>
+              <Script />
+              <Code><![CDATA[using System;
 using Models.Core;
 using System.Collections.Generic;
 using System.Text;
@@ -35622,23 +36114,588 @@ namespace Models
 	}
 }
 	   ]]></Code>
-      </Manager>
-      <Plant>
-        <Name>Chickpea</Name>
-        <CropType>Chickpea</CropType>
-      </Plant>
-      <Manager>
-        <Name>AutoIrrigate</Name>
-        <Script>
-          <FASW>0</FASW>
-          <WaterDeficit>0</WaterDeficit>
-          <AutoIrrigationOn>False</AutoIrrigationOn>
-          <StartStageName>StartFlowering</StartStageName>
-          <EndStageName>EndGrainFill</EndStageName>
-          <FASWThreshold>0.9</FASWThreshold>
-          <FASWDepth>600</FASWDepth>
-        </Script>
-        <Code><![CDATA[using System;
+            </Manager>
+            <Plant>
+              <Name>Chickpea</Name>
+              <CropType>Chickpea</CropType>
+            </Plant>
+            <Soil>
+              <Name>WI_SCAF005</Name>
+              <Water>
+                <Name>Water</Name>
+                <SoilCrop>
+                  <Name>ChickpeaSoil</Name>
+                  <LL>
+                    <double>0.2</double>
+                    <double>0.2</double>
+                    <double>0.2</double>
+                    <double>0.25</double>
+                    <double>0.34</double>
+                    <double>0.34</double>
+                  </LL>
+                  <KL>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                  </KL>
+                  <XF>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0</double>
+                  </XF>
+                </SoilCrop>
+                <Thickness>
+                  <double>150</double>
+                  <double>200</double>
+                  <double>350</double>
+                  <double>400</double>
+                  <double>600</double>
+                  <double>1000</double>
+                </Thickness>
+                <BD>
+                  <double>1.1</double>
+                  <double>1.3</double>
+                  <double>1.33</double>
+                  <double>1.46</double>
+                  <double>1.46</double>
+                  <double>1.33</double>
+                </BD>
+                <AirDry>
+                  <double>0.05</double>
+                  <double>0.06</double>
+                  <double>0.03</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.1</double>
+                </AirDry>
+                <LL15>
+                  <double>0.143</double>
+                  <double>0.165</double>
+                  <double>0.088</double>
+                  <double>0.156</double>
+                  <double>0.156</double>
+                  <double>0.307</double>
+                </LL15>
+                <DUL>
+                  <double>0.339</double>
+                  <double>0.283</double>
+                  <double>0.215</double>
+                  <double>0.295</double>
+                  <double>0.295</double>
+                  <double>0.453</double>
+                </DUL>
+                <SAT>
+                  <double>0.548</double>
+                  <double>0.488</double>
+                  <double>0.475</double>
+                  <double>0.425</double>
+                  <double>0.425</double>
+                  <double>0.485</double>
+                </SAT>
+              </Water>
+              <SoilWater>
+                <Name>SoilWater</Name>
+                <residueinterception>0</residueinterception>
+                <SummerDate>1-Apr</SummerDate>
+                <SummerU>9.2</SummerU>
+                <SummerCona>3</SummerCona>
+                <WinterDate>1-Nov</WinterDate>
+                <WinterU>9.2</WinterU>
+                <WinterCona>3</WinterCona>
+                <DiffusConst>0</DiffusConst>
+                <DiffusSlope>0</DiffusSlope>
+                <Salb>0.13</Salb>
+                <CN2Bare>75</CN2Bare>
+                <CNRed>0</CNRed>
+                <CNCov>0</CNCov>
+                <slope>NaN</slope>
+                <discharge_width>NaN</discharge_width>
+                <catchment_area>NaN</catchment_area>
+                <max_pond>0</max_pond>
+                <Thickness>
+                  <double>150</double>
+                  <double>200</double>
+                  <double>350</double>
+                  <double>400</double>
+                  <double>600</double>
+                  <double>1000</double>
+                </Thickness>
+                <SWCON>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                </SWCON>
+              </SoilWater>
+              <SoilNitrogen>
+                <Name>SoilNitrogen</Name>
+                <fom_type>
+                  <string>default</string>
+                  <string>manure</string>
+                  <string>mucuna</string>
+                  <string>lablab</string>
+                  <string>shemp</string>
+                  <string>stable</string>
+                </fom_type>
+                <fract_carb>
+                  <double>0.2</double>
+                  <double>0.3</double>
+                  <double>0.54</double>
+                  <double>0.57</double>
+                  <double>0.45</double>
+                  <double>0</double>
+                </fract_carb>
+                <fract_cell>
+                  <double>0.7</double>
+                  <double>0.3</double>
+                  <double>0.37</double>
+                  <double>0.37</double>
+                  <double>0.47</double>
+                  <double>0.1</double>
+                </fract_cell>
+                <fract_lign>
+                  <double>0.1</double>
+                  <double>0.4</double>
+                  <double>0.09</double>
+                  <double>0.06</double>
+                  <double>0.08</double>
+                  <double>0.9</double>
+                </fract_lign>
+                <wfpsN2N2O_x>
+                  <double>22</double>
+                  <double>88</double>
+                </wfpsN2N2O_x>
+                <wfpsN2N2O_y>
+                  <double>0.1</double>
+                  <double>1</double>
+                </wfpsN2N2O_y>
+              </SoilNitrogen>
+              <SoilOrganicMatter>
+                <Name>SoilOrganicMatter</Name>
+                <RootCN>40</RootCN>
+                <RootWt>500</RootWt>
+                <SoilCN>14</SoilCN>
+                <EnrACoeff>0</EnrACoeff>
+                <EnrBCoeff>0</EnrBCoeff>
+                <Thickness>
+                  <double>150</double>
+                  <double>200</double>
+                  <double>350</double>
+                  <double>400</double>
+                  <double>600</double>
+                  <double>1000</double>
+                </Thickness>
+                <Depth>
+                  <string>0-15</string>
+                  <string>15-35</string>
+                  <string>35-70</string>
+                  <string>70-110</string>
+                  <string>110-170</string>
+                  <string>170-270</string>
+                </Depth>
+                <OC>
+                  <double>1.46</double>
+                  <double>0.84</double>
+                  <double>0.6</double>
+                  <double>0.6</double>
+                  <double>0.6</double>
+                  <double>0.6</double>
+                </OC>
+                <FBiom>
+                  <double>0.04</double>
+                  <double>0.02</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                </FBiom>
+                <FInert>
+                  <double>0.4</double>
+                  <double>0.66</double>
+                  <double>0.9</double>
+                  <double>0.99</double>
+                  <double>0.99</double>
+                  <double>0.99</double>
+                </FInert>
+                <OCUnits>Total</OCUnits>
+              </SoilOrganicMatter>
+              <Analysis>
+                <Name>Analysis</Name>
+                <Thickness>
+                  <double>150</double>
+                  <double>200</double>
+                  <double>350</double>
+                  <double>400</double>
+                  <double>600</double>
+                  <double>1000</double>
+                </Thickness>
+                <Texture />
+                <MunsellColour />
+                <PH>
+                  <double>8.6</double>
+                  <double>8.9</double>
+                  <double>8.7</double>
+                  <double>8.9</double>
+                  <double>9.1</double>
+                  <double>9.1</double>
+                </PH>
+                <PHUnits>Water</PHUnits>
+                <BoronUnits>HotWater</BoronUnits>
+              </Analysis>
+              <InitialWater>
+                <Name>Initial Water</Name>
+                <PercentMethod>FilledFromTop</PercentMethod>
+                <FractionFull>1</FractionFull>
+                <DepthWetSoil>NaN</DepthWetSoil>
+              </InitialWater>
+              <Sample>
+                <Name>Initial nitrogen</Name>
+                <Thickness>
+                  <double>150</double>
+                  <double>200</double>
+                  <double>350</double>
+                  <double>400</double>
+                  <double>600</double>
+                  <double>1000</double>
+                </Thickness>
+                <NO3>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                </NO3>
+                <NH4>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                </NH4>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
+                <SWUnits>Volumetric</SWUnits>
+                <OCUnits>Total</OCUnits>
+                <PHUnits>Water</PHUnits>
+              </Sample>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>LL15</Name>
+                  <Type>Area</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-3479297</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].LL15</XFieldName>
+                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
+                  <X2FieldName>[Soil].DUL</X2FieldName>
+                  <Y2FieldName>[Soil].DepthMidPoints</Y2FieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Air dry</Name>
+                  <Type>Scatter</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].AirDry</XFieldName>
+                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
+                  <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>LL15</Name>
+                  <Type>Scatter</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16711681</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].LL15</XFieldName>
+                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
+                  <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>DUL</Name>
+                  <Type>Scatter</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16776961</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].DUL</XFieldName>
+                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
+                  <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>SAT</Name>
+                  <Type>Scatter</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16760704</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].SAT</XFieldName>
+                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
+                  <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>LL15</Name>
+                  <Type>Scatter</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-32768</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].LL15</XFieldName>
+                  <YFieldName>[Soil]l.DepthMidPoints</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Depth (mm)</Title>
+                  <Inverted>true</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Top</Type>
+                  <Title>Volumetric water (mm/mm)</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>LL15</Name>
+                  <Type>Area</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-3479297</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].LL15</XFieldName>
+                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
+                  <X2FieldName>[Soil].DUL</X2FieldName>
+                  <Y2FieldName>[Soil].DepthMidPoints</Y2FieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Air dry</Name>
+                  <Type>Scatter</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].AirDry</XFieldName>
+                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
+                  <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>LL15</Name>
+                  <Type>Scatter</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16711681</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].LL15</XFieldName>
+                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
+                  <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>DUL</Name>
+                  <Type>Scatter</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16776961</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].DUL</XFieldName>
+                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
+                  <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>SAT</Name>
+                  <Type>Scatter</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16760704</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].SAT</XFieldName>
+                  <YFieldName>[Soil].DepthMidPoints</YFieldName>
+                  <ShowInLegend>true</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>LL15</Name>
+                  <Type>Scatter</Type>
+                  <XAxis>Top</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-32768</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <XFieldName>[Soil].LL15</XFieldName>
+                  <YFieldName>[Soil]l.DepthMidPoints</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Depth (mm)</Title>
+                  <Inverted>true</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Top</Type>
+                  <Title>Volumetric water (mm/mm)</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <RecordNumber>0</RecordNumber>
+              <SoilType>Gleyic Solonchak (SCg)</SoilType>
+              <Country>Afganistan</Country>
+              <Latitude>34.333</Latitude>
+              <Longitude>61.433</Longitude>
+              <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
+              <Comments>You will need to add crops to this soil before running simulations.</Comments>
+            </Soil>
+            <Manager>
+              <Name>AutoIrrigate</Name>
+              <Script>
+                <FASW>0</FASW>
+                <WaterDeficit>0</WaterDeficit>
+                <AutoIrrigationOn>True</AutoIrrigationOn>
+                <StartStageName>Sowing</StartStageName>
+                <EndStageName>EndGrainFill</EndStageName>
+                <FASWThreshold>0.9</FASWThreshold>
+                <FASWDepth>600</FASWDepth>
+              </Script>
+              <Code><![CDATA[using System;
 using Models.Core;
 using System.Collections.Generic;
 using System.Text;
@@ -35730,1039 +36787,146 @@ namespace Models
 	}
 }
 	   ]]></Code>
-      </Manager>
-      <Manager>
-        <Name>SowingRule</Name>
-        <Script>
-          <SowDate>24-Jul</SowDate>
-          <CultivarName>Hashem</CultivarName>
-          <SowingDepth>50</SowingDepth>
-          <RowSpacing>750</RowSpacing>
-          <Population>6</Population>
-        </Script>
-        <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.Soils;
-using Models.Utilities;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Fertiliser Fertiliser;
-		[Link] Summary Summary;
-		[Link] Plant Chickpea;
-		[Link] Soil Soil;
-		Accumulator accumulatedRain;
-		
-		[Description("Sowing date (d-mmm)")]
-		public string SowDate { get; set; }
-		[Description("Cultivar to be sown")]
-		public string CultivarName { get; set; }
-		[Description("Sowing depth (mm)")]
-		public double SowingDepth { get; set; }
-		[Description("Row spacing (mm)")]
-		public double RowSpacing { get; set; }
-		[Description("Plant population (/m2)")]
-		public double Population { get; set; }
-		
-		
-
-
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-		
-			
-			if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))
-			{
-				Chickpea.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
-			}
-		
-		}
-		
-	}
-}
-]]></Code>
-      </Manager>
-      <Soil>
-        <Name>WI_SCAF005</Name>
-        <Water>
-          <Name>Water</Name>
-          <SoilCrop>
-            <Name>ChickpeaSoil</Name>
-            <LL>
-              <double>0.2</double>
-              <double>0.2</double>
-              <double>0.2</double>
-              <double>0.25</double>
-              <double>0.34</double>
-              <double>0.34</double>
-            </LL>
-            <KL>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <Thickness>
-            <double>150</double>
-            <double>200</double>
-            <double>350</double>
-            <double>400</double>
-            <double>600</double>
-            <double>1000</double>
-          </Thickness>
-          <BD>
-            <double>1.1</double>
-            <double>1.3</double>
-            <double>1.33</double>
-            <double>1.46</double>
-            <double>1.46</double>
-            <double>1.33</double>
-          </BD>
-          <AirDry>
-            <double>0.05</double>
-            <double>0.06</double>
-            <double>0.03</double>
-            <double>0.05</double>
-            <double>0.05</double>
-            <double>0.1</double>
-          </AirDry>
-          <LL15>
-            <double>0.143</double>
-            <double>0.165</double>
-            <double>0.088</double>
-            <double>0.156</double>
-            <double>0.156</double>
-            <double>0.307</double>
-          </LL15>
-          <DUL>
-            <double>0.339</double>
-            <double>0.283</double>
-            <double>0.215</double>
-            <double>0.295</double>
-            <double>0.295</double>
-            <double>0.453</double>
-          </DUL>
-          <SAT>
-            <double>0.548</double>
-            <double>0.488</double>
-            <double>0.475</double>
-            <double>0.425</double>
-            <double>0.425</double>
-            <double>0.485</double>
-          </SAT>
-        </Water>
-        <SoilWater>
-          <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
-          <SummerDate>1-Apr</SummerDate>
-          <SummerU>9.2</SummerU>
-          <SummerCona>3</SummerCona>
-          <WinterDate>1-Nov</WinterDate>
-          <WinterU>9.2</WinterU>
-          <WinterCona>3</WinterCona>
-          <DiffusConst>0</DiffusConst>
-          <DiffusSlope>0</DiffusSlope>
-          <Salb>0.13</Salb>
-          <CN2Bare>75</CN2Bare>
-          <CNRed>0</CNRed>
-          <CNCov>0</CNCov>
-          <slope>NaN</slope>
-          <discharge_width>NaN</discharge_width>
-          <catchment_area>NaN</catchment_area>
-          <max_pond>0</max_pond>
-          <Thickness>
-            <double>150</double>
-            <double>200</double>
-            <double>350</double>
-            <double>400</double>
-            <double>600</double>
-            <double>1000</double>
-          </Thickness>
-          <SWCON>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.5</double>
-          </SWCON>
-        </SoilWater>
-        <SoilNitrogen>
-          <Name>SoilNitrogen</Name>
-          <fom_type>
-            <string>default</string>
-            <string>manure</string>
-            <string>mucuna</string>
-            <string>lablab</string>
-            <string>shemp</string>
-            <string>stable</string>
-          </fom_type>
-          <fract_carb>
-            <double>0.2</double>
-            <double>0.3</double>
-            <double>0.54</double>
-            <double>0.57</double>
-            <double>0.45</double>
-            <double>0</double>
-          </fract_carb>
-          <fract_cell>
-            <double>0.7</double>
-            <double>0.3</double>
-            <double>0.37</double>
-            <double>0.37</double>
-            <double>0.47</double>
-            <double>0.1</double>
-          </fract_cell>
-          <fract_lign>
-            <double>0.1</double>
-            <double>0.4</double>
-            <double>0.09</double>
-            <double>0.06</double>
-            <double>0.08</double>
-            <double>0.9</double>
-          </fract_lign>
-          <wfpsN2N2O_x>
-            <double>22</double>
-            <double>88</double>
-          </wfpsN2N2O_x>
-          <wfpsN2N2O_y>
-            <double>0.1</double>
-            <double>1</double>
-          </wfpsN2N2O_y>
-        </SoilNitrogen>
-        <SoilOrganicMatter>
-          <Name>SoilOrganicMatter</Name>
-          <RootCN>40</RootCN>
-          <RootWt>500</RootWt>
-          <SoilCN>14</SoilCN>
-          <EnrACoeff>0</EnrACoeff>
-          <EnrBCoeff>0</EnrBCoeff>
-          <Thickness>
-            <double>150</double>
-            <double>200</double>
-            <double>350</double>
-            <double>400</double>
-            <double>600</double>
-            <double>1000</double>
-          </Thickness>
-          <Depth>
-            <string>0-15</string>
-            <string>15-35</string>
-            <string>35-70</string>
-            <string>70-110</string>
-            <string>110-170</string>
-            <string>170-270</string>
-          </Depth>
-          <OC>
-            <double>1.46</double>
-            <double>0.84</double>
-            <double>0.6</double>
-            <double>0.6</double>
-            <double>0.6</double>
-            <double>0.6</double>
-          </OC>
-          <FBiom>
-            <double>0.04</double>
-            <double>0.02</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-          </FBiom>
-          <FInert>
-            <double>0.4</double>
-            <double>0.66</double>
-            <double>0.9</double>
-            <double>0.99</double>
-            <double>0.99</double>
-            <double>0.99</double>
-          </FInert>
-          <OCUnits>Total</OCUnits>
-        </SoilOrganicMatter>
-        <Analysis>
-          <Name>Analysis</Name>
-          <Thickness>
-            <double>150</double>
-            <double>200</double>
-            <double>350</double>
-            <double>400</double>
-            <double>600</double>
-            <double>1000</double>
-          </Thickness>
-          <Texture />
-          <MunsellColour />
-          <PH>
-            <double>8.6</double>
-            <double>8.9</double>
-            <double>8.7</double>
-            <double>8.9</double>
-            <double>9.1</double>
-            <double>9.1</double>
-          </PH>
-          <PHUnits>Water</PHUnits>
-          <BoronUnits>HotWater</BoronUnits>
-        </Analysis>
-        <InitialWater>
-          <Name>Initial Water</Name>
-          <PercentMethod>FilledFromTop</PercentMethod>
-          <FractionFull>1</FractionFull>
-          <DepthWetSoil>NaN</DepthWetSoil>
-        </InitialWater>
-        <Sample>
-          <Name>Initial nitrogen</Name>
-          <Thickness>
-            <double>150</double>
-            <double>200</double>
-            <double>350</double>
-            <double>400</double>
-            <double>600</double>
-            <double>1000</double>
-          </Thickness>
-          <NO3>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-          </NO3>
-          <NH4>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-          </NH4>
-          <NO3Units>ppm</NO3Units>
-          <NH4Units>ppm</NH4Units>
-          <SWUnits>Volumetric</SWUnits>
-          <OCUnits>Total</OCUnits>
-          <PHUnits>Water</PHUnits>
-        </Sample>
+            </Manager>
+            <Irrigation>
+              <Name>Irrigation</Name>
+            </Irrigation>
+            <Area>1</Area>
+            <Slope>0</Slope>
+          </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
+        </Simulation>
         <Graph>
-          <Name>Graph</Name>
+          <Name>AboveGroundWt</Name>
           <Series>
-            <Name>LL15</Name>
-            <Type>Area</Type>
-            <XAxis>Top</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-3479297</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <XFieldName>[Soil].LL15</XFieldName>
-            <YFieldName>[Soil].DepthMidPoints</YFieldName>
-            <X2FieldName>[Soil].DUL</X2FieldName>
-            <Y2FieldName>[Soil].DepthMidPoints</Y2FieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Air dry</Name>
+            <Name>Predicted</Name>
             <Type>Scatter</Type>
-            <XAxis>Top</XAxis>
+            <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-65536</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
-            <XFieldName>[Soil].AirDry</XFieldName>
-            <YFieldName>[Soil].DepthMidPoints</YFieldName>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Chickpea.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>LL15</Name>
+            <Name>Observed</Name>
             <Type>Scatter</Type>
-            <XAxis>Top</XAxis>
+            <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16711681</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
+            <Marker>FilledCircle</Marker>
             <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
+            <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <XFieldName>[Soil].LL15</XFieldName>
-            <YFieldName>[Soil].DepthMidPoints</YFieldName>
+            <TableName>ObservedTimeseriesData</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Biomass</YFieldName>
             <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>DUL</Name>
-            <Type>Scatter</Type>
-            <XAxis>Top</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <XFieldName>[Soil].DUL</XFieldName>
-            <YFieldName>[Soil].DepthMidPoints</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>SAT</Name>
-            <Type>Scatter</Type>
-            <XAxis>Top</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16760704</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <XFieldName>[Soil].SAT</XFieldName>
-            <YFieldName>[Soil].DepthMidPoints</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>LL15</Name>
-            <Type>Scatter</Type>
-            <XAxis>Top</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-32768</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <XFieldName>[Soil].LL15</XFieldName>
-            <YFieldName>[Soil]l.DepthMidPoints</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
-            <Type>Left</Type>
-            <Title>Depth (mm)</Title>
-            <Inverted>true</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Top</Type>
-            <Title>Volumetric water (mm/mm)</Title>
+            <Type>Bottom</Type>
+            <Title />
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <LegendPosition>BottomRight</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>Graph</Name>
-          <Series>
-            <Name>LL15</Name>
-            <Type>Area</Type>
-            <XAxis>Top</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-3479297</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <XFieldName>[Soil].LL15</XFieldName>
-            <YFieldName>[Soil].DepthMidPoints</YFieldName>
-            <X2FieldName>[Soil].DUL</X2FieldName>
-            <Y2FieldName>[Soil].DepthMidPoints</Y2FieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Air dry</Name>
-            <Type>Scatter</Type>
-            <XAxis>Top</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-65536</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <XFieldName>[Soil].AirDry</XFieldName>
-            <YFieldName>[Soil].DepthMidPoints</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>LL15</Name>
-            <Type>Scatter</Type>
-            <XAxis>Top</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16711681</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <XFieldName>[Soil].LL15</XFieldName>
-            <YFieldName>[Soil].DepthMidPoints</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>DUL</Name>
-            <Type>Scatter</Type>
-            <XAxis>Top</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <XFieldName>[Soil].DUL</XFieldName>
-            <YFieldName>[Soil].DepthMidPoints</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>SAT</Name>
-            <Type>Scatter</Type>
-            <XAxis>Top</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16760704</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <XFieldName>[Soil].SAT</XFieldName>
-            <YFieldName>[Soil].DepthMidPoints</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>LL15</Name>
-            <Type>Scatter</Type>
-            <XAxis>Top</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-32768</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <XFieldName>[Soil].LL15</XFieldName>
-            <YFieldName>[Soil]l.DepthMidPoints</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>Depth (mm)</Title>
-            <Inverted>true</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Top</Type>
-            <Title>Volumetric water (mm/mm)</Title>
+            <Title />
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <LegendPosition>BottomRight</LegendPosition>
+          <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
-        <RecordNumber>0</RecordNumber>
-        <SoilType>Gleyic Solonchak (SCg)</SoilType>
-        <Country>Afganistan</Country>
-        <Latitude>34.333</Latitude>
-        <Longitude>61.433</Longitude>
-        <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
-        <Comments>You will need to add crops to this soil before running simulations.</Comments>
-      </Soil>
-      <Area>1</Area>
-      <Slope>0</Slope>
-    </Zone>
-    <Graph>
-      <Name>NDemand</Name>
-      <Series>
-        <Name>Predicted</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Chickpea.Nodule.NFixed</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Predicted1</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16736653</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Chickpea.Arbitrator.NDemand</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Predicted11</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-2793984</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Chickpea.Leaf.Fn</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>DMDemand</Name>
-      <Series>
-        <Name>Predicted</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Chickpea.Arbitrator.DMSupply</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Predicted1</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16736653</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Chickpea.Arbitrator.DMDemand</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Predicted11</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-2793984</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Chickpea.Arbitrator.DMSinkLimitation</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>Leaves</Name>
-      <Series>
-        <Name>Predicted</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Chickpea.Structure.MainStemNodeNo</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Predicted1</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Chickpea.Leaf.SenescingCohortNo</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>LeafNconc</Name>
-      <Series>
-        <Name>Metabolic</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Chickpea.Leaf.Live.MetabolicNConc</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>NonStructural</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-2793984</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Chickpea.Leaf.Live.NonStructuralNConc</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Structural</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-2793984</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Chickpea.Leaf.Live.StructuralNConc</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>LeafNconc1</Name>
-      <Series>
-        <Name>Metabolic</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Chickpea.Leaf.Live.MetabolicNConc</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>NonStructural</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-2793984</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Chickpea.Leaf.Live.NonStructuralNConc</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Structural</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-2793984</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Chickpea.Leaf.Live.StructuralNConc</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
-  </Simulation>
+        <Graph>
+          <Name>LAI</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Chickpea.Leaf.LAI</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>ObservedTimeseriesData</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>LAI</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+      </Experiment>
+    </Folder>
+  </Folder>
   <ExplorerWidth>304</ExplorerWidth>
 </Simulations>
