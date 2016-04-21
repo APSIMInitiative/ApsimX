@@ -57,6 +57,9 @@ namespace Models.PMF.Organs
     /// 
     ///</remarks>
     [Serializable]
+    [Description("Root Class")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Root : BaseOrgan, BelowGround
     {
         #region Links

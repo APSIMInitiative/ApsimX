@@ -314,6 +314,10 @@ namespace Models.PMF.Organs
         [Description("Extinction Coefficient (Dead)")]
         public double KDead { get; set; }
         
+        /// <value>The Maximum Number of Leaves that will be produced.  Used for determining the number of members in cohort properties</value>
+        [Description("Maximum number of Main-Stem leaves.  Used for determoining the number of members in cohort properties (Dead)")]
+        public int MaximumMainStemLeafNumber { get; set; }
+
         #endregion
 
         #region States
@@ -403,10 +407,10 @@ namespace Models.PMF.Organs
             {
                 double FLF = 1;
                 //int Count = CohortCounter("IsIniated");
-                if (InitialisedCohortNo < Structure.MainStemFinalNodeNo)
-                    FLF = Math.Min(Structure.MainStemFinalNodeNo - InitialisedCohortNo, 1);
+                if (InitialisedCohortNo < Structure.MainStemFinalNodeNumber.Value)
+                    FLF = Math.Min(Structure.MainStemFinalNodeNumber.Value - InitialisedCohortNo, 1);
                 else
-                    FLF = 1 - Math.Min(InitialisedCohortNo - Structure.MainStemFinalNodeNo, 1);
+                    FLF = 1 - Math.Min(InitialisedCohortNo - Structure.MainStemFinalNodeNumber.Value, 1);
                 return FLF;
                     
                 //int Count = CohortCounter("IsAppeared");
@@ -428,7 +432,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Structure != null && Structure.MainStemNodeNo >= Structure.MainStemFinalNodeNo)
+                if (Structure != null && Structure.MainStemNodeNo >= Structure.MainStemFinalNodeNumber.Value)
                     return true;
                 else
                     return false;
@@ -459,7 +463,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the expanded cohort no.</summary>
         /// <value>The expanded cohort no.</value>
         [Description("Number of leaf cohorts that are fully expanded")]
-        public double ExpandedCohortNo { get { return Math.Min(CohortCounter("IsFullyExpanded"), Structure.MainStemFinalNodeNo); } }
+        public double ExpandedCohortNo { get { return Math.Min(CohortCounter("IsFullyExpanded"), Structure.MainStemFinalNodeNumber.Value); } }
 
         /// <summary>Gets the green cohort no.</summary>
         /// <value>The green cohort no.</value>
@@ -484,7 +488,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the dead cohort no.</summary>
         /// <value>The dead cohort no.</value>
         [Description("Number of leaf cohorts that have fully Senesced")]
-        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.MainStemFinalNodeNo); } }
+        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.MainStemFinalNodeNumber.Value); } }
 
         /// <summary>Gets the plant appeared green leaf no.</summary>
         /// <value>The plant appeared green leaf no.</value>
@@ -616,8 +620,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[Structure.MaximumNodeNumber];
-                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -655,8 +659,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[Structure.MaximumNodeNumber];
-                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -678,8 +682,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[Structure.MaximumNodeNumber];
-                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -701,8 +705,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[Structure.MaximumNodeNumber];
-                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -724,8 +728,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[Structure.MaximumNodeNumber];
-                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -747,8 +751,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[Structure.MaximumNodeNumber];
-                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -770,8 +774,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[Structure.MaximumNodeNumber];
-                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -793,8 +797,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[Structure.MaximumNodeNumber];
-                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -959,7 +963,7 @@ namespace Models.PMF.Organs
 
                 //When Node number is 1 more than current appeared leaf number make a new leaf appear and start growing
                 double FinalFraction = 1;
-                if (Structure.MainStemFinalNodeNo - AppearedCohortNo <= 1)
+                if (Structure.MainStemFinalNodeNumber.Value - AppearedCohortNo <= 1)
                     FinalFraction = FinalLeafFraction;
                 if ((Structure.MainStemNodeNo >= AppearedCohortNo + FinalFraction) && (FinalFraction > 0.0))
                 {
