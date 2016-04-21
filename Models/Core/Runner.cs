@@ -220,6 +220,7 @@
                 // See above. FIXME!
                 files.RemoveAll(s => s.Contains("UnitTests"));
                 files.RemoveAll(s => s.Contains("UserInterface"));
+                files.RemoveAll(s => s.Contains("ApsimNG"));
 
                 // Get a reference to the JobManager so that we can add jobs to it.
                 JobManager jobManager = e.Argument as JobManager;

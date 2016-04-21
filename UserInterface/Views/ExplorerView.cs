@@ -60,7 +60,6 @@ namespace UserInterface.Views
         public ExplorerView()
         {
             this.InitializeComponent();
-            StatusWindow.Visible = false;
         }
 
         /// <summary>
@@ -285,155 +284,18 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>Ask the user if they wish to save the simulation.</summary>
-        /// <returns>Choice for saving the simulation</returns>
-        public Int32 AskToSave()
+        /// <summary>Get a screen shot of the right hand panel.</summary>
+        public Image GetScreenshotOfRightHandPanel()
         {
-            TabPage page = Parent as TabPage;
-            DialogResult result = MessageBox.Show("Do you want to save changes for " + page.Text + " ?", "Save changes", MessageBoxButtons.YesNoCancel);
-            switch (result)
+            if (RightHandPanel != null)
             {
-                case DialogResult.Cancel: return -1;
-                case DialogResult.Yes: return 0;
-                case DialogResult.No: return 1;
-                default: return -1;
+                var bmp = new Bitmap(RightHandPanel.Width, RightHandPanel.Height);
+                RightHandPanel.DrawToBitmap(bmp, new Rectangle(0, 0, bmp.Width, bmp.Height));
+                return bmp;
             }
+            return null;
         }
-
-        /// <summary>A helper function that asks user for a folder.</summary>
-        /// <param name="prompt"></param>
-        /// <returns>
-        /// Returns the selected folder or null if action cancelled by user.
-        /// </returns>
-        public string AskUserForFolder(string prompt)
-        {
-            folderBrowserDialog1.Description = prompt;
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
-                return folderBrowserDialog1.SelectedPath;
-            else
-                return null;
-        }
-
-        /// <summary>A helper function that asks user for a file.</summary>
-        /// <param name="prompt"></param>
-        /// <returns>
-        /// Returns the selected file or null if action cancelled by user.
-        /// </returns>
-        public string AskUserForFile(string prompt)
-        {
-            openFileDialog.Title = prompt;
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-                return openFileDialog.FileName;
-            else
-                return null;
-        }
-
-        /// <summary>Add a status message to the explorer window</summary>
-        /// <param name="message">The message.</param>
-        /// <param name="errorLevel">The error level.</param>
-        public void ShowMessage(string message, Models.DataStore.ErrorLevel errorLevel)
-        {
-            MethodInvoker messageUpdate = delegate
-            {
-                StatusWindow.Visible = message != null;
-
-                // Output the message
-                if (errorLevel == Models.DataStore.ErrorLevel.Error)
-                {
-                    StatusWindow.ForeColor = Color.Red;
-                }
-                else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
-                {
-                    StatusWindow.ForeColor = Color.Brown;
-                }
-                else
-                {
-                    StatusWindow.ForeColor = Color.Blue;
-                }
-                message = message.TrimEnd("\n".ToCharArray());
-                message = message.Replace("\n", "\n                      ");
-                message += "\n";
-                StatusWindow.Text = message;
-                this.toolTip1.SetToolTip(this.StatusWindow, message);
-                progressBar.Visible = false;
-                Application.DoEvents();
-            };
-
-            if (InvokeRequired)
-                this.BeginInvoke(new Action(messageUpdate));
-            else
-                messageUpdate();
-        }
-
-        /// <summary>
-        /// Show progress bar with the specified percent.
-        /// </summary>
-        /// <param name="percent"></param>
-        public void ShowProgress(int percent)
-        {
-            // We need to use "Invoke" if the timer is running in a
-            // different thread. That means we can use either
-            // System.Timers.Timer or Windows.Forms.Timer in 
-            // RunCommand.cs
-            MethodInvoker progressBarUpdate = delegate
-            {
-                progressBar.Visible = true;
-                progressBar.Value = percent;
-            };
-
-            if (InvokeRequired)
-                this.BeginInvoke(new Action(progressBarUpdate));
-            else
-                progressBarUpdate();
-        }
-
-        /// <summary>Show the wait cursor</summary>
-        /// <param name="wait">If true will show the wait cursor otherwise the normal cursor.</param>
-        public void ShowWaitCursor(bool wait)
-        {
-            if (wait)
-                Cursor.Current = Cursors.WaitCursor;
-            else
-                Cursor.Current = Cursors.Default;
-        }
-
-        /// <summary>
-        /// A helper function that asks user for a SaveAs name and returns their new choice.
-        /// </summary>
-        /// <param name="oldFilename">The old filename.</param>
-        /// <returns>
-        /// Returns the new file name or null if action cancelled by user.
-        /// </returns>
-        public string SaveAs(string oldFilename)
-        {
-            TabbedExplorerView parentView = this.Parent.Parent.Parent as TabbedExplorerView;
-            return parentView.AskUserForSaveFileName(oldFilename);
-        }
-
-        /// <summary>Change the name of the tab.</summary>
-        /// <param name="newTabName">New name of the tab.</param>
-        public void ChangeTabText(string newTabName)
-        {
-            TabPage page = Parent as TabPage;
-            page.Text = newTabName;
-        }
-
-        /// <summary>Toggle the 2nd right hand side explorer view on/off</summary>
-        public void ToggleSecondExplorerViewVisible()
-        {
-            MainForm mainForm = Application.OpenForms[0] as MainForm;
-            mainForm.ToggleSecondExplorerViewVisible();
-        }
-
-        /// <summary>
-        /// Close down APSIMX user interface.
-        /// </summary>
-        public void Close()
-        {
-            MainForm mainForm = Application.OpenForms[0] as MainForm;
-            mainForm.Close();
-        }
-
+        
         /// <summary>Gets or sets the width of the tree view.</summary>
         public Int32 TreeWidth
         {
@@ -744,14 +606,6 @@ namespace UserInterface.Views
         public void SetClipboardText(string text)
         {
             Clipboard.SetText(text);
-        }
-
-        /// <summary>User has closed the status window.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
-        private void OnCloseStatusWindowClick(object sender, EventArgs e)
-        {
-            StatusWindow.Visible = false;
         }
 
         #endregion

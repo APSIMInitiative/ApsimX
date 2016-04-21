@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.IO;
+using UserInterface.Views;
+using UserInterface.Presenters;
 
 namespace UserInterface
 {
@@ -14,27 +16,21 @@ namespace UserInterface
         [STAThread]
         static int Main(string[] args)
         {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            MainView mainForm = new MainView();
+            MainPresenter mainPresenter = new MainPresenter();
+
             try
             {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                MainForm f = new MainForm(args);
-                Application.Run(f);
-
-                // ErrorMessage can be set when a startup script fails.
-                if (f.ErrorMessage != null)
-                {
-                    File.WriteAllText("errors.txt", f.ErrorMessage);
-                    return 1;
-                }
+                mainPresenter.Attach(mainForm, args);
+                if (args.Length == 0 || Path.GetExtension(args[0]) != ".cs")
+                    Application.Run(mainForm);  
             }
             catch (Exception err)
             {
-                string Msg = err.Message;
-                if (err.InnerException != null)
-                    Msg += "\r\n" + err.InnerException.Message;
-                Msg += "\r\n" + err.StackTrace;
-                MessageBox.Show(Msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                File.WriteAllText("errors.txt", err.ToString());
+                return 1;
             }
 
             return 0;

@@ -43,12 +43,12 @@ namespace UserInterface.Forms
         /// <summary>
         /// Our explorer presenter.
         /// </summary>
-        private ITabbedExplorerView tabbedExplorerView;
+        private IMainView tabbedExplorerView;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public UpgradeForm(ITabbedExplorerView explorerPresenter)
+        public UpgradeForm(IMainView explorerPresenter)
         {
             InitializeComponent();
             this.tabbedExplorerView = explorerPresenter;

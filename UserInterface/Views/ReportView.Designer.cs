@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.VariableEditor = new EditorView();
+            this.VariableEditor = new Views.EditorView();
             this.label2 = new System.Windows.Forms.Label();
-            this.FrequencyEditor = new EditorView();
+            this.FrequencyEditor = new Views.EditorView();
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.dataStoreView1 = new DataStoreView();
+            this.dataStoreView1 = new Views.DataStoreView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -49,8 +49,7 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(4, 4);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -63,9 +62,8 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.FrequencyEditor);
             this.splitContainer1.Panel2.Controls.Add(this.label1);
-            this.splitContainer1.Size = new System.Drawing.Size(792, 562);
-            this.splitContainer1.SplitterDistance = 369;
-            this.splitContainer1.SplitterWidth = 5;
+            this.splitContainer1.Size = new System.Drawing.Size(592, 455);
+            this.splitContainer1.SplitterDistance = 298;
             this.splitContainer1.TabIndex = 7;
             // 
             // VariableEditor
@@ -75,10 +73,10 @@
             this.VariableEditor.IntelliSenseChars = ".";
             this.VariableEditor.Lines = new string[] {
         "textEditorControl1"};
-            this.VariableEditor.Location = new System.Drawing.Point(0, 17);
-            this.VariableEditor.Margin = new System.Windows.Forms.Padding(5);
+            this.VariableEditor.Location = new System.Drawing.Point(0, 13);
+            this.VariableEditor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.VariableEditor.Name = "VariableEditor";
-            this.VariableEditor.Size = new System.Drawing.Size(792, 352);
+            this.VariableEditor.Size = new System.Drawing.Size(592, 285);
             this.VariableEditor.TabIndex = 8;
             // 
             // label2
@@ -86,9 +84,8 @@
             this.label2.AutoSize = true;
             this.label2.Dock = System.Windows.Forms.DockStyle.Top;
             this.label2.Location = new System.Drawing.Point(0, 0);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(135, 17);
+            this.label2.Size = new System.Drawing.Size(101, 13);
             this.label2.TabIndex = 7;
             this.label2.Text = "Reporting variables:";
             // 
@@ -99,10 +96,10 @@
             this.FrequencyEditor.IntelliSenseChars = ".";
             this.FrequencyEditor.Lines = new string[] {
         ""};
-            this.FrequencyEditor.Location = new System.Drawing.Point(0, 17);
-            this.FrequencyEditor.Margin = new System.Windows.Forms.Padding(5);
+            this.FrequencyEditor.Location = new System.Drawing.Point(0, 13);
+            this.FrequencyEditor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.FrequencyEditor.Name = "FrequencyEditor";
-            this.FrequencyEditor.Size = new System.Drawing.Size(792, 171);
+            this.FrequencyEditor.Size = new System.Drawing.Size(592, 140);
             this.FrequencyEditor.TabIndex = 7;
             // 
             // label1
@@ -110,32 +107,29 @@
             this.label1.AutoSize = true;
             this.label1.Dock = System.Windows.Forms.DockStyle.Top;
             this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(141, 17);
+            this.label1.Size = new System.Drawing.Size(106, 13);
             this.label1.TabIndex = 8;
             this.label1.Text = "Reporting frequency:";
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(808, 599);
+            this.tabControl1.Size = new System.Drawing.Size(606, 487);
             this.tabControl1.TabIndex = 9;
             // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.dataStoreView1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(4);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage1.Size = new System.Drawing.Size(800, 570);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Size = new System.Drawing.Size(598, 461);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Data";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -143,32 +137,29 @@
             // dataStoreView1
             // 
             this.dataStoreView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataStoreView1.Location = new System.Drawing.Point(4, 4);
-            this.dataStoreView1.Margin = new System.Windows.Forms.Padding(4);
+            this.dataStoreView1.Location = new System.Drawing.Point(3, 3);
             this.dataStoreView1.Name = "dataStoreView1";
-            this.dataStoreView1.Size = new System.Drawing.Size(792, 562);
+            this.dataStoreView1.Size = new System.Drawing.Size(592, 455);
             this.dataStoreView1.TabIndex = 0;
             // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.splitContainer1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(4);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage2.Size = new System.Drawing.Size(800, 570);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage2.Size = new System.Drawing.Size(598, 461);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Properties";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // ReportView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tabControl1);
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ReportView";
-            this.Size = new System.Drawing.Size(808, 599);
+            this.Size = new System.Drawing.Size(606, 487);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
