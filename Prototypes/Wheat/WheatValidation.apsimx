@@ -105,73 +105,8 @@ The model consists of:
                 <Name>VernSens</Name>
                 <VariableName>[Phenology].VernSens.Value</VariableName>
               </VariableReference>
-              <MinimumFunction>
-                <Name>CumulativeVernalisationDays</Name>
-                <VariableReference>
-                  <Name>VernSens</Name>
-                  <VariableName>[Phenology].Vegetative.Stress.VernalisationEffect.MaxVernalisationRequirement.Value</VariableName>
-                </VariableReference>
-                <AccumulateFunction>
-                  <Name>CumulativeVernalisationDays</Name>
-                  <AirTemperatureFunction>
-                    <Name>VDModel</Name>
-                    <XYPairs>
-                      <Name>XYPairs</Name>
-                      <X>
-                        <double>-6</double>
-                        <double>-5</double>
-                        <double>11</double>
-                        <double>18</double>
-                      </X>
-                      <Y>
-                        <double>0</double>
-                        <double>0.642</double>
-                        <double>0.5432</double>
-                        <double>0</double>
-                      </Y>
-                    </XYPairs>
-                  </AirTemperatureFunction>
-                  <LessThanFunction>
-                    <Name>DeVernalisationModel</Name>
-                    <VariableReference>
-                      <Name>ValueToTest</Name>
-                      <VariableName>[Phenology].MaxTFunction.Value</VariableName>
-                    </VariableReference>
-                    <Constant>
-                      <Name>LessThanCriteria</Name>
-                      <Value>30</Value>
-                    </Constant>
-                    <Constant>
-                      <Name>ValueIfTrue</Name>
-                      <Value>0</Value>
-                    </Constant>
-                    <MultiplyFunction>
-                      <Name>ValueIfFalse</Name>
-                      <Constant>
-                        <Name>ValueIfTrue</Name>
-                        <Value>0.5</Value>
-                      </Constant>
-                      <SubtractFunction>
-                        <Name>SubtractFunction</Name>
-                        <VariableReference>
-                          <Name>ValueToTest</Name>
-                          <VariableName>[Phenology].MaxTFunction.Value</VariableName>
-                        </VariableReference>
-                        <Constant>
-                          <Name>Thirty</Name>
-                          <Value>30</Value>
-                        </Constant>
-                      </SubtractFunction>
-                    </MultiplyFunction>
-                  </LessThanFunction>
-                  <StartStageName>Germination</StartStageName>
-                  <EndStageName>TerminalSpikelet</EndStageName>
-                </AccumulateFunction>
-              </MinimumFunction>
-              <Constant>
-                <Name>MaxVernalisationRequirement</Name>
-                <Value>50</Value>
-              </Constant>
+              <StartStageForCumulativeVD>Germination</StartStageForCumulativeVD>
+              <EndStageForCumulativeVD>TerminalSpikelet</EndStageForCumulativeVD>
             </VernalisationEffect>
             <PhotoPeriodEffect>
               <Name>PhotoPeriodEffect</Name>
@@ -291,9 +226,6 @@ The model consists of:
           <Value>1</Value>
           <Units>0-5</Units>
         </Constant>
-        <MaxTFunction>
-          <Name>MaxTFunction</Name>
-        </MaxTFunction>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
