@@ -4363,17 +4363,17 @@ VShort duration variety released in New Zealand by Pioneer
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
-            <n>169</n>
-            <Slope>0.98988158722099062</Slope>
-            <Intercept>-29.171611459128371</Intercept>
-            <SEslope>0.03423949919519962</SEslope>
-            <SEintercept>47.034741723895095</SEintercept>
-            <R2>0.83346927224181711</R2>
-            <RMSE>261.22849509435707</RMSE>
-            <NSE>0.79897938128186574</NSE>
-            <ME>-41.759086628140409</ME>
-            <MAE>189.52557360203943</MAE>
-            <RSR>0.44702477291695913</RSR>
+            <n>170</n>
+            <Slope>0.984975053577975</Slope>
+            <Intercept>-25.385494229595452</Intercept>
+            <SEslope>0.034220469986918953</SEslope>
+            <SEintercept>47.152355542400912</SEintercept>
+            <R2>0.83140541949685265</R2>
+            <RMSE>262.70129705586385</RMSE>
+            <NSE>0.7973172382484025</NSE>
+            <ME>-44.140295563411229</ME>
+            <MAE>191.037567908052</MAE>
+            <RSR>0.44887694328388295</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Live.N</Name>
@@ -4690,31 +4690,31 @@ VShort duration variety released in New Zealand by Pioneer
         <AcceptedStats>
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
-            <n>84</n>
-            <Slope>0.82159040568264907</Slope>
-            <Intercept>0.85397355658506147</Intercept>
-            <SEslope>0.080915488041722064</SEslope>
-            <SEintercept>0.76642056483210386</SEintercept>
-            <R2>0.55698981897305488</R2>
-            <RMSE>4.7191406068970565</RMSE>
-            <NSE>0.42678347545975903</NSE>
-            <ME>-0.41843564114669141</ME>
-            <MAE>2.7044960366353918</MAE>
-            <RSR>0.75259053827145228</RSR>
+            <n>87</n>
+            <Slope>0.82552674261586267</Slope>
+            <Intercept>0.86532560956292937</Intercept>
+            <SEslope>0.078435766696164158</SEslope>
+            <SEintercept>0.74282927775196717</SEintercept>
+            <R2>0.56582373079641435</R2>
+            <RMSE>4.64253137085238</RMSE>
+            <NSE>0.44287794970245831</NSE>
+            <ME>-0.38071992900856555</ME>
+            <MAE>2.6432502444599377</MAE>
+            <RSR>0.742104001181764</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
-            <n>654</n>
-            <Slope>0.9142442670734926</Slope>
-            <Intercept>67.408179337857064</Intercept>
-            <SEslope>0.01449167205933804</SEslope>
-            <SEintercept>17.801469569967395</SEintercept>
-            <R2>0.85924130117322706</R2>
-            <RMSE>270.91789129126448</RMSE>
-            <NSE>0.85504744781180586</NSE>
-            <ME>-18.459009304207203</ME>
-            <MAE>187.70916050923836</MAE>
-            <RSR>0.38043516162434143</RSR>
+            <n>687</n>
+            <Slope>0.90489330616197627</Slope>
+            <Intercept>65.620935967050173</Intercept>
+            <SEslope>0.0142933571272941</SEslope>
+            <SEintercept>17.541970347799079</SEintercept>
+            <R2>0.85403751218596469</R2>
+            <RMSE>275.98573897333137</RMSE>
+            <NSE>0.84928416953954011</NSE>
+            <ME>-29.525870094171207</ME>
+            <MAE>191.40885771127725</MAE>
+            <RSR>0.38793871665943641</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Live.N</Name>
@@ -4774,17 +4774,17 @@ VShort duration variety released in New Zealand by Pioneer
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
-            <n>410</n>
-            <Slope>0.930668089883076</Slope>
-            <Intercept>-1.0221747958934202</Intercept>
-            <SEslope>0.023963547541376331</SEslope>
-            <SEintercept>9.0854781414780614</SEintercept>
-            <R2>0.787089585903433</R2>
-            <RMSE>136.6650471225517</RMSE>
-            <NSE>0.756192604945473</NSE>
-            <ME>-18.986803820340413</ME>
-            <MAE>82.854036414835591</MAE>
-            <RSR>0.4931660398602758</RSR>
+            <n>419</n>
+            <Slope>0.921774226293448</Slope>
+            <Intercept>1.5266872359508454</Intercept>
+            <SEslope>0.023452984131235668</SEslope>
+            <SEintercept>9.0082880743521461</SEintercept>
+            <R2>0.78743264497498111</R2>
+            <RMSE>136.89765275084557</RMSE>
+            <NSE>0.75984031961005838</NSE>
+            <ME>-19.095452192412672</ME>
+            <MAE>83.730259818621136</MAE>
+            <RSR>0.48947574702776692</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CoverTotal</Name>
@@ -4830,17 +4830,17 @@ VShort duration variety released in New Zealand by Pioneer
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
-            <n>407</n>
-            <Slope>1.1406559830757146</Slope>
-            <Intercept>0.28661870713372384</Intercept>
-            <SEslope>0.059374489354042735</SEslope>
-            <SEintercept>0.24318812185517091</SEintercept>
-            <R2>0.47679199044952858</R2>
-            <RMSE>3.1424098973742751</RMSE>
-            <NSE>-0.53221666677608748</NSE>
-            <ME>0.73871610588584979</ME>
-            <MAE>1.9769796277374194</MAE>
-            <RSR>1.2363057901106662</RSR>
+            <n>435</n>
+            <Slope>1.1383465438577747</Slope>
+            <Intercept>0.2873636433312714</Intercept>
+            <SEslope>0.056602718668215743</SEslope>
+            <SEintercept>0.22699726566731474</SEintercept>
+            <R2>0.48295970563450263</R2>
+            <RMSE>3.0480230715851753</RMSE>
+            <NSE>-0.48989687505362878</NSE>
+            <ME>0.72150197860427479</ME>
+            <MAE>1.8933130370497904</MAE>
+            <RSR>1.2192095081511418</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.N</Name>
@@ -4858,17 +4858,17 @@ VShort duration variety released in New Zealand by Pioneer
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.Wt</Name>
-            <n>257</n>
-            <Slope>0.8491352264105575</Slope>
-            <Intercept>78.671240095055921</Intercept>
-            <SEslope>0.066466861668464369</SEslope>
-            <SEintercept>11.898117527149122</SEintercept>
-            <R2>0.39025662206586409</R2>
-            <RMSE>131.99718065338217</RMSE>
-            <NSE>-0.41808410079944669</NSE>
-            <ME>57.465489270643722</ME>
-            <MAE>95.512370009672253</MAE>
-            <RSR>1.1885143094769011</RSR>
+            <n>271</n>
+            <Slope>0.8495090678448165</Slope>
+            <Intercept>75.769056175681087</Intercept>
+            <SEslope>0.064724979170898478</SEslope>
+            <SEintercept>11.464014768206425</SEintercept>
+            <R2>0.39038633800097311</R2>
+            <RMSE>128.86148585738781</RMSE>
+            <NSE>-0.40265673173561867</NSE>
+            <ME>54.736559992609692</ME>
+            <MAE>92.46104824193921</MAE>
+            <RSR>1.182150953405259</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.SpecificArea</Name>
@@ -4942,17 +4942,17 @@ VShort duration variety released in New Zealand by Pioneer
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Live.Wt</Name>
-            <n>307</n>
-            <Slope>0.73020829852864033</Slope>
-            <Intercept>28.42821014995593</Intercept>
-            <SEslope>0.02440220966577708</SEslope>
-            <SEintercept>16.62639158204718</SEintercept>
-            <R2>0.74592593901765536</R2>
-            <RMSE>215.99476597073203</RMSE>
-            <NSE>0.598513226494187</NSE>
-            <ME>-130.73343204032344</ME>
-            <MAE>161.75106644508807</MAE>
-            <RSR>0.63259702733990086</RSR>
+            <n>321</n>
+            <Slope>0.73476124143321631</Slope>
+            <Intercept>26.04635190927371</Intercept>
+            <SEslope>0.024005746705412421</SEslope>
+            <SEintercept>16.229143120356326</SEintercept>
+            <R2>0.74598527268986581</R2>
+            <RMSE>213.66277293464407</RMSE>
+            <NSE>0.59873950792802355</NSE>
+            <ME>-129.35638704568339</ME>
+            <MAE>160.34488106028726</MAE>
+            <RSR>0.63246380085060516</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.TotalStemPopn</Name>
@@ -38340,7 +38340,7 @@ namespace Models
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.LAI</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
+            <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -38361,6 +38361,112 @@ namespace Models
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.LAI</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Biomass</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Predicted1</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Grain.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed1</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Grain.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
