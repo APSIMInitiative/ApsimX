@@ -10,7 +10,7 @@ namespace Models
 {
     /// <summary>This is a memo/text component that stores user entered text information.</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.HTMLView")]
+    [ViewName("UserInterface.Views.MemoView")]
     [PresenterName("UserInterface.Presenters.MemoPresenter")]
     [ValidParent(DropAnywhere = true)]
     public class Memo : Model
