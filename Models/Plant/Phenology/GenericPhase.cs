@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This generic phase uses a thermal time target to determine the duration between growth stages.
+    /// This phase uses a <i>ThermalTime Target</i> to determine the duration between development <i>Stages</i>.
     /// Thermal time is accumulated until the target is met and remaining thermal time is forwarded to the next phase.
     /// </summary>
     /// \param Target The thermal time target in this phase.

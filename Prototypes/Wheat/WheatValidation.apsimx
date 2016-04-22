@@ -11,10 +11,10 @@ _Brown, H.E., Huth, N.I. and Holzworth, D.P._]]></MemoText>
     <Name>Introduction</Name>
     <MemoText><![CDATA[The APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
 
-The model consists of:
+The wheat model consists of:
 
-* a phenology model to simulate development between growth phases  
-* a structure model to simulate plant morphology  
+* a phenology model to simulate development through sequential growth phases  
+* a structure model to simulate plant morphology 
 * a collection of organs to simulate the various plant parts  
 * an arbitrator to allocate resources (N, biomass) to the various plant organs  
 ]]></MemoText>
@@ -47,83 +47,30 @@ The model consists of:
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
-        <MultiplyFunction>
+        <AirTemperatureFunction>
           <Name>ThermalTime</Name>
-          <PhaseLookup>
-            <Name>Temperature</Name>
-            <PhaseLookupValue>
-              <Name>SoilTemperature</Name>
-              <AirTemperatureFunction>
-                <Name>AirThermalTime</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>26</double>
-                    <double>37</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>26</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </AirTemperatureFunction>
-              <Start>Sowing</Start>
-              <End>TerminalSpikelet</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>AirTemperature</Name>
-              <AirTemperatureFunction>
-                <Name>AirThermalTime</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>26</double>
-                    <double>37</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>26</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </AirTemperatureFunction>
-              <Start>TerminalSpikelet</Start>
-              <End>HarvestRipe</End>
-            </PhaseLookupValue>
-          </PhaseLookup>
-          <AddFunction>
-            <Name>DroughtPhenologyAcelleration</Name>
-            <Constant>
-              <Name>One</Name>
-              <Value>1</Value>
-            </Constant>
-            <MultiplyFunction>
-              <Name>Stress</Name>
-              <Constant>
-                <Name>StressResponseCoefficient</Name>
-                <Value>2</Value>
-              </Constant>
-              <LinearInterpolationFunction>
-                <Name>StressFactor</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
-              </LinearInterpolationFunction>
-            </MultiplyFunction>
-          </AddFunction>
-        </MultiplyFunction>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>26</double>
+              <double>37</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>26</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
+          </Memo>
+        </AirTemperatureFunction>
+        <PhotoperiodFunction>
+          <Name>Photoperiod</Name>
+          <Twilight>-6</Twilight>
+        </PhotoperiodFunction>
         <GerminatingPhase>
           <Name>Germinating</Name>
           <Start>Sowing</Start>
@@ -152,14 +99,91 @@ The model consists of:
           </VariableReference>
           <MinimumFunction>
             <Name>Stress</Name>
-            <VariableReference>
+            <VernalisationEffect>
               <Name>VernalisationEffect</Name>
-              <VariableName>[Phenology].Vernalisation.VernEff</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>PhotoperiodEffect</Name>
-              <VariableName> [Phenology].Vernalisation.PhotopEff</VariableName>
-            </VariableReference>
+              <VariableReference>
+                <Name>VernSens</Name>
+                <VariableName>[Phenology].VernSens.Value</VariableName>
+              </VariableReference>
+              <MinimumFunction>
+                <Name>CumulativeVernalisationDays</Name>
+                <VariableReference>
+                  <Name>VernSens</Name>
+                  <VariableName>[Phenology].Vegetative.Stress.VernalisationEffect.MaxVernalisationRequirement.Value</VariableName>
+                </VariableReference>
+                <AccumulateFunction>
+                  <Name>CumulativeVernalisationDays</Name>
+                  <AirTemperatureFunction>
+                    <Name>VDModel</Name>
+                    <XYPairs>
+                      <Name>XYPairs</Name>
+                      <X>
+                        <double>-6</double>
+                        <double>-5</double>
+                        <double>11</double>
+                        <double>18</double>
+                      </X>
+                      <Y>
+                        <double>0</double>
+                        <double>0.642</double>
+                        <double>0.5432</double>
+                        <double>0</double>
+                      </Y>
+                    </XYPairs>
+                  </AirTemperatureFunction>
+                  <LessThanFunction>
+                    <Name>DeVernalisationModel</Name>
+                    <VariableReference>
+                      <Name>ValueToTest</Name>
+                      <VariableName>[Phenology].MaxTFunction.Value</VariableName>
+                    </VariableReference>
+                    <Constant>
+                      <Name>LessThanCriteria</Name>
+                      <Value>30</Value>
+                    </Constant>
+                    <Constant>
+                      <Name>ValueIfTrue</Name>
+                      <Value>0</Value>
+                    </Constant>
+                    <MultiplyFunction>
+                      <Name>ValueIfFalse</Name>
+                      <Constant>
+                        <Name>ValueIfTrue</Name>
+                        <Value>0.5</Value>
+                      </Constant>
+                      <SubtractFunction>
+                        <Name>SubtractFunction</Name>
+                        <VariableReference>
+                          <Name>ValueToTest</Name>
+                          <VariableName>[Phenology].MaxTFunction.Value</VariableName>
+                        </VariableReference>
+                        <Constant>
+                          <Name>Thirty</Name>
+                          <Value>30</Value>
+                        </Constant>
+                      </SubtractFunction>
+                    </MultiplyFunction>
+                  </LessThanFunction>
+                  <StartStageName>Germination</StartStageName>
+                  <EndStageName>TerminalSpikelet</EndStageName>
+                </AccumulateFunction>
+              </MinimumFunction>
+              <Constant>
+                <Name>MaxVernalisationRequirement</Name>
+                <Value>50</Value>
+              </Constant>
+            </VernalisationEffect>
+            <PhotoPeriodEffect>
+              <Name>PhotoPeriodEffect</Name>
+              <VariableReference>
+                <Name>PhotoSens</Name>
+                <VariableName>[Phenology].PhotoSens.Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>Photoperiod</Name>
+                <VariableName>[Phenology].Photoperiod.Value</VariableName>
+              </VariableReference>
+            </PhotoPeriodEffect>
           </MinimumFunction>
           <Start>Emergence</Start>
           <End>TerminalSpikelet</End>
@@ -175,23 +199,10 @@ The model consists of:
         </LeafAppearancePhase>
         <GenericPhase>
           <Name>EarlyReproductive</Name>
-          <LinearInterpolationFunction>
+          <VariableReference>
             <Name>ThermalTime</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>26</double>
-                <double>34</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>26</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Vernalisation].CrownTemperature</XProperty>
-          </LinearInterpolationFunction>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
           <MultiplyFunction>
             <Name>Target</Name>
             <Constant>
@@ -267,42 +278,22 @@ The model consists of:
           <Start>HarvestRipe</Start>
           <End>Unused</End>
         </EndPhase>
-        <PhotoperiodFunction>
-          <Name>Photoperiod</Name>
-          <Twilight>-6</Twilight>
-        </PhotoperiodFunction>
-        <VernalisationCW>
-          <Name>Vernalisation</Name>
-          <AirTemperatureFunction>
-            <Name>VDModel</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>2</double>
-                <double>15</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
-          </AirTemperatureFunction>
-          <PhotoperiodFunction>
-            <Name>Photoperiod</Name>
-            <Twilight>-6</Twilight>
-          </PhotoperiodFunction>
-          <VernSens>2.5</VernSens>
-          <PhotopSens>2</PhotopSens>
-          <StartStageForEffects>Emergence</StartStageForEffects>
-          <EndStageForEffects>TerminalSpikelet</EndStageForEffects>
-          <StartStageForCumulativeVD>Germination</StartStageForCumulativeVD>
-          <EndStageForCumulativeVD>TerminalSpikelet</EndStageForCumulativeVD>
-        </VernalisationCW>
         <ZadokPMF>
           <Name>Zadok</Name>
         </ZadokPMF>
+        <Constant>
+          <Name>VernSens</Name>
+          <Value>1</Value>
+          <Units>0-5</Units>
+        </Constant>
+        <Constant>
+          <Name>PhotoSens</Name>
+          <Value>1</Value>
+          <Units>0-5</Units>
+        </Constant>
+        <MaxTFunction>
+          <Name>MaxTFunction</Name>
+        </MaxTFunction>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -1894,178 +1885,178 @@ The EarLive composite biomass object includes the Live pools of all organs withi
           <Name>New Zealand</Name>
           <Cultivar>
             <Name>Wakanui</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 4</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3</Command>
+            <Command>[Phenology].VernSens.Value = 4</Command>
+            <Command>[Phenology].PhotoSens.Value = 3</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
             <Command>[Leaf].ExtinctionCoeff.PotentialExtinctionCoeff.XYPairs.Y = 0.9,0.9</Command>
             <Command>[Phenology].EarlyReproductive.Target.Multiplier.Value = 5</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rongotea</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 2.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
             <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
           </Cultivar>
           <Cultivar>
             <Name>BattenSpring</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 0.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+            <Command>[Phenology].VernSens.Value = 0.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 5.0</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
           <Name>Australia</Name>
           <Cultivar>
             <Name>GattonHartog</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+            <Command>[Phenology].VernSens.Value = 2.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.5</Command>
           </Cultivar>
           <Cultivar>
             <Name>h45</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 1.5</Command>
+            <Command>[Phenology].VernSens.Value = 1.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 1.5</Command>
           </Cultivar>
           <Cultivar>
             <Name>Hartog</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+            <Command>[Phenology].VernSens.Value = 1.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Gamenya</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.6</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 2.0</Command>
+            <Command>[Phenology].VernSens.Value = 1.6</Command>
+            <Command>[Phenology].PhotoSens.Value = 2.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Spear</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+            <Command>[Phenology].VernSens.Value = 1.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.5</Command>
             <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
             <Command>[Phenology].GrainFilling.Target.Value = 580</Command>
           </Cultivar>
           <Cultivar>
             <Name>Gutha</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+            <Command>[Phenology].VernSens.Value = 1.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Wilgoyne</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.4</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 1.8</Command>
+            <Command>[Phenology].VernSens.Value = 1.4</Command>
+            <Command>[Phenology].PhotoSens.Value = 1.8</Command>
             <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
             <Command>[Phenology].GrainFilling.Target.Value = 580</Command>
           </Cultivar>
           <Cultivar>
             <Name>BattenWinter</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 2.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
             <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
           </Cultivar>
           <Cultivar>
             <Name>Bolac</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 2.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>EGAGregory</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.7</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+            <Command>[Phenology].VernSens.Value = 2.7</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.2</Command>
           </Cultivar>
           <Cultivar>
             <Name>Kelallac</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 2.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Mckellar</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Kennedy</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 2.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Derrimut</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+            <Command>[Phenology].VernSens.Value = 1.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.5</Command>
           </Cultivar>
           <Cultivar>
             <Name>Janz</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+            <Command>[Phenology].VernSens.Value = 1.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.5</Command>
           </Cultivar>
           <Cultivar>
             <Name>Gladius</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+            <Command>[Phenology].VernSens.Value = 1.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Ventura</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+            <Command>[Phenology].VernSens.Value = 1.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Young</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.3</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+            <Command>[Phenology].VernSens.Value = 2.3</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.2</Command>
           </Cultivar>
           <Cultivar>
             <Name>Yitpi</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+            <Command>[Phenology].VernSens.Value = 1.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Ruby</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.3</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+            <Command>[Phenology].VernSens.Value = 2.3</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.2</Command>
           </Cultivar>
           <Cultivar>
             <Name>Wyalkatchem</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.3</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+            <Command>[Phenology].VernSens.Value = 2.3</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.2</Command>
           </Cultivar>
           <Cultivar>
             <Name>Wedgetail</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 3.9</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.9</Command>
+            <Command>[Phenology].VernSens.Value = 3.9</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.9</Command>
           </Cultivar>
           <Cultivar>
             <Name>H46</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 1.5</Command>
+            <Command>[Phenology].VernSens.Value = 1.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 1.5</Command>
           </Cultivar>
           <Cultivar>
             <Name>Mercury</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 2.5</Command>
+            <Command>[Phenology].VernSens.Value = 1.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 2.5</Command>
           </Cultivar>
           <Cultivar>
             <Name>Gregory</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.7</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+            <Command>[Phenology].VernSens.Value = 2.7</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.2</Command>
           </Cultivar>
           <Cultivar>
             <Name>Livingston</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.3</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+            <Command>[Phenology].VernSens.Value = 2.3</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.2</Command>
           </Cultivar>
           <Cultivar>
             <Name>ega_gregory</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.7</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+            <Command>[Phenology].VernSens.Value = 2.7</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.2</Command>
           </Cultivar>
           <Cultivar>
             <Name>Lorikeet</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 2.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
           <Name>Turkey</Name>
           <Cultivar>
             <Name>Konya</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.7</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
+            <Command>[Phenology].VernSens.Value = 2.7</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.2</Command>
             <Command>[Grain].NumberFunction.GrainsPerStem.Value = 20</Command>
             <Command>[Grain].MaximumPotentialGrainSize.Value = 0.050</Command>
           </Cultivar>
@@ -2074,16 +2065,16 @@ The EarLive composite biomass object includes the Live pools of all organs withi
           <Name>China</Name>
           <Cultivar>
             <Name>Keyu13</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 1</Command>
+            <Command>[Phenology].VernSens.Value = 5</Command>
+            <Command>[Phenology].PhotoSens.Value = 1</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
           <Name>USA</Name>
           <Cultivar>
             <Name>Yecora</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+            <Command>[Phenology].VernSens.Value = 2.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.5</Command>
           </Cultivar>
         </CultivarFolder>
       </CultivarFolder>
@@ -10635,7 +10626,7 @@ namespace Models
           <Name>APS2Base</Name>
           <Clock>
             <Name>Clock</Name>
-            <StartDate>1991-05-30T00:00:00</StartDate>
+            <StartDate>1991-05-29T00:00:00</StartDate>
             <EndDate>1991-12-30T00:00:00</EndDate>
           </Clock>
           <Summary>
@@ -22906,6 +22897,8 @@ namespace Models
                 <string>[Wheat].Leaf.CohortParameters.LagDuration.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.SenescenceDuration.Value</string>
                 <string>[Wheat].Leaf.CoverGreen</string>
+                <string>[Wheat].Phenology.Vegetative.Stress.VernalisationEffect.Value</string>
+                <string>[Wheat].Phenology.Vegetative.Stress.PhotoPeriodEffect.Value</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
