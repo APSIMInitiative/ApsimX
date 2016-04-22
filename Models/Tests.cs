@@ -145,22 +145,71 @@ namespace Models
 
             double accepted;
             double current;
-            double difference;
-            for (int i = 0; i < columnNames.Count; i++)
+            DataTable AcceptedTable = Table.Copy();
+            DataTable CurrentTable = Table.Copy();
+
+            //accepted table
+            for (int i = 0; i < AcceptedStats.Count(); i++)
                 for (int j = 1; j < statNames.Count; j++) //start at 1; we don't want Name field.
                 {
                     accepted = Convert.ToDouble(AcceptedStats[i].GetType().GetField(statNames[j]).GetValue(AcceptedStats[i]));
-                    current = Convert.ToDouble(stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]));
-                    difference = current - accepted;
-
-                    Table.Rows.Add(PO.Name,
-                        columnNames[i],
-                        statNames[j],
-                        accepted,
-                        current,
-                        difference,
-                        Math.Abs(difference) > Math.Abs(accepted) * 0.01 ? "FAIL" : " ");
+                    AcceptedTable.Rows.Add(PO.Name,
+                                    AcceptedStats[i].Name,
+                                    statNames[j],
+                                    accepted,
+                                    null,
+                                    null,
+                                    null);
                 }
+
+            //current table
+            Table = AcceptedTable.Copy();
+            int rowIndex = 0;
+            for (int i = 0; i < stats.Count(); i++)
+                for (int j = 1; j < statNames.Count; j++) //start at 1; we don't want Name field.
+                {
+                    current = Convert.ToDouble(stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]));
+                    CurrentTable.Rows.Add(PO.Name,
+                                    stats[i].Name,
+                                    statNames[j],
+                                    null,
+                                    current,
+                                    null,
+                                    null);
+                    Table.Rows[rowIndex]["Current"] = current;
+                    rowIndex++;
+                }
+
+            //Merge overwrites rows, so add the correct data back in
+            foreach(DataRow row in Table.Rows)
+            {
+                DataRow[] rowAccepted = AcceptedTable.Select("Name = '" + row["Name"] + "' AND Variable = '" + row["Variable"] + "' AND Test = '" + row["Test"] + "'");
+                DataRow[] rowCurrent  = CurrentTable.Select ("Name = '" + row["Name"] + "' AND Variable = '" + row["Variable"] + "' AND Test = '" + row["Test"] + "'");
+
+                if (rowAccepted.Count() == 0)
+                    row["Accepted"] = DBNull.Value;
+                else
+                    row["Accepted"] = rowAccepted[0]["Accepted"];
+
+                if (rowCurrent.Count() == 0)
+                    row["Current"] = DBNull.Value;
+                else
+                    row["Current"] = rowCurrent[0]["Current"];
+
+                if (row["Accepted"] != DBNull.Value && row["Current"] != DBNull.Value)
+                {
+                    row["Difference"] = Convert.ToDouble(row["Current"]) - Convert.ToDouble(row["Accepted"]);
+                    row["Fail?"] = Math.Abs(Convert.ToDouble(row["Difference"])) > Math.Abs(Convert.ToDouble(row["Accepted"])) * 0.01 ? sigIdent : " ";
+                }
+                else
+                {
+                    row["Difference"] = DBNull.Value;
+                    row["Fail?"] = sigIdent;
+                }
+            }
+            //Tables could be large so free the memory.
+            AcceptedTable = null;
+            CurrentTable = null;
 
             if (accept)
                 AcceptedStats = stats;
@@ -190,66 +239,71 @@ namespace Models
             Test();
         }
 
-        /// <summary>
-        /// Convert a data table to a string.
-        /// http://stackoverflow.com/questions/1104121/how-to-convert-a-datatable-to-a-string-in-c
-        /// Modified for multi-platform line breaks and explicit typing.
-        /// </summary>
-        /// <param name="dataTable"></param>
-        /// <returns></returns>
-        public static string ConvertDataTableToString(DataTable dataTable)
+        /// <summary>Document the stats.</summary>
+        /// <param name="tags"></param>
+        /// <param name="headingLevel"></param>
+        /// <param name="indent"></param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            StringBuilder output = new StringBuilder();
+            // Run test suite so that data table is full.
+            Test(accept: false, GUIrun: true);
 
-            int[] columnsWidths = new int[dataTable.Columns.Count];
-            int length;
-            string text;
+            // add a heading.
+            // tags.Add(new AutoDocumentation.Heading(Parent.Name + " statistics", headingLevel));
 
-            // Get column widths
-            foreach (DataRow row in dataTable.Rows)
+            // Get stat names.
+            List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
+            statNames.RemoveAt(0);
+
+            // Grab the columns of data we want.
+            List<List<string>> dataForDoc = new List<List<string>>();
+            dataForDoc.Add(new List<string>()); // variable name.
+            foreach (string stat in statNames)
+                dataForDoc.Add(new List<string>()); // column for each stat.
+            
+            // add in headings.
+            dataForDoc[0].Add("Variable");
+            for (int statIndex = 0; statIndex < statNames.Count; statIndex++)
             {
-                for (int i = 0; i < dataTable.Columns.Count; i++)
+                if (statNames[statIndex] == "SEintercept")
+                    statNames[statIndex] = "SEinter";
+                dataForDoc[statIndex + 1].Add(statNames[statIndex]);
+            }
+
+            int rowIndex = 0;
+            while (rowIndex < Table.Rows.Count)
+            {
+                string variableName = Table.Rows[rowIndex][1].ToString();
+                dataForDoc[0].Add(variableName);
+
+                for (int statIndex = 0; statIndex < statNames.Count; statIndex++)
                 {
-                    length = row[i].ToString().Length;
-                    if (columnsWidths[i] < length)
-                        columnsWidths[i] = length;
+                    object currentValue = Table.Rows[rowIndex]["Current"];
+                    string formattedValue;
+                    if (currentValue.GetType() == typeof(double))
+                    {
+                        double doubleValue = Convert.ToDouble(currentValue);
+                        if (!double.IsNaN(doubleValue))
+                        {
+                            if (statIndex == 0)
+                                formattedValue = doubleValue.ToString("F0");
+                            else
+                                formattedValue = doubleValue.ToString("F3");
+                        }
+                        else
+                            formattedValue = currentValue.ToString();
+                    }
+                    else
+                        formattedValue = currentValue.ToString();
+
+                    dataForDoc[statIndex + 1].Add(formattedValue);
+                    
+                    rowIndex++;
                 }
             }
 
-            // Get Column Titles
-            for (int i = 0; i < dataTable.Columns.Count; i++)
-            {
-                length = dataTable.Columns[i].ColumnName.Length;
-                if (columnsWidths[i] < length)
-                    columnsWidths[i] = length;
-            }
-
-            // Write Column titles
-            for (int i = 0; i < dataTable.Columns.Count; i++)
-            {
-                text = dataTable.Columns[i].ColumnName;
-                output.Append("|" + PadCenter(text, columnsWidths[i] + 2));
-            }
-            output.Append("|" + Environment.NewLine + new string('=', output.Length) + Environment.NewLine);
-
-            // Write Rows
-            foreach (DataRow row in dataTable.Rows)
-            {
-                for (int i = 0; i < dataTable.Columns.Count; i++)
-                {
-                    text = row[i].ToString();
-                    output.Append("|" + PadCenter(text, columnsWidths[i] + 2));
-                }
-                output.Append("|" + Environment.NewLine);
-            }
-            return output.ToString();
-        }
-
-        private static string PadCenter(string text, int maxLength)
-        {
-            int diff = maxLength - text.Length;
-            return new string(' ', diff / 2) + text + new string(' ', (int)(diff / 2.0 + 0.5));
-
+            // add data to doc table.
+            tags.Add(new AutoDocumentation.Table(dataForDoc, headingLevel));
         }
     }
 }

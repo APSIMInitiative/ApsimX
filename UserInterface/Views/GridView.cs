@@ -306,6 +306,26 @@ namespace UserInterface.Views
             this.Grid.Columns[number - 1].Frozen = true;
         }
 
+        /// <summary>Get screenshot of grid.</summary>
+        public Image GetScreenshot()
+        {
+            Grid.Dock = DockStyle.None;
+
+            // Resize DataGridView to full height.
+            Grid.AutoSize = true;
+            Application.DoEvents();
+
+            // Create a Bitmap and draw the DataGridView on it.
+            // I've added 20 pixels to account for scroll bars.
+            Bitmap bitmap = new Bitmap(this.Grid.Width, this.Grid.Height);
+            Grid.DrawToBitmap(bitmap, new Rectangle(0, 0, this.Grid.Width, this.Grid.Height));
+
+            // Resize DataGridView back to original height.
+            Grid.Dock = DockStyle.Fill;
+
+            return bitmap;
+        }
+
         /// <summary>
         /// Populate the grid from the DataSource.
         /// </summary>
@@ -639,63 +659,72 @@ namespace UserInterface.Views
                 int rowIndex = this.Grid.CurrentCell.RowIndex;
                 int columnIndex = this.Grid.CurrentCell.ColumnIndex;
                 List<IGridCell> cellsChanged = new List<IGridCell>();
-                foreach (string line in lines)
+                if (lines.Length > 0 && this.Grid.CurrentCell.IsInEditMode)
                 {
-                    if (rowIndex < this.Grid.RowCount && line.Length > 0)
+                    DataGridViewTextBoxEditingControl dText = (DataGridViewTextBoxEditingControl)Grid.EditingControl;
+                    dText.Paste(text);
+                    cellsChanged.Add(this.GetCell(columnIndex , rowIndex));
+                }
+                else
+                {
+                    foreach (string line in lines)
                     {
-                        string[] words = line.Split('\t');
-                        for (int i = 0; i < words.GetLength(0); ++i)
+                        if (rowIndex < this.Grid.RowCount && line.Length > 0)
                         {
-                            if (columnIndex + i < this.Grid.ColumnCount)
+                            string[] words = line.Split('\t');
+                            for (int i = 0; i < words.GetLength(0); ++i)
                             {
-                                DataGridViewCell cell = this.Grid[columnIndex + i, rowIndex];
-                                if (!cell.ReadOnly)
+                                if (columnIndex + i < this.Grid.ColumnCount)
                                 {
-                                    if (cell.Value == null || cell.Value.ToString() != words[i])
+                                    DataGridViewCell cell = this.Grid[columnIndex + i, rowIndex];
+                                    if (!cell.ReadOnly)
                                     {
-                                        // We are pasting a new value for this cell. Put the new
-                                        // value into the cell.
-                                        if (words[i] == string.Empty)
+                                        if (cell.Value == null || cell.Value.ToString() != words[i])
                                         {
-                                            cell.Value = null;
-                                        }
-                                        else
-                                        {
-                                            cell.Value = Convert.ChangeType(words[i], this.DataSource.Columns[columnIndex + i].DataType);
-                                        }
+                                            // We are pasting a new value for this cell. Put the new
+                                            // value into the cell.
+                                            if (words[i] == string.Empty)
+                                            {
+                                                cell.Value = null;
+                                            }
+                                            else
+                                            {
+                                                cell.Value = Convert.ChangeType(words[i], this.DataSource.Columns[columnIndex + i].DataType);
+                                            }
 
-                                        // Make sure there are enough rows in the data source.
-                                        while (this.DataSource.Rows.Count <= rowIndex)
-                                        {
-                                            this.DataSource.Rows.Add(this.DataSource.NewRow());
-                                        }
+                                            // Make sure there are enough rows in the data source.
+                                            while (this.DataSource.Rows.Count <= rowIndex)
+                                            {
+                                                this.DataSource.Rows.Add(this.DataSource.NewRow());
+                                            }
 
-                                        // Put the new value into the data source.
-                                        if (cell.Value == null)
-                                        {
-                                            this.DataSource.Rows[rowIndex][columnIndex + i] = DBNull.Value;
-                                        }
-                                        else
-                                        {
-                                            this.DataSource.Rows[rowIndex][columnIndex + i] = cell.Value;
-                                        }
+                                            // Put the new value into the data source.
+                                            if (cell.Value == null)
+                                            {
+                                                this.DataSource.Rows[rowIndex][columnIndex + i] = DBNull.Value;
+                                            }
+                                            else
+                                            {
+                                                this.DataSource.Rows[rowIndex][columnIndex + i] = cell.Value;
+                                            }
 
-                                        // Put a cell into the cells changed member.
-                                        cellsChanged.Add(this.GetCell(columnIndex + i, rowIndex));
+                                            // Put a cell into the cells changed member.
+                                            cellsChanged.Add(this.GetCell(columnIndex + i, rowIndex));
+                                        }
                                     }
                                 }
+                                else
+                                {
+                                    break;
+                                }
                             }
-                            else
-                            { 
-                                break; 
-                            }
-                        }
 
-                        rowIndex++;
-                    }
-                    else
-                    { 
-                        break; 
+                            rowIndex++;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
 
@@ -746,18 +775,35 @@ namespace UserInterface.Views
         private void OnDeleteClick(object sender, EventArgs e)
         {
             List<IGridCell> cellsChanged = new List<IGridCell>();
-            foreach (DataGridViewCell cell in this.Grid.SelectedCells)
+
+            if (this.Grid.CurrentCell.IsInEditMode)
             {
-                // Save change in data source
-                if (cell.RowIndex < this.DataSource.Rows.Count)
+                DataGridViewTextBoxEditingControl dText = (DataGridViewTextBoxEditingControl)Grid.EditingControl;
+                string newText;
+                int savedSelectionStart = dText.SelectionStart;
+                if (dText.SelectionLength == 0)
+                    newText = dText.Text.Remove(dText.SelectionStart, 1);
+                else
+                    newText = dText.Text.Remove(dText.SelectionStart, dText.SelectionLength);
+                dText.Text = newText;
+                dText.SelectionStart = savedSelectionStart;
+                cellsChanged.Add(this.GetCell(Grid.CurrentCell.ColumnIndex, Grid.CurrentCell.RowIndex));
+            }
+            else
+            {
+                foreach (DataGridViewCell cell in this.Grid.SelectedCells)
                 {
-                    this.DataSource.Rows[cell.RowIndex][cell.ColumnIndex] = DBNull.Value;
+                    // Save change in data source
+                    if (cell.RowIndex < this.DataSource.Rows.Count)
+                    {
+                        this.DataSource.Rows[cell.RowIndex][cell.ColumnIndex] = DBNull.Value;
 
-                    // Delete cell in grid.
-                    this.Grid[cell.ColumnIndex, cell.RowIndex].Value = null;
+                        // Delete cell in grid.
+                        this.Grid[cell.ColumnIndex, cell.RowIndex].Value = null;
 
-                    // Put a cell into the cells changed member.
-                    cellsChanged.Add(this.GetCell(cell.ColumnIndex, cell.RowIndex));
+                        // Put a cell into the cells changed member.
+                        cellsChanged.Add(this.GetCell(cell.ColumnIndex, cell.RowIndex));
+                    }
                 }
             }
 

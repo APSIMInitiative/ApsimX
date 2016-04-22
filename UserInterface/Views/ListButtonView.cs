@@ -1,36 +1,28 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="InsertView.cs" company="APSIM Initiative">
+// <copyright file="ListButtonView.cs" company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
 namespace UserInterface.Views
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Drawing;
-    using System.Data;
-    using System.Linq;
-    using System.Text;
     using System.Windows.Forms;
 
-    /// <summary>An interface for a list/button box</summary>
+    /// <summary>An interface for a list with a button bar</summary>
     public interface IListButtonView
     {
         /// <summary>The list.</summary>
         IListBoxView List { get; }
 
-        /// <summary>The button.</summary>
-        IButtonView Button { get; }
-
-        /// <summary>
-        /// Property to set/clear the wait cursor of the view
-        /// </summary>
-        bool WaitCursor { get; set; }
+        /// <summary>Add a button to the button bar</summary>
+        /// <param name="text">Text for button</param>
+        /// <param name="image">Image for button</param>
+        /// <param name="handler">Handler to call when user clicks on button</param>
+        void AddButton(string text, Image image, EventHandler handler);
     }
 
-
-    /// <summary>An view for a list with a button</summary>
+    /// <summary>A view for a list with a button bar</summary>
     public partial class ListButtonView : UserControl, IListButtonView
     {
         /// <summary>Constructor</summary>
@@ -42,27 +34,21 @@ namespace UserInterface.Views
         /// <summary>The list.</summary>
         public IListBoxView List { get { return listBoxView1; } }
 
-        /// <summary>The button.</summary>
-        public IButtonView Button { get { return buttonView1; } }
-
-        public bool WaitCursor
+        /// <summary>Add a button to the button bar</summary>
+        /// <param name="text">Text for button</param>
+        /// <param name="image">Image for button</param>
+        /// <param name="handler">Handler to call when user clicks on button</param>
+        public void AddButton(string text, Image image, EventHandler handler)
         {
-            get
-            {
-                return Cursor.Current == Cursors.WaitCursor;
-            }
-            set
-            {
-                if (value == true)
-                {
-                    Cursor.Current = Cursors.WaitCursor;
-                }
-                else
-                {
-                    Cursor.Current = Cursors.Default;
-                }
-            }
-        }
+            Button button = new Button();
+            button.Text = text;
+            button.Image = image;
+            button.Click += handler;
+            button.AutoSize = true;
+            if (image != null)
+                button.TextImageRelation = TextImageRelation.ImageAboveText;
 
+            buttonPanel.Controls.Add(button);
+        }
     }
 }

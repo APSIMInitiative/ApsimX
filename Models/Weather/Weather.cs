@@ -117,15 +117,15 @@ namespace Models
             get
             {
                 Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-                if (simulation == null)
-                    return null;
+
                 return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
             }
 
             set
             {
-                Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-                this.FileName = PathUtilities.GetRelativePath(value, simulation.FileName);
+
+                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
             }
         }
 
@@ -317,6 +317,24 @@ namespace Models
                 else
                 {
                     return this.reader.ConstantAsDouble("Latitude");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the longitude
+        /// </summary>
+        public double Longitude
+        {
+            get
+            {
+                if (this.reader == null || this.reader.Constant("Longitude") == null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return this.reader.ConstantAsDouble("Longitude");
                 }
             }
         }
@@ -540,7 +558,7 @@ namespace Models
         /// Open the weather data file.
         /// </summary>
         /// <returns>True if the file was successfully opened</returns>
-        private bool OpenDataFile()
+        public bool OpenDataFile()
         {
             if (System.IO.File.Exists(this.FullFileName))
             {
@@ -592,6 +610,16 @@ namespace Models
             }
         }
 
+        /// <summary>Close the datafile.</summary>
+        public void CloseDataFile()
+        {
+            if (reader != null)
+            {
+                reader.Close();
+                reader = null;
+            }
+        }
+
         /// <summary>
         /// Calculate the amp and tav 'constant' values for this weather file
         /// and store the values into the File constants.
@@ -632,6 +660,8 @@ namespace Models
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
         private void ProcessMonthlyTAVAMP(out double tav, out double amp)
         {
+            int savedPosition = reader.GetCurrentPosition();
+
             // init return values
             tav = 0;
             amp = 0;
@@ -705,7 +735,7 @@ namespace Models
             tav = yearlySumMeans / nyears;  // calc the ave of the yearly ave means
             amp = yearlySumAmp / nyears;    // calc the ave of the yearly amps
 
-            this.reader.SeekToDate(start.AddDays(1)); // goto start of data set
+            reader.SeekToPosition(savedPosition);
         }
 
         /// <summary>

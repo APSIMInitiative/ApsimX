@@ -13,7 +13,7 @@ namespace UserInterface.Views
     ///// <summary>A delegate for a numericUpDown click event</summary>
     ///// <param name="startYear">the start year for the data being displayed in the graph</param>
     ///// <param name="showYears">the number of years of data to be used/displayed in the graph</param>
-    public delegate void GraphRefreshDelegate(decimal startYear, decimal showYears);
+    public delegate void GraphRefreshDelegate(int tabIndex, decimal startYear, decimal showYears);
 
 
     /// <summary>
@@ -185,7 +185,10 @@ namespace UserInterface.Views
         private void uxGraphStartYear_ValueChanged(object sender, EventArgs e)
         {
             if (GraphRefreshClicked != null)
-                GraphRefreshClicked.Invoke(GraphStartYearControl.Value, GraphShowYearsControl.Value);
+            {
+                int selectedTabIndex = tabControl1.SelectedIndex;
+                GraphRefreshClicked.Invoke(selectedTabIndex, GraphStartYearControl.Value, GraphShowYearsControl.Value);
+            }
         }
 
         /// <summary>Handles the change event for the GraphShowYears NumericUpDown </summary>
@@ -194,7 +197,10 @@ namespace UserInterface.Views
         private void uxGraphShowYears_ValueChanged(object sender, EventArgs e)
         {
             if (GraphRefreshClicked != null)
-                GraphRefreshClicked.Invoke((int)GraphStartYearControl.Value, (int)GraphShowYearsControl.Value);
+            {
+                int selectedTabIndex = tabControl1.SelectedIndex;
+                GraphRefreshClicked.Invoke(selectedTabIndex, (int)GraphStartYearControl.Value, (int)GraphShowYearsControl.Value);
+            }
         }
 
         /// <summary>
@@ -209,10 +215,12 @@ namespace UserInterface.Views
             if (tc.SelectedIndex == 0 || tc.SelectedIndex == 1)
             {
                 BrowsePanelControl.Height = 41;
+                GraphRefreshClicked.Invoke(tc.SelectedIndex, GraphStartYearControl.Value, GraphShowYearsControl.Value);
             }
             else
             {
                 BrowsePanelControl.Height = 68;
+                GraphRefreshClicked.Invoke(tc.SelectedIndex, GraphStartYearControl.Value, GraphShowYearsControl.Value);
             }
         }
     }

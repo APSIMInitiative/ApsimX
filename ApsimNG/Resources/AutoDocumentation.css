@@ -1,0 +1,44 @@
+﻿#content {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+  padding: 5px;
+}
+
+#left 
+{
+    width:50%;
+    float:left;
+}
+
+#right
+{
+    width:50%;
+    float:right;
+}
+
+body {
+  font-family: "Arial", Arial, sans-serif;
+} 
+
+table {
+    border-collapse: collapse;
+}
+
+table, td, tr {
+   border: 0px solid black;
+} 
+
+td {
+    text-align: right;
+	padding: 5px;
+    vertical-align: top;
+}
+
+.tab1 { margin-left: 40px; }
+.tab2 { margin-left: 80px; }
+.tab3 { margin-left: 120px; }
+.tab4 { margin-left: 160px; }
+.tab5 { margin-left: 200px; }
+.tab6 { margin-left: 240px; }

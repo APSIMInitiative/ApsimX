@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// A function that accumulates values from child functions
     /// </summary>
     [Serializable]
-    [Description("Adds the value of all childern functions to the previous days accumulation between start and end phases")]
+    [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class AccumulateFunction : Model, IFunction

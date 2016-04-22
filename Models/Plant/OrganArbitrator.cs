@@ -225,6 +225,10 @@ namespace Models.PMF
             /// <summary>Gets or sets the balance error.</summary>
             /// <value>The balance error.</value>
             public double BalanceError { get; set; }
+            /// <summary>the type of biomass being arbitrated</summary>
+            /// <value>The balance error.</value>
+            public string BiomassType { get; set; }
+
             //Constructor for Array variables
             /// <summary>Initializes a new instance of the <see cref="BiomassArbitrationType"/> class.</summary>
             public BiomassArbitrationType()
@@ -476,26 +480,52 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.IsAlive)
+                if (Plant != null && Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
                         if (N != null)
                         {
                             if ((Plant.Phenology.Emerged == true) && (N.TotalPlantDemand > 0) && (N.TotalPlantSupply > 0))
-                                return Math.Min(1, N.TotalPlantSupply / N.TotalPlantDemand);
+                                return N.TotalPlantSupply / N.TotalPlantDemand;
                             else return 1;
                         }
                         else return 1;
                     }
                     else
-                        return Math.Min(1, N.TotalPlantSupply / N.TotalPlantDemand);
+                        return N.TotalPlantSupply / N.TotalPlantDemand;
                 }
                 else
                     return 1;
             }
         }
 
+        /// <summary>Gets the n supply relative to N demand.</summary>
+        /// <value>The n supply.</value>
+        [XmlIgnore]
+        public double FDM
+        {
+            get
+            {
+                if (Plant != null && Plant.IsAlive)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (DM != null)
+                        {
+                            if ((Plant.Phenology.Emerged == true) && (DM.TotalPlantDemand > 0) && (DM.TotalPlantSupply > 0))
+                                return DM.TotalPlantSupply / DM.TotalPlantDemand;
+                            else return 1;
+                        }
+                        else return 1;
+                    }
+                    else
+                        return DM.TotalPlantSupply / DM.TotalPlantDemand;
+                }
+                else
+                    return 1;
+            }
+        }
         /// <summary>Gets the delta wt.</summary>
         /// <value>The delta wt.</value>
         public double DeltaWt
@@ -781,8 +811,8 @@ namespace Models.PMF
         {
             if (Plant.IsEmerged)
             {
-                DoRetranslocation(Organs, N, NArbitrationOption);        //Allocate retranslocated N to each organ
-                DoFixation(Organs, N, NArbitrationOption);               //Allocate fixed Nitrogen to each organ
+                DoFixation(Organs, N, NArbitrationOption);               //Allocate supply of fixable Nitrogen to each organ
+                DoRetranslocation(Organs, N, NArbitrationOption);        //Allocate supply of retranslocatable N to each organ
                 DoNutrientConstrainedDMAllocation(Organs);               //Work out how much DM can be assimilated by each organ based on allocated nutrients
                 SendDMAllocations(Organs);                               //Tell each organ how DM they are getting folling allocation
                 SendNutrientAllocations(Organs);                         //Tell each organ how much nutrient they are getting following allocaition
@@ -807,6 +837,7 @@ namespace Models.PMF
         {
             //Creat Drymatter variable class
             DM = new BiomassArbitrationType(Organs.Length);
+            DM.BiomassType = "DM";
 
             // GET INITIAL STATE VARIABLES FOR MASS BALANCE CHECKS
             DM.Start = 0;
@@ -898,67 +929,68 @@ namespace Models.PMF
         }
         /// <summary>Does the nutrient set up.</summary>
         /// <param name="Organs">The organs.</param>
-        /// <param name="BAT">The bat.</param>
-        virtual public void DoNutrientSetUp(IArbitration[] Organs, ref BiomassArbitrationType BAT)
+        /// <param name="N">The bat.</param>
+        virtual public void DoNutrientSetUp(IArbitration[] Organs, ref BiomassArbitrationType N)
         {
             //Creat Biomass variable class
-            BAT = new BiomassArbitrationType(Organs.Length);
+            N = new BiomassArbitrationType(Organs.Length);
+            N.BiomassType = "N";
 
             // GET ALL INITIAL STATE VARIABLES FOR MASS BALANCE CHECKS
-            BAT.Start = 0;
+            N.Start = 0;
 
             // GET ALL SUPPLIES AND DEMANDS AND CALCULATE TOTALS
             for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassSupplyType Supply = Organs[i].NSupply;
-                BAT.ReallocationSupply[i] = Supply.Reallocation;
-                //BAT.UptakeSupply[i] = Supply.Uptake;             This is done on DoNutrientUptakeCalculations
-                BAT.FixationSupply[i] = Supply.Fixation;
-                BAT.RetranslocationSupply[i] = Supply.Retranslocation;
-                BAT.Start += Organs[i].N;
+                N.ReallocationSupply[i] = Supply.Reallocation;
+                //N.UptakeSupply[i] = Supply.Uptake;             This is done on DoNutrientUptakeCalculations
+                N.FixationSupply[i] = Supply.Fixation;
+                N.RetranslocationSupply[i] = Supply.Retranslocation;
+                N.Start += Organs[i].N;
             }
 
-            BAT.TotalReallocationSupply = MathUtilities.Sum(BAT.ReallocationSupply);
-            //BAT.TotalUptakeSupply = MathUtilities.Sum(BAT.UptakeSupply);       This is done on DoNutrientUptakeCalculations
-            BAT.TotalFixationSupply = MathUtilities.Sum(BAT.FixationSupply);
-            BAT.TotalRetranslocationSupply = MathUtilities.Sum(BAT.RetranslocationSupply);
-            BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
+            N.TotalReallocationSupply = MathUtilities.Sum(N.ReallocationSupply);
+            //N.TotalUptakeSupply = MathUtilities.Sum(N.UptakeSupply);       This is done on DoNutrientUptakeCalculations
+            N.TotalFixationSupply = MathUtilities.Sum(N.FixationSupply);
+            N.TotalRetranslocationSupply = MathUtilities.Sum(N.RetranslocationSupply);
+            N.TotalPlantSupply = N.TotalReallocationSupply + N.TotalUptakeSupply + N.TotalFixationSupply + N.TotalRetranslocationSupply;
             
             for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassPoolType Demand = Organs[i].NDemand;
-                BAT.StructuralDemand[i] = Organs[i].NDemand.Structural;
-                BAT.MetabolicDemand[i] = Organs[i].NDemand.Metabolic;
-                BAT.NonStructuralDemand[i] = Organs[i].NDemand.NonStructural;
-                BAT.TotalDemand[i] = BAT.StructuralDemand[i] + BAT.MetabolicDemand[i] + BAT.NonStructuralDemand[i];
+                N.StructuralDemand[i] = Organs[i].NDemand.Structural;
+                N.MetabolicDemand[i] = Organs[i].NDemand.Metabolic;
+                N.NonStructuralDemand[i] = Organs[i].NDemand.NonStructural;
+                N.TotalDemand[i] = N.StructuralDemand[i] + N.MetabolicDemand[i] + N.NonStructuralDemand[i];
 
-                BAT.Reallocation[i] = 0;
-                BAT.Uptake[i] = 0;
-                BAT.Fixation[i] = 0;
-                BAT.Retranslocation[i] = 0;
-                BAT.StructuralAllocation[i] = 0;
-                BAT.MetabolicAllocation[i] = 0;
-                BAT.NonStructuralAllocation[i] = 0;
+                N.Reallocation[i] = 0;
+                N.Uptake[i] = 0;
+                N.Fixation[i] = 0;
+                N.Retranslocation[i] = 0;
+                N.StructuralAllocation[i] = 0;
+                N.MetabolicAllocation[i] = 0;
+                N.NonStructuralAllocation[i] = 0;
             }
 
-            BAT.TotalStructuralDemand = MathUtilities.Sum(BAT.StructuralDemand);
-            BAT.TotalMetabolicDemand = MathUtilities.Sum(BAT.MetabolicDemand);
-            BAT.TotalNonStructuralDemand = MathUtilities.Sum(BAT.NonStructuralDemand);
-            BAT.TotalPlantDemand = BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand;
+            N.TotalStructuralDemand = MathUtilities.Sum(N.StructuralDemand);
+            N.TotalMetabolicDemand = MathUtilities.Sum(N.MetabolicDemand);
+            N.TotalNonStructuralDemand = MathUtilities.Sum(N.NonStructuralDemand);
+            N.TotalPlantDemand = N.TotalStructuralDemand + N.TotalMetabolicDemand + N.TotalNonStructuralDemand;
 
-            BAT.TotalStructuralAllocation = 0;
-            BAT.TotalMetabolicAllocation = 0;
-            BAT.TotalNonStructuralAllocation = 0;
+            N.TotalStructuralAllocation = 0;
+            N.TotalMetabolicAllocation = 0;
+            N.TotalNonStructuralAllocation = 0;
 
             //Set relative N demands of each organ
             for (int i = 0; i < Organs.Length; i++)
             {
-                if (BAT.TotalStructuralDemand > 0)
-                    BAT.RelativeStructuralDemand[i] = BAT.StructuralDemand[i] / BAT.TotalStructuralDemand;
-                if (BAT.TotalMetabolicDemand > 0)
-                    BAT.RelativeMetabolicDemand[i] = BAT.MetabolicDemand[i] / BAT.TotalMetabolicDemand;
-                if (BAT.TotalNonStructuralDemand > 0)
-                    BAT.RelativeNonStructuralDemand[i] = BAT.NonStructuralDemand[i] / BAT.TotalNonStructuralDemand;
+                if (N.TotalStructuralDemand > 0)
+                    N.RelativeStructuralDemand[i] = N.StructuralDemand[i] / N.TotalStructuralDemand;
+                if (N.TotalMetabolicDemand > 0)
+                    N.RelativeMetabolicDemand[i] = N.MetabolicDemand[i] / N.TotalMetabolicDemand;
+                if (N.TotalNonStructuralDemand > 0)
+                    N.RelativeNonStructuralDemand[i] = N.NonStructuralDemand[i] / N.TotalNonStructuralDemand;
             }
         }
         /// <summary>Does the re allocation.</summary>
@@ -1192,7 +1224,7 @@ namespace Models.PMF
                             }
                         }
                         if (UnallocatedRespirationCost > 0.0000000001)
-                            throw new Exception("Crop is trying to Fix excessive amounts of BAT.  Check partitioning coefficients are giving realistic nodule size and that FixationRatePotential is realistic");
+                            throw new Exception("Crop is trying to Fix excessive amounts of " + BAT.BiomassType +" Check partitioning coefficients are giving realistic nodule size and that FixationRatePotential is realistic");
                     }
                 }
             }

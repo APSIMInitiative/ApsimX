@@ -2,8 +2,8 @@
 !experiment number = 6
 !experiment = Lincoln9192
 !station name = Lincoln                                  
-latitude = -43.39  (DECIMAL DEGREES)
-longitude = 0  (DECIMAL DEGREES)
+Latitude=-43.624
+Longitude=172.466 
 tav =   11.00 (oC)     ! annual average ambient temperature
 amp =   10.00 (oC)     ! annual amplitude in mean monthly temperature
 

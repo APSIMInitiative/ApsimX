@@ -58,7 +58,7 @@ namespace Models.PMF.Phen
 
             FractionCompleteYesterday = FractionComplete;
 
-            if (Leaf.ExpandedCohortNo >= (int)(Structure.MainStemFinalNodeNo - RemainingLeaves))
+            if (Leaf.ExpandedCohortNo >= (int)(Structure.MainStemFinalNodeNumber.Value - RemainingLeaves))
                 return 0.00001;
             else
                 return 0;
@@ -79,7 +79,7 @@ namespace Models.PMF.Phen
 
             FractionCompleteYesterday = FractionComplete;
 
-            if (Leaf.ExpandedCohortNo >= (int)(Structure.MainStemFinalNodeNo - RemainingLeaves))
+            if (Leaf.ExpandedCohortNo >= (int)(Structure.MainStemFinalNodeNumber.Value - RemainingLeaves))
                 return 0.00001;
             else
                 return 0;
@@ -92,7 +92,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = (Leaf.ExpandedNodeNo - CohortNoAtStart) / ((Structure.MainStemFinalNodeNo - RemainingLeaves) - CohortNoAtStart);
+                double F = (Leaf.ExpandedNodeNo - CohortNoAtStart) / ((Structure.MainStemFinalNodeNumber.Value - RemainingLeaves) - CohortNoAtStart);
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
