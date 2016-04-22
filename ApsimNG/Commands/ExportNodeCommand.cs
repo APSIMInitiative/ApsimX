@@ -184,7 +184,7 @@ namespace UserInterface.Commands
             string png1 = Path.Combine(workingDirectory, "AIBanner.png");
             using (FileStream file = new FileStream(png1, FileMode.Create, FileAccess.Write))
             {
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("UserInterface.Resources.AIBanner.png").CopyTo(file);
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.AIBanner.png").CopyTo(file);
             }
             section.AddImage(png1);
 
@@ -233,6 +233,9 @@ namespace UserInterface.Commands
             FileNameWritten = Path.Combine(Path.GetDirectoryName(ExplorerPresenter.ApsimXFile.FileName), modelNameToExport + ".pdf");
             PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(false, PdfSharp.Pdf.PdfFontEmbedding.Always);
             pdfRenderer.Document = document;
+            /// Fails on non-Windows platforms. It's trying to get a Windows DC for associated font information
+            /// See https://alex-maz.info/pdfsharp_150 for a sort of work-around
+            /// See also http://stackoverflow.com/questions/32726223/pdfsharp-migradoc-font-resolver-for-embedded-fonts-system-argumentexception
             pdfRenderer.RenderDocument();
             pdfRenderer.PdfDocument.Save(FileNameWritten);
 
@@ -386,7 +389,7 @@ namespace UserInterface.Commands
                                               graphAndTable.xyPairs.Parent.Parent.Name + graphAndTable.xyPairs.Parent.Name + ".png");
 
             // Setup graph.
-            GraphView graph = new GraphView(null /* TBI */);
+            GraphView graph = new GraphView(null);
             graph.Clear();
 
             // Create a line series.
@@ -398,7 +401,7 @@ namespace UserInterface.Commands
             // Format the axes.
             graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN);
             graph.FormatAxis(Models.Graph.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN);
-            /// TBI graph.BackColor = System.Drawing.Color.White;
+            graph.BackColor = OxyPlot.OxyColors.White;
             graph.FontSize = 10;
             graph.Refresh();
 
@@ -522,11 +525,11 @@ namespace UserInterface.Commands
                 else if (tag is Graph)
                 {
                     GraphPresenter graphPresenter = new GraphPresenter();
-                    GraphView graphView = new GraphView(null /* TBI */);
-                    /// TBI graphView.BackColor = System.Drawing.Color.White;
+                    GraphView graphView = new GraphView(null);
+                    graphView.BackColor = OxyPlot.OxyColors.White;
                     graphView.FontSize = 12;
-                    /// TBI graphView.Width = 500;
-                    /// TBI graphView.Height = 500;
+                    graphView.Width = 500;
+                    graphView.Height = 500;
                     graphPresenter.Attach(tag, graphView, ExplorerPresenter);
                     string PNGFileName = graphPresenter.ExportToPDF(workingDirectory);
                     section.AddImage(PNGFileName);

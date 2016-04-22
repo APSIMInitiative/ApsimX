@@ -127,6 +127,24 @@ namespace UserInterface.Views
         /// </summary>
         public int LeftRightPadding { get; set; }
 
+        public OxyColor BackColor
+        {
+            get { return this.plot1.Model.Background; }
+            set { this.plot1.Model.Background = value; }
+        }
+
+        public int Width
+        {
+            get { return this.plot1.Allocation.Width; }
+            set { this.plot1.WidthRequest = value; }
+        }
+
+        public int Height
+        {
+            get { return this.plot1.Allocation.Height; }
+            set { this.plot1.HeightRequest = value; }
+        }
+
         /// <summary>Gets or sets a value indicating if the legend is visible.</summary>
         public bool IsLegendVisible
         {

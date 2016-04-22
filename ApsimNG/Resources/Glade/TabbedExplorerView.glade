@@ -53,11 +53,19 @@
             <property name="can_focus">False</property>
             <property name="label_xalign">0</property>
             <child>
-              <widget class="GtkIconView" id="recentFilesView">
+              <widget class="GtkScrolledWindow" id="scrolledwindow1">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="item_width">80</property>
-                <signal name="item_activated" handler="OnRecentFileIconActivated" swapped="no"/>
+                <property name="hscrollbar_policy">automatic</property>
+                <property name="vscrollbar_policy">automatic</property>
+                <child>
+                  <widget class="GtkIconView" id="recentFilesView">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="item_width">80</property>
+                    <signal name="item_activated" handler="OnRecentFileIconActivated" swapped="no"/>
+                  </widget>
+                </child>
               </widget>
             </child>
             <child>
