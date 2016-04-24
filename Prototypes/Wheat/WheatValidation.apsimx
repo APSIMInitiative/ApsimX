@@ -44264,7 +44264,7 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
           <Name>Jamma</Name>
           <Weather>
             <Name>Weather</Name>
-            <FileName>%root%\Prototypes\Teff\Jamma.met</FileName>
+            <FileName>Jamma.met</FileName>
           </Weather>
           <Clock>
             <Name>clock</Name>
