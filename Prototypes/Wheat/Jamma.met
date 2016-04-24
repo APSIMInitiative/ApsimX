@@ -1,6 +1,7 @@
 !title=Jamma
 [weather.met.weather]
 Latitude =10.45(DECIMALDEGREES)
+Longitude = 39.25 ()
 
  tav =  15.8 (oC)     ! annual average ambient temperature
  amp =   3.8 (oC)     ! annual amplitude in mean monthly temperature
