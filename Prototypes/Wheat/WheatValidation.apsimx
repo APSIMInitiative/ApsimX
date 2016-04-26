@@ -1893,23 +1893,143 @@ The EarLive composite biomass object includes the Live pools of all organs withi
         <CultivarFolder>
           <Name>New Zealand</Name>
           <Cultivar>
-            <Name>Wakanui</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 4</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
-            <Command>[Leaf].ExtinctionCoeff.PotentialExtinctionCoeff.XYPairs.Y = 0.9,0.9</Command>
-            <Command>[Phenology].EarlyReproductive.Target.Multiplier.Value = 5</Command>
+            <Name>Alberic</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 3.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 5</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Amarok</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 3.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Aspiring</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>BattenWinter</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 3.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>BattenSpring</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 5</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Centaur</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Claire</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 3.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Conquest</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Einstein</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Exceed</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Majestic</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Option</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 4.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Otane</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Pennant</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens  = 3.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Regency</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Richmond</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Robigus</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 3.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rongotea</Name>
             <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
             <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
-            <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
           </Cultivar>
           <Cultivar>
-            <Name>BattenSpring</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 0.0</Command>
+            <Name>Rubric</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Sage</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.0</Command>
             <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Saracen</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Savannah</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Solstice</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Tanker</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Tribute</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Wakanui</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
+            <Command>[Leaf].ExtinctionCoeff.PotentialExtinctionCoeff.XYPairs.Y = 0.9,0.9</Command>
+            <Command>[Phenology].EarlyReproductive.Target.Multiplier.Value = 5</Command>
+            <Command>[Leaf].CohortParameters.SpecificLeafAreaMin.XYPairs.Y = 1000,1000</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Weston</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
@@ -1954,12 +2074,6 @@ The EarLive composite biomass object includes the Live pools of all organs withi
             <Command>[Phenology].GrainFilling.Target.Value = 580</Command>
           </Cultivar>
           <Cultivar>
-            <Name>BattenWinter</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
-            <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
-          </Cultivar>
-          <Cultivar>
             <Name>Bolac</Name>
             <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
             <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
@@ -1975,7 +2089,7 @@ The EarLive composite biomass object includes the Live pools of all organs withi
             <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
           </Cultivar>
           <Cultivar>
-            <Name>Mckellar</Name>
+            <Name>MacKellar</Name>
             <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
             <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
           </Cultivar>
@@ -2058,6 +2172,21 @@ The EarLive composite biomass object includes the Live pools of all organs withi
             <Name>Lorikeet</Name>
             <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
             <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Lang</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>McCubbin</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 5</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Sunco</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 4</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
@@ -4373,44 +4502,44 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>175</n>
-            <Slope>1.0072948175978027</Slope>
-            <Intercept>-62.825131341196993</Intercept>
-            <SEslope>0.0331864160532158</SEslope>
-            <SEintercept>45.2153427100788</SEintercept>
-            <R2>0.84190543979539278</R2>
-            <RMSE>261.01901773737183</RMSE>
-            <NSE>0.800943198403733</NSE>
-            <ME>-53.849116569558383</ME>
-            <MAE>188.88522598920153</MAE>
-            <RSR>0.44488125849329069</RSR>
+            <Slope>1.0729481659956917</Slope>
+            <Intercept>-114.52628854530985</Intercept>
+            <SEslope>0.040686952337309283</SEslope>
+            <SEintercept>55.434563672379866</SEintercept>
+            <R2>0.80078763236010519</R2>
+            <RMSE>316.949137794612</RMSE>
+            <NSE>0.70649745664326535</NSE>
+            <ME>-24.766153111829968</ME>
+            <MAE>216.75776025106063</MAE>
+            <RSR>0.54020865039919963</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Live.N</Name>
             <n>132</n>
-            <Slope>1.2114069847826432</Slope>
-            <Intercept>-2.4827093952549024</Intercept>
-            <SEslope>0.054016568820241528</SEslope>
-            <SEintercept>0.51927022637224107</SEintercept>
-            <R2>0.79461303460203958</R2>
-            <RMSE>2.7326853198700172</RMSE>
-            <NSE>0.55118856212114131</NSE>
-            <ME>-0.64244334359855026</ME>
-            <MAE>2.1256104964506641</MAE>
-            <RSR>0.66739145276835943</RSR>
+            <Slope>1.063434075033961</Slope>
+            <Intercept>-1.6221782339773796</Intercept>
+            <SEslope>0.045668585440449869</SEslope>
+            <SEintercept>0.43901967891888777</SEintercept>
+            <R2>0.806614699392847</R2>
+            <RMSE>2.3922911349282923</RMSE>
+            <NSE>0.65603620602064228</NSE>
+            <ME>-1.0699941378689153</ME>
+            <MAE>1.8782971168734757</MAE>
+            <RSR>0.58425851098750148</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Live.NConc</Name>
             <n>86</n>
-            <Slope>-0.052991206304185905</Slope>
-            <Intercept>0.023734099610139885</Intercept>
-            <SEslope>0.093019489730242683</SEslope>
-            <SEintercept>0.0019785049282367156</SEintercept>
-            <R2>0.0038486264341880405</R2>
-            <RMSE>0.0057362377605160815</RMSE>
-            <NSE>-1.0224748880590875</NSE>
-            <ME>0.0017436055482490738</ME>
-            <MAE>0.0044703156057243473</MAE>
-            <RSR>1.4138450191580176</RSR>
+            <Slope>-0.058909695152838441</Slope>
+            <Intercept>0.023442490322220011</Intercept>
+            <SEslope>0.10030940348759776</SEslope>
+            <SEintercept>0.0021335598563724735</SEintercept>
+            <R2>0.0040891349128255872</R2>
+            <RMSE>0.005810190386235323</RMSE>
+            <NSE>-1.0749592722064305</NSE>
+            <ME>0.0013283955188391847</ME>
+            <MAE>0.0044432524620547573</MAE>
+            <RSR>1.4320725675777331</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
@@ -4443,30 +4572,30 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>190</n>
-            <Slope>1.1828934628186971</Slope>
-            <Intercept>-136.10827761749908</Intercept>
-            <SEslope>0.051484350762431977</SEslope>
-            <SEintercept>24.713749327734995</SEintercept>
-            <R2>0.73738863966615031</R2>
-            <RMSE>158.33784577210619</RMSE>
-            <NSE>0.39052645322794755</NSE>
-            <ME>-56.536332298232196</ME>
-            <MAE>129.29746919761945</MAE>
-            <RSR>0.778630715591625</RSR>
+            <Slope>1.117432966494708</Slope>
+            <Intercept>-116.1265451240684</Intercept>
+            <SEslope>0.057124314616558848</SEslope>
+            <SEintercept>27.421070112482784</SEintercept>
+            <R2>0.67055073782702812</R2>
+            <RMSE>173.29868060141982</RMSE>
+            <NSE>0.26991082520396648</NSE>
+            <ME>-65.034672048980411</ME>
+            <MAE>137.60952891935767</MAE>
+            <RSR>0.85220103273338266</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
             <n>17</n>
-            <Slope>-0.009544495989347224</Slope>
-            <Intercept>0.026233961139941763</Intercept>
-            <SEslope>0.10743373668864246</SEslope>
-            <SEintercept>0.011637872540892182</SEintercept>
-            <R2>0.00052590211984615554</R2>
-            <RMSE>0.11160226045021682</RMSE>
-            <NSE>-0.20519821173633046</NSE>
-            <ME>-0.011540818501165518</ME>
-            <MAE>0.053931723236558322</MAE>
-            <RSR>1.0650371821120859</RSR>
+            <Slope>0.0041005224463157757</Slope>
+            <Intercept>0.021954752292549218</Intercept>
+            <SEslope>0.10562191389467195</SEslope>
+            <SEintercept>0.01144160493080224</SEintercept>
+            <R2>0.00010046977436894977</R2>
+            <RMSE>0.11051524316513316</RMSE>
+            <NSE>-0.18183504383024896</NSE>
+            <ME>-0.015309462864621285</ME>
+            <MAE>0.050163078873102548</MAE>
+            <RSR>1.0546636124232438</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.Wt</Name>
@@ -4476,11 +4605,11 @@ VShort duration variety released in New Zealand by Pioneer
             <SEslope>NaN</SEslope>
             <SEintercept>NaN</SEintercept>
             <R2>NaN</R2>
-            <RMSE>1.0760440360729977</RMSE>
-            <NSE>-INF</NSE>
-            <ME>0.43929313819063665</ME>
-            <MAE>0.43929313819063665</MAE>
-            <RSR>INF</RSR>
+            <RMSE>0</RMSE>
+            <NSE>NaN</NSE>
+            <ME>0</ME>
+            <MAE>0</MAE>
+            <RSR>NaN</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
@@ -4513,58 +4642,58 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Spike.Live.Wt</Name>
             <n>29</n>
-            <Slope>0.073297526519046335</Slope>
-            <Intercept>98.574882613834916</Intercept>
-            <SEslope>0.019399507603700111</SEslope>
-            <SEintercept>11.037766047543968</SEintercept>
-            <R2>0.34586199529623007</R2>
-            <RMSE>462.01507481413279</RMSE>
-            <NSE>-0.40849194948367051</NSE>
-            <ME>-285.95396741893825</ME>
-            <MAE>285.95396741893825</MAE>
-            <RSR>1.1661574771746914</RSR>
+            <Slope>-0.018388298057453793</Slope>
+            <Intercept>192.75240465260558</Intercept>
+            <SEslope>0.029630667040151402</SEslope>
+            <SEintercept>16.8590037078819</SEintercept>
+            <R2>0.014063243810418902</R2>
+            <RMSE>462.15326668938775</RMSE>
+            <NSE>-0.40933465468439811</NSE>
+            <ME>-229.82085089068414</ME>
+            <MAE>277.403570312382</MAE>
+            <RSR>1.166506282868268</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Live.N</Name>
             <n>16</n>
-            <Slope>0.89940871782112008</Slope>
-            <Intercept>1.6734308910574856</Intercept>
-            <SEslope>0.091704903538118332</SEslope>
-            <SEintercept>0.16988887499207223</SEintercept>
-            <R2>0.87294650979662236</R2>
-            <RMSE>1.5285933459446641</RMSE>
-            <NSE>-2.972998139569254</NSE>
-            <ME>1.5037962675730781</ME>
-            <MAE>1.5037962675730781</MAE>
-            <RSR>1.9299444955350853</RSR>
+            <Slope>1.1670185956399723</Slope>
+            <Intercept>1.9500087829766566</Intercept>
+            <SEslope>0.14677734968565462</SEslope>
+            <SEintercept>0.27191390918424496</SEintercept>
+            <R2>0.81869400097132117</R2>
+            <RMSE>2.2746683767454789</RMSE>
+            <NSE>-7.7977296478529254</NSE>
+            <ME>2.2316647671990153</ME>
+            <MAE>2.2316647671990153</MAE>
+            <RSR>2.8719107828869124</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Live.Wt</Name>
             <n>28</n>
-            <Slope>0.93985253458460571</Slope>
-            <Intercept>-40.052121159325566</Intercept>
-            <SEslope>0.11334734989009865</SEslope>
-            <SEintercept>73.5346625133533</SEintercept>
-            <R2>0.72560466602235</R2>
-            <RMSE>148.32512584973065</RMSE>
-            <NSE>0.53867781198384845</NSE>
-            <ME>-76.795937625855871</ME>
-            <MAE>118.98695442237667</MAE>
-            <RSR>0.66696806189427349</RSR>
+            <Slope>1.1341724094837871</Slope>
+            <Intercept>-92.2862891812822</Intercept>
+            <SEslope>0.14531003618872715</SEslope>
+            <SEintercept>94.270615777975166</SEintercept>
+            <R2>0.70087776560871462</R2>
+            <RMSE>164.76119805807147</RMSE>
+            <NSE>0.43077393972236211</NSE>
+            <ME>-10.320966870582911</ME>
+            <MAE>127.15384698325497</MAE>
+            <RSR>0.74087553484027613</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.TotalStemPopn</Name>
             <n>9</n>
-            <Slope>-0.064874384371331778</Slope>
-            <Intercept>449.3178530911818</Intercept>
-            <SEslope>0.12003514327258227</SEslope>
-            <SEintercept>87.998570333487663</SEintercept>
-            <R2>0.040056880867569311</R2>
-            <RMSE>374.94287349353897</RMSE>
-            <NSE>-2.498299088023983</NSE>
-            <ME>-301.59574745666424</ME>
-            <MAE>310.7461761343709</MAE>
-            <RSR>1.7634055657603702</RSR>
+            <Slope>-0.22267079840032339</Slope>
+            <Intercept>511.35096935583431</Intercept>
+            <SEslope>0.16411002934124749</SEslope>
+            <SEintercept>120.31016555395009</SEintercept>
+            <R2>0.20823531090591119</R2>
+            <RMSE>436.73364466859817</RMSE>
+            <NSE>-3.7463529469499459</NSE>
+            <ME>-350.8353551405761</ME>
+            <MAE>359.98578381828281</MAE>
+            <RSR>2.0540156760085453</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4590,17 +4719,17 @@ VShort duration variety released in New Zealand by Pioneer
         <AcceptedStats>
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
-            <n>449</n>
-            <Slope>0.89096403063950225</Slope>
-            <Intercept>4.1029938685812084</Intercept>
-            <SEslope>0.016938714105024268</SEslope>
-            <SEintercept>0.98958797752453742</SEintercept>
-            <R2>0.86090726988298028</R2>
-            <RMSE>9.7655548114340043</RMSE>
-            <NSE>0.85591135163900256</NSE>
-            <ME>-1.6161841206925995</ME>
-            <MAE>6.3499929192550706</MAE>
-            <RSR>0.37916716396731592</RSR>
+            <n>432</n>
+            <Slope>0.8140533579886039</Slope>
+            <Intercept>4.5650423630484553</Intercept>
+            <SEslope>0.019293298785801955</SEslope>
+            <SEintercept>1.142313754664043</SEintercept>
+            <R2>0.80545611857556709</R2>
+            <RMSE>12.599373340856038</RMSE>
+            <NSE>0.76278436563113883</NSE>
+            <ME>-5.3380183027084636</ME>
+            <MAE>8.6533189025292572</MAE>
+            <RSR>0.48648383745415263</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4617,45 +4746,45 @@ VShort duration variety released in New Zealand by Pioneer
         <AcceptedStats>
           <RegrStats>
             <Name>Wheat.Leaf.AppearedCohortNo</Name>
-            <n>325</n>
-            <Slope>0.88081914039585218</Slope>
-            <Intercept>2.5165200099537657</Intercept>
-            <SEslope>0.050143906232599934</SEslope>
-            <SEintercept>0.4396919099505634</SEintercept>
-            <R2>0.48856657246859192</R2>
-            <RMSE>2.7537175476274105</RMSE>
-            <NSE>-0.18564976380973342</NSE>
-            <ME>1.5158779883375149</ME>
-            <MAE>2.0104083779188717</MAE>
-            <RSR>1.08719897474672</RSR>
+            <n>311</n>
+            <Slope>0.90915781901166082</Slope>
+            <Intercept>2.2469604820378493</Intercept>
+            <SEslope>0.051306041041040758</SEslope>
+            <SEintercept>0.44918311869220195</SEintercept>
+            <R2>0.50401969069942465</R2>
+            <RMSE>2.7213814218083763</RMSE>
+            <NSE>-0.17015210387548607</NSE>
+            <ME>1.4851819214307378</ME>
+            <MAE>1.9971648530384232</MAE>
+            <RSR>1.0799951652288482</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.DeadCohortNo</Name>
             <n>17</n>
-            <Slope>1.2087287322863827</Slope>
-            <Intercept>-3.1142236926581139</Intercept>
-            <SEslope>0.14564684546903148</SEslope>
-            <SEintercept>1.2413670432837853</SEintercept>
-            <R2>0.82116038614209885</R2>
-            <RMSE>3.0665958004195715</RMSE>
-            <NSE>0.50612837637833841</NSE>
-            <ME>-1.5860450359682141</ME>
-            <MAE>2.2919273889093903</MAE>
-            <RSR>0.68177734755850949</RSR>
+            <Slope>1.2195872500347613</Slope>
+            <Intercept>-3.1055106157343753</Intercept>
+            <SEslope>0.15254968063472582</SEslope>
+            <SEintercept>1.3002008069146998</SEintercept>
+            <R2>0.80992219286371092</R2>
+            <RMSE>3.13184549053128</RMSE>
+            <NSE>0.48488801282224758</NSE>
+            <ME>-1.4978328173374613</ME>
+            <MAE>2.3213622291021667</MAE>
+            <RSR>0.69628390908425375</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.ExpandedCohortNo</Name>
             <n>99</n>
-            <Slope>1.0333911536596274</Slope>
-            <Intercept>-0.64176236586561508</Intercept>
-            <SEslope>0.0617848818910795</SEslope>
-            <SEintercept>0.58188535226525262</SEintercept>
-            <R2>0.74253261091814338</R2>
-            <RMSE>2.1351881771093537</RMSE>
-            <NSE>0.61839123215151059</NSE>
-            <ME>-0.34923139612314391</ME>
-            <MAE>0.75908275781883239</MAE>
-            <RSR>0.61461706275519057</RSR>
+            <Slope>1.0270034449685006</Slope>
+            <Intercept>-0.61612816288959671</Intercept>
+            <SEslope>0.061300978606424542</SEslope>
+            <SEintercept>0.57732798766997584</SEintercept>
+            <R2>0.743167729195149</R2>
+            <RMSE>2.1230870764989875</RMSE>
+            <NSE>0.62270448219002561</NSE>
+            <ME>-0.379558201170247</ME>
+            <MAE>0.71968485596754772</MAE>
+            <RSR>0.61113374311480306</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4714,44 +4843,44 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>692</n>
-            <Slope>0.897679809744926</Slope>
-            <Intercept>53.739738225396195</Intercept>
-            <SEslope>0.013978986758562228</SEslope>
-            <SEintercept>17.111323983103798</SEintercept>
-            <R2>0.856660381177427</R2>
-            <RMSE>274.61569266604351</RMSE>
-            <NSE>0.85004858620897039</NSE>
-            <ME>-48.346764143854763</ME>
-            <MAE>186.82439898185493</MAE>
-            <RSR>0.38695570934737988</RSR>
+            <Slope>0.89368410070944548</Slope>
+            <Intercept>45.00149795234438</Intercept>
+            <SEslope>0.015196554432582559</SEslope>
+            <SEintercept>18.601717764953182</SEintercept>
+            <R2>0.83367163679654788</R2>
+            <RMSE>299.25319963574407</RMSE>
+            <NSE>0.82193544936573038</NSE>
+            <ME>-61.071587699252952</ME>
+            <MAE>203.74654662988073</MAE>
+            <RSR>0.42167194822454124</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Live.N</Name>
             <n>171</n>
-            <Slope>1.4022757984775489</Slope>
-            <Intercept>0.42122628011456342</Intercept>
-            <SEslope>0.068696784394072244</SEslope>
-            <SEintercept>0.53142153028879635</SEintercept>
-            <R2>0.71144246054832694</R2>
-            <RMSE>5.1985958815131088</RMSE>
-            <NSE>-0.43763141669434713</NSE>
-            <ME>2.9984097117960538</ME>
-            <MAE>4.2446723239260136</MAE>
-            <RSR>1.1955016584794556</RSR>
+            <Slope>0.88327123143531672</Slope>
+            <Intercept>-1.3228359047411287</Intercept>
+            <SEslope>0.05601864898926142</SEslope>
+            <SEintercept>0.43334657412513489</SEintercept>
+            <R2>0.59531859836080814</R2>
+            <RMSE>3.8096385662376351</RMSE>
+            <NSE>0.2279543376534825</NSE>
+            <ME>-2.0706597844873356</ME>
+            <MAE>2.8123742205478894</MAE>
+            <RSR>0.87608833768759331</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Live.NConc</Name>
             <n>167</n>
-            <Slope>0.32628785566812624</Slope>
-            <Intercept>0.01535159831170007</Intercept>
-            <SEslope>0.22780983395655188</SEslope>
-            <SEintercept>0.00389027291501963</SEintercept>
-            <R2>0.012280235195785472</R2>
-            <RMSE>0.0103354132600672</RMSE>
-            <NSE>-9.6491744698480879</NSE>
-            <ME>0.0040463212461833552</ME>
-            <MAE>0.0090447048638750971</MAE>
-            <RSR>3.25352223875181</RSR>
+            <Slope>0.32206872475928572</Slope>
+            <Intercept>0.011690108924581182</Intercept>
+            <SEslope>0.28481961823901208</SEslope>
+            <SEintercept>0.0048638200873838645</SEintercept>
+            <R2>0.0076899014524989262</R2>
+            <RMSE>0.011788720629999711</RMSE>
+            <NSE>-12.854587538740114</NSE>
+            <ME>0.00031403241704546045</ME>
+            <MAE>0.010097171550960189</MAE>
+            <RSR>3.7110141385761026</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
@@ -4784,30 +4913,30 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>424</n>
-            <Slope>0.96676939200117384</Slope>
-            <Intercept>4.491222710524994</Intercept>
-            <SEslope>0.025047663301096125</SEslope>
-            <SEintercept>9.5858206537781356</SEintercept>
-            <R2>0.7792590311845029</R2>
-            <RMSE>143.31050405301951</RMSE>
-            <NSE>0.7339044545811434</NSE>
-            <ME>-4.2553929084340245</ME>
-            <MAE>89.064686860208809</MAE>
-            <RSR>0.51523583103790582</RSR>
+            <Slope>0.73548418346054767</Slope>
+            <Intercept>-20.918961803016629</Intercept>
+            <SEslope>0.029162741238864677</SEslope>
+            <SEintercept>11.160674108712684</SEintercept>
+            <R2>0.60115236327574328</R2>
+            <RMSE>203.22084635264486</RMSE>
+            <NSE>0.46492080041807982</NSE>
+            <ME>-90.542068683500048</ME>
+            <MAE>124.02590225469376</MAE>
+            <RSR>0.730627963013751</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CoverTotal</Name>
             <n>102</n>
-            <Slope>0.26276361672025589</Slope>
-            <Intercept>0.68753558101473744</Intercept>
-            <SEslope>0.059095737641566323</SEslope>
-            <SEintercept>0.047697510279761546</SEintercept>
-            <R2>0.16507001927247211</R2>
-            <RMSE>0.36509222841744104</RMSE>
-            <NSE>-0.079486250970187688</NSE>
-            <ME>0.151848515801524</ME>
-            <MAE>0.17103214722345764</MAE>
-            <RSR>1.0338776776927066</RSR>
+            <Slope>0.2429669840974153</Slope>
+            <Intercept>0.67187028489762524</Intercept>
+            <SEslope>0.065757834686751115</SEslope>
+            <SEintercept>0.053074639916839847</SEintercept>
+            <R2>0.12012185937870157</R2>
+            <RMSE>0.37281715967550727</RMSE>
+            <NSE>-0.12565090632492493</NSE>
+            <ME>0.1217986881130633</ME>
+            <MAE>0.19469615943007104</MAE>
+            <RSR>1.0557533391496619</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Dead.N</Name>
@@ -4840,58 +4969,58 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
             <n>435</n>
-            <Slope>1.1092998029633996</Slope>
-            <Intercept>0.30151535530896778</Intercept>
-            <SEslope>0.052859028710360578</SEslope>
-            <SEintercept>0.21198372207905417</SEintercept>
-            <R2>0.5042433425568118</R2>
-            <RMSE>2.8344246284934216</RMSE>
-            <NSE>-0.28839649636348841</NSE>
-            <ME>0.64450357301955385</ME>
-            <MAE>1.8038576176989891</MAE>
-            <RSR>1.1337701113265273</RSR>
+            <Slope>1.1978150268552565</Slope>
+            <Intercept>0.18245296352816443</Intercept>
+            <SEslope>0.051693038793093282</SEslope>
+            <SEintercept>0.20730768302575761</SEintercept>
+            <R2>0.55357473271870594</R2>
+            <RMSE>2.8467663584118612</RMSE>
+            <NSE>-0.29964086659847533</NSE>
+            <ME>0.80320635610450675</ME>
+            <MAE>1.8258738440659923</MAE>
+            <RSR>1.1387068044256938</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.N</Name>
             <n>200</n>
-            <Slope>1.1817678098695315</Slope>
-            <Intercept>-0.13859878411643978</Intercept>
-            <SEslope>0.041442244726209519</SEslope>
-            <SEintercept>0.17842516103564238</SEintercept>
-            <R2>0.80418593136369909</R2>
-            <RMSE>1.7446331593813247</RMSE>
-            <NSE>0.59864051723944223</NSE>
-            <ME>0.46296269148582264</ME>
-            <MAE>1.2035689305982293</MAE>
-            <RSR>0.63194357766081855</RSR>
+            <Slope>1.3332363626268666</Slope>
+            <Intercept>0.43477733615608205</Intercept>
+            <SEslope>0.04374979761234507</SEslope>
+            <SEintercept>0.1883600836738123</SEintercept>
+            <R2>0.82426113757496189</R2>
+            <RMSE>2.4658579050172849</RMSE>
+            <NSE>0.19820863156249968</NSE>
+            <ME>1.5376247444515108</ME>
+            <MAE>1.7334975883717665</MAE>
+            <RSR>0.89318666111586831</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.Wt</Name>
             <n>271</n>
-            <Slope>0.83996439051796667</Slope>
-            <Intercept>56.381167008943464</Intercept>
-            <SEslope>0.053894074350330792</SEslope>
-            <SEintercept>9.5456572127998527</SEintercept>
-            <R2>0.47451374467685625</R2>
-            <RMSE>103.48880492940688</RMSE>
-            <NSE>0.095326488519277053</NSE>
-            <ME>34.01471411120022</ME>
-            <MAE>72.85268006375523</MAE>
-            <RSR>0.9493867667292254</RSR>
+            <Slope>1.3970044297370623</Slope>
+            <Intercept>25.343799747547621</Intercept>
+            <SEslope>0.041960423427017418</SEslope>
+            <SEintercept>7.4319825206495311</SEintercept>
+            <R2>0.80471150873925668</R2>
+            <RMSE>118.3475410380094</RMSE>
+            <NSE>-0.18310586834659581</NSE>
+            <ME>80.828831526716741</ME>
+            <MAE>88.725244313885412</MAE>
+            <RSR>1.0856980077513976</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.SpecificArea</Name>
             <n>77</n>
-            <Slope>0.15500154978743816</Slope>
-            <Intercept>20635.823404736486</Intercept>
-            <SEslope>0.0892210400404972</SEslope>
-            <SEintercept>1748.4670581644166</SEintercept>
-            <R2>0.038684946260732267</R2>
-            <RMSE>6800.5508449753124</RMSE>
-            <NSE>-1.3389716140643744</NSE>
-            <ME>4508.2833883320291</ME>
-            <MAE>5849.3334580049805</MAE>
-            <RSR>1.5194062522367957</RSR>
+            <Slope>0.58577730613941081</Slope>
+            <Intercept>8026.4407251023713</Intercept>
+            <SEslope>0.068004309998348111</SEslope>
+            <SEintercept>1332.6822439117818</SEintercept>
+            <R2>0.49731230160361928</R2>
+            <RMSE>3203.9254640786748</RMSE>
+            <NSE>0.4808395795782362</NSE>
+            <ME>120.63560882193653</ME>
+            <MAE>2502.1178512356887</MAE>
+            <RSR>0.71583383358109254</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
@@ -4924,58 +5053,58 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Spike.Live.Wt</Name>
             <n>132</n>
-            <Slope>0.12719653741308232</Slope>
-            <Intercept>29.202295685754549</Intercept>
-            <SEslope>0.017983853973589113</SEslope>
-            <SEintercept>8.496272384244282</SEintercept>
-            <R2>0.277877123289351</R2>
-            <RMSE>395.65767130590041</RMSE>
-            <NSE>-0.66015655684584607</NSE>
-            <ME>-284.16113874949781</ME>
-            <MAE>288.16354259735505</MAE>
-            <RSR>1.2835807778372881</RSR>
+            <Slope>0.12675483919278527</Slope>
+            <Intercept>20.14196662413913</Intercept>
+            <SEslope>0.022288929221421731</SEslope>
+            <SEintercept>10.530157445475908</SEintercept>
+            <R2>0.19921545125621509</R2>
+            <RMSE>405.05227456745411</RMSE>
+            <NSE>-0.73993095405890275</NSE>
+            <ME>-293.38005113167651</ME>
+            <MAE>303.83367665032068</MAE>
+            <RSR>1.3140584686201737</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Live.N</Name>
             <n>244</n>
-            <Slope>0.95324698438002642</Slope>
-            <Intercept>1.4375144470035552</Intercept>
-            <SEslope>0.043951777776483618</SEslope>
-            <SEintercept>0.1741189218879784</SEintercept>
-            <R2>0.66029838403788677</R2>
-            <RMSE>2.0167357861497126</RMSE>
-            <NSE>0.20879826706026783</NSE>
-            <ME>1.2856309526083207</ME>
-            <MAE>1.5768413951282947</MAE>
-            <RSR>0.88767060494684646</RSR>
+            <Slope>1.094525956418086</Slope>
+            <Intercept>2.5629678809170811</Intercept>
+            <SEslope>0.066158318350022671</SEslope>
+            <SEintercept>0.2620921302344012</SEintercept>
+            <R2>0.53073975084841873</R2>
+            <RMSE>3.7051414568633967</RMSE>
+            <NSE>-1.6705382765249408</NSE>
+            <ME>2.8700482345894387</ME>
+            <MAE>2.9819681911156279</MAE>
+            <RSR>1.6308260016086293</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Live.Wt</Name>
             <n>321</n>
-            <Slope>0.726472853625883</Slope>
-            <Intercept>13.236309238979402</Intercept>
-            <SEslope>0.02504220824001362</SEslope>
-            <SEintercept>16.929845447603434</SEintercept>
-            <R2>0.72513657295455114</R2>
-            <RMSE>229.97257769667036</RMSE>
-            <NSE>0.53514148893621516</NSE>
-            <ME>-147.02257583029504</ME>
-            <MAE>174.06692410111185</MAE>
-            <RSR>0.680742501764394</RSR>
+            <Slope>0.749561358262234</Slope>
+            <Intercept>26.591161412504448</Intercept>
+            <SEslope>0.028412503753034279</SEslope>
+            <SEintercept>19.208341880558581</SEintercept>
+            <R2>0.68570740156565713</R2>
+            <RMSE>225.53832571879082</RMSE>
+            <NSE>0.55289514597392686</NSE>
+            <ME>-120.14022534449097</ME>
+            <MAE>162.46184439359018</MAE>
+            <RSR>0.66761665947872417</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.TotalStemPopn</Name>
             <n>61</n>
-            <Slope>1.2964873583383139</Slope>
-            <Intercept>-481.15378106472883</Intercept>
-            <SEslope>0.13421074393874177</SEslope>
-            <SEintercept>117.41792557172089</SEintercept>
-            <R2>0.61265060999264087</R2>
-            <RMSE>396.01968148700911</RMSE>
-            <NSE>-0.79298607569358492</NSE>
-            <ME>-237.03452811103347</ME>
-            <MAE>356.77131130757772</MAE>
-            <RSR>1.3280033363429296</RSR>
+            <Slope>1.134865838085668</Slope>
+            <Intercept>-339.43792133146246</Intercept>
+            <SEslope>0.081352934074964731</SEslope>
+            <SEintercept>71.1738306332264</SEintercept>
+            <R2>0.76735006254227911</R2>
+            <RMSE>296.49535135693947</RMSE>
+            <NSE>-0.0050302966978643671</NSE>
+            <ME>-228.3932284751846</ME>
+            <MAE>246.10228264763575</MAE>
+            <RSR>0.99426072546119437</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4984,6 +5113,12 @@ VShort duration variety released in New Zealand by Pioneer
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Observed</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
+    <PredictedObserved>
+      <Name>PredictedObserved1</Name>
+      <PredictedTableName>PhenDOY</PredictedTableName>
+      <ObservedTableName>Phenology</ObservedTableName>
+      <FieldNameUsedForMatch>SimulationID</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>1000</MaximumResultsPerPage>
@@ -9827,7 +9962,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Factor>
             <Name>Cv</Name>
             <Specifications>
-              <string>[SowingRule].Script.Cultivar = Bolac, Derrimut, EGAGregory, Gladius, H46, Hartog, Janz, Kelallac, Kennedy, Mckellar, Ruby, Ventura, Wedgetail, Wyalkatchem, Yitpi, Young</string>
+              <string>[SowingRule].Script.Cultivar = Bolac, Derrimut, EGAGregory, Gladius, H46, Hartog, Janz, Kelallac, Kennedy, MacKellar, Ruby, Ventura, Wedgetail, Wyalkatchem, Yitpi, Young</string>
             </Specifications>
           </Factor>
         </Factors>
@@ -22933,6 +23068,8 @@ namespace Models
                 <string>[Wheat].Leaf.CohortParameters.LagDuration.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.SenescenceDuration.Value</string>
                 <string>[Wheat].Leaf.CoverGreen</string>
+                <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
+                <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -25808,6 +25945,27 @@ namespace Models
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
+              <Series>
+                <Name>MaxArea1</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Right</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>ExtraVariables.Script.LeafAppearedPosition</XFieldName>
+                <YFieldName>Wheat.Phenology.Stage</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
               <Axis>
                 <Type>Left</Type>
                 <Title>Leaf size (mm2)</Title>
@@ -25819,6 +25977,13 @@ namespace Models
               <Axis>
                 <Type>Bottom</Type>
                 <Title>Leaf position</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Right</Type>
                 <Inverted>false</Inverted>
                 <Minimum>NaN</Minimum>
                 <Maximum>NaN</Maximum>
@@ -25931,6 +26096,48 @@ namespace Models
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.SpecificArea</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Min</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16736653</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>DashDot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.CohortParameters.SpecificLeafAreaMin.Value</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Max</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-8388608</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.CohortParameters.SpecificLeafAreaMax.Value</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
@@ -26182,10 +26389,6 @@ namespace Models
                 <Date>1992-10-20T00:00:00</Date>
                 <Action>[Fertiliser].Apply(16, Fertiliser.Types.NO3N, 0);</Action>
               </Operation>
-              <Operation>
-                <Date>1992-11-25T00:00:00</Date>
-                <Action>[Fertiliser].Apply(16, Fertiliser.Types.NO3N, 0);</Action>
-              </Operation>
             </Operations>
             <Operations>
               <Name>162</Name>
@@ -26201,10 +26404,6 @@ namespace Models
                 <Date>1992-10-20T00:00:00</Date>
                 <Action>[Fertiliser].Apply(32, Fertiliser.Types.NO3N, 0);</Action>
               </Operation>
-              <Operation>
-                <Date>1992-11-25T00:00:00</Date>
-                <Action>[Fertiliser].Apply(32, Fertiliser.Types.NO3N, 0);</Action>
-              </Operation>
             </Operations>
             <Operations>
               <Name>250</Name>
@@ -26218,10 +26417,6 @@ namespace Models
               </Operation>
               <Operation>
                 <Date>1992-10-20T00:00:00</Date>
-                <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N, 0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-11-25T00:00:00</Date>
                 <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N, 0);</Action>
               </Operation>
             </Operations>
@@ -26294,12 +26489,12 @@ namespace Models
                   <XF>
                     <double>1</double>
                     <double>1</double>
+                    <double>0.3</double>
+                    <double>0.7</double>
+                    <double>0.9</double>
                     <double>1</double>
                     <double>1</double>
-                    <double>0.6</double>
-                    <double>0.4</double>
-                    <double>0.4</double>
-                    <double>0.4</double>
+                    <double>1</double>
                   </XF>
                 </SoilCrop>
                 <Thickness>
@@ -26469,7 +26664,7 @@ namespace Models
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <RootCN>30</RootCN>
-                <RootWt>3000</RootWt>
+                <RootWt>500</RootWt>
                 <SoilCN>11.5</SoilCN>
                 <EnrACoeff>0</EnrACoeff>
                 <EnrBCoeff>0</EnrBCoeff>
@@ -26921,7 +27116,12 @@ namespace Models
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
+            <DisabledSeries>
+              <string>Sow5MayNit81</string>
+              <string>Sow5AugNit81</string>
+              <string>Sow5MayNit162</string>
+              <string>Sow5AugNit162</string>
+            </DisabledSeries>
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
@@ -31518,6 +31718,575 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
         </Folder>
+      </Experiment>
+      <Experiment>
+        <Name>CPT</Name>
+        <Factors>
+          <Name>Factors</Name>
+          <Factor>
+            <Name>Cult</Name>
+            <Specifications>
+              <string>[Sowing].Script.Cultivar = Lang,Otane,BattenSpring,Conquest,Saracen,Amarok,Claire,Aspiring,Pennant,Solstice,Einstein,Richmond,Wakanui</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sow</Name>
+            <Specifications>
+              <string>[Clock].StartDate = 2000-03-03,2000-05-15,2000-09-20,2001-04-09,2001-06-15,2001-08-09,2002-03-07,2002-05-15,2002-09-09,2003-03-14,2003-05-21,2003-09-02,2004-03-23,2004-05-28,2004-09-06,2005-04-04,2005-05-27,2005-09-05,2005-12-05,2006-03-13,2006-05-10,2006-10-11,2006-12-14,2007-04-24,2007-06-28,2007-09-13,2007-11-29,2008-04-11,2008-06-06,2008-09-11,2008-12-05,2009-03-20,2009-06-05,2009-08-24,2009-12-07,2010-03-30,2010-07-06,2010-10-04,2010-11-30,2011-03-30,2011-05-11,2011-09-09,2011-12-09,2012-04-05,2012-06-28,2012-09-25</string>
+            </Specifications>
+          </Factor>
+        </Factors>
+        <Simulation>
+          <Name>LincolnCPT</Name>
+          <Clock>
+            <Name>Clock</Name>
+            <StartDate>1991-06-08T00:00:00</StartDate>
+            <EndDate>2013-07-01T00:00:00</EndDate>
+          </Clock>
+          <Summary>
+            <Name>summaryfile</Name>
+          </Summary>
+          <Weather>
+            <Name>Weather</Name>
+            <FileName>lincoln.met</FileName>
+          </Weather>
+          <Zone>
+            <Name>paddock</Name>
+            <Irrigation>
+              <Name>Irrigation</Name>
+            </Irrigation>
+            <Soil>
+              <Name>Soil</Name>
+              <Water>
+                <Name>Water</Name>
+                <SoilCrop>
+                  <Name>WheatSoil</Name>
+                  <LL>
+                    <double>0.08</double>
+                    <double>0.07</double>
+                    <double>0.07</double>
+                    <double>0.09</double>
+                    <double>0.11</double>
+                    <double>0.16</double>
+                    <double>0.15</double>
+                    <double>0.12</double>
+                  </LL>
+                  <KL>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.04</double>
+                    <double>0.03</double>
+                    <double>0.02</double>
+                    <double>0.02</double>
+                    <double>0.02</double>
+                  </KL>
+                  <XF>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0.6</double>
+                    <double>0.4</double>
+                    <double>0.4</double>
+                    <double>0.4</double>
+                  </XF>
+                </SoilCrop>
+                <Thickness>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <BD>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                </BD>
+                <AirDry>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                </AirDry>
+                <LL15>
+                  <double>0.08</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
+                  <double>0.16</double>
+                  <double>0.15</double>
+                  <double>0.12</double>
+                </LL15>
+                <DUL>
+                  <double>0.31</double>
+                  <double>0.3</double>
+                  <double>0.28</double>
+                  <double>0.31</double>
+                  <double>0.3</double>
+                  <double>0.28</double>
+                  <double>0.3</double>
+                  <double>0.34</double>
+                </DUL>
+                <SAT>
+                  <double>0.44</double>
+                  <double>0.44</double>
+                  <double>0.44</double>
+                  <double>0.44</double>
+                  <double>0.44</double>
+                  <double>0.44</double>
+                  <double>0.44</double>
+                  <double>0.44</double>
+                </SAT>
+              </Water>
+              <SoilWater>
+                <Name>SoilWater</Name>
+                <residueinterception>0</residueinterception>
+                <SummerDate>1-Nov</SummerDate>
+                <SummerU>7</SummerU>
+                <SummerCona>3</SummerCona>
+                <WinterDate>1-Apr</WinterDate>
+                <WinterU>7</WinterU>
+                <WinterCona>3</WinterCona>
+                <DiffusConst>40</DiffusConst>
+                <DiffusSlope>16</DiffusSlope>
+                <Salb>0.2</Salb>
+                <CN2Bare>75</CN2Bare>
+                <CNRed>20</CNRed>
+                <CNCov>0.8</CNCov>
+                <slope>0</slope>
+                <discharge_width>0</discharge_width>
+                <catchment_area>0</catchment_area>
+                <max_pond>0</max_pond>
+                <Thickness>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <SWCON>
+                  <double>0.6</double>
+                  <double>0.6</double>
+                  <double>0.6</double>
+                  <double>0.6</double>
+                  <double>0.6</double>
+                  <double>0.6</double>
+                  <double>0.6</double>
+                  <double>0.6</double>
+                </SWCON>
+                <KLAT>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                </KLAT>
+              </SoilWater>
+              <SoilNitrogen>
+                <Name>SoilNitrogen</Name>
+                <fom_type>
+                  <string>default</string>
+                  <string>manure</string>
+                  <string>mucuna</string>
+                  <string>lablab</string>
+                  <string>shemp</string>
+                  <string>stable</string>
+                </fom_type>
+                <fract_carb>
+                  <double>0.2</double>
+                  <double>0.3</double>
+                  <double>0.54</double>
+                  <double>0.57</double>
+                  <double>0.45</double>
+                  <double>0</double>
+                </fract_carb>
+                <fract_cell>
+                  <double>0.7</double>
+                  <double>0.3</double>
+                  <double>0.37</double>
+                  <double>0.37</double>
+                  <double>0.47</double>
+                  <double>0.1</double>
+                </fract_cell>
+                <fract_lign>
+                  <double>0.1</double>
+                  <double>0.4</double>
+                  <double>0.09</double>
+                  <double>0.06</double>
+                  <double>0.08</double>
+                  <double>0.9</double>
+                </fract_lign>
+                <wfpsN2N2O_x>
+                  <double>22</double>
+                  <double>88</double>
+                </wfpsN2N2O_x>
+                <wfpsN2N2O_y>
+                  <double>0.1</double>
+                  <double>1</double>
+                </wfpsN2N2O_y>
+                <oc>
+                  <double>0.36030177375113792</double>
+                  <double>0.27080607825510783</double>
+                  <double>0.241057083027954</double>
+                  <double>0.1614100773132848</double>
+                  <double>0.16039591661358196</double>
+                  <double>0.29923549966041468</double>
+                  <double>0.099634477132654622</double>
+                  <double>0.099656769505334544</double>
+                </oc>
+              </SoilNitrogen>
+              <SoilOrganicMatter>
+                <Name>SoilOrganicMatter</Name>
+                <RootCN>0</RootCN>
+                <RootWt>0</RootWt>
+                <SoilCN>0</SoilCN>
+                <EnrACoeff>0</EnrACoeff>
+                <EnrBCoeff>0</EnrBCoeff>
+                <Thickness>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <Depth>
+                  <string>0-10</string>
+                  <string>10-30</string>
+                  <string>30-50</string>
+                  <string>50-70</string>
+                  <string>70-90</string>
+                  <string>90-110</string>
+                  <string>110-130</string>
+                  <string>130-150</string>
+                </Depth>
+                <OC>
+                  <double>0.35</double>
+                  <double>0.27</double>
+                  <double>0.24</double>
+                  <double>0.16</double>
+                  <double>0.16</double>
+                  <double>0.3</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                </OC>
+                <FBiom>
+                  <double>0.04</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                </FBiom>
+                <FInert>
+                  <double>0.31</double>
+                  <double>0.31</double>
+                  <double>0.31</double>
+                  <double>0.31</double>
+                  <double>0.31</double>
+                  <double>0.25</double>
+                  <double>0.2</double>
+                  <double>0.2</double>
+                </FInert>
+                <OCUnits>Total</OCUnits>
+              </SoilOrganicMatter>
+              <Analysis>
+                <Name>Analysis</Name>
+                <Thickness>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <PH>
+                  <double>8.5</double>
+                  <double>8.5</double>
+                  <double>8.6</double>
+                  <double>8.6</double>
+                  <double>8.6</double>
+                  <double>8.6</double>
+                  <double>8.6</double>
+                  <double>8.6</double>
+                </PH>
+                <PHUnits>Water</PHUnits>
+                <BoronUnits>HotWater</BoronUnits>
+              </Analysis>
+              <Sample>
+                <Name>Initial nitrogen</Name>
+                <Thickness>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <NO3>
+                  <double>24.9</double>
+                  <double>16</double>
+                  <double>9.8</double>
+                  <double>9.8</double>
+                  <double>2.1</double>
+                  <double>2.1</double>
+                  <double>2.1</double>
+                  <double>2.1</double>
+                </NO3>
+                <NH4>
+                  <double>1.3</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0.8</double>
+                  <double>0.8</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                </NH4>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
+                <SWUnits>Volumetric</SWUnits>
+                <OCUnits>Total</OCUnits>
+                <PHUnits>Water</PHUnits>
+              </Sample>
+              <Sample>
+                <Name>Initial water</Name>
+                <Thickness>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <SW>
+                  <double>0.27</double>
+                  <double>0.3</double>
+                  <double>0.28</double>
+                  <double>0.25</double>
+                  <double>0.24</double>
+                  <double>0.27</double>
+                  <double>0.27</double>
+                  <double>0.21</double>
+                </SW>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
+                <SWUnits>Volumetric</SWUnits>
+                <OCUnits>Total</OCUnits>
+                <PHUnits>Water</PHUnits>
+              </Sample>
+              <RecordNumber>0</RecordNumber>
+              <SoilType>LincolnSoil</SoilType>
+              <LocalName>Lincoln</LocalName>
+              <Site>Lincoln</Site>
+              <NearestTown>Unknown</NearestTown>
+              <Region>NZ</Region>
+              <NaturalVegetation>Unknown</NaturalVegetation>
+              <Latitude>0</Latitude>
+              <Longitude>0</Longitude>
+            </Soil>
+            <SurfaceOrganicMatter>
+              <Name>Surface Organic Matter</Name>
+              <ResidueTypes>
+                <Name>ResidueTypes</Name>
+                <LoadFromResource>ResidueTypes</LoadFromResource>
+              </ResidueTypes>
+              <Pools>
+                <Pool>
+                  <PoolName>wheat_stubble</PoolName>
+                  <ResidueType>wheat</ResidueType>
+                  <Mass>1000</Mass>
+                  <CNRatio>80</CNRatio>
+                  <CPRatio>NaN</CPRatio>
+                  <StandingFraction>0</StandingFraction>
+                </Pool>
+              </Pools>
+              <PoolName>wheat_stubble</PoolName>
+              <type>wheat</type>
+              <mass>1000</mass>
+              <standing_fraction>0</standing_fraction>
+              <cpr />
+              <cnr>80</cnr>
+              <CriticalResidueWeight>2000</CriticalResidueWeight>
+              <OptimumDecompTemp>20</OptimumDecompTemp>
+              <MaxCumulativeEOS>20</MaxCumulativeEOS>
+              <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+              <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+              <TotalLeachRain>25</TotalLeachRain>
+              <MinRainToLeach>10</MinRainToLeach>
+              <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+              <DefaultCPRatio>0</DefaultCPRatio>
+              <DefaultStandingFraction>0</DefaultStandingFraction>
+              <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+              <FractionFaecesAdded>0.5</FractionFaecesAdded>
+            </SurfaceOrganicMatter>
+            <Fertiliser>
+              <Name>Fertiliser</Name>
+            </Fertiliser>
+            <MicroClimate>
+              <Name>MicroClimate</Name>
+              <a_interception>0</a_interception>
+              <b_interception>1</b_interception>
+              <c_interception>0</c_interception>
+              <d_interception>0</d_interception>
+              <soil_albedo>0.3</soil_albedo>
+              <air_pressure>1010</air_pressure>
+              <soil_emissivity>0.96</soil_emissivity>
+              <sun_angle>15</sun_angle>
+              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+              <night_interception_fraction>0.5</night_interception_fraction>
+              <windspeed_default>3</windspeed_default>
+              <refheight>2</refheight>
+              <albedo>0.29366217672824863</albedo>
+              <emissivity>0.96</emissivity>
+              <gsmax>0.01</gsmax>
+              <r50>200</r50>
+            </MicroClimate>
+            <Plant>
+              <Name>Wheat</Name>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
+            <Report>
+              <Name>PhenDOY</Name>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[Clock].Today</string>
+                <string>[Sowing].Script.FlagLeafDAS</string>
+                <string>[Sowing].Script.FloweringDAS</string>
+                <string>[Sowing].Script.Bolix</string>
+              </VariableNames>
+              <EventNames>
+                <string>[Wheat].PlantEnding</string>
+              </EventNames>
+            </Report>
+            <Manager>
+              <Name>Sowing</Name>
+              <Script>
+                <Cultivar>Wakanui</Cultivar>
+              </Script>
+              <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Wheat;
+		[Link] Clock Clock;
+		[Link] Simulation sim;
+		[Link] Summary Summary;
+		
+		[Description("Cultivar")]
+		public string Cultivar { get; set; }
+		
+		[XmlIgnore] public bool Sown { get; set; }
+		[XmlIgnore] public bool Harvested { get; set; }
+		[XmlIgnore] public bool FlagLeafDASSet { get; set; }
+		[XmlIgnore] public bool FloweringDASSet { get; set; }
+		[XmlIgnore] public bool EndSet { get; set; }
+				
+		[XmlIgnore] public double DAS { get; set; }
+		[XmlIgnore] public double FlagLeafDAS { get; set; }
+		[XmlIgnore] public double FloweringDAS { get; set; }
+		[XmlIgnore] public string Bolix { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Sown = false;
+			Harvested = false;
+			Bolix = "ThatsRight";
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Sown)
+				DAS += 1;
+			
+			if (Sown == false)
+			{
+				Wheat.Sow(population: 200, cultivar: Cultivar, depth: 15, rowSpacing: 150, budNumber: 1);
+				Sown = true;
+			}
+			
+			if ((Wheat.Phenology.Stage >= 5.0) && (FlagLeafDASSet == false))
+			{
+				FlagLeafDAS = DAS;
+				FlagLeafDASSet = true;
+			}
+			
+			if ((Wheat.Phenology.Stage >= 6.0) && (FloweringDASSet == false))
+			{
+				FloweringDAS = DAS;
+				FloweringDASSet = true;
+			}
+			
+			if (Wheat.Phenology.Stage >= 6.1)
+			{
+				Wheat.EndCrop();
+				Harvested = true;
+				Summary.WriteMessage(this, "Flowering reached so setting end date to stop simulation");
+			}
+			
+			if ((Harvested == true) && (EndSet == false))
+			{
+				sim.Set("Clock.EndDate", Clock.Today.AddDays(1));
+				EndSet = true;
+			}
+		}
+	}
+}
+				]]></Code>
+            </Manager>
+            <Area>1</Area>
+            <Slope>0</Slope>
+          </Zone>
+          <SoilArbitrator>
+            <Name>Soil Arbitrator</Name>
+          </SoilArbitrator>
+          <Area>0</Area>
+          <Slope>0</Slope>
+        </Simulation>
       </Experiment>
       <Graph>
         <Name>Harvest Yield</Name>
