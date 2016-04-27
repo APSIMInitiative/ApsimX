@@ -118,6 +118,8 @@ The model consists of:
                 <Name>Photoperiod</Name>
                 <VariableName>[Phenology].Photoperiod.Value</VariableName>
               </VariableReference>
+              <StartStageForEffects>Emergence</StartStageForEffects>
+              <EndStageForEffects>TerminalSpikelet</EndStageForEffects>
             </PhotoPeriodEffect>
           </MinimumFunction>
           <Start>Emergence</Start>
@@ -227,9 +229,9 @@ The model consists of:
           <Units>0-5</Units>
         </Constant>
         <VernalisationCW>
-          <Name>VernalisationCW</Name>
-          <VernSens>4</VernSens>
-          <PhotopSens>5</PhotopSens>
+          <Name>Vernalisation</Name>
+          <VernSens>5</VernSens>
+          <PhotopSens>4</PhotopSens>
           <StartStageForEffects>Emergence</StartStageForEffects>
           <EndStageForEffects>TerminalSpikelet</EndStageForEffects>
           <StartStageForCumulativeVD>Germination</StartStageForCumulativeVD>
