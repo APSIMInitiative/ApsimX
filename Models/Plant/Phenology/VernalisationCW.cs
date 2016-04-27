@@ -109,8 +109,9 @@ namespace Models.PMF.Phen
         [Description("EndStageForCumulativeVD")]
         public string EndStageForCumulativeVD { get; set; }
 
-        /// <summary>The cumulative vd</summary>
-        private double CumulativeVD = 0;
+        /// <summary>Amount of Vernal days accumulated</summary>
+        [XmlIgnore]
+        public double CumulativeVD { get; set; }
 
         /// <summary>Trap the DoDailyInitialisation event.</summary>
         /// <param name="sender">The sender.</param>

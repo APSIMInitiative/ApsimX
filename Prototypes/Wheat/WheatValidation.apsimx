@@ -226,6 +226,15 @@ The model consists of:
           <Value>1</Value>
           <Units>0-5</Units>
         </Constant>
+        <VernalisationCW>
+          <Name>VernalisationCW</Name>
+          <VernSens>4</VernSens>
+          <PhotopSens>5</PhotopSens>
+          <StartStageForEffects>Emergence</StartStageForEffects>
+          <EndStageForEffects>TerminalSpikelet</EndStageForEffects>
+          <StartStageForCumulativeVD>Germination</StartStageForCumulativeVD>
+          <EndStageForCumulativeVD>TerminalSpikelet</EndStageForCumulativeVD>
+        </VernalisationCW>
       </Phenology>
       <Structure>
         <Name>Structure</Name>

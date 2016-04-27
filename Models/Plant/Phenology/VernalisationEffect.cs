@@ -29,7 +29,9 @@ namespace Models.PMF.Phen
         [Link]
         IFunction VernSens = null;
 
-        private double CumulativeVD = 0;
+        /// <summary>Amount of Vernal days accumulated</summary>
+        [XmlIgnore]
+        public double CumulativeVD { get; set; }
 
         /// <summary>Gets or sets the vern eff.</summary>
         /// <value>The vern eff.</value>
