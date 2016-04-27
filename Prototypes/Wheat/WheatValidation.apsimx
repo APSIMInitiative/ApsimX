@@ -1817,133 +1817,133 @@ The EarLive composite biomass object includes the Live pools of all organs withi
           <Name>New Zealand</Name>
           <Cultivar>
             <Name>Alberic</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 3.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 5</Command>
+            <Command>[Phenology].VernSens.Value = 3.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 5</Command>
           </Cultivar>
           <Cultivar>
             <Name>Amarok</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 3.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 3.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Aspiring</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>BattenWinter</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 3.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+            <Command>[Phenology].VernSens.Value = 3.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 5.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>BattenSpring</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 5</Command>
+            <Command>[Phenology].VernSens.Value = 1</Command>
+            <Command>[Phenology].PhotoSens.Value = 5</Command>
           </Cultivar>
           <Cultivar>
             <Name>Centaur</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Claire</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 3.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+            <Command>[Phenology].VernSens.Value = 3.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 5.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Conquest</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+            <Command>[Phenology].VernSens.Value = 1.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 5.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Einstein</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Exceed</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Majestic</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+            <Command>[Phenology].VernSens.Value = 1.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 5.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Option</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 4.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+            <Command>[Phenology].VernSens.Value = 4.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 5.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Otane</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+            <Command>[Phenology].VernSens.Value = 1.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Pennant</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens  = 3.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value  = 3.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Regency</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 5.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Richmond</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Robigus</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 3.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+            <Command>[Phenology].VernSens.Value = 3.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 5.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rongotea</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 2.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rubric</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 1.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Sage</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+            <Command>[Phenology].VernSens.Value = 1.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 5.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Saracen</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+            <Command>[Phenology].VernSens.Value = 2.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 5.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Savannah</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Solstice</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Tanker</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Tribute</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 1.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Wakanui</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
             <Command>[Leaf].ExtinctionCoeff.PotentialExtinctionCoeff.XYPairs.Y = 0.9,0.9</Command>
             <Command>[Phenology].EarlyReproductive.Target.Multiplier.Value = 5</Command>
@@ -1951,8 +1951,8 @@ The EarLive composite biomass object includes the Live pools of all organs withi
           </Cultivar>
           <Cultivar>
             <Name>Weston</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
@@ -1998,8 +1998,8 @@ The EarLive composite biomass object includes the Live pools of all organs withi
           </Cultivar>
           <Cultivar>
             <Name>Bolac</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 2.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>EGAGregory</Name>
@@ -2013,8 +2013,8 @@ The EarLive composite biomass object includes the Live pools of all organs withi
           </Cultivar>
           <Cultivar>
             <Name>MacKellar</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Kennedy</Name>
@@ -2093,23 +2093,23 @@ The EarLive composite biomass object includes the Live pools of all organs withi
           </Cultivar>
           <Cultivar>
             <Name>Lorikeet</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+            <Command>[Phenology].VernSens.Value = 2.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 4.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Lang</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4</Command>
+            <Command>[Phenology].VernSens.Value = 1</Command>
+            <Command>[Phenology].PhotoSens.Value = 4</Command>
           </Cultivar>
           <Cultivar>
             <Name>McCubbin</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 5</Command>
+            <Command>[Phenology].VernSens.Value = 1</Command>
+            <Command>[Phenology].PhotoSens.Value = 5</Command>
           </Cultivar>
           <Cultivar>
             <Name>Sunco</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 4</Command>
+            <Command>[Phenology].VernSens.Value = 1</Command>
+            <Command>[Phenology].PhotoSens.Value = 4</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
@@ -2134,34 +2134,34 @@ The EarLive composite biomass object includes the Live pools of all organs withi
           <Name>USA</Name>
           <Cultivar>
             <Name>Yecora</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 2.0</Command>
+            <Command>[Phenology].VernSens.Value = 1.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 2.0</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
           <Name>Europe</Name>
           <Cultivar>
             <Name>Dekan</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rosario</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Ararat</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+            <Command>[Phenology].VernSens.Value = 5.0</Command>
+            <Command>[Phenology].PhotoSens.Value = 3.0</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
           <Name>Africa</Name>
           <Cultivar>
             <Name>HAR1685</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 2.0</Command>
+            <Command>[Phenology].VernSens.Value = 1.5</Command>
+            <Command>[Phenology].PhotoSens.Value = 2.0</Command>
             <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
           </Cultivar>
         </CultivarFolder>
