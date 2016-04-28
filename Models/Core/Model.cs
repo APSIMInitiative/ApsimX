@@ -144,6 +144,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.AgeCalculatorFunction))]
         [XmlElement(typeof(Models.PMF.Functions.AirTemperatureFunction))]
         [XmlElement(typeof(Models.PMF.Functions.BellCurveFunction))]
+        [XmlElement(typeof(Models.PMF.Functions.BoundFunction))]
         [XmlElement(typeof(Models.PMF.Functions.Constant))]
         [XmlElement(typeof(Models.PMF.Functions.DeltaFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DivideFunction))]

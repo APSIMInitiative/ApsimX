@@ -81,7 +81,7 @@ namespace Models.PMF.Phen
                 + "Where:<br>"
                 + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootRate* = " + ShootRate + " (deg day/mm),<br>"
                 + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootLag* = " + ShootLag + " (deg day), <br>"
-                + "and *SowingDepth* (mm) is sent with the sowing event.", indent));
+                + "and *SowingDepth* (mm) is sent from the manager with the sowing event.", indent));
 
             // write memos.
             foreach (IModel memo in Apsim.Children(this, typeof(Memo)))

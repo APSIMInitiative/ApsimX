@@ -108,19 +108,56 @@ The model consists of:
               <StartStageForCumulativeVD>Germination</StartStageForCumulativeVD>
               <EndStageForCumulativeVD>TerminalSpikelet</EndStageForCumulativeVD>
             </VernalisationEffect>
-            <PhotoPeriodEffect>
+            <BoundFunction>
               <Name>PhotoPeriodEffect</Name>
-              <VariableReference>
-                <Name>PhotoSens</Name>
-                <VariableName>[Phenology].PhotoSens.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>Photoperiod</Name>
-                <VariableName>[Phenology].Photoperiod.Value</VariableName>
-              </VariableReference>
-              <StartStageForEffects>Emergence</StartStageForEffects>
-              <EndStageForEffects>TerminalSpikelet</EndStageForEffects>
-            </PhotoPeriodEffect>
+              <Constant>
+                <Name>UpperBoundry</Name>
+                <Value>1</Value>
+              </Constant>
+              <Constant>
+                <Name>LowerBoundry</Name>
+                <Value>0</Value>
+              </Constant>
+              <SubtractFunction>
+                <Name>Variable</Name>
+                <Constant>
+                  <Name>One</Name>
+                  <Value>1</Value>
+                </Constant>
+                <MultiplyFunction>
+                  <Name>PhotoPeriodResponse</Name>
+                  <MultiplyFunction>
+                    <Name>PhotoPeriodSensitivity</Name>
+                    <Constant>
+                      <Name>Coefficient</Name>
+                      <Value>0.002</Value>
+                    </Constant>
+                    <VariableReference>
+                      <Name>PhotoSens</Name>
+                      <VariableName>[Phenology].PhotoSens.Value</VariableName>
+                    </VariableReference>
+                  </MultiplyFunction>
+                  <PowerFunction>
+                    <Name>PhotoPeriodFactor</Name>
+                    <Constant>
+                      <Name>Exponent</Name>
+                      <Value>0</Value>
+                    </Constant>
+                    <SubtractFunction>
+                      <Name>Subject</Name>
+                      <Constant>
+                        <Name>Twenty</Name>
+                        <Value>20</Value>
+                      </Constant>
+                      <VariableReference>
+                        <Name>Photoperiod</Name>
+                        <VariableName>[Phenology].Photoperiod.Value</VariableName>
+                      </VariableReference>
+                    </SubtractFunction>
+                  </PowerFunction>
+                </MultiplyFunction>
+              </SubtractFunction>
+            </BoundFunction>
           </MinimumFunction>
           <Start>Emergence</Start>
           <End>TerminalSpikelet</End>
@@ -228,6 +265,19 @@ The model consists of:
           <Value>1</Value>
           <Units>0-5</Units>
         </Constant>
+        <PhotoPeriodEffect>
+          <Name>PhotoPeriodEffect</Name>
+          <VariableReference>
+            <Name>PhotoSens</Name>
+            <VariableName>[Phenology].PhotoSens.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>Photoperiod</Name>
+            <VariableName>[Phenology].Photoperiod.Value</VariableName>
+          </VariableReference>
+          <StartStageForEffects>Emergence</StartStageForEffects>
+          <EndStageForEffects>TerminalSpikelet</EndStageForEffects>
+        </PhotoPeriodEffect>
       </Phenology>
       <Structure>
         <Name>Structure</Name>

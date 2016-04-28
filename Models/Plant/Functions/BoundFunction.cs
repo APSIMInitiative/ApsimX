@@ -3,36 +3,45 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Models.Core;
+using Models.PMF.Phen;
 
 namespace Models.PMF.Functions
 {
     /// <summary>
-    /// Raises the value of the child to the power of the exponent specified
+    /// A function that returns the value of its Variable child constrained within the specified Upper and LowerBounds
     /// </summary>
     [Serializable]
-    [Description("Raises the value of the child to the power of the exponent specified")]
+    [Description("Returns the value of the Variable function, constrained within the upper and lower bounds")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class PowerFunction : Model, IFunction
+    public class BoundFunction : Model, IFunction
     {
-        /// <summary>The exponent value that the subjuct is raised to</summary>
+        /// <summary>The value to be bound within the Upper and LowerBoundry</summary>
         [Link]
-        IFunction Exponent = null;
+        IFunction Variable = null;
 
-        /// <summary>The number that is to be raised by the exponent</summary>
+        /// <summary>The upper limit to constrain the variable to</summary>
         [Link]
-        IFunction Subject = null;
+        IFunction UpperBoundry = null;
 
+        /// <summary>The lower limit to constrain the variable to</summary>
+        [Link]
+        IFunction LowerBoundry = null;
+        
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        /// <exception cref="System.Exception">Power function must have only one argument</exception>
         public double Value
         {
             get
             {
-                return Math.Pow(Subject.Value, Exponent.Value);
+                if (Variable.Value > UpperBoundry.Value)
+                    return UpperBoundry.Value;
+                else if (Variable.Value < LowerBoundry.Value)
+                    return LowerBoundry.Value;
+                else return Variable.Value;
             }
         }
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
@@ -43,18 +52,15 @@ namespace Models.PMF.Functions
             Name = this.Name;
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            tags.Add(new AutoDocumentation.Paragraph("<i>" + this.Name + "</i> returns Subject.Value raised to the power of " + Exponent.Value, indent));
+            tags.Add(new AutoDocumentation.Paragraph("<i>" + this.Name + "</i> returns <i>Variable.Value</i> constrained within <i>UpperBoundry.Value</i> and <i>LowerBoundry.Value</i>", indent));
 
-            tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
-            
+
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
             {
-                if (child.Name == "Subject")
                 child.Document(tags, headingLevel + 1, indent + 1);
             }
         }
-
 
     }
 }
