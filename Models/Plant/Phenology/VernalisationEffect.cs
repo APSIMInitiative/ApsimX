@@ -10,23 +10,7 @@ namespace Models.PMF.Phen
 {
 
     ///<summary>
-    /// In CERES-Wheat \cite jones_dssat_2003, vernalisation is simulated from daily average crown temperature (\f$T_{c}\f$), daily maximum (\f$T_{max}\f$) and 
-    /// minimum (\f$T_{min}\f$) temperatures using the original CERES approach.
-    /// \f[
-    /// \Delta V=\min(1.4-0.0778T_{c},\:0.5+13.44\frac{T_{c}}{(T_{max}-T_{min}+3)^{2}})\quad\text{when, }T_{max}&lt;30\,{}^{\circ}\text{C}\:\text{and}\, T_{min}&lt;15\,{}^{\circ}\text{C}
-    /// \f]
-    /// Devernalisation can occur if daily \f$T_{max}\f$ is above 30 \f$^{\circ}\text{C}\f$ and the total vernalisation (\f$V\f$) is less than 10 .
-    /// \f[
-    /// \Delta V_{d}=\min(0.5(T_{max}-30),\: V)\quad\text{when, }T_{max}&gt;30\,{}^{\circ}\text{C}\;\text{and}\; V&lt;10
-    /// \f]
-    /// The total vernalisation (\f$V\f$) is calculated by summing daily vernalisation and devernalisation from \p StartStageForEffects to \p EndStageForEffects. 
-    /// \f[
-    /// V=\sum(\Delta V-\Delta V_{d})
-    /// \f]
-    /// However, the vernalisation factor (\f$f_{v}\f$) is calculated just from \p StartStageForCumulativeVD to \p EndStageForCumulativeVD.
-    /// \f[
-    /// f_{V}=1-(0.0054545R_{V}+0.0003)\times(50-V)
-    /// \f]
+    /// The vernalization and photoperiod effects from CERES wheat.
     ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]

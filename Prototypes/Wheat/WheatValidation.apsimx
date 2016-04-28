@@ -278,6 +278,33 @@ The model consists of:
           <StartStageForEffects>Emergence</StartStageForEffects>
           <EndStageForEffects>TerminalSpikelet</EndStageForEffects>
         </PhotoPeriodEffect>
+        <AccumulateFunction>
+          <Name>AccumVD</Name>
+          <AirTemperatureFunction>
+            <Name>VernalisationDays</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>-6</double>
+                <double>-5</double>
+                <double>11</double>
+                <double>18</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0.642</double>
+                <double>0.5432</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
+            </Memo>
+          </AirTemperatureFunction>
+          <StartStageName>Germination</StartStageName>
+          <EndStageName>TerminalSpikelet</EndStageName>
+        </AccumulateFunction>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -23047,6 +23074,8 @@ namespace Models
                 <string>[Wheat].Phenology.Vegetative.Stress.PhotoPeriodEffect.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
+                <string>[Wheat].Phenology.AccumVD.Value</string>
+                <string>[Wheat].Phenology.Vegetative.Stress.VernalisationEffect.CumulativeVD</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
