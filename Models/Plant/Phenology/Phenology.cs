@@ -432,7 +432,7 @@ namespace Models.PMF.Phen
                 if (Emerged)
                     AccumulatedEmergedTT += CurrentPhase.TTForToday;
                
-                if (Emerged && PostPhenology != null)
+                if (Plant.IsAlive && PostPhenology != null)
                     PostPhenology.Invoke(this, new EventArgs());
 
                 Util.Debug("Phenology.CurrentPhaseName=%s", CurrentPhase.Name.ToLower());
