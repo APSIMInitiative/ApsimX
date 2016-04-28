@@ -141,7 +141,7 @@ The model consists of:
                     <Name>PhotoPeriodFactor</Name>
                     <Constant>
                       <Name>Exponent</Name>
-                      <Value>0</Value>
+                      <Value>2</Value>
                     </Constant>
                     <SubtractFunction>
                       <Name>Subject</Name>
