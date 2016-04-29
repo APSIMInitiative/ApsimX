@@ -7,6 +7,7 @@ using Models.PMF.Organs;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
 using Models.PMF.Functions.StructureFunctions;
+using Models.Interfaces;
 
 namespace Models.PMF
 {
@@ -194,7 +195,7 @@ namespace Models.PMF
         Plant Plant = null;
         /// <summary>The leaf</summary>
         [Link]
-        Leaf Leaf = null;
+        ILeaf Leaf = null;
         /// <summary>The phenology</summary>
         [Link]
         private Phenology Phenology = null;
