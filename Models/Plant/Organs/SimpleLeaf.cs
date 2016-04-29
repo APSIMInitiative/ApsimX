@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
 using Models.PMF.Phen;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Organs
 {
@@ -172,6 +173,16 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         public Phenology Phenology = null;
 
+        /// <summary>TE Function</summary>
+        [Link]
+        [Link(IsOptional = true)]
+        IFunction TranspirationEfficiency = null;
+        /// <summary></summary>
+        [Link]
+        [Link(IsOptional = true)]
+        IFunction SVPFrac = null;
+        /// <summary>The structure</summary>
+
         #endregion
 
         #region States and variables
@@ -201,6 +212,14 @@ namespace Models.PMF.Organs
         {
             get
             {
+                if (SVPFrac != null && TranspirationEfficiency != null)
+                {
+                    double svpMax = MetUtilities.svp(MetData.MaxT) * 0.1;
+                    double svpMin = MetUtilities.svp(MetData.MinT) * 0.1;
+                    double vpd = Math.Max(SVPFrac.Value * (svpMax - svpMin), 0.01);
+
+                    return Photosynthesis.Value / (TranspirationEfficiency.Value / vpd / 0.001);
+                }
                 return PotentialEP;
             }
             //set
