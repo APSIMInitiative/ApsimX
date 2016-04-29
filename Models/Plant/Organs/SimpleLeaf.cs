@@ -87,9 +87,21 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (CoverFunction == null)
-                    return 1.0 - Math.Exp((-1 * ExtinctionCoefficientFunction.Value) * LAI);
-                return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
+                //if (CoverFunction == null)
+                //    return 1.0 - Math.Exp((-1 * ExtinctionCoefficientFunction.Value) * LAI);
+                //return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
+
+                if (Plant.IsAlive)
+                {
+                    if (CoverFunction == null)
+                        return 1.0 - Math.Exp((-1 * ExtinctionCoefficientFunction.Value) * LAI);
+                    return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
+                }
+                else
+                {
+                    return 0;
+                }
+
             }
         }
 
@@ -379,7 +391,7 @@ namespace Models.PMF.Organs
                     if (Structure != null)
                         Structure.MainStemNodeNo = 1.0;
                 }
-        
+
             EP = 0;
         }
         #endregion
