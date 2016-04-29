@@ -844,7 +844,13 @@
     <Input>
       <Name>Input</Name>
     </Input>
-    <ExcelInput />
+    <ExcelInput>
+      <Name>ExcelInput</Name>
+      <FileNameMetadata>
+        <string>Excel files (*.xlsx)|*.xlsx</string>
+        <string>All files (*.*)|*.*</string>
+      </FileNameMetadata>
+    </ExcelInput>
     <PredictedObserved/>
     <TimeSeriesStats>
       <TableName>PredictedObserved</TableName>
