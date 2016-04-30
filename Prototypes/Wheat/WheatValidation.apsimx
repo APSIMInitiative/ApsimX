@@ -18518,6 +18518,7 @@ namespace Models
                 <string>Wheat.Grain.Live.Wt</string>
                 <string>Wheat.Grain.Live.N</string>
                 <string>Wheat.Grain.Live.NConc</string>
+                <string>Wheat.Grain.Size</string>
                 <string>Wheat.Leaf.LAI</string>
                 <string>Wheat.Leaf.Live.Wt</string>
                 <string>Wheat.Leaf.Live.N</string>
@@ -19513,6 +19514,7 @@ namespace Models
                 <string>Wheat.Grain.Live.Wt</string>
                 <string>Wheat.Grain.Live.N</string>
                 <string>Wheat.Grain.Live.NConc</string>
+                <string>Wheat.Grain.Size</string>
                 <string>Wheat.Leaf.LAI</string>
                 <string>Wheat.Leaf.Live.Wt</string>
                 <string>Wheat.Leaf.Live.N</string>
@@ -20075,6 +20077,53 @@ namespace Models
         <Axis>
           <Type>Left</Type>
           <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>GrainSize</Name>
+        <Series>
+          <Name>Series 0</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.Wheat.Grain.Number</XFieldName>
+          <YFieldName>Predicted.Wheat.Grain.Number</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Observed Grain Number</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Predicted Grain Number</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -21460,7 +21509,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
+            <YFieldName>Wheat.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -40471,6 +40520,92 @@ namespace Models
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>N Stress</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16736653</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Leaf.Fn</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title>Date</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>Stress1</Name>
+            <Series>
+              <Name>Predicted1</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16747854</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Leaf.Fw</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title>Date</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
             <DisabledSeries />
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
