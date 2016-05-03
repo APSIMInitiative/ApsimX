@@ -27,6 +27,7 @@ namespace Models.PMF
     [PresenterName("UserInterface.Presenters.CultivarPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
     [ValidParent(ParentType = typeof(Plant15))]
+    [ValidParent(ParentType = typeof(CultivarFolder))]
     public class Cultivar : Model
     {
         /// <summary>
