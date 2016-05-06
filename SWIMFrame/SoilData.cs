@@ -80,8 +80,8 @@ namespace SWIMFrame
                     hdx[x] = dx[x] / 2;
             }
 
-            Array.Copy(sid, 1, jt, 0, sid.Length); //just TEST everything...
-            np = 0;
+            Array.Copy(sid, 0, jt, 0, sid.Length); //just TEST everything...
+            np = 0; //no.of different paths out of possible n + 1
             for (i = 0; i <= n; i++)
             {
                 isid[np + 1, 1] = jt[i];

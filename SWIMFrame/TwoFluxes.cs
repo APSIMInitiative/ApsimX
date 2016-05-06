@@ -525,10 +525,6 @@ namespace SWIMFrame
                         phiiFind[x] = phii[1, x];
                     ii = Find(phia, phiiFind);
                     v = phia - phii[1, ii];
-                 /*   Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(coq);
-                    printMatrix = printMatrix.RemoveRow(0);
-                    printMatrix = printMatrix.RemoveColumn(0);
-                    MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t", null, "E6", null, null);*/
                     der = coq[2, ii] + v * 2.0 * coq[3, ii];
                    // phib = coq[1, ii] + v * (coq[2, ii] + v * coq[3, ii]);
                 }

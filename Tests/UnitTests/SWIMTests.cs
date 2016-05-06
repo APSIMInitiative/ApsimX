@@ -775,6 +775,7 @@ namespace UnitTests
         public void TestGetK()
         {
             SoilData sd = new SoilData();
+            sd.GetTables(10, new int[] {0, 103, 103, 103, 103, 103, 109, 109, 109, 109, 109 }, new double[] {0, 10, 20, 30, 40, 60, 80, 100, 120, 160, 200 });
             int iq = 10;
             int iS= 0;
             double[] x = new double[] { 6.981601E-01, 6.981602E-01, 6.981650E-01, 6.981651E-01, 7.925112E-01, 7.920824E-01 };
