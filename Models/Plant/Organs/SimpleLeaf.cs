@@ -165,23 +165,17 @@ namespace Models.PMF.Organs
         IFunction StructuralFraction = null;
 
         /// <summary>The structure</summary>
-        [Link]
         [Link(IsOptional = true)]
         public Structure Structure = null;
         /// <summary>The phenology</summary>
-        [Link]
         [Link(IsOptional = true)]
         public Phenology Phenology = null;
-
         /// <summary>TE Function</summary>
-        [Link]
         [Link(IsOptional = true)]
         IFunction TranspirationEfficiency = null;
         /// <summary></summary>
-        [Link]
         [Link(IsOptional = true)]
         IFunction SVPFrac = null;
-        /// <summary>The structure</summary>
 
         #endregion
 
