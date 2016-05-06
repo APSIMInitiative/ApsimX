@@ -83,7 +83,7 @@ namespace UserInterface.Presenters
         [MainMenu(MenuName = "Split screen")]
         public void ToggleSecondExplorerViewVisible(object sender, EventArgs e)
         {
-            this.explorerPresenter.ToggleSecondExplorerViewVisible();
+            this.explorerPresenter.MainPresenter.ToggleSecondExplorerViewVisible();
         }
 
         /// <summary>
@@ -99,24 +99,6 @@ namespace UserInterface.Presenters
             process.Start();
         }
 
-        /// <summary>
-        /// User has clicked on Upgrade
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [MainMenu(MenuName = "Upgrade")]
-        public void OnUpgrade(object sender, EventArgs e)
-        {
-            // Get the version of the current assembly.
-            Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            if (version.Revision == 0)
-                explorerPresenter.ShowMessage("You are on a custom build. You cannot upgrade.", DataStore.ErrorLevel.Error);
-            else
-            {
-                UpgradeForm form = new UpgradeForm(explorerPresenter);
-                form.Show();
-            }
-        }
 
     }
 }

@@ -6,6 +6,7 @@
 namespace UserInterface.Interfaces
 {
     using System;
+    using System.Drawing;
     using EventArguments;
 
     /// <summary>
@@ -114,5 +115,8 @@ namespace UserInterface.Interfaces
         /// <summary>Lock the left most number of columns.</summary>
         /// <param name="number"></param>
         void LockLeftMostColumns(int number);
+
+        /// <summary>Get screenshot of grid.</summary>
+        Image GetScreenshot();
     }
 }

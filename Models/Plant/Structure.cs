@@ -185,7 +185,7 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Plant))]
     public class Structure : Model
     {
-        private double _MainStemFinalNodeNo;
+        //private double _MainStemFinalNodeNumber;
         private double _Height;
 
         #region Links
@@ -232,14 +232,11 @@ namespace Models.PMF
         [Link]
         [Units("/node")]
         IFunction BranchingRate = null;
-        /// <summary>The shade induced branch mortality</summary>
-        [Link(IsOptional = true)]
-        [Units("0-1")]
-        IFunction ShadeInducedBranchMortality = null;
-        /// <summary>The drought induced branch mortality</summary>
-        [Link(IsOptional = true)]
-        [Units("0-1")]
-        IFunction DroughtInducedBranchMortality = null;
+        /// <summary>The branch mortality</summary>
+        [Link]
+        [Units("/d")]
+        IFunction BranchMortality = null;
+
         /// <summary>The plant mortality</summary>
         [Link(IsOptional = true)]
         IFunction PlantMortality = null;
@@ -285,11 +282,7 @@ namespace Models.PMF
         /// <value>The proportion plant mortality.</value>
         [XmlIgnore]
         public double ProportionPlantMortality { get; set; }
-        /// <summary>Gets or sets the maximum node number.</summary>
-        /// <value>The maximum node number.</value>
-        [XmlIgnore]
-        public int MaximumNodeNumber { get; set; }
-        /// <summary>Gets or sets the delta node number.</summary>
+        
         /// <value>The delta node number.</value>
         [XmlIgnore]
         public double DeltaNodeNumber { get; set; }
@@ -323,7 +316,7 @@ namespace Models.PMF
         /// <summary>Gets the remaining node no.</summary>
         /// <value>The remaining node no.</value>
         [Description("Number of leaves yet to appear")]
-        public double RemainingNodeNo { get { return MainStemFinalNodeNo - MainStemNodeNo; } }
+        public double RemainingNodeNo { get { return MainStemFinalNodeNumber.Value - MainStemNodeNo; } }
 
         /// <summary>Gets the height.</summary>
         /// <value>The height.</value>
@@ -337,11 +330,11 @@ namespace Models.PMF
         [Description("Number of appeared leaves per primary bud unit including all main stem and branch leaves")]
         public double PrimaryBudTotalNodeNo { get { return PlantTotalNodeNo / PrimaryBudNo; } }
 
-        /// <summary>Gets the main stem final node no.</summary>
-        /// <value>The main stem final node no.</value>
-        [XmlIgnore]
-        [Description("Number of leaves that will appear on the mainstem before it terminates")]
-        public double MainStemFinalNodeNo { get { return _MainStemFinalNodeNo; } } 
+        // <summary>Gets the main stem final node no.</summary>
+        // <value>The main stem final node no.</value>
+        //[XmlIgnore]
+        //[Description("Number of leaves that will appear on the mainstem before it terminates")]
+        //public double MainStemFinalNodeNo { get; set; } 
 
         /// <summary>Gets the relative node apperance.</summary>
         /// <value>The relative node apperance.</value>
@@ -354,7 +347,7 @@ namespace Models.PMF
                 if (Leaf.CohortsInitialised == false) //FIXME introduced to removed colateral damage during testing.  Need to remove and fix max leaf area parameterisation in potato.xml
                     return 0;
                 else
-                    return MainStemNodeNo / MainStemFinalNodeNo;
+                    return MainStemNodeNo / MainStemFinalNodeNumber.Value;
             }
         }
         
@@ -367,6 +360,9 @@ namespace Models.PMF
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
+            //Fixme.  I have added the line below so If this value is set from a manager it updates.  Need to review if MaximumNodeNumber and MainStemFinalNodeNumber are both needed to fix this
+            //MaximumNodeNumber = (int)_MainStemFinalNodeNo;
+
             if (Phenology.OnDayOf(InitialiseStage) == false) // We have no leaves set up and nodes have just started appearing - Need to initialise Leaf cohorts
                 if (MainStemPrimordiaInitiationRate.Value > 0.0)
                 {
@@ -375,8 +371,8 @@ namespace Models.PMF
 
             double StartOfDayMainStemNodeNo = (int)MainStemNodeNo;
 
-            _MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
-            MainStemPrimordiaNo = Math.Min(MainStemPrimordiaNo, MaximumNodeNumber);
+            //_MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
+            MainStemPrimordiaNo = Math.Min(MainStemPrimordiaNo, MainStemFinalNodeNumber.Value);
 
             if (MainStemNodeNo > 0)
             {
@@ -384,7 +380,7 @@ namespace Models.PMF
                 if (MainStemNodeAppearanceRate.Value > 0)
                     DeltaNodeNumber = ThermalTime.Value / MainStemNodeAppearanceRate.Value;
                 MainStemNodeNo += DeltaNodeNumber;
-                MainStemNodeNo = Math.Min(MainStemNodeNo, MainStemFinalNodeNo);
+                MainStemNodeNo = Math.Min(MainStemNodeNo, MainStemFinalNodeNumber.Value);
             }
 
             //Fixme  This is redundant now and could be removed
@@ -414,10 +410,7 @@ namespace Models.PMF
 
             //Reduce stem number incase of mortality
             double PropnMortality = 0;
-            if (DroughtInducedBranchMortality != null)
-                PropnMortality = DroughtInducedBranchMortality.Value;
-            if (ShadeInducedBranchMortality != null)
-                PropnMortality += ShadeInducedBranchMortality.Value;
+            PropnMortality = BranchMortality.Value;
             {
                 double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
                 TotalStemPopn -= DeltaPopn;
@@ -485,15 +478,24 @@ namespace Models.PMF
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 PrimaryBudNo = Sow.BudNumber;
                 TotalStemPopn = Sow.Population * PrimaryBudNo;
-                if (MainStemFinalNodeNumber is MainStemFinalNodeNumberFunction)
-                    _MainStemFinalNodeNo = (MainStemFinalNodeNumber as MainStemFinalNodeNumberFunction).MaximumMainStemNodeNumber;
-                else
-                    _MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
-                MaximumNodeNumber = (int)_MainStemFinalNodeNo;
-                _Height = HeightModel.Value;
+                //MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
+                //if (MainStemFinalNodeNumber is MainStemFinalNodeNumberFunction)
+                //    _MainStemFinalNodeNo = (MainStemFinalNodeNumber as MainStemFinalNodeNumberFunction).MaximumMainStemNodeNumber;
+                //else
+                //    _MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
+                //MaximumNodeNumber = (int)_MainStemFinalNodeNo;
+                //_Height = HeightModel.Value;
             }
         }
-        
+
+        /// <summary>Called when crop recieves a remove biomass event from manager</summary>
+        /// /// <param name="ProportionRemoved">The cultivar.</param>
+        public void doThin(double ProportionRemoved)
+        {
+            Plant.Population *= (1-ProportionRemoved);
+            TotalStemPopn *= (1-ProportionRemoved);
+            Leaf.DoThin(ProportionRemoved);
+        }
         #endregion
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

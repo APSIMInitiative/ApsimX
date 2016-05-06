@@ -94,11 +94,11 @@ namespace Models.PMF.Organs
         /// <summary>The maximum n conc</summary>
         [Link(IsOptional = true)]
         [Units("g/g")]
-        IFunction MaximumNConc = null;
+        public IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
         [Units("g/g")]
         [Link(IsOptional = true)]
-        IFunction MinimumNConc = null;
+        public IFunction MinimumNConc = null;
         #endregion
 
         #region States
@@ -356,8 +356,6 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            FractionRemoved = 0;
-            FractionToResidue = 0;
             if (data.Plant == Plant)
                 Clear();
         }
@@ -441,7 +439,7 @@ namespace Models.PMF.Organs
                         SurfaceOrganicMatter.Add(DetachedWt * 10, DetachedN * 10, 0, Plant.CropType, Name);
                 }
 
-                if ((DryMatterContent != null) && (Live.Wt != 0))
+                if (DryMatterContent != null) 
                     LiveFWt = Live.Wt / DryMatterContent.Value;
             }
         }

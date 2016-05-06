@@ -163,9 +163,7 @@ namespace Models.Core
             }
         }
 
-        /// <summary>
-        /// Describes an auto-doc table command.
-        /// </summary>
+        /// <summary>Describes an auto-doc graph and table command.</summary>
         public class GraphAndTable : ITag
         {
             /// <summary>The data to show in graph and table.</summary>
@@ -201,6 +199,35 @@ namespace Models.Core
             }
         }
 
+        /// <summary>Describes an auto-doc table command.</summary>
+        public class Table : ITag
+        {
+            /// <summary>The data to show in the table.</summary>
+            public List<List<string>> data;
 
+            /// <summary>The indent level.</summary>
+            public int indent;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Table"/> class.
+            /// </summary>
+            /// <param name="data">The column / row data.</param>
+            /// <param name="indent">The indentation.</param>
+            public Table(List<List<string>> data, int indent)
+            {
+                this.data = data;
+                this.indent = indent;
+            }
+        }
+
+        /// <summary>Descibes an image for the tags system.</summary>
+        public class Image : ITag
+        {
+            /// <summary>The image to put into the doc.</summary>
+            public System.Drawing.Image image;
+
+            /// <summary>Unique name for image. Used to save image to temp folder.</summary>
+            public string name;
+        }
     }
 }
