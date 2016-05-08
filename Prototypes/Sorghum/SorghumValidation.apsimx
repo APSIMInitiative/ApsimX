@@ -596,6 +596,10 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <Name>MainStemPrimordiaInitiationRate</Name>
           <VariableName>[Structure].LeafInitiationRate.Value</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>BranchMortality</Name>
+          <Value>0</Value>
+        </Constant>
         <InitialiseStage>Emergence</InitialiseStage>
         <PrimaryBudNo>1</PrimaryBudNo>
       </Structure>
@@ -858,8 +862,6 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <Name>DMDemandFunction33</Name>
           <Value>0</Value>
         </Constant>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
         <RipeStage />
       </ReproductiveOrgan>
       <Root>
@@ -1016,26 +1018,55 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Start>Germination</Start>
           <End>Maturity</End>
         </PhaseBasedSwitch>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <LinearInterpolationFunction>
+          <Name>KNO3</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.003</double>
+            </X>
+            <Y>
+              <double>0.03</double>
+              <double>0.03</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDenisty</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>NUptakeSWFactor</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.2</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RWC</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>KNH4</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.003</double>
+            </X>
+            <Y>
+              <double>0.03</double>
+              <double>0.03</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDenisty</XProperty>
+        </LinearInterpolationFunction>
         <InitialDM>0.2</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
-        <KNO3_yProperty>
-          <double>0</double>
-          <double>0.03</double>
-        </KNO3_yProperty>
-        <KNO3_xRootLength>
-          <double>0</double>
-          <double>0.003</double>
-        </KNO3_xRootLength>
-        <KNH4_yProperty>
-          <double>0</double>
-          <double>0.0003</double>
-        </KNH4_yProperty>
-        <KNH4_xRootLength>
-          <double>0</double>
-          <double>0.003</double>
-        </KNH4_xRootLength>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <SimpleLeaf>
@@ -1095,7 +1126,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </Constant>
         </RUEModel>
         <MultiplyFunction>
-          <Name>ExtinctionCoeff</Name>
+          <Name>ExtinctionCoefficientFunction</Name>
           <LinearInterpolationFunction>
             <Name>PotentialExtinctionCoeff</Name>
             <XYPairs>
@@ -1423,9 +1454,17 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <VariableName>[Leaf].DMDemandFunction.Value</VariableName>
           </VariableReference>
         </SubtractFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Value>100</Value>
+        </Constant>
         <BiomassYesterday>0</BiomassYesterday>
+        <CohortsInitialised>false</CohortsInitialised>
+        <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
         <Albedo>0</Albedo>
         <Gsmax>0</Gsmax>
         <R50>200</R50>
@@ -1539,8 +1578,6 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <End>Flowering</End>
           </PhaseLookupValue>
         </PhaseLookup>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -1622,8 +1659,6 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Value>0</Value>
           </Constant>
         </MaximumFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
       <Cultivar>
         <Name>Buster</Name>
@@ -1904,12 +1939,12 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
             <Manager>
               <Name>SorghumSowingRule</Name>
               <Script>
-                <DaysAfterSowing>0</DaysAfterSowing>
                 <PlantPopulation>10</PlantPopulation>
                 <RowSpacing>500</RowSpacing>
                 <SowingDepth>30</SowingDepth>
                 <CultivarName>Buster</CultivarName>
                 <SowingDate>1997-11-27</SowingDate>
+                <DaysAfterSowing>0</DaysAfterSowing>
               </Script>
               <Code><![CDATA[
 using System;
