@@ -770,6 +770,13 @@ namespace UnitTests
         {
             //TODO: Find an example that uses this function. Ex4 doesn't.
         }
+        
+        [Test]
+        public void TestGetTables()
+        {
+            SoilData sd = new SoilData();
+            sd.GetTables(10, new int[] { 0, 103, 103, 103, 103, 109, 109, 109, 109, 109, 109 }, new double[] { 0, 10, 20, 30, 40, 60, 80, 100, 120, 160, 200 });
+        }
 
         [Test]
         public void TestGetK()

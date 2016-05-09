@@ -30,11 +30,11 @@ namespace SWIMFrame
         {
             double small = 1E-5;
             string id, mm, sfile;
-            string[] ftname = new string[2];
+            string[] ftname = new string[2+1];
             int i, j, ns, np, nc, i1;
             int[] isoil = new int[nin + 1];
             int[,] isid = new int[nin + 1 + 1, 2 + 1];
-            int[] jt = new int[nin + 1]; //0-based FORTRAN array
+            int[] jt = new int[nin + 2]; //0-based FORTRAN array +2 as first and last elements will be copied twice
             double[,] dz = new double[nin + 1 + 1, 2 + 1];
             double[] hdx = new double[nin + 1]; //0-based FORTRAN array
             double x1;
@@ -80,12 +80,14 @@ namespace SWIMFrame
                     hdx[x] = dx[x] / 2;
             }
 
-            Array.Copy(sid, 0, jt, 0, sid.Length); //just TEST everything...
+            Array.Copy(sid, 1, jt, 1, sid.Length - 1); //just TEST everything...
+            jt[0] = sid[1];
+            jt[jt.Length - 1] = sid[n];
             np = 0; //no.of different paths out of possible n + 1
-            for (i = 0; i <= n; i++)
+            for (i = 0; i < n; i++)
             {
-                isid[np + 1, 1] = jt[i];
-                isid[np + 1, 2] = jt[i + 1];
+                isid[np + 1, 1] = jt[i + 1];
+                isid[np + 1, 2] = jt[i + 1 + 1];
                 if (jt[i] == jt[i + 1]) //no interface between types
                 {
                     dz[np + 1, 1] = hdx[i] + hdx[i + 1];
@@ -125,10 +127,13 @@ namespace SWIMFrame
             }
 
             //Set ths and he
+            ths = new double[n + 1];
+            he = new double[n + 1];
+
             for (i = 1; i <= n; i++)
             {
-                ths[i] = sp[soilloc[i]].ths;
-                he[i] = sp[soilloc[i]].he;
+                ths[i] = sp[soilloc[i] -1].ths;
+                he[i] = sp[soilloc[i] - 1].he;
             }
 
             //Set up S and phi arrays to get phi from S.
