@@ -45,6 +45,7 @@ namespace Models.PMF.Phen
     /// The generic and/or environmental stresses (\f$f_{s,\, pheno}\f$) gets from the value of \a Stress. 
     /// </remarks>
     [Serializable]
+    [ValidParent(ParentType = typeof(Phenology))]
     abstract public class Phase : Model
     {
         /// <summary>The start</summary>
