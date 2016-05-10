@@ -4393,7 +4393,7 @@ namespace Models
                     for (int s = 0; s < numSpecies; s++)
                     {
                         SP[s].gfwater = 1 - SP[s].soilSatFactor * (SW - FC) / (Sat - FC);
-                        accum_gfwater += SP[s].gfwater * SP[s].greenLAI;   //weighted by greenLAI
+                        accum_gfwater += SP[s].gfwater * SP[s].greenLAI;   //weighted by LAIGreen
                         p_greenLAI += SP[s].greenLAI;					  //FLi 19 Sept 2011 for avoiding error of an unupdated
                     }													  //p_greenLAI when using SWIM for waterUptake
                     if (p_greenLAI > 0)
@@ -6420,7 +6420,7 @@ namespace Models
 
             //double standingDead =dmleaf4 + dmstem4;
             //double deadFrac = standingDead /(dmleaf+dmstem);
-            //digestDefoliated = (1-deadFrac) * digestLive + deadFrac * digestDead;
+            //myDigestDefoliated = (1-deadFrac) * digestLive + deadFrac * digestDead;
             digestDefoliated = calcDigestability(); //because the defoliateion of different parts is in proportion to biomass
 
 
