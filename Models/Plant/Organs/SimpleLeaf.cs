@@ -177,6 +177,10 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         IFunction SVPFrac = null;
 
+        /// <summary>The initial leaf DM</summary>
+        [Link(IsOptional = true)]
+        IFunction InitialDM = null;
+
         #endregion
 
         #region States and variables
@@ -272,6 +276,10 @@ namespace Models.PMF.Organs
                 return CoverGreen * MetData.Radn;
             }
         }
+
+        /// <summary>Flag whether leaf DM has been initialised</summary>
+        private bool isInitialised = false;
+
         #endregion
 
         #region Arbitrator Methods
@@ -445,6 +453,15 @@ namespace Models.PMF.Organs
             base.OnDoPotentialPlantGrowth(sender, e);
             if (Plant.IsEmerged)
             {
+                if (!isInitialised)
+                {
+                    if (InitialDM != null)
+                    {
+                        Live.StructuralWt = InitialDM.Value;
+                        isInitialised = true;
+                    }
+                }
+
                 FRGR = FRGRFunction.Value;
                 if (CoverFunction == null & ExtinctionCoefficientFunction == null)
                 {
