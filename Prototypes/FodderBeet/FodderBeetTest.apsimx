@@ -748,7 +748,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <FractionToResidue>0.1</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <BiomassRemovalDefaults />
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -761,6 +760,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
+        <MaximumMainStemLeafNumber>80</MaximumMainStemLeafNumber>
         <FractionDied>0</FractionDied>
       </Leaf>
       <Root>
@@ -876,9 +876,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <FractionToResidue>0.15</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <BiomassRemovalDefaults />
-        <InitialDM>5</InitialDM>
-        <SpecificRootLength>40000</SpecificRootLength>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
@@ -903,12 +900,29 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
               <double>0.003</double>
             </X>
             <Y>
-              <double>0.00</double>
-              <double>0.00</double>
+              <double>0</double>
+              <double>0</double>
             </Y>
           </XYPairs>
           <XProperty>[Root].RootLengthDenisty</XProperty>
-        </LinearInterpolationFunction>        
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>NUptakeSWFactor</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RWC</XProperty>
+        </LinearInterpolationFunction>
+        <InitialDM>5</InitialDM>
+        <SpecificRootLength>40000</SpecificRootLength>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <GenericAboveGroundOrgan>
@@ -999,7 +1013,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <FractionToResidue>0.2</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Petiole</Name>
@@ -1097,7 +1110,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <FractionToResidue>0.2</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <BiomassRemovalDefaults />
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>

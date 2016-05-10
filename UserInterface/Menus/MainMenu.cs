@@ -83,7 +83,7 @@ namespace UserInterface.Presenters
         [MainMenu(MenuName = "Split screen")]
         public void ToggleSecondExplorerViewVisible(object sender, EventArgs e)
         {
-            this.explorerPresenter.ToggleSecondExplorerViewVisible();
+            this.explorerPresenter.MainPresenter.ToggleSecondExplorerViewVisible();
         }
 
         /// <summary>

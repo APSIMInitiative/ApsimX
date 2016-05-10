@@ -7,6 +7,7 @@ using Models.PMF.Organs;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
 using Models.PMF.Functions.StructureFunctions;
+using Models.Interfaces;
 
 namespace Models.PMF
 {
@@ -185,7 +186,7 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Plant))]
     public class Structure : Model
     {
-        private double _MainStemFinalNodeNo;
+        //private double _MainStemFinalNodeNumber;
         private double _Height;
 
         #region Links
@@ -194,7 +195,7 @@ namespace Models.PMF
         Plant Plant = null;
         /// <summary>The leaf</summary>
         [Link]
-        Leaf Leaf = null;
+        ILeaf Leaf = null;
         /// <summary>The phenology</summary>
         [Link]
         private Phenology Phenology = null;
@@ -282,11 +283,7 @@ namespace Models.PMF
         /// <value>The proportion plant mortality.</value>
         [XmlIgnore]
         public double ProportionPlantMortality { get; set; }
-        /// <summary>Gets or sets the maximum node number.</summary>
-        /// <value>The maximum node number.</value>
-        [XmlIgnore]
-        public int MaximumNodeNumber { get; set; }
-        /// <summary>Gets or sets the delta node number.</summary>
+        
         /// <value>The delta node number.</value>
         [XmlIgnore]
         public double DeltaNodeNumber { get; set; }
@@ -320,7 +317,7 @@ namespace Models.PMF
         /// <summary>Gets the remaining node no.</summary>
         /// <value>The remaining node no.</value>
         [Description("Number of leaves yet to appear")]
-        public double RemainingNodeNo { get { return MainStemFinalNodeNo - MainStemNodeNo; } }
+        public double RemainingNodeNo { get { return MainStemFinalNodeNumber.Value - MainStemNodeNo; } }
 
         /// <summary>Gets the height.</summary>
         /// <value>The height.</value>
@@ -334,11 +331,11 @@ namespace Models.PMF
         [Description("Number of appeared leaves per primary bud unit including all main stem and branch leaves")]
         public double PrimaryBudTotalNodeNo { get { return PlantTotalNodeNo / PrimaryBudNo; } }
 
-        /// <summary>Gets the main stem final node no.</summary>
-        /// <value>The main stem final node no.</value>
-        [XmlIgnore]
-        [Description("Number of leaves that will appear on the mainstem before it terminates")]
-        public double MainStemFinalNodeNo { get { return _MainStemFinalNodeNo; } } 
+        // <summary>Gets the main stem final node no.</summary>
+        // <value>The main stem final node no.</value>
+        //[XmlIgnore]
+        //[Description("Number of leaves that will appear on the mainstem before it terminates")]
+        //public double MainStemFinalNodeNo { get; set; } 
 
         /// <summary>Gets the relative node apperance.</summary>
         /// <value>The relative node apperance.</value>
@@ -351,7 +348,7 @@ namespace Models.PMF
                 if (Leaf.CohortsInitialised == false) //FIXME introduced to removed colateral damage during testing.  Need to remove and fix max leaf area parameterisation in potato.xml
                     return 0;
                 else
-                    return MainStemNodeNo / MainStemFinalNodeNo;
+                    return MainStemNodeNo / MainStemFinalNodeNumber.Value;
             }
         }
         
@@ -375,8 +372,8 @@ namespace Models.PMF
 
             double StartOfDayMainStemNodeNo = (int)MainStemNodeNo;
 
-            _MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
-            MainStemPrimordiaNo = Math.Min(MainStemPrimordiaNo, MaximumNodeNumber);
+            //_MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
+            MainStemPrimordiaNo = Math.Min(MainStemPrimordiaNo, MainStemFinalNodeNumber.Value);
 
             if (MainStemNodeNo > 0)
             {
@@ -384,7 +381,7 @@ namespace Models.PMF
                 if (MainStemNodeAppearanceRate.Value > 0)
                     DeltaNodeNumber = ThermalTime.Value / MainStemNodeAppearanceRate.Value;
                 MainStemNodeNo += DeltaNodeNumber;
-                MainStemNodeNo = Math.Min(MainStemNodeNo, MainStemFinalNodeNo);
+                MainStemNodeNo = Math.Min(MainStemNodeNo, MainStemFinalNodeNumber.Value);
             }
 
             //Fixme  This is redundant now and could be removed
@@ -482,12 +479,13 @@ namespace Models.PMF
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 PrimaryBudNo = Sow.BudNumber;
                 TotalStemPopn = Sow.Population * PrimaryBudNo;
-                if (MainStemFinalNodeNumber is MainStemFinalNodeNumberFunction)
-                    _MainStemFinalNodeNo = (MainStemFinalNodeNumber as MainStemFinalNodeNumberFunction).MaximumMainStemNodeNumber;
-                else
-                    _MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
-                MaximumNodeNumber = (int)_MainStemFinalNodeNo;
-                _Height = HeightModel.Value;
+                //MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
+                //if (MainStemFinalNodeNumber is MainStemFinalNodeNumberFunction)
+                //    _MainStemFinalNodeNo = (MainStemFinalNodeNumber as MainStemFinalNodeNumberFunction).MaximumMainStemNodeNumber;
+                //else
+                //    _MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
+                //MaximumNodeNumber = (int)_MainStemFinalNodeNo;
+                //_Height = HeightModel.Value;
             }
         }
 

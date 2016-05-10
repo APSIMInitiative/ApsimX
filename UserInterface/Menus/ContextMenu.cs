@@ -168,7 +168,7 @@ namespace UserInterface.Presenters
                 string errorMessages = currentSoil.Check(false);
                 if (errorMessages != string.Empty)
                 {
-                    this.explorerPresenter.ShowMessage(errorMessages, DataStore.ErrorLevel.Error);
+                    this.explorerPresenter.MainPresenter.ShowMessage(errorMessages, DataStore.ErrorLevel.Error);
                 }
             }
         }
@@ -194,7 +194,7 @@ namespace UserInterface.Presenters
             }
             catch (ApsimXException ex)
             {
-                this.explorerPresenter.ShowMessage(ex.Message, DataStore.ErrorLevel.Error);
+                this.explorerPresenter.MainPresenter.ShowMessage(ex.Message, DataStore.ErrorLevel.Error);
             }
             finally
             {
@@ -232,11 +232,11 @@ namespace UserInterface.Presenters
                 {
                     // Run all child model post processors.
                     dataStore.RunPostProcessingTools();
-                    this.explorerPresenter.ShowMessage("Post processing models have successfully completed", Models.DataStore.ErrorLevel.Information);
+                    this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Models.DataStore.ErrorLevel.Information);
                 }
                 catch (Exception err)
                 {
-                    this.explorerPresenter.ShowMessage("Error: " + err.Message, Models.DataStore.ErrorLevel.Error);
+                    this.explorerPresenter.MainPresenter.ShowMessage("Error: " + err.Message, Models.DataStore.ErrorLevel.Error);
                 }
             }
         }
@@ -297,19 +297,19 @@ namespace UserInterface.Presenters
             string destinationFolder = Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), "Doc");
             if (destinationFolder != null)
             {
-                explorerPresenter.ShowMessage("Creating documentation...", DataStore.ErrorLevel.Information);
+                explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", DataStore.ErrorLevel.Information);
                 Cursor.Current = Cursors.WaitCursor;
 
                 try
                 {
                     ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath);
                     this.explorerPresenter.CommandHistory.Add(command, true);
-                    explorerPresenter.ShowMessage("Finished creating documentation", DataStore.ErrorLevel.Information);
+                    explorerPresenter.MainPresenter.ShowMessage("Finished creating documentation", DataStore.ErrorLevel.Information);
                     Process.Start(command.FileNameWritten);
                 }
                 catch (Exception err)
                 {
-                    explorerPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                    explorerPresenter.MainPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
                 }
 
                 Cursor.Current = Cursors.Default;

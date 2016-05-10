@@ -305,10 +305,8 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <End>FlagLeaf</End>
       </PhaseLookupValue>
     </PhaseLookup>
-    <MainStemFinalNodeNumberFunction>
-      <Name>MainStemFinalNodeNumber</Name>
-      <OnEventFunction>
-        <Name>FinalLeafNumber</Name>
+    <OnEventFunction>
+        <Name>MainStemFinalNodeNumber</Name>
         <AddFunction>
           <Name>PreEventValue</Name>
           <Constant>
@@ -334,8 +332,6 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <SetEvent>FloralInitiation</SetEvent>
         <ReSetEvent />
       </OnEventFunction>
-      <MaximumMainStemNodeNumber>30</MaximumMainStemNodeNumber>
-    </MainStemFinalNodeNumberFunction>
     <HeightFunction>
       <Name>HeightModel</Name>
       <LinearInterpolationFunction>
@@ -864,6 +860,21 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <XProperty>[Root].RootLengthDenisty</XProperty>
     </LinearInterpolationFunction>        
     <NuptakeSupply>0</NuptakeSupply>
+    <LinearInterpolationFunction>
+      <Name>NUptakeSWFactor</Name>
+      <XYPairs>
+        <Name>XYPairs</Name>
+        <X>
+          <double>0</double>
+          <double>1</double>
+        </X>
+        <Y>
+          <double>0</double>
+          <double>1</double>
+        </Y>
+      </XYPairs>
+      <XProperty>[Root].RWC</XProperty>
+    </LinearInterpolationFunction>
   </Root>
   <Leaf>
     <Name>Leaf</Name>
@@ -1421,6 +1432,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
     <PotentialEP>0</PotentialEP>
     <KDead>0.03</KDead>
     <FractionDied>0</FractionDied>
+    <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
   </Leaf>
   <GenericAboveGroundOrgan>
     <Name>Husk</Name>

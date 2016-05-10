@@ -690,6 +690,8 @@ namespace Models.Grazplan
     [Serializable]
     [ViewName("UserInterface.Views.SupplementView")]
     [PresenterName("UserInterface.Presenters.SupplementPresenter")]
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class Supplement : Model
     {
 
