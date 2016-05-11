@@ -28,7 +28,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The memo view
         /// </summary>
-        private HTMLView memoViewer;
+        private MemoView memoViewer;
 
         /// <summary>
         /// The explorer presenter used
@@ -44,11 +44,9 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.memoModel = model as Memo;
-            this.memoViewer = view as HTMLView;
+            this.memoViewer = view as MemoView;
             this.explorerPresenter = explorerPresenter;
-
-            this.memoViewer.ImagePath = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-            this.memoViewer.SetContents(this.memoModel.MemoText, true);
+            this.memoViewer.MemoText = this.memoModel.MemoText;
         }
 
         /// <summary>
@@ -56,9 +54,9 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            string markdown = this.memoViewer.GetMarkdown();
-            if (markdown != memoModel.MemoText)
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.memoModel, "MemoText", markdown));
+            string newText = this.memoViewer.MemoText;
+            if (newText != memoModel.MemoText)
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.memoModel, "MemoText", newText));
         }
 
         /// <summary>
@@ -68,7 +66,7 @@ namespace UserInterface.Presenters
         public void OnModelChanged(object changedModel)
         {
             if (changedModel == this.memoModel)
-                this.memoViewer.SetContents(((Memo)changedModel).MemoText, true);
+                this.memoViewer.MemoText = ((Memo)changedModel).MemoText;
         }
 
         /// <summary>
