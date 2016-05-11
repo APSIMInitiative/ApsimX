@@ -314,8 +314,15 @@
         /// <returns>The newly created paragraph.</returns>
         private static DocumentObject AddHeading(DocumentObject parentObject, int headingNumber)
         {
-            Paragraph paragraph = ((Section)parentObject).AddParagraph();
-            paragraph.Style = "Heading" + headingNumber;
+            Paragraph paragraph = null;
+            if (parentObject is Section)
+                paragraph = (parentObject as Section).AddParagraph();
+            else if (parentObject is Paragraph)
+                paragraph = (parentObject as Paragraph).Section.AddParagraph();
+            if (paragraph != null)
+            {
+                paragraph.Style = "Heading" + headingNumber;
+            }
             return paragraph;
         }
 
