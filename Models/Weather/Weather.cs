@@ -130,6 +130,11 @@ namespace Models
         }
 
         /// <summary>
+        /// Used to hold the WorkSheet Name if data retrieved from an Excel file
+        /// </summary>
+        public string ExcelWorkSheetName { get; set; }
+
+        /// <summary>
         /// Gets the start date of the weather file
         /// </summary>
         public DateTime StartDate
@@ -455,6 +460,7 @@ namespace Models
         public DataTable GetAllData()
         {
             this.reader = null;
+
             if (this.OpenDataFile())
             {
                 List<string> metProps = new List<string>();
@@ -463,6 +469,7 @@ namespace Models
                 metProps.Add("radn");
                 metProps.Add("rain");
                 metProps.Add("wind");
+
                 return this.reader.ToTable(metProps);
             }
             else
@@ -560,12 +567,22 @@ namespace Models
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
         {
+            bool isExcelFile = System.IO.Path.GetExtension(this.FullFileName).ToLower() == ExcelUtilities.ExcelExtension;
+
             if (System.IO.File.Exists(this.FullFileName))
             {
                 if (this.reader == null)
                 {
                     this.reader = new ApsimTextFile();
-                    this.reader.Open(this.FullFileName);
+
+                    if (isExcelFile == true)
+                    { 
+                        reader.IsExcelFile = isExcelFile;
+                        this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
+                    }
+                    else
+                        this.reader.Open(this.FullFileName);
+
                     this.maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Maxt");
                     this.minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Mint");
                     this.radiationIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Radn");
@@ -599,7 +616,8 @@ namespace Models
                 }
                 else
                 {
-                    this.reader.SeekToDate(this.reader.FirstDate);
+                    if (isExcelFile != true) 
+                        this.reader.SeekToDate(this.reader.FirstDate);
                 }
 
                 return true;
