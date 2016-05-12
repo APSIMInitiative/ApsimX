@@ -84,7 +84,7 @@ namespace Models.PMF.Organs
     [Description("Leaf Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Leaf : BaseOrgan, AboveGround, ICanopy
+    public class Leaf : BaseOrgan, AboveGround, ICanopy, ILeaf
     {
         #region Canopy interface
 

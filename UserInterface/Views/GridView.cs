@@ -829,6 +829,9 @@ namespace UserInterface.Views
             IGridCell cell = this.GetCell(e.ColumnIndex, e.RowIndex);
             if (cell != null && cell.EditorType == EditorTypeEnum.Button)
             {
+                DataGridViewButtonCell gridCell = Grid[e.ColumnIndex, e.RowIndex] as DataGridViewButtonCell;
+                if (gridCell != null)
+                    cell.DropDownStrings = (string[])gridCell.Tag;
                 GridCellsChangedArgs cellClicked = new GridCellsChangedArgs();
                 cellClicked.ChangedCells = new List<IGridCell>();
                 cellClicked.ChangedCells.Add(cell);

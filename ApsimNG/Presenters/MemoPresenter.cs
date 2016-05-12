@@ -46,9 +46,6 @@ namespace UserInterface.Presenters
             this.memoModel = model as Memo;
             this.memoViewer = view as MemoView;
             this.explorerPresenter = explorerPresenter;
-
-            ///this.memoViewer.ImagePath = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-            ///this.memoViewer.SetContents(this.memoModel.MemoText, true);
             this.memoViewer.MemoText = this.memoModel.MemoText;
         }
 
@@ -57,10 +54,9 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            ///string markdown = this.memoViewer.GetMarkdown();
-            string markdown = this.memoViewer.MemoText;
-            if (markdown != memoModel.MemoText)
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.memoModel, "MemoText", markdown));
+            string newText = this.memoViewer.MemoText;
+            if (newText != memoModel.MemoText)
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.memoModel, "MemoText", newText));
         }
 
         /// <summary>
