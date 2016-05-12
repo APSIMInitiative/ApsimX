@@ -5024,7 +5024,7 @@ The map below shows the location of the experimental sites used in the validatio
         <TableName>PredictedObserved</TableName>
         <XFieldName>Observed.Wheat.AboveGround.Wt</XFieldName>
         <YFieldName>Predicted.Wheat.AboveGround.Wt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
+        <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -5071,7 +5071,7 @@ The map below shows the location of the experimental sites used in the validatio
         <TableName>PredictedObservedAll</TableName>
         <XFieldName>Observed.Wheat.Leaf.LAI</XFieldName>
         <YFieldName>Predicted.Wheat.Leaf.LAI</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
+        <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
@@ -5166,7 +5166,7 @@ The map below shows the location of the experimental sites used in the validatio
         <TableName>PredictedObserved</TableName>
         <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
         <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
+        <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
