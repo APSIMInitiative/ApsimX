@@ -460,9 +460,9 @@ namespace UnitTests
         public void TestFd()
         {
             double[] phia = new double[] { 3.35430149789317511E-006 };
-            double[] f = new double[] { 4.20606605100459774E-010 };
-            double[] d = new double[] { -0.25981243845145552 };
-            double[] q = new double[] { 8.74052774602063209E-010 };
+            double[] f = new double[] { 1.763006E-07 };
+            double[] d = new double[] { -2.598123E-01 };
+            double[] q = new double[] { 8.74052774602063E-10 };
             double[] phi1max = new double[] { 18.137952804565430 };
             int[] nco1 = new int[] { 4 };
             int[] j = new int[] { 1 };
@@ -776,13 +776,30 @@ namespace UnitTests
         {
             SoilData sd = new SoilData();
             sd.GetTables(10, new int[] { 0, 103, 103, 103, 103, 109, 109, 109, 109, 109, 109 }, new double[] { 0, 10, 20, 30, 40, 60, 80, 100, 120, 160, 200 });
+
+            //No assertions at this point, just make sure it runs
+        }
+
+        [Test]
+        public void TestJsp()
+        {
+            int[] sid = new int[] { 103, 109 };
+            int[] ns = new int[] { 2, 2 };
+            int[] isoil = new int[] { 103, 109 };
+            int[] jsp = new int[] { 1, 2 };
+
+            for(int i=0;i<sid.Length;i++)
+            {
+                int res = (int)Extensions.TestMethod("SoilData", "TestJsp", new object[] { sid[i], ns[i], isoil });
+                Assert.AreEqual(jsp[i], res);
+            }
         }
 
         [Test]
         public void TestGetK()
         {
             SoilData sd = new SoilData();
-            sd.GetTables(10, new int[] {0, 103, 103, 103, 103, 103, 109, 109, 109, 109, 109 }, new double[] {0, 10, 20, 30, 40, 60, 80, 100, 120, 160, 200 });
+            sd.GetTables(10, new int[] {0, 103, 103, 103, 103, 109, 109, 109, 109, 109, 109 }, new double[] {0, 10, 20, 30, 40, 60, 80, 100, 120, 160, 200 });
             int iq = 10;
             int iS= 0;
             double[] x = new double[] { 6.981601E-01, 6.981602E-01, 6.981650E-01, 6.981651E-01, 7.925112E-01, 7.920824E-01 };

@@ -98,13 +98,13 @@ namespace SWIMFrame
             {
                 retVal = new double[m.GetLength(0)];
                 for (int i = 0; i < m.GetLength(0); i++)
-                    retVal[i] = m[index, i];
+                    retVal[i] = m[i, index];
             }
             else
             {
                 retVal = new double[m.GetLength(1)];
                 for (int i = 0; i < m.GetLength(1); i++)
-                    retVal[i] = m[i,index];
+                    retVal[i] = m[index,i];
             }
             return retVal;
         }

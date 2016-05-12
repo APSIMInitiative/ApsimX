@@ -36,7 +36,7 @@ namespace SWIMFrame
             int[,] isid = new int[nin + 1 + 1, 2 + 1];
             int[] jt = new int[nin + 2]; //0-based FORTRAN array +2 as first and last elements will be copied twice
             double[,] dz = new double[nin + 1 + 1, 2 + 1];
-            double[] hdx = new double[nin + 1]; //0-based FORTRAN array
+            double[] hdx = new double[nin + 1+1]; //0-based FORTRAN array
             double x1;
 
             n = nin;
@@ -52,19 +52,11 @@ namespace SWIMFrame
                     philoc[x, y] = 1;
 
             // Get ns different soil idents in array isoil.
-            ns = 0;
-            for (i = 1; i <= n; i++)
+            isoil = sid.Skip(1).Distinct().ToArray();
+            ns = isoil.Length;
+            for(int count=1;count < soilloc.Length;count++)
             {
-                if (isoil.Select(x => x == sid[i]).Count() == 0) //TEST
-                {
-                    ns++;
-                    isoil[ns] = sid[i];
-                }
-
-                double[] tempisoil = new double[i + 1];
-                for (int x = 1; x <= i; x++)
-                    tempisoil[x] = Math.Abs(isoil[x] - sid[x]);
-                soilloc[i] = TwoFluxes.MinLoc(tempisoil);
+                soilloc[count] = Array.IndexOf(isoil, sid[count]);
             }
 
             // Get soil idents in array isid and lengths in array dz for the np paths.
@@ -80,7 +72,7 @@ namespace SWIMFrame
                     hdx[x] = dx[x] / 2;
             }
 
-            Array.Copy(sid, 1, jt, 1, sid.Length - 1); //just TEST everything...
+            Array.Copy(sid, 1, jt, 1, sid.Length - 1);
             jt[0] = sid[1];
             jt[jt.Length - 1] = sid[n];
             np = 0; //no.of different paths out of possible n + 1
@@ -123,7 +115,7 @@ namespace SWIMFrame
             sp = new SoilProps[nsp + 1];
             for (i = 1; i <= ns; i++)
             {
-                sp[i] = Soil.ReadProps("soil" + isoil[i] + ".dat");
+                sp[i] = Soil.ReadProps("soil" + isoil[i-1] + ".dat");
             }
 
             //Set ths and he
@@ -132,8 +124,8 @@ namespace SWIMFrame
 
             for (i = 1; i <= n; i++)
             {
-                ths[i] = sp[soilloc[i] -1].ths;
-                he[i] = sp[soilloc[i] - 1].he;
+                ths[i] = sp[soilloc[i]+1].ths;
+                he[i] = sp[soilloc[i]+1].he;
             }
 
             //Set up S and phi arrays to get phi from S.
@@ -149,7 +141,7 @@ namespace SWIMFrame
 
                 //S(:,i)=sp(i)%Sc(1)+(/(j,j=0,nphi-1)/)*(sp(i)%Sc(nc)-sp(i)%Sc(1))/(nphi-1)
                 for (int x = 0; x < nphi; x++)
-                    S[x, i] = sp[i].Sc[1] + x * (sp[i].Sc[nc] - sp[i].Sc[1]) / (nphi - 1);
+                    S[x+1, i] = sp[i].Sc[1] + x * (sp[i].Sc[nc] - sp[i].Sc[1]) / (nphi - 1);
                 phi[1, i] = sp[i].phic[1];
                 phi[nphi, i] = sp[i].phic[nc];
                 j = 1;
@@ -162,9 +154,9 @@ namespace SWIMFrame
                         j++;
                     }
                     x1 = S[i1, i] - sp[i].Sc[j];
-                    phi[i1, i] = sp[i].phic[j] + x1 * (sp[i].phico[1, j] + x1 * (sp[i].phico[2, j] + x1 * sp[i].phico[3, j]));
+                    phi[i1, i] = sp[i].phic[j] + x1 * (sp[i].phico[0, j] + x1 * (sp[i].phico[1, j] + x1 * sp[i].phico[2, j]));
                     x1 = phi[i1, i] - sp[i].phic[j];
-                    K[i1, i] = sp[i].Kc[j] + x1 * (sp[i].Kco[1, j] + x1 * (sp[i].Kco[2, j] + x1 * sp[i].Kco[3, j]));
+                    K[i1, i] = sp[i].Kc[j] + x1 * (sp[i].Kco[0, j] + x1 * (sp[i].Kco[1, j] + x1 * sp[i].Kco[2, j]));
                 }
 
                 rdS[i] = 1.0 / (S[2, i] - S[1, i]);
@@ -197,58 +189,65 @@ namespace SWIMFrame
                 ft[i] = Fluxes.ReadFluxTable(sfile);
 
                 // Set up flux path data.
-                j = jsp(ft[i].fend[1].sid, ns, isoil);
-                pe1.nfu = ft[i].fend[1].nfu;
-                pe1.nft = ft[i].fend[1].nft;
+                j = jsp(ft[i].fend[0].sid, ns, isoil);
+                pe1.nfu = ft[i].fend[0].nfu;
+                pe1.nft = ft[i].fend[0].nft;
                 pe1.nld = sp[j].nld;
                 pe1.ths = sp[j].ths;
                 pe1.rdS = rdS[j];
                 pe1.Ks = sp[j].ks;
-                pe1.S = Extensions.GetRowCol(S, j, false);
-                pe1.phi = Extensions.GetRowCol(phi, j, false);
-                pe1.dphidS = Extensions.GetRowCol(dphidS, j, false);
-                pe1.K = Extensions.GetRowCol(K, j, false);
-                pe1.dKdS = Extensions.GetRowCol(dKdS, j, false);
+                pe1.S = Extensions.GetRowCol(S, j, true);
+                pe1.phi = Extensions.GetRowCol(phi, j, true);
+                pe1.dphidS = Extensions.GetRowCol(dphidS, j, true);
+                pe1.K = Extensions.GetRowCol(K, j, true);
+                pe1.dKdS = Extensions.GetRowCol(dKdS, j, true);
                 pe1.Sd = sp[j].Sd;
                 pe1.lnh = sp[j].lnh;
-                pe1.phif = ft[i].fend[1].phif;
-                fpath[i].dz = ft[i].fend[1].dz;
-                if (ft[i].fend[2].sid == ft[i].fend[1].sid)
+                pe1.phif = ft[i].fend[0].phif;
+                fpath[i].dz = ft[i].fend[0].dz;
+                if (ft[i].fend[1].sid == ft[i].fend[0].sid)
                     pe2 = pe1;
                 else //composite path
                 {
-                    j = jsp(ft[i].fend[2].sid, ns, isoil);
-                    pe2.nfu = ft[i].fend[2].nfu;
-                    pe2.nft = ft[i].fend[2].nft;
+                    j = jsp(ft[i].fend[1].sid, ns, isoil);
+                    pe2.nfu = ft[i].fend[1].nfu;
+                    pe2.nft = ft[i].fend[1].nft;
                     pe2.nld = sp[j].nld;
                     pe2.ths = sp[j].ths;
                     pe2.rdS = rdS[j];
                     pe2.Ks = sp[j].ks;
-                    pe2.S = Extensions.GetRowCol(S, j, false);
-                    pe2.phi = Extensions.GetRowCol(phi, j, false);
-                    pe2.dphidS = Extensions.GetRowCol(dphidS, j, false);
-                    pe2.K = Extensions.GetRowCol(K, j, false);
-                    pe2.dKdS = Extensions.GetRowCol(dKdS, j, false);
+                    pe2.S = Extensions.GetRowCol(S, j, true);
+                    pe2.phi = Extensions.GetRowCol(phi, j, true);
+                    pe2.dphidS = Extensions.GetRowCol(dphidS, j, true);
+                    pe2.K = Extensions.GetRowCol(K, j, true);
+                    pe2.dKdS = Extensions.GetRowCol(dKdS, j, true);
                     pe2.Sd = sp[j].Sd;
                     pe2.lnh = sp[j].lnh;
-                    pe2.phif = ft[i].fend[2].phif;
-                    fpath[i].dz = ft[i].fend[2].dz;
+                    pe2.phif = ft[i].fend[1].phif;
+                    fpath[i].dz = ft[i].fend[1].dz;
                 }
+                fpath[i].pend = new PathEnd[3];
                 fpath[i].pend[1] = pe1;
                 fpath[i].pend[2] = pe2;
                 fpath[i].ftable = ft[i].ftable;
             }
         }
 
+        private static int TestJsp(int sid, int ns, int[] isoil)
+        {
+            SoilData sd = new SoilData();
+            return sd.jsp(sid, ns, isoil);
+        }
+
         private int jsp(int sid, int ns, int[] isoil)
         {
             int jsp;
             // Get soil prop location in isoil list
-            for (jsp = 1; jsp <= ns; jsp++)
+            for (jsp = 0; jsp < ns; jsp++)
                 if (sid == isoil[jsp])
-                    return jsp;
+                    return jsp + 1;
 
-            if (jsp > ns)
+            if (jsp > ns) //from FORTRAN but doesn't look right... this will never run.
             {
                 Console.WriteLine("Data for soil " + sid + " not found");
                 Environment.Exit(1);
