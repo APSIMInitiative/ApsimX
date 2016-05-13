@@ -43,6 +43,8 @@ obsData$N_cat <- as.factor(obsData$N_cat)
 
 summary(obsData)
 
+head(obsData)
+
 print(unique(obsData$Name))
 
 ```
@@ -90,13 +92,6 @@ x[1]
 x[2]
 x[3]
 x[4]
-x[5]
-x[6]
-x[7]
-x[8]
-x[9]
-x[10]
-
 
 
 ```
@@ -106,7 +101,7 @@ x[10]
 
 
 ```{r, ReadSimulated, echo=FALSE, include=FALSE}
-# load Justin's function
+# load Justin's function (FIXME: not used yet, reading from output csv file)
 GetApsimNGTable <- function(dbLoc, table) 
 {
     connection <- dbConnect(SQLite(), dbname = dbLoc, flags = SQLITE_RW)
@@ -120,11 +115,12 @@ dbPath <- "C:\\GitHubRepos\\ApsimX\\Prototypes\\FodderBeet\\"
 dbName <- "FodderBeet.db.Report.csv"
 #dbName <- "SimData.txt"
 
+# FIXME: can I call myDb as simData ?
 myDb <- read.csv(paste0(dbPath,dbName), header=TRUE)
 #myDb <- read.table("C:\\GitHubRepos\\ApsimX\\Prototypes\\FodderBeet\\SimData.txt", header=TRUE)
 
 # get date sorted
-myDb$Date <- ymd(myDb$Clock.Today)
+myDb$Date <- dmy(myDb$Clock.Today)
 
 # remove unecessary variables
 myDb <- myDb %>%
@@ -135,7 +131,7 @@ summary(myDb)
 head(myDb)
 str(myDb)
 
-myDb$Name <- gsub(" ", "", myDb$Name, fixed = TRUE)
+myDb$Name <- gsub(" ", "", myDb$SimName, fixed = TRUE)
 
 myDb %>%
   filter(Name == "LincolnP21_Cv2012") %>%
@@ -149,7 +145,11 @@ myDb %>%
 
 # Add info for merging
 
+# Remove extra variables that are not for comparing with observed data
+varsToDelete <- grep("ExtraVariables|Phenology|irrigation",
+                     names(myDb)) # find output variables
 
+myDb <- myDb %>% select(-varsToDelete)
 
 # re-arrange
 outVarsPos <- grep("FodderBeet",names(myDb)) # find output variables
@@ -162,6 +162,7 @@ summary(simData)
 summary(obsData)
 
 mergedDF <- merge(obsData,simData, by=c("Date","Variable","Name")) # FIXME: add experiment?
+
 head(mergedDF)
 tail(mergedDF)
 summary(mergedDF)
