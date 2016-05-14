@@ -124,6 +124,15 @@ The model consists of:
             </MultiplyFunction>
           </AddFunction>
         </MultiplyFunction>
+        <AccumulateFunction>
+          <Name>AccumulateThermalTime</Name>
+          <VariableReference>
+            <Name>VariableReference</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <StartStageName>Sowing</StartStageName>
+          <EndStageName>HarvestRipe</EndStageName>
+        </AccumulateFunction>
         <GerminatingPhase>
           <Name>Germinating</Name>
           <Start>Sowing</Start>
@@ -1556,7 +1565,6 @@ The model consists of:
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.3</KDead>
-        <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -2046,6 +2054,11 @@ The EarLive composite biomass object includes the Live pools of all organs withi
           </Cultivar>
           <Cultivar>
             <Name>Hartog</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Suntop</Name>
             <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
             <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
           </Cultivar>
@@ -3534,7 +3547,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
-        <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
