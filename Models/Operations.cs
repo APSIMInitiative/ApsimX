@@ -92,75 +92,107 @@ namespace Models
                         Model model = Apsim.Get(this, modelName) as Model;
                         if (model == null)
                             throw new ApsimXException(this, "Cannot find model: " + modelName);
-                        MethodInfo method = model.GetType().GetMethod(methodName);
-                        if (method == null)
+
+
+                        MethodInfo[] methods = model.GetType().GetMethods();
+                        if (methods == null)
                             throw new ApsimXException(this, "Cannot find method: " + methodName + " in model: " + modelName);
 
-                        // convert arguments to an object array.
-                        ParameterInfo[] parameters = method.GetParameters();
-                        object[] parameterValues = new object[parameters.Length];
-
-                        //retrieve the values for the named arguments that were provided. (not all the named arguments for the method may have been provided)
-                        for (int i = 0; i < arguments.Length; i++)
+                        object[] parameterValues = null;
+                        foreach (MethodInfo method in methods)
                         {
-                            string value = arguments[i];
-                            int argumentIndex;
-                            int posColon = arguments[i].IndexOf(':');
-                            if (posColon == -1)
-                                argumentIndex = i;
-                            else
+                            if (method.Name.Equals(methodName, StringComparison.CurrentCultureIgnoreCase))
                             {
-                                string argumentName = arguments[i].Substring(0, posColon).Trim();
-                                // find parameter with this name.
-                                for (argumentIndex = 0; argumentIndex < parameters.Length; argumentIndex++)
+                                parameterValues = GetArgumentsForMethod(arguments, method);
+
+                                // invoke method.
+                                if (parameterValues != null)
                                 {
-                                    if (parameters[argumentIndex].Name == argumentName)
-                                        break;
+                                    method.Invoke(model, parameterValues);
+                                    break;
                                 }
-                                if (argumentIndex == parameters.Length)
-                                    throw new ApsimXException(this, "Cannot find argument: " + argumentName + " in operation call: " + operation.Action);
-                                value = value.Substring(posColon + 1);
-                            }
-
-                            // convert value to correct type.
-                            if (parameters[argumentIndex].ParameterType == typeof(double))
-                                parameterValues[argumentIndex] = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-                            else if (parameters[argumentIndex].ParameterType == typeof(float))
-                                parameterValues[argumentIndex] = Convert.ToSingle(value, CultureInfo.InvariantCulture);
-                            else if (parameters[argumentIndex].ParameterType == typeof(int))
-                                parameterValues[argumentIndex] = Convert.ToInt32(value, CultureInfo.InvariantCulture);
-                            else if (parameters[argumentIndex].ParameterType == typeof(bool))
-                                parameterValues[argumentIndex] = Convert.ToBoolean(value, CultureInfo.InvariantCulture);
-                            else if (parameters[argumentIndex].ParameterType == typeof(string))
-                                parameterValues[argumentIndex] = value.Replace("\"", "").Trim();
-                            else if (parameters[argumentIndex].ParameterType.IsEnum)
-                            {
-                                value = value.Trim();
-                                int posLastPeriod = value.LastIndexOf('.');
-                                if (posLastPeriod != -1)
-                                    value = value.Substring(posLastPeriod + 1);
-                                parameterValues[argumentIndex] = Enum.Parse(parameters[argumentIndex].ParameterType, value);
                             }
                         }
 
-
-                        //if there were missing named arguments in the method call then use the default values for them.
-                        for (int i = 0; i < parameterValues.Length; i++)
-                        {
-                            if (parameterValues[i] == null)
-                            {
-                                parameterValues[i] = parameters[i].DefaultValue;
-                            }
-                        }
-
-
-                        // invoke method.
-                        method.Invoke(model, parameterValues);
+                        if (parameterValues == null)
+                            throw new ApsimXException(this, "Cannot find method: " + methodName + " in model: " + modelName);
                     }
                 }
             }
         }
 
-       
+        /// <summary>
+        /// Try and get the arguments for the specified method. Will return null if arguments don't match the method.
+        /// </summary>
+        /// <param name="arguments">The arguments specified by user.</param>
+        /// <param name="method">The method to try and match to.</param>
+        /// <returns>The arguments or null if not matched.</returns>
+        private object[] GetArgumentsForMethod(string[] arguments, MethodInfo method)
+        {
+            // convert arguments to an object array.
+            ParameterInfo[] parameters = method.GetParameters();
+            object[] parameterValues = new object[parameters.Length];
+            if (arguments.Length > parameters.Length)
+                return null;
+
+            //retrieve the values for the named arguments that were provided. (not all the named arguments for the method may have been provided)
+            for (int i = 0; i < arguments.Length; i++)
+            {
+                string value = arguments[i];
+                int argumentIndex;
+                int posColon = arguments[i].IndexOf(':');
+                if (posColon == -1)
+                    argumentIndex = i;
+                else
+                {
+                    string argumentName = arguments[i].Substring(0, posColon).Trim();
+                    // find parameter with this name.
+                    for (argumentIndex = 0; argumentIndex < parameters.Length; argumentIndex++)
+                    {
+                        if (parameters[argumentIndex].Name == argumentName)
+                            break;
+                    }
+                    if (argumentIndex == parameters.Length)
+                        return null;
+                    value = value.Substring(posColon + 1);
+                }
+
+                if (argumentIndex >= parameterValues.Length)
+                    return null;
+
+                // convert value to correct type.
+                if (parameters[argumentIndex].ParameterType == typeof(double))
+                    parameterValues[argumentIndex] = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                else if (parameters[argumentIndex].ParameterType == typeof(float))
+                    parameterValues[argumentIndex] = Convert.ToSingle(value, CultureInfo.InvariantCulture);
+                else if (parameters[argumentIndex].ParameterType == typeof(int))
+                    parameterValues[argumentIndex] = Convert.ToInt32(value, CultureInfo.InvariantCulture);
+                else if (parameters[argumentIndex].ParameterType == typeof(bool))
+                    parameterValues[argumentIndex] = Convert.ToBoolean(value, CultureInfo.InvariantCulture);
+                else if (parameters[argumentIndex].ParameterType == typeof(string))
+                    parameterValues[argumentIndex] = value.Replace("\"", "").Trim();
+                else if (parameters[argumentIndex].ParameterType.IsEnum)
+                {
+                    value = value.Trim();
+                    int posLastPeriod = value.LastIndexOf('.');
+                    if (posLastPeriod != -1)
+                        value = value.Substring(posLastPeriod + 1);
+                    parameterValues[argumentIndex] = Enum.Parse(parameters[argumentIndex].ParameterType, value);
+                }
+            }
+
+
+            //if there were missing named arguments in the method call then use the default values for them.
+            for (int i = 0; i < parameterValues.Length; i++)
+            {
+                if (parameterValues[i] == null)
+                {
+                    parameterValues[i] = parameters[i].DefaultValue;
+                }
+            }
+
+            return parameterValues;
+        }
+
     }
 }

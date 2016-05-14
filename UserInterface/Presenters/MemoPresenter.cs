@@ -46,7 +46,6 @@ namespace UserInterface.Presenters
             this.memoModel = model as Memo;
             this.memoViewer = view as HTMLView;
             this.explorerPresenter = explorerPresenter;
-
             this.memoViewer.ImagePath = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
             this.memoViewer.SetContents(this.memoModel.MemoText, true);
         }
