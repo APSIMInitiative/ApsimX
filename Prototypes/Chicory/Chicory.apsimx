@@ -753,6 +753,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
       <ExperimentFactorNames />
       <ExperimentFactorValues />
       <VariableNames>
+        <string>[Clock].Today as Date</string>
         <string>[Clock].Today</string>
         <string>[ExtraVariables].Script.AccumPlantN</string>
         <string>[ExtraVariables].Script.AccumMineralisation</string>
@@ -792,65 +793,81 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <string>[Soil].SoilWater.pond</string>
         <string>[Soil].SoilWater.SWmm</string>
         <string>[Soil].NO3N</string>
+        <string>[Soil].SoilWater.LL15mm</string>
         <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
         <string>([Soil].SoilWater.SW[1]+[Soil].SoilWater.SW[2]+[Soil].SoilWater.SW[3]) as TopWater</string>
-        <string>[Chicory].Leaf.Live.Wt</string>
+        <string />
         <string>[Defoliate].Script.LeafWt</string>
-        <string>[Chicory].Root.Live.Wt</string>
-        <string>[Chicory].Stem.Live.Wt</string>
-        <string>[Chicory].Leaf.Live.N</string>
-        <string>[Chicory].Root.Live.N</string>
-        <string>[Chicory].Stem.Live.N</string>
-        <string>[Chicory].Leaf.Live.NConc</string>
-        <string>[Chicory].Root.Live.NConc</string>
-        <string>[Chicory].Stem.Live.NConc</string>
-        <string>[Chicory].Root.WaterSupply</string>
-        <string>[Chicory].Root.WaterUptake</string>
-        <string>[Chicory].Leaf.Transpiration</string>
-        <string>[Chicory].Leaf.WaterDemand</string>
-        <string>[Chicory].Root.Depth</string>
-        <string>[Chicory].Leaf.CoverTotal</string>
-        <string>[Chicory].Leaf.CoverDead</string>
-        <string>[Chicory].Leaf.LAI as LAIgreen</string>
-        <string>[Chicory].Leaf.LAIDead as LAIdead</string>
-        <string>[Chicory].Leaf.Height</string>
-        <string>[Chicory].Leaf.PotentialBiomass.Value</string>
-        <string>[Chicory].Stem.LiveFWt</string>
-        <string>[Chicory].Arbitrator.NDemand</string>
-        <string>[Chicory].Arbitrator.NSupply</string>
-        <string>[Chicory].Leaf.Fw</string>
-        <string>[Chicory].Leaf.Fn</string>
-        <string>[Chicory].Total.Wt</string>
-        <string>[Chicory].ExpectedYield.Value</string>
-        <string>[Chicory].DryYield.Value</string>
+        <string>[Defoliate].Script.LeafHarvested</string>
+        <string>[Defoliate].Script.StemWt</string>
+        <string>[Defoliate].Script.StemHarvested</string>
+        <string />
+        <string>[Defoliate].Script.leafToDefoliate</string>
+        <string>[Defoliate].Script.stemToDefoliate</string>
+        <string />
+        <string>[Chicory].Total.Wt as Total Weight</string>
+        <string>[Chicory].ExpectedYield.Value as Expected Yield</string>
+        <string>[Chicory].DryYield.Value as Dry Yield</string>
         <string>[Chicory].TotalBiomassAtStartReStemive.Value</string>
         <string>[Chicory].TotalBiomassAtStartSenescence.Value</string>
         <string>[Chicory].Ymax.Value</string>
-        <string>[Chicory].Total.N</string>
+        <string>[Chicory].Total.N as Total N</string>
+        <string>[Chicory].AboveGround.Wt as Above Ground Weight</string>
+        <string>[Chicory].Population as Population</string>
+        <string />
+        <string>[Chicory].Arbitrator.NDemand</string>
+        <string>[Chicory].Arbitrator.NSupply</string>
         <string>[Chicory].Arbitrator.DMSupply</string>
         <string>[Chicory].Arbitrator.DMDemand</string>
-        <string>[Chicory].Phenology.AccumulatedEmergedTT</string>
         <string>[Chicory].Arbitrator.DMSinkLimitation</string>
         <string>[Chicory].Arbitrator.DMNutrientLimitation</string>
+        <string>[Chicory].Arbitrator.FN</string>
+        <string>[Chicory].Arbitrator.NSupply</string>
+        <string />
+        <string>[Chicory].Leaf.Wt as Leaf Weight</string>
+        <string>[Chicory].Leaf.Live.Wt as Leaf Live Weight</string>
+        <string>[Chicory].Leaf.Live.N as Leaf Live N</string>
+        <string>[Chicory].Leaf.Live.NConc as Leaf Live N Concentration</string>
+        <string>[Chicory].Leaf.Transpiration as Leaf Transpiration</string>
+        <string>[Chicory].Leaf.WaterDemand as Leaf Water Demand</string>
+        <string>[Chicory].Leaf.CoverTotal as Leaf Total Cover</string>
+        <string>[Chicory].Leaf.CoverDead as Leaf Dead Cover</string>
+        <string>[Chicory].Leaf.LAI as LAI Green</string>
+        <string>[Chicory].Leaf.LAIDead as LAI Dead</string>
+        <string>[Chicory].Leaf.Height as Leaf Height</string>
+        <string>[Chicory].Leaf.PotentialBiomass.Value as Leaf Potential Biomass</string>
+        <string>[Chicory].Leaf.Fw</string>
+        <string>[Chicory].Leaf.Fn</string>
+        <string />
+        <string>[Chicory].Phenology.AccumulatedEmergedTT</string>
         <string>[Chicory].Phenology.ThermalTime.Value</string>
         <string>[Chicory].Phenology.CurrentPhaseName</string>
         <string>[Chicory].Phenology.Stage</string>
-        <string>[Chicory].AboveGround.Wt</string>
-        <string>[Chicory].Population</string>
+        <string />
+        <string>[Chicory].Root.Live.Wt as Root Live Weight</string>
+        <string>[Chicory].Root.Live.N as Root Live N</string>
+        <string>[Chicory].Root.Live.NConc as Root Live N Concentration</string>
+        <string>[Chicory].Root.WaterSupply as Root Water Supply</string>
+        <string>[Chicory].Root.WaterUptake as Root Water Uptake</string>
+        <string>[Chicory].Root.Depth as Root Depth</string>
+        <string />
+        <string>[Chicory].Stem.Live.Wt as Stem Live Weight</string>
+        <string>[Chicory].Stem.Live.N as Stem Live N</string>
+        <string>[Chicory].Stem.Live.NConc as Stem Live N Concentration</string>
+        <string>[Chicory].Stem.LiveFWt </string>
+        <string />
         <string>[AutomaticIrrigation].Script.Top_Refull</string>
         <string>[AutomaticIrrigation].Script.Top_Trigger</string>
         <string>[AutomaticIrrigation].Script.Top_SW</string>
         <string>[AutomaticIrrigation].Script.Top_DUL</string>
-        <string>[Irrigation].IrrigationApplied</string>
         <string>[AutomaticIrrigation].Script.Amount_to_apply</string>
         <string>[AutomaticIrrigation].Script.StartDate</string>
-        <string>[Clock].Today</string>
         <string>[AutomaticIrrigation].Script.SeasonIsOpen</string>
         <string>[AutomaticIrrigation].Script.EndDate</string>
         <string>[AutomaticIrrigation].Script.TodayYear</string>
-        <string>[Chicory].Arbitrator.FN</string>
-        <string>[Chicory].Arbitrator.NSupply</string>
-        <string>[Fertiliser].NitrogenApplied</string>
+        <string>[Irrigation].IrrigationApplied as Irrigation Applied (mm)</string>
+        <string />
+        <string>[Fertiliser].NitrogenApplied as Nitrogen Applied</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -875,7 +892,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
       <Name>POClassic</Name>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>ClassicObserved</ObservedTableName>
-      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+      <FieldNameUsedForMatch>Date</FieldNameUsedForMatch>
     </PredictedObserved>
     <ExcelInput>
       <Name>Iversen</Name>
@@ -888,7 +905,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
       <Name>POIversen</Name>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>IversenObserved</ObservedTableName>
-      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+      <FieldNameUsedForMatch>Date</FieldNameUsedForMatch>
     </PredictedObserved>
     <ExcelInput>
       <Name>C17a</Name>
@@ -1738,7 +1755,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumPlantN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1759,7 +1776,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumMineralisation</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1780,7 +1797,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumDenit</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1801,7 +1818,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumFert</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1822,7 +1839,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumLeach</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1843,7 +1860,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.DeltaSoilOMN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1864,7 +1881,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.DeltaSurfaceOMN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1885,7 +1902,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.DeltaSoilMineralN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1903,7 +1920,7 @@ This model has been built to simulate a range of different crops in simulations 
         </Memo>
         <Axis>
           <Type>Bottom</Type>
-          <Title>X axis title 2</Title>
+          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -1937,7 +1954,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumEO</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1958,7 +1975,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumEP</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1979,7 +1996,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumES</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2000,7 +2017,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumDrainage</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2021,7 +2038,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumRunoff</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2042,7 +2059,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumRainfall</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2063,7 +2080,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumIrrigation</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2084,7 +2101,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumOutflowLat</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2105,7 +2122,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.SoilWaterDeficit</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2148,7 +2165,7 @@ This model has been built to simulate a range of different crops in simulations 
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Chicory.Leaf.Live.Wt</YFieldName>
+          <YFieldName>Leaf Live Weight</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2169,7 +2186,7 @@ This model has been built to simulate a range of different crops in simulations 
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Chicory.Root.Live.Wt</YFieldName>
+          <YFieldName>Root Live Weight</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2190,7 +2207,7 @@ This model has been built to simulate a range of different crops in simulations 
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Chicory.Stem.Live.Wt</YFieldName>
+          <YFieldName>Stem Live Weight</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2211,7 +2228,7 @@ This model has been built to simulate a range of different crops in simulations 
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Chicory.Total.Wt</YFieldName>
+          <YFieldName>Total Weight</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2231,7 +2248,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Dash</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
+          <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
           <YFieldName>SCUM.DryYield.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2252,32 +2269,11 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>DashDot</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
+          <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
           <YFieldName>SCUM.TotalBiomassAtStartSenescence.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series10</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Chicory.Arbitrator.DMSupply</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>true</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Axis>
@@ -2315,8 +2311,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Leaf.Live.N</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Leaf Live N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2336,8 +2332,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Root.Live.N</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Root Live N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2357,8 +2353,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Stem.Live.N</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Stem Live N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2378,8 +2374,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Total.N</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Total N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2420,7 +2416,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>SCUM.Root.WaterSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2441,8 +2437,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Root.WaterUptake</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Root Water Uptake</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2462,8 +2458,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Leaf.WaterDemand</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Leaf Water Demand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2483,8 +2479,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Leaf.Transpiration</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Leaf Transpiration</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2504,7 +2500,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Soil.SoilWater.Eo</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2525,29 +2521,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Root.Depth</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Canopy Height</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-16711936</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Leaf.Height</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Root Depth</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2597,7 +2572,7 @@ This model has been built to simulate a range of different crops in simulations 
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Chicory.Root.Depth</YFieldName>
+          <YFieldName>Root Depth</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2618,7 +2593,7 @@ This model has been built to simulate a range of different crops in simulations 
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Chicory.Leaf.CoverTotal</YFieldName>
+          <YFieldName>Leaf Total Cover</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2639,7 +2614,7 @@ This model has been built to simulate a range of different crops in simulations 
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Chicory.Leaf.LAI</YFieldName>
+          <YFieldName>LAI Green</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2687,7 +2662,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Arbitrator.NDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2708,7 +2683,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Arbitrator.NSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2750,7 +2725,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Arbitrator.DMSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2771,7 +2746,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Arbitrator.DMDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2792,7 +2767,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Arbitrator.DMSinkLimitation</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2813,7 +2788,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Arbitrator.DMNutrientLimitation</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2855,7 +2830,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Leaf.Fw</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2876,7 +2851,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Arbitrator.FN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2897,7 +2872,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Phenology.Stage</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2939,7 +2914,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Phenology.Stage</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2981,8 +2956,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Irrigation.IrrigationApplied</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Irrigation Applied (mm)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -3007,7 +2982,7 @@ This model has been built to simulate a range of different crops in simulations 
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>AboveGnd Weight Predicted Observed</Name>
+        <Name>Above Ground Weight</Name>
         <Series>
           <Name>Predicted</Name>
           <Type>Scatter</Type>
@@ -3022,8 +2997,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.AboveGround.Wt</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Above Ground Weight</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -3042,8 +3017,8 @@ This model has been built to simulate a range of different crops in simulations 
           <MarkerSize>Small</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>C17aObs</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <TableName>C17aObserved</TableName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>YieldGm2</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -3052,6 +3027,7 @@ This model has been built to simulate a range of different crops in simulations 
         </Series>
         <Axis>
           <Type>Left</Type>
+          <Title>Above Ground Weight (g/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -3084,8 +3060,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Population</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Population</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -3120,13 +3096,13 @@ This model has been built to simulate a range of different crops in simulations 
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
+          <Marker>None</Marker>
           <MarkerSize>Small</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Fertiliser.NitrogenApplied</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Nitrogen Applied</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4331,7 +4307,139 @@ namespace Models
             <Name>DefoliationSchedule</Name>
             <Operation>
               <Date>1997-02-21T00:00:00</Date>
-              <Action> [Defoliate].Script.addDefoliation(2,200)</Action>
+              <Action> [Defoliate].Script.addDefoliation(9,112)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-06-05T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(5,95)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-10-06T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(7,118)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-11-19T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(5,37)</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-12-23T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(7,29)</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-02-03T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(14,35)</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-03-12T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(3,23)</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-05-29T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(7,75)</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-09-29T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(10,116)</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-11-11T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(5,33)</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-12-15T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(7,29)</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-01-11T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(0,20)</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-02-17T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(7,37)</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-04-09T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(13,44)</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-06-24T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(3,63)</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-09-29T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(7,94)</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-11-09T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(8,34)</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-12-20T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(6,33)</Action>
+            </Operation>
+            <Operation>
+              <Date>2000-01-21T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(5,26)</Action>
+            </Operation>
+            <Operation>
+              <Date>2000-03-13T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(5,47)</Action>
+            </Operation>
+            <Operation>
+              <Date>2000-05-25T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(4,68)</Action>
+            </Operation>
+            <Operation>
+              <Date>2000-09-22T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(9,116)</Action>
+            </Operation>
+            <Operation>
+              <Date>2000-11-10T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(6,40)</Action>
+            </Operation>
+            <Operation>
+              <Date>2000-12-19T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(8,33)</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-01-24T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(6,28)</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-03-11T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(6,40)</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-05-02T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(4,46)</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-06-24T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(10,49)</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-10-03T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(7,91)</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-11-21T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(5,42)</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-12-22T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(8,26)</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-02-06T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(9,38)</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-04-03T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(14,47)</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-06-24T00:00:00</Date>
+              <Action> [Defoliate].Script.addDefoliation(11,68)</Action>
             </Operation>
           </Operations>
           <Manager>
@@ -4343,13 +4451,13 @@ namespace Models
               <interval2Cut>21</interval2Cut>
               <duration>3</duration>
               <defoliationType>Graze</defoliationType>
-              <herbageAmount>200</herbageAmount>
-              <fracResidue>0.05</fracResidue>
+              <herbageAmount>112</herbageAmount>
+              <leafResidueFrac>0.05</leafResidueFrac>
+              <stemResidueFrac>0.5</stemResidueFrac>
               <fracN2Remove>0.15</fracN2Remove>
               <urineDepth>300</urineDepth>
               <fracN2Dung>0.4</fracN2Dung>
               <fracPopDecline>0.2</fracPopDecline>
-              <phenStageReset>3.5</phenStageReset>
             </Script>
             <Code><![CDATA[// Defoliates on a regular cycle or one-off via a schedule
 // currenty defoliates by the amount specified spread evenly over the specified period
@@ -4390,7 +4498,13 @@ namespace Models
 		
 		//Outputs
 		[XmlIgnore] private RemovalFractions removalFractions { get; set; }
-		[XmlIgnore] public double LeafWt { get; set; }
+		[XmlIgnore] public double leafWt { get; set; }
+		[XmlIgnore] public double stemWt { get; set; }
+		
+		
+		[XmlIgnore] public double leafToDefoliate { get; set; }
+		[XmlIgnore] public double stemToDefoliate { get; set; }
+
 		
 		//Whether today is a harvesting day
 		[XmlIgnore] public string Can_Cut{ get; set; }
@@ -4463,14 +4577,17 @@ namespace Models
 		[Description("Enter the number of days to defoliate over (days):")]
 		public int duration { get; set; }
 
-		[Description("Enter type of defoliation:")]
+		[Description("Select type of defoliation:")]
 		public defoliationTypes defoliationType { get; set; }
 
-		[Description("Enter the herbage amount to defoliate (kgDM/ha):")]
+		[Description("Enter amount to defoliate (kgDM/ha):")]
 		public double herbageAmount { get; set; }
 
-		[Description("Enter fraction returned as residue(0-1):")]
-		public double fracResidue { get; set; }
+		[Description("Enter fraction of leaf returned as residue(0-1):")]
+		public double leafResidueFrac { get; set; }
+
+		[Description("Enter fraction of stem returned as residue(0-1):")]
+		public double stemResidueFrac { get; set; }
 
 		[Description("Enter fraction of N that is removed from the field (0-1):")]
 		public double fracN2Remove { get; set; }
@@ -4483,60 +4600,82 @@ namespace Models
 
 		[Description("Enter the fraction of population decline due to defoliation (0-1):")]
 		public double fracPopDecline { get; set; }
-					  
-		[Description("Enter the phenology stage that defoliating sets crop to (0=no change, or 1.0-7.0):")]
-		public double phenStageReset { get; set; }
 
 		private void defoliate(int listNumber)
 		{
-		
-	
-	
-			summary.WriteMessage(this, "Defoliating (" + listNumber + ")");
-			
-			LeafWt = (double)zone.Get("Chicory.Leaf.Wt");
-			
 			double numDays = (defoliations[listNumber].endDate - defoliations[listNumber].startDate).TotalDays;
-			double amountToDefoliate = defoliations[listNumber].herbageAmount / numDays;
-						
-			if (amountToDefoliate > LeafWt * 0.9)
+			
+			summary.WriteMessage(this, "Defoliating (" + listNumber + "). " + defoliations[listNumber].herbageAmount + "kg/ha over " + numDays + " days");
+			
+			leafWt = (double)zone.Get("Chicory.Leaf.Wt");
+			stemWt = (double)zone.Get("Chicory.Stem.Wt");
+			
+			
+			if (leafWt + stemWt > 0)
 			{
-				amountToDefoliate = LeafWt * 0.9; 
-			}			
 			
-			double amountToResidue = amountToDefoliate * fracResidue;
-			double fractionToDefoliate = (amountToDefoliate - amountToResidue) / LeafWt;
-			double fractionToResidue = amountToResidue / LeafWt;
+				double herbageToRemove = (defoliations[listNumber].herbageAmount / 10) / numDays; // total herbage to remove in g/m2 per day
+				
+				
+				
+				if (herbageToRemove > (leafWt + stemWt) * 0.9) // limit to 90% of existing herbage
+				{
+					herbageToRemove = (leafWt + stemWt) * 0.9;
+				}			
+							
+				leafToDefoliate = herbageToRemove * leafWt / (leafWt + stemWt);			
+				stemToDefoliate = herbageToRemove * stemWt / (leafWt + stemWt);
+
+				summary.WriteMessage(this, "Current herbage (g/m2): leaf=" + leafWt + ",stem=" + stemWt);
+				summary.WriteMessage(this, "Herbage to remove today (g/m2): " + herbageToRemove + " (leaf=" + leafToDefoliate + ",stem=" + stemToDefoliate + ")");
+
+
+				double leafFracToRemove = leafToDefoliate / (leafWt + stemWt);
+				double stemFracToRemove = stemToDefoliate / (leafWt + stemWt);				
+
+				// calculate residue				
+				double leafFracToResidue = leafResidueFrac * leafFracToRemove;
+				double stemFracToResidue = stemResidueFrac * stemFracToRemove;
+				
+				// subtract residue from amount to remove
+				leafFracToRemove = leafFracToRemove - leafFracToResidue;
+				stemFracToRemove = stemFracToRemove - stemFracToResidue;
+				
+				removalFractions.SetFractionRemoved("Leaf", leafFracToRemove);
+				removalFractions.SetFractionToResidue("Leaf", leafFracToResidue);
+				removalFractions.SetFractionRemoved("Stem", stemFracToRemove);
+				removalFractions.SetFractionToResidue("Stem", stemFracToResidue);  
+				
+				removalFractions.SetFractionRemoved("Root", 0.0);
+				removalFractions.SetFractionToResidue("Root", 0.0);
+				
 			
-			removalFractions.SetFractionRemoved("Leaf", fractionToDefoliate);
-			removalFractions.SetFractionToResidue("Leaf", fractionToResidue);
+				if (defoliationType == defoliationTypes.Cut)
+				{			
+					Chicory.RemoveBiomass("Cut", removalFractions);  
+				}
+				else
+				{
+					Chicory.RemoveBiomass("Graze", removalFractions);  
+				}
+															
+				double popDeclineToday = fracPopDecline / numDays;
+				Chicory.Population = Chicory.Population * (1.0 - popDeclineToday);						
+
 			
-			removalFractions.SetFractionRemoved("Root", 0.0);
-			removalFractions.SetFractionToResidue("Root", 0.0);
-			removalFractions.SetFractionRemoved("Stem", 0.0);
-			removalFractions.SetFractionToResidue("Stem", 0.0);  
+			}
+
 			
-			
-			if (phenStageReset > 0)
+/*			if (phenStageReset > 0)
 			{
 				//removalFractions.SetPhenologyStage = 3.5; //phenStageReset;
 
 //				Chicory.Phenology.ReSetToStage(3.5); // same ERROR
 //				Chicory.Phenology.Stage = 3.5; // nada
 
-			}
+			} */
 			
-			if (defoliationType == defoliationTypes.Cut)
-			{			
-				Chicory.RemoveBiomass("Cut", removalFractions);  
-			}
-			else
-			{
-				Chicory.RemoveBiomass("Graze", removalFractions);  
-			}
-														
-			double popDeclineToday = fracPopDecline / numDays;
-			Chicory.Population = Chicory.Population * (1.0 - popDeclineToday);						
+			
 		
 		
 		}
@@ -4614,6 +4753,47 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
+        <Graph>
+          <Name>Irrigation</Name>
+          <Series>
+            <Name>Applied</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Irrigation Applied (mm)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
         <Area>0</Area>
         <Slope>0</Slope>
       </Simulation>
@@ -4633,8 +4813,8 @@ namespace Models
           <Line>Dash</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.AboveGround.Wt</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Above Ground Weight</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4649,13 +4829,13 @@ namespace Models
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>IversenObserved</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.AboveGround.Wt</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Above Ground Weight</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4697,8 +4877,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Population</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Population</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4738,8 +4918,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Irrigation.IrrigationApplied</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Irrigation Applied (mm)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4779,7 +4959,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Defoliate.Script.LeafWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4820,7 +5000,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Phenology.Stage</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4846,9 +5026,31 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>AbovegroundWt1</Name>
+        <Name>Defoliation</Name>
         <Series>
-          <Name>Leaf</Name>
+          <Name>LeafToDefoliate</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Dash</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Defoliate.Script.leafToDefoliate</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Series>
+          <Name>LeafWeight</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4861,51 +5063,8 @@ namespace Models
           <Line>Dash</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Leaf.Live.Wt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-          <Filter />
-        </Series>
-        <Series>
-          <Name>Stem</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-2793984</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Dash</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Stem.Live.Wt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Root</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-1663232</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Dash</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Root.Live.Wt</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Defoliate.Script.LeafWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4928,6 +5087,13 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -4941,7 +5107,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16736653</ColourArgb>
+            <ColourArgb>-1663232</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4950,8 +5116,8 @@ namespace Models
             <Line>Dash</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chicory.Leaf.Live.Wt</YFieldName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Leaf Live Weight</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -4994,8 +5160,8 @@ namespace Models
             <Line>Dash</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chicory.Stem.Live.Wt</YFieldName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Stem Live Weight</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5037,8 +5203,8 @@ namespace Models
             <Line>Dash</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chicory.Root.Live.Wt</YFieldName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Root Live Weight</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5066,6 +5232,49 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
       </Folder>
+      <Graph>
+        <Name>POAboveground</Name>
+        <Series>
+          <Name>PO</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>POIversen</TableName>
+          <XFieldName>Predicted.Above Ground Weight</XFieldName>
+          <YFieldName>Observed.Above Ground Weight</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
     </Experiment>
     <Simulation>
       <Name>Classic</Name>
@@ -5305,185 +5514,6 @@ namespace Models
 	   ]]></Code>
         </Manager>
         <Manager>
-          <Name>AutomaticIrrigation</Name>
-          <Script>
-            <Irrigation_Yes_No>yes</Irrigation_Yes_No>
-            <Season_Start>1-Oct</Season_Start>
-            <Season_End>30-Jul</Season_End>
-            <Season_Allocation>10000</Season_Allocation>
-            <Refull_Frac>0.9</Refull_Frac>
-            <Trigger_Frac>0.75</Trigger_Frac>
-            <Return_days>3</Return_days>
-            <Maximum_Irrigation_Amount>30</Maximum_Irrigation_Amount>
-            <Top_Depth>300</Top_Depth>
-          </Script>
-          <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.Soils;
-using System.Xml.Serialization;
-using Models.PMF;
-using APSIM.Shared.Utilities;
-
-        
-namespace Models
-{
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		//Communication to other modules
-		[Link] ISummary summary = null;
-		[Link] Irrigation Irrigation;
-		[Link] Clock Clock;
-		[Link] Soil Soil;
-		[Link] Plant SCUM;
-	   
-		//User inputs from properties tab
-		[Description("Irrigation on (yes or no)")]
-		public string Irrigation_Yes_No { get; set; }
-		[Description("SeasonStart (dd-MMM)")]
-		public string Season_Start { get; set; }
-		[Description("SeasonEnd (dd-MMM)")]
-		public string Season_End { get; set; }
-		[Description("Season Allocation (mm)")]
-		public double Season_Allocation { get; set; }
-		[Description("% PAWC to refill soil to (0-1)")]
-		public double Refull_Frac { get; set; }
-		[Description("% PAWC to trigger irrigation (0-1)")]
-		public double Trigger_Frac { get; set; }
-		[Description("Minimum days for irrigation to return")]
-		public double Return_days { get; set; }
-		[Description("Maximum irrigation application (mm)")]
-		public double Maximum_Irrigation_Amount { get; set; }
-		[Description("Depth to calculate PAWC (mm)")]
-		public double Top_Depth { get; set; }
-	   
-		//Class members
-		[XmlIgnore] private bool IrrigationIsAvailable { get; set; }
-		[XmlIgnore] public bool SeasonIsOpen { get; set; }
-		[XmlIgnore] private bool CropIsActive { get; set; }
-		[XmlIgnore] private bool IrrigatorIsAvailable { get; set; }
-		[XmlIgnore] private bool SoilIsDry { get; set; }
-		[XmlIgnore] public double Top_DUL { get; set; }
-		[XmlIgnore] public double Top_Refull { get; set; }
-		[XmlIgnore] public double Top_Trigger { get; set; }
-		[XmlIgnore] public double Top_LL { get; set; }
-		[XmlIgnore] public double Top_SW { get; set; }
-		[XmlIgnore] public double Accumulated_depth { get; set; }
-		[XmlIgnore] public double Days_since_irrigation { get; set; }
-		[XmlIgnore] public double Amount_to_apply { get; set; }
-		[XmlIgnore] public double Season_Application { get; set; }
-		
-		//Variables for date logic testing
-		[XmlIgnore] public string StartString { get; set; }
-		[XmlIgnore] public string EndString { get; set; }
-		[XmlIgnore] public DateTime StartDate { get; set; }
-		[XmlIgnore] public DateTime EndDate { get; set; }
-		[XmlIgnore] public int TodayYear { get; set; }
-		[XmlIgnore] public int TodayMonth { get; set; }
-		[XmlIgnore] public int StartMonth { get; set; }
-		[XmlIgnore] public int EndMonth { get; set; }
-		[XmlIgnore] public int TodayDay { get; set; }
-		[XmlIgnore] public int StartDay { get; set; }
-		[XmlIgnore] public int EndDay { get; set; }
-	   
-	
-		//Calculate static soil variables
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{   
-			//Calculated soil water variables
-			Accumulated_depth = 0;
-			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
-			{
-				Top_LL += Soil.SoilWater.LL15mm[layer];
-				Top_DUL += Soil.SoilWater.DULmm[layer];
-				Accumulated_depth += Soil.SoilWater.Thickness[layer];
-			}
-			Top_Refull = Top_LL + (Top_DUL - Top_LL) * Refull_Frac;
-		}
-	   
-	  
-		//Determine daily requirement for irrigation
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{ 
-			//Can we irrigate?
-			IrrigationIsAvailable = false; 
-			if (Irrigation_Yes_No == "yes")
-				IrrigationIsAvailable = true; 
-	
-			//Are we Allowed to Irrigate?
-			TodayYear = Clock.Today.Year;
-			StartString = Season_Start + "-" + TodayYear.ToString();
-			EndString = Season_End + "-" + TodayYear.ToString();
-			StartDate = DateTime.Parse(StartString);
-			EndDate = DateTime.Parse(EndString);
-			TodayMonth = Clock.Today.Month;
-			TodayDay = Clock.Today.Day;
-			StartDay = StartDate.Day;
-			StartMonth = StartDate.Month;
-			EndDay = EndDate.Day;
-			EndMonth = EndDate.Month;
-		  
-			SeasonIsOpen = false;
-			//if we are in the spring and after the start date then yes
-			if ((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
-				SeasonIsOpen = true;
-			//if we are in the autumn and before the end date then yes
-			if ((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
-				SeasonIsOpen = true;
-		  
-			//Is there a crop in the ground that needs irrigation?
-			CropIsActive = false;
-			if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
-				CropIsActive = true;
-	      
-			//Is the irrigator available?
-			IrrigatorIsAvailable = false;
-			Days_since_irrigation += 1;
-			if (Days_since_irrigation >= Return_days)
-				IrrigatorIsAvailable = true;
-	      
-			//Is the soil dry enough to require irrigation?
-			SoilIsDry = false;
-			double CurrentRootDepth = 0;
-			double RootDepth = SCUM.Root.Depth;
-			CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
-	      
-			double RelativeRootDepth = Math.Min(1.0, CurrentRootDepth / Top_Depth);
-			Top_Trigger = Math.Min(Top_Refull, Top_DUL - (Top_DUL - Top_LL) * RelativeRootDepth * (1 - Trigger_Frac)); 
-	      
-			Accumulated_depth = 0;
-			Top_SW = 0;
-			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
-			{
-				Top_SW += Soil.SoilWater.SWmm[layer];
-				Accumulated_depth += Soil.SoilWater.Thickness[layer];
-			}
-			if (Top_SW <= Top_Trigger)
-				SoilIsDry = true;
-	            
-			//Lets bloody well irrigate then!!!!
-			if ((IrrigationIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (IrrigatorIsAvailable) && (SoilIsDry)) //The conditions are rife for irrigation
-			{
-				Amount_to_apply = Math.Min(Top_Refull - Top_SW, Maximum_Irrigation_Amount);
-				Amount_to_apply = Math.Min(Amount_to_apply, Season_Allocation - Season_Application); 
-				Amount_to_apply = Math.Max(Amount_to_apply, 0.0);
-				Irrigation.Apply(Amount_to_apply);
-				Days_since_irrigation = 0;
-				Season_Application += Amount_to_apply;
-				summary.WriteMessage(this, "Automatic Irrigation");
-            
-			}
-		}
-	}
-}
-             
-             ]]></Code>
-        </Manager>
-        <Manager>
           <Name>FertiliseTopupOnCriticalNO3Level</Name>
           <Script>
             <fertCriteria>200</fertCriteria>
@@ -5605,6 +5635,8 @@ namespace Models
           <Script>
             <LeafRemoved>0.95</LeafRemoved>
             <LeafResidue>0.01</LeafResidue>
+            <StemRemoved>0.5</StemRemoved>
+            <StemResidue>0.05</StemResidue>
             <popDecline>0.2</popDecline>
             <popStartDate>2009-02-01</popStartDate>
             <popEndDate>2010-04-01</popEndDate>
@@ -5637,6 +5669,14 @@ namespace Models
 		[Description("Fraction of leaves to residue (0-1)")]
 		public double LeafResidue { get; set; }
 
+
+		[Description("Fraction of stem removed by defoliation (0-1)")]
+		public double StemRemoved { get; set; }
+
+		[Description("Fraction of stem to residue (0-1)")]
+		public double StemResidue { get; set; }
+
+
 		[Description("Population decline due to defoliation (0-1)")]
 		public double popDecline { get; set; }
 
@@ -5647,6 +5687,10 @@ namespace Models
 		public DateTime popEndDate { get; set; }
 
 		[XmlIgnore] private RemovalFractions removalFractions { get; set; }
+		[XmlIgnore] public double LeafWt { get; set; }
+		[XmlIgnore] public double LeafHarvested { get; set; }
+		[XmlIgnore] public double StemWt { get; set; }
+		[XmlIgnore] public double StemHarvested { get; set; }
 					        
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
@@ -5665,18 +5709,27 @@ namespace Models
 			
 			
 			//removalFractions.SetPhenologyStage = 3.5;
+			
+			LeafWt = (double)zone.Get("Chicory.Leaf.Wt");
+			StemWt = (double)zone.Get("Chicory.Stem.Wt");
+			
+			LeafHarvested = LeafWt * LeafRemoved;
+			StemHarvested = StemWt * StemRemoved;
 
-			removalFractions.SetFractionRemoved("Leaf", 0.2);
-			removalFractions.SetFractionToResidue("Leaf", 0.1);
+			removalFractions.SetFractionRemoved("Leaf", LeafRemoved);
+			removalFractions.SetFractionToResidue("Leaf", LeafResidue);
+
+			removalFractions.SetFractionRemoved("Stem", StemRemoved);
+			removalFractions.SetFractionToResidue("Stem", StemResidue);  
 			
 			removalFractions.SetFractionRemoved("Root", 0.0);
 			removalFractions.SetFractionToResidue("Root", 0.0);
-			removalFractions.SetFractionRemoved("Stem", 0.0);
-			removalFractions.SetFractionToResidue("Stem", 0.0);  
 			
 			Chicory.RemoveBiomass("Cut", removalFractions);
+						
 			
-			// Reduce population			
+			
+			// Reduce population
 			if ((Clock.Today > popStartDate) && (Clock.Today < popEndDate))
 			{
 				Chicory.Population = Chicory.Population * (1 - popDecline);
@@ -5693,24 +5746,36 @@ namespace Models
 	   ]]></Code>
         </Manager>
         <Soil>
-          <Name>Soil</Name>
+          <Name>SoilHorotiu</Name>
+          <InitialWater>
+            <Name>Initial water</Name>
+            <PercentMethod>EvenlyDistributed</PercentMethod>
+            <FractionFull>0.5</FractionFull>
+            <DepthWetSoil>NaN</DepthWetSoil>
+          </InitialWater>
           <Water>
             <Name>Water</Name>
             <SoilCrop>
               <Name>ChicorySoil</Name>
               <LL>
-                <double>0.13</double>
-                <double>0.13</double>
-                <double>0.1</double>
-                <double>0.15</double>
-                <double>0.3</double>
-                <double>0.3</double>
+                <double>0.26</double>
+                <double>0.26</double>
+                <double>0.2</double>
+                <double>0.16</double>
+                <double>0.17</double>
+                <double>0.16</double>
+                <double>0.17</double>
+                <double>0.17</double>
+                <double>0.17</double>
               </LL>
               <KL>
-                <double>0.1</double>
+                <double>0.06</double>
+                <double>0.06</double>
                 <double>0.06</double>
                 <double>0.04</double>
+                <double>0.02</double>
                 <double>0.01</double>
+                <double>0</double>
                 <double>0</double>
                 <double>0</double>
               </KL>
@@ -5719,102 +5784,121 @@ namespace Models
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>0</double>
                 <double>0</double>
                 <double>0</double>
               </XF>
             </SoilCrop>
             <Thickness>
               <double>100</double>
+              <double>90</double>
+              <double>60</double>
+              <double>110</double>
+              <double>240</double>
+              <double>110</double>
+              <double>290</double>
               <double>200</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
               <double>300</double>
             </Thickness>
             <BD>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
+              <double>1.1</double>
+              <double>1.1</double>
+              <double>1.1</double>
+              <double>1.1</double>
+              <double>1.1</double>
+              <double>1.1</double>
+              <double>1.1</double>
+              <double>1.1</double>
+              <double>1.1</double>
             </BD>
             <AirDry>
-              <double>0.08</double>
+              <double>0.16</double>
               <double>0.16</double>
               <double>0.15</double>
-              <double>0.13</double>
-              <double>0.15</double>
-              <double>0.15</double>
+              <double>0.12</double>
+              <double>0.12</double>
+              <double>0.12</double>
+              <double>0.12</double>
+              <double>0.12</double>
+              <double>0.12</double>
             </AirDry>
             <LL15>
+              <double>0.26</double>
+              <double>0.26</double>
+              <double>0.2</double>
               <double>0.16</double>
+              <double>0.17</double>
               <double>0.16</double>
-              <double>0.15</double>
-              <double>0.13</double>
-              <double>0.15</double>
-              <double>0.15</double>
+              <double>0.17</double>
+              <double>0.17</double>
+              <double>0.17</double>
             </LL15>
             <DUL>
-              <double>0.33</double>
-              <double>0.33</double>
-              <double>0.31</double>
-              <double>0.27</double>
-              <double>0.3</double>
-              <double>0.3</double>
+              <double>0.42</double>
+              <double>0.42</double>
+              <double>0.42</double>
+              <double>0.37</double>
+              <double>0.34</double>
+              <double>0.32</double>
+              <double>0.32</double>
+              <double>0.32</double>
+              <double>0.34</double>
             </DUL>
             <SAT>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.44</double>
-              <double>0.46</double>
-              <double>0.44</double>
-              <double>0.44</double>
+              <double>0.43</double>
+              <double>0.43</double>
+              <double>0.51</double>
+              <double>0.47</double>
+              <double>0.43</double>
+              <double>0.39</double>
+              <double>0.38</double>
+              <double>0.38</double>
+              <double>0.4</double>
             </SAT>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
             <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <SummerU>9</SummerU>
-            <SummerCona>4.4</SummerCona>
-            <WinterDate>1-Apr</WinterDate>
-            <WinterU>9</WinterU>
-            <WinterCona>4.4</WinterCona>
+            <SummerU>6</SummerU>
+            <SummerCona>3.5</SummerCona>
+            <WinterDate>1-apr</WinterDate>
+            <WinterU>2</WinterU>
+            <WinterCona>2</WinterCona>
             <DiffusConst>88</DiffusConst>
-            <DiffusSlope>35.4</DiffusSlope>
-            <Salb>0.18</Salb>
-            <CN2Bare>0</CN2Bare>
-            <CNRed>-9E-05</CNRed>
-            <CNCov>0</CNCov>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
+            <DiffusSlope>35</DiffusSlope>
+            <Salb>0.13</Salb>
+            <CN2Bare>73</CN2Bare>
+            <CNRed>20</CNRed>
+            <CNCov>0.8</CNCov>
+            <slope>NaN</slope>
+            <discharge_width>NaN</discharge_width>
+            <catchment_area>NaN</catchment_area>
             <max_pond>0</max_pond>
             <Thickness>
               <double>100</double>
+              <double>90</double>
+              <double>60</double>
+              <double>110</double>
+              <double>240</double>
+              <double>100</double>
+              <double>300</double>
               <double>200</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
               <double>300</double>
             </Thickness>
             <SWCON>
-              <double>0.55</double>
-              <double>0.55</double>
-              <double>0.55</double>
-              <double>0.55</double>
-              <double>0.55</double>
-              <double>0.55</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.8</double>
+              <double>0.8</double>
+              <double>0.8</double>
+              <double>0.9</double>
+              <double>0.9</double>
             </SWCON>
-            <KLAT>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KLAT>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -5858,61 +5942,68 @@ namespace Models
               <double>0.1</double>
               <double>1</double>
             </wfpsN2N2O_y>
-            <oc>
-              <double>3.5120417868354008</double>
-              <double>2.4888011122565477</double>
-              <double>1.1998615131698891</double>
-              <double>1.0306721761582318</double>
-              <double>0.47032752096862684</double>
-              <double>0.47012738804856147</double>
-            </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
-            <RootCN>30</RootCN>
-            <RootWt>3000</RootWt>
-            <SoilCN>11.5</SoilCN>
+            <RootCN>40</RootCN>
+            <RootWt>800</RootWt>
+            <SoilCN>11.3</SoilCN>
             <EnrACoeff>7.4</EnrACoeff>
             <EnrBCoeff>0.2</EnrBCoeff>
             <Thickness>
               <double>100</double>
+              <double>90</double>
+              <double>60</double>
+              <double>110</double>
+              <double>240</double>
+              <double>110</double>
+              <double>290</double>
               <double>200</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
               <double>300</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
-              <string>10-30</string>
-              <string>30-60</string>
-              <string>60-90</string>
-              <string>90-120</string>
+              <string>10-19</string>
+              <string>19-25</string>
+              <string>25-36</string>
+              <string>36-60</string>
+              <string>60-71</string>
+              <string>71-100</string>
+              <string>100-120</string>
               <string>120-150</string>
             </Depth>
             <OC>
-              <double>3.5</double>
-              <double>2.5</double>
+              <double>8.2</double>
+              <double>8.2</double>
+              <double>5.5</double>
+              <double>3.3</double>
+              <double>1.7</double>
+              <double>1.7</double>
               <double>1.2</double>
-              <double>1.03</double>
-              <double>0.47</double>
-              <double>0.47</double>
+              <double>0.7</double>
+              <double>0.1</double>
             </OC>
             <FBiom>
-              <double>0.025</double>
-              <double>0.025</double>
-              <double>0.015</double>
+              <double>0.08</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.02</double>
               <double>0.01</double>
               <double>0.01</double>
-              <double>0.01</double>
+              <double>0</double>
+              <double>0</double>
             </FBiom>
             <FInert>
               <double>0.3</double>
               <double>0.4</double>
-              <double>0.75</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.8</double>
               <double>0.9</double>
-              <double>0.96</double>
-              <double>0.96</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
             </FInert>
             <OCUnits>Total</OCUnits>
           </SoilOrganicMatter>
@@ -5925,26 +6016,22 @@ namespace Models
               <double>300</double>
               <double>300</double>
               <double>300</double>
+              <double>300</double>
             </Thickness>
             <PH>
-              <double>6.6</double>
-              <double>6.2</double>
-              <double>5.7</double>
-              <double>5.5</double>
-              <double>5.5</double>
-              <double>5.5</double>
+              <double>5.9</double>
+              <double>6</double>
+              <double>6</double>
+              <double>6</double>
+              <double>6</double>
+              <double>6</double>
+              <double>6</double>
             </PH>
             <PHUnits>Water</PHUnits>
             <BoronUnits>HotWater</BoronUnits>
           </Analysis>
-          <InitialWater>
-            <Name>Initial water</Name>
-            <PercentMethod>FilledFromTop</PercentMethod>
-            <FractionFull>1</FractionFull>
-            <DepthWetSoil>NaN</DepthWetSoil>
-          </InitialWater>
           <Sample>
-            <Name>Sample</Name>
+            <Name>Initial nitrogen</Name>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -5952,39 +6039,238 @@ namespace Models
               <double>300</double>
               <double>300</double>
               <double>300</double>
+              <double>300</double>
             </Thickness>
             <NO3>
-              <double>40</double>
-              <double>30</double>
-              <double>14</double>
-              <double>14</double>
-              <double>1.38</double>
-              <double>1.38</double>
+              <double>7.61904761904762</double>
+              <double>7.27008360596147</double>
+              <double>3.87146728610143</double>
+              <double>3.84024577572965</double>
+              <double>3.80952380952381</double>
+              <double>3.77928949357521</double>
+              <double>3.69139904023625</double>
             </NO3>
             <NH4>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
+              <double>0.132451499118166</double>
+              <double>0.132451499118166</double>
+              <double>0.132451499118166</double>
+              <double>0.132451499118166</double>
+              <double>0.132451499118166</double>
+              <double>0.132451499118166</double>
+              <double>0.132451499118166</double>
             </NH4>
-            <NO3Units>kgha</NO3Units>
-            <NH4Units>kgha</NH4Units>
+            <NO3Units>ppm</NO3Units>
+            <NH4Units>ppm</NH4Units>
             <SWUnits>Volumetric</SWUnits>
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
           <RecordNumber>0</RecordNumber>
-          <SoilType>Sedementary</SoilType>
-          <LocalName>Lincoln</LocalName>
-          <Site />
-          <NearestTown />
-          <Region />
-          <NaturalVegetation />
+          <SoilType>0</SoilType>
+          <Site>Horotiu</Site>
+          <State>New Zealand</State>
+          <NaturalVegetation>0</NaturalVegetation>
+          <ApsoilNumber>0</ApsoilNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <LocationAccuracy>0</LocationAccuracy>
+          <DataSource>published soil profile description (as an example)</DataSource>
         </Soil>
+        <Operations>
+          <Name>IrrigationSchedule</Name>
+          <Operation>
+            <Date>2010-04-07T00:00:00</Date>
+            <Action>[Irrigation].Apply(13.59)</Action>
+          </Operation>
+          <Operation>
+            <Date>2010-03-30T00:00:00</Date>
+            <Action>[Irrigation].Apply(14.259)</Action>
+          </Operation>
+          <Operation>
+            <Date>2010-03-18T00:00:00</Date>
+            <Action>[Irrigation].Apply(14.819)</Action>
+          </Operation>
+          <Operation>
+            <Date>2010-03-13T00:00:00</Date>
+            <Action>[Irrigation].Apply(13.709)</Action>
+          </Operation>
+          <Operation>
+            <Date>2010-03-09T00:00:00</Date>
+            <Action>[Irrigation].Apply(17.081)</Action>
+          </Operation>
+          <Operation>
+            <Date>2010-03-05T00:00:00</Date>
+            <Action>[Irrigation].Apply(13.666)</Action>
+          </Operation>
+          <Operation>
+            <Date>2010-03-01T00:00:00</Date>
+            <Action>[Irrigation].Apply(15.381)</Action>
+          </Operation>
+          <Operation>
+            <Date>2010-02-23T00:00:00</Date>
+            <Action>[Irrigation].Apply(13.578)</Action>
+          </Operation>
+          <Operation>
+            <Date>2010-02-20T00:00:00</Date>
+            <Action>[Irrigation].Apply(14.767)</Action>
+          </Operation>
+          <Operation>
+            <Date>2010-02-11T00:00:00</Date>
+            <Action>[Irrigation].Apply(16.424)</Action>
+          </Operation>
+          <Operation>
+            <Date>2010-02-06T00:00:00</Date>
+            <Action>[Irrigation].Apply(15.428)</Action>
+          </Operation>
+          <Operation>
+            <Date>2010-01-16T00:00:00</Date>
+            <Action>[Irrigation].Apply(15.533)</Action>
+          </Operation>
+          <Operation>
+            <Date>2010-01-13T00:00:00</Date>
+            <Action>[Irrigation].Apply(13.834)</Action>
+          </Operation>
+          <Operation>
+            <Date>2010-01-08T00:00:00</Date>
+            <Action>[Irrigation].Apply(16.152)</Action>
+          </Operation>
+          <Operation>
+            <Date>2010-01-03T00:00:00</Date>
+            <Action>[Irrigation].Apply(13.616)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-12-31T00:00:00</Date>
+            <Action>[Irrigation].Apply(14.804)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-12-26T00:00:00</Date>
+            <Action>[Irrigation].Apply(14.012)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-12-22T00:00:00</Date>
+            <Action>[Irrigation].Apply(13.626)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-12-19T00:00:00</Date>
+            <Action>[Irrigation].Apply(16.333)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-12-11T00:00:00</Date>
+            <Action>[Irrigation].Apply(16.976)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-11-26T00:00:00</Date>
+            <Action>[Irrigation].Apply(14.886)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-11-15T00:00:00</Date>
+            <Action>[Irrigation].Apply(14.86)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-11-09T00:00:00</Date>
+            <Action>[Irrigation].Apply(14.768)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-04-17T00:00:00</Date>
+            <Action>[Irrigation].Apply(15.455)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-04-03T00:00:00</Date>
+            <Action>[Irrigation].Apply(15.5)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-03-29T00:00:00</Date>
+            <Action>[Irrigation].Apply(14.707)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-03-25T00:00:00</Date>
+            <Action>[Irrigation].Apply(15.091)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-03-21T00:00:00</Date>
+            <Action>[Irrigation].Apply(15.491)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-03-15T00:00:00</Date>
+            <Action>[Irrigation].Apply(13.734)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-02-09T00:00:00</Date>
+            <Action>[Irrigation].Apply(15.271)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-02-06T00:00:00</Date>
+            <Action>[Irrigation].Apply(14.836)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-02-03T00:00:00</Date>
+            <Action>[Irrigation].Apply(15.199)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-01-31T00:00:00</Date>
+            <Action>[Irrigation].Apply(15.181)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-01-28T00:00:00</Date>
+            <Action>[Irrigation].Apply(15.497)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-01-25T00:00:00</Date>
+            <Action>[Irrigation].Apply(15.809)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-01-22T00:00:00</Date>
+            <Action>[Irrigation].Apply(14.565)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-01-16T00:00:00</Date>
+            <Action>[Irrigation].Apply(15.158)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-01-09T00:00:00</Date>
+            <Action>[Irrigation].Apply(14.99)</Action>
+          </Operation>
+          <Operation>
+            <Date>2009-01-06T00:00:00</Date>
+            <Action>[Irrigation].Apply(14.389)</Action>
+          </Operation>
+          <Operation>
+            <Date>2008-12-29T00:00:00</Date>
+            <Action>[Irrigation].Apply(15.256)</Action>
+          </Operation>
+          <Operation>
+            <Date>2008-12-15T00:00:00</Date>
+            <Action>[Irrigation].Apply(15.229)</Action>
+          </Operation>
+          <Operation>
+            <Date>2008-12-07T00:00:00</Date>
+            <Action>[Irrigation].Apply(16.41)</Action>
+          </Operation>
+          <Operation>
+            <Date>2008-11-29T00:00:00</Date>
+            <Action>[Irrigation].Apply(14.072)</Action>
+          </Operation>
+          <Operation>
+            <Date>2008-11-24T00:00:00</Date>
+            <Action>[Irrigation].Apply(14.055)</Action>
+          </Operation>
+          <Operation>
+            <Date>2008-11-21T00:00:00</Date>
+            <Action>[Irrigation].Apply(13.848)</Action>
+          </Operation>
+          <Operation>
+            <Date>2008-11-15T00:00:00</Date>
+            <Action>[Irrigation].Apply(14.109)</Action>
+          </Operation>
+          <Operation>
+            <Date>2008-07-10T00:00:00</Date>
+            <Action>[Irrigation].Apply(15.441)</Action>
+          </Operation>
+          <Operation>
+            <Date>2008-07-01T00:00:00</Date>
+            <Action>[Irrigation].Apply(27.05)</Action>
+          </Operation>
+        </Operations>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -6004,7 +6290,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumPlantN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6025,7 +6311,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumMineralisation</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6046,7 +6332,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumDenit</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6067,7 +6353,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumFert</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6088,7 +6374,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumLeach</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6109,7 +6395,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.DeltaSoilOMN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6130,7 +6416,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.DeltaSurfaceOMN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6151,7 +6437,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.DeltaSoilMineralN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6203,7 +6489,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumEO</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6224,7 +6510,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumEP</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6245,7 +6531,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumES</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6266,7 +6552,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumDrainage</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6287,7 +6573,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumRunoff</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6308,7 +6594,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumRainfall</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6329,7 +6615,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumIrrigation</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6350,7 +6636,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumOutflowLat</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6371,7 +6657,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>ExtraVariables.Script.SoilWaterDeficit</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6414,7 +6700,7 @@ This model has been built to simulate a range of different crops in simulations 
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Chicory.Leaf.Live.Wt</YFieldName>
+          <YFieldName>Leaf Live Weight</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6435,7 +6721,7 @@ This model has been built to simulate a range of different crops in simulations 
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Chicory.Stem.Live.Wt</YFieldName>
+          <YFieldName>Stem Live Weight</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6456,7 +6742,7 @@ This model has been built to simulate a range of different crops in simulations 
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Chicory.Root.Live.Wt</YFieldName>
+          <YFieldName>Root Live Weight</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6477,73 +6763,10 @@ This model has been built to simulate a range of different crops in simulations 
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Chicory.Total.Wt</YFieldName>
+          <YFieldName>Total Weight</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>ParamDryYield</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32704</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Dash</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCUM.DryYield.Value</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>ParamTotalBiomStartSen</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>DashDot</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCUM.TotalBiomassAtStartSenescence.Value</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series10</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Chicory.Arbitrator.DMSupply</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>true</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Axis>
@@ -6581,8 +6804,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Leaf.Live.N</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Leaf Live N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6602,8 +6825,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Root.Live.N</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Root Live N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6623,8 +6846,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Stem.Live.N</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Stem Live N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6644,8 +6867,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Total.N</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Total N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6686,7 +6909,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>SCUM.Root.WaterSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6707,8 +6930,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Root.WaterUptake</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Root Water Uptake</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6728,8 +6951,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Leaf.WaterDemand</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Leaf Water Demand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6749,8 +6972,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Leaf.Transpiration</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Leaf Transpiration</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6770,7 +6993,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Soil.SoilWater.Eo</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6791,8 +7014,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Root.Depth</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Root Depth</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6812,8 +7035,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Leaf.Height</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Leaf Height</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6863,7 +7086,7 @@ This model has been built to simulate a range of different crops in simulations 
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Chicory.Root.Depth</YFieldName>
+          <YFieldName>Root Depth</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6884,7 +7107,7 @@ This model has been built to simulate a range of different crops in simulations 
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Chicory.Leaf.CoverTotal</YFieldName>
+          <YFieldName>Leaf Total Cover</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6905,7 +7128,7 @@ This model has been built to simulate a range of different crops in simulations 
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Chicory.Leaf.LAI</YFieldName>
+          <YFieldName>LAI Green</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6953,7 +7176,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Arbitrator.NDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6974,7 +7197,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Arbitrator.NSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -7016,7 +7239,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Arbitrator.DMSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -7037,7 +7260,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Arbitrator.DMDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -7058,7 +7281,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Arbitrator.DMSinkLimitation</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -7079,7 +7302,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Arbitrator.DMNutrientLimitation</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -7121,7 +7344,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Leaf.Fw</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -7142,7 +7365,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Leaf.Fn</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -7163,7 +7386,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Arbitrator.FN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -7205,7 +7428,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Phenology.Stage</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -7247,8 +7470,50 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Irrigation.IrrigationApplied</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Irrigation Applied (mm)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Applied1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Soil.SoilWater.SWmm(1)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Applied11</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Soil.SoilWater.LL15mm(1)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7268,12 +7533,19 @@ This model has been built to simulate a range of different crops in simulations 
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>12</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>AboveGnd Weight Predicted Observed</Name>
+        <Name>Above Ground Weight</Name>
         <Series>
           <Name>Predicted</Name>
           <Type>Scatter</Type>
@@ -7288,8 +7560,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.AboveGround.Wt</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Above Ground Weight</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7309,8 +7581,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ClassicObserved</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.AboveGround.Wt</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Density</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7349,9 +7621,9 @@ This model has been built to simulate a range of different crops in simulations 
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>PORuakura</TableName>
-          <XFieldName>Observed.Chicory.AboveGround.Wt</XFieldName>
-          <YFieldName>Predicted.Chicory.AboveGround.Wt</YFieldName>
+          <TableName>POClassic</TableName>
+          <XFieldName>Predicted.Above Ground Weight</XFieldName>
+          <YFieldName>Observed.Above Ground Weight</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7391,8 +7663,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Chicory.Population</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Population</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7432,8 +7704,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Fertiliser.NitrogenApplied</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Nitrogen Applied</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7475,8 +7747,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>LAIgreen</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>LAI Green</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7486,7 +7758,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Name>DeadLAI</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
+          <YAxis>Right</YAxis>
           <ColourArgb>-1663232</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
@@ -7496,8 +7768,8 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>LAIdead</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>LAI Dead</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7512,6 +7784,119 @@ This model has been built to simulate a range of different crops in simulations 
         </Axis>
         <Axis>
           <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>DM Harvest</Name>
+        <Series>
+          <Name>Leaf  Weight</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Defoliate.Script.LeafWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Leaf Harvested</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Dash</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Defoliate.Script.LeafHarvested</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Stem Weight</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Defoliate.Script.StemWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Stem Harvested</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Dash</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Defoliate.Script.StemHarvested</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>X axis title 2</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated N changes (kg/ha)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
