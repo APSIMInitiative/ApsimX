@@ -460,9 +460,9 @@ namespace UnitTests
         public void TestFd()
         {
             double[] phia = new double[] { 3.35430149789317511E-006 };
-            double[] f = new double[] { 1.763006E-07 };
-            double[] d = new double[] { -2.598123E-01 };
-            double[] q = new double[] { 8.74052774602063E-10 };
+            double[] f = new double[] { 4.206066E-10 };
+            double[] d = new double[] { -2.598124E-01 };
+            double[] q = new double[] { 8.740528E-10 };
             double[] phi1max = new double[] { 18.137952804565430 };
             int[] nco1 = new int[] { 4 };
             int[] j = new int[] { 1 };
@@ -671,6 +671,7 @@ namespace UnitTests
         [Test]
         public void TestTwoTables()
         {
+            TwoFluxes.TestReset();
             SoilProps sp1 = Soil.ReadProps(@"..\..\..\..\SWIMFrame\bin\soil103.dat");
             SoilProps sp2 = Soil.ReadProps(@"..\..\..\..\SWIMFrame\bin\soil109.dat");
             FluxTable ft1 = Fluxes.ReadFluxTable(@"..\..\..\..\SWIMFrame\bin\soil103dz50.dat");
@@ -721,14 +722,14 @@ namespace UnitTests
             double[] col = new double[] { 0, 10, 20, 30 };
 
             double[] res = Extensions.GetRowCol(m, 0, true);
-            Assert.AreEqual(row.Length, res.Length);
-            for (int i = 0; i < row.Length; i++)
-                Assert.AreEqual(row, res);
-
-            res = Extensions.GetRowCol(m, 0, false);
             Assert.AreEqual(col.Length, res.Length);
             for (int i = 0; i < col.Length; i++)
                 Assert.AreEqual(col, res);
+
+            res = Extensions.GetRowCol(m, 0, false);
+            Assert.AreEqual(row.Length, res.Length);
+            for (int i = 0; i < row.Length; i++)
+                Assert.AreEqual(row, res);
         }
 
         [Test]

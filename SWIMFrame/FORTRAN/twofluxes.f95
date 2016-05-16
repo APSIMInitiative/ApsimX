@@ -300,6 +300,7 @@ contains
   ! Returns flux difference f, deriv d and upper flux q.
   ! phia - phi at interface in upper path.
   real h,phib,der,v,vm1,qv,qvm1,q1,q1d,q2,q2d
+  save phib,q1,q1d ! #mod# 13/5/16
   if (phia/=phialast) then
    if (phia>phi1max) then ! both saturated - calc der and lower interface phi
     h=he(1)+(phia-phie(1))/Ks(1)

@@ -559,7 +559,7 @@ namespace SWIMFrame
         // Return v(1:n-1) corresponding to u(1:n-1) using quadratic interpolation.
         public static double[] quadinterp(double[] x, double[] y, int n, double[] u)
         {
-            double[] v = new double[100];
+            double[] v = new double[100 + 1];
             int i, j, k;
             double z;
             double[] co = new double[4];

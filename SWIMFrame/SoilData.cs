@@ -78,8 +78,8 @@ namespace SWIMFrame
             np = 0; //no.of different paths out of possible n + 1
             for (i = 0; i < n; i++)
             {
-                isid[np + 1, 1] = jt[i + 1];
-                isid[np + 1, 2] = jt[i + 1 + 1];
+                isid[np + 1, 1] = jt[i];
+                isid[np + 1, 2] = jt[i + 1];
                 if (jt[i] == jt[i + 1]) //no interface between types
                 {
                     dz[np + 1, 1] = hdx[i] + hdx[i + 1];
@@ -100,8 +100,9 @@ namespace SWIMFrame
                     double[] absdz = new double[dz.GetLength(1)];
                     for (int x = 0; x < absdz.Length; x++)
                     {
-                        absdz[x] = Math.Abs(dz[j, x] = dz[np + 1, x]);
+                        absdz[x] = Math.Abs(dz[j, x] - dz[np + 1, x]);
                     }
+                    double tsum = MathUtilities.Sum(absdz);
                     if (MathUtilities.Sum(absdz) < small)
                         break;
                 }
@@ -169,8 +170,8 @@ namespace SWIMFrame
             }
 
             // Read flux tables and form flux paths.
-            ft = new FluxTable[np];
-            fpath = new FluxPath[np];
+            ft = new FluxTable[np+1];
+            fpath = new FluxPath[np+1];
             nft = np;
             for (i = 1; i <= np; i++)
             {

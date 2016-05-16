@@ -53,10 +53,9 @@ namespace SWIMFrame
                 BinaryWriter b = new BinaryWriter(File.OpenWrite("soil" + soils[i].sid + ".dat"));
                 MVG.Params(soils[i].sid, soils[i].ths, soils[i].ks, soils[i].he, soils[i].hd, soils[i].p, soils[i].hg, soils[i].em, soils[i].en);
                 soils[i].sp = Soil.gensptbl(dzmin, soils[i], Kgiven);
-               // b.Write(soils[i].sid);
                 WriteProps(b, soils[i].sp);
                 b.Close();
-                for (j = 0; j < ndz[i]; j++)
+                for (j = 0; j <= ndz[i]; j++)
                 {
                     Fluxes.FluxTable(dz[i, j], soils[i].sp);
                     b = new BinaryWriter(File.OpenWrite("soil" + soils[i].sid + "dz" + (dz[i, j] * 10) + ".dat"));

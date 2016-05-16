@@ -48,6 +48,51 @@ namespace SWIMFrame
         static FluxTable[] ft = { new FluxTable(), new FluxTable() };
         static SoilProps[] sp = { new SoilProps(), new SoilProps() };
 
+        /// <summary>
+        /// Only used in unit tests. Resets all static variables
+        /// </summary>
+        public static void TestReset()
+        {
+            mx = 100;
+            maxit = 20;
+            i = j = k = m = ni = id = ip = nco1 = nco2 = nit = ie = ii = jj = 0;
+            nft = new int[2 + 1];
+            nfu = new int[2 + 1];
+            n = new int[2 + 1];
+            nfi = new int[2 + 1];
+            rerr = 1e-3;
+            phi1max = dhe = v = vlast = dx = e = f = df = q1 = phialast = v1 = v2 = f1 = f2 = 0;
+            he = new double[2 + 1];
+            phie = new double[2 + 1];
+            Ks = new double[2 + 1];
+            co = new double[4 + 1];
+            xval = new double[mx + 1];
+            phico1 = new double[mx + 1];
+            phico2 = new double[mx + 1];
+            y2 = new double[3 * mx + 1];
+            hi = new double[3 * mx + 1];
+            phif = new double[2 + 1, mx + 1];
+            phifi = new double[2 + 1, mx + 1];
+            phii5 = new double[2 + 1, mx + 1];
+            coq = new double[3 + 1, 3 * mx + 1];
+            co1 = new double[4 + 1, mx + 1];
+            qp = new double[mx + 1, mx + 1];
+            y22 = new double[mx + 1, mx + 1];
+            qi1 = new double[mx + 1, mx + 1];
+            qi2 = new double[mx + 1, mx + 1];
+            qi3 = new double[mx + 1, mx + 1];
+            qi5 = new double[mx + 1, mx + 1];
+            h = new double[2 + 1, 3 * mx + 1];
+            phi = new double[2 + 1, 3 * mx + 1];
+            phii = new double[2 + 1, 3 * mx + 1];
+            qf = new double[2 + 1, mx + 1, mx + 1];
+            y2q = new double[2 + 1, mx + 1, mx + 1];
+            co2 = new double[4 + 1, mx + 1, mx + 1];
+            ftwo = new FluxTable();
+            ft = new FluxTable[] { new FluxTable(), new FluxTable() };
+            sp = new SoilProps[] { new SoilProps(), new SoilProps() };
+        }
+
         public static FluxTable TwoTables(FluxTable ft1, SoilProps sp1, FluxTable ft2, SoilProps sp2)
         {
             /*Generates a composite flux table from two uniform ones.
@@ -526,7 +571,7 @@ namespace SWIMFrame
                     ii = Find(phia, phiiFind);
                     v = phia - phii[1, ii];
                     der = coq[2, ii] + v * 2.0 * coq[3, ii];
-                   // phib = coq[1, ii] + v * (coq[2, ii] + v * coq[3, ii]);
+                    phib = coq[1, ii] + v * (coq[2, ii] + v * coq[3, ii]);
                 }
                 // Get upper flux and deriv.
                 v = phif[1, nft[1]];

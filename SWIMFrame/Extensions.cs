@@ -91,10 +91,10 @@ namespace SWIMFrame
         /// <param name="index">The index to return.</param>
         /// <param name="row">True for row, false for column</param>
         /// <returns></returns>
-        public static double[] GetRowCol(double[,] m, int index, bool row)
+        public static double[] GetRowCol(double[,] m, int index, bool column)
         {
             double[] retVal;
-            if(row)
+            if(column)
             {
                 retVal = new double[m.GetLength(0)];
                 for (int i = 0; i < m.GetLength(0); i++)
