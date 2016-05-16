@@ -266,7 +266,7 @@ namespace UserInterface.Presenters
         {
             Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Toolboxes.ManagementToolbox.apsimx");
             StreamReader streamReader = new StreamReader(s);
-            this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd());
+            this.OpenApsimXFromMemoryInTab("Management toolbox", streamReader.ReadToEnd());
         }
 
         /// <summary>
