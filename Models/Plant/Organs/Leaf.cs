@@ -518,7 +518,7 @@ namespace Models.PMF.Organs
                 foreach (LeafCohort L in Leaves)
                     if (L.IsAppeared)
                         n += L.CohortPopulation;
-                return n;
+                return n / Plant.Population;
             }
         }
 
@@ -531,7 +531,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return PlantAppearedLeafNo/ Plant.Population - PlantAppearedGreenLeafNo;
+                return PlantAppearedLeafNo - PlantAppearedGreenLeafNo;
             }
         }
 
