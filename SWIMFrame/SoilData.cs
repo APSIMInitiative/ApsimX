@@ -42,7 +42,7 @@ namespace SWIMFrame
             n = nin;
             x = xin;
             soilloc = new int[n + 1];
-            pathloc = new int[n]; //0 based in FORTRAN
+            pathloc = new int[n + 1]; //0 based in FORTRAN
             philoc = new int[n, 2 + 1]; //0 based in FORTRAN
             dx = MathUtilities.Subtract(x.Slice(2, n), x.Slice(1, n - 1));
 
@@ -76,7 +76,7 @@ namespace SWIMFrame
             jt[0] = sid[1];
             jt[jt.Length - 1] = sid[n];
             np = 0; //no.of different paths out of possible n + 1
-            for (i = 0; i < n; i++)
+            for (i = 0; i <= n; i++)
             {
                 isid[np + 1, 1] = jt[i];
                 isid[np + 1, 2] = jt[i + 1];
@@ -269,19 +269,19 @@ namespace SWIMFrame
         {
             bool vapour;
             int i, j, i2;
-            int[] k = new int[2];
+            int[] k = new int[2+1];
             double dlnhdS, lnh, h, cvs, rhow, dv, vc;
-            double[] hr = new double[2];
-            double[] dhrdS = new double[2];
-            double[] poros = new double[2];
-            double[] dv1 = new double[2];
-            double[] cv = new double[2];
-            double[] dcvdS = new double[2];
+            double[] hr = new double[2+1];
+            double[] dhrdS = new double[2+1];
+            double[] poros = new double[2+1];
+            double[] dv1 = new double[2+1];
+            double[] cv = new double[2+1];
+            double[] dcvdS = new double[2+1];
             double v, phii, f1, f2, f3, f4, Smin;
-            double[] phix = new double[2];
-            double[] rdphif = new double[2];
-            double[] u = new double[2];
-            double[] omu = new double[2];
+            double[] phix = new double[2+1];
+            double[] rdphif = new double[2+1];
+            double[] u = new double[2+1];
+            double[] omu = new double[2+1];
             double[] phif;
             double[,] qf;
             FluxPath path;
@@ -379,7 +379,8 @@ namespace SWIMFrame
             f2 = qf[k[1] + 1, k[2]];
             f3 = qf[k[1], k[2] + 1];
             f4 = qf[k[1] + 1, k[2] + 1];
-            omu = MathUtilities.Subtract_Value(u, 1.0);
+            for (int count = 1; count < u.Length; count++)
+                omu[count] = 1.0 - u[count];
             q = omu[1] * omu[2] * f1 + u[1] * omu[2] * f2 + omu[1] * u[2] * f3 + u[1] * u[2] * f4;
             qya = phix[1] * rdphif[1] * (omu[2] * (f2 - f1) + u[2] * (f4 - f3));
             qyb = phix[2] * rdphif[2] * (omu[1] * (f3 - f1) + u[1] * (f4 - f2));
@@ -392,6 +393,7 @@ namespace SWIMFrame
                     dv = 864.0; //ditto
                     dv1[j] = 0.66 * poros[j] * dv / rhow;
                     cv[j] = hr[j] * cvs;
+                    dcvdS[j] = dhrdS[j] * cvs;
                 }
                 vc = 0.5 * (dv1[1] + dv1[2]) / path.dz;
                 q = q + vc * (cv[1] - cv[2]);
@@ -426,7 +428,7 @@ namespace SWIMFrame
                     v = Smin;
                 if (v < Smin)
                     v = Smin;
-                i=(int)Math.Truncate(pe.rdS * (v - Smin));
+                i = 1 + (int)Math.Truncate(pe.rdS * (v - Smin));
                 qya = pe.dKdS[i];
                 q = pe.K[i] + qya * (v - pe.S[i]);
             }
@@ -443,7 +445,7 @@ namespace SWIMFrame
         {
             int i, j;
             double d, lnh;
-            i = soilloc[il];
+            i = soilloc[il]+1;
             if (h > sp[i].he)
             {
                 S = 1.0;
@@ -482,7 +484,7 @@ namespace SWIMFrame
             double d, lnh;
             h = 0;
             hS = 0;
-            i = soilloc[il];
+            i = soilloc[il]+1;
 
             if (S > 1.0 || S < 0.0)
             {

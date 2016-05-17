@@ -689,7 +689,7 @@ namespace SWIMFrame
         public static int Find(double x, double[] xa)
         {
             int i1 = 1;
-            int i2 = xa.Length - 1;
+            int i2 = Array.IndexOf(xa.Skip(1).ToArray(),0);
             int im;
 
             while (true) //use bisection
