@@ -52,7 +52,7 @@
             for (int i = 0; i < ForestryModel.Table[1].Count; i++)
                 for (int j = 2; j < table.Columns.Count + 1; j++)
                 {
-                    /// TBI ForestryModel.Table[j][i] = table.Rows[i].Field<string>(j - 1);
+                    ForestryModel.Table[j][i] = table.Rows[i].Field<string>(j - 1);
                 }
         }
 

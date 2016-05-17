@@ -6,17 +6,15 @@
 namespace UserInterface.Presenters
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Data;
     using System.Drawing;
-    using System.Linq;
+    using System.IO;
     using System.Text;
-    using Models.Graph;
-    using Models.Core;
-    using Views;
-    using Models;
     using APSIM.Shared.Utilities;
+    using Models;
+    using Models.Graph;
+    using Views;
 
     /// <summary>A presenter for displaying weather data</summary>
     class MetDataPresenter : IPresenter
@@ -55,8 +53,9 @@ namespace UserInterface.Presenters
 
             this.weatherDataView.BrowseClicked += this.OnBrowse;
             this.weatherDataView.GraphRefreshClicked += this.GraphRefreshValueChanged;
+            this.weatherDataView.ExcelSheetChangeClicked += this.ExcelSheetValueChanged;
 
-            this.WriteTableAndSummary(this.weatherData.FullFileName);
+            this.WriteTableAndSummary(this.weatherData.FullFileName, this.weatherData.ExcelWorkSheetName);
 
         }
 
@@ -65,6 +64,7 @@ namespace UserInterface.Presenters
         {
             this.weatherDataView.BrowseClicked -= this.OnBrowse;
             this.weatherDataView.GraphRefreshClicked -= this.GraphRefreshValueChanged;
+            this.weatherDataView.ExcelSheetChangeClicked -= this.ExcelSheetValueChanged;
         }
 
         /// <summary>Called when [browse].</summary>
@@ -73,7 +73,24 @@ namespace UserInterface.Presenters
         {
             if (this.weatherData.FullFileName != PathUtilities.GetAbsolutePath(fileName, this.explorerPresenter.ApsimXFile.FileName))
             {
-                this.WriteTableAndSummary(fileName);
+                this.weatherDataView.Filename = PathUtilities.GetRelativePath(fileName, this.explorerPresenter.ApsimXFile.FileName);
+                if (Path.GetExtension(fileName) == ExcelUtilities.ExcelExtension)
+                {
+                    //Extend height of Browse Panel to show Drop Down for Sheet names
+                    weatherDataView.ShowExcelSheets(true);
+                    List<string> sheetNames = ExcelUtilities.GetWorkSheetNames(fileName);
+                    this.weatherDataView.PopulateDropDownData(sheetNames);
+                    //the following is not required here as it happens when the sheet name is changed
+                    //this.WriteTableAndSummary(fileName);
+                }
+                else
+                {
+                    //Shrink Browse Panel so that the sheet name dropdown doesn't show
+                    weatherDataView.ShowExcelSheets(false);
+                    //as a precaution, set this to nothing
+                    this.weatherData.ExcelWorkSheetName = string.Empty;
+                    this.WriteTableAndSummary(fileName);
+                }
             }
         }
 
@@ -101,12 +118,28 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// This is called when the value of DropDown combo list containing sheet names is changed.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="sheetName"></param>
+        public void ExcelSheetValueChanged(string fileName, string sheetName)
+        {
+            if (!String.IsNullOrEmpty(sheetName))
+            {
+                if ((this.weatherData.FullFileName != PathUtilities.GetAbsolutePath(fileName, this.explorerPresenter.ApsimXFile.FileName)) ||
+                    (this.weatherData.ExcelWorkSheetName != sheetName))
+                {
+                    this.WriteTableAndSummary(fileName, sheetName);
+                }
+            }
+        }
 
         /// <summary>
         /// Get data from the weather file and present it to the view as both a table and a summary
         /// </summary>
         /// <param name="filename">The filename.</param>
-        private void WriteTableAndSummary(string filename)
+        private void WriteTableAndSummary(string filename, string sheetName = "")
         {
             // Clear any previous summary
             this.weatherDataView.Summarylabel = string.Empty;
@@ -120,15 +153,45 @@ namespace UserInterface.Presenters
             this.weatherDataView.GraphTemperature.Refresh();
             this.weatherDataView.GraphRadiation.Clear();
             this.weatherDataView.GraphRadiation.Refresh();
+            this.graphMetData = new DataTable();
             if (filename != null)
             {
+            this.weatherDataView.Filename = PathUtilities.GetRelativePath(filename, this.explorerPresenter.ApsimXFile.FileName);
                 try
                 {
-                    this.weatherData.FullFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
-                    DataTable data = this.weatherData.GetAllData();
-                    this.WriteTable(data);
-                    this.WriteSummary(data);
-                    this.DisplayDetailedGraphs(data);
+                    if (Path.GetExtension(filename) == ExcelUtilities.ExcelExtension)
+                    {
+                        //Extend height of Browse Panel to show Drop Down for Sheet names
+                        weatherDataView.ShowExcelSheets(true);
+                        List<string> sheetNames = ExcelUtilities.GetWorkSheetNames(filename);
+                        this.weatherDataView.ExcelSheetChangeClicked -= this.ExcelSheetValueChanged;
+                        this.weatherDataView.PopulateDropDownData(sheetNames);
+                        this.weatherDataView.ExcelWorkSheetName = sheetName;
+                        this.weatherDataView.ExcelSheetChangeClicked += this.ExcelSheetValueChanged;
+                        this.weatherData.ExcelWorkSheetName = this.weatherDataView.ExcelWorkSheetName;
+                    }
+                    else
+                    {
+                        //Shrink Browse Panel so that the sheet name dropdown doesn't show
+                        weatherDataView.ShowExcelSheets(false);
+                        //as a precaution, set this to nothing
+                        this.weatherData.ExcelWorkSheetName = string.Empty;
+                    }
+
+                    (weatherDataView as TabbedMetDataView).WaitCursor = true;
+                    try
+                    {
+                        this.weatherData.FullFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+                        DataTable data = this.weatherData.GetAllData();
+                        this.WriteTable(data);
+                        this.WriteSummary(data);
+                        this.DisplayDetailedGraphs(data);
+                        this.explorerPresenter.ShowMessage(" ", DataStore.ErrorLevel.Information);
+                    }
+                    finally
+                    {
+                        (weatherDataView as TabbedMetDataView).WaitCursor = false;
+                    }
 
                 }
                 catch (Exception err)
@@ -201,6 +264,10 @@ namespace UserInterface.Presenters
         {
             StringBuilder summary = new StringBuilder();
             summary.AppendLine("File name: " + this.weatherData.FileName);
+            if (this.weatherData.ExcelWorkSheetName.Length > 0)
+            {
+                summary.AppendLine("Sheet Name: " + this.weatherData.ExcelWorkSheetName.ToString());
+            }
             summary.AppendLine("Latitude : " + this.weatherData.Latitude.ToString());
             summary.AppendLine("TAV      : " + String.Format("{0, 2:f2}", this.weatherData.Tav));
             summary.AppendLine("AMP      : " + String.Format("{0, 2:f2}", this.weatherData.Amp));
@@ -481,7 +548,7 @@ namespace UserInterface.Presenters
         private void PopulateSummaryGraph(string title, string[] months, double[] monthlyRain, double[] monthlyMaxT, double[] monthlyMinT)
         {
             this.weatherDataView.GraphSummary.Clear();
-            this.weatherDataView.GraphSummary.DrawBar("",
+            this.weatherDataView.GraphSummary.DrawBar(title,
                                       months,
                                       monthlyRain,
                                       Axis.AxisType.Bottom,

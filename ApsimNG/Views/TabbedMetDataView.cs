@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using UserInterface.Interfaces;
 using Gtk;
@@ -16,6 +17,10 @@ namespace UserInterface.Views
     ///// <param name="showYears">the number of years of data to be used/displayed in the graph</param>
     public delegate void GraphRefreshDelegate(int tabIndex, decimal startYear, decimal showYears);
 
+    /// <summary>A delegate used when the sheetname dropdown value change is actived</summary>
+    /// <param name="fileName"></param>
+    /// <param name="sheetName"></param>
+    public delegate void ExcelSheetDelegate(string fileName, string sheetName);
 
     /// <summary>
     /// An interface for a weather data view
@@ -27,6 +32,11 @@ namespace UserInterface.Views
 
         /// <summary>Occurs when the start year numericUpDown is clicked</summary>
         event GraphRefreshDelegate GraphRefreshClicked;
+
+        /// <summary>A delegate used when the sheetname dropdown value change is actived</summary>
+        event ExcelSheetDelegate ExcelSheetChangeClicked;
+
+        string ExcelWorkSheetName { get; set; }
 
         /// <summary>Gets or sets the filename.</summary>
         string Filename { get; set; }
@@ -58,6 +68,10 @@ namespace UserInterface.Views
         /// <summary>set the maximum value for the graph 'Start Year' NumericUpDown control  </summary>
         int GraphStartYearMaxValue { get; set; }
 
+        /// <summary>Show or hide the combobox listing the names of Excel worksheets </summary>
+        /// <param name="show"></param>
+        void ShowExcelSheets(bool show);
+
         /// <summary>sets/gets the value of 'Show Years' NumericUpDown control </summary>
         int GraphShowYearsValue { get; set; }
 
@@ -67,6 +81,12 @@ namespace UserInterface.Views
         /// <summary>Populates the data grid</summary>
         /// <param name="Data">The data</param>
         void PopulateData(DataTable Data);
+
+        /// <summary>
+        /// Populates the DropDown of Excel WorksheetNames 
+        /// </summary>
+        /// <param name="sheetNames"></param>
+        void PopulateDropDownData(List<string> sheetNames);
 
     }
 
@@ -88,6 +108,8 @@ namespace UserInterface.Views
 
         /// <summary>Occurs when start year or show Years numericUpDowns are clicked</summary>
         public event GraphRefreshDelegate GraphRefreshClicked;
+
+        public event ExcelSheetDelegate ExcelSheetChangeClicked;
 
         [Widget]
         private Label labelFileName;
@@ -127,7 +149,11 @@ namespace UserInterface.Views
         private Button button1;
         [Widget]
         private VPaned vpaned1;
-
+        [Widget]
+        private HBox hbox2;
+        [Widget]
+        private Alignment alignment10;
+        private DropDownView worksheetCombo;
 
         /// <summary>Initializes a new instance of the <see cref="TabbedMetDataView"/> class.</summary>
         public TabbedMetDataView(ViewBase owner) : base(owner)
@@ -156,6 +182,10 @@ namespace UserInterface.Views
             GraphStartYearMinValue = 1900;
             GraphStartYearValue = 2000;
             GraphShowYearsValue = 1;
+            worksheetCombo = new DropDownView(this);
+            alignment10.Add(worksheetCombo.MainWidget);
+            worksheetCombo.IsVisible = true;
+            worksheetCombo.Changed += WorksheetCombo_Changed;
         }
 
         /// <summary>Gets or sets the filename.</summary>
@@ -164,6 +194,12 @@ namespace UserInterface.Views
         {
             get { return labelFileName.Text; }
             set { labelFileName.Text = value; }
+        }
+
+        public string ExcelWorkSheetName
+        {
+            get { return hbox2.Visible ? worksheetCombo.SelectedValue : ""; }
+            set { worksheetCombo.SelectedValue = value; }
         }
 
         /// <summary>Sets the summarylabel.</summary>
@@ -200,7 +236,7 @@ namespace UserInterface.Views
         public IGraphView GraphRadiation { get { return graphViewRadiation; } }
 
         /// <summary>Sets the Graph Year</summary>
-        public int GraphStartYearValue 
+        public int GraphStartYearValue
         {
             get { return spinStartYear.ValueAsInt; }
             set { spinStartYear.Value = value; }
@@ -243,7 +279,7 @@ namespace UserInterface.Views
         /// <summary>Gets and sets the Graph Year</summary>
         public int GraphShowYearsValue
         {
-            get { return spinNYears.ValueAsInt; } 
+            get { return spinNYears.ValueAsInt; }
             set { spinNYears.Value = value; }
         }
 
@@ -256,6 +292,24 @@ namespace UserInterface.Views
                 spinNYears.GetRange(out min, out max);
                 spinNYears.SetRange(Math.Min(value, min), value);
             }
+        }
+
+        /// <summary>Show or hide the combobox listing the names of Excel worksheets </summary>
+        /// <param name="show"></param>
+        public void ShowExcelSheets(bool show)
+        {
+            if (show)
+                hbox2.ShowAll();
+            hbox2.Visible = show;
+        }
+
+        /// <summary>
+        /// Populates the DropDown of Excel WorksheetNames 
+        /// </summary>
+        /// <param name="sheetNames"></param>
+        public void PopulateDropDownData(List<string> sheetNames)
+        {
+            worksheetCombo.Values = sheetNames.ToArray();
         }
 
         /// <summary>Populates the data.</summary>
@@ -279,6 +333,11 @@ namespace UserInterface.Views
             fileFilter.Name = "APSIM Weather file (*.met)";
             fileFilter.AddPattern("*.met");
             fileChooser.AddFilter(fileFilter);
+
+            FileFilter excelFilter = new FileFilter();
+            excelFilter.Name = "Excel file (*.xlsx)";
+            excelFilter.AddPattern("*.xlsx");
+            fileChooser.AddFilter(excelFilter);
 
             FileFilter allFilter = new FileFilter();
             allFilter.Name = "All files";
@@ -372,6 +431,17 @@ namespace UserInterface.Views
             }
             if (GraphRefreshClicked != null)
                 GraphRefreshClicked.Invoke(notebook1.CurrentPage, spinStartYear.ValueAsInt, spinNYears.ValueAsInt);
+        }
+
+        /// <summary>
+        /// This is used to handle the change in value (selected index) for the worksheet dropdown combo.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WorksheetCombo_Changed(object sender, EventArgs e)
+        {
+            if (ExcelSheetChangeClicked != null)
+               ExcelSheetChangeClicked.Invoke(Filename, worksheetCombo.SelectedValue);
         }
     }
 }
