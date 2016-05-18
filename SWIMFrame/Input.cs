@@ -149,12 +149,12 @@ namespace SWIMFrame
         }
 
         /// <summary>
-        /// Implements a cut down versions of FORTRAN spread.
+        /// Implements a cut down version of FORTRAN spread.
         /// The source array is copied n times by appending into a new array.
         /// </summary>
         /// <param name="source">The array to copy.</param>
         /// <param name="n">The number of times to copy the array.</param>
-        /// <returns>A 1-indexed array of length (source.length * n)</returns>
+        /// <returns>A 1-indexed array of length (source.length * n + 1)</returns>
         private static double[] Spread(double[] source, int n)
         {
             double[] res = new double[(source.Length - 1) * n];

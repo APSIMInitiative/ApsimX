@@ -699,6 +699,13 @@ namespace SWIMFrame
             }
         }
 
+        public static void TestSolute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win,
+                                   double[] cin, int n, int ns, int nex, double[] dx, int[] jt, double dsmmax,
+                                   ref double[,] sm, double[] sdrn, int[] nssteps, double[,] c, double[,,] sex, bool extraction, SolProps solProps)
+        {
+
+        }
+
         /// <summary>
         /// Solves the ADE from time ti to tf. Diffusion of solute ignored - dispersion
         /// coeff = dispersivity* abs(pore water velocity).
@@ -709,9 +716,9 @@ namespace SWIMFrame
         /// <param name="thf">initial layer water contents.</param>
         /// <param name="dwexs">water extracted from layers over period ti to tf.</param>
         /// <param name="win">water in at top of profile.</param>
-        /// <param name="cav">solute concn in win.</param>
+        /// <param name="cin">solute concn in win.</param>
         /// <param name="n">no. of soil layers.</param>
-        /// <param name="nsol">no. of solutes.</param>
+        /// <param name="ns">no. of solutes.</param>
         /// <param name="nex">no. of water extraction streams.</param>
         /// <param name="dx">layer thicknesses.</param>
         /// <param name="jt">layer soil type numbers for solute.</param>
@@ -721,7 +728,11 @@ namespace SWIMFrame
         /// <param name="nssteps">cumulative no. of time steps for ADE soln.</param>
         /// <param name="c"></param>
         /// <param name="sex">cumulative solute extractions in water extraction streams.</param>
-        private static void Solute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win, double[] cin, int n, int ns, int nex, double[] dx, int[] jt, double dsmmax, ref double[,] sm, ref double[] sdrn, ref int[] nssteps, ref double[,] c, ref double[,,] sex, bool extraction, SolProps solProps)
+        /// <param name="extraction">bool indicating if solute extraction is enabled.</param>
+        /// <param name="solProps">Solute properties.</param>
+        private static void Solute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win,
+                                   double[] cin, int n, int ns, int nex, double[] dx, int[] jt, double dsmmax,
+                                   ref double[,] sm, ref double[] sdrn, ref int[] nssteps, ref double[,] c, ref double[,,] sex, bool extraction, SolProps solProps)
         {
             int itmax = 20; //max iterations for finding c from sm
             double eps = 0.00001; // for stopping
@@ -930,6 +941,18 @@ namespace SWIMFrame
                 }
                 nssteps[j] = nssteps[j] + 1;
             }
+        }
+
+        public static List<double[]> TestTri(int ns, int n, double[] aa, double[] bb, double[] cc, double[] dd, double[] ee, double[] dy)
+        {
+            List<double[]> res = new List<double[]>();
+
+            Tri(ns, n, aa, ref bb, cc, dd, ref ee, ref dy);
+            res.Add(bb);
+            res.Add(ee);
+            res.Add(dy);
+
+            return res;
         }
 
         /// <summary>
