@@ -41,6 +41,9 @@ namespace UserInterface.Views
         /// <summary>Gets or sets the filename.</summary>
         string Filename { get; set; }
 
+        /// <summary>Gets or sets the Excel Sheet name, where applicable</summary>
+        string ExcelWorkSheetName { get; set; }
+
         /// <summary>Sets the summarylabel.</summary>
         string Summarylabel { set; }
 
@@ -87,6 +90,7 @@ namespace UserInterface.Views
         /// <param name="sheetNames"></param>
         void PopulateDropDownData(List<string> sheetNames);
 
+
     }
 
     /// <summary>
@@ -114,6 +118,17 @@ namespace UserInterface.Views
         {
             get { return FileNameControl.Text; }
             set { FileNameControl.Text = value;}
+        }
+
+        /// <summary>Gets and sets the worksheet name</summary>
+        public string ExcelWorkSheetName
+        {
+            get { return WorksheetNamesControl.SelectedText; }
+            set
+            {
+                WorksheetNamesControl.SelectedText = value;
+                WorksheetNamesControl.Text = value;
+            }
         }
 
         /// <summary>Sets the summarylabel.</summary>
@@ -191,14 +206,23 @@ namespace UserInterface.Views
             dataGridView1.DataSource = data;
         }
 
+
+        /// <summary>
+        /// used to show load status of Excel sheetname combo
+        /// </summary>
+        private bool PopulatingDropDownData;
+
         /// <summary>
         /// Populates the DropDown of Excel WorksheetNames 
         /// </summary>
         /// <param name="sheetNames"></param>
         public void PopulateDropDownData(List<string> sheetNames)
         {
+            PopulatingDropDownData = true;
             WorksheetNamesControl.DataSource = sheetNames;
+            PopulatingDropDownData = false;
         }
+
 
 
         /// <summary>Handles the Click event of the button1 control.</summary>
@@ -274,10 +298,12 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void WorkSheetNameControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ComboBox cb = (ComboBox)sender;
-            ExcelSheetChangeClicked.Invoke(FileNameControl.Text, cb.SelectedValue.ToString());
-            if (tabControl1.SelectedTab.TabIndex != 0)
-                tabControl1.SelectedIndex = 0;
+            if (PopulatingDropDownData == false)
+            {
+                ComboBox cb = (ComboBox)sender;
+                ExcelSheetChangeClicked.Invoke(FileNameControl.Text, cb.SelectedValue.ToString());
+                if (tabControl1.SelectedTab.TabIndex == -1) { tabControl1.SelectedIndex = 0; }
+            }
         }
     }
 }
