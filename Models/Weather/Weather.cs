@@ -117,17 +117,19 @@ namespace Models
             get
             {
                 Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-
                 return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
             }
-
             set
             {
-
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
                 this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
             }
         }
+
+        /// <summary>
+        /// Used to hold the WorkSheet Name if data retrieved from an Excel file
+        /// </summary>
+        public string ExcelWorkSheetName { get; set; }
 
         /// <summary>
         /// Gets the start date of the weather file
@@ -455,6 +457,7 @@ namespace Models
         public DataTable GetAllData()
         {
             this.reader = null;
+
             if (this.OpenDataFile())
             {
                 List<string> metProps = new List<string>();
@@ -463,6 +466,7 @@ namespace Models
                 metProps.Add("radn");
                 metProps.Add("rain");
                 metProps.Add("wind");
+
                 return this.reader.ToTable(metProps);
             }
             else
@@ -565,7 +569,8 @@ namespace Models
                 if (this.reader == null)
                 {
                     this.reader = new ApsimTextFile();
-                    this.reader.Open(this.FullFileName);
+                    this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
+
                     this.maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Maxt");
                     this.minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Mint");
                     this.radiationIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Radn");
@@ -599,7 +604,8 @@ namespace Models
                 }
                 else
                 {
-                    this.reader.SeekToDate(this.reader.FirstDate);
+                    if (this.reader.IsExcelFile != true) 
+                        this.reader.SeekToDate(this.reader.FirstDate);
                 }
 
                 return true;

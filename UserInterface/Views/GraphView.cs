@@ -116,6 +116,9 @@ namespace UserInterface.Views
             this.plot1.Model.Axes.Clear();
             this.plot1.Model.Annotations.Clear();
 
+            //modLMC - 11/05/2016 - Need to clear the chart title as well
+            this.FormatTitle("");
+
         }
 
         /// <summary>

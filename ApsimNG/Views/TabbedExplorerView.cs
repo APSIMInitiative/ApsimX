@@ -18,7 +18,7 @@ namespace UserInterface.Views
 
         event EventHandler MruFileClick;
 
-        event EventHandler TabClosing;
+        event EventHandler<TabClosingArgs> TabClosing;
 
         /// <summary>
         /// Add a tab form to the tab control. Optionally select the tab if SelectTab is true.
@@ -70,7 +70,7 @@ namespace UserInterface.Views
 
         public event EventHandler<PopulateStartPageArgs> PopulateStartPage;
         public event EventHandler MruFileClick;
-        public event EventHandler TabClosing;
+        public event EventHandler<TabClosingArgs> TabClosing;
 
         private ListStore standardList = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(EventHandler));
         private ListStore recentFileList = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(EventHandler));
@@ -198,7 +198,11 @@ namespace UserInterface.Views
                 if (tabPage > 0)
                 {
                     if (TabClosing != null)
-                        TabClosing.Invoke(this, e);
+                    {
+                        TabClosingArgs args = new TabClosingArgs();
+                        args.tabIndex = tabPage;
+                        TabClosing.Invoke(this, args);
+                    }
                     notebook1.RemovePage(tabPage);
                 }
             }
@@ -232,7 +236,11 @@ namespace UserInterface.Views
             if (tabPage > 0)
             {
                 if (TabClosing != null)
-                    TabClosing.Invoke(this, e);
+                {
+                    TabClosingArgs args = new TabClosingArgs();
+                    args.tabIndex = tabPage;
+                    TabClosing.Invoke(this, args);
+                }
                 notebook1.RemovePage(tabPage);
             }
         }
@@ -401,6 +409,10 @@ namespace UserInterface.Views
         }
     }
 
+    public class TabClosingArgs : EventArgs
+    {
+        public int tabIndex;
+    }
 
     public class PopulateStartPageArgs : EventArgs
     {
