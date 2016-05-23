@@ -206,9 +206,8 @@ namespace UserInterface.Views
             dataGridView1.DataSource = data;
         }
 
-
         /// <summary>
-        /// used to show load status of Excel sheetname combo
+        /// used to control onchange event status of Excel sheetname combo
         /// </summary>
         private bool PopulatingDropDownData;
 
