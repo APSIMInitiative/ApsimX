@@ -257,7 +257,7 @@ namespace UserInterface.Presenters
             StringBuilder summary = new StringBuilder();
             summary.AppendLine("File name : " + this.weatherData.FileName);
 
-            if (this.weatherData.ExcelWorkSheetName.Length > 0)
+            if (this.weatherData.ExcelWorkSheetName != null)
             {
                 summary.AppendLine("Sheet Name: " + this.weatherData.ExcelWorkSheetName.ToString());
             }
