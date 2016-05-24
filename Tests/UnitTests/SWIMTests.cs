@@ -846,8 +846,49 @@ namespace UnitTests
         }
 
         [Test]
+        public void Isosub()
+        {
+            SolProps sp = new SolProps(2, 10);
+            string iso = "Fr";
+            double c = 0;
+            double dsmmax = 10;
+            List<double> p = new List<double> { 0, 1, 0.5, 0, 0 };
+            List<double> pOut = new List<double> {0, 1, 0.5, 0.01, 10 };
+            double f;
+            double fd;
+            double fOut = 0;
+            double fdOut = 10;
+
+            sp.Isosub(iso, c, dsmmax, ref p, out f, out fd);
+
+            for (int i = 0; i < p.Count; i++)
+                Assert.AreEqual(pOut[i], p[i], Math.Abs(pOut[i] * 1E-5));
+            Assert.AreEqual(fOut, f, Math.Abs(fOut * 1E-5));
+            Assert.AreEqual(fdOut, fd, Math.Abs(fdOut * 1E-5));
+        }
+
+        [Test]
+        public void SetIso()
+        {
+            SolProps sp = new SolProps(2, 10);
+            int[] j = new int[] { 1, 2 };
+            int[] isol = new int[] { 2, 2 };
+            string[] isotypeji = new string[] { "Fr", "La" };
+            double[][] isoparji = new double[][] { new double[] { 0, 1, 0.5 }, new double[] { 0, 1, 0.01 } };
+            double[][] isopar = new double[][] { new double[] { 0, 1, 0.5, 0, 0 }, new double[] { 0, 1, 0.1 } };
+
+            for(int i=0;i <j.Length;i++)
+            {
+                sp.Setiso(j[i], isol[i], isotypeji[i], isoparji[i]);
+                for (int count = 1; count < sp.isopar.GetLength(2); count++)
+                    Assert.AreEqual(isopar[j[i]][count], sp.isopar[j[i], count], Math.Abs(isopar[j[i]][count] * 1E-5));
+            }
+        }
+
+        [Test]
         public void Solute()
         {
+            SolProps sp = new SolProps(10, 2);
             int n = 10;
             int ns = 2;
             int nex = 0;
@@ -861,20 +902,19 @@ namespace UnitTests
             double[] dx = new double[] { 0, 10, 10, 10, 10, 20, 20, 20, 20, 40, 40 };
             int[] jt = new int[] { 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2 };
             int dsmmax = 10;
-            double[,] sm = new double[,] { { 0, 0 }, { 100, 100 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 } };
+            double[,] sm = new double[,] { { 0, 0, 0 }, {0, 100, 100 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
             double[] sdrn = new double[] { 0, 0, 0 };
             int[] nssteps = new int[] { 0, 0, 0 };
+            double[,] c = new double[n + 1, ns + 1];
             double[,,] sex = new double[0, 0, 0];
 
-            
-
-
+            List<object> res = Flow.TestSolute(ti, tf, thi, thf, dwexs, win, cin, n, ns, nex, dx, jt, dsmmax, sm, sdrn, nssteps, c, sex, false, sp);
         }
 
         [Test]
         public void Solve()
         {
-
+            
         }
 
         [Test]
@@ -931,13 +971,5 @@ namespace UnitTests
             }
 
         }
-    }
-
-    public struct SoluteTerms
-    {
-        int[] nssteps;
-        double[,] sm;
-        double[,] c;
-        double[] sdrn;
     }
 }

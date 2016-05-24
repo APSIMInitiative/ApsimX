@@ -699,11 +699,19 @@ namespace SWIMFrame
             }
         }
 
-        public static void TestSolute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win,
+        public static List<object> TestSolute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win,
                                    double[] cin, int n, int ns, int nex, double[] dx, int[] jt, double dsmmax,
-                                   ref double[,] sm, double[] sdrn, int[] nssteps, double[,] c, double[,,] sex, bool extraction, SolProps solProps)
+                                   double[,] sm, double[] sdrn, int[] nssteps, double[,] c, double[,,] sex, bool extraction, SolProps solProps)
         {
+            List<object> ret = new List<object>();
+            Solute(ti, tf, thi, thf, dwexs, win, cin, n, ns, nex, dx, jt, dsmmax, ref sm, ref sdrn, ref nssteps, ref c, ref sex, extraction, solProps);
 
+            ret.Add(sm);
+            ret.Add(sdrn);
+            ret.Add(nssteps);
+            ret.Add(c);
+
+            return ret;
         }
 
         /// <summary>
@@ -748,34 +756,37 @@ namespace SWIMFrame
             double[] qsexd = new double[n + 1];
             double[,] qsexs = new double[n + 1, nex + 1];
             double[,] qsexsd = new double[n + 1, nex + 1];
-            double[] aa = new double[n]; // these are 0 based
-            double[] bb = new double[n];
-            double[] cc = new double[n];
-            double[] dd = new double[n];
-            double[] dy = new double[n];
-            double[] ee = new double[n];
-            double[] q = new double[n];
-            double[] qw = new double[n];    
-            double[] qya = new double[n];
-            double[] qyb = new double[n];
+            double[] aa = new double[n + 1]; // these are 0 based
+            double[] bb = new double[n + 1];
+            double[] cc = new double[n + 1];
+            double[] dd = new double[n + 1];
+            double[] dy = new double[n + 1];
+            double[] ee = new double[n + 1];
+            double[] q = new double[n + 1];
+            double[] qw = new double[n + 1];    
+            double[] qya = new double[n + 1];
+            double[] qyb = new double[n + 1];
 
             sig = 0.5;
             rsig = 1.0 / sig;
             tfin = tf;
-            for(int x=1;x<= n;x++)
-                dz[x] = 0.5 * (dx[x - 1] + dx[x + 1]); //TEST
+            for(int x=1;x<= n-1;x++)
+                dz[x] = 0.5 * (dx[x] + dx[x + 1]);
             //get average water fluxes
             //dwex = sum(dwexs, 2) !total changes in sink water extraction since last call
-            Matrix<double> dwexsM = Matrix<double>.Build.DenseOfArray(dwexs);
-            for(int x=0;x<dwexs.GetLength(1);x++)
+            if (dwexs.GetLength(1) > 0)
             {
-                dwex[x] = MathUtilities.Sum(dwexsM.Column(x));
+                Matrix<double> dwexsM = Matrix<double>.Build.DenseOfArray(dwexs);
+                for (int x = 0; x < dwexs.GetLength(1); x++)
+                {
+                    dwex[x] = MathUtilities.Sum(dwexsM.Column(x));
+                }
             }
 
             r = 1.0 / (tf - ti);
             qw[0] = r * win;
 
-            for (int x = 0; x < thf.Length; x++)
+            for (int x =10; x < thf.Length; x++)
                 tht[x] = r * (thf[x] - thi[x]);
             for (i = 1; i <= n; i++)
                 qw[i] = qw[i - 1] - dx[i] * tht[i] - r * dwex[i];
