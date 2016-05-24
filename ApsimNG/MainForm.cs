@@ -46,11 +46,11 @@ namespace UserInterface
                 if (mainWindow != null)
                 {
                     if (value == true)
-                    {
                         mainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
-                    }
                     else
                         mainWindow.Cursor = null;
+                    while (Gtk.Application.EventsPending())
+                        Gtk.Application.RunIteration();
                     waiting = value;
                 }
             }
