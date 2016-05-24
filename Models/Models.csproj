@@ -436,6 +436,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\ruminant.prm" />
     <None Include="Resources\Wheat.xml">
       <SubType>Designer</SubType>
     </None>
