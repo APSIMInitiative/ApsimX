@@ -105,6 +105,8 @@
             options.ColorScheme = "Visual Studio";
             options.HighlightCaretLine = true;
             textEditor.Options = options;
+            textEditor.Document.LineChanged += OnTextHasChanged;
+            textEditor.LeaveNotifyEvent += OnTextBoxLeave;
 
             /*
             CompletionForm = new Form();
@@ -472,9 +474,9 @@
         /// User has changed text. Invoke our OnTextChanged event.
         /// </summary>
         private void OnTextHasChanged(object sender, EventArgs e)
-        {
+       {
             if (TextHasChangedByUser != null)
-                TextHasChangedByUser(sender, e);
+              TextHasChangedByUser(sender, e);
         }
 
         private void OnTextBoxLeave(object sender, EventArgs e)

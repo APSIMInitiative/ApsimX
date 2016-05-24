@@ -406,7 +406,7 @@ namespace UserInterface.Views
             if (owner != null)
             {
                 Notebook notebook = owner.MainWidget as Notebook;
-                string name = notebook.GetMenuLabelText(notebook.CurrentPageWidget);
+                string name = notebook.GetMenuLabelText(MainWidget);
                 string message = "Do you want to save changes for " + name + " ?";
                 MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Question, ButtonsType.YesNo, message);
                 md.Title = "Save changes";

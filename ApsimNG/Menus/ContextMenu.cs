@@ -278,10 +278,16 @@ namespace UserInterface.Presenters
                         tables.Add(table);
                     }
                 }
-                /// TBI Cursor.Current = Cursors.WaitCursor; 
-                string fileName = Path.ChangeExtension(dataStore.Filename, ".xlsx");
-                Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
-                /// TBI Cursor.Current = Cursors.Default; 
+                explorerPresenter.ShowWaitCursor(true);
+                try
+                {
+                    string fileName = Path.ChangeExtension(dataStore.Filename, ".xlsx");
+                    Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
+                }
+                finally
+                {
+                    explorerPresenter.ShowWaitCursor(false);
+                }
             }
         }
 
@@ -297,7 +303,7 @@ namespace UserInterface.Presenters
             if (destinationFolder != null)
             {
                 explorerPresenter.ShowMessage("Creating documentation...", DataStore.ErrorLevel.Information);
-                /// TBI Cursor.Current = Cursors.WaitCursor;
+                explorerPresenter.ShowWaitCursor(true);
 
                 try
                 {
@@ -310,8 +316,7 @@ namespace UserInterface.Presenters
                 {
                     explorerPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
                 }
-
-                /// TBI Cursor.Current = Cursors.Default;
+                explorerPresenter.ShowWaitCursor(false);
             }
         }
 

@@ -36,10 +36,11 @@ namespace UserInterface.Views
         /// <summary>A delegate used when the sheetname dropdown value change is actived</summary>
         event ExcelSheetDelegate ExcelSheetChangeClicked;
 
-        string ExcelWorkSheetName { get; set; }
-
         /// <summary>Gets or sets the filename.</summary>
         string Filename { get; set; }
+
+        /// <summary>Gets or sets the Excel Sheet name, where applicable</summary>
+        string ExcelWorkSheetName { get; set; }
 
         /// <summary>Sets the summarylabel.</summary>
         string Summarylabel { set; }
@@ -303,15 +304,6 @@ namespace UserInterface.Views
             hbox2.Visible = show;
         }
 
-        /// <summary>
-        /// Populates the DropDown of Excel WorksheetNames 
-        /// </summary>
-        /// <param name="sheetNames"></param>
-        public void PopulateDropDownData(List<string> sheetNames)
-        {
-            worksheetCombo.Values = sheetNames.ToArray();
-        }
-
         /// <summary>Populates the data.</summary>
         /// <param name="Data">The data.</param>
         public void PopulateData(DataTable data)
@@ -320,13 +312,27 @@ namespace UserInterface.Views
             gridViewData.DataSource = data;
         }
 
+        /// <summary>
+        /// used to show load status of Excel sheetname combo
+        /// </summary>
+        private bool PopulatingDropDownData;
+
+        /// <summary>
+        /// Populates the DropDown of Excel WorksheetNames 
+        /// </summary>
+        /// <param name="sheetNames"></param>
+        public void PopulateDropDownData(List<string> sheetNames)
+        {
+            PopulatingDropDownData = true;
+            worksheetCombo.Values = sheetNames.ToArray();
+            PopulatingDropDownData = false;
+        }
+
         /// <summary>Handles the Click event of the button1 control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnButton1Click(object sender, EventArgs e)
         {
-            string fileName = null;
-
             FileChooserDialog fileChooser = new FileChooserDialog("Choose a weather file to open", null, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
 
             FileFilter fileFilter = new FileFilter();
@@ -348,12 +354,16 @@ namespace UserInterface.Views
 
             if (fileChooser.Run() == (int)ResponseType.Accept)
             {
-                fileName = fileChooser.Filename;
+                Filename = fileChooser.Filename;
                 fileChooser.Destroy();
                 if (BrowseClicked != null)
-                    BrowseClicked.Invoke(fileName);    //reload the grid with data
-            }
-            else
+                {
+                    BrowseClicked.Invoke(Filename);    //reload the grid with data
+                    notebook1.CurrentPage = 0;
+                }
+
+             }
+             else
                 fileChooser.Destroy();
         }
 
@@ -442,6 +452,7 @@ namespace UserInterface.Views
         {
             if (ExcelSheetChangeClicked != null)
                ExcelSheetChangeClicked.Invoke(Filename, worksheetCombo.SelectedValue);
+            notebook1.CurrentPage = 0;
         }
     }
 }

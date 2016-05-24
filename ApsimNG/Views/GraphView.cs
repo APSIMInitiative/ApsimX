@@ -181,7 +181,7 @@ namespace UserInterface.Views
         public void Refresh()
         {
             this.plot1.Model.DefaultFontSize = FontSize;
-            this.plot1.Model.PlotAreaBorderThickness = new OxyThickness(0);
+            this.plot1.Model.PlotAreaBorderThickness = new OxyThickness(0.0);
             this.plot1.Model.LegendBorder = OxyColors.Transparent;
             this.plot1.Model.LegendBackground = OxyColors.White;
 
