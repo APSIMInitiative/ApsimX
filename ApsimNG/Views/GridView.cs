@@ -49,14 +49,14 @@ namespace UserInterface.Views
         private string defaultNumericFormat = "F2";
 
         [Widget]
-        private ScrolledWindow scrolledwindow1;
+        private ScrolledWindow scrolledwindow1 = null;
 
         [Widget]
-        public TreeView gridview;
+        public TreeView gridview = null;
         [Widget]
-        private HBox hbox1;
+        private HBox hbox1 = null;
         [Widget]
-        private Gtk.Image image1;
+        private Gtk.Image image1 = null;
 
         private Gdk.Pixbuf imagePixbuf;
 

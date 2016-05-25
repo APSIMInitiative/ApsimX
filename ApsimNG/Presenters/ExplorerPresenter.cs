@@ -252,6 +252,11 @@ namespace UserInterface.Presenters
             this.view.ShowMessage(message, errorLevel);
         }
 
+        public int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType)
+        {
+            return this.view.ShowMsgDialog(message, title, msgType, buttonType);
+        }
+
         /// <summary>
         /// Show progress bar with the specified percent.
         /// </summary>

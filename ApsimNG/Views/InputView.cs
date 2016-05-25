@@ -36,13 +36,13 @@ namespace UserInterface.Views
         public event EventHandler<OpenDialogArgs> BrowseButtonClicked;
 
         [Widget]
-        private VBox vbox1;
+        private VBox vbox1 = null;
         [Widget]
-        private Button button1;
+        private Button button1 = null;
         [Widget]
-        private Label label1;
+        private Label label1 = null;
         [Widget]
-        private Label label2;
+        private Label label2 = null;
         private GridView Grid;
 
         /// <summary>

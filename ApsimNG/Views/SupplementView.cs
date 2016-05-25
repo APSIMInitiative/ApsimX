@@ -46,43 +46,43 @@ namespace UserInterface.Views
         public event EventHandler<TStringArgs> SuppNameChanged;
 
         [Widget]
-        private Table table1;
+        private Table table1 = null;
         [Widget]
-        private Entry tbSulph;
+        private Entry tbSulph = null;
         [Widget]
-        private Entry tbPhos;
+        private Entry tbPhos = null;
         [Widget]
-        private Entry tbADIP2CP;
+        private Entry tbADIP2CP = null;
         [Widget]
-        private Entry tbProtDegrad;
+        private Entry tbProtDegrad = null;
         [Widget]
-        private Entry tbEE;
+        private Entry tbEE = null;
         [Widget]
-        private Entry tbCP;
+        private Entry tbCP = null;
         [Widget]
-        private Entry tbME;
+        private Entry tbME = null;
         [Widget]
-        private Entry tbDMD;
+        private Entry tbDMD = null;
         [Widget]
-        private Entry tbDM;
+        private Entry tbDM = null;
         [Widget]
-        private CheckButton cbxRoughage;
+        private CheckButton cbxRoughage = null;
         [Widget]
-        private Entry tbAmount;
+        private Entry tbAmount = null;
         [Widget]
-        private Entry tbName;
+        private Entry tbName = null;
         [Widget]
-        private Button btnResetAll;
+        private Button btnResetAll = null;
         [Widget]
-        private Button btnReset;
+        private Button btnReset = null;
         [Widget]
-        private Button btnDelete;
+        private Button btnDelete = null;
         [Widget]
-        private Button btnAdd;
+        private Button btnAdd = null;
         [Widget]
-        private IconView lbDefaultNames;
+        private IconView lbDefaultNames = null;
         [Widget]
-        private TreeView lvSupps;
+        private TreeView lvSupps = null;
 
         private ListStore suppList = new ListStore(typeof(string));
         private ListStore defNameList = new ListStore(typeof(string));

@@ -180,8 +180,8 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Accept Tests", AppliesTo = new Type[] { typeof(Tests) })]
         public void AcceptTests(object sender, EventArgs e)
         {
-            /// TBI DialogResult result = MessageBox.Show("You are about to change the officially accepted stats for this model. Are you sure?", "Replace official stats?", MessageBoxButtons.YesNo);
-            ///if(result != DialogResult.Yes)
+            int result = explorerPresenter.ShowMsgDialog("You are about to change the officially accepted stats for this model. Are you sure?", "Replace official stats?", Gtk.MessageType.Question, Gtk.ButtonsType.YesNo);
+            if ((Gtk.ResponseType)result != Gtk.ResponseType.Yes)
             {
                 return;
             }

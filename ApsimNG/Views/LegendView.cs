@@ -33,11 +33,11 @@ namespace UserInterface.Views
         public event EventHandler DisabledSeriesChanged;
 
         [Widget]
-        private ComboBox combobox1;
+        private ComboBox combobox1 = null;
         [Widget]
-        private HBox hbox1;
+        private HBox hbox1 = null;
         [Widget]
-        private TreeView listview;
+        private TreeView listview = null;
 
         private ListStore comboModel = new ListStore(typeof(string));
         private CellRendererText comboRender = new CellRendererText();

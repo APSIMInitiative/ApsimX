@@ -53,23 +53,47 @@ namespace UserInterface.Views
             hWndNewParent);
 
         public System.Windows.Forms.WebBrowser wb = null;
-        public Gtk.Socket socket = new Gtk.Socket();
-
+        public Gtk.Socket socket = null;
+        public bool unmapped = false;
+    
         public void InitIE(Gtk.Box w)
         {
             wb = new System.Windows.Forms.WebBrowser();
             w.SetSizeRequest(500, 500);
             wb.Height = 500; // w.GdkWindow.FrameExtents.Height;
             wb.Width = 500; // w.GdkWindow.FrameExtents.Width;
+            wb.Navigate("about:blank");
+            wb.Document.Write(String.Empty);
 
+            socket = new Gtk.Socket();
             socket.SetSizeRequest(wb.Width, wb.Height);
             w.Add(socket);
             socket.Realize();
             socket.Show();
-
+            socket.UnmapEvent += Socket_UnmapEvent;
             IntPtr browser_handle = wb.Handle;
             IntPtr window_handle = (IntPtr)socket.Id;
             SetParent(browser_handle, window_handle);
+        }
+
+        public void Remap()
+        {
+            // There are some quirks in the use of GTK sockets. I don't know why, but
+            // once the socket has been "unmapped", we seem to lose it and its content.
+            // In the GUI, this unmapping can occur either by switching to another tab, 
+            // or by shrinking the window dimensions down to 0.
+            // This explict remapping seems to correct the problem.
+            if (socket != null)
+            {
+                socket.Unmap();
+                socket.Map();
+            }
+            unmapped = false;
+        }
+
+        private void Socket_UnmapEvent(object o, UnmapEventArgs args)
+        {
+            unmapped = true;
         }
 
         public void Navigate(string uri)
@@ -79,9 +103,13 @@ namespace UserInterface.Views
 
         public void LoadHTML(string html)
         {
-            wb.Navigate("about:blank");
-            wb.Document.Write(String.Empty);
-            wb.DocumentText = html;
+            if (wb.Document.Body != null)
+                // If we already have a document body, this is the more efficient
+                // way to update its contents. It doesn't affect the scroll position
+                // and doesn't make a little clicky sound.
+                wb.Document.Body.InnerHtml = html;
+            else
+               wb.DocumentText = html;
         }
 
         public TWWebBrowserIE(Gtk.Box w)
@@ -133,26 +161,53 @@ namespace UserInterface.Views
         public string ImagePath { get; set; }
 
         [Widget]
-        private VBox vbox1;
+        private VPaned vpaned1 = null;
         [Widget]
-        private TextView textview1;
+        private VBox vbox2 = null;
         [Widget]
-        private VBox vbox2;
+        private Frame frame1 = null;
         [Widget]
-        private Frame frame1;
+        private HBox hbox1 = null;
 
         private IBrowserWidget browser = null;
+        private MemoView memoView1;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public HTMLView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.HTMLView.glade", "vbox1");
+            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.HTMLView.glade", "vpaned1");
             gxml.Autoconnect(this);
-            _mainWidget = vbox1;
-            vbox1.ShowAll();
+            _mainWidget = vpaned1;
+            memoView1 = new MemoView(this);
+            hbox1.PackStart(memoView1.MainWidget, true, true, 0);
+            vpaned1.PositionSet = true;
+            vpaned1.Position = 200;
+            hbox1.Visible = false;
+            hbox1.NoShowAll = true;
+            memoView1.ReadOnly = false;
+            memoView1.MemoChange += this.TextUpdate;
+            vpaned1.ShowAll();
             frame1.ExposeEvent += OnWidgetExpose;
+            hbox1.Realized += Hbox1_Realized;
+        }
+
+        private void Hbox1_Realized(object sender, EventArgs e)
+        {
+           vpaned1.Position = vpaned1.Parent.Allocation.Height / 2;
+        }
+
+        private void Frame1_Unrealized(object sender, EventArgs e)
+        {
+            if ((browser as TWWebBrowserIE) != null)
+              (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
+        }
+
+        private void MainWindow_SetFocus(object o, SetFocusArgs args)
+        {
+            if (mainWindow != null)
+                mainWindow.Focus(0);
         }
 
         /// <summary>
@@ -162,19 +217,14 @@ namespace UserInterface.Views
         /// </summary>
         public void SetContents(string contents, bool allowModification)
         {
-            bool editingEnabled = false;
+            TurnEditorOn(allowModification);
             if (contents != null)
             {
-                textview1.Buffer.Text = contents;
-                editingEnabled = PopulateView(contents, editingEnabled);
+                if (allowModification)
+                  memoView1.MemoText = contents;
+                else
+                  PopulateView(contents);
             }
-
-            if (!editingEnabled)
-            {
-                /// TBI richTextBox1.ContextMenuStrip = null;
-                /// TBI textBox1.ContextMenuStrip = null;
-            }
-            TurnEditorOn(false);
         }
 
         /// <summary>
@@ -183,37 +233,51 @@ namespace UserInterface.Views
         /// <param name="contents"></param>
         /// <param name="editingEnabled"></param>
         /// <returns></returns>
-        private bool PopulateView(string contents, bool editingEnabled)
+        private void PopulateView(string contents)
         {
             if (browser == null)
             {
                 if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
                 {
                     browser = new TWWebBrowserIE(vbox2);
+
+                    /// UGH! Once the browser control gets keyboard focus, it doesn't relinquish it to 
+                    /// other controls. It's actually a COM object, I guess, and running
+                    /// with a different message loop, and probably in a different thread. 
+                    /// 
+                    /// Well, this hack works, more or less.
+                    (vbox2.Toplevel as Window).SetFocus += MainWindow_SetFocus;
+                    frame1.Unrealized += Frame1_Unrealized;
                 }
                 else
                     browser = new TWWebBrowserWK(vbox2);
             }
             browser.LoadHTML(contents);
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
-            return editingEnabled;
         }
 
-        // Allow this isn't the obvious way to do the window resizing,
+        // Although this isn't the obvious way to handle window resizing,
         // I couldn't find any better technique. 
         public void OnWidgetExpose(object o, ExposeEventArgs args)
         {
             int height, width;
             frame1.GdkWindow.GetSize(out width, out height);
-            vbox2.SetSizeRequest(width, height);
+            frame1.SetSizeRequest(width, height);
             if (browser is TWWebBrowserIE)
             {
-                (browser as TWWebBrowserIE).socket.SetSizeRequest(width, height);
-                (browser as TWWebBrowserIE).wb.Height = height;
-                (browser as TWWebBrowserIE).wb.Width = width;
+                TWWebBrowserIE brow = browser as TWWebBrowserIE;
+                if (brow.unmapped)
+                {
+                    brow.Remap();
+                }
+
+                if (brow.wb.Height != height || brow.wb.Width != width)
+                {
+                    brow.socket.SetSizeRequest(width, height);
+                    brow.wb.Height = height;
+                    brow.wb.Width = width;
+                }
             }
-            //else
-            //    (browser as TWWebBrowserWK).wb.SetSizeRequest(width, height);
         }
 
         /// <summary>
@@ -222,7 +286,7 @@ namespace UserInterface.Views
         /// <returns></returns>
         public string GetMarkdown()
         {
-            return textview1.Buffer.Text;
+            return memoView1.MemoText;
         }
 
         /// <summary>
@@ -230,7 +294,6 @@ namespace UserInterface.Views
         /// </summary>
         public void UseMonoSpacedFont() 
         {
-            /// TBI richTextBox1.Font = new Font("Consolas", 10F);   
         }
 
         /// <summary>
@@ -239,16 +302,7 @@ namespace UserInterface.Views
         /// <param name="turnOn"></param>
         private void TurnEditorOn(bool turnOn)
         {
-            vbox2.Visible = !turnOn;
-            textview1.Visible = turnOn;
-
-            /// TBI menuItem1.Visible = !turnOn;
-            /// TBI menuItem2.Visible = turnOn;
-            /// TBIif (textview1.Visible)
-            /// TBI    textview1.Focus();
-
-            if (!turnOn)
-                PopulateView(textview1.Buffer.Text, true);               
+            hbox1.Visible = turnOn;
         }
 
         /// <summary>
@@ -256,7 +310,7 @@ namespace UserInterface.Views
         /// </summary>
         private void ToggleEditMode()
         {
-            bool editorIsOn = false;  /// TBI !richTextBox1.Visible;
+            bool editorIsOn = hbox1.Visible;  
             TurnEditorOn(!editorIsOn);   // toggle preview / edit mode.
         }
 
@@ -282,28 +336,12 @@ namespace UserInterface.Views
             TurnEditorOn(true);
         }
 
-        /// <summary>
-        /// User has clicked 'preview'
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnPreviewClick(object sender, EventArgs e)
+        private void TextUpdate(object sender, EventArgs e)
         {
-            TurnEditorOn(false);
-            PopulateView(textview1.Buffer.Text, true);
-        }
-
-        /// <summary>
-        /// User has pressed a key. Look for toggle character.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnKeyDown(object sender, /* TBI Key */ EventArgs e)
-        {
-            /*
-            if (e.KeyCode == Keys.F12)
-                ToggleEditMode();
-            */
+            MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
+            markDown.ExtraMode = true;
+            string html = markDown.Transform(memoView1.MemoText);
+            PopulateView(html);
         }
 
         #endregion
@@ -313,5 +351,10 @@ namespace UserInterface.Views
             Process.Start("https://www.apsim.info/Documentation/APSIM(nextgeneration)/Memo.aspx");
         }
 
+        public void EnableWb(bool state)
+        {
+            if (browser is TWWebBrowserIE)
+                (browser as TWWebBrowserIE).wb.Parent.Enabled = state;
+        }
     }
 }
