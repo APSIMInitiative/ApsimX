@@ -214,6 +214,15 @@ namespace UserInterface.Interfaces
         void ShowMessage(string Message, Models.DataStore.ErrorLevel errorLevel);
 
         /// <summary>
+        /// Add a status message. A message of null will clear the status message.
+        /// </summary>
+        /// <param name="message">Message to display</param>
+        /// <param name="title">Dialog title</param>
+        /// <param name="msgType">Type of message to display</param>
+        /// <param name="buttonType">Buttons to display</param>
+        int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType);
+
+        /// <summary>
         /// A helper function that asks user for a SaveAs name and returns their new choice.
         /// </summary>
         string SaveAs(string OldFilename);

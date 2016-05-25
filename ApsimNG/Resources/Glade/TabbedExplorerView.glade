@@ -92,7 +92,6 @@
       <widget class="GtkEventBox" id="eventbox1">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <signal name="button_press_event" handler="on_eventbox1_button_press_event" swapped="no"/>
         <child>
           <widget class="GtkLabel" id="label4">
             <property name="visible">True</property>

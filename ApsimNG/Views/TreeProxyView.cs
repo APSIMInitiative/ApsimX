@@ -51,7 +51,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Overall font to use.
         /// </summary>
-        private new const string Font = "Calibri Light";
+        private const string Font = "Calibri Light";
 
         /// <summary>
         /// Margin to use

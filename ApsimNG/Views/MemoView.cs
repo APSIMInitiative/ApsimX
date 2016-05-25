@@ -10,7 +10,8 @@ namespace UserInterface.Views
 {
     interface IMemoView
     {
-        event EventHandler<EditorArgs> MemoUpdate;
+        event EventHandler<EditorArgs> MemoLeave;
+        event EventHandler<EditorArgs> MemoChange;
 
         /// <summary>
         /// Add an action (on context menu) on the memo.
@@ -35,16 +36,15 @@ namespace UserInterface.Views
     /// </summary>
     public class MemoView : ViewBase, IMemoView
     {
-        public event EventHandler<EditorArgs> MemoUpdate;
+        public event EventHandler<EditorArgs> MemoLeave;
+        public event EventHandler<EditorArgs> MemoChange;
 
         [Widget]
-        private VBox vbox1;
+        private VBox vbox1 = null;
         [Widget]
-        private TextView textView;
+        public TextView textView = null;
         [Widget]
-        private ScrolledWindow scroller;
-        [Widget]
-        private Label label1;
+        private Label label1 = null;
 
         public MemoView(ViewBase owner) : base(owner)
         {
@@ -52,6 +52,7 @@ namespace UserInterface.Views
             gxml.Autoconnect(this);
             _mainWidget = vbox1;
             textView.FocusOutEvent += richTextBox1_Leave;
+            textView.Buffer.Changed += richTextBox1_TextChanged;
         }
 
         /// <summary>
@@ -108,11 +109,21 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void richTextBox1_Leave(object sender, FocusOutEventArgs e)
         {
-            if (MemoUpdate != null)
+            if (MemoLeave != null)
             {
                 EditorArgs args = new EditorArgs();
                 args.TextString = textView.Buffer.Text;
-                MemoUpdate(this, args);
+                MemoLeave(this, args);
+            }
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (MemoChange != null)
+            {
+                EditorArgs args = new EditorArgs();
+                args.TextString = textView.Buffer.Text;
+                MemoChange(this, args);
             }
         }
 

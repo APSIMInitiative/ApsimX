@@ -231,7 +231,7 @@ namespace UserInterface.Commands
 
             // Write the PDF file.
             FileNameWritten = Path.Combine(Path.GetDirectoryName(ExplorerPresenter.ApsimXFile.FileName), modelNameToExport + ".pdf");
-            PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(false, PdfSharp.Pdf.PdfFontEmbedding.Always);
+            PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(false);
             pdfRenderer.Document = document;
             /// Fails on non-Windows platforms. It's trying to get a Windows DC for associated font information
             /// See https://alex-maz.info/pdfsharp_150 for a sort of work-around

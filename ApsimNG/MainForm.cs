@@ -64,9 +64,9 @@ namespace UserInterface
         private string[] commandLineArguments;
 
         [Widget]
-        private Window mainWindow;
+        private new Window mainWindow = null;
         [Widget]
-        private HPaned hpaned1;
+        private HPaned hpaned1 = null;
 
         /// <summary>
         /// The error message will be set if an error results from a startup script.
