@@ -117,12 +117,18 @@ namespace Models
             get
             {
                 Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-                return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                if (simulation != null)
+                    return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                else
+                    return this.FileName;
             }
             set
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                if (simulations != null)
+                    this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                else
+                    this.FileName = value;
             }
         }
 
