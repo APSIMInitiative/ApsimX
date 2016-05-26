@@ -29,6 +29,7 @@ namespace UserInterface.Presenters
         /// <summary>Hold the data used by the graphs</summary>
         private DataTable graphMetData;
 
+        /// <summary>This is used to hold the sheetNames, so that they are only retrieved once</summary>
         private List<string> sheetNames;
 
         /// <summary>Hold the first date in datatable, for use in the graphs</summary>
@@ -80,8 +81,6 @@ namespace UserInterface.Presenters
                     weatherDataView.BrowsePanelControlHeight = 76;
                     sheetNames = ExcelUtilities.GetWorkSheetNames(fileName);
                     this.weatherDataView.PopulateDropDownData(sheetNames);
-                    //the following is not required here as it happens when the sheet name is changed
-                    //this.WriteTableAndSummary(fileName);
                 }
                 else
                 {
@@ -134,6 +133,7 @@ namespace UserInterface.Presenters
                 }
             }
         }
+
         /// <summary>
         /// Get data from the weather file and present it to the view as both a table and a summary
         /// </summary>
@@ -257,7 +257,7 @@ namespace UserInterface.Presenters
             StringBuilder summary = new StringBuilder();
             summary.AppendLine("File name : " + this.weatherData.FileName);
 
-            if (this.weatherData.ExcelWorkSheetName.Length > 0)
+            if (this.weatherData.ExcelWorkSheetName != null)
             {
                 summary.AppendLine("Sheet Name: " + this.weatherData.ExcelWorkSheetName.ToString());
             }

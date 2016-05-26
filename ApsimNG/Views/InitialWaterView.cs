@@ -19,20 +19,20 @@ namespace UserInterface.Views
     public class InitialWaterView : ViewBase, IInitialWaterView
     {
         [Widget]
-        private HPaned hpaned1;
+        private HPaned hpaned1 = null;
         [Widget]
-        private SpinButton spinbutton1;
+        private SpinButton spinbutton1 = null;
         [Widget]
-        private Entry entry1;
+        private Entry entry1 = null;
         [Widget]
-        private Entry entry2;
+        private Entry entry2 = null;
         [Widget]
-        private RadioButton radiobutton1;
+        private RadioButton radiobutton1 = null;
         [Widget]
-        private RadioButton radiobutton2;
+        private RadioButton radiobutton2 = null;
         [Widget]
-        private ComboBox combobox1;
-        private GraphView graphView1;
+        private ComboBox combobox1 = null;
+        private GraphView graphView1 = null;
         private ListStore comboModel = new ListStore(typeof(string));
         private CellRendererText comboRender = new CellRendererText();
 

@@ -204,6 +204,8 @@ namespace UserInterface.Commands
                 introductionPage.Document(tags, 1, 0);
             }
 
+            AddUserDocumentation(tags, modelNameToExport);
+
             // Document model description.
             tags.Add(new AutoDocumentation.Heading("Model description", 1));
             ExplorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 1);
@@ -231,7 +233,7 @@ namespace UserInterface.Commands
 
             // Write the PDF file.
             FileNameWritten = Path.Combine(Path.GetDirectoryName(ExplorerPresenter.ApsimXFile.FileName), modelNameToExport + ".pdf");
-            PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(false, PdfSharp.Pdf.PdfFontEmbedding.Always);
+            PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(false);
             pdfRenderer.Document = document;
             /// Fails on non-Windows platforms. It's trying to get a Windows DC for associated font information
             /// See https://alex-maz.info/pdfsharp_150 for a sort of work-around
@@ -241,6 +243,60 @@ namespace UserInterface.Commands
 
             // Remove temporary working directory.
             Directory.Delete(workingDirectory, true);
+        }
+
+        /// <summary>Add user documentation, based on the example.</summary>
+        /// <param name="tags">The tags to add to.</param>
+        /// <param name="modelName">Name of model to document.</param>
+        private void AddUserDocumentation(List<AutoDocumentation.ITag> tags, string modelName)
+        {
+            /* TBI
+            // Look for some instructions on which models in the example file we should write.
+            // Instructions will be in a memo in the validation .apsimx file 
+
+            IModel userDocumentation = Apsim.Get(ExplorerPresenter.ApsimXFile, ".Simulations.UserDocumentation") as IModel;
+            string exampleFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "Examples", modelName + ".apsimx");
+
+            if (userDocumentation != null && userDocumentation.Children.Count > 0 && File.Exists(exampleFileName))
+            {
+                // Write heading.
+                tags.Add(new AutoDocumentation.Heading("User documentation", 1));
+
+                // Open the related example .apsimx file and get its presenter.
+                ExplorerPresenter examplePresenter = ExplorerPresenter.MainPresenter.OpenApsimXFileInTab(exampleFileName, onLeftTabControl: true);
+
+                Memo instructionsMemo = userDocumentation.Children[0] as Memo;
+                string[] instructions = instructionsMemo.MemoText.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                foreach (string instruction in instructions)
+                {
+                    IModel model = Apsim.Find(examplePresenter.ApsimXFile, instruction);
+                    if (model != null)
+                    {
+                        examplePresenter.SelectNode(Apsim.FullPath(model));
+                        Application.DoEvents();
+                        if (model is Memo)
+                            model.Document(tags, 1, 0);
+                        else
+                        {
+                            System.Drawing.Image image;
+
+                            if (model is Manager)
+                                image = (examplePresenter.CurrentPresenter as ManagerPresenter).GetScreenshot();
+                            else
+                                image = examplePresenter.GetScreenhotOfRightHandPanel();
+
+                            if (image != null)
+                            {
+                                string name = "Example" + instruction;
+                                tags.Add(new AutoDocumentation.Image() { name = name, image = image });
+                            }
+                        }
+                    }
+                }
+
+                // Close the tab
+                examplePresenter.MainPresenter.CloseTab(exampleFileName);
+            } */
         }
 
         /// <summary>Adds a software availability section</summary>

@@ -36,10 +36,11 @@ namespace UserInterface.Views
         /// <summary>A delegate used when the sheetname dropdown value change is actived</summary>
         event ExcelSheetDelegate ExcelSheetChangeClicked;
 
-        string ExcelWorkSheetName { get; set; }
-
         /// <summary>Gets or sets the filename.</summary>
         string Filename { get; set; }
+
+        /// <summary>Gets or sets the Excel Sheet name, where applicable</summary>
+        string ExcelWorkSheetName { get; set; }
 
         /// <summary>Sets the summarylabel.</summary>
         string Summarylabel { set; }
@@ -112,47 +113,47 @@ namespace UserInterface.Views
         public event ExcelSheetDelegate ExcelSheetChangeClicked;
 
         [Widget]
-        private Label labelFileName;
+        private Label labelFileName = null;
         [Widget]
-        private VBox vbox1;
+        private VBox vbox1 = null;
         [Widget]
-        private Notebook notebook1;
+        private Notebook notebook1 = null;
         [Widget]
-        private TextView textview1;
+        private TextView textview1 = null;
         [Widget]
-        private Alignment alignSummary;
+        private Alignment alignSummary = null;
         [Widget]
-        private Alignment alignData;
+        private Alignment alignData = null;
         [Widget]
-        private Alignment alignRainChart;
+        private Alignment alignRainChart = null;
         [Widget]
-        private Alignment alignRainMonthly;
+        private Alignment alignRainMonthly = null;
         [Widget]
-        private Alignment alignTemp;
+        private Alignment alignTemp = null;
         [Widget]
-        private Alignment alignRadn;
+        private Alignment alignRadn = null;
         [Widget]
-        private VBox vboxRainChart;
+        private VBox vboxRainChart = null;
         [Widget]
-        private VBox vboxRainMonthly;
+        private VBox vboxRainMonthly = null;
         [Widget]
-        private VBox vboxTemp;
+        private VBox vboxTemp = null;
         [Widget]
-        private VBox vboxRadn;
+        private VBox vboxRadn = null;
         [Widget]
-        private HBox hboxOptions;
+        private HBox hboxOptions = null;
         [Widget]
-        private SpinButton spinStartYear;
+        private SpinButton spinStartYear = null;
         [Widget]
-        private SpinButton spinNYears;
+        private SpinButton spinNYears = null;
         [Widget]
-        private Button button1;
+        private Button button1 = null;
         [Widget]
-        private VPaned vpaned1;
+        private VPaned vpaned1 = null;
         [Widget]
-        private HBox hbox2;
+        private HBox hbox2 = null;
         [Widget]
-        private Alignment alignment10;
+        private Alignment alignment10 = null;
         private DropDownView worksheetCombo;
 
         /// <summary>Initializes a new instance of the <see cref="TabbedMetDataView"/> class.</summary>
@@ -303,6 +304,14 @@ namespace UserInterface.Views
             hbox2.Visible = show;
         }
 
+        /// <summary>Populates the data.</summary>
+        /// <param name="Data">The data.</param>
+        public void PopulateData(DataTable data)
+        {
+            //fill the grid with data
+            gridViewData.DataSource = data;
+        }
+
         /// <summary>
         /// Populates the DropDown of Excel WorksheetNames 
         /// </summary>
@@ -312,21 +321,11 @@ namespace UserInterface.Views
             worksheetCombo.Values = sheetNames.ToArray();
         }
 
-        /// <summary>Populates the data.</summary>
-        /// <param name="Data">The data.</param>
-        public void PopulateData(DataTable data)
-        {
-            //fill the grid with data
-            gridViewData.DataSource = data;
-        }
-
         /// <summary>Handles the Click event of the button1 control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnButton1Click(object sender, EventArgs e)
         {
-            string fileName = null;
-
             FileChooserDialog fileChooser = new FileChooserDialog("Choose a weather file to open", null, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
 
             FileFilter fileFilter = new FileFilter();
@@ -348,12 +347,16 @@ namespace UserInterface.Views
 
             if (fileChooser.Run() == (int)ResponseType.Accept)
             {
-                fileName = fileChooser.Filename;
+                Filename = fileChooser.Filename;
                 fileChooser.Destroy();
                 if (BrowseClicked != null)
-                    BrowseClicked.Invoke(fileName);    //reload the grid with data
-            }
-            else
+                {
+                    BrowseClicked.Invoke(Filename);    //reload the grid with data
+                    notebook1.CurrentPage = 0;
+                }
+
+             }
+             else
                 fileChooser.Destroy();
         }
 
@@ -442,6 +445,7 @@ namespace UserInterface.Views
         {
             if (ExcelSheetChangeClicked != null)
                ExcelSheetChangeClicked.Invoke(Filename, worksheetCombo.SelectedValue);
+            notebook1.CurrentPage = 0;
         }
     }
 }

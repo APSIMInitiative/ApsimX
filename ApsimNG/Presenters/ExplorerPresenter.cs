@@ -57,6 +57,10 @@ namespace UserInterface.Presenters
             set { this.view.TreeWidth = value; }
         }
 
+        /// <summary>Gets the presenter for the main window</summary>
+        /// To be revised if we want to replicate the Windows.Forms version
+        public ExplorerPresenter MainPresenter { get { return this; } }
+
         /// <summary>Gets the current right hand presenter.</summary>
         /// <value>The current presenter.</value>
         public IPresenter CurrentPresenter
@@ -250,6 +254,11 @@ namespace UserInterface.Presenters
         public void ShowMessage(string message, Models.DataStore.ErrorLevel errorLevel)
         {
             this.view.ShowMessage(message, errorLevel);
+        }
+
+        public int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType)
+        {
+            return this.view.ShowMsgDialog(message, title, msgType, buttonType);
         }
 
         /// <summary>

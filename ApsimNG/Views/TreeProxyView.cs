@@ -51,7 +51,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Overall font to use.
         /// </summary>
-        private new const string Font = "Calibri Light";
+        private const string Font = "Calibri Light";
 
         /// <summary>
         /// Margin to use
@@ -279,7 +279,7 @@ namespace UserInterface.Views
                 p.Model.DefaultFont = Font;
                 p.Model.DefaultFontSize = FontSize;
 
-                p.Model.PlotAreaBorderThickness = new OxyThickness(0);
+                p.Model.PlotAreaBorderThickness = new OxyThickness(0.0);
                 p.Model.LegendBorder = OxyColors.Transparent;
                 p.Model.LegendBackground = OxyColors.White;
                 p.Model.InvalidatePlot(true);

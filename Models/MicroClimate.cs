@@ -171,19 +171,19 @@ namespace Models
         /// <summary>The air_pressure</summary>
         [Bounds(Lower = 900.0, Upper = 1100.0)]
         [Units("hPa")]
-        [Description("")]
+        [Description("air pressure")]
         public double air_pressure { get; set; }
 
         /// <summary>The soil_emissivity</summary>
         [Bounds(Lower = 0.9, Upper = 1.0)]
         [Units("")]
-        [Description("")]
+        [Description("soil emissivity")]
         public double soil_emissivity { get; set; }
 
         /// <summary>The sun_angle</summary>
         [Bounds(Lower = -20.0, Upper = 20.0)]
         [Units("deg")]
-        [Description("")]
+        [Description("sun angle at twilight")]
         public double sun_angle { get; set; }
 
         /// <summary>The soil_heat_flux_fraction</summary>
