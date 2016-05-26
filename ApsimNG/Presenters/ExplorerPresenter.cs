@@ -57,6 +57,10 @@ namespace UserInterface.Presenters
             set { this.view.TreeWidth = value; }
         }
 
+        /// <summary>Gets the presenter for the main window</summary>
+        /// To be revised if we want to replicate the Windows.Forms version
+        public ExplorerPresenter MainPresenter { get { return this; } }
+
         /// <summary>Gets the current right hand presenter.</summary>
         /// <value>The current presenter.</value>
         public IPresenter CurrentPresenter
