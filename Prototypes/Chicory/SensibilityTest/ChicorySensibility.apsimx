@@ -68,7 +68,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <XYPairs>
             <Name>XYPairs</Name>
             <X>
-              <double>0</double>
+              <double>5</double>
               <double>30</double>
               <double>40</double>
             </X>
@@ -100,8 +100,8 @@ private void OnDoManagement(object sender, EventArgs e)
           </Memo>
           <Start>Germination</Start>
           <End>Emergence</End>
-          <ShootLag>0</ShootLag>
-          <ShootRate>0.1</ShootRate>
+          <ShootLag>75</ShootLag>
+          <ShootRate>0.12</ShootRate>
         </EmergingPhase>
         <GenericPhase>
           <Name>Vegetative</Name>
@@ -129,9 +129,11 @@ During this phase the plant only partitions biomass to Root and Stover (leaf and
                 <X>
                   <double>0</double>
                   <double>4</double>
-                  <double>5</double>
+                  <double>6</double>
+                  <double>12</double>
                 </X>
                 <Y>
+                  <double>0</double>
                   <double>1</double>
                   <double>1</double>
                   <double>0</double>
