@@ -808,7 +808,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\ExternalVariable.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\MultiplyFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LinearInterpolationFunction.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\Sugarcane.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SugarCane.png" />
     <EmbeddedResource Include="Resources\Toolboxes\Import.png" />
     <EmbeddedResource Include="Resources\Toolboxes\OpenFile.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Probability.png" />
