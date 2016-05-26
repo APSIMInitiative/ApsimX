@@ -459,8 +459,8 @@ namespace UserInterface.Presenters
         private void PopulateFieldNames(DataStore dataStore)
         {
             Graph parentGraph = series.Parent as Graph;
-            if (this.seriesView.DataSource != null &&
-                this.seriesView.DataSource.SelectedValue != string.Empty &&
+            if (this.seriesView.DataSource != null && 
+                this.seriesView.DataSource.SelectedValue != string.Empty && 
                 this.seriesView.DataSource.SelectedValue != null &&
                 parentGraph != null)
             {
