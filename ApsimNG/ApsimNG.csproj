@@ -102,6 +102,11 @@
     <EmbeddedResource Include="Resources\Glade\SupplementView.glade" />
     <EmbeddedResource Include="Resources\Glade\InputView.glade" />
     <EmbeddedResource Include="Resources\Glade\ReportView.glade" />
+    <EmbeddedResource Include="Resources\Fonts\arial.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\arialbd.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\arialbi.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\ariali.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\cour.ttf" />
     <None Include="Resources\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Test.xshd" />
