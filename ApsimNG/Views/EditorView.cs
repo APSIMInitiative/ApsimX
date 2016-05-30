@@ -89,7 +89,7 @@
         public event EventHandler LeaveEditor;
 
         private ScrolledWindow scroller;
-        private TextEditor textEditor;
+        private Mono.TextEditor.TextEditor textEditor;
 
         /// <summary>
         /// Default constructor that configures the Completion form.
@@ -105,6 +105,8 @@
             options.ColorScheme = "Visual Studio";
             options.HighlightCaretLine = true;
             textEditor.Options = options;
+            textEditor.Document.LineChanged += OnTextHasChanged;
+            textEditor.LeaveNotifyEvent += OnTextBoxLeave;
 
             /*
             CompletionForm = new Form();
@@ -152,7 +154,7 @@
         /// <summary>
         /// Gets or sets the text property to get and set the content of the editor.
         /// </summary>
-        public new string Text
+        public string Text
         {
             get
             {
@@ -472,9 +474,9 @@
         /// User has changed text. Invoke our OnTextChanged event.
         /// </summary>
         private void OnTextHasChanged(object sender, EventArgs e)
-        {
+       {
             if (TextHasChangedByUser != null)
-                TextHasChangedByUser(sender, e);
+              TextHasChangedByUser(sender, e);
         }
 
         private void OnTextBoxLeave(object sender, EventArgs e)

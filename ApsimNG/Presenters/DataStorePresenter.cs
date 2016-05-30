@@ -46,7 +46,7 @@ namespace UserInterface.Presenters
             this.view.Grid.ReadOnly = true;
             this.view.Grid.NumericFormat = "N3";
             this.view.TableList.Values = this.GetTableNames();
-            if (dataStore.MaximumResultsPerPage > 0)
+            if (dataStore != null && dataStore.MaximumResultsPerPage > 0)
                 this.view.MaximumNumberRecords.Value = dataStore.MaximumResultsPerPage.ToString();
 
             this.view.Grid.ResizeControls();
@@ -68,11 +68,14 @@ namespace UserInterface.Presenters
         private string[] GetTableNames()
         {
             List<string> tableNames = new List<string>();
-            foreach (string tableName in this.dataStore.TableNames)
+            if (this.dataStore != null)
             {
-                if (tableName != "Messages" && tableName != "InitialConditions")
+                foreach (string tableName in this.dataStore.TableNames)
                 {
-                    tableNames.Add(tableName);
+                    if (tableName != "Messages" && tableName != "InitialConditions")
+                    {
+                        tableNames.Add(tableName);
+                    }
                 }
             }
 
@@ -132,19 +135,23 @@ namespace UserInterface.Presenters
         /// <returns>A data table of all data.</returns>
         private DataTable GetData()
         {
-            int start = 0;
-            int count = dataStore.MaximumResultsPerPage;
             DataTable data;
-            if (ExperimentFilter != null)
+            if (dataStore != null)
             {
-                string filter = "NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
-                data = dataStore.GetFilteredData(view.TableList.SelectedValue, filter, start, count);
+                int start = 0;
+                int count = dataStore.MaximumResultsPerPage;
+                if (ExperimentFilter != null)
+                {
+                    string filter = "NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
+                    data = dataStore.GetFilteredData(view.TableList.SelectedValue, filter, start, count);
+                }
+                else if (SimulationFilter != null)
+                    data = dataStore.GetData(SimulationFilter.Name, view.TableList.SelectedValue, false, start, count);
+                else
+                    data = dataStore.GetData("*", view.TableList.SelectedValue, true, 0, dataStore.MaximumResultsPerPage);
             }
-            else if (SimulationFilter != null)
-                data = dataStore.GetData(SimulationFilter.Name, view.TableList.SelectedValue, false, start, count);
             else
-                data = dataStore.GetData("*", view.TableList.SelectedValue, true, 0, dataStore.MaximumResultsPerPage);
-
+                data = new DataTable();
             return data;
         }
 

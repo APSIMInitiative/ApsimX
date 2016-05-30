@@ -49,14 +49,14 @@ namespace UserInterface.Views
         private string defaultNumericFormat = "F2";
 
         [Widget]
-        private ScrolledWindow scrolledwindow1;
+        private ScrolledWindow scrolledwindow1 = null;
 
         [Widget]
-        public TreeView gridview;
+        public TreeView gridview = null;
         [Widget]
-        private HBox hbox1;
+        private HBox hbox1 = null;
         [Widget]
-        private Gtk.Image image1;
+        private Gtk.Image image1 = null;
 
         private Gdk.Pixbuf imagePixbuf;
 
@@ -357,6 +357,22 @@ namespace UserInterface.Views
         public void LockLeftMostColumns(int number)
         {
             /// TBI this.Grid.Columns[number - 1].Frozen = true;
+        }
+
+        /// <summary>Get screenshot of grid.</summary>
+        /// THIS CODE HAS NOT BEEN TESTED.
+        public System.Drawing.Image GetScreenshot()
+        {
+            // Create a Bitmap and draw the DataGridView on it.
+            int width;
+            int height;
+            Gdk.Window gridWindow = gridview.GdkWindow;
+            gridWindow.GetSize(out width, out height);
+            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(gridWindow, gridWindow.Colormap, 0, 0, 0, 0, width, height);
+            byte[] buffer = screenshot.SaveToBuffer("png");
+            MemoryStream stream = new MemoryStream(buffer);
+            System.Drawing.Bitmap bitmap = new Bitmap(stream);
+            return bitmap;
         }
 
         /// <summary>

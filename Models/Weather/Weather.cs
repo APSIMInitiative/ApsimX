@@ -117,15 +117,18 @@ namespace Models
             get
             {
                 Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-
-                return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                if (simulation != null)
+                    return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                else
+                    return this.FileName;
             }
-
             set
             {
-
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                if (simulations != null)
+                    this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                else
+                    this.FileName = value;
             }
         }
 
@@ -567,21 +570,12 @@ namespace Models
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
         {
-            bool isExcelFile = System.IO.Path.GetExtension(this.FullFileName).ToLower() == ExcelUtilities.ExcelExtension;
-
             if (System.IO.File.Exists(this.FullFileName))
             {
                 if (this.reader == null)
                 {
                     this.reader = new ApsimTextFile();
-
-                    if (isExcelFile == true)
-                    { 
-                        reader.IsExcelFile = isExcelFile;
-                        this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
-                    }
-                    else
-                        this.reader.Open(this.FullFileName);
+                    this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
 
                     this.maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Maxt");
                     this.minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Mint");
@@ -616,7 +610,7 @@ namespace Models
                 }
                 else
                 {
-                    if (isExcelFile != true) 
+                    if (this.reader.IsExcelFile != true) 
                         this.reader.SeekToDate(this.reader.FirstDate);
                 }
 

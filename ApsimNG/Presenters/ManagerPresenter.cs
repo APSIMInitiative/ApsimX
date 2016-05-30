@@ -18,6 +18,7 @@ namespace UserInterface.Presenters
     using Models.Core;
     using Views;
     using APSIM.Shared.Utilities;
+    using System.Drawing;
 
     /// <summary>
     /// Presenter for the Manager component
@@ -162,15 +163,15 @@ namespace UserInterface.Presenters
                 // If it gets this far then compiles ok.
                 this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.manager, "Code", code));
 
-                this.explorerPresenter.ShowMessage("Manager script compiled successfully", DataStore.ErrorLevel.Information);
+                this.explorerPresenter.MainPresenter.ShowMessage("Manager script compiled successfully", DataStore.ErrorLevel.Information);
             }
             catch (Models.Core.ApsimXException err)
             {
                 string msg = err.Message;
                 if (err.InnerException != null)
-                    this.explorerPresenter.ShowMessage(string.Format("[{0}]: {1}", err.model.Name, err.InnerException.Message), DataStore.ErrorLevel.Error);
+                    this.explorerPresenter.MainPresenter.ShowMessage(string.Format("[{0}]: {1}", err.model.Name, err.InnerException.Message), DataStore.ErrorLevel.Error);
                 else
-                    this.explorerPresenter.ShowMessage(string.Format("[{0}]: {1}", err.model.Name, err.Message), DataStore.ErrorLevel.Error);
+                    this.explorerPresenter.MainPresenter.ShowMessage(string.Format("[{0}]: {1}", err.model.Name, err.Message), DataStore.ErrorLevel.Error);
             }
             this.explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
         }
@@ -199,6 +200,12 @@ namespace UserInterface.Presenters
         {
             if (changedModel == this.manager)
                 this.managerView.Editor.Text = this.manager.Code;
+        }
+
+        /// <summary>Get a screen shot of the manager grid.</summary>
+        public Image GetScreenshot()
+        {
+            return managerView.GridView.GetScreenshot();
         }
     }
 }

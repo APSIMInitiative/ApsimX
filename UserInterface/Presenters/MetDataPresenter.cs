@@ -29,6 +29,9 @@ namespace UserInterface.Presenters
         /// <summary>Hold the data used by the graphs</summary>
         private DataTable graphMetData;
 
+        /// <summary>This is used to hold the sheetNames, so that they are only retrieved once</summary>
+        private List<string> sheetNames;
+
         /// <summary>Hold the first date in datatable, for use in the graphs</summary>
         private DateTime dataFirstDate;
         /// <summary>Hold the last date in datatable, for use in the graphs</summary>
@@ -55,7 +58,7 @@ namespace UserInterface.Presenters
             this.weatherDataView.GraphRefreshClicked += this.GraphRefreshValueChanged;
             this.weatherDataView.ExcelSheetChangeClicked += this.ExcelSheetValueChanged;
 
-            this.WriteTableAndSummary(this.weatherData.FullFileName);
+            this.WriteTableAndSummary(this.weatherData.FullFileName, this.weatherData.ExcelWorkSheetName);
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -76,10 +79,8 @@ namespace UserInterface.Presenters
                 {
                     //Extend height of Browse Panel to show Drop Down for Sheet names
                     weatherDataView.BrowsePanelControlHeight = 76;
-                    List<string> sheetNames = ExcelUtilities.GetWorkSheetNames(fileName);
+                    sheetNames = ExcelUtilities.GetWorkSheetNames(fileName);
                     this.weatherDataView.PopulateDropDownData(sheetNames);
-                    //the following is not required here as it happens when the sheet name is changed
-                    //this.WriteTableAndSummary(fileName);
                 }
                 else
                 {
@@ -123,7 +124,7 @@ namespace UserInterface.Presenters
         /// <param name="sheetName"></param>
         public void ExcelSheetValueChanged(string fileName, string sheetName)
         {
-            if (sheetName.Length > 0)
+            if (sheetName.Length > 0) 
             { 
                 if ((this.weatherData.FullFileName != PathUtilities.GetAbsolutePath(fileName, this.explorerPresenter.ApsimXFile.FileName)) ||
                     (this.weatherData.ExcelWorkSheetName != sheetName))
@@ -132,6 +133,7 @@ namespace UserInterface.Presenters
                 }
             }
         }
+
         /// <summary>
         /// Get data from the weather file and present it to the view as both a table and a summary
         /// </summary>
@@ -160,24 +162,19 @@ namespace UserInterface.Presenters
                     {
                         ////Extend height of Browse Panel to show Drop Down for Sheet names
                         weatherDataView.BrowsePanelControlHeight = 76;
-                        if (sheetName == string.Empty)
+                        if (sheetNames == null)
                         {
-                            List<string> sheetNames = ExcelUtilities.GetWorkSheetNames(filename);
+                            sheetNames = ExcelUtilities.GetWorkSheetNames(filename);
                             this.weatherDataView.PopulateDropDownData(sheetNames);
-                        }
-                        else
-                        {
-                            this.weatherData.ExcelWorkSheetName = sheetName;
                         }
                     }
                     else
-                    {
+                    {   
                         //Shrink Browse Panel so that the sheet name dropdown doesn't show
                         weatherDataView.BrowsePanelControlHeight = 41;
-                        //as a precaution, set this to nothing
-                        this.weatherData.ExcelWorkSheetName = string.Empty;
                     }
 
+                    this.weatherData.ExcelWorkSheetName = sheetName;
                     this.weatherData.FullFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
 
                     DataTable data = this.weatherData.GetAllData();
@@ -197,6 +194,7 @@ namespace UserInterface.Presenters
                 }
             }
             this.weatherDataView.Filename = PathUtilities.GetRelativePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+            this.weatherDataView.ExcelWorkSheetName = sheetName;
         }
 
         /// <summary>Send the DataTable to the View</summary>
@@ -259,7 +257,7 @@ namespace UserInterface.Presenters
             StringBuilder summary = new StringBuilder();
             summary.AppendLine("File name : " + this.weatherData.FileName);
 
-            if (this.weatherData.ExcelWorkSheetName.Length > 0)
+            if (this.weatherData.ExcelWorkSheetName != null)
             {
                 summary.AppendLine("Sheet Name: " + this.weatherData.ExcelWorkSheetName.ToString());
             }
