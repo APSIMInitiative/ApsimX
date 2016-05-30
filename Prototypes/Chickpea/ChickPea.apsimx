@@ -76,153 +76,57 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
           <ShootLag>15</ShootLag>
           <ShootRate>2</ShootRate>
         </EmergingPhase>
-        <NodeNumberPhase>
+        <GenericPhase>
           <Name>Vegetative</Name>
+          <Constant>
+            <Name>Target</Name>
+            <Value>500</Value>
+          </Constant>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>Stress</Name>
+            <VariableName>[Phenology].Vegetative.PhotoperiodEffect.PhotoperiodEffect</VariableName>
+          </VariableReference>
+          <QualitativePPEffect>
+            <Name>PhotoperiodEffect</Name>
+            <VariableReference>
+              <Name>Photoperiod</Name>
+              <VariableName>[Phenology].Photoperiod.Value</VariableName>
+            </VariableReference>
+            <OptimumPhotoperiod>21</OptimumPhotoperiod>
+            <CriticalPhotoperiod>9</CriticalPhotoperiod>
+          </QualitativePPEffect>
+          <Start>Emergence</Start>
+          <End>StartFlowering</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>Flowering</Name>
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[
-Robertson et al (2002) described early post-emergent chickpea development in terms of juvenile and inductive phases. In this model we describe a vegetative growth phase, which is photoperiod dependant.]]></MemoText>
+The duration of the grain filling phase has been taken from the model of Robertson et al (2002).]]></MemoText>
           </Memo>
-          <LinearInterpolationFunction>
-            <Name>CompletionNodeNumber</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>10.7</double>
-                <double>17</double>
-              </X>
-              <Y>
-                <double>33</double>
-                <double>12</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Phenology].Photoperiod.Value</XProperty>
-          </LinearInterpolationFunction>
-          <Start>Emergence</Start>
-          <End>StartFlowering</End>
-        </NodeNumberPhase>
-        <NodeNumberPhase>
-          <Name>Flowering</Name>
-          <AddFunction>
-            <Name>CompletionNodeNumber</Name>
-            <VariableReference>
-              <Name>VegetativeNodes</Name>
-              <VariableName>[Phenology].NFF.Value</VariableName>
-            </VariableReference>
-            <LinearInterpolationFunction>
-              <Name>FloweringNodes</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <Graph>
-                  <Name>Graph</Name>
-                  <Series>
-                    <Name>FloweringNodes</Name>
-                    <Type>Scatter</Type>
-                    <XAxis>Bottom</XAxis>
-                    <YAxis>Left</YAxis>
-                    <ColourArgb>-65536</ColourArgb>
-                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                    <Marker>None</Marker>
-                    <MarkerSize>Normal</MarkerSize>
-                    <Line>Solid</Line>
-                    <LineThickness>Normal</LineThickness>
-                    <XFieldName>[XYPairs].X</XFieldName>
-                    <YFieldName>[XYPairs].Y</YFieldName>
-                    <ShowInLegend>true</ShowInLegend>
-                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                    <Cumulative>false</Cumulative>
-                    <CumulativeX>false</CumulativeX>
-                  </Series>
-                  <Axis>
-                    <Type>Left</Type>
-                    <Title>Y</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <Axis>
-                    <Type>Bottom</Type>
-                    <Title>X</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <LegendPosition>BottomRight</LegendPosition>
-                  <DisabledSeries />
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
-                </Graph>
-                <Graph>
-                  <Name>Graph</Name>
-                  <Series>
-                    <Name>FloweringNodes</Name>
-                    <Type>Scatter</Type>
-                    <XAxis>Bottom</XAxis>
-                    <YAxis>Left</YAxis>
-                    <ColourArgb>-65536</ColourArgb>
-                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                    <Marker>None</Marker>
-                    <MarkerSize>Normal</MarkerSize>
-                    <Line>Solid</Line>
-                    <LineThickness>Normal</LineThickness>
-                    <XFieldName>[XYPairs].X</XFieldName>
-                    <YFieldName>[XYPairs].Y</YFieldName>
-                    <ShowInLegend>true</ShowInLegend>
-                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                    <Cumulative>false</Cumulative>
-                    <CumulativeX>false</CumulativeX>
-                  </Series>
-                  <Axis>
-                    <Type>Left</Type>
-                    <Title>Y</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <Axis>
-                    <Type>Bottom</Type>
-                    <Title>X</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <LegendPosition>BottomRight</LegendPosition>
-                  <DisabledSeries />
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
-                </Graph>
-                <X>
-                  <double>13</double>
-                  <double>16</double>
-                </X>
-                <Y>
-                  <double>9.8</double>
-                  <double>9.8</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Phenology].Photoperiod.Value</XProperty>
-            </LinearInterpolationFunction>
-          </AddFunction>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
           <MultiplyFunction>
             <Name>Target</Name>
-            <VariableReference>
-              <Name>NodeNumberDuration</Name>
-              <VariableName>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.Value</VariableName>
-            </VariableReference>
+            <Constant>
+              <Name>NumberOfFloweringNodes</Name>
+              <Value>9.8</Value>
+            </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+              <VariableName>[Structure].NodeAppearanceRate.Value</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <Start>StartFlowering</Start>
           <End>EndFlowering</End>
-        </NodeNumberPhase>
+        </GenericPhase>
         <GenericPhase>
           <Name>GrainFilling</Name>
           <Memo>
@@ -282,39 +186,6 @@ The duration of the Maturing phase has been taken from the model of Robertson et
           <End>Unused</End>
         </EndPhase>
         <OnEventFunction>
-          <Name>NFF</Name>
-          <Constant>
-            <Name>PreEventValue</Name>
-            <Value>0</Value>
-          </Constant>
-          <VariableReference>
-            <Name>PostEventValue</Name>
-            <VariableName>[Phenology].Vegetative.CompletionNodeNumber.Value</VariableName>
-          </VariableReference>
-          <SetEvent>StartFlowering</SetEvent>
-          <ReSetEvent>never</ReSetEvent>
-        </OnEventFunction>
-        <OnEventFunction>
-          <Name>FN</Name>
-          <Constant>
-            <Name>PreEventValue</Name>
-            <Value>0</Value>
-          </Constant>
-          <SubtractFunction>
-            <Name>PostEventValue</Name>
-            <VariableReference>
-              <Name>PostEventValue</Name>
-              <VariableName>[Structure].MainStemNodeNo</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>PostEventValue1</Name>
-              <VariableName>[Phenology].NFF.Value</VariableName>
-            </VariableReference>
-          </SubtractFunction>
-          <SetEvent>EndFlowering</SetEvent>
-          <ReSetEvent>never</ReSetEvent>
-        </OnEventFunction>
-        <OnEventFunction>
           <Name>FloweringDAS</Name>
           <Memo>
             <Name>memo</Name>
@@ -350,17 +221,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <SetEvent>Maturity</SetEvent>
           <ReSetEvent>never</ReSetEvent>
         </OnEventFunction>
-        <AddFunction>
-          <Name>FinalNodeNo</Name>
-          <VariableReference>
-            <Name>NodeAtFirstFlower</Name>
-            <VariableName>[Phenology].NFF.Value</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>FloweringNodes</Name>
-            <VariableName>[Phenology].FN.Value</VariableName>
-          </VariableReference>
-        </AddFunction>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -943,27 +803,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </PhaseLookupValue>
           <PhaseLookupValue>
             <Name>CanopyDevelopment</Name>
-            <LinearInterpolationFunction>
-              <Name>MainStemNodeAppearanceRate</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>1</double>
-                  <double>2</double>
-                  <double>3</double>
-                  <double>4</double>
-                  <double>30</double>
-                </X>
-                <Y>
-                  <double>20</double>
-                  <double>20</double>
-                  <double>20</double>
-                  <double>50</double>
-                  <double>50</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Structure].MainStemNodeNo</XProperty>
-            </LinearInterpolationFunction>
+            <VariableReference>
+              <Name>NodeAppearanceRate</Name>
+              <VariableName>[Structure].NodeAppearanceRate.Value</VariableName>
+            </VariableReference>
             <Start>Emergence</Start>
             <End>EndFlowering</End>
           </PhaseLookupValue>
@@ -977,6 +820,27 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <End>Maturity</End>
           </PhaseLookupValue>
         </PhaseLookup>
+        <LinearInterpolationFunction>
+          <Name>NodeAppearanceRate</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>1</double>
+              <double>2</double>
+              <double>3</double>
+              <double>4</double>
+              <double>30</double>
+            </X>
+            <Y>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>50</double>
+              <double>50</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Structure].MainStemNodeNo</XProperty>
+        </LinearInterpolationFunction>
         <InitialiseStage>Emergence</InitialiseStage>
         <PrimaryBudNo>0</PrimaryBudNo>
       </Structure>
@@ -1672,22 +1536,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>StemPopulation</Name>
             <VariableName>[Structure].TotalStemPopn</VariableName>
           </VariableReference>
-          <PhaseLookupValue>
+          <VariableReference>
             <Name>FloweringNodes</Name>
-            <SubtractFunction>
-              <Name>FloweringNodes</Name>
-              <VariableReference>
-                <Name>TotalNodes</Name>
-                <VariableName>[Structure].MainStemNodeNo</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>VegetativeNodes</Name>
-                <VariableName>[Phenology].NFF.Value</VariableName>
-              </VariableReference>
-            </SubtractFunction>
-            <Start>StartFlowering</Start>
-            <End>Unused</End>
-          </PhaseLookupValue>
+            <VariableName>[Phenology].Flowering.Target.NumberOfFloweringNodes.Value</VariableName>
+          </VariableReference>
         </MultiplyFunction>
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
@@ -2554,17 +2406,17 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
       </Cultivar>
       <Cultivar>
         <Name>Hashem</Name>
-        <Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.X = 11, 17</Command>
-        <Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.Y = 44, 12</Command>
         <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
         <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 430</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 11</Command>
       </Cultivar>
       <Cultivar>
         <Name>Ayaz</Name>
-        <Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.X = 11, 17</Command>
-        <Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.Y = 44, 12</Command>
         <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
         <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 430</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 11</Command>
       </Cultivar>
       <CropType>Chickpea</CropType>
     </Plant>
@@ -2662,114 +2514,100 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>Chickpea.AboveGround.Wt</Name>
             <n>73</n>
-            <Slope>0.046557035114479638</Slope>
-            <Intercept>882.23390407417571</Intercept>
-            <SEslope>0.076382852585109892</SEslope>
-            <SEintercept>60.434391694473547</SEintercept>
-            <R2>0.0052053981708066743</R2>
-            <RMSE>367.41767765657215</RMSE>
-            <NSE>-0.72142536999633178</NSE>
-            <ME>176.697512191882</ME>
-            <MAE>311.51364691260147</MAE>
-            <RSR>1.30301350742973</RSR>
+            <Slope>0.48015974561227892</Slope>
+            <Intercept>635.98899562737552</Intercept>
+            <SEslope>0.0701026769380031</SEslope>
+            <SEintercept>55.465493805455282</SEintercept>
+            <R2>0.39786614661898989</R2>
+            <RMSE>334.23518241519469</RMSE>
+            <NSE>-0.42453272130345621</NSE>
+            <ME>251.31342410021657</ME>
+            <MAE>292.92820133699917</MAE>
+            <RSR>1.1853347942401276</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chickpea.Grain.NumberFunction.Value</Name>
-            <n>196</n>
-            <Slope>2.9799567965816993</Slope>
-            <Intercept>9624.4221447183954</Intercept>
-            <SEslope>0.37785175335936172</SEslope>
-            <SEintercept>452.0937707182635</SEintercept>
-            <R2>0.24277343505030269</R2>
-            <RMSE>12283.624457472179</RMSE>
-            <NSE>-143.65321195084397</NSE>
-            <ME>10858.488900318902</ME>
-            <MAE>10865.114189101494</MAE>
-            <RSR>11.996465536117629</RSR>
+            <n>197</n>
+            <Slope>2.896701021567933</Slope>
+            <Intercept>9442.4572651017625</Intercept>
+            <SEslope>0.37146102088369681</SEslope>
+            <SEintercept>444.55664840894997</SEintercept>
+            <R2>0.23771793103713113</R2>
+            <RMSE>12030.385635539544</RMSE>
+            <NSE>-138.18957101752861</NSE>
+            <ME>10630.696372533017</ME>
+            <MAE>10637.37816082702</MAE>
+            <RSR>11.767881073997748</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chickpea.Grain.Size</Name>
-            <n>196</n>
-            <Slope>-0.25348769463303428</Slope>
-            <Intercept>0.12343583839981911</Intercept>
-            <SEslope>0.026126791483821948</SEslope>
-            <SEintercept>0.0090785392138074666</SEintercept>
-            <R2>0.32669967332016336</R2>
-            <RMSE>0.31716166875613966</RMSE>
-            <NSE>-17.50171027612981</NSE>
-            <ME>-0.30220679551084145</ME>
-            <MAE>0.30300569127664012</MAE>
-            <RSR>4.2903745518461607</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>Chickpea.Phenology.FinalNodeNo.Value</Name>
-            <n>24</n>
-            <Slope>0.854321597490486</Slope>
-            <Intercept>4.2553968104894118</Intercept>
-            <SEslope>0.18936478891764477</SEslope>
-            <SEintercept>6.3787832011797558</SEintercept>
-            <R2>0.48056540582095653</R2>
-            <RMSE>2.2474031334335365</RMSE>
-            <NSE>0.1185303936881541</NSE>
-            <ME>-0.63939751383026744</ME>
-            <MAE>1.6201442271259001</MAE>
-            <RSR>0.91909831141660381</RSR>
+            <n>197</n>
+            <Slope>-0.26892531554058469</Slope>
+            <Intercept>0.13170912463848927</Intercept>
+            <SEslope>0.024774295182542396</SEslope>
+            <SEintercept>0.0085898253324311353</SEintercept>
+            <R2>0.37666088729591352</R2>
+            <RMSE>0.3137536935706372</RMSE>
+            <NSE>-16.490524141833845</NSE>
+            <ME>-0.29783432659674075</ME>
+            <MAE>0.29846762409004823</MAE>
+            <RSR>4.1715392549186294</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chickpea.Shell.PodNumber.Value</Name>
-            <n>196</n>
-            <Slope>3.0352611229645325</Slope>
-            <Intercept>5984.9692283617605</Intercept>
-            <SEslope>0.31101931845521874</SEslope>
-            <SEintercept>296.47052334686839</SEintercept>
-            <R2>0.32927570872631939</R2>
-            <RMSE>8022.3275175904382</RMSE>
-            <NSE>-105.18715094955822</NSE>
-            <ME>7104.4631002608057</ME>
-            <MAE>7109.2011159117847</MAE>
-            <RSR>10.278393832269911</RSR>
+            <n>197</n>
+            <Slope>2.9600960989745353</Slope>
+            <Intercept>5871.8522160013181</Intercept>
+            <SEslope>0.30606866824028528</SEslope>
+            <SEintercept>291.62058803242235</SEintercept>
+            <R2>0.32417197104640183</R2>
+            <RMSE>7854.2366892516784</RMSE>
+            <NSE>-101.21834433700083</NSE>
+            <ME>6953.1344999009325</ME>
+            <MAE>6957.908551657003</MAE>
+            <RSR>10.084615485612259</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FloweringDAS</Name>
-            <n>267</n>
-            <Slope>0.82382926953727165</Slope>
-            <Intercept>11.696488113166808</Intercept>
-            <SEslope>0.013320626274258512</SEslope>
-            <SEintercept>1.5116283897341973</SEintercept>
-            <R2>0.9352069461343695</R2>
-            <RMSE>12.863521642821905</RMSE>
-            <NSE>0.88747447089626852</NSE>
-            <ME>-7.1193882646691655</ME>
-            <MAE>9.8007865168539343</MAE>
-            <RSR>0.33481948147397878</RSR>
+            <n>270</n>
+            <Slope>0.97222259850958248</Slope>
+            <Intercept>-1.4248703092672059</Intercept>
+            <SEslope>0.015268924187929569</SEslope>
+            <SEintercept>1.7274632568503541</SEintercept>
+            <R2>0.937995795505137</R2>
+            <RMSE>10.575103231359469</RMSE>
+            <NSE>0.92363295236491771</NSE>
+            <ME>-4.3822592592592624</ME>
+            <MAE>8.0140617283950615</MAE>
+            <RSR>0.27583365769592971</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainWt</Name>
-            <n>311</n>
-            <Slope>1.2434838615964277</Slope>
-            <Intercept>203.13928321999651</Intercept>
-            <SEslope>0.08074110877053009</SEslope>
-            <SEintercept>17.486750965242685</SEintercept>
-            <R2>0.43425969849644797</R2>
-            <RMSE>295.33168865311688</RMSE>
-            <NSE>-6.0927772076584157</NSE>
-            <ME>248.43573478388453</ME>
-            <MAE>256.62568760910153</MAE>
-            <RSR>2.6589416785776852</RSR>
+            <n>312</n>
+            <Slope>1.3449170204745258</Slope>
+            <Intercept>221.73219222567604</Intercept>
+            <SEslope>0.095798055184879577</SEslope>
+            <SEintercept>20.73369981876148</SEintercept>
+            <R2>0.388675793368483</R2>
+            <RMSE>343.59828382730421</RMSE>
+            <NSE>-8.6303101237248718</NSE>
+            <ME>285.87500912297503</ME>
+            <MAE>296.05630201490862</MAE>
+            <RSR>3.0982969104208182</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
             <n>208</n>
-            <Slope>0.690383981814223</Slope>
-            <Intercept>54.225765004816424</Intercept>
-            <SEslope>0.01297470579622083</SEslope>
-            <SEintercept>2.1320948990922708</SEintercept>
-            <R2>0.93217667496759649</R2>
-            <RMSE>18.685329575529405</RMSE>
-            <NSE>0.85612981977635638</NSE>
-            <ME>5.6875</ME>
-            <MAE>16.009615384615387</MAE>
-            <RSR>0.3783893453374132</RSR>
+            <Slope>0.77466442891366183</Slope>
+            <Intercept>42.53722260568901</Intercept>
+            <SEslope>0.01506284065511003</SEslope>
+            <SEintercept>2.4752319035976984</SEintercept>
+            <R2>0.92774276615222928</R2>
+            <RMSE>16.989838676963085</RMSE>
+            <NSE>0.881054566601664</NSE>
+            <ME>7.2115384615384617</ME>
+            <MAE>15.33173076923077</MAE>
+            <RSR>0.34405461827034323</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -2816,7 +2654,7 @@ Simulation results for the combined datasets from the various growing regions ar
         <TableName>PredictedObserved</TableName>
         <XFieldName>Observed.FloweringDAS</XFieldName>
         <YFieldName>Predicted.FloweringDAS</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
