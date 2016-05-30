@@ -32236,12 +32236,12 @@ namespace Models
                 <SoilCrop>
                   <Name>ChickpeaSoil</Name>
                   <LL>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.25</double>
-                    <double>0.34</double>
-                    <double>0.34</double>
+                    <double>0.14</double>
+                    <double>0.17</double>
+                    <double>0.09</double>
+                    <double>0.16</double>
+                    <double>0.16</double>
+                    <double>0.31</double>
                   </LL>
                   <KL>
                     <double>0.06</double>
@@ -33799,6 +33799,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
           <Weather>
             <Name>Weather</Name>
             <FileName>Gorgan.met</FileName>
+            <ExcelWorkSheetName />
           </Weather>
           <Clock>
             <Name>clock</Name>
@@ -34135,12 +34136,12 @@ namespace Models
                 <SoilCrop>
                   <Name>ChickpeaSoil</Name>
                   <LL>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.25</double>
-                    <double>0.34</double>
-                    <double>0.34</double>
+                    <double>0.14</double>
+                    <double>0.17</double>
+                    <double>0.09</double>
+                    <double>0.16</double>
+                    <double>0.16</double>
+                    <double>0.31</double>
                   </LL>
                   <KL>
                     <double>0.06</double>
@@ -34763,6 +34764,96 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
+        <Graph>
+          <Name>Biomass</Name>
+          <Series>
+            <Name>Series1</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObserved</TableName>
+            <XFieldName>Observed.Chickpea.AboveGround.Wt</XFieldName>
+            <YFieldName>Predicted.Chickpea.AboveGround.Wt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Stress</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Chickpea.Leaf.Fw</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
       </Experiment>
       <Experiment>
         <Name>Gorgan01029096c</Name>
@@ -35022,12 +35113,12 @@ namespace Models
                 <SoilCrop>
                   <Name>ChickpeaSoil</Name>
                   <LL>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.25</double>
-                    <double>0.34</double>
-                    <double>0.34</double>
+                    <double>0.14</double>
+                    <double>0.17</double>
+                    <double>0.09</double>
+                    <double>0.16</double>
+                    <double>0.16</double>
+                    <double>0.31</double>
                   </LL>
                   <KL>
                     <double>0.06</double>
