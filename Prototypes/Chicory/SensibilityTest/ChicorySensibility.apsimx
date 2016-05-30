@@ -79,6 +79,20 @@ private void OnDoManagement(object sender, EventArgs e)
             </Y>
           </XYPairs>
         </AirTemperatureFunction>
+        <PhotoperiodFunction>
+          <Name>Photoperiod</Name>
+          <Twilight>-6</Twilight>
+        </PhotoperiodFunction>
+        <AccumulateFunction>
+          <Name>DaysVernalised</Name>
+          <VariableReference>
+            <Name>VariableReference</Name>
+            <VariableName>[Phenology].Vegetative.ThermalTime.Vernalisation.Value</VariableName>
+          </VariableReference>
+          <StartStageName>StartStemElongation</StartStageName>
+          <EndStageName>StartReproductive</EndStageName>
+          <ReSetEvent>EndReproductive</ReSetEvent>
+        </AccumulateFunction>
         <Memo>
           <Name>Description1</Name>
           <MemoText><![CDATA[As ThermalTime accumulates the crop progresses through the following phases:]]></MemoText>
@@ -101,7 +115,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Start>Germination</Start>
           <End>Emergence</End>
           <ShootLag>75</ShootLag>
-          <ShootRate>0.12</ShootRate>
+          <ShootRate>10</ShootRate>
         </EmergingPhase>
         <GenericPhase>
           <Name>Vegetative</Name>
@@ -140,20 +154,6 @@ During this phase the plant only partitions biomass to Root and Stover (leaf and
                 </Y>
               </XYPairs>
             </AirTemperatureFunction>
-          </AddFunction>
-          <MaximumFunction>
-            <Name>Devernalisation</Name>
-            <MultiplyFunction>
-              <Name>MultiplyFunction</Name>
-              <VariableReference>
-                <Name>ThermalTime</Name>
-                <VariableName>[Phenology].AccumulatedTT</VariableName>
-              </VariableReference>
-              <Constant>
-                <Name>Constant</Name>
-                <Value>-1</Value>
-              </Constant>
-            </MultiplyFunction>
             <AirTemperatureFunction>
               <Name>Devernalisation</Name>
               <Memo>
@@ -164,17 +164,19 @@ During this phase the plant only partitions biomass to Root and Stover (leaf and
                 <Name>XYPairs</Name>
                 <X>
                   <double>0</double>
-                  <double>4</double>
-                  <double>5</double>
+                  <double>20</double>
+                  <double>30</double>
+                  <double>40</double>
                 </X>
                 <Y>
                   <double>0</double>
                   <double>0</double>
-                  <double>-10</double>
+                  <double>-1</double>
+                  <double>-1</double>
                 </Y>
               </XYPairs>
             </AirTemperatureFunction>
-          </MaximumFunction>
+          </AddFunction>
           <Start>Emergence</Start>
           <End>StartInductive</End>
         </GenericPhase>
@@ -182,14 +184,49 @@ During this phase the plant only partitions biomass to Root and Stover (leaf and
           <Name>Inductive</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>500</Value>
+            <Value>10</Value>
+            <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>ThermalTime</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>10</double>
+                <double>12</double>
+                <double>13</double>
+                <double>15</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Phenology].Photoperiod.Value</XProperty>
+          </LinearInterpolationFunction>
+          <Start>StartInductive</Start>
+          <End>StartStemElongation</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>StemElongation</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+During this phase the plant is partitioning biomass to Root, Stover and Product organs.
+]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>Target</Name>
+            <Value>1000</Value>
             <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Start>StartInductive</Start>
+          <Start>StartStemElongation</Start>
           <End>StartReproductive</End>
         </GenericPhase>
         <GenericPhase>
@@ -202,15 +239,11 @@ During this phase the plant is partitioning biomass to Root, Stover and Product 
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>600</Value>
+            <Value>800</Value>
             <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableReference>
-              <Name>ThermalTime</Name>
-              <VariableName>[Phenology].ThermalTime.Value</VariableName>
-            </VariableReference>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
           <Start>StartReproductive</Start>
@@ -244,7 +277,8 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>0.5</Value>
+            <Value>1.5</Value>
+            <Units>g/MJ</Units>
           </Constant>
           <RUECO2Function>
             <Name>FCO2</Name>
@@ -256,13 +290,13 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>0.5</double>
-                <double>1</double>
+                <double>0.4</double>
+                <double>0.8</double>
                 <double>1.5</double>
               </X>
               <Y>
                 <double>0</double>
-                <double>0.2</double>
+                <double>0.5</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
@@ -274,10 +308,10 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>2</double>
-                <double>12</double>
-                <double>24</double>
-                <double>34</double>
+                <double>4</double>
+                <double>18</double>
+                <double>26</double>
+                <double>35</double>
               </X>
               <Y>
                 <double>0</double>
@@ -371,12 +405,39 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
           <PhaseLookup>
             <Name>PartitionFraction</Name>
             <PhaseLookupValue>
-              <Name>PhaseLookupValue</Name>
+              <Name>VegetativeGrowth</Name>
               <Constant>
-                <Name>Constant</Name>
-                <Value>0.7</Value>
+                <Name>LeafProportion</Name>
+                <Value>0.6</Value>
               </Constant>
               <Start>Emergence</Start>
+              <End>StartInductive</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>InductiveGrowth</Name>
+              <Constant>
+                <Name>LeafProportion</Name>
+                <Value>0.7</Value>
+              </Constant>
+              <Start>StartInductive</Start>
+              <End>StartStemElongation</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>StemElongation</Name>
+              <Constant>
+                <Name>LeafProportion</Name>
+                <Value>0.15</Value>
+              </Constant>
+              <Start>StartStemElongation</Start>
+              <End>StartReproductive</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>ReproductiveGrowth</Name>
+              <Constant>
+                <Name>LeafProportion</Name>
+                <Value>0.15</Value>
+              </Constant>
+              <Start>StartReproductive</Start>
               <End>EndReproductive</End>
             </PhaseLookupValue>
           </PhaseLookup>
@@ -401,7 +462,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
             </VariableReference>
             <Constant>
               <Name>SLA</Name>
-              <Value>0.02</Value>
+              <Value>0.04</Value>
               <Units>m^2/g</Units>
             </Constant>
           </MultiplyFunction>
@@ -504,6 +565,15 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <Name>Dead</Name>
         </Biomass>
         <Constant>
+          <Name>DryMatterContent</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+This is the dry matter content of the harvested yield and is used to convert fresh yield into *DryYield* which are subsequently used in determining *Ymax* (total biomass production), daily dry matter production, *HarvestIndex* and the *PartitioningFraction* of each organ]]></MemoText>
+          </Memo>
+          <Value>0.4</Value>
+        </Constant>
+        <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.012</Value>
         </Constant>
@@ -516,25 +586,69 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <PhaseLookup>
             <Name>PartitionFraction</Name>
             <PhaseLookupValue>
-              <Name>YieldIncreasing</Name>
-              <Constant>
-                <Name>Constant</Name>
-                <Value>0.1</Value>
-              </Constant>
+              <Name>StemElongation</Name>
+              <MultiplyFunction>
+                <Name>StemProportion</Name>
+                <Constant>
+                  <Name>MaxProportionToStem</Name>
+                  <Value>1.3</Value>
+                </Constant>
+                <LinearInterpolationFunction>
+                  <Name>VernalisationEffect</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <X>
+                      <double>0</double>
+                      <double>10</double>
+                      <double>35</double>
+                      <double>40</double>
+                    </X>
+                    <Y>
+                      <double>0</double>
+                      <double>0.1</double>
+                      <double>1</double>
+                      <double>1</double>
+                    </Y>
+                  </XYPairs>
+                  <XProperty>[Phenology].DaysVernalised.Value</XProperty>
+                </LinearInterpolationFunction>
+              </MultiplyFunction>
+              <Start>StartStemElongation</Start>
+              <End>StartReproductive</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Reproductive</Name>
+              <MultiplyFunction>
+                <Name>StemProportion</Name>
+                <Constant>
+                  <Name>MaxProportionToStem</Name>
+                  <Value>0.5</Value>
+                </Constant>
+                <LinearInterpolationFunction>
+                  <Name>VernalisationEffect</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <X>
+                      <double>0</double>
+                      <double>10</double>
+                      <double>35</double>
+                      <double>40</double>
+                    </X>
+                    <Y>
+                      <double>0</double>
+                      <double>0.1</double>
+                      <double>1</double>
+                      <double>1</double>
+                    </Y>
+                  </XYPairs>
+                  <XProperty>[Phenology].DaysVernalised.Value</XProperty>
+                </LinearInterpolationFunction>
+              </MultiplyFunction>
               <Start>StartReproductive</Start>
               <End>EndReproductive</End>
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <Constant>
-          <Name>DryMatterContent</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[
-This is the dry matter content of the harvested yield and is used to convert fresh yield into *DryYield* which are subsequently used in determining *Ymax* (total biomass production), daily dry matter production, *HarvestIndex* and the *PartitioningFraction* of each organ]]></MemoText>
-          </Memo>
-          <Value>0.4</Value>
-        </Constant>
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
@@ -593,7 +707,7 @@ The root organ demands and is partitioned N and DM and its depth increases throu
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.009</Value>
+          <Value>0.012</Value>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -617,27 +731,43 @@ The root organ demands and is partitioned N and DM and its depth increases throu
           <Constant>
             <Name>RootFrontVelocity</Name>
             <Value>0.1</Value>
+            <Units>mm/day</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
         </MultiplyFunction>
-        <PhaseLookupValue>
+        <PhaseLookup>
           <Name>PartitionFraction</Name>
-          <Constant>
-            <Name>RootProportion</Name>
-            <Memo>
-              <Name>Description</Name>
-              <MemoText><![CDATA[
-This is the proportion of total biomass that is paritioned into the roots and is used to set the partitioning fraction for the roots
-]]></MemoText>
-            </Memo>
-            <Value>0.2</Value>
-          </Constant>
-          <Start>Emergence</Start>
-          <End>EndReproductive</End>
-        </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>VegetativeGrowth</Name>
+            <Constant>
+              <Name>RootProportion</Name>
+              <Value>0.2</Value>
+            </Constant>
+            <Start>Emergence</Start>
+            <End>EndReproductive</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>InductiveGrowth</Name>
+            <Constant>
+              <Name>RootProportion</Name>
+              <Value>0.25</Value>
+            </Constant>
+            <Start>Emergence</Start>
+            <End>EndReproductive</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>ReproductiveGrowth</Name>
+            <Constant>
+              <Name>RootProportion</Name>
+              <Value>0.1</Value>
+            </Constant>
+            <Start>Emergence</Start>
+            <End>EndReproductive</End>
+          </PhaseLookupValue>
+        </PhaseLookup>
         <Constant>
           <Name>KLModifier</Name>
           <Value>1</Value>
@@ -748,8 +878,226 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Name>Choice</Name>
         <Command />
       </Cultivar>
+      <GenericAboveGroundOrgan>
+        <Name>Stem1</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[It is the biomass that is removed from the crop at harvest and may include grain, root, leaf, stem, pod or any other organ type depending on the type of crop and how it is harvested.]]></MemoText>
+        </Memo>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Value>0.012</Value>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.008</Value>
+        </Constant>
+        <Constant>
+          <Name>DryMatterContent</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+This is the dry matter content of the harvested yield and is used to convert fresh yield into *DryYield* which are subsequently used in determining *Ymax* (total biomass production), daily dry matter production, *HarvestIndex* and the *PartitioningFraction* of each organ]]></MemoText>
+          </Memo>
+          <Value>0.4</Value>
+        </Constant>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0.5</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+      </GenericAboveGroundOrgan>
       <CropType>SCUM</CropType>
     </Plant>
+    <GenericAboveGroundOrgan>
+      <Name>Taproot</Name>
+      <Biomass>
+        <Name>Live</Name>
+      </Biomass>
+      <Biomass>
+        <Name>Dead</Name>
+      </Biomass>
+      <Constant>
+        <Name>MaximumNConc</Name>
+        <Value>0.012</Value>
+      </Constant>
+      <Constant>
+        <Name>MinimumNConc</Name>
+        <Value>0.008</Value>
+      </Constant>
+      <AllometricDemandFunction>
+        <Name>DMDemandFunction</Name>
+        <Const>1</Const>
+        <Power>1</Power>
+        <XProperty>[Leaf].Live.Wt</XProperty>
+        <YProperty>[Taproot].Live.Wt</YProperty>
+      </AllometricDemandFunction>
+      <PartitionFractionDemandFunction>
+        <Name>DMDemandFunction1</Name>
+        <PhaseLookup>
+          <Name>PartitionFraction</Name>
+          <PhaseLookupValue>
+            <Name>VegetativeGrowth</Name>
+            <Constant>
+              <Name>TaprootProportion</Name>
+              <Value>0.2</Value>
+            </Constant>
+            <Start>Emergence</Start>
+            <End>EndReproductive</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>InductiveGrowth</Name>
+            <Constant>
+              <Name>TaprootProportion</Name>
+              <Value>0.05</Value>
+            </Constant>
+            <Start>Emergence</Start>
+            <End>EndReproductive</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>ReproductiveGrowth</Name>
+            <Constant>
+              <Name>TaprootProportion</Name>
+              <Value>0</Value>
+            </Constant>
+            <Start>Emergence</Start>
+            <End>EndReproductive</End>
+          </PhaseLookupValue>
+        </PhaseLookup>
+      </PartitionFractionDemandFunction>
+      <Constant>
+        <Name>DryMatterContent</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[
+This is the dry matter content of the harvested yield and is used to convert fresh yield into *DryYield* which are subsequently used in determining *Ymax* (total biomass production), daily dry matter production, *HarvestIndex* and the *PartitioningFraction* of each organ]]></MemoText>
+        </Memo>
+        <Value>0.4</Value>
+      </Constant>
+      <Folder>
+        <Name>BiomassRemovalDefaults</Name>
+        <OrganBiomassRemovalType>
+          <Name>Harvest</Name>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </OrganBiomassRemovalType>
+        <OrganBiomassRemovalType>
+          <Name>Cut</Name>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </OrganBiomassRemovalType>
+        <OrganBiomassRemovalType>
+          <Name>Prune</Name>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </OrganBiomassRemovalType>
+        <OrganBiomassRemovalType>
+          <Name>Graze</Name>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </OrganBiomassRemovalType>
+      </Folder>
+      <Constant>
+        <Name>StructuralFraction</Name>
+        <Value>0.8</Value>
+      </Constant>
+      <Constant>
+        <Name>DMRetranslocationFactor</Name>
+        <Value>0</Value>
+      </Constant>
+    </GenericAboveGroundOrgan>
+    <GenericAboveGroundOrgan>
+      <Name>Inflorescence</Name>
+      <Memo>
+        <Name>Description</Name>
+        <MemoText><![CDATA[It is the biomass that is removed from the crop at harvest and may include grain, root, leaf, stem, pod or any other organ type depending on the type of crop and how it is harvested.]]></MemoText>
+      </Memo>
+      <Biomass>
+        <Name>Live</Name>
+      </Biomass>
+      <Biomass>
+        <Name>Dead</Name>
+      </Biomass>
+      <Constant>
+        <Name>MaximumNConc</Name>
+        <Value>0.012</Value>
+      </Constant>
+      <Constant>
+        <Name>MinimumNConc</Name>
+        <Value>0.008</Value>
+      </Constant>
+      <PartitionFractionDemandFunction>
+        <Name>DMDemandFunction</Name>
+        <PhaseLookup>
+          <Name>PartitionFraction</Name>
+          <PhaseLookupValue>
+            <Name>ReproductiveGrowth</Name>
+            <Constant>
+              <Name>StemProportion</Name>
+              <Value>0.4</Value>
+            </Constant>
+            <Start>StartReproductive</Start>
+            <End>EndReproductive</End>
+          </PhaseLookupValue>
+        </PhaseLookup>
+      </PartitionFractionDemandFunction>
+      <Constant>
+        <Name>DryMatterContent</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[
+This is the dry matter content of the harvested yield and is used to convert fresh yield into *DryYield* which are subsequently used in determining *Ymax* (total biomass production), daily dry matter production, *HarvestIndex* and the *PartitioningFraction* of each organ]]></MemoText>
+        </Memo>
+        <Value>0.4</Value>
+      </Constant>
+      <Folder>
+        <Name>BiomassRemovalDefaults</Name>
+        <OrganBiomassRemovalType>
+          <Name>Harvest</Name>
+          <FractionRemoved>0.5</FractionRemoved>
+          <FractionToResidue>0.1</FractionToResidue>
+        </OrganBiomassRemovalType>
+        <OrganBiomassRemovalType>
+          <Name>Cut</Name>
+          <FractionRemoved>0.8</FractionRemoved>
+          <FractionToResidue>0</FractionToResidue>
+        </OrganBiomassRemovalType>
+        <OrganBiomassRemovalType>
+          <Name>Prune</Name>
+          <FractionRemoved>0</FractionRemoved>
+          <FractionToResidue>0.6</FractionToResidue>
+        </OrganBiomassRemovalType>
+        <OrganBiomassRemovalType>
+          <Name>Graze</Name>
+          <FractionRemoved>0.6</FractionRemoved>
+          <FractionToResidue>0.2</FractionToResidue>
+        </OrganBiomassRemovalType>
+      </Folder>
+    </GenericAboveGroundOrgan>
   </Replacements>
   <Memo>
     <Name>TitlePage</Name>
@@ -1611,10 +1959,318 @@ namespace Models
           <Operations>
             <Name>Sowing</Name>
             <Operation>
-              <Date>2008-10-23T00:00:00</Date>
+              <Date>2008-10-15</Date>
               <Action> [Chicory].Sow(population:200, cultivar:"Choice", depth:10, rowSpacing:150);</Action>
             </Operation>
           </Operations>
+          <Manager>
+            <Name>Defoliate</Name>
+            <Script>
+              <removeAmountType>ResidualDM</removeAmountType>
+              <cutPasture_StartDate>2008-11-15</cutPasture_StartDate>
+              <cutPasture_EndDate>2013-06-10</cutPasture_EndDate>
+              <interval2Cut>21</interval2Cut>
+              <duration>3</duration>
+              <defoliationType>Graze</defoliationType>
+              <herbageAmount>10000</herbageAmount>
+              <leafResidueFrac>0.05</leafResidueFrac>
+              <stemResidueFrac>0.5</stemResidueFrac>
+              <fracN2Remove>0.15</fracN2Remove>
+              <urineDepth>300</urineDepth>
+              <fracN2Dung>0.4</fracN2Dung>
+              <fracPopDecline>0.2</fracPopDecline>
+            </Script>
+            <Code><![CDATA[// Defoliates on a regular cycle or one-off via a schedule
+// currenty defoliates by the amount specified spread evenly over the specified period
+
+using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+
+
+	public class Defoliation
+	{
+		public DateTime startDate { set; get; }
+		public DateTime endDate { set; get; }
+		public double herbageAmount { set; get; }
+	}
+	
+
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Chicory;
+		[Link] Zone zone;
+		[Link] ISummary summary = null;
+		[Link] Clock Clock;
+		
+		List<Defoliation> defoliations = new List<Defoliation>();
+
+		//defoliations = new List<Defoliation>();
+		
+		//Outputs
+		[XmlIgnore] private RemovalFractions removalFractions { get; set; }
+		[XmlIgnore] public double leafWt { get; set; }
+		[XmlIgnore] public double stemWt { get; set; }
+		
+		
+		[XmlIgnore] public double leafToDefoliate { get; set; }
+		[XmlIgnore] public double stemToDefoliate { get; set; }
+
+		
+		//Whether today is a harvesting day
+		[XmlIgnore] public string Can_Cut{ get; set; }
+		//Whether today's harvest was done
+		[XmlIgnore] public string Has_Cut{ get; set; }
+		//Pasture DM harvested today (kg/ha)
+		[XmlIgnore] public double harvested_dm{ get; set; }
+		//N harvested today
+		[XmlIgnore] public double harvested_n{ get; set; }
+		//DM removed from the paddock
+		[XmlIgnore] public double removed_dm{ get; set; }
+		//N removed from the paddock
+		[XmlIgnore] public double removed_n{ get; set; }
+		//DM returned to the paddock
+		[XmlIgnore] public double returned_dm{ get; set; }
+		//N returned to the paddock
+		[XmlIgnore] public double returned_n{ get; set; }
+		//N returned as dung (SurfaceOM)
+		[XmlIgnore] public double NReturnedInDung{ get; set; }
+		//N returned as urine (urea)
+		[XmlIgnore] public double NReturnedInUrine{ get; set; }
+		//Average growth rate for this cut
+		[XmlIgnore] public double GrowthRateCalc{ get; set; }
+		//Number of days after last harvest
+		[XmlIgnore] public int DaysAfterCut{ get; set; }
+		//Total standing DM (Leaf + Stem/Sheath) before cut
+		[XmlIgnore] public double PreHarvestDM{ get; set; }
+		//Total standing DM (Leaf + Stem/Sheath) after cut
+		[XmlIgnore] public double PostHarvestDM{ get; set; }
+		
+		
+		//Internal variables
+		//The fraction of DM to be removed from the simulation (0-1)
+		private double FracDM2Remove;
+		//Whether cutting are allowed
+		private bool CutIsAllowed;
+		//The fraction of urine to be applied in each layer
+		private double[] FracLayer;
+		
+		
+		public enum removeAmountTypes
+		{
+			/// <summary>Setting DM amount to remove</summary>
+			DMToRemove,
+			/// <summary>Setting residual DM amount</summary>
+			ResidualDM
+		}
+
+
+		public enum defoliationTypes
+		{
+			/// <summary>Cut</summary>
+			Cut,
+			/// <summary>Graze</summary>
+			Graze
+		}
+
+		[Description("Choose what amount is being defined:")]
+		public removeAmountTypes removeAmountType { get; set; }
+		
+		[Description("Enter the date to start the rotation (dd/mm/yyyy):")]
+		public DateTime cutPasture_StartDate { get; set; }
+
+		[Description("Enter the date to end the rotation (dd/mm/yyyy):")]
+		public DateTime cutPasture_EndDate { get; set; }
+
+		[Description("Enter the interval between harvests (days):")]
+		public int interval2Cut { get; set; }
+
+		[Description("Enter the number of days to defoliate over (days):")]
+		public int duration { get; set; }
+
+		[Description("Select type of defoliation:")]
+		public defoliationTypes defoliationType { get; set; }
+
+		[Description("Enter amount to defoliate (kgDM/ha):")]
+		public double herbageAmount { get; set; }
+
+		[Description("Enter fraction of leaf returned as residue(0-1):")]
+		public double leafResidueFrac { get; set; }
+
+		[Description("Enter fraction of stem returned as residue(0-1):")]
+		public double stemResidueFrac { get; set; }
+
+		[Description("Enter fraction of N that is removed from the field (0-1):")]
+		public double fracN2Remove { get; set; }
+
+		[Description("Enter the depth down to which urine will applied (mm):")]
+		public double urineDepth { get; set; }
+
+		[Description("Enter the proportion of N returned in dung (0-1):")]
+		public double fracN2Dung { get; set; }
+
+		[Description("Enter the fraction of population decline due to defoliation (0-1):")]
+		public double fracPopDecline { get; set; }
+
+		private void defoliate(int listNumber)
+		{
+			double numDays = (defoliations[listNumber].endDate - defoliations[listNumber].startDate).TotalDays;
+			
+			summary.WriteMessage(this, "Defoliating (" + listNumber + "). " + defoliations[listNumber].herbageAmount + "kg/ha over " + numDays + " days");
+			
+			leafWt = (double)zone.Get("Chicory.Leaf.Wt");
+			stemWt = (double)zone.Get("Chicory.Stem.Wt");
+			
+			
+			if (leafWt + stemWt > 0)
+			{
+			
+				double herbageToRemove = (defoliations[listNumber].herbageAmount / 10) / numDays; // total herbage to remove in g/m2 per day
+				
+				
+				
+				if (herbageToRemove > (leafWt + stemWt) * 0.9) // limit to 90% of existing herbage
+				{
+					herbageToRemove = (leafWt + stemWt) * 0.9;
+				}			
+							
+				leafToDefoliate = herbageToRemove * leafWt / (leafWt + stemWt);			
+				stemToDefoliate = herbageToRemove * stemWt / (leafWt + stemWt);
+
+				summary.WriteMessage(this, "Current herbage (g/m2): leaf=" + leafWt + ",stem=" + stemWt);
+				summary.WriteMessage(this, "Herbage to remove today (g/m2): " + herbageToRemove + " (leaf=" + leafToDefoliate + ",stem=" + stemToDefoliate + ")");
+
+
+				double leafFracToRemove = leafToDefoliate / (leafWt + stemWt);
+				double stemFracToRemove = stemToDefoliate / (leafWt + stemWt);				
+
+				// calculate residue				
+				double leafFracToResidue = leafResidueFrac * leafFracToRemove;
+				double stemFracToResidue = stemResidueFrac * stemFracToRemove;
+				
+				// subtract residue from amount to remove
+				leafFracToRemove = leafFracToRemove - leafFracToResidue;
+				stemFracToRemove = stemFracToRemove - stemFracToResidue;
+				
+				removalFractions.SetFractionRemoved("Leaf", leafFracToRemove);
+				removalFractions.SetFractionToResidue("Leaf", leafFracToResidue);
+				removalFractions.SetFractionRemoved("Stem", stemFracToRemove);
+				removalFractions.SetFractionToResidue("Stem", stemFracToResidue);  
+				
+				removalFractions.SetFractionRemoved("Root", 0.0);
+				removalFractions.SetFractionToResidue("Root", 0.0);
+				
+			
+				if (defoliationType == defoliationTypes.Cut)
+				{			
+					Chicory.RemoveBiomass("Cut", removalFractions);  
+				}
+				else
+				{
+					Chicory.RemoveBiomass("Graze", removalFractions);  
+				}
+															
+				double popDeclineToday = fracPopDecline / numDays;
+				Chicory.Population = Chicory.Population * (1.0 - popDeclineToday);						
+
+			
+			}
+
+			
+/*			if (phenStageReset > 0)
+			{
+				//removalFractions.SetPhenologyStage = 3.5; //phenStageReset;
+
+//				Chicory.Phenology.ReSetToStage(3.5); // same ERROR
+//				Chicory.Phenology.Stage = 3.5; // nada
+
+			} */
+			
+			
+		
+		
+		}
+
+		public void addDefoliation(int numDays, double amount)
+		{			
+			
+			Defoliation defoliation = new Defoliation();
+			defoliation.startDate = Clock.Today;
+			defoliation.endDate = Clock.Today.AddDays(numDays);
+			defoliation.herbageAmount = amount;
+			
+			defoliations.Add(defoliation);
+			
+			summary.WriteMessage(this, "Added defoliation for " + numDays + " days");
+			
+			
+			/*
+
+			
+			
+			// Reduce population			
+			if ((Clock.Today > popStartDate) && (Clock.Today < popEndDate))
+			{
+				Chicory.Population = Chicory.Population * (1 - popDecline);
+			}			 */
+			
+			//StoverWt = (double)zone.Get("Chicory.Stover.Wt");
+			//summary.WriteMessage(this, StoverWt.ToString());
+
+			
+		}
+
+					  
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			removalFractions = new RemovalFractions();
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{			
+			// Add any regular defoliations to the defoliation list if they begin today
+			if ((Clock.Today >= cutPasture_StartDate) && (Clock.Today <= cutPasture_EndDate))
+			{
+				double daysSinceStart = (Clock.Today - cutPasture_StartDate).TotalDays;
+				if (daysSinceStart % interval2Cut == 0)
+				{
+					summary.WriteMessage(this, "Added regular defoliation starting at " + Clock.Today.ToString());
+					addDefoliation(duration, herbageAmount);
+				}
+			}
+			
+			// Check the list of defoliations to see if any need running
+			for (var i = defoliations.Count - 1; i >= 0; i--)
+			{
+				if ((defoliations[i].startDate <= Clock.Today) && (defoliations[i].endDate > Clock.Today))
+				{									
+					defoliate(i);
+				}
+			}
+		}
+								
+		
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
+			
+		}
+	}
+}
+	   ]]></Code>
+          </Manager>
         </Folder>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -1763,7 +2419,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>ChickpeaSoil</Name>
+              <Name>ChicorySoil</Name>
               <LL>
                 <double>0.22</double>
                 <double>0.18</double>
@@ -2042,9 +2698,127 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Weather].Rain as Rain</string>
-            <string>[Irrigation].IrrigationApplied as Irrigation</string>
-            <string>sum([HorotiuSoil].SoilWater.SWmm) as SoilWater</string>
+            <string>[Clock].Today</string>
+            <string>[Phenology].Vegetative.ThermalTime.Vernalisation.Value</string>
+            <string>[ExtraVariables].Script.AccumPlantN</string>
+            <string>[ExtraVariables].Script.AccumMineralisation</string>
+            <string>[ExtraVariables].Script.AccumDenit</string>
+            <string>[ExtraVariables].Script.AccumFert</string>
+            <string>[ExtraVariables].Script.AccumLeach</string>
+            <string>[ExtraVariables].Script.AccumDetach</string>
+            <string>[ExtraVariables].Script.DeltaSoilOMN</string>
+            <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
+            <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
+            <string>[ExtraVariables].Script.SWC</string>
+            <string>[ExtraVariables].Script.DUL</string>
+            <string>[ExtraVariables].Script.OutFlowLat</string>
+            <string>[ExtraVariables].Script.AccumEO</string>
+            <string>[ExtraVariables].Script.AccumEP</string>
+            <string>[ExtraVariables].Script.AccumES</string>
+            <string>[ExtraVariables].Script.AccumDrainage</string>
+            <string>[ExtraVariables].Script.AccumRunoff</string>
+            <string>[ExtraVariables].Script.AccumRainfall</string>
+            <string>[ExtraVariables].Script.AccumIrrigation</string>
+            <string>[ExtraVariables].Script.AccumOutflowLat</string>
+            <string>[ExtraVariables].Script.SoilWaterDeficit</string>
+            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
+            <string>[ExtraVariables].Script.FomN</string>
+            <string>[ExtraVariables].Script.HumN</string>
+            <string>[ExtraVariables].Script.BiomN</string>
+            <string>[ExtraVariables].Script.DltNMinRes</string>
+            <string>[ExtraVariables].Script.DltNMinTot</string>
+            <string>[MicroClimate].net_radn</string>
+            <string>[MicroClimate].peta</string>
+            <string>[MicroClimate].petr</string>
+            <string>[Soil].SoilWater.Drainage</string>
+            <string>[Soil].SoilWater.Runoff</string>
+            <string>[Soil].SoilWater.Eo</string>
+            <string>[Soil].SoilWater.SW</string>
+            <string>[Soil].SoilWater.Es</string>
+            <string>[Soil].SoilWater.pond</string>
+            <string>[Soil].SoilWater.SWmm</string>
+            <string>[Soil].NO3N</string>
+            <string>[Soil].SoilWater.LL15mm</string>
+            <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+            <string>([Soil].SoilWater.SW[1]+[Soil].SoilWater.SW[2]+[Soil].SoilWater.SW[3]) as TopWater</string>
+            <string />
+            <string>[Defoliate].Script.LeafWt</string>
+            <string>[Defoliate].Script.LeafHarvested</string>
+            <string>[Defoliate].Script.StemWt</string>
+            <string>[Defoliate].Script.StemHarvested</string>
+            <string />
+            <string>[Defoliate].Script.leafToDefoliate</string>
+            <string>[Defoliate].Script.stemToDefoliate</string>
+            <string />
+            <string>[Chicory].Total.Wt as Total Weight</string>
+            <string>[Chicory].ExpectedYield.Value as Expected Yield</string>
+            <string>[Chicory].DryYield.Value as Dry Yield</string>
+            <string>[Chicory].TotalBiomassAtStartReStemive.Value</string>
+            <string>[Chicory].TotalBiomassAtStartSenescence.Value</string>
+            <string>[Chicory].Ymax.Value</string>
+            <string>[Chicory].Total.N as Total N</string>
+            <string>[Chicory].AboveGround.Wt as Above Ground Weight</string>
+            <string>[Chicory].Population as Population</string>
+            <string />
+            <string>[Chicory].Arbitrator.NDemand</string>
+            <string>[Chicory].Arbitrator.NSupply</string>
+            <string>[Chicory].Arbitrator.DMSupply</string>
+            <string>[Chicory].Arbitrator.DMDemand</string>
+            <string>[Chicory].Arbitrator.DMSinkLimitation</string>
+            <string>[Chicory].Arbitrator.DMNutrientLimitation</string>
+            <string>[Chicory].Arbitrator.FN</string>
+            <string>[Chicory].Arbitrator.NSupply</string>
+            <string />
+            <string>[Chicory].Leaf.Wt as Leaf Weight</string>
+            <string>[Chicory].Leaf.Live.Wt as Leaf Live Weight</string>
+            <string>[Chicory].Leaf.Live.N as Leaf Live N</string>
+            <string>[Chicory].Leaf.Live.NConc as Leaf Live N Concentration</string>
+            <string>[Chicory].Leaf.Transpiration as Leaf Transpiration</string>
+            <string>[Chicory].Leaf.WaterDemand as Leaf Water Demand</string>
+            <string>[Chicory].Leaf.CoverTotal as Leaf Total Cover</string>
+            <string>[Chicory].Leaf.CoverDead as Leaf Dead Cover</string>
+            <string>[Chicory].Leaf.LAI as LAI Green</string>
+            <string>[Chicory].Leaf.LAIDead as LAI Dead</string>
+            <string>[Chicory].Leaf.Height as Leaf Height</string>
+            <string>[Chicory].Leaf.PotentialBiomass.Value as Leaf Potential Biomass</string>
+            <string>[Chicory].Leaf.Fw</string>
+            <string>[Chicory].Leaf.Fn</string>
+            <string />
+            <string>[Chicory].Phenology.AccumulatedEmergedTT</string>
+            <string>[Chicory].Phenology.ThermalTime.Value</string>
+            <string>[Chicory].Phenology.CurrentPhaseName</string>
+            <string>[Chicory].Phenology.Stage</string>
+            <string />
+            <string>[Chicory].Root.Live.Wt as Root Live Weight</string>
+            <string>[Chicory].Root.Live.N as Root Live N</string>
+            <string>[Chicory].Root.Live.NConc as Root Live N Concentration</string>
+            <string>[Chicory].Root.WaterSupply as Root Water Supply</string>
+            <string>[Chicory].Root.WaterUptake as Root Water Uptake</string>
+            <string>[Chicory].Root.Depth as Root Depth</string>
+            <string />
+            <string>[Chicory].Stem.Live.Wt as Stem Live Weight</string>
+            <string>[Chicory].Stem.Live.N as Stem Live N</string>
+            <string>[Chicory].Stem.Live.NConc as Stem Live N Concentration</string>
+            <string>[Chicory].Stem.LiveFWt </string>
+            <string />
+            <string>[AutomaticIrrigation].Script.Top_Refull</string>
+            <string>[AutomaticIrrigation].Script.Top_Trigger</string>
+            <string>[AutomaticIrrigation].Script.Top_SW</string>
+            <string>[AutomaticIrrigation].Script.Top_DUL</string>
+            <string>[AutomaticIrrigation].Script.Amount_to_apply</string>
+            <string>[AutomaticIrrigation].Script.StartDate</string>
+            <string>[AutomaticIrrigation].Script.SeasonIsOpen</string>
+            <string>[AutomaticIrrigation].Script.EndDate</string>
+            <string>[AutomaticIrrigation].Script.TodayYear</string>
+            <string>[Irrigation].IrrigationApplied as Irrigation Applied (mm)</string>
+            <string />
+            <string>[Fertiliser].NitrogenApplied as Nitrogen Applied</string>
+            <string />
+            <string>[Chicory].Leaf.DMDemand</string>
+            <string>[Chicory].Stem.DMDemand</string>
+            <string>[Chicory].Inflorescence.DMDemand</string>
+            <string>[Chicory].Root.DMDemand</string>
+            <string>[Chicory].Taproot.DMDemand</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -2478,7 +3252,7 @@ This model has been built to simulate a range of different crops in simulations 
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Chicory.Phenology.AccumulatedEmergedTT</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Leaf Live Weight</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -3131,7 +3905,7 @@ This model has been built to simulate a range of different crops in simulations 
       <Graph>
         <Name>Stress Factors</Name>
         <Series>
-          <Name>Series 0</Name>
+          <Name>FW</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3152,7 +3926,7 @@ This model has been built to simulate a range of different crops in simulations 
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Series2</Name>
+          <Name>FN</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3167,27 +3941,6 @@ This model has been built to simulate a range of different crops in simulations 
           <TableName>Report</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>Chicory.Arbitrator.FN</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series3</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Date</XFieldName>
-          <YFieldName>Chicory.Phenology.Stage</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>

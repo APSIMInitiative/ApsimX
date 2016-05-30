@@ -33,7 +33,11 @@ namespace Models.PMF.Functions
         /// <summary>The end stage name</summary>
         [Description("EndStageName")]
         public string EndStageName { get; set; }
-    
+
+        /// <summary>The re set event</summary>
+        [Description("(optional) The event in which value is reset to zero")]
+        public string ReSetEvent { get; set; }
+
         /// <summary>The fraction removed on cut</summary>
         private double FractionRemovedOnCut = 0; //FIXME: This should be passed from teh manager when "cut event" is called. Must be made general to other events.
 
@@ -65,6 +69,15 @@ namespace Models.PMF.Functions
                 AccumulatedValue += DailyIncrement;
             }
 
+        }
+
+        /// <summary>Called when [phase changed].</summary>
+        /// <param name="PhaseChange">The phase change.</param>
+        [EventSubscribe("PhaseChanged")]
+        private void OnPhaseChanged(PhaseChangedType PhaseChange)
+        {
+            if (PhaseChange.EventStageName == ReSetEvent)
+                AccumulatedValue = 0.0;
         }
 
 
