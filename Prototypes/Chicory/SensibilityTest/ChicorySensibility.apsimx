@@ -1040,7 +1040,7 @@ This is the dry matter content of the harvested yield and is used to convert fre
         <Name>Choice</Name>
         <Command />
       </Cultivar>
-      <CropType>SCUM</CropType>
+      <CropType>Chicory</CropType>
     </Plant>
   </Replacements>
   <Memo>
@@ -2250,20 +2250,20 @@ namespace Models
           </TillageTypes>
           <Pools>
             <Pool>
-              <PoolName>maize</PoolName>
-              <ResidueType>maize</ResidueType>
+              <PoolName>grass</PoolName>
+              <ResidueType>grass</ResidueType>
               <Mass>500</Mass>
-              <CNRatio>65</CNRatio>
+              <CNRatio>40</CNRatio>
               <CPRatio>NaN</CPRatio>
               <StandingFraction>0</StandingFraction>
             </Pool>
           </Pools>
-          <PoolName>maize</PoolName>
-          <type>maize</type>
+          <PoolName>grass</PoolName>
+          <type>grass</type>
           <mass>500</mass>
           <standing_fraction>0</standing_fraction>
           <cpr />
-          <cnr>65</cnr>
+          <cnr>40</cnr>
           <CriticalResidueWeight>2000</CriticalResidueWeight>
           <OptimumDecompTemp>20</OptimumDecompTemp>
           <MaxCumulativeEOS>20</MaxCumulativeEOS>
