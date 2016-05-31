@@ -54,6 +54,9 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            if (view is MapView)
+              (view as MapView).Destroy();
+            view = null;
         }
 
         /// <summary>
@@ -71,7 +74,6 @@ namespace UserInterface.Presenters
         {
             string path = Apsim.FullPath(map).Replace(".Simulations.", "");
             string fileName = Path.Combine(folder, path + ".png");
-
             Image rawImage = view.Export();
             rawImage.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 
