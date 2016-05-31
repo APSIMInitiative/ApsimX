@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
+using System.Windows.Forms;
 using Glade;
 using Gtk;
 using WebKit;
@@ -34,6 +34,7 @@ namespace UserInterface.Views
         /// Tells view to use a mono spaced font.
         /// </summary>
         void UseMonoSpacedFont();
+
     }
 
     interface IBrowserWidget
@@ -55,7 +56,7 @@ namespace UserInterface.Views
         public System.Windows.Forms.WebBrowser wb = null;
         public Gtk.Socket socket = null;
         public bool unmapped = false;
-    
+
         public void InitIE(Gtk.Box w)
         {
             wb = new System.Windows.Forms.WebBrowser();
@@ -110,6 +111,15 @@ namespace UserInterface.Views
                 wb.Document.Body.InnerHtml = html;
             else
                wb.DocumentText = html;
+
+            // Probably should make this conditional.
+            // We use a timeout so we don't sit here forever if a document fails to load.
+
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            while (wb.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
+                while (Gtk.Application.EventsPending())
+                    Gtk.Application.RunIteration();
         }
 
         public TWWebBrowserIE(Gtk.Box w)
@@ -180,6 +190,17 @@ namespace UserInterface.Views
             Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.HTMLView.glade", "vpaned1");
             gxml.Autoconnect(this);
             _mainWidget = vpaned1;
+            // Handle a temporary browser created when we want to export a map.
+            if (owner == null)
+            {
+                Gtk.Window win = new Gtk.Window(Gtk.WindowType.Popup);
+                win.SetSizeRequest(500, 500);
+                win.Add(MainWidget);
+                win.ShowAll();
+                while (Gtk.Application.EventsPending())
+                    Gtk.Application.RunIteration();
+                tempWindow = true;
+            }
             memoView1 = new MemoView(this);
             hbox1.PackStart(memoView1.MainWidget, true, true, 0);
             vpaned1.PositionSet = true;
@@ -191,6 +212,17 @@ namespace UserInterface.Views
             vpaned1.ShowAll();
             frame1.ExposeEvent += OnWidgetExpose;
             hbox1.Realized += Hbox1_Realized;
+        }
+
+        public override void Destroy()
+        {
+            if (memoView1 != null)
+                memoView1.Destroy();
+            if (tempWindow && _mainWidget != null && _mainWidget.IsRealized)
+            {
+                MainWidget.ParentWindow.Destroy();
+            }
+            base.Destroy();
         }
 
         private void Hbox1_Realized(object sender, EventArgs e)
@@ -227,6 +259,7 @@ namespace UserInterface.Views
             }
         }
 
+        protected bool tempWindow = false;
         /// <summary>
         /// Populate the view given the specified text.
         /// </summary>
@@ -246,7 +279,8 @@ namespace UserInterface.Views
                     /// with a different message loop, and probably in a different thread. 
                     /// 
                     /// Well, this hack works, more or less.
-                    (vbox2.Toplevel as Window).SetFocus += MainWindow_SetFocus;
+                    if (vbox2.Toplevel is Window)
+                       (vbox2.Toplevel as Window).SetFocus += MainWindow_SetFocus;
                     frame1.Unrealized += Frame1_Unrealized;
                 }
                 else

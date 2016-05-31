@@ -65,6 +65,16 @@ namespace UserInterface.Views
         /// </summary>
         public IGridView GridView { get { return Grid; } }
 
+        public override void Destroy()
+        {
+            if (Grid != null)
+            {
+                Grid.Destroy();
+                Grid = null;
+            }
+            base.Destroy();
+        }
+
         /// <summary>
         /// Property to provide access to the filename label.
         /// </summary>

@@ -12,6 +12,7 @@ namespace UserInterface.Presenters
     using System.Reflection;
     using EventArguments;
     using Interfaces;
+    using UserInterface.Views;
     using Models;
     using Models.Core;
     using APSIM.Shared.Utilities;
@@ -112,6 +113,9 @@ namespace UserInterface.Presenters
             this.grid.CellsChanged -= this.OnCellValueChanged;
             this.grid.ButtonClick -= OnFileBrowseClick;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+            if (this.grid is GridView)
+                (this.grid as GridView).Destroy();
+            this.grid = null;
         }
 
         /// <summary>

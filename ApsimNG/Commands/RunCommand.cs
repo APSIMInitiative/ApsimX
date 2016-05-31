@@ -25,7 +25,7 @@
         private ExplorerPresenter explorerPresenter;
 
         /// <summary>The stop watch we can use to time the runs.</summary>
-        private System.Timers.Timer timer = null;
+        private Timer timer = null;
 
         /// <summary>The stop watch we can use to time the runs.</summary>
         private Stopwatch stopwatch = new Stopwatch();
@@ -72,7 +72,7 @@
 
                 showNumberRunning = true;
 
-                timer = new System.Timers.Timer();
+                timer = new Timer();
                 timer.Interval = 1000;
                 timer.AutoReset = true;
                 timer.Elapsed += OnTimerTick;
