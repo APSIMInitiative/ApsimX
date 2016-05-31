@@ -157,6 +157,7 @@ namespace UserInterface.Presenters
             this.graphMetData = new DataTable();
             if (filename != null)
             {
+                this.weatherDataView.Filename = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
                 try
                 {
                     if (Path.GetExtension(filename) == ExcelUtilities.ExcelExtension)
@@ -166,9 +167,9 @@ namespace UserInterface.Presenters
                         if (sheetNames == null)
                         {
                             sheetNames = ExcelUtilities.GetWorkSheetNames(filename);
-                            //this.weatherDataView.ExcelSheetChangeClicked -= this.ExcelSheetValueChanged;
+                            this.weatherDataView.ExcelSheetChangeClicked -= this.ExcelSheetValueChanged;
                             this.weatherDataView.PopulateDropDownData(sheetNames);
-                            //this.weatherDataView.ExcelSheetChangeClicked += this.ExcelSheetValueChanged;
+                            this.weatherDataView.ExcelSheetChangeClicked += this.ExcelSheetValueChanged;
                         }
                     }
                     else

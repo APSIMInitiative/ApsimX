@@ -171,8 +171,14 @@ namespace UserInterface.Commands
         /// </summary>
         public void DoExportPDF(string modelNameToExport)
         {
-            // We register our own fontresolver. We don't need to do this on Windows.
-            if (GlobalFontSettings.FontResolver == null)
+            /// This is a bit tricky on non-Windows platforms. 
+            /// Normally PdfSharp tries to get a Windows DC for associated font information
+            /// See https://alex-maz.info/pdfsharp_150 for the work-around we can apply here.
+            /// See also http://stackoverflow.com/questions/32726223/pdfsharp-migradoc-font-resolver-for-embedded-fonts-system-argumentexception
+            /// The work-around is to register our own fontresolver. We don't need to do this on Windows.
+            if (Environment.OSVersion.Platform != PlatformID.Win32NT &&
+                Environment.OSVersion.Platform != PlatformID.Win32Windows &&
+                GlobalFontSettings.FontResolver == null)
                GlobalFontSettings.FontResolver = new MyFontResolver();
 
             // Create a temporary working directory.
@@ -240,9 +246,6 @@ namespace UserInterface.Commands
             FileNameWritten = Path.Combine(Path.GetDirectoryName(ExplorerPresenter.ApsimXFile.FileName), modelNameToExport + ".pdf");
             PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(false);
             pdfRenderer.Document = document;
-            /// Fails on non-Windows platforms. It's trying to get a Windows DC for associated font information
-            /// See https://alex-maz.info/pdfsharp_150 for a sort of work-around
-            /// See also http://stackoverflow.com/questions/32726223/pdfsharp-migradoc-font-resolver-for-embedded-fonts-system-argumentexception
             pdfRenderer.RenderDocument();
             pdfRenderer.PdfDocument.Save(FileNameWritten);
 
@@ -599,30 +602,15 @@ namespace UserInterface.Commands
                         section.AddParagraph(caption);
                     graphPresenter.Detach();
                 }
-                else if (tag is Map)
+                else if (tag is Map && (tag as Map).GetCoordinates().Count > 0)
                 {
-                    /* TBI
-                    Form f = new Form();
-                    f.Width = 700; // 1100;
-                    f.Height = 500; // 600;
                     MapPresenter mapPresenter = new MapPresenter();
-                    MapView mapView = new MapView();
-                    mapView.BackColor = System.Drawing.Color.White;
-                    mapView.Parent = f;
-                    (mapView as Control).Dock = DockStyle.Fill;
-                    f.Show();
-
+                    MapView mapView = new MapView(null);
                     mapPresenter.Attach(tag, mapView, ExplorerPresenter);
-
-                    Application.DoEvents();
-                    Thread.Sleep(2000);
-                    Application.DoEvents();
                     string PNGFileName = mapPresenter.ExportToPDF(workingDirectory);
-                    section.AddImage(PNGFileName);
+                    if (!String.IsNullOrEmpty(PNGFileName))
+                       section.AddImage(PNGFileName);
                     mapPresenter.Detach();
-
-                    f.Close();
-                    */
                 }
             }
         }

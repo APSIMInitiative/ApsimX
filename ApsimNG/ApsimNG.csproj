@@ -67,9 +67,6 @@
     <EmbeddedResource Include="Utility\FindAndReplaceForm.resx">
       <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\MapView.resx">
-      <DependentUpon>MapView.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\TreeProxyView.resx">
       <DependentUpon>TreeProxyView.cs</DependentUpon>
     </EmbeddedResource>
@@ -230,9 +227,6 @@
     <Compile Include="Views\ListButtonView.cs" />
     <Compile Include="Views\ManagerView.cs" />
     <Compile Include="Views\MapView.cs" />
-    <Compile Include="Views\MapView.Designer.cs">
-      <DependentUpon>MapView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\MemoView.cs" />
     <Compile Include="Views\ProfileView.cs" />
     <Compile Include="Views\ReportView.cs" />
