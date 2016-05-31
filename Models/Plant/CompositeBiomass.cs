@@ -15,6 +15,7 @@ namespace Models.PMF
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Plant))]
     public class CompositeBiomass : Biomass
     {
         /// <summary>The propertys</summary>

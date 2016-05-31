@@ -577,7 +577,7 @@ namespace Models.PMF.Organs
                 {
                     if (layer <= InitialLayers - 1)
                     {
-                        //dirstibute root biomass evently through root depth
+                        //distribute root biomass evently through root depth
                         LayerLive[layer].StructuralWt = InitialDM / InitialLayers * Plant.Population;
                         LayerLive[layer].StructuralN = InitialDM / InitialLayers * MaxNconc * Plant.Population;
                     }

@@ -457,7 +457,8 @@ namespace Models.PMF.Organs
                 {
                     if (InitialDM != null)
                     {
-                        Live.StructuralWt = InitialDM.Value;
+                        Live.StructuralWt = InitialDM.Value * Plant.Population;
+                        Live.StructuralN = InitialDM.Value * Plant.Population * MaxNconc;
                         isInitialised = true;
                     }
                 }

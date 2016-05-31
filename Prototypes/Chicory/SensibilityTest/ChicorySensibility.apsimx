@@ -69,8 +69,8 @@ private void OnDoManagement(object sender, EventArgs e)
             <Name>XYPairs</Name>
             <X>
               <double>5</double>
-              <double>30</double>
-              <double>40</double>
+              <double>25</double>
+              <double>35</double>
             </X>
             <Y>
               <double>0</double>
@@ -90,8 +90,8 @@ private void OnDoManagement(object sender, EventArgs e)
             <VariableName>[Phenology].Vegetative.ThermalTime.Vernalisation.Value</VariableName>
           </VariableReference>
           <StartStageName>StartStemElongation</StartStageName>
-          <EndStageName>StartReproductive</EndStageName>
-          <ReSetEvent>EndReproductive</ReSetEvent>
+          <EndStageName>StartFlowering</EndStageName>
+          <ResetStageName>EndReproductive</ResetStageName>
         </AccumulateFunction>
         <Memo>
           <Name>Description1</Name>
@@ -178,7 +178,7 @@ During this phase the plant only partitions biomass to Root and Stover (leaf and
             </AirTemperatureFunction>
           </AddFunction>
           <Start>Emergence</Start>
-          <End>StartInductive</End>
+          <End>Vernalised</End>
         </GenericPhase>
         <GenericPhase>
           <Name>Inductive</Name>
@@ -206,7 +206,7 @@ During this phase the plant only partitions biomass to Root and Stover (leaf and
             </XYPairs>
             <XProperty>[Phenology].Photoperiod.Value</XProperty>
           </LinearInterpolationFunction>
-          <Start>StartInductive</Start>
+          <Start>Vernalised</Start>
           <End>StartStemElongation</End>
         </GenericPhase>
         <GenericPhase>
@@ -227,7 +227,7 @@ During this phase the plant is partitioning biomass to Root, Stover and Product 
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
           <Start>StartStemElongation</Start>
-          <End>StartReproductive</End>
+          <End>StartFlowering</End>
         </GenericPhase>
         <GenericPhase>
           <Name>Reproductive</Name>
@@ -246,7 +246,7 @@ During this phase the plant is partitioning biomass to Root, Stover and Product 
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Start>StartReproductive</Start>
+          <Start>StartFlowering</Start>
           <End>EndReproductive</End>
         </GenericPhase>
         <GotoPhase>
@@ -271,7 +271,8 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
         </Memo>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>0.6</Value>
+          <Value>0.005</Value>
+          <Units>g/plant</Units>
         </Constant>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -363,12 +364,64 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
             <VariableName>[Leaf].RadIntTot</VariableName>
           </VariableReference>
         </RUEModel>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
+        <Constant>
+          <Name>ExtinctionCoefficientFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+The extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover
+]]></MemoText>
+          </Memo>
+          <Value>0.8</Value>
+        </Constant>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+DM demand is based on a simple partitioning coefficients.  At harvest the biomass partitioned to the stover = TotalDM * (1 - RootProportion) * (1 - Harvest index).  However the partitioningFraction is more complicated that this as it partitions more biomass to the stover in the CanopyExpanding Phase and less in the Yield increasing phase to give realistic patterns of accumulation of biomass in the Stover and Product over the duration of the crop
+]]></MemoText>
+          </Memo>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>VegetativeGrowth</Name>
+              <Constant>
+                <Name>LeafProportion</Name>
+                <Value>0.6</Value>
+              </Constant>
+              <Start>Emergence</Start>
+              <End>Vernalised</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>InductiveGrowth</Name>
+              <Constant>
+                <Name>LeafProportion</Name>
+                <Value>0.7</Value>
+              </Constant>
+              <Start>Vernalised</Start>
+              <End>StartStemElongation</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>StemElongation</Name>
+              <Constant>
+                <Name>LeafProportion</Name>
+                <Value>0.15</Value>
+              </Constant>
+              <Start>StartStemElongation</Start>
+              <End>StartFlowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>ReproductiveGrowth</Name>
+              <Constant>
+                <Name>LeafProportion</Name>
+                <Value>0.15</Value>
+              </Constant>
+              <Start>StartFlowering</Start>
+              <End>EndReproductive</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
+        </PartitionFractionDemandFunction>
         <DivideFunction>
           <Name>FRGRFunction</Name>
           <VariableReference>
@@ -394,64 +447,6 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
             </MaximumFunction>
           </MultiplyFunction>
         </DivideFunction>
-        <PartitionFractionDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[
-DM demand is based on a simple partitioning coefficients.  At harvest the biomass partitioned to the stover = TotalDM * (1 - RootProportion) * (1 - Harvest index).  However the partitioningFraction is more complicated that this as it partitions more biomass to the stover in the CanopyExpanding Phase and less in the Yield increasing phase to give realistic patterns of accumulation of biomass in the Stover and Product over the duration of the crop
-]]></MemoText>
-          </Memo>
-          <PhaseLookup>
-            <Name>PartitionFraction</Name>
-            <PhaseLookupValue>
-              <Name>VegetativeGrowth</Name>
-              <Constant>
-                <Name>LeafProportion</Name>
-                <Value>0.6</Value>
-              </Constant>
-              <Start>Emergence</Start>
-              <End>StartInductive</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>InductiveGrowth</Name>
-              <Constant>
-                <Name>LeafProportion</Name>
-                <Value>0.7</Value>
-              </Constant>
-              <Start>StartInductive</Start>
-              <End>StartStemElongation</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>StemElongation</Name>
-              <Constant>
-                <Name>LeafProportion</Name>
-                <Value>0.15</Value>
-              </Constant>
-              <Start>StartStemElongation</Start>
-              <End>StartReproductive</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>ReproductiveGrowth</Name>
-              <Constant>
-                <Name>LeafProportion</Name>
-                <Value>0.15</Value>
-              </Constant>
-              <Start>StartReproductive</Start>
-              <End>EndReproductive</End>
-            </PhaseLookupValue>
-          </PhaseLookup>
-        </PartitionFractionDemandFunction>
-        <Constant>
-          <Name>ExtinctionCoefficientFunction</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[
-The extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover
-]]></MemoText>
-          </Memo>
-          <Value>0.8</Value>
-        </Constant>
         <AddFunction>
           <Name>LAIFunction</Name>
           <MultiplyFunction>
@@ -505,6 +500,20 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <Start>Emergence</Start>
           <End>EndReproductive</End>
         </PhaseLookupValue>
+        <Constant>
+          <Name>SenescenceRateFunction</Name>
+          <Value>0.01</Value>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+        </Constant>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
@@ -528,14 +537,6 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
             <FractionToResidue>0.1</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <Constant>
-          <Name>SenescenceRateFunction</Name>
-          <Value>0.01</Value>
-        </Constant>
-        <Constant>
-          <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
-        </Constant>
         <BiomassYesterday>0</BiomassYesterday>
         <CohortsInitialised>false</CohortsInitialised>
         <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
@@ -558,12 +559,6 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <Name>Description</Name>
           <MemoText><![CDATA[It is the biomass that is removed from the crop at harvest and may include grain, root, leaf, stem, pod or any other organ type depending on the type of crop and how it is harvested.]]></MemoText>
         </Memo>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
         <Constant>
           <Name>DryMatterContent</Name>
           <Memo>
@@ -575,11 +570,11 @@ This is the dry matter content of the harvested yield and is used to convert fre
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.012</Value>
+          <Value>0.015</Value>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.008</Value>
+          <Value>0.005</Value>
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -614,7 +609,7 @@ This is the dry matter content of the harvested yield and is used to convert fre
                 </LinearInterpolationFunction>
               </MultiplyFunction>
               <Start>StartStemElongation</Start>
-              <End>StartReproductive</End>
+              <End>StartFlowering</End>
             </PhaseLookupValue>
             <PhaseLookupValue>
               <Name>Reproductive</Name>
@@ -644,11 +639,85 @@ This is the dry matter content of the harvested yield and is used to convert fre
                   <XProperty>[Phenology].DaysVernalised.Value</XProperty>
                 </LinearInterpolationFunction>
               </MultiplyFunction>
-              <Start>StartReproductive</Start>
+              <Start>StartFlowering</Start>
               <End>EndReproductive</End>
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0.5</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0.8</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.6</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+      </GenericAboveGroundOrgan>
+      <GenericAboveGroundOrgan>
+        <Name>Inflorescence</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[It is the biomass that is removed from the crop at harvest and may include grain, root, leaf, stem, pod or any other organ type depending on the type of crop and how it is harvested.]]></MemoText>
+        </Memo>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>ReproductiveGrowth</Name>
+              <Constant>
+                <Name>FlowerProportion</Name>
+                <Value>0.4</Value>
+              </Constant>
+              <Start>StartFlowering</Start>
+              <End>EndReproductive</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Value>0.03</Value>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.02</Value>
+        </Constant>
+        <Constant>
+          <Name>DryMatterContent</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+This is the dry matter content of the harvested yield and is used to convert fresh yield into *DryYield* which are subsequently used in determining *Ymax* (total biomass production), daily dry matter production, *HarvestIndex* and the *PartitioningFraction* of each organ]]></MemoText>
+          </Memo>
+          <Value>0.4</Value>
+        </Constant>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
@@ -681,18 +750,11 @@ This is the dry matter content of the harvested yield and is used to convert fre
 The root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply
 ]]></MemoText>
         </Memo>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <Propertys>
-            <string>[Root].LayerLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <Propertys>
-            <string>[Root].LayerDead</string>
-          </Propertys>
-        </CompositeBiomass>
+        <Constant>
+          <Name>InitialDM</Name>
+          <Value>0.01</Value>
+          <Units>g/plant</Units>
+        </Constant>
         <Constant>
           <Name>SoilWaterEffect</Name>
           <Value>1</Value>
@@ -707,11 +769,13 @@ The root organ demands and is partitioned N and DM and its depth increases throu
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.012</Value>
+          <Value>0.01</Value>
+          <Units>gN/gDM</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.009</Value>
+          <Value>0.01</Value>
+          <Units>gN/gDM</Units>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -738,6 +802,11 @@ The root organ demands and is partitioned N and DM and its depth increases throu
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
         </MultiplyFunction>
+        <Constant>
+          <Name>SpecificRootLength</Name>
+          <Value>40000</Value>
+          <Units>mm/g</Units>
+        </Constant>
         <PhaseLookup>
           <Name>PartitionFraction</Name>
           <PhaseLookupValue>
@@ -747,7 +816,7 @@ The root organ demands and is partitioned N and DM and its depth increases throu
               <Value>0.2</Value>
             </Constant>
             <Start>Emergence</Start>
-            <End>EndReproductive</End>
+            <End>Vernalised</End>
           </PhaseLookupValue>
           <PhaseLookupValue>
             <Name>InductiveGrowth</Name>
@@ -755,8 +824,8 @@ The root organ demands and is partitioned N and DM and its depth increases throu
               <Name>RootProportion</Name>
               <Value>0.25</Value>
             </Constant>
-            <Start>Emergence</Start>
-            <End>EndReproductive</End>
+            <Start>Vernalised</Start>
+            <End>StartStemElongation</End>
           </PhaseLookupValue>
           <PhaseLookupValue>
             <Name>ReproductiveGrowth</Name>
@@ -764,7 +833,7 @@ The root organ demands and is partitioned N and DM and its depth increases throu
               <Name>RootProportion</Name>
               <Value>0.1</Value>
             </Constant>
-            <Start>Emergence</Start>
+            <Start>StartStemElongation</Start>
             <End>EndReproductive</End>
           </PhaseLookupValue>
         </PhaseLookup>
@@ -802,6 +871,33 @@ The root organ demands and is partitioned N and DM and its depth increases throu
           </XYPairs>
           <XProperty>[Root].RootLengthDenisty</XProperty>
         </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>NUptakeSWFactor</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RWC</XProperty>
+        </LinearInterpolationFunction>
+        <CompositeBiomass>
+          <Name>Live</Name>
+          <Propertys>
+            <string>[Root].LayerLive</string>
+          </Propertys>
+        </CompositeBiomass>
+        <CompositeBiomass>
+          <Name>Dead</Name>
+          <Propertys>
+            <string>[Root].LayerDead</string>
+          </Propertys>
+        </CompositeBiomass>
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
@@ -825,25 +921,102 @@ The root organ demands and is partitioned N and DM and its depth increases throu
             <FractionToResidue>0.15</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <LinearInterpolationFunction>
-          <Name>NUptakeSWFactor</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>1</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Root].RWC</XProperty>
-        </LinearInterpolationFunction>
         <InitialDM>0.3</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
+      <GenericBelowGroundOrgan>
+        <Name>Taproot</Name>
+        <Constant>
+          <Name>DryMatterContent</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+This is the dry matter content of the harvested yield and is used to convert fresh yield into *DryYield* which are subsequently used in determining *Ymax* (total biomass production), daily dry matter production, *HarvestIndex* and the *PartitioningFraction* of each organ]]></MemoText>
+          </Memo>
+          <Value>0.4</Value>
+        </Constant>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Value>0.015</Value>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.01</Value>
+        </Constant>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>AllGrowth</Name>
+              <Constant>
+                <Name>TaprootProportion</Name>
+                <Value>0.4</Value>
+              </Constant>
+              <Start>Vernalised</Start>
+              <End>EndReproductive</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+      </GenericBelowGroundOrgan>
+      <CompositeBiomass>
+        <Name>AboveGround</Name>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Live</string>
+          <string>[Stem].Dead</string>
+          <string>[Inflorescence].Live</string>
+          <string>[Inflorescence].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>BelowGround</Name>
+        <Propertys>
+          <string>[Root].Live</string>
+          <string>[Root].Dead</string>
+          <string>[Taproot].Live</string>
+          <string>[Taproot].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
       <CompositeBiomass>
         <Name>Total</Name>
         <Propertys>
@@ -851,23 +1024,12 @@ The root organ demands and is partitioned N and DM and its depth increases throu
           <string>[Leaf].Dead</string>
           <string>[Stem].Live</string>
           <string>[Stem].Dead</string>
+          <string>[Inflorescence].Live</string>
+          <string>[Inflorescence].Dead</string>
           <string>[Root].Live</string>
           <string>[Root].Dead</string>
-        </Propertys>
-      </CompositeBiomass>
-      <CompositeBiomass>
-        <Name>AboveGround</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The AboveGround composite biomass object includes Stover and Product organs.
-]]></MemoText>
-        </Memo>
-        <Propertys>
-          <string>[Leaf].Live</string>
-          <string>[Leaf].Dead</string>
-          <string>[Stem].Live</string>
-          <string>[Stem].Dead</string>
+          <string>[Taproot].Live</string>
+          <string>[Taproot].Dead</string>
         </Propertys>
       </CompositeBiomass>
       <Cultivar>
@@ -878,226 +1040,8 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Name>Choice</Name>
         <Command />
       </Cultivar>
-      <GenericAboveGroundOrgan>
-        <Name>Stem1</Name>
-        <Memo>
-          <Name>Description</Name>
-          <MemoText><![CDATA[It is the biomass that is removed from the crop at harvest and may include grain, root, leaf, stem, pod or any other organ type depending on the type of crop and how it is harvested.]]></MemoText>
-        </Memo>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
-        <Constant>
-          <Name>MaximumNConc</Name>
-          <Value>0.012</Value>
-        </Constant>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <Value>0.008</Value>
-        </Constant>
-        <Constant>
-          <Name>DryMatterContent</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[
-This is the dry matter content of the harvested yield and is used to convert fresh yield into *DryYield* which are subsequently used in determining *Ymax* (total biomass production), daily dry matter production, *HarvestIndex* and the *PartitioningFraction* of each organ]]></MemoText>
-          </Memo>
-          <Value>0.4</Value>
-        </Constant>
-        <Folder>
-          <Name>BiomassRemovalDefaults</Name>
-          <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionRemoved>0.5</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
-          </OrganBiomassRemovalType>
-        </Folder>
-      </GenericAboveGroundOrgan>
       <CropType>SCUM</CropType>
     </Plant>
-    <GenericAboveGroundOrgan>
-      <Name>Taproot</Name>
-      <Biomass>
-        <Name>Live</Name>
-      </Biomass>
-      <Biomass>
-        <Name>Dead</Name>
-      </Biomass>
-      <Constant>
-        <Name>MaximumNConc</Name>
-        <Value>0.012</Value>
-      </Constant>
-      <Constant>
-        <Name>MinimumNConc</Name>
-        <Value>0.008</Value>
-      </Constant>
-      <AllometricDemandFunction>
-        <Name>DMDemandFunction</Name>
-        <Const>1</Const>
-        <Power>1</Power>
-        <XProperty>[Leaf].Live.Wt</XProperty>
-        <YProperty>[Taproot].Live.Wt</YProperty>
-      </AllometricDemandFunction>
-      <PartitionFractionDemandFunction>
-        <Name>DMDemandFunction1</Name>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <PhaseLookupValue>
-            <Name>VegetativeGrowth</Name>
-            <Constant>
-              <Name>TaprootProportion</Name>
-              <Value>0.2</Value>
-            </Constant>
-            <Start>Emergence</Start>
-            <End>EndReproductive</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>InductiveGrowth</Name>
-            <Constant>
-              <Name>TaprootProportion</Name>
-              <Value>0.05</Value>
-            </Constant>
-            <Start>Emergence</Start>
-            <End>EndReproductive</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>ReproductiveGrowth</Name>
-            <Constant>
-              <Name>TaprootProportion</Name>
-              <Value>0</Value>
-            </Constant>
-            <Start>Emergence</Start>
-            <End>EndReproductive</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
-      </PartitionFractionDemandFunction>
-      <Constant>
-        <Name>DryMatterContent</Name>
-        <Memo>
-          <Name>Description</Name>
-          <MemoText><![CDATA[
-This is the dry matter content of the harvested yield and is used to convert fresh yield into *DryYield* which are subsequently used in determining *Ymax* (total biomass production), daily dry matter production, *HarvestIndex* and the *PartitioningFraction* of each organ]]></MemoText>
-        </Memo>
-        <Value>0.4</Value>
-      </Constant>
-      <Folder>
-        <Name>BiomassRemovalDefaults</Name>
-        <OrganBiomassRemovalType>
-          <Name>Harvest</Name>
-          <FractionRemoved>0</FractionRemoved>
-          <FractionToResidue>0</FractionToResidue>
-        </OrganBiomassRemovalType>
-        <OrganBiomassRemovalType>
-          <Name>Cut</Name>
-          <FractionRemoved>0</FractionRemoved>
-          <FractionToResidue>0</FractionToResidue>
-        </OrganBiomassRemovalType>
-        <OrganBiomassRemovalType>
-          <Name>Prune</Name>
-          <FractionRemoved>0</FractionRemoved>
-          <FractionToResidue>0</FractionToResidue>
-        </OrganBiomassRemovalType>
-        <OrganBiomassRemovalType>
-          <Name>Graze</Name>
-          <FractionRemoved>0</FractionRemoved>
-          <FractionToResidue>0</FractionToResidue>
-        </OrganBiomassRemovalType>
-      </Folder>
-      <Constant>
-        <Name>StructuralFraction</Name>
-        <Value>0.8</Value>
-      </Constant>
-      <Constant>
-        <Name>DMRetranslocationFactor</Name>
-        <Value>0</Value>
-      </Constant>
-    </GenericAboveGroundOrgan>
-    <GenericAboveGroundOrgan>
-      <Name>Inflorescence</Name>
-      <Memo>
-        <Name>Description</Name>
-        <MemoText><![CDATA[It is the biomass that is removed from the crop at harvest and may include grain, root, leaf, stem, pod or any other organ type depending on the type of crop and how it is harvested.]]></MemoText>
-      </Memo>
-      <Biomass>
-        <Name>Live</Name>
-      </Biomass>
-      <Biomass>
-        <Name>Dead</Name>
-      </Biomass>
-      <Constant>
-        <Name>MaximumNConc</Name>
-        <Value>0.012</Value>
-      </Constant>
-      <Constant>
-        <Name>MinimumNConc</Name>
-        <Value>0.008</Value>
-      </Constant>
-      <PartitionFractionDemandFunction>
-        <Name>DMDemandFunction</Name>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <PhaseLookupValue>
-            <Name>ReproductiveGrowth</Name>
-            <Constant>
-              <Name>StemProportion</Name>
-              <Value>0.4</Value>
-            </Constant>
-            <Start>StartReproductive</Start>
-            <End>EndReproductive</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
-      </PartitionFractionDemandFunction>
-      <Constant>
-        <Name>DryMatterContent</Name>
-        <Memo>
-          <Name>Description</Name>
-          <MemoText><![CDATA[
-This is the dry matter content of the harvested yield and is used to convert fresh yield into *DryYield* which are subsequently used in determining *Ymax* (total biomass production), daily dry matter production, *HarvestIndex* and the *PartitioningFraction* of each organ]]></MemoText>
-        </Memo>
-        <Value>0.4</Value>
-      </Constant>
-      <Folder>
-        <Name>BiomassRemovalDefaults</Name>
-        <OrganBiomassRemovalType>
-          <Name>Harvest</Name>
-          <FractionRemoved>0.5</FractionRemoved>
-          <FractionToResidue>0.1</FractionToResidue>
-        </OrganBiomassRemovalType>
-        <OrganBiomassRemovalType>
-          <Name>Cut</Name>
-          <FractionRemoved>0.8</FractionRemoved>
-          <FractionToResidue>0</FractionToResidue>
-        </OrganBiomassRemovalType>
-        <OrganBiomassRemovalType>
-          <Name>Prune</Name>
-          <FractionRemoved>0</FractionRemoved>
-          <FractionToResidue>0.6</FractionToResidue>
-        </OrganBiomassRemovalType>
-        <OrganBiomassRemovalType>
-          <Name>Graze</Name>
-          <FractionRemoved>0.6</FractionRemoved>
-          <FractionToResidue>0.2</FractionToResidue>
-        </OrganBiomassRemovalType>
-      </Folder>
-    </GenericAboveGroundOrgan>
   </Replacements>
   <Memo>
     <Name>TitlePage</Name>
@@ -2811,14 +2755,32 @@ namespace Models
             <string>[AutomaticIrrigation].Script.EndDate</string>
             <string>[AutomaticIrrigation].Script.TodayYear</string>
             <string>[Irrigation].IrrigationApplied as Irrigation Applied (mm)</string>
-            <string />
             <string>[Fertiliser].NitrogenApplied as Nitrogen Applied</string>
             <string />
-            <string>[Chicory].Leaf.DMDemand</string>
-            <string>[Chicory].Stem.DMDemand</string>
-            <string>[Chicory].Inflorescence.DMDemand</string>
-            <string>[Chicory].Root.DMDemand</string>
-            <string>[Chicory].Taproot.DMDemand</string>
+            <string>[Chicory].Leaf.Live.StructuralWt</string>
+            <string>[Chicory].Leaf.Live.NonStructuralWt</string>
+            <string>[Chicory].Leaf.Live.StructuralN</string>
+            <string>[Chicory].Leaf.Live.NonStructuralN</string>
+            <string>[Chicory].Stem.Live.StructuralWt</string>
+            <string>[Chicory].Stem.Live.NonStructuralWt</string>
+            <string>[Chicory].Stem.Live.StructuralN</string>
+            <string>[Chicory].Stem.Live.NonStructuralN</string>
+            <string>[Chicory].Inflorescence.Live.StructuralWt</string>
+            <string>[Chicory].Inflorescence.Live.NonStructuralWt</string>
+            <string>[Chicory].Inflorescence.Live.StructuralN</string>
+            <string>[Chicory].Inflorescence.Live.NonStructuralN</string>
+            <string>[Chicory].Root.Live.StructuralWt</string>
+            <string>[Chicory].Root.Live.NonStructuralWt</string>
+            <string>[Chicory].Root.Live.StructuralN</string>
+            <string>[Chicory].Root.Live.NonStructuralN</string>
+            <string>[Chicory].Taproot.Live.StructuralWt</string>
+            <string>[Chicory].Taproot.Live.NonStructuralWt</string>
+            <string>[Chicory].Taproot.Live.StructuralN</string>
+            <string>[Chicory].Taproot.Live.NonStructuralN</string>
+            <string>[Chicory].Leaf.Live.StructuralNConc</string>
+            <string>[Chicory].Leaf.Live.NonStructuralNConc</string>
+            <string>[Chicory].Root.Live.StructuralNConc</string>
+            <string>[Chicory].Root.Live.NonStructuralNConc</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -4195,6 +4157,652 @@ This model has been built to simulate a range of different crops in simulations 
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
+      <Folder>
+        <Name>PlantWt</Name>
+        <Graph>
+          <Name>Leaf</Name>
+          <Series>
+            <Name>Structural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.Live.StructuralWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>NonStructural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.Live.NonStructuralWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Stem</Name>
+          <Series>
+            <Name>Structural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Stem.Live.StructuralWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>NonStructural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Stem.Live.NonStructuralWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Inflorescence</Name>
+          <Series>
+            <Name>Structural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Inflorescence.Live.StructuralWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>NonStructural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Inflorescence.Live.NonStructuralWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Root</Name>
+          <Series>
+            <Name>Structural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Root.Live.StructuralWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>NonStructural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Root.Live.NonStructuralWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Taproot</Name>
+          <Series>
+            <Name>Structural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Taproot.Live.StructuralWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>NonStructural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Taproot.Live.NonStructuralWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+      </Folder>
+      <Folder>
+        <Name>PlantN</Name>
+        <Graph>
+          <Name>Leaf</Name>
+          <Series>
+            <Name>Structural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.Live.StructuralN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>NonStructural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.Live.NonStructuralN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Stem</Name>
+          <Series>
+            <Name>Structural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Stem.Live.StructuralN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>NonStructural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Stem.Live.NonStructuralN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Inflorescence</Name>
+          <Series>
+            <Name>Structural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Inflorescence.Live.StructuralN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>NonStructural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Inflorescence.Live.NonStructuralN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Root</Name>
+          <Series>
+            <Name>Structural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Root.Live.StructuralN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>NonStructural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Root.Live.NonStructuralN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Taproot</Name>
+          <Series>
+            <Name>Structural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Taproot.Live.StructuralN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>NonStructural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Taproot.Live.NonStructuralN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+      </Folder>
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
