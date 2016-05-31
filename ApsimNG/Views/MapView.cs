@@ -67,6 +67,11 @@ namespace UserInterface.Views
      var mapProp = {
        center:myCenter,
        zoom: 6,
+";
+            if (tempWindow) // When exporting into a report, leave off the controls
+                html += "disableDefaultUI: true,";
+            html += @"
+
        mapTypeId: google.maps.MapTypeId.TERRAIN
      };
 
@@ -106,9 +111,12 @@ google.maps.event.addDomListener(window, 'load', initialize);
             // Create a Bitmap and draw the DataGridView on it.
             int width;
             int height;
+            // Give the browser a fraction of a second to run all its scripts
+            // It would be better if we could tap into the browser's Javascript engine
+            // and see whether loading of the map was complete, but this will do for now.
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            while (watch.ElapsedMilliseconds < 10) // Give the browser a fraction of a second to run all its scripts
+            while (watch.ElapsedMilliseconds < 500)
                 Gtk.Application.RunIteration();
             Gdk.Window gridWindow = MainWidget.GdkWindow;
             gridWindow.GetSize(out width, out height);

@@ -152,6 +152,14 @@ namespace UserInterface.Views
         public void LoadHTML(string html)
         {
             wb.LoadHtmlString(html, "about:blank");
+            // Probably should make this conditional.
+            // We use a timeout so we don't sit here forever if a document fails to load.
+
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            while (wb.LoadStatus != LoadStatus.Finished && watch.ElapsedMilliseconds < 10000)
+                while (Gtk.Application.EventsPending())
+                    Gtk.Application.RunIteration();
         }
 
         public TWWebBrowserWK(Gtk.Box w)

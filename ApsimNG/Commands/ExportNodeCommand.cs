@@ -177,7 +177,7 @@ namespace UserInterface.Commands
             /// See also http://stackoverflow.com/questions/32726223/pdfsharp-migradoc-font-resolver-for-embedded-fonts-system-argumentexception
             /// The work-around is to register our own fontresolver. We don't need to do this on Windows.
             if (Environment.OSVersion.Platform != PlatformID.Win32NT &&
-                Environment.OSVersion.Platform == PlatformID.Win32Windows &&
+                Environment.OSVersion.Platform != PlatformID.Win32Windows &&
                 GlobalFontSettings.FontResolver == null)
                GlobalFontSettings.FontResolver = new MyFontResolver();
 
