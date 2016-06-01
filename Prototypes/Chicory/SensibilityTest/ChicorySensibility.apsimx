@@ -262,6 +262,72 @@ During this phase the plant is partitioning biomass to Root, Stover and Product 
         <NArbitrationOption>RelativeAllocation</NArbitrationOption>
         <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
       </OrganArbitrator>
+      <PhaseLookup>
+        <Name>ShootRootRatio</Name>
+        <PhaseLookupValue>
+          <Name>Vegetative</Name>
+          <Constant>
+            <Name>TargetSR</Name>
+            <Value>1</Value>
+          </Constant>
+        </PhaseLookupValue>
+        <PhaseLookupValue>
+          <Name>InductiveElongation</Name>
+          <MultiplyFunction>
+            <Name>TargetSR</Name>
+            <Constant>
+              <Name>MaxTargetSR</Name>
+              <Value>4</Value>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>VernalisationEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>10</double>
+                  <double>35</double>
+                  <double>40</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>0.1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Phenology].DaysVernalised.Value</XProperty>
+            </LinearInterpolationFunction>
+          </MultiplyFunction>
+        </PhaseLookupValue>
+        <PhaseLookupValue>
+          <Name>Reproductive</Name>
+          <MultiplyFunction>
+            <Name>TargetSR</Name>
+            <Constant>
+              <Name>MaxTargetSR</Name>
+              <Value>3</Value>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>VernalisationEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>5</double>
+                  <double>5.6</double>
+                  <double>6</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0.33</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Phenology].Stage</XProperty>
+            </LinearInterpolationFunction>
+          </MultiplyFunction>
+        </PhaseLookupValue>
+      </PhaseLookup>
       <SimpleLeaf>
         <Name>Leaf</Name>
         <Memo>
