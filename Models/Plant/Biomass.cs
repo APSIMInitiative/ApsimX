@@ -4,6 +4,7 @@ using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF
 {
@@ -32,6 +33,7 @@ namespace Models.PMF
     /// Biomass of plant organs
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(IOrgan))]
     [XmlInclude(typeof(CompositeBiomass))]
     public class Biomass: Model
     {

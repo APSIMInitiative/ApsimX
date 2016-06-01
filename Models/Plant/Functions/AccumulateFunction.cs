@@ -19,6 +19,7 @@ namespace Models.PMF.Functions
         //Class members
         /// <summary>The accumulated value</summary>
         private double AccumulatedValue = 0;
+        
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
 
@@ -27,13 +28,17 @@ namespace Models.PMF.Functions
         Phenology Phenology = null;
 
         /// <summary>The start stage name</summary>
-        [Description("StartStageName")]
+        [Description("Stage name to start accumulation")]
         public string StartStageName { get; set; }
 
         /// <summary>The end stage name</summary>
-        [Description("EndStageName")]
+        [Description("Stage name to stop accumulation")]
         public string EndStageName { get; set; }
-    
+
+        /// <summary>The re set event</summary>
+        [Description("(optional) Stage name to reset accumulation to zero")]
+        public string ResetStageName { get; set; }
+
         /// <summary>The fraction removed on cut</summary>
         private double FractionRemovedOnCut = 0; //FIXME: This should be passed from teh manager when "cut event" is called. Must be made general to other events.
 
@@ -65,6 +70,15 @@ namespace Models.PMF.Functions
                 AccumulatedValue += DailyIncrement;
             }
 
+        }
+
+        /// <summary>Called when [phase changed].</summary>
+        /// <param name="PhaseChange">The phase change.</param>
+        [EventSubscribe("PhaseChanged")]
+        private void OnPhaseChanged(PhaseChangedType PhaseChange)
+        {
+            if (PhaseChange.EventStageName == ResetStageName)
+                AccumulatedValue = 0.0;
         }
 
 
