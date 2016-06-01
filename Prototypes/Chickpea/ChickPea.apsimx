@@ -117,7 +117,7 @@ The duration of the grain filling phase has been taken from the model of Roberts
             <Name>Target</Name>
             <Constant>
               <Name>NumberOfFloweringNodes</Name>
-              <Value>9.8</Value>
+              <Value>5</Value>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
@@ -844,134 +844,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <InitialiseStage>Emergence</InitialiseStage>
         <PrimaryBudNo>0</PrimaryBudNo>
       </Structure>
-      <ReproductiveOrgan>
-        <Name>Grain</Name>
-        <Constant>
-          <Name>MaximumPotentialGrainSize</Name>
-          <Value>0.22</Value>
-        </Constant>
-        <PhaseLookup>
-          <Name>DMDemandFunction</Name>
-          <PhaseLookupValue>
-            <Name>GrainFilling</Name>
-            <FillingRateFunction>
-              <Name>FillingRateFunction</Name>
-              <VariableReference>
-                <Name>NumberFunction</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>PotentialSizeIncrement</Name>
-                <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>FillingDuration</Name>
-                <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
-              </VariableReference>
-            </FillingRateFunction>
-            <Start>StartFlowering</Start>
-            <End>EndGrainFill</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <Value>0.02</Value>
-        </Constant>
-        <Constant>
-          <Name>MaximumNConc</Name>
-          <Value>0.028</Value>
-        </Constant>
-        <Constant>
-          <Name>WaterContent</Name>
-          <Value>0.12</Value>
-        </Constant>
-        <PhaseLookup>
-          <Name>NFillingRate</Name>
-          <PhaseLookupValue>
-            <Name>GrainFilling</Name>
-            <FillingRateFunction>
-              <Name>FillingRateFunction</Name>
-              <VariableReference>
-                <Name>NumberFunction</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
-              </VariableReference>
-              <AddFunction>
-                <Name>FillingDuration</Name>
-                <VariableReference>
-                  <Name>FillingDuration</Name>
-                  <VariableName>[Phenology].Flowering.Target.Value</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>FillingDuration</Name>
-                  <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
-                </VariableReference>
-              </AddFunction>
-              <VariableReference>
-                <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
-              </VariableReference>
-              <MultiplyFunction>
-                <Name>PotentialSizeIncrement</Name>
-                <Constant>
-                  <Name>MaximumFinalNConc</Name>
-                  <Value>0.028</Value>
-                </Constant>
-                <VariableReference>
-                  <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
-                </VariableReference>
-              </MultiplyFunction>
-            </FillingRateFunction>
-            <Start>StartFlowering</Start>
-            <End>EndGrainFill</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
-        <MultiplyFunction>
-          <Name>NumberFunction</Name>
-          <Constant>
-            <Name>PeasPerPod</Name>
-            <Value>1.5</Value>
-          </Constant>
-          <VariableReference>
-            <Name>PodNumber</Name>
-            <VariableName>[Shell].PodNumber.Value</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
-        <Folder>
-          <Name>BiomassRemovalDefaults</Name>
-          <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionRemoved>1</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <FractionRemoved>1</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.8</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
-          </OrganBiomassRemovalType>
-        </Folder>
-        <RipeStage />
-      </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
         <CompositeBiomass>
@@ -1263,6 +1135,99 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <SpecificRootLength>40000</SpecificRootLength>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
+      <HIReproductiveOrgan>
+        <Name>Grain</Name>
+        <Constant>
+          <Name>WaterContent</Name>
+          <Value>0.12</Value>
+        </Constant>
+        <Constant>
+          <Name>NConc</Name>
+          <Value>0.02</Value>
+        </Constant>
+        <VariableReference>
+          <Name>AboveGroundWt</Name>
+          <VariableName>[AboveGround].Wt</VariableName>
+        </VariableReference>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>1</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>1</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.8</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0.6</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Thin</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.05</FractionToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <PhaseLookup>
+          <Name>HIIncrement</Name>
+          <PhaseLookupValue>
+            <Name>Vegetative</Name>
+            <Constant>
+              <Name>Function</Name>
+              <Value>0</Value>
+            </Constant>
+            <Start>Emergence</Start>
+            <End>EndFlowering</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>Reproductive</Name>
+            <MultiplyFunction>
+              <Name>HIIncrement</Name>
+              <DivideFunction>
+                <Name>IncrementPerDegreeDay</Name>
+                <Constant>
+                  <Name>PotentialHarvestIndex</Name>
+                  <Value>0.5</Value>
+                </Constant>
+                <VariableReference>
+                  <Name>GrainFillingDuration</Name>
+                  <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                </VariableReference>
+              </DivideFunction>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+            </MultiplyFunction>
+            <Start>EndFlowering</Start>
+            <End>EndGrainFill</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>Ripening</Name>
+            <Constant>
+              <Name>Function</Name>
+              <Value>0</Value>
+            </Constant>
+            <Start>EndGrainFill</Start>
+            <End>HarvestRipe</End>
+          </PhaseLookupValue>
+        </PhaseLookup>
+      </HIReproductiveOrgan>
       <Nodule>
         <Name>Nodule</Name>
         <Biomass>
@@ -2472,6 +2437,7 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
         <string>[Chickpea].Shell.Live.Wt</string>
         <string>[Chickpea].Grain.Live.Wt</string>
         <string>[Chickpea].Grain.NumberFunction.Value</string>
+        <string>[Chickpea].Grain.HI</string>
         <string>[Chickpea].Shell.PodNumber.Value</string>
         <string>[Chickpea].Nodule.NFixed</string>
         <string>[Chickpea].Arbitrator.DMNutrientLimitation</string>
@@ -2514,58 +2480,30 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>Chickpea.AboveGround.Wt</Name>
             <n>73</n>
-            <Slope>0.48015974561227892</Slope>
-            <Intercept>635.98899562737552</Intercept>
-            <SEslope>0.0701026769380031</SEslope>
-            <SEintercept>55.465493805455282</SEintercept>
-            <R2>0.39786614661898989</R2>
-            <RMSE>334.23518241519469</RMSE>
-            <NSE>-0.42453272130345621</NSE>
-            <ME>251.31342410021657</ME>
-            <MAE>292.92820133699917</MAE>
-            <RSR>1.1853347942401276</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>Chickpea.Grain.NumberFunction.Value</Name>
-            <n>197</n>
-            <Slope>2.896701021567933</Slope>
-            <Intercept>9442.4572651017625</Intercept>
-            <SEslope>0.37146102088369681</SEslope>
-            <SEintercept>444.55664840894997</SEintercept>
-            <R2>0.23771793103713113</R2>
-            <RMSE>12030.385635539544</RMSE>
-            <NSE>-138.18957101752861</NSE>
-            <ME>10630.696372533017</ME>
-            <MAE>10637.37816082702</MAE>
-            <RSR>11.767881073997748</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>Chickpea.Grain.Size</Name>
-            <n>197</n>
-            <Slope>-0.26892531554058469</Slope>
-            <Intercept>0.13170912463848927</Intercept>
-            <SEslope>0.024774295182542396</SEslope>
-            <SEintercept>0.0085898253324311353</SEintercept>
-            <R2>0.37666088729591352</R2>
-            <RMSE>0.3137536935706372</RMSE>
-            <NSE>-16.490524141833845</NSE>
-            <ME>-0.29783432659674075</ME>
-            <MAE>0.29846762409004823</MAE>
-            <RSR>4.1715392549186294</RSR>
+            <Slope>0.58219501154962616</Slope>
+            <Intercept>321.36184861718669</Intercept>
+            <SEslope>0.0746138966356274</SEslope>
+            <SEintercept>59.034787292135015</SEintercept>
+            <R2>0.46164487615509464</R2>
+            <RMSE>211.74412249144424</RMSE>
+            <NSE>0.42827019644025321</NSE>
+            <ME>12.191153653703379</ME>
+            <MAE>167.59195598411642</MAE>
+            <RSR>0.75093134735639444</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chickpea.Shell.PodNumber.Value</Name>
             <n>197</n>
-            <Slope>2.9600960989745353</Slope>
-            <Intercept>5871.8522160013181</Intercept>
-            <SEslope>0.30606866824028528</SEslope>
-            <SEintercept>291.62058803242235</SEintercept>
-            <R2>0.32417197104640183</R2>
-            <RMSE>7854.2366892516784</RMSE>
-            <NSE>-101.21834433700083</NSE>
-            <ME>6953.1344999009325</ME>
-            <MAE>6957.908551657003</MAE>
-            <RSR>10.084615485612259</RSR>
+            <Slope>1.4989546913577334</Slope>
+            <Intercept>3000.6760066687125</Intercept>
+            <SEslope>0.15637664631427622</SEslope>
+            <SEintercept>148.99483117594414</SEintercept>
+            <R2>0.32027941806966009</R2>
+            <RMSE>3709.4066354712645</RMSE>
+            <NSE>-21.799733038702666</NSE>
+            <ME>3275.9231583343721</ME>
+            <MAE>3297.6855490541416</MAE>
+            <RSR>4.7627721290470131</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FloweringDAS</Name>
@@ -2584,30 +2522,30 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>GrainWt</Name>
             <n>312</n>
-            <Slope>1.3449170204745258</Slope>
-            <Intercept>221.73219222567604</Intercept>
-            <SEslope>0.095798055184879577</SEslope>
-            <SEintercept>20.73369981876148</SEintercept>
-            <R2>0.388675793368483</R2>
-            <RMSE>343.59828382730421</RMSE>
-            <NSE>-8.6303101237248718</NSE>
-            <ME>285.87500912297503</ME>
-            <MAE>296.05630201490862</MAE>
-            <RSR>3.0982969104208182</RSR>
+            <Slope>0.52590390240961482</Slope>
+            <Intercept>124.93194389316754</Intercept>
+            <SEslope>0.049321839214493839</SEslope>
+            <SEintercept>10.674790911036585</SEintercept>
+            <R2>0.268338401542484</R2>
+            <RMSE>115.55133364682041</RMSE>
+            <NSE>-0.089151328362333082</NSE>
+            <ME>36.766218880156963</ME>
+            <MAE>90.516398425994055</MAE>
+            <RSR>1.0419503148999698</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
             <n>208</n>
-            <Slope>0.77466442891366183</Slope>
-            <Intercept>42.53722260568901</Intercept>
-            <SEslope>0.01506284065511003</SEslope>
-            <SEintercept>2.4752319035976984</SEintercept>
-            <R2>0.92774276615222928</R2>
-            <RMSE>16.989838676963085</RMSE>
-            <NSE>0.881054566601664</NSE>
-            <ME>7.2115384615384617</ME>
-            <MAE>15.33173076923077</MAE>
-            <RSR>0.34405461827034323</RSR>
+            <Slope>0.78058605231695788</Slope>
+            <Intercept>30.431009644464595</Intercept>
+            <SEslope>0.014719346520666142</SEslope>
+            <SEintercept>2.4187865318553</SEintercept>
+            <R2>0.93175008035545992</R2>
+            <RMSE>15.520142092678245</RMSE>
+            <NSE>0.90074311330750589</NSE>
+            <ME>-3.9663461538461542</ME>
+            <MAE>11.619134615384615</MAE>
+            <RSR>0.31429236408455286</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -3904,6 +3842,70 @@ namespace Models
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Chickpea.Leaf.LAI</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>HI</Name>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>ObservedHarvestData</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>HI</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Chickpea.Grain.HI</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
