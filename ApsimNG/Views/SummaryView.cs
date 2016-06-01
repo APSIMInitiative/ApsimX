@@ -31,6 +31,16 @@ namespace UserInterface.Views
             vbox1.PackEnd(htmlview.MainWidget, true, true, 0);
         }
 
+        public override void Destroy()
+        {
+            if (htmlview != null)
+            {
+                htmlview.Destroy();
+                htmlview = null;
+            }
+            base.Destroy();
+        }
+
         /// <summary>Occurs when the name of the simulation is changed by the user</summary>
         public event EventHandler SimulationNameChanged;
 
