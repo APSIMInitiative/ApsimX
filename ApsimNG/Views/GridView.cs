@@ -341,7 +341,7 @@ namespace UserInterface.Views
                     return false;
                 }
             }
-            return true;
+            /// TBI return true;
         }
 
         /// <summary>
