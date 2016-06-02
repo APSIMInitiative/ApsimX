@@ -642,7 +642,6 @@ namespace UserInterface.Views
             if (x != null && y != null && x != null && y != null)
             {
                 // Create a new data point for each x.
-                IEnumerator xEnum = x.GetEnumerator();
                 double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
                 double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
 
@@ -814,7 +813,6 @@ namespace UserInterface.Views
                 Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
                 if (legendArea.Contains(Location))
                 {
-                    int margin = Convert.ToInt32(this.plot1.Model.LegendMargin);
                     int y = Convert.ToInt32(Location.Y - this.plot1.Model.LegendArea.Top);
                     int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height) / this.plot1.Model.Series.Count;
                     int seriesIndex = y / itemHeight;

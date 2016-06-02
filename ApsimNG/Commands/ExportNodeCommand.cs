@@ -35,8 +35,8 @@ namespace UserInterface.Commands
         private ExplorerPresenter ExplorerPresenter;
         private string NodePath;
         private string[] indents = new string[] { string.Empty, " class=\"tab1\"", " class=\"tab2\"", " class=\"tab3\"",
-                                                  " class=\"tab4\"", " class=\"tab5\"", " class=\"tab6\"",
-                                                  " class=\"tab7\"", " class=\"tab8\"", " class=\"tab9\""};
+                                                   " class=\"tab4\"", " class=\"tab5\"", " class=\"tab6\"",
+                                                   " class=\"tab7\"", " class=\"tab8\"", " class=\"tab9\""};
 
         // Setup a list of model types that we will recurse down through.
         private static Type[] modelTypesToRecurseDown = new Type[] {typeof(Folder),
@@ -145,7 +145,7 @@ namespace UserInterface.Commands
                     if (Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
                     {
                         tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel));
-                        string childFolderPath = Path.Combine(workingDirectory, child.Name);
+                        // string childFolderPath = Path.Combine(workingDirectory, child.Name);
                         AddValidationTags(tags, child, headingLevel + 1, workingDirectory);
 
                         if (child.Name == "Validation")
@@ -473,7 +473,7 @@ namespace UserInterface.Commands
             Bitmap image = new Bitmap(400, 250);
             graph.Export(ref image, false);
             image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
-            MigraDoc.DocumentObjectModel.Shapes.Image image1 = row.Cells[0].AddImage(PNGFileName);
+            row.Cells[0].AddImage(PNGFileName);
 
             // Add x/y data.
             Paragraph xyParagraph = row.Cells[1].AddParagraph();
@@ -490,7 +490,7 @@ namespace UserInterface.Commands
             }
 
             // Add an empty paragraph for spacing.
-            Paragraph spacing = section.AddParagraph();
+            section.AddParagraph();
         }
 
         /// <summary>Creates the table.</summary>

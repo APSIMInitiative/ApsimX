@@ -723,7 +723,6 @@ namespace UserInterface.Presenters
                     if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
                     {
                         this.HideRightHandPanel();
-                        string parentModelPath = StringUtilities.ParentName(e.NodePath);
                         RenameModelCommand cmd = new RenameModelCommand(model,  e.NewName, view);
                         CommandHistory.Add(cmd);
                         this.ShowRightHandPanel();

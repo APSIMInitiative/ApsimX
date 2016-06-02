@@ -78,8 +78,8 @@ namespace UserInterface.Views
             {
                 textView.Buffer.Clear();
                 TextIter iter = textView.Buffer.EndIter;
-                foreach (string line in MemoLines)
-                    textView.Buffer.Insert(ref iter, line);
+                foreach (string line in value)
+                    textView.Buffer.Insert(ref iter, line + Environment.NewLine);
             }
         }
 
@@ -145,11 +145,10 @@ namespace UserInterface.Views
         public Point CurrentPosition
         {
             get
-            {   /* TBI
-                int lineNumber = richTextBox1.GetLineFromCharIndex(richTextBox1.SelectionStart);
-                int firstCharOfLine = richTextBox1.GetFirstCharIndexFromLine(lineNumber);
-                int colNumber = richTextBox1.SelectionStart - firstCharOfLine; */
-                return new Point(0, 0); /// TBI colNumber, lineNumber);
+            {
+                TextIter cursorIter = textView.Buffer.GetIterAtMark(textView.Buffer.InsertMark);
+                int lineNumber = cursorIter.Line;
+                return new Point(cursorIter.Offset, cursorIter.Line);
             }
         }
 
@@ -158,10 +157,10 @@ namespace UserInterface.Views
         /// </summary>
         public void Export(int width, int height, Graphics graphics)
         {
+            /* TBI
             float x = 10;
             float y = 0;
             int charpos = 0;
-            /* TBI
             while (charpos < richTextBox1.Text.Length)
             {
                 if (richTextBox1.Text[charpos] == '\n')

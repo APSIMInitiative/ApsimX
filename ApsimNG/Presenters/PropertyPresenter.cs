@@ -186,7 +186,6 @@ namespace UserInterface.Presenters
 
                     if (includeProperty)
                     {
-                        Attribute descriptionAttribute = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), true);
                         this.properties.Add(new VariableProperty(this.model, property));
                     }
 
