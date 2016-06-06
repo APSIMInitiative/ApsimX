@@ -135,7 +135,7 @@
                 if (File.Exists(fullPath))
                 {
                     Paragraph para = section.Section.AddParagraph();
-                    Image image1 = para.AddImage(fullPath);
+                    para.AddImage(fullPath);
                 }
             }
             return section;

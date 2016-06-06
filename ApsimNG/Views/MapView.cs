@@ -26,6 +26,17 @@ namespace UserInterface.Views
         Image Export();
     }
 
+    /// It would be good if we could retrieve the current center and zoom values for a map,
+    /// and store them as part of the Map object, so that maps can be recreated and exported
+    /// using those settings. 
+    /// Google map readily allows the center and zoom values to be obtained in JavaScript, and
+    /// provides event handlers for when those values change, but the problem is getting those
+    /// values back to the hosting application. With IE, it should be possible to use
+    /// the ObjectForScripting approach. For Webkit, it may be a bit harder. See
+    /// http://stackoverflow.com/questions/9804360/how-to-call-javascript-from-monos-webkitsharp
+    /// for a workaround using the document title as a mechanism for receiving information. Webkit
+    /// does provide a listener for title changes.
+    /// 
     /// <summary>
     /// A Windows forms implementation of an AxisView
     /// </summary>
@@ -69,7 +80,12 @@ namespace UserInterface.Views
        zoom: 6,
 ";
             if (tempWindow) // When exporting into a report, leave off the controls
-                html += "disableDefaultUI: true,";
+            {
+                html += "zoomControl: false,";
+                html += "mapTypeControl: false,";
+                html += "scaleControl: false,";
+                html += "streetViewControl: false,";
+            }
             html += @"
 
        mapTypeId: google.maps.MapTypeId.TERRAIN
@@ -111,13 +127,17 @@ google.maps.event.addDomListener(window, 'load', initialize);
             // Create a Bitmap and draw the DataGridView on it.
             int width;
             int height;
-            // Give the browser a fraction of a second to run all its scripts
-            // It would be better if we could tap into the browser's Javascript engine
-            // and see whether loading of the map was complete, but this will do for now.
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
-            while (watch.ElapsedMilliseconds < 500)
-                Gtk.Application.RunIteration();
+            if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
+            {
+                // Give the browser half a second to run all its scripts
+                // It would be better if we could tap into the browser's Javascript engine
+                // and see whether loading of the map was complete, but my attempts to do
+                // so were not entirely successful.
+                Stopwatch watch = new Stopwatch();
+                watch.Start();
+                while (watch.ElapsedMilliseconds < 500)
+                    Gtk.Application.RunIteration();
+            }
             Gdk.Window gridWindow = MainWidget.GdkWindow;
             gridWindow.GetSize(out width, out height);
             Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(gridWindow, gridWindow.Colormap, 0, 0, 0, 0, width, height);
