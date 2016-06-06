@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CMPServices;
-using Models.Grazplan;
 
-namespace Models.Stock
+namespace Models.GrazPlan
 {
     /*
      GRAZPLAN animal biology model for AusFarm - TPaddockList & TForageList classes                                                                   
@@ -51,6 +50,7 @@ namespace Models.Stock
     /// <summary>
     /// Up to 12 classes with separate digestible and indigestible pools
     /// </summary>
+    [Serializable]
     public class TForageInfo
     {
         /// <summary>
@@ -1074,6 +1074,7 @@ namespace Models.Stock
     /// <summary>
     /// List of forages
     /// </summary>
+    [Serializable]
     public class TForageList
     {
         private TForageInfo[] FList;
@@ -1187,11 +1188,13 @@ namespace Models.Stock
     /// Each of these can contain 0..n forage. The forage will be named
     /// with the cohortid string.
     /// </summary>
+    [Serializable]
     public class TForageProvider
     {
         bool FUseCohorts;                       // uses new cohorts array type
         private TForageList FForages;
-        private string FForageHostName;         // host pasture component name
+        private string FForageHostName;         // host crop, pasture component name
+        private Object FForageObj;               // the forage object (crop, pasture)
         private int FHostID;                    // plant/pasture comp
         private string FPaddockOwnerName;       // owning paddock FQN
         private int FSetterID;                  // setting property ID (or published event ID)
@@ -1235,63 +1238,40 @@ namespace Models.Stock
         /// Setter id
         /// </summary>
         public int SetterID { get { return FSetterID; } set { FSetterID = value; } }
+        /// <summary>
+        /// The crop, pasture component
+        /// </summary>
+        public Object ForageObj { get { return FForageObj; } set { FForageObj = value; } }
 
         /// <summary>
         /// Update the forages for this provider
         /// </summary>
         /// <param name="availableForage"></param>
         /// <returns></returns>
-        public void UpdateForages(TTypedValue availableForage)
+        public void UpdateForages(TAvailableToAnimal[] availableForage)
         {
-            const int elementCOHORT = 1;  // see piTypes.pas
-            const int elementORGAN = 2;
-            const int elementAGE = 3;
-            const int elementBOTTOM = 4;
-            const int elementTOP = 5;
-            const int elementCHEM = 6;
-            const int elementWEIGHT = 7;
-            const int elementN = 8;
-            const int elementP = 9;
-            const int elementS = 10;
-            const int elementASHALK = 11;
-
             int i;
-            TTypedValue cohortItem;
+            TAvailableToAnimal cohortItem;
             string sCohort;
             string sOrgan;
             string sAge;
             string sCohortName;
             TForageInfo forage;
 
-              // CPI Pasture components will only contain one forage
-            if (!FUseCohorts)  // if CPI Pasture
-            {
-                // ensure this forage is in the list
-                // the forage key in this case is (CompName)
-                forage = FForages.byName(ForageHostName);
-                if (forage == null)  // if this cohort doesn't exist in the forage list then
-                {
-                    forage = new TForageInfo();
-                    forage.sName = ForageHostName.ToLower();
-                    FOwningPaddock.AssignForage(forage);              // the paddock in the model can access this forage
-                    FForages.Add(forage); // create a new forage for this cohort
-                }
-                passGrazingInputs(forage, Value2GrazingInputs(availableForage), "kg/ha"); //then update it's value
-            }
-            else
+            if (FUseCohorts) 
             {
                 // Need to clear the forage data for all the forages in this provider
                 for (i = 0; i <= FForages.Count() - 1; i++) // for each forage
                     FForages.byIndex(i).clearForageData();
 
-                for (i = 1; i <= availableForage.count(); i++)
+                for (i = 1; i <= availableForage.Length; i++)
                 {
-                    cohortItem = availableForage.item((uint)i);
-                    sCohort = cohortItem.item(elementCOHORT).asString();     // wheat, sorghum
+                    cohortItem = availableForage[i-1];
+                    sCohort = cohortItem.CohortID;     // wheat, sorghum
                     if (sCohort.Length > 0)                            // must have a cohort name
                     {
-                        sOrgan = cohortItem.item(elementORGAN).asString();
-                        sAge = cohortItem.item(elementAGE).asString();
+                        sOrgan = cohortItem.Organ;
+                        sAge = cohortItem.AgeID;
                         sCohortName = (sCohort + '_' + sOrgan + '_' + sAge).ToLower();
                         forage = FForages.byName(sCohortName);
 
@@ -1307,14 +1287,14 @@ namespace Models.Stock
                         }
 
                         forage.addForageData(sCohort, sOrgan, sAge,      // Accessible when availForage() is called by the model
-                                              cohortItem.item(elementCHEM).asString(),
-                                              cohortItem.item(elementBOTTOM).asDouble(),
-                                              cohortItem.item(elementTOP).asDouble(),
-                                              cohortItem.item(elementWEIGHT).asDouble(),
-                                              cohortItem.item(elementN).asDouble(),
-                                              cohortItem.item(elementP).asDouble(),
-                                              cohortItem.item(elementS).asDouble(),
-                                              cohortItem.item(elementASHALK).asDouble());
+                                              cohortItem.Chem,
+                                              cohortItem.Bottom,
+                                              cohortItem.Top,
+                                              cohortItem.Weight,
+                                              cohortItem.N,
+                                              cohortItem.P,
+                                              cohortItem.S,
+                                              cohortItem.AshAlk);
                     }
                 }
             }
@@ -1494,6 +1474,7 @@ namespace Models.Stock
     /// TForageProviders is a collection of forage/cmp components that each in turn
     /// supply 1..n forage plants/species
     /// </summary>
+    [Serializable]
     public class TForageProviders
     {
         private List<TForageProvider> FForageProviderList;
@@ -1514,16 +1495,16 @@ namespace Models.Stock
         }
 
         /// <summary>
-        /// Add a forage provider/cmp component
+        /// Add a forage provider component
         /// </summary>
         /// <param name="paddock"></param>
         /// <param name="paddName"></param>
         /// <param name="forageName"></param>
         /// <param name="hostID"></param>
         /// <param name="driverID"></param>
-        /// <param name="setterID"></param>
+        /// <param name="forageObj"></param>
         /// <param name="usePlantCohorts"></param>
-        public void AddProvider(TPaddockInfo paddock, string paddName, string forageName, int hostID, int driverID, int setterID, bool usePlantCohorts)
+        public void AddProvider(TPaddockInfo paddock, string paddName, string forageName, int hostID, int driverID, Object forageObj, bool usePlantCohorts)
         {
             TForageProvider forageProvider;
 
@@ -1534,7 +1515,7 @@ namespace Models.Stock
             forageProvider.ForageHostName = forageName;    // host pasture/plant component name
             forageProvider.HostID = hostID;                // plant/pasture comp
             forageProvider.DriverID = driverID;            // driving property ID
-            forageProvider.SetterID = setterID;            // setting property ID
+            forageProvider.ForageObj = forageObj;          // setting property ID
             // keep a ptr to the paddock owned by the model so the forages can be assigned there as they become available
             forageProvider.OwningPaddock = paddock;
             forageProvider.UseCohorts = usePlantCohorts;   // use cohorts array type
@@ -1626,6 +1607,7 @@ namespace Models.Stock
     /// <summary>
     /// Paddock details
     /// </summary>
+    [Serializable]
     public class TPaddockInfo
     {
         /// <summary>
@@ -1657,11 +1639,14 @@ namespace Models.Stock
         public double FSummedGreenMass;
         public string sName;
         public int iPaddID;
+        public Object paddObj;
         public string sExcretionDest;
         public int iExcretionID;
         public string sUrineDest;
         public int iAddFaecesID;                                    // id of published event
+        public Object AddFaecesObj;
         public int iAddUrineID;                                     // id of published event
+        public Object AddUrineObj;
         public double fArea;                                        // Paddock area (ha)                     
         public double fWaterlog;                                    // Waterlogging index (0-1)              
 
@@ -1800,6 +1785,7 @@ namespace Models.Stock
     /// <summary>
     /// The TPaddockList class
     /// </summary>
+    [Serializable]
     public class TPaddockList
     {
         private TPaddockInfo[] FList;
@@ -1845,6 +1831,21 @@ namespace Models.Stock
             this.Add(NewPadd);
         }
         /// <summary>
+        /// Add a new paddock object using reference and name
+        /// </summary>
+        /// <param name="paddObj"></param>
+        /// <param name="sName"></param>
+        public void Add(Object paddObj, string sName)
+        {
+            TPaddockInfo NewPadd;
+
+            NewPadd = new TPaddockInfo();
+            NewPadd.iPaddID = this.Count() + 1; //???????? ID is 1 based here
+            NewPadd.paddObj = paddObj;
+            NewPadd.sName = sName.ToLower();
+            this.Add(NewPadd);
+        }
+        /// <summary>
         /// Delete the paddock at the index
         /// </summary>
         /// <param name="iValue"></param>
@@ -1880,6 +1881,26 @@ namespace Models.Stock
             while ((Idx < this.Count()) && (Result == null))
             {
                 if (this.byIndex(Idx).iPaddID == iValue)
+                    Result = this.byIndex(Idx);
+                else
+                    Idx++;
+            }
+            return Result;
+        }
+        /// <summary>
+        /// Get the paddock by object
+        /// </summary>
+        /// <param name="paddObj">The paddock object</param>
+        /// <returns>The paddock info</returns>
+        public TPaddockInfo byObj(Object paddObj)
+        {
+            int Idx;
+
+            TPaddockInfo Result = null;
+            Idx = 0;
+            while ((Idx < this.Count()) && (Result == null))
+            {
+                if (this.byIndex(Idx).paddObj == paddObj)
                     Result = this.byIndex(Idx);
                 else
                     Idx++;

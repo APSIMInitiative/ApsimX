@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using CMPServices;
 
-namespace Models.Stock
+namespace Models.GrazPlan
 {
     /// <summary>
     /// TParameterDefinition                                                         

@@ -115,12 +115,19 @@ namespace Models.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
+        ///   Looks up a localized string similar to &lt;parameters name=&quot;standard&quot; version=&quot;2.0&quot;&gt;
+        ///  &lt;par name=&quot;editor&quot;&gt;Andrew Moore&lt;/par&gt;
+        ///  &lt;par name=&quot;edited&quot;&gt;30 Jan 2013&lt;/par&gt;
+        ///  &lt;par name=&quot;dairy&quot;&gt;false&lt;/par&gt;
+        ///  &lt;par name=&quot;c-srs-&quot;&gt;1.2,1.4&lt;/par&gt;
+        ///  &lt;par name=&quot;c-i-&quot;&gt;,1.7,,,,25.0,22.0,,,,,0.15,,0.002,0.5,1.0,0.01,20.0,3.0,1.5&lt;/par&gt;
+        ///  &lt;par name=&quot;c-r-&quot;&gt;0.8,0.17,1.7,,0.6,,,,0.14,0.28,10.5,0.8,0.35,1.0,0.0,0.0,0.012,1.0,1.0,11.5&lt;/par&gt;
+        ///  &lt;par name=&quot;c-k-&quot;&gt;0.5,0.02,0.85,0.7,0.4,0.02,0.6,0.133,0.95,0.84,0.8,0.7,0.035,0.33,0.12,0.043&lt;/par&gt;
+        ///  &lt;par name=&quot;c-m-&quot;&gt;0.09,,0. [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static byte[] ruminant {
+        internal static string RUMINANT_PARAM_GLB {
             get {
-                object obj = ResourceManager.GetObject("ruminant", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("RUMINANT_PARAM_GLB", resourceCulture);
             }
         }
         

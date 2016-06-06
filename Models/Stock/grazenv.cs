@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Models.Stock
+namespace Models.GrazPlan
 {
     /// <summary>
     /// Environment interface

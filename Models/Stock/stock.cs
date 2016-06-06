@@ -4,28 +4,30 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace Models.Stock
+namespace Models.GrazPlan
 {
     using System;
     using System.Collections.Generic;
     using Models.Core;
-    using Models.Grazplan;
+    using Models.SurfaceOM;
+    using Models.Soils;
     using StdUnits;
 
     /// <summary>
     /// The main GrazPlan stock class
     /// </summary>
     [Serializable]
-    [ViewName("")]
-    [PresenterName("")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Simulation))]
     public class Stock : Model
     {
         private List<string> FUserForages;      // user specified forage component names
         private List<string> FUserPaddocks;
         private TStockList FModel;
-        //private TAnimalWeather FWeather;
+        private TAnimalWeather FWeather;
 
-        //private bool FFirstStep;
+        private bool FFirstStep;
         private TSingleGenotypeInits[] FGenotypeInits = new TSingleGenotypeInits[0];
         private TAnimalInits[] FAnimalInits;
         private bool FPaddocksGiven;
@@ -33,18 +35,24 @@ namespace Models.Stock
         private TMyRandom FRandFactory;
         private TSupplement FSuppFed;
         private TExcretionInfo FExcretion;
+        private DateTime FTime;
         internal const int UNKNOWN = -1;
-        /*
-        /// <summary>
-        /// The simulation
-        /// </summary>
+
+        #region Class links
         [Link]
-        Simulation Simulation = null;
-*/
+        Clock Systemclock = null;
+
+        [Link]
+        Weather LocWtr = null;
+
+        [Link]
+        Supplement Suppfeed = null;
+        #endregion
+
         /// <summary>
         /// The Stock class constructor
         /// </summary>
-        public Stock()
+        public Stock() : base()
         {
             this.FUserForages = new List<string>();
             this.FUserPaddocks = new List<string>();
@@ -55,16 +63,16 @@ namespace Models.Stock
             Array.Resize(ref FAnimalInits, 0);
             FSuppFed = new TSupplement();
             FExcretion = new TExcretionInfo();
-            //FPaddocksGiven = false;
-            //FFirstStep = true;
+            FPaddocksGiven = false;
+            FFirstStep = true;
             FRandSeed = 0;
         }
 
         #region Initialisation properties ====================================================
         /// <summary>
-        /// Seed for the random number generator
+        /// Seed for the random number generator. Used when computing numbers of animals dying and conceiving from the equations for mortality and conception rates
         /// </summary>
-        [Description("Seed for the random number generator. Used when computing numbers of animals dying and conceiving from the equations for mortality and conception rates")]
+        [Description("Random number seed for mortality and conception rates")]
         [Units("")]
         public int RandSeed
         {
@@ -152,7 +160,7 @@ namespace Models.Stock
             }
             set
             {
-                FPaddocksGiven = (value.Length > 0);
+                FPaddocksGiven = (value.Length > 1);    // more than the null paddock
                 TPaddockInfo aPadd;
                 if (FPaddocksGiven)
                 {
@@ -161,9 +169,11 @@ namespace Models.Stock
 
                     for (int Idx = 0; Idx < value.Length; Idx++)
                     {
+                        // TODO: Find the paddock object for this name and store it
+                        // if the paddock object is found then add it to Paddocks
                         FModel.Paddocks.Add(Idx, value[Idx].name);
 
-                        aPadd = FModel.Paddocks.byIndex(Idx - 1);
+                        aPadd = FModel.Paddocks.byIndex(Idx);
                         aPadd.sExcretionDest = value[Idx].excretion;
                         aPadd.sUrineDest = value[Idx].urine;
                         aPadd.iExcretionID = UNKNOWN;
@@ -244,13 +254,13 @@ namespace Models.Stock
         public double Trampling
         {
             get
-            {
-                ////////////////////TForageProvider forageProvider;
-                //using the compenent ID
+            {   // TODO: complete the function
+
+                TForageProvider forageProvider;
+                //using the component ID
                 //return the mass per area for all forages
-                /////////////forageProvider = FModel.ForagesAll.FindProvider(iRequestFrom);
-                /////////////return FModel.returnMassPerArea(iRequestFrom, forageProvider, "kg/ha"); //by paddock or from forage ref
-                return 0;
+                forageProvider = FModel.ForagesAll.FindProvider(0);
+                return FModel.returnMassPerArea(0, forageProvider, "kg/ha"); //by paddock or from forage ref
             }
         }
 
@@ -262,7 +272,7 @@ namespace Models.Stock
         {
             get
             {
-                TSupplementEaten[] value = new TSupplementEaten[1];
+                TSupplementEaten[] value = null;
                 StockVars.MakeSuppEaten(FModel, ref value);
                 return value;
             }
@@ -3759,34 +3769,493 @@ namespace Models.Stock
         #endregion
 
         #region Subscribed events ====================================================
+
+
+        #region Class links
+        [Link]
+        Simulation sim = null;
+        #endregion
+
+        /// <summary>
+        /// At the start of the simulation, initialise all the paddocks and forages and nitrogen returns.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            if (!FPaddocksGiven)
+            {
+                //get the paddock areas from the simulation
+                foreach (Zone zone in Apsim.FindAll(sim, typeof(Zone)))
+                {
+                    FModel.Paddocks.Add(zone, zone.Name);                          // Add to the Paddocks list
+                    FModel.Paddocks.byObj(zone).fArea = zone.Area;
+
+                    TPaddockInfo ThePadd = FModel.Paddocks.byObj(zone);
+
+                    // find all the child crop, pasture components with an TAvailableToAnimal property
+                    foreach (Model crop in Apsim.FindAll(zone, typeof(ICrop)))
+                    {
+                        FModel.ForagesAll.AddProvider(ThePadd, zone.Name, crop.Name, 0, 0, crop, true);
+                    }
+
+                    // locate surfaceOM and soil nutrient model
+                    SurfaceOrganicMatter surfaceOM = (SurfaceOrganicMatter)Apsim.Find(zone, typeof(SurfaceOrganicMatter));
+                    SoilNitrogen soiln = (SoilNitrogen)Apsim.Find(zone, typeof(SoilNitrogen));
+                    ThePadd.AddFaecesObj = surfaceOM;
+                    ThePadd.AddUrineObj = soiln;
+                }
+            }
+
+            FModel.addGenotypes(FGenotypeInits);
+            for (int Idx = 0; Idx <= FAnimalInits.Length - 1; Idx++)                // Only create the initial animal groups 
+                FModel.Add(FAnimalInits[Idx]);                                      //   after the paddocks have been        
+                                                                                    //   identified                          
+            FTime = Systemclock.Today;
+            int currentDay = FTime.Day + FTime.Month * 0x100 + FTime.Year * 0x10000;
+            FModel.ManageInternalInit(currentDay, FWeather.Latitude);               //init groups
+        }
+
         /// <summary>
         /// 
         /// </summary>
-        [EventSubscribe("Sort")]
-        public void OnSort()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("NewWeatherDataAvailable")]
+        private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
-            TStockSort anEvent = new TStockSort();
-            FModel.doStockManagement(FModel, (IStockEvent)anEvent);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
+            if (FFirstStep)
+            {
+                FWeather.Latitude = LocWtr.Latitude;
+
+                FFirstStep = false;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("EndOfDay")]
+        private void OnEndOfDay(object sender, EventArgs e)
+        {
+        }
+
+
 
         /// <summary>
         /// Initialisation step
         /// </summary>
-        [EventSubscribe("InitStep")]
-        public void InitStep()
+        [EventSubscribe("DoStock")]
+        private void OnDoStock(object sender, EventArgs e)
         {
-            /*
-            if (!FFirstStep)
-                        iCondition = 1;
-                    else
+            GetTimeAndWeather();
+
+            // for each paddock
+            //FModel.Paddocks.byID(1).fWaterlog = 0.0;    // TODO
+
+            if (!FPaddocksGiven)
+            {
+                // update the paddock area as this can change during the simulation
+                foreach (Zone zone in Apsim.FindAll(sim, typeof(Zone)))
+                {
+                    FModel.Paddocks.byObj(zone).fArea = zone.Area;
+                    FModel.Paddocks.byObj(zone).Slope = zone.Slope;
+                }
+
+                RequestAvailableToAnimal();  // accesses each forage provider (crop)
+
+                FModel.Paddocks.beginTimeStep();
+
+                SuppToStockType[] availSupp = Suppfeed.SuppToStock;
+
+                for (int Idx = 0; Idx < availSupp.Length; Idx++)    // each paddock
+                {
+                    FSuppFed.SetSuppAttrs(availSupp[Idx]);
+                    FModel.PlaceSuppInPadd(availSupp[Idx].Paddock, availSupp[Idx].Amount, FSuppFed);
+                }
+
+                FWeather.MeanTemp = 0.5 * (FWeather.MaxTemp + FWeather.MinTemp);
+                FModel.Weather = FWeather;
+
+                // Do internal management tasks that are defined for the various
+                // enterprises. This includes shearing, buying, selling...
+                FModel.ManageInternalTasks(FWeather.TheDay);
+
+                FModel.Dynamics();
+
+                TForageProvider forageProvider;
+                // Return the amounts of forage removed
+                for (int i = 0; i <= FModel.ForagesAll.Count() - 1; i++)
+                {
+                    forageProvider = FModel.ForagesAll.ForageProvider(i);
+                    if (forageProvider.ForageObj != null)                       //if there is a pubevent or setter then
                     {
-                        sendQueryInfo("daylength", TypeSpec.KIND_OWNED, eventID);
-                        if (!FPaddocksGiven)                                                    // Paddock list not specified - query    
-                            sendQueryInfo("area", TypeSpec.KIND_OWNED, eventID);                //   the simulation                      
+                        if (forageProvider.somethingRemoved())
+                        {
+                            // TODO: forageProvider        // Build "removedbyanimal" data
+                            // forageProvider.ForageObj    // call property setter
+                        }
                     }
-            */
+                    else
+                        throw new ApsimXException(this, "No destination for forage removal");
+                }
+
+                //if destinations for the surface om and nutrients are known then
+                //send the values to the components
+                for (int Idx = 0; Idx <= FModel.Paddocks.Count() - 1; Idx++)
+                {
+                    TPaddockInfo PaddInfo = FModel.Paddocks.byIndex(Idx);
+                    
+                    if (PaddInfo.AddFaecesObj != null)
+                    {
+                        SurfaceOrganicMatter.AddFaecesType faeces = new SurfaceOrganicMatter.AddFaecesType();
+                        if (PopulateFaeces(PaddInfo.iPaddID, faeces))
+                        {
+                            ((SurfaceOrganicMatter)PaddInfo.AddFaecesObj).AddFaeces(faeces);
+                        }
+                    }
+                    if (PaddInfo.AddUrineObj != null)
+                    {
+                        AddUrineType urine = new AddUrineType();
+                        if (PopulateUrine(PaddInfo.iPaddID, urine))
+                        {
+                            ((SoilNitrogen)PaddInfo.AddUrineObj).AddUrine(urine);
+                        }
+                    }
+                }
+            }
         }
 
+        //............................................................................
+        // Management methods                                                         
+        //............................................................................
+
+        /// <summary>
+        /// Causes a set of related age cohorts of animals to enter the simulation. 
+        /// Each age cohort may contain animals that are pregnant and/or lactating, in which case distributions of numbers of foetuses and/or suckling offspring are computed automatically. 
+        /// This event is primarily intended to simplify the initialisation of flocks and herds in simulations.
+        /// </summary>
+        /// <param name="animals"></param>
+        public void Add(TStockAdd animals)
+        {
+            GetTimeAndWeather();
+            FModel.doStockManagement(FModel, animals, FWeather.TheDay, FWeather.Latitude);
+        }
+
+        /// <summary>
+        /// Buys animals (i.e. they enter the simulation). The purchased animals will form a new animal group that is placed at the end of the list of animal groups.
+        /// </summary>
+        /// <param name="stock"></param>
+        public void Buy(TStockBuy stock)
+        {
+            FModel.doStockManagement(FModel, stock, FWeather.TheDay, FWeather.Latitude);
+        }
+
+        /// <summary>
+        /// Assigns animals to paddocks. The process is as follows:
+        /// (a) Animal groups with a positive priority score are removed from their current paddock; groups with a zero or negative priority score remain in their current paddock.
+        /// (b) The set of unoccupied non-excluded paddocks is identified and then ranked according the quality of the pasture(the best paddock is that which would give highest DM intake).
+        /// (c) The unallocated animal groups are ranked by their priority(lowest values first).
+        /// (d) Unallocated animal groups are then assigned to paddocks in rank order(e.g.those with the lowest positive score are placed in the best unoccupied paddock). 
+        ///     Animal groups with the same priority score are placed in the same paddock
+        /// </summary>
+        /// <param name="closedZones">Names of paddocks to be excluded from consideration as possible destinations</param>
+        public void Draft(TStockDraft closedZones)
+        {
+            RequestAvailableToAnimal();
+
+            FModel.doStockManagement(FModel, closedZones, FWeather.TheDay, FWeather.Latitude);
+        }
+
+        /// <summary>
+        /// Removes animals from the simulation.  sell without parameters will remove all sheep in the stock sub-model.
+        /// </summary>
+        /// <param name="group">Index number of the animal group from which animals are to be removed. 
+        /// A value of zero denotes that each animal group should be processed in turn until the nominated number of animals has been removed.</param>
+        /// <param name="number">Number of animals to sell.</param>
+        public void Sell(int group, int number)
+        {
+            TStockSell selling = new TStockSell();
+            selling.group = group;
+            selling.number = number;
+            FModel.doStockManagement(FModel, selling, FWeather.TheDay, FWeather.Latitude);
+        }
+
+        /// <summary>
+        /// Removes animals from the simulation by tag number.
+        /// </summary>
+        /// <param name="tag">Tag number of the animals from which animals are to be removed. 
+        /// Animals are removed starting from the group with the smallest index.</param>
+        /// <param name="number">Number of animals to sell.</param>
+        public void SellTag(int tag, int number)
+        {
+            TStockSellTag selling = new TStockSellTag();
+            selling.tag = tag;
+            selling.number = number; 
+            FModel.doStockManagement(FModel, selling, FWeather.TheDay, FWeather.Latitude);
+        }
+
+        /// <summary>
+        /// Shears sheep. The event has no effect on cattle
+        /// </summary>
+        /// <param name="group">Index number of the animal group to be shorn. 
+        /// A value of zero denotes that all animal groups should be processed.</param>
+        /// <param name="subGroup">Denotes whether the main group of animals, suckling lambs, or both should be shorn. 
+        /// Feasible values are the null string (main group), ‘adults’ (main group), ‘lambs’ (suckling lambs), ‘both’ (both).</param>
+        public void Shear(int group, string subGroup)
+        {
+            TStockShear shearing = new TStockShear();
+            shearing.group = group;
+            shearing.sub_group = subGroup;
+            FModel.doStockManagement(FModel, shearing, FWeather.TheDay, FWeather.Latitude);
+        }
+
+        /// <summary>
+        /// Changes the paddock to which an animal group is assigned.
+        /// </summary>
+        ///<param name="group">Index number of the animal group to be moved.</param>
+        ///<param name="paddock">Name of the paddock to which the animal group is to be moved.</param>
+        public void Move(int group, string paddock)
+        {
+            TStockMove move = new TStockMove();
+            move.group = group;
+            move.paddock = paddock;
+            FModel.doStockManagement(FModel, move, FWeather.TheDay, FWeather.Latitude);
+        }
+
+        /// <summary>
+        /// Commences mating of a particular group of animals.  If the animals are not empty females, or if they are too young, has no effect
+        /// </summary>
+        /// <param name="group">Index number of the animal group for which mating is to commence. 
+        /// A value of zero denotes that all empty females of sufficient age should be mated</param>
+        /// <param name="mateTo">Genotype of the rams or bulls with which the animals are mated. 
+        /// Must match the name field of a member of the genotypes property.</param>
+        /// <param name="mateDays">Length of the mating period in days.</param>
+        public void Join(int group, string mateTo, int mateDays)
+        {
+            TStockJoin join = new TStockJoin();
+            join.group = group;
+            join.mate_to = mateTo;
+            join.mate_days = mateDays;
+            FModel.doStockManagement(FModel, join, FWeather.TheDay, FWeather.Latitude);
+        }
+
+        /// <summary>
+        /// Converts ram lambs to wether lambs, or bull calves to steers.  If the animal group(s) denoted by group has no suckling young, has no effect. 
+        /// If the number of male lambs or calves in a nominated group is greater than the number to be castrated, the animal group will be split; 
+        /// the sub-group with castrated offspring will remain at the original index and the sub-group with offspring that were not castrated will 
+        /// be added at the end of the set of animal groups.
+        /// </summary>
+        /// <param name="group">Index number of the animal group, the lambs or calves of which are to be castrated. 
+        /// A value of zero denotes that each animal group should be processed in turn until the nominated number of offspring has been castrated.</param>
+        /// <param name="number">Number of male lambs or calves to be castrated.</param>
+        public void Castrate(int group, int number)
+        {
+            TStockCastrate castrate = new TStockCastrate();
+            castrate.group = group;
+            castrate.number = number;
+            FModel.doStockManagement(FModel, castrate, FWeather.TheDay, FWeather.Latitude);
+        }
+
+        /// <summary>
+        /// Weans some or all of the lambs or calves from an animal group. 
+        /// The newly weaned animals are added to the end of the list of animal groups, with males and females in separate groups.
+        /// </summary>
+        public void Wean(TStockWean wean)
+        {
+            FModel.doStockManagement(FModel, wean, FWeather.TheDay, FWeather.Latitude);
+        }
+
+        /// <summary>
+        /// Ends lactation in cows that have already had their calves weaned.  The event has no effect on other animals.
+        /// If the number of cows in a nominated group is greater than the number to be dried off, the animal group will be split; 
+        /// the sub-group that is no longer lactating will remain at the original index and the sub-group that continues lactating will be added at the end of the set of animal groups
+        /// </summary>
+        /// <param name="group">Index number of the animal group for which lactation is to end. 
+        /// A value of zero denotes that each animal group should be processed in turn until the nominated number of cows has been dried off.</param>
+        /// <param name="number">Number of females for which lactation is to end.</param>
+        public void DryOff(int group, int number)
+        {
+            TStockDryoff dryoff = new TStockDryoff();
+            dryoff.group = group;
+            dryoff.number = number;
+            FModel.doStockManagement(FModel, dryoff, FWeather.TheDay, FWeather.Latitude);
+        }
+
+        /// <summary>
+        /// Creates new animal groups from all the animal groups.  The new groups are placed at the end of the animal group list. 
+        /// This event is for when splits need to occur over all animal groups. Description of split event also applies.
+        /// </summary>
+        /// <param name="splitall"></param>
+        public void SplitAll(TStockSplitAll splitall)
+        {
+            FModel.doStockManagement(FModel, splitall, FWeather.TheDay, FWeather.Latitude);
+        }
+
+        /// <summary>
+        /// Creates two or more animal groups from the nominated group.  
+        /// One of these groups is placed at the end of the animal group list. 
+        /// The new groups remain in the same paddock and keep the same tag value as the original animal group. 
+        ///The division may only persist until the beginning of the next do_stock step, when sufficiently similar 
+        ///groups of animals are merged.Splitting an animal group is therefore usually carried out as a preliminary to some other management event.
+        /// </summary>
+        /// <param name="split"></param>
+        public void Split(TStockSplit split)
+        {
+            FModel.doStockManagement(FModel, split, FWeather.TheDay, FWeather.Latitude);
+        }
+
+        /// <summary>
+        /// Changes the “tag value” associated with an animal group.  
+        /// This value is used to sort animals; it can also be used to group animals for user-defined purposes 
+        /// (e.g. to identify animals that are to be managed as a single mob even though they differ physiologically) 
+        /// and to keep otherwise similar animal groups distinct from one another.
+        /// </summary>
+        /// <param name="group">Index number of the animal group to be assigned a tag value.</param>
+        /// <param name="value">Tag value to be assigned.</param>
+        public void Tag(int group, int value)
+        {
+            TStockTag tag = new TStockTag();
+            tag.group = group;
+            tag.value = value;
+            FModel.doStockManagement(FModel, tag, FWeather.TheDay, FWeather.Latitude);
+        }
+
+        /// <summary>
+        /// Sets the "priority" of an animal group for later use in a draft event. It is usual practice to use positive values for priorities.
+        /// </summary>
+        /// <param name="group">Index number of the animal group for which priority is to be set.</param>
+        /// <param name="value">New priority value for the group.</param>
+        public void Prioritise(int group, int value)
+        {
+            TStockPrioritise prioritise = new TStockPrioritise();
+            prioritise.group = group;
+            prioritise.value = value;
+            FModel.doStockManagement(FModel, prioritise, FWeather.TheDay, FWeather.Latitude);
+        }
+
+        /// <summary>
+        /// Rearranges the list of animal groups in ascending order of tag value. This event has no parameters.
+        /// </summary>
+        public void Sort()
+        {
+            TStockSort sortEvent = new TStockSort();
+            FModel.doStockManagement(FModel, sortEvent, FWeather.TheDay, FWeather.Latitude);
+        }
+
+
         #endregion
+
+        /// <summary>
+        /// Get the current time and weather values
+        /// </summary>
+        private void GetTimeAndWeather()
+        {
+            FTime = Systemclock.Today;
+            FWeather.DayLength = LocWtr.CalculateDayLength(-6.0);   // civil twighlight
+            FWeather.TheDay = FTime.Day + FTime.Month * 0x100 + FTime.Year * 0x10000;
+            FWeather.MaxTemp = LocWtr.MaxT;
+            FWeather.MinTemp = LocWtr.MinT;
+            FWeather.Precipitation = LocWtr.Rain;
+            FWeather.WindSpeed = LocWtr.Wind;
+        }
+
+        /// <summary>
+        /// Do a request for the AvailableToAnimals property
+        /// </summary>
+        private void RequestAvailableToAnimal()
+        {
+            TForageProvider forageProvider;
+            for (int i = 0; i <= FModel.ForagesAll.Count() - 1; i++)
+            {
+                forageProvider = FModel.ForagesAll.ForageProvider(i);
+                if (forageProvider.ForageObj != null)
+                {
+                    //TODO: get the forage info from forageProvider.ForageObj
+                    // forageProvider.UpdateForages(available_to_animal);
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Populate the AddFaecesType object
+        /// </summary>
+        /// <param name="iPaddID"></param>
+        /// <param name="aValue"></param>
+        /// <returns></returns>
+        private bool PopulateFaeces(int iPaddID, SurfaceOrganicMatter.AddFaecesType aValue)
+        {
+            int N = (int)GrazType.TOMElement.N;
+            int P = (int)GrazType.TOMElement.P;
+            int S = (int)GrazType.TOMElement.S;
+            bool result = false;
+
+            FModel.ReturnExcretion(iPaddID, out FExcretion);
+
+            if (FExcretion.dDefaecations > 0)
+            {
+                aValue.Defaecations = FExcretion.dDefaecations;
+                aValue.VolumePerDefaecation = FExcretion.dDefaecationVolume;
+                aValue.AreaPerDefaecation = FExcretion.dDefaecationArea;
+                aValue.Eccentricity = FExcretion.dDefaecationEccentricity;
+                aValue.OMWeight = FExcretion.OrgFaeces.DM;
+                aValue.OMN = FExcretion.OrgFaeces.Nu[N];
+                aValue.OMP = FExcretion.OrgFaeces.Nu[P];
+                aValue.OMS = FExcretion.OrgFaeces.Nu[S];
+                aValue.OMAshAlk = FExcretion.OrgFaeces.AshAlk;
+                aValue.NO3N = FExcretion.InOrgFaeces.Nu[N] * FExcretion.dFaecalNO3Propn;
+                aValue.NH4N = FExcretion.InOrgFaeces.Nu[N] * (1.0 - FExcretion.dFaecalNO3Propn);
+                aValue.POXP = FExcretion.InOrgFaeces.Nu[P];
+                aValue.SO4S = FExcretion.InOrgFaeces.Nu[S];
+                result = true;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Copy the urine info into the AddUrineType
+        /// </summary>
+        /// <param name="iPaddID"></param>
+        /// <param name="aValue"></param>
+        /// <returns></returns>
+        private bool PopulateUrine(int iPaddID, AddUrineType aValue)
+        {
+
+            int N = (int)GrazType.TOMElement.N;
+            int P = (int)GrazType.TOMElement.P;
+            int S = (int)GrazType.TOMElement.S;
+            bool result = false;
+
+            FModel.ReturnExcretion(iPaddID, out FExcretion);
+            if (FExcretion.dUrinations > 0)
+            {
+                aValue.Urinations = FExcretion.dUrinations;
+                aValue.VolumePerUrination = FExcretion.dUrinationVolume;
+                aValue.AreaPerUrination = FExcretion.dUrinationArea;
+                aValue.Eccentricity = FExcretion.dUrinationEccentricity;
+                aValue.Urea = FExcretion.Urine.Nu[N];
+                aValue.POX = FExcretion.Urine.Nu[P];
+                aValue.SO4 = FExcretion.Urine.Nu[S];
+                aValue.AshAlk = FExcretion.Urine.AshAlk;
+                result = true;
+            }
+            return result;
+        }
+
+
     }
 }

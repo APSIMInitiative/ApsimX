@@ -7,7 +7,7 @@
 namespace UserInterface.Interfaces
 {
     using System;
-    using Models.Grazplan;
+    using Models.GrazPlan;
 
     public class TSuppAttrArgs : EventArgs
     {

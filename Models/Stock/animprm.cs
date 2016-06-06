@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using StdUnits;
 
-namespace  Models.Stock
+namespace  Models.GrazPlan
 {
     /// <summary>
     /// The animal parameters object

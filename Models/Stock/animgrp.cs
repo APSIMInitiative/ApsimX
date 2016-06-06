@@ -6,10 +6,9 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Reflection;
-using Models.Grazplan;
 using StdUnits;
 
-namespace Models.Stock
+namespace Models.GrazPlan
 {
     /// <summary>
     /// Record containing the different sources from which an animal acquires energy, protein etc                                
@@ -766,6 +765,7 @@ namespace Models.Stock
     /// <summary>
     /// TExcretionInfo type. Totalled amounts of excretion                           
     /// </summary>
+    [Serializable]
     public class TExcretionInfo
     {
         /// <summary>

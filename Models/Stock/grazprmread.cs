@@ -8,7 +8,7 @@ using CMPServices;
 
 //Classes for I/O of the generic parameter set class, TParameterSet.           
 
-namespace Models.Stock
+namespace Models.GrazPlan
 {
     /// <summary>
     /// Class that wraps the XML param reader

@@ -5,7 +5,7 @@ using System.Text;
 using CMPServices;
 using StdUnits;
 
-namespace Models.Stock
+namespace Models.GrazPlan
 {
     /// <summary>
     /// Shear by tag details
@@ -918,6 +918,7 @@ namespace Models.Stock
     /// <summary>
     /// 
     /// </summary>
+    [Serializable]
     public class TEnterpriseList
     {
         private List<TEnterpriseInfo> FEnterpriseList = new List<TEnterpriseInfo>();
@@ -1059,6 +1060,7 @@ namespace Models.Stock
     /// <summary>
     /// List of grazing periods
     /// </summary>
+    [Serializable]
     public class TGrazingList
     {
         private List<TGrazingPeriod> FGrazingList = new List<TGrazingPeriod>();
@@ -1376,7 +1378,7 @@ namespace Models.Stock
         }
 
         /// <summary>
-        /// 
+        /// "dd mmm" -> StdDate
         /// </summary>
         /// <param name="strDay"></param>
         /// <returns></returns>

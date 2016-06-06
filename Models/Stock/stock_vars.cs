@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Models.Stock
+namespace Models.GrazPlan
 {
     /// <summary>
     /// The stock genotype
@@ -257,6 +257,57 @@ namespace Models.Stock
     }
 
     /// <summary>
+    /// Forage available to the animal from a crop component
+    /// </summary>
+    public class TAvailableToAnimal
+    {
+        /// <summary>
+        /// e.g. seedling, established, senescing, dead, litter
+        /// </summary>
+        public string CohortID; 
+        /// <summary>
+        /// //e.g. leaf, stem, head
+        /// </summary>
+        public string Organ;    
+        /// <summary>
+        /// //e.g. DMD80-85, DMD75-80...
+        /// </summary>
+        public string AgeID;    
+        /// <summary>
+        /// 
+        /// </summary>
+        public double Bottom;
+        /// <summary>
+        /// 
+        /// </summary>
+        public double Top;
+        /// <summary>
+        /// e.g. "DDM"/"IDM"
+        /// </summary>
+        public string Chem;     
+        /// <summary>
+        /// 
+        /// </summary>
+        public double Weight;
+        /// <summary>
+        /// 
+        /// </summary>
+        public double N;
+        /// <summary>
+        /// 
+        /// </summary>
+        public double P;
+        /// <summary>
+        /// 
+        /// </summary>
+        public double S;
+        /// <summary>
+        /// 
+        /// </summary>
+        public double AshAlk;
+    }
+
+    /// <summary>
     /// Definitions of many property constants in the Stock component
     /// </summary>
     public static class StockProps
@@ -308,108 +359,6 @@ namespace Models.Stock
         public const int prpPADD_RANK = 41;
         public const int prpINTAKE_MOD = 42;
 #pragma warning restore 1591 //missing xml comment
-        /*   
-            // Initialisation variables --------------------------------------------------}
-            
-            /// <summary>
-            /// Organic matter
-            /// from pitypes.pas 
-            /// </summary>
-            public const string typeORG_MATTER = "<field name=\"weight\"  unit=\"kg/ha\"  kind=\"double\"/>"
-                        + "<field name=\"n\"       unit=\"kg/ha\"  kind=\"double\"/>"
-                        + "<field name=\"p\"       unit=\"kg/ha\"  kind=\"double\"/>"
-                        + "<field name=\"s\"       unit=\"kg/ha\"  kind=\"double\"/>"
-                        + "<field name=\"ash_alk\" unit=\"mol/ha\" kind=\"double\"/>";
-
-            /// <summary>
-            /// Excretion to soil
-            /// </summary>
-            public const string typeEXCRETA2SOIL = "<type>"
-                       + "<field name=\"faeces_om\">"
-                       + typeORG_MATTER
-                       + "</field>"
-                       + "<field name=\"faeces_inorg\">"
-                       + "<field name=\"n\" unit=\"kg/ha\" kind=\"double\"/>"
-                       + "<field name=\"p\" unit=\"kg/ha\" kind=\"double\"/>"
-                       + "<field name=\"s\" unit=\"kg/ha\" kind=\"double\"/>"
-                       + "</field>"
-                       + "<field name=\"urine\">"
-                       + "<field name=\"volume\"  unit=\"m^3/ha\" kind=\"double\"/>"
-                       + "<field name=\"urea\"    unit=\"kg/ha\"  kind=\"double\"/>"
-                       + "<field name=\"pox\"     unit=\"kg/ha\"  kind=\"double\"/>"
-                       + "<field name=\"so4\"     unit=\"kg/ha\"  kind=\"double\"/>"
-                       + "<field name=\"ash_alk\" unit=\"mol/ha\" kind=\"double\"/>"
-                       + "</field>"
-                       + "<field name=\"urine_area\" unit=\"m^2/m^2\" kind=\"double\"/>"
-                     + "</type>";
-            /// <summary>
-            /// Forage cohort available
-            /// </summary>
-            public const string typeCOHORTAVAIL = "<type name=\"AvailableToAnimal\" array=\"T\">"
-                     + "<element>"
-                     + "<field name=\"CohortID\"       kind=\"string\"/>"    //e.g. seedling, established, senescing, dead, litter
-                     + "<field name=\"Organ\"          kind=\"string\"/>"    //e.g. leaf, stem, head
-                     + "<field name=\"AgeID\"          kind=\"string\"/>"    //e.g. DMD80-85, DMD75-80...
-                     + "<field name=\"Bottom\"         kind=\"double\" unit=\"mm\"/>"
-                     + "<field name=\"Top\"            kind=\"double\" unit=\"mm\"/>"
-                     + "<field name=\"Chem\"           kind=\"string\"/>"    //e.g. \"DDM\"/\"IDM\"
-                     + "<field name=\"Weight\"         kind=\"double\" unit=\"kg/ha\"/>"
-                     + "<field name=\"N\"              kind=\"double\" unit=\"kg/ha\"/>"
-                     + "<field name=\"P\"              kind=\"double\" unit=\"kg/ha\"/>"
-                     + "<field name=\"S\"              kind=\"double\" unit=\"kg/ha\"/>"
-                     + "<field name=\"AshAlk\"         kind=\"double\" unit=\"mol/ha\"/>"
-                     + "</element>"
-                     + "</type>";
-            /// <summary>
-            /// Cohort removed by the animals
-            /// </summary>
-            public const string typeCOHORTREM = "<type name=\"RemovedByAnimal\" array=\"T\">"
-                    + "<element>"
-                    + "<field name=\"CohortID\"       kind=\"string\"/>"    //e.g. seedling, established, senescing, dead, litter
-                    + "<field name=\"Organ\"          kind=\"string\"/>"    //e.g. leaf, stem, head
-                    + "<field name=\"AgeID\"          kind=\"string\"/>"    //e.g. DMD80-85, DMD75-80...
-                    + "<field name=\"Bottom\"         kind=\"double\" unit=\"mm\"/>"
-                    + "<field name=\"Top\"            kind=\"double\" unit=\"mm\"/>"
-                    + "<field name=\"Chem\"           kind=\"string\"/>"    //e.g. \"DDM\"/\"IDM\"
-                    + "<field name=\"WeightRemoved\"  kind=\"double\" unit=\"kg/ha\"/>"
-                    + "</element>"
-                    + "</type>";
-            /// <summary>
-            /// Pasture removal
-            /// </summary>
-            public const string typeREMOVAL = "<type>"
-                     + "<field name=\"herbage\" unit=\"kg/ha\" kind=\"double\" array=\"T\"/>"
-                     + "<field name=\"seed\"    unit=\"kg/ha\" kind=\"double\" array=\"T\"/>"
-                     + "</type>";
-            /// <summary>
-            /// Diet specifics
-            /// </summary>
-            private const string typeDIET = "<element>"
-                             + "<field name=\"dm\"           unit=\"kg/ha\"  kind=\"double\"/>"
-                             + "<field name=\"dmd\"          unit=\"-\"      kind=\"double\"/>"
-                             + "<field name=\"cp_conc\"      unit=\"kg/kg\"  kind=\"double\"/>"
-                             + "<field name=\"p_conc\"       unit=\"kg/kg\"  kind=\"double\"/>"
-                             + "<field name=\"s_conc\"       unit=\"kg/kg\"  kind=\"double\"/>"
-                             + "<field name=\"prot_dg\"      unit=\"kg/kg\"  kind=\"double\"/>"
-                             + "<field name=\"ash_alk\"      unit=\"mol/kg\" kind=\"double\"/>"
-                             + "<field name=\"height_ratio\" unit=\"-\"      kind=\"double\"/>"
-                             + "</element>";
-            /// <summary>
-            /// Pasture to stock
-            /// </summary>
-            public const string typePLANT2STOCK = "<type>"
-                         + "<field name = \"herbage\" array=\"T\">"
-                         + typeDIET
-                         + "</field>"
-                         + "<field name=\"propn_green\"   unit=\"-\" kind=\"double\"/>"
-                         + "<field name=\"legume\"        unit=\"-\" kind=\"double\"/>"
-                         + "<field name=\"select_factor\" unit=\"-\" kind=\"double\"/>"
-                         + "<field name=\"seed\"          array=\"T\">"
-                         + typeDIET
-                         + "</field>"
-                         + "<field name=\"seed_class\"    unit=\"-\" kind=\"integer4\" array=\"T\"/>"
-                       + "</type>";
-        */
     }
 
     /// <summary>
@@ -665,6 +614,7 @@ namespace Models.Stock
             for (Idx = 0; Idx < aValue.Length; Idx++)
             {
                 aPadd = Model.Paddocks.byIndex(Idx);
+                aValue[Idx] = new TPaddInit();
                 aValue[Idx].name = aPadd.sName;                                       // "name"                                
                 aValue[Idx].area = aPadd.fArea;                                       // "area"                                
                 aValue[Idx].slope = aPadd.Slope;                                       // "slope"                               
@@ -903,7 +853,7 @@ namespace Models.Stock
         /// <param name="Pool"></param>
         /// <param name="aValue"></param>
         /// <param name="bNPSVal"></param>
-        public static void DMPool2Value(GrazType.DM_Pool Pool, ref TDMPoolHead aValue, bool bNPSVal = false)
+        public static void DMPool2Value(GrazType.DM_Pool Pool, TDMPoolHead aValue, bool bNPSVal = false)
         {
             if (!bNPSVal)
             {
@@ -941,7 +891,8 @@ namespace Models.Stock
             int iPass, Idx;
 
             bool Result = true;
-            Array.Clear(aValue, 0, aValue.Length);
+            for (int i = 0; i < aValue.Length; i++)
+                aValue[i] = new TDMPoolHead();
 
             if (bUseTag)
                 iNoPasses = aValue.Length;
@@ -1007,7 +958,9 @@ namespace Models.Stock
                         }
 
                         if (!bUseTag && !bUseAll)
-                            DMPool2Value(Pool, ref aValue[Idx - 1], (iCode == StockProps.prpINORG_FAECES));
+                        {
+                            DMPool2Value(Pool, aValue[Idx - 1], (iCode == StockProps.prpINORG_FAECES));
+                        }
                         else if (aGroup != null)
                         {
                             GrazType.AddDMPool(GrazType.MultiplyDMPool(Pool, aGroup.NoAnimals), TotalPool);
@@ -1021,9 +974,13 @@ namespace Models.Stock
                     if (iDenom > 0)
                         TotalPool = GrazType.PoolFraction(TotalPool, 1.0 / iDenom);
                     if (bUseAll)
-                        DMPool2Value(TotalPool, ref aValue[0], (iCode == StockProps.prpINORG_FAECES));
+                    {
+                        DMPool2Value(TotalPool, aValue[0], (iCode == StockProps.prpINORG_FAECES));
+                    }
                     else
-                        DMPool2Value(TotalPool, ref aValue[iPass - 1], (iCode == StockProps.prpINORG_FAECES));
+                    {
+                        DMPool2Value(TotalPool, aValue[iPass - 1], (iCode == StockProps.prpINORG_FAECES));
+                    }
                 }
             }
             return Result;
@@ -1046,11 +1003,13 @@ namespace Models.Stock
                 if (Model.Paddocks.byIndex(iPadd).SuppRemovalKG > 0.0)
                     iCount++;
             }
-            Array.Resize(ref aValue, iCount);
+            
+            aValue = new TSupplementEaten[iCount];
             Idx = 0;
             for (iPadd = 0; iPadd <= Model.Paddocks.Count() - 1; iPadd++)
                 if (Model.Paddocks.byIndex(iPadd).SuppRemovalKG > 0.0)
                 {
+                    aValue[Idx] = new TSupplementEaten();
                     aValue[Idx].paddock = Model.Paddocks.byIndex(iPadd).sName;
                     aValue[Idx].eaten = Model.Paddocks.byIndex(iPadd).SuppRemovalKG;
                     Idx++;

@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 
-namespace Models.Stock
+namespace Models.GrazPlan
 {
     /// <summary>
     /// Container for many GrazPlan constants

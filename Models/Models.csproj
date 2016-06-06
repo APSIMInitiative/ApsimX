@@ -138,8 +138,8 @@
     <Compile Include="Core\ITestable.cs" />
     <Compile Include="Core\Replacements.cs" />
     <Compile Include="Graph\Regression.cs" />
-    <Compile Include="Grazplan\Supplement.cs" />
-    <Compile Include="Grazplan\GrazSupp.cs" />
+    <Compile Include="GrazPlan\Supplement.cs" />
+    <Compile Include="GrazPlan\GrazSupp.cs" />
     <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
@@ -222,14 +222,11 @@
     <Compile Include="Soils\Variables.cs" />
     <Compile Include="Stock\animgrp.cs" />
     <Compile Include="Stock\animprm.cs" />
-    <Compile Include="Stock\comppsr.cs" />
     <Compile Include="Stock\grazenv.cs" />
     <Compile Include="Stock\grazparam.cs" />
     <Compile Include="Stock\grazprmread.cs" />
     <Compile Include="Stock\graztype.cs" />
-    <Compile Include="Stock\initpsr.cs" />
     <Compile Include="Stock\sdmlpsr.cs" />
-    <Compile Include="Stock\sdmlval.cs" />
     <Compile Include="Stock\stddate.cs" />
     <Compile Include="Stock\stdmath.cs" />
     <Compile Include="Stock\stdstrng.cs" />

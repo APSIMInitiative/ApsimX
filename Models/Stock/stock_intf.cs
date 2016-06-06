@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Models.Grazplan;
 using StdUnits;
 
-namespace Models.Stock
+namespace Models.GrazPlan
 {
 
     /// <summary>
@@ -14,6 +13,7 @@ namespace Models.Stock
     ///      be set to the null string, in which case the TStockList class will      
     ///      provide a default.                                                      
     /// </summary>
+    [Serializable]
     public class TSingleGenotypeInits
     {
         /// <summary>
@@ -67,6 +67,7 @@ namespace Models.Stock
     /// N.B. the YoungWt and YoungGFW fields may be set to MISSING, in which case    
     ///      TStockList will estimate defaults.                                       
     /// </summary>
+    [Serializable]
     public struct TAnimalInits
     {
         /// <summary>
@@ -150,6 +151,7 @@ namespace Models.Stock
     /// <summary>
     ///  Abbreviated animal initialisation set, used in TStockList.Buy                
     /// </summary>
+    [Serializable]
     public struct TPurchaseInfo
     {
         /// <summary>
@@ -209,6 +211,7 @@ namespace Models.Stock
     /// <summary>
     /// Attributes of a set of livstock cohorts, used in TStockList.AddStock         
     /// </summary>
+    [Serializable]
     public struct TCohortsInfo
     {
         /// <summary>
@@ -290,6 +293,7 @@ namespace Models.Stock
     /// <summary>
     /// The container for stock
     /// </summary>
+    [Serializable]
     public class TStockContainer
     {
         /// <summary>
@@ -374,6 +378,7 @@ namespace Models.Stock
     ///  N.B. The At property is 1-offset.  In many of the management methods, an     
     ///       index of 0 denotes "do to all groups".                                  
     /// </summary>
+    [Serializable]
     public class TStockList
     {
         private const double MONTH2DAY = 365.25 / 12;
@@ -1711,7 +1716,7 @@ namespace Models.Stock
             setParamFile("");                                                          // Creates a default FBaseParams         
             Array.Resize(ref FStock, 1);                                               // Set aside temporary storage           
             FPaddocks = new TPaddockList();
-            FPaddocks.Add(-1, "");                                                     // The "null" paddock is added here      
+            FPaddocks.Add(-1, String.Empty);                                                     // The "null" paddock is added here      
             //  FForages  := TForageList.Create( TRUE );
             FForageProviders = new TForageProviders();
             FEnterprises = new TEnterpriseList();
@@ -3750,6 +3755,7 @@ namespace Models.Stock
         /// <summary>
         /// Stock age record
         /// </summary>
+        [Serializable]
         protected struct TAgeRec
         {
             /// <summary>
@@ -3765,6 +3771,7 @@ namespace Models.Stock
         /// <summary>
         /// Mob record
         /// </summary>
+        [Serializable]
         protected struct TMobRec
         {
             /// <summary>
@@ -4081,7 +4088,7 @@ namespace Models.Stock
 
             return Result;
         }
-
+        
         /// <summary>
         /// The main stock management function that handles a number of events.
         /// </summary>
