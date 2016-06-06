@@ -184,7 +184,7 @@ namespace UserInterface.Views
                         MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
                                            String.Format("Value should be a number in the range 0 to {0:F2}", maxVal));
                         md.Title = "Invalid entry";
-                        int result = md.Run();
+                        md.Run();
                         md.Destroy();
                     }
                     if (!cancel)
@@ -409,7 +409,7 @@ namespace UserInterface.Views
                 MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
                                    "Value should be a non-negative number");
                 md.Title = "Invalid entry";
-                int result = md.Run();
+                md.Run();
                 md.Destroy();
             }
             if (!cancel)
@@ -433,7 +433,7 @@ namespace UserInterface.Views
                 MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
                                    "You must provide a name for the supplement");
                 md.Title = "Invalid entry";
-                int result = md.Run();
+                md.Run();
                 md.Destroy();
             }
             if (!cancel)

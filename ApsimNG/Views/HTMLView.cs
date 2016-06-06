@@ -203,6 +203,7 @@ namespace UserInterface.Views
             {
                 Gtk.Window win = new Gtk.Window(Gtk.WindowType.Popup);
                 win.SetSizeRequest(500, 500);
+                win.Move(-10000, -10000); // Move the window offscreen; the user doesn't need to see it.
                 win.Add(MainWidget);
                 win.ShowAll();
                 while (Gtk.Application.EventsPending())

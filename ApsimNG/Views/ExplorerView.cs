@@ -748,7 +748,7 @@ namespace UserInterface.Views
 
         private void OnDragEnd(object sender, DragEndArgs e)
         {
-            if (dragSourceHandle != null)
+            if (dragSourceHandle.IsAllocated)
             {
                 dragSourceHandle.Free();
             }
