@@ -57,23 +57,19 @@ namespace UserInterface.Views
         private string nodePathBeforeRename;
 
         [Widget]
-        private VPaned vpaned1;
+        private VPaned vpaned1 = null;
         [Widget]
-        private TextView statusWindow;
+        private TextView statusWindow = null;
         [Widget]
-        private Toolbar toolStrip;
+        private Toolbar toolStrip = null;
         [Widget]
-        private ProgressBar progressbar1;
+        private ProgressBar progressbar1 = null;
         [Widget]
-        private HBox hbox1;
+        private TreeView treeview1 = null;
         [Widget]
-        private TreeView treeview1;
+        private Viewport RightHandView = null;
         [Widget]
-        private ScrolledWindow RightHandPanel;
-        [Widget]
-        private Viewport RightHandView;
-        [Widget]
-        private Label toolbarlabel;
+        private Label toolbarlabel = null;
 
         private Menu Popup = new Menu();
 
@@ -163,7 +159,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the view wants to know if a drop is allowed on the specified Node.
         /// </summary>
-        public new event EventHandler<AllowDropArgs> AllowDrop;
+        public event EventHandler<AllowDropArgs> AllowDrop;
 
         /// <summary>Invoked when a drop has occurred.</summary>
         public event EventHandler<DropArgs> Droped;
@@ -336,7 +332,7 @@ namespace UserInterface.Views
                     {
                         item.Image = new Image(null, Description.ResourceNameForImage);
                     }
-                    catch (Exception e)
+                    catch (Exception /*e*/)
                     {
                     }
                 item.Activated += Description.OnClick;
@@ -406,7 +402,7 @@ namespace UserInterface.Views
             if (owner != null)
             {
                 Notebook notebook = owner.MainWidget as Notebook;
-                string name = notebook.GetMenuLabelText(notebook.CurrentPageWidget);
+                string name = notebook.GetMenuLabelText(MainWidget);
                 string message = "Do you want to save changes for " + name + " ?";
                 MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Question, ButtonsType.YesNo, message);
                 md.Title = "Save changes";
@@ -485,6 +481,19 @@ namespace UserInterface.Views
                 //this.toolTip1.SetToolTip(this.StatusWindow, message);
                 progressbar1.Visible = false;
             });
+        }
+
+        /// <summary>Add a status message to the explorer window</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="errorLevel">The error level.</param>
+        public int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType)
+        {
+            Gtk.MessageDialog md = new Gtk.MessageDialog(MainWidget.Toplevel as Window, Gtk.DialogFlags.Modal,
+                msgType, buttonType, message);
+            md.Title = title;
+            int result = md.Run();
+            md.Destroy();
+            return result;
         }
 
         /// <summary>
@@ -587,7 +596,7 @@ namespace UserInterface.Views
             {
                 pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage);
             }
-            catch (ArgumentException e)
+            catch (ArgumentException /*e*/)
             {
                 pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // Something else we could use as a default?
             }
@@ -739,7 +748,7 @@ namespace UserInterface.Views
 
         private void OnDragEnd(object sender, DragEndArgs e)
         {
-            if (dragSourceHandle != null)
+            if (dragSourceHandle.IsAllocated)
             {
                 dragSourceHandle.Free();
             }

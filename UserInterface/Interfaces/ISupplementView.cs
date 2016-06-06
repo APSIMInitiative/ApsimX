@@ -65,6 +65,8 @@ namespace UserInterface.Interfaces
 
         TSupplementItem SelectedSupplementValues { set; }
 
+        string SelectedSupplementName { get; set; }
+
         int SelectedSupplementIndex { set; get;  }
      }
 }

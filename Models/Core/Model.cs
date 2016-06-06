@@ -135,6 +135,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Phen.PhaseSetFunction))]
         [XmlElement(typeof(Models.PMF.Phen.Vernalisation))]
         [XmlElement(typeof(Models.PMF.Phen.VernalisationCW))]
+        [XmlElement(typeof(Models.PMF.Phen.QualitativePPEffect))]
         [XmlElement(typeof(Models.PMF.Phen.ZadokPMF))]
         [XmlElement(typeof(Models.PMF.Functions.AccumulateFunction))]
         [XmlElement(typeof(Models.PMF.Functions.MovingAverageFunction))]

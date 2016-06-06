@@ -31,6 +31,13 @@ namespace UserInterface
         public ViewBase Owner { get { return _owner; } }
         public Widget MainWidget { get { return _mainWidget; } }
         public ViewBase(ViewBase owner) { _owner = owner; }
+        public virtual void Destroy()
+        {
+            if (_mainWidget != null && _mainWidget.IsRealized)
+                _mainWidget.Destroy();
+            _mainWidget = null;
+            _owner = null;
+        }
 
         protected Gdk.Window mainWindow { get { return MainWidget == null ? null : MainWidget.Toplevel.GdkWindow; } }
         private bool waiting = false;
@@ -46,11 +53,11 @@ namespace UserInterface
                 if (mainWindow != null)
                 {
                     if (value == true)
-                    {
                         mainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
-                    }
                     else
                         mainWindow.Cursor = null;
+                    while (Gtk.Application.EventsPending())
+                        Gtk.Application.RunIteration();
                     waiting = value;
                 }
             }
@@ -64,9 +71,9 @@ namespace UserInterface
         private string[] commandLineArguments;
 
         [Widget]
-        private Window mainWindow;
+        private new Window mainWindow = null;
         [Widget]
-        private HPaned hpaned1;
+        private HPaned hpaned1 = null;
 
         /// <summary>
         /// The error message will be set if an error results from a startup script.

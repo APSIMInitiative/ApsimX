@@ -72,6 +72,9 @@ namespace UserInterface.Presenters
             if (dataStore != null)
                 dataStore.Disconnect();
             this.view.SimulationNameChanged -= OnSimulationNameChanged;
+            if (this.view is SummaryView)
+                (view as SummaryView).Destroy();
+            this.view = null;
         }
 
         /// <summary>Populate the summary view.</summary>

@@ -37,7 +37,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Overall font to use.
         /// </summary>
-        private new const string Font = "Calibri Light";
+        private const string Font = "Calibri Light";
 
         /// <summary>
         /// Margin to use
@@ -52,17 +52,17 @@ namespace UserInterface.Views
 
         private OxyPlot.GtkSharp.PlotView plot1;
         [Widget]
-        private VBox vbox1;
+        private VBox vbox1 = null;
         [Widget]
-        private Expander expander1;
+        private Expander expander1 = null;
         [Widget]
-        private VBox vbox2;
+        private VBox vbox2 = null;
         [Widget]
-        private Label captionLabel;
+        private Label captionLabel = null;
         [Widget]
-        private EventBox captionEventBox;
+        private EventBox captionEventBox = null;
         [Widget]
-        private Label label2;
+        private Label label2 = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphView" /> class.
@@ -160,6 +160,9 @@ namespace UserInterface.Views
             this.plot1.Model.Series.Clear();
             this.plot1.Model.Axes.Clear();
             this.plot1.Model.Annotations.Clear();
+            //modLMC - 11/05/2016 - Need to clear the chart title as well
+            this.FormatTitle("");
+
         }
 
         /// <summary>
@@ -178,7 +181,7 @@ namespace UserInterface.Views
         public void Refresh()
         {
             this.plot1.Model.DefaultFontSize = FontSize;
-            this.plot1.Model.PlotAreaBorderThickness = new OxyThickness(0);
+            this.plot1.Model.PlotAreaBorderThickness = new OxyThickness(0.0);
             this.plot1.Model.LegendBorder = OxyColors.Transparent;
             this.plot1.Model.LegendBackground = OxyColors.White;
 
@@ -476,7 +479,6 @@ namespace UserInterface.Views
             if (text != null && text != string.Empty)
             {
                 captionLabel.Text = text;
-                FontStyle fontStyle = FontStyle.Regular;
                 if (italics)
                     text = "<i>" + text + "<i/>";
                 captionLabel.Markup = text;
@@ -640,7 +642,6 @@ namespace UserInterface.Views
             if (x != null && y != null && x != null && y != null)
             {
                 // Create a new data point for each x.
-                IEnumerator xEnum = x.GetEnumerator();
                 double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
                 double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
 
@@ -812,7 +813,6 @@ namespace UserInterface.Views
                 Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
                 if (legendArea.Contains(Location))
                 {
-                    int margin = Convert.ToInt32(this.plot1.Model.LegendMargin);
                     int y = Convert.ToInt32(Location.Y - this.plot1.Model.LegendArea.Top);
                     int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height) / this.plot1.Model.Series.Count;
                     int seriesIndex = y / itemHeight;
@@ -955,7 +955,6 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnChartClick(object sender, OxyMouseDownEventArgs e)
         {
-            Gdk.EventButton button;
             e.Handled = false;
             if (e.ChangedButton == OxyMouseButton.Left) /// Left clicks only
             {

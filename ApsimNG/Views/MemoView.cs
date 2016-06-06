@@ -10,7 +10,8 @@ namespace UserInterface.Views
 {
     interface IMemoView
     {
-        event EventHandler<EditorArgs> MemoUpdate;
+        event EventHandler<EditorArgs> MemoLeave;
+        event EventHandler<EditorArgs> MemoChange;
 
         /// <summary>
         /// Add an action (on context menu) on the memo.
@@ -35,16 +36,15 @@ namespace UserInterface.Views
     /// </summary>
     public class MemoView : ViewBase, IMemoView
     {
-        public event EventHandler<EditorArgs> MemoUpdate;
+        public event EventHandler<EditorArgs> MemoLeave;
+        public event EventHandler<EditorArgs> MemoChange;
 
         [Widget]
-        private VBox vbox1;
+        private VBox vbox1 = null;
         [Widget]
-        private TextView textView;
+        public TextView textView = null;
         [Widget]
-        private ScrolledWindow scroller;
-        [Widget]
-        private Label label1;
+        private Label label1 = null;
 
         public MemoView(ViewBase owner) : base(owner)
         {
@@ -52,6 +52,7 @@ namespace UserInterface.Views
             gxml.Autoconnect(this);
             _mainWidget = vbox1;
             textView.FocusOutEvent += richTextBox1_Leave;
+            textView.Buffer.Changed += richTextBox1_TextChanged;
         }
 
         /// <summary>
@@ -77,8 +78,8 @@ namespace UserInterface.Views
             {
                 textView.Buffer.Clear();
                 TextIter iter = textView.Buffer.EndIter;
-                foreach (string line in MemoLines)
-                    textView.Buffer.Insert(ref iter, line);
+                foreach (string line in value)
+                    textView.Buffer.Insert(ref iter, line + Environment.NewLine);
             }
         }
 
@@ -108,11 +109,21 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void richTextBox1_Leave(object sender, FocusOutEventArgs e)
         {
-            if (MemoUpdate != null)
+            if (MemoLeave != null)
             {
                 EditorArgs args = new EditorArgs();
                 args.TextString = textView.Buffer.Text;
-                MemoUpdate(this, args);
+                MemoLeave(this, args);
+            }
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (MemoChange != null)
+            {
+                EditorArgs args = new EditorArgs();
+                args.TextString = textView.Buffer.Text;
+                MemoChange(this, args);
             }
         }
 
@@ -134,11 +145,10 @@ namespace UserInterface.Views
         public Point CurrentPosition
         {
             get
-            {   /* TBI
-                int lineNumber = richTextBox1.GetLineFromCharIndex(richTextBox1.SelectionStart);
-                int firstCharOfLine = richTextBox1.GetFirstCharIndexFromLine(lineNumber);
-                int colNumber = richTextBox1.SelectionStart - firstCharOfLine; */
-                return new Point(0, 0); /// TBI colNumber, lineNumber);
+            {
+                TextIter cursorIter = textView.Buffer.GetIterAtMark(textView.Buffer.InsertMark);
+                int lineNumber = cursorIter.Line;
+                return new Point(cursorIter.Offset, cursorIter.Line);
             }
         }
 
@@ -147,10 +157,10 @@ namespace UserInterface.Views
         /// </summary>
         public void Export(int width, int height, Graphics graphics)
         {
+            /* TBI
             float x = 10;
             float y = 0;
             int charpos = 0;
-            /* TBI
             while (charpos < richTextBox1.Text.Length)
             {
                 if (richTextBox1.Text[charpos] == '\n')

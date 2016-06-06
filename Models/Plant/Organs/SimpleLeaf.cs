@@ -351,9 +351,8 @@ namespace Models.PMF.Organs
                     NDeficit = 0;
                 else
                 {
-                    double DMDemandTot = DMDemand.Structural + DMDemand.NonStructural + DMDemand.Metabolic;
-                    StructuralDemand = MaximumNConc.Value * DMDemandTot * _StructuralFraction;
-                    NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + DMDemandTot) - Live.N) - StructuralDemand;
+                    StructuralDemand = MaximumNConc.Value * PotentialDMAllocation * _StructuralFraction;
+                    NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N) - StructuralDemand;
                 }
                 if (Math.Round(StructuralDemand, 8) < 0)
                     throw new Exception(this.Name + " organ is returning a negative structural N Demand.  Check your parameterisation");
@@ -457,7 +456,8 @@ namespace Models.PMF.Organs
                 {
                     if (InitialDM != null)
                     {
-                        Live.StructuralWt = InitialDM.Value;
+                        Live.StructuralWt = InitialDM.Value * Plant.Population;
+                        Live.StructuralN = InitialDM.Value * Plant.Population * MaxNconc;
                         isInitialised = true;
                     }
                 }
