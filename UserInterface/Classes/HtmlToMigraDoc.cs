@@ -119,11 +119,7 @@
             HtmlAttribute srcAttribute = node.Attributes["src"];
             if (srcAttribute != null)
             {
-                string fullPath;
-                if (String.IsNullOrEmpty(imagePath))
-                    fullPath = srcAttribute.Value;
-                else
-                    fullPath = Path.Combine(imagePath, srcAttribute.Value);
+                string fullPath = Path.Combine(imagePath, srcAttribute.Value);
                 if (!File.Exists(fullPath))
                 {
                     // Look in documentation folder.

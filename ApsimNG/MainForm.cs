@@ -31,13 +31,6 @@ namespace UserInterface
         public ViewBase Owner { get { return _owner; } }
         public Widget MainWidget { get { return _mainWidget; } }
         public ViewBase(ViewBase owner) { _owner = owner; }
-        public virtual void Destroy()
-        {
-            if (_mainWidget != null && _mainWidget.IsRealized)
-                _mainWidget.Destroy();
-            _mainWidget = null;
-            _owner = null;
-        }
 
         protected Gdk.Window mainWindow { get { return MainWidget == null ? null : MainWidget.Toplevel.GdkWindow; } }
         private bool waiting = false;
@@ -71,9 +64,9 @@ namespace UserInterface
         private string[] commandLineArguments;
 
         [Widget]
-        private new Window mainWindow = null;
+        private Window mainWindow;
         [Widget]
-        private HPaned hpaned1 = null;
+        private HPaned hpaned1;
 
         /// <summary>
         /// The error message will be set if an error results from a startup script.

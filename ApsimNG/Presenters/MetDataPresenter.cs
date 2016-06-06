@@ -157,7 +157,6 @@ namespace UserInterface.Presenters
             this.graphMetData = new DataTable();
             if (filename != null)
             {
-                this.weatherDataView.Filename = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
                 try
                 {
                     if (Path.GetExtension(filename) == ExcelUtilities.ExcelExtension)
@@ -167,9 +166,9 @@ namespace UserInterface.Presenters
                         if (sheetNames == null)
                         {
                             sheetNames = ExcelUtilities.GetWorkSheetNames(filename);
-                            this.weatherDataView.ExcelSheetChangeClicked -= this.ExcelSheetValueChanged;
+                            //this.weatherDataView.ExcelSheetChangeClicked -= this.ExcelSheetValueChanged;
                             this.weatherDataView.PopulateDropDownData(sheetNames);
-                            this.weatherDataView.ExcelSheetChangeClicked += this.ExcelSheetValueChanged;
+                            //this.weatherDataView.ExcelSheetChangeClicked += this.ExcelSheetValueChanged;
                         }
                     }
                     else
@@ -189,7 +188,7 @@ namespace UserInterface.Presenters
                         this.WriteTable(data);
                         this.WriteSummary(data);
                         this.DisplayDetailedGraphs(data);
-                        this.explorerPresenter.MainPresenter.ShowMessage(" ", DataStore.ErrorLevel.Information);
+                        this.explorerPresenter.ShowMessage(" ", DataStore.ErrorLevel.Information);
                     }
                     finally
                     {
@@ -202,7 +201,7 @@ namespace UserInterface.Presenters
                     string message = err.Message;
                     message += "\r\n" + err.StackTrace;
                     this.weatherDataView.Summarylabel = err.Message;
-                    this.explorerPresenter.MainPresenter.ShowMessage(message, DataStore.ErrorLevel.Error);
+                    this.explorerPresenter.ShowMessage(message, DataStore.ErrorLevel.Error);
                 }
             }
             //this.weatherDataView.Filename = PathUtilities.GetRelativePath(filename, this.explorerPresenter.ApsimXFile.FileName);
@@ -268,16 +267,16 @@ namespace UserInterface.Presenters
         private void WriteSummary(DataTable table)
         {
             StringBuilder summary = new StringBuilder();
-            summary.AppendLine("File name : " + this.weatherData.FileName);
+            summary.AppendLine("File name: " + this.weatherData.FileName);
             if (!String.IsNullOrEmpty(this.weatherData.ExcelWorkSheetName))
             {
                 summary.AppendLine("Sheet Name: " + this.weatherData.ExcelWorkSheetName.ToString());
             }
-            summary.AppendLine("Latitude  : " + this.weatherData.Latitude.ToString());
-            summary.AppendLine("TAV       : " + String.Format("{0, 2:f2}", this.weatherData.Tav));
-            summary.AppendLine("AMP       : " + String.Format("{0, 2:f2}", this.weatherData.Amp));
-            summary.AppendLine("Start     : " + this.weatherData.StartDate.ToShortDateString());
-            summary.AppendLine("End       : " + this.weatherData.EndDate.ToShortDateString());
+            summary.AppendLine("Latitude : " + this.weatherData.Latitude.ToString());
+            summary.AppendLine("TAV      : " + String.Format("{0, 2:f2}", this.weatherData.Tav));
+            summary.AppendLine("AMP      : " + String.Format("{0, 2:f2}", this.weatherData.Amp));
+            summary.AppendLine("Start    : " + this.weatherData.StartDate.ToShortDateString());
+            summary.AppendLine("End      : " + this.weatherData.EndDate.ToShortDateString());
             summary.AppendLine("");
 
             if (table != null && table.Rows.Count > 0)

@@ -75,17 +75,17 @@ namespace UserInterface.Views
         private ListStore standardList = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(EventHandler));
         private ListStore recentFileList = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(EventHandler));
         [Widget]
-        private Notebook notebook1 = null;
+        private Notebook notebook1;
         [Widget]
-        private IconView standardView = null;
+        private IconView standardView;
         [Widget]
-        private IconView recentFilesView = null;
+        private IconView recentFilesView;
         [Widget]
-        private Label label4 = null;
+        private Label label4;
         [Widget]
-        private EventBox eventbox1 = null;
+        private EventBox eventbox1;
         [Widget]
-        private VBox vbox1 = null;
+        private VBox vbox1;
 
         private const string indexTabText = "Home";
 
@@ -122,7 +122,6 @@ namespace UserInterface.Views
                 labelText.WrapMode = Pango.WrapMode.Word;
                 labelText.SizePoints = 8;  // Works in GTKSharp 2, but not in 3
             }
-            eventbox1.ButtonPressEvent += on_eventbox1_button_press_event;
         }
 
         /// <summary>

@@ -23,13 +23,13 @@ namespace UserInterface.Views
     public class ReportView : ViewBase, IReportView
     {
         [Widget]
-        private Notebook notebook1 = null;
+        private Notebook notebook1;
         [Widget]
-        private VBox vbox1 = null;
+        private VBox vbox1;
         [Widget]
-        private VBox vbox2 = null;
+        private VBox vbox2;
         [Widget]
-        private Alignment alignment1 = null;
+        private Alignment alignment1;
 
         private EditorView VariableEditor;
         private EditorView FrequencyEditor;

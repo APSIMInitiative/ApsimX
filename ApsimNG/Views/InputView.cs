@@ -36,13 +36,13 @@ namespace UserInterface.Views
         public event EventHandler<OpenDialogArgs> BrowseButtonClicked;
 
         [Widget]
-        private VBox vbox1 = null;
+        private VBox vbox1;
         [Widget]
-        private Button button1 = null;
+        private Button button1;
         [Widget]
-        private Label label1 = null;
+        private Label label1;
         [Widget]
-        private Label label2 = null;
+        private Label label2;
         private GridView Grid;
 
         /// <summary>
@@ -64,16 +64,6 @@ namespace UserInterface.Views
         /// Property to provide access to the grid.
         /// </summary>
         public IGridView GridView { get { return Grid; } }
-
-        public override void Destroy()
-        {
-            if (Grid != null)
-            {
-                Grid.Destroy();
-                Grid = null;
-            }
-            base.Destroy();
-        }
 
         /// <summary>
         /// Property to provide access to the filename label.

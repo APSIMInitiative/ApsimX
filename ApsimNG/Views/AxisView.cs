@@ -96,17 +96,17 @@ namespace UserInterface.Views
         public event EventHandler IntervalChanged;
 
         [Widget]
-        private Table table1 = null;
+        private Table table1;
         [Widget]
-        private Entry entryMin = null;
+        private Entry entryMin;
         [Widget]
-        private Entry entryMax = null;
+        private Entry entryMax;
         [Widget]
-        private Entry entryInterval = null;
+        private Entry entryInterval;
         [Widget]
-        private Entry entryTitle = null;
+        private Entry entryTitle;
         [Widget]
-        private CheckButton checkbutton1 = null;
+        private CheckButton checkbutton1;
 
         /// <summary>
         /// Construtor

@@ -2,11 +2,11 @@
 {
     partial class TreeProxyView
     {
-        /* TBI
         /// <summary> 
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
+        /* TBI
 
         /// <summary> 
         /// Clean up any resources being used.

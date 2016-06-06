@@ -1758,8 +1758,7 @@
 
         /// <summary>Called when [add faeces].</summary>
         /// <param name="data">The data.</param>
-        [EventSubscribe("AddFaeces")]
-        private void OnAddFaeces(AddFaecesType data) { AddFaeces(data); }
+        public void OnAddFaeces(AddFaecesType data) { AddFaeces(data); }
 
         #endregion
 
@@ -2931,7 +2930,7 @@
         /// an alternative to using add_surfaceom directly
         /// </summary>
         /// <param name="data">structure holding description of the added faeces</param>
-        private void AddFaeces(AddFaecesType data)
+        public void AddFaeces(AddFaecesType data)
         {
             string Manure = "manure";
             Add((double)(data.OMWeight * FractionFaecesAdded),

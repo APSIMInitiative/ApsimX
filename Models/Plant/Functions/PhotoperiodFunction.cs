@@ -29,7 +29,7 @@ namespace Models.PMF.Functions
         protected Clock Clock = null;
 
         /// <summary>The twilight</summary>
-        [Description("Twilight angle")]
+        [Description("Twilight")]
         [Units("degrees")]
         public double Twilight { get; set; }
 

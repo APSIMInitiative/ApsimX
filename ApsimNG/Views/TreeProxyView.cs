@@ -51,7 +51,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Overall font to use.
         /// </summary>
-        private const string Font = "Calibri Light";
+        private new const string Font = "Calibri Light";
 
         /// <summary>
         /// Margin to use
@@ -457,18 +457,18 @@ namespace UserInterface.Views
         /// <param name="bitmap">Bitmap to write to</param>
         public void Export(Bitmap bitmap)
         {
-            /* TBI
             int i = 0;
             foreach (PlotView p in plots)
             {
+                /* TBI
                 p.Dock = DockStyle.None;
                 p.Width = bitmap.Width;
                 p.Height = bitmap.Height / 2;
                 p.DrawToBitmap(bitmap, new Rectangle(0, p.Height * i, bitmap.Width, bitmap.Height / 2));
                 p.Dock = DockStyle.Fill;
                 i++;
+                */
             }
-            */
         }
 
         /// <summary>
@@ -680,9 +680,9 @@ namespace UserInterface.Views
         private void ResizeControls()
         {
             //resize tree heights grid
-            /* TBI
             int hWidth = 0;
             int hHeight = 0;
+            /* TBI
             foreach (DataGridViewColumn col in dgvHeights.Columns)
                 hWidth += col.Width;
             foreach (DataGridViewRow row in dgvHeights.Rows)
@@ -794,7 +794,7 @@ namespace UserInterface.Views
                 pBelowGround.Model.LegendBorder = OxyColors.Transparent;
                 LinearAxis bgxAxis = new LinearAxis();
                 LinearAxis bgyAxis = new LinearAxis();
-                // List<Utility.LineSeriesWithTracker> seriesList = new List<Utility.LineSeriesWithTracker>();
+                List<Utility.LineSeriesWithTracker> seriesList = new List<Utility.LineSeriesWithTracker>();
 
                 bgyAxis.Position = AxisPosition.Left;
                 bgxAxis.Position = AxisPosition.Top;

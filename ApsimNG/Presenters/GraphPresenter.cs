@@ -143,11 +143,13 @@ namespace UserInterface.Presenters
             double maximumX = graphView.AxisMaximum(Axis.AxisType.Bottom);
             double minimumY = graphView.AxisMinimum(Axis.AxisType.Left);
             double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
+            double majorStepY = graphView.AxisMajorStep(Axis.AxisType.Left);
             double lowestAxisScale = Math.Min(minimumX, minimumY);
             double largestAxisScale = Math.Max(maximumX, maximumY);
             
             for (int i = 0; i < annotations.Count; i++)
             {
+                int numLines = StringUtilities.CountSubStrings(annotations[i].text, "\r\n") + 1;
                 double interval = (largestAxisScale - lowestAxisScale) / 10; // fit 10 annotations on graph.
 
                 double yPosition = largestAxisScale - i * interval;

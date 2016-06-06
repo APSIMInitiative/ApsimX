@@ -113,47 +113,47 @@ namespace UserInterface.Views
         public event ExcelSheetDelegate ExcelSheetChangeClicked;
 
         [Widget]
-        private Label labelFileName = null;
+        private Label labelFileName;
         [Widget]
-        private VBox vbox1 = null;
+        private VBox vbox1;
         [Widget]
-        private Notebook notebook1 = null;
+        private Notebook notebook1;
         [Widget]
-        private TextView textview1 = null;
+        private TextView textview1;
         [Widget]
-        private Alignment alignSummary = null;
+        private Alignment alignSummary;
         [Widget]
-        private Alignment alignData = null;
+        private Alignment alignData;
         [Widget]
-        private Alignment alignRainChart = null;
+        private Alignment alignRainChart;
         [Widget]
-        private Alignment alignRainMonthly = null;
+        private Alignment alignRainMonthly;
         [Widget]
-        private Alignment alignTemp = null;
+        private Alignment alignTemp;
         [Widget]
-        private Alignment alignRadn = null;
+        private Alignment alignRadn;
         [Widget]
-        private VBox vboxRainChart = null;
+        private VBox vboxRainChart;
         [Widget]
-        private VBox vboxRainMonthly = null;
+        private VBox vboxRainMonthly;
         [Widget]
-        private VBox vboxTemp = null;
+        private VBox vboxTemp;
         [Widget]
-        private VBox vboxRadn = null;
+        private VBox vboxRadn;
         [Widget]
-        private HBox hboxOptions = null;
+        private HBox hboxOptions;
         [Widget]
-        private SpinButton spinStartYear = null;
+        private SpinButton spinStartYear;
         [Widget]
-        private SpinButton spinNYears = null;
+        private SpinButton spinNYears;
         [Widget]
-        private Button button1 = null;
+        private Button button1;
         [Widget]
-        private VPaned vpaned1 = null;
+        private VPaned vpaned1;
         [Widget]
-        private HBox hbox2 = null;
+        private HBox hbox2;
         [Widget]
-        private Alignment alignment10 = null;
+        private Alignment alignment10;
         private DropDownView worksheetCombo;
 
         /// <summary>Initializes a new instance of the <see cref="TabbedMetDataView"/> class.</summary>
@@ -313,12 +313,19 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// used to show load status of Excel sheetname combo
+        /// </summary>
+        private bool PopulatingDropDownData;
+
+        /// <summary>
         /// Populates the DropDown of Excel WorksheetNames 
         /// </summary>
         /// <param name="sheetNames"></param>
         public void PopulateDropDownData(List<string> sheetNames)
         {
+            PopulatingDropDownData = true;
             worksheetCombo.Values = sheetNames.ToArray();
+            PopulatingDropDownData = false;
         }
 
         /// <summary>Handles the Click event of the button1 control.</summary>

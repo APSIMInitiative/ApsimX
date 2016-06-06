@@ -14,13 +14,13 @@ namespace UserInterface.Views
     public class SeriesView : ViewBase, ISeriesView
     {
         [Widget]
-        private Table table1 = null;
+        private Table table1;
         [Widget]
-        private VBox vbox1 = null;
+        private VBox vbox1;
         [Widget]
-        private Label label4 = null;
+        private Label label4;
         [Widget]
-        private Label label5 = null;
+        private Label label5;
 
         private DropDownView dropDownView1;
         private DropDownView dropDownView2;

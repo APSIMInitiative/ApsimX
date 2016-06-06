@@ -89,7 +89,7 @@
         public event EventHandler LeaveEditor;
 
         private ScrolledWindow scroller;
-        private Mono.TextEditor.TextEditor textEditor;
+        private TextEditor textEditor;
 
         /// <summary>
         /// Default constructor that configures the Completion form.
@@ -154,7 +154,7 @@
         /// <summary>
         /// Gets or sets the text property to get and set the content of the editor.
         /// </summary>
-        public string Text
+        public new string Text
         {
             get
             {

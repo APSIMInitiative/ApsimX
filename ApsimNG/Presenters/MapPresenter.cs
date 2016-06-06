@@ -54,9 +54,6 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            if (view is MapView)
-              (view as MapView).Destroy();
-            view = null;
         }
 
         /// <summary>
@@ -74,10 +71,32 @@ namespace UserInterface.Presenters
         {
             string path = Apsim.FullPath(map).Replace(".Simulations.", "");
             string fileName = Path.Combine(folder, path + ".png");
+
             Image rawImage = view.Export();
             rawImage.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 
-            return fileName;
+            
+            // The numbers below are optimised for generation of PDF document
+            // on a computer that has its display settings at 100%.
+            //double targetWidth = 650;
+            //double targetHeight = 450;
+
+            //// Determine scaling.
+            //double scale = Math.Min(targetWidth / rawImage.Width, targetHeight / rawImage.Height);
+            //var scaleWidth = (int)(rawImage.Width * scale);
+            //var scaleHeight = (int)(rawImage.Height * scale);
+            //var scaleRectangle = new Rectangle(((int)targetWidth - scaleWidth) / 2, ((int)targetHeight - scaleHeight) / 2, scaleWidth, scaleHeight);
+
+            //// Create a scaled image.
+            //Bitmap scaledImage = new Bitmap((int) targetWidth, (int) targetHeight);
+            //using (var graph = Graphics.FromImage(scaledImage))
+            //{
+            //    graph.DrawImage(rawImage, scaleRectangle);
+
+            //    scaledImage.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+
+                return fileName;
+            //}
         }
     }
 }

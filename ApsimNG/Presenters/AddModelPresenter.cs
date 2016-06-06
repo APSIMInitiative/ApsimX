@@ -63,7 +63,7 @@ namespace UserInterface.Presenters
             Type selectedModelType = allowableChildModels.Find(m => m.Name == view.List.SelectedValue);
             if (selectedModelType != null)
             {
-                explorerPresenter.MainPresenter.ShowWaitCursor(true);
+                explorerPresenter.ShowWaitCursor(true);
                 try
                 {
                     // Use the pre built serialization assembly.
@@ -77,7 +77,7 @@ namespace UserInterface.Presenters
                 }
                 finally
                 {
-                    explorerPresenter.MainPresenter.ShowWaitCursor(false);
+                    explorerPresenter.ShowWaitCursor(false);
                 }
             }
         }

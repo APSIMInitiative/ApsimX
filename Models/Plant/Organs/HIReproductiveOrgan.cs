@@ -14,8 +14,8 @@ namespace Models.PMF.Organs
     public class HIReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
     {
         /// <summary>Gets or sets the above ground.</summary>
-        [Link]
-        IFunction AboveGroundWt = null;
+        /// <value>The above ground.</value>
+        public Biomass AboveGround { get; set; }
 
         /// <summary>The water content</summary>
         [Link]
@@ -77,8 +77,8 @@ namespace Models.PMF.Organs
             get
             {
                 double CurrentWt = (Live.Wt + Dead.Wt);
-                if (AboveGroundWt.Value > 0)
-                    return CurrentWt / AboveGroundWt.Value;
+                if (AboveGround.Wt > 0)
+                    return CurrentWt / AboveGround.Wt;
                 else
                     return 0.0;
             }
@@ -91,7 +91,7 @@ namespace Models.PMF.Organs
             {
                 double CurrentWt = (Live.Wt + Dead.Wt);
                 double NewHI = HI + HIIncrement.Value;
-                double NewWt = NewHI * AboveGroundWt.Value;
+                double NewWt = NewHI * AboveGround.Wt;
                 double Demand = Math.Max(0.0, NewWt - CurrentWt);
 
                 return new BiomassPoolType { Structural = Demand };

@@ -22,7 +22,7 @@ namespace Utility
             XLWorkbook workbook = new XLWorkbook();
             foreach (System.Data.DataTable table in tables)
             {
-                workbook.Worksheets.Add(table);
+                IXLWorksheet worksheet = workbook.Worksheets.Add(table);
             }
 
             workbook.SaveAs(fileName);

@@ -11,9 +11,11 @@ namespace UserInterface.Views
     public class SummaryView : ViewBase, ISummaryView
     {
         [Widget]
-        private VBox vbox1 = null;
+        private VBox vbox1;
         [Widget]
-        private ComboBox combobox1 = null;
+        private ComboBox combobox1;
+        [Widget]
+        private Layout layout1;
         private ListStore comboModel = new ListStore(typeof(string));
         private CellRendererText comboRender = new CellRendererText();
         private HTMLView htmlview;
@@ -28,17 +30,7 @@ namespace UserInterface.Views
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Model = comboModel;
             htmlview = new HTMLView(this);
-            vbox1.PackEnd(htmlview.MainWidget, true, true, 0);
-        }
-
-        public override void Destroy()
-        {
-            if (htmlview != null)
-            {
-                htmlview.Destroy();
-                htmlview = null;
-            }
-            base.Destroy();
+            layout1.Add(htmlview.MainWidget);
         }
 
         /// <summary>Occurs when the name of the simulation is changed by the user</summary>

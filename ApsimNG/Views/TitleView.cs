@@ -26,9 +26,9 @@ namespace UserInterface.Views
         public event TitleChangedDelegate OnTitleChanged;
 
         [Widget]
-        private HBox hbox1 = null;
+        private HBox hbox1;
         [Widget]
-        private Entry entry1 = null;
+        private Entry entry1;
         /// <summary>
         /// Construtor
         /// </summary>

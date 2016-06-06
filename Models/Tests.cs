@@ -50,8 +50,6 @@ namespace Models
         public void Test(bool accept = false, bool GUIrun = false)
         {
             PredictedObserved PO = Parent as PredictedObserved;
-            if (PO == null)
-                return;
             DataStore DS = PO.Parent as DataStore;
             MathUtilities.RegrStats[] stats;
             List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available

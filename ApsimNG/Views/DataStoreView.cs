@@ -41,11 +41,11 @@ namespace UserInterface.Views
         private EditView editView2;
 
         [Widget]
-        private VBox vbox1 = null;
+        private VBox vbox1;
         [Widget]
-        private Table table1 = null;
+        private Table table1;
         [Widget]
-        private HBox hbox1 = null;
+        private HBox hbox1;
 
         /// <summary>Initializes a new instance of the <see cref="DataStoreView" /> class.</summary>
         public DataStoreView(ViewBase owner) : base(owner)

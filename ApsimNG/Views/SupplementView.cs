@@ -12,7 +12,7 @@ namespace UserInterface.Views
     using Glade;
     using Gtk;
     using Interfaces;
-    using Models.Grazplan;   // For access to the TSuppAttribute enumeration
+    using Models.GrazPlan;   // For access to the TSuppAttribute enumeration
 
     public class SupplementView : ViewBase, ISupplementView
     {
@@ -46,43 +46,43 @@ namespace UserInterface.Views
         public event EventHandler<TStringArgs> SuppNameChanged;
 
         [Widget]
-        private Table table1 = null;
+        private Table table1;
         [Widget]
-        private Entry tbSulph = null;
+        private Entry tbSulph;
         [Widget]
-        private Entry tbPhos = null;
+        private Entry tbPhos;
         [Widget]
-        private Entry tbADIP2CP = null;
+        private Entry tbADIP2CP;
         [Widget]
-        private Entry tbProtDegrad = null;
+        private Entry tbProtDegrad;
         [Widget]
-        private Entry tbEE = null;
+        private Entry tbEE;
         [Widget]
-        private Entry tbCP = null;
+        private Entry tbCP;
         [Widget]
-        private Entry tbME = null;
+        private Entry tbME;
         [Widget]
-        private Entry tbDMD = null;
+        private Entry tbDMD;
         [Widget]
-        private Entry tbDM = null;
+        private Entry tbDM;
         [Widget]
-        private CheckButton cbxRoughage = null;
+        private CheckButton cbxRoughage;
         [Widget]
-        private Entry tbAmount = null;
+        private Entry tbAmount;
         [Widget]
-        private Entry tbName = null;
+        private Entry tbName;
         [Widget]
-        private Button btnResetAll = null;
+        private Button btnResetAll;
         [Widget]
-        private Button btnReset = null;
+        private Button btnReset;
         [Widget]
-        private Button btnDelete = null;
+        private Button btnDelete;
         [Widget]
-        private Button btnAdd = null;
+        private Button btnAdd;
         [Widget]
-        private IconView lbDefaultNames = null;
+        private IconView lbDefaultNames;
         [Widget]
-        private TreeView lvSupps = null;
+        private TreeView lvSupps;
 
         private ListStore suppList = new ListStore(typeof(string));
         private ListStore defNameList = new ListStore(typeof(string));
@@ -184,7 +184,7 @@ namespace UserInterface.Views
                         MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
                                            String.Format("Value should be a number in the range 0 to {0:F2}", maxVal));
                         md.Title = "Invalid entry";
-                        md.Run();
+                        int result = md.Run();
                         md.Destroy();
                     }
                     if (!cancel)
@@ -409,7 +409,7 @@ namespace UserInterface.Views
                 MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
                                    "Value should be a non-negative number");
                 md.Title = "Invalid entry";
-                md.Run();
+                int result = md.Run();
                 md.Destroy();
             }
             if (!cancel)
@@ -433,7 +433,7 @@ namespace UserInterface.Views
                 MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
                                    "You must provide a name for the supplement");
                 md.Title = "Invalid entry";
-                md.Run();
+                int result = md.Run();
                 md.Destroy();
             }
             if (!cancel)

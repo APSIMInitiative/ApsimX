@@ -9,22 +9,16 @@ namespace Models.PMF.Functions.DemandFunctions
     /// <summary>Calculate partitioning of daily growth based upon allometric relationship</summary>
     [Serializable]
     [Description("This function calculated dry matter demand using plant allometry which is described using a simple power function (y=kX^p).")]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class AllometricDemandFunction : Model, IFunction
     {
         /// <summary>The constant</summary>
-        [Description("Constant")]
-        public double Const { get; set; }
+        public double Const = 0.0;
         /// <summary>The power</summary>
-        [Description("Power")]
-        public double Power { get; set; }
+        public double Power = 0.0;
         /// <summary>The x property</summary>
-        [Description("XProperty")]
-        public string XProperty { get; set; }
+        public string XProperty = null;
         /// <summary>The y property</summary>
-        [Description("YProperty")]
-        public string YProperty { get; set; }
+        public string YProperty = null;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
