@@ -2474,6 +2474,7 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
       </Memo>
       <Cultivar>
         <Name>Amethyst</Name>
+        <Command />
       </Cultivar>
       <Cultivar>
         <Name>Hashem</Name>
@@ -14600,14 +14601,14 @@ namespace Models
                   <double>1.45</double>
                 </BD>
                 <AirDry>
-                  <double>0.08</double>
-                  <double>0.169</double>
-                  <double>0.173</double>
-                  <double>0.14</double>
-                  <double>0.114</double>
-                  <double>0.107</double>
-                  <double>0.106</double>
-                  <double>0.119</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
                 </AirDry>
                 <LL15>
                   <double>0.08</double>
