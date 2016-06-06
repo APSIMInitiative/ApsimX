@@ -35,12 +35,12 @@ namespace Models.PMF.Functions
         [Description("Stage name to stop accumulation")]
         public string EndStageName { get; set; }
 
-        /// <summary>The re set event</summary>
-        [Description("(optional) Stage name to reset accumulation to zero")]
+        /// <summary>The reset stage name</summary>
+        [Description("(optional) Stage name to reset accumulation")]
         public string ResetStageName { get; set; }
 
         /// <summary>The fraction removed on cut</summary>
-        private double FractionRemovedOnCut = 0; //FIXME: This should be passed from teh manager when "cut event" is called. Must be made general to other events.
+        private double FractionRemovedOnCut = 0; //FIXME: This should be passed from the manager when "cut event" is called. Must be made general to other events.
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -63,13 +63,13 @@ namespace Models.PMF.Functions
             if (Phenology.Between(StartStageName, EndStageName))
             {
                 double DailyIncrement = 0.0;
-                foreach (IFunction F in ChildFunctions)
+                foreach (IFunction function in ChildFunctions)
                 {
-                    DailyIncrement = DailyIncrement + F.Value;
+                    DailyIncrement += function.Value;
                 }
+
                 AccumulatedValue += DailyIncrement;
             }
-
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -81,16 +81,12 @@ namespace Models.PMF.Functions
                 AccumulatedValue = 0.0;
         }
 
-
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value
         {
             get
             {
-                if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
-
                 return AccumulatedValue;
             }
         }
@@ -122,10 +118,8 @@ namespace Models.PMF.Functions
             // add a heading.
             Name = this.Name;
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
             tags.Add(new AutoDocumentation.Paragraph(this.Name + " is a daily accumulation of the values of functions listed below between the " + StartStageName + " and "
                                                         + EndStageName + " stages.  Function values added to the accumulate total each day are:", indent));
-
 
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
@@ -133,6 +127,5 @@ namespace Models.PMF.Functions
                 child.Document(tags, headingLevel + 1, indent + 1);
             }
         }
-
     }
 }

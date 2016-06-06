@@ -157,6 +157,7 @@
     <Compile Include="Plant\Phenology\NodeNumberPhase.cs" />
     <Compile Include="Plant\Phenology\PhaseSetFunction.cs" />
     <Compile Include="Plant\Phenology\QualitativePPEffect.cs" />
+    <Compile Include="Plant\Phenology\VernalisationC.cs" />
     <Compile Include="Plant\Phenology\ZadokPMF.cs" />
     <Compile Include="Plant\PlantTypes.cs" />
     <Compile Include="PostSimulationTools\Probability.cs" />
