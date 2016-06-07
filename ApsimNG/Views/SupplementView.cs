@@ -135,6 +135,31 @@ namespace UserInterface.Views
             lbDefaultNames.LeaveNotifyEvent += lbDefaultNames_Leave;
             lbDefaultNames.Visible = false;
             lvSupps.CursorChanged += lvSupps_SelectedIndexChanged;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            lbDefaultNames.ItemActivated -= lbDefaultNames_Click;
+            lbDefaultNames.LeaveNotifyEvent -= lbDefaultNames_Leave;
+            tbName.Changed -= tbName_Validating;
+            tbDM.Changed -= RealEditValidator;
+            tbDMD.Changed -= RealEditValidator;
+            tbME.Changed -= RealEditValidator;
+            tbEE.Changed -= RealEditValidator;
+            tbCP.Changed -= RealEditValidator;
+            tbProtDegrad.Changed -= RealEditValidator;
+            tbADIP2CP.Changed -= RealEditValidator;
+            tbPhos.Changed -= RealEditValidator;
+            tbSulph.Changed -= RealEditValidator;
+            tbAmount.Changed -= tbAmount_Validating;
+            btnAdd.Clicked -= btnAdd_Click;
+            btnDelete.Clicked -= btnDelete_Click;
+            btnReset.Clicked -= btnReset_Click;
+            btnResetAll.Clicked -= btnResetAll_Click;
+            cbxRoughage.Toggled -= cbxRoughage_CheckedChanged;
+            lbDefaultNames.LeaveNotifyEvent -= lbDefaultNames_Leave;
+            lvSupps.CursorChanged -= lvSupps_SelectedIndexChanged;
         }
 
         private void RealEditValidator(object sender, EventArgs e)

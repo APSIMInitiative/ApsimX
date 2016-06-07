@@ -221,17 +221,24 @@ namespace UserInterface.Views
             vpaned1.ShowAll();
             frame1.ExposeEvent += OnWidgetExpose;
             hbox1.Realized += Hbox1_Realized;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
-        public override void Destroy()
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            if (memoView1 != null)
-                memoView1.Destroy();
+            memoView1.MemoChange -= this.TextUpdate;
+            frame1.ExposeEvent -= OnWidgetExpose;
+            hbox1.Realized -= Hbox1_Realized;
+            if ((browser as TWWebBrowserIE) != null)
+            {
+                if (vbox2.Toplevel is Window)
+                    (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
+                frame1.Unrealized -= Frame1_Unrealized;
+            }
             if (tempWindow && _mainWidget != null && _mainWidget.IsRealized)
             {
                 MainWidget.ParentWindow.Destroy();
             }
-            base.Destroy();
         }
 
         private void Hbox1_Realized(object sender, EventArgs e)

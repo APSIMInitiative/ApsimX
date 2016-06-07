@@ -87,6 +87,14 @@ namespace UserInterface.Views
 
             captionLabel.Text = null;
             captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            plot1.Model.MouseDown -= OnChartClick;
+            captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
+            Clear();
         }
 
         /// <summary>
@@ -157,6 +165,9 @@ namespace UserInterface.Views
         /// </summary>
         public void Clear()
         {
+            foreach (OxyPlot.Series.Series series in this.plot1.Model.Series)
+                if (series is Utility.LineSeriesWithTracker)
+                    (series as Utility.LineSeriesWithTracker).OnHoverOverPoint -= OnHoverOverPoint;
             this.plot1.Model.Series.Clear();
             this.plot1.Model.Axes.Clear();
             this.plot1.Model.Annotations.Clear();

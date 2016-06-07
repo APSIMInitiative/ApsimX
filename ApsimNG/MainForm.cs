@@ -31,13 +31,6 @@ namespace UserInterface
         public ViewBase Owner { get { return _owner; } }
         public Widget MainWidget { get { return _mainWidget; } }
         public ViewBase(ViewBase owner) { _owner = owner; }
-        public virtual void Destroy()
-        {
-            if (_mainWidget != null && _mainWidget.IsRealized)
-                _mainWidget.Destroy();
-            _mainWidget = null;
-            _owner = null;
-        }
 
         protected Gdk.Window mainWindow { get { return MainWidget == null ? null : MainWidget.Toplevel.GdkWindow; } }
         private bool waiting = false;
@@ -126,10 +119,10 @@ namespace UserInterface
             // Depending on how the resources are added, they are read in 
             // slightly different ways, apparently. So we might instead have:
             // Builder Gui = new Builder();
-            // Gui.AddFromString(GTKUserInterface.Properties.Resources.MainForm);
+            // Gui.AddFromString(ApsimNG.Properties.Resources.MainForm);
 
             // Here's how we load the form description using an embedded GtkBuilder file
-            // Builder Gui = new Builder("GTKUserInterface.Resources.Glade.MainForm.glade");
+            // Builder Gui = new Builder("ApsimNG.Resources.Glade.MainForm.glade");
             // window1 = (Window)Gui.GetObject("window1");
             // hpaned1 = (HPaned)Gui.GetObject("hpaned1");
 

@@ -54,9 +54,6 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            if (view is MapView)
-              (view as MapView).Destroy();
-            view = null;
         }
 
         /// <summary>

@@ -81,6 +81,7 @@ namespace UserInterface.Commands
             // Get the model we are to export.
             string modelName = Path.GetFileNameWithoutExtension(ExplorerPresenter.ApsimXFile.FileName.Replace("Validation", ""));
             DoExportPDF(modelName);
+            citations.Clear();
         }
 
         /// <summary>
@@ -472,6 +473,7 @@ namespace UserInterface.Commands
             // Export graph to bitmap file.
             Bitmap image = new Bitmap(400, 250);
             graph.Export(ref image, false);
+            graph.MainWidget.Destroy();
             image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
             row.Cells[0].AddImage(PNGFileName);
 
@@ -601,6 +603,7 @@ namespace UserInterface.Commands
                     if (caption != null)
                         section.AddParagraph(caption);
                     graphPresenter.Detach();
+                    graphView.MainWidget.Destroy();
                 }
                 else if (tag is Map && (tag as Map).GetCoordinates().Count > 0)
                 {
@@ -611,6 +614,7 @@ namespace UserInterface.Commands
                     if (!String.IsNullOrEmpty(PNGFileName))
                        section.AddImage(PNGFileName);
                     mapPresenter.Detach();
+                    mapView.MainWidget.Destroy();
                 }
             }
         }
