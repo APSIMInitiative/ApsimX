@@ -611,7 +611,11 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
         <SenescenceDetachmentFraction>1</SenescenceDetachmentFraction>
         <InitialWt>0.01</InitialWt>
         <InitialNConcentration>0.02</InitialNConcentration>
-        <SpecificRootLength>105000</SpecificRootLength>
+        <Constant>
+          <Name>SpecificRootLength</Name>
+          <Value>105</Value>
+          <Units>m/g</Units>
+        </Constant>
       </Root1>
       <GenericArbitratorXY>
         <Name>Arbitrator1</Name>

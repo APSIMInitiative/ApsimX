@@ -827,8 +827,16 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
         <FractionToResidue>0.15</FractionToResidue>
       </OrganBiomassRemovalType>
     </Folder>
-    <InitialDM>0.2</InitialDM>
-    <SpecificRootLength>40000</SpecificRootLength>
+	<Constant>
+	  <Name>InitialDM</Name>
+	  <Value>0.2</Value>
+	  <Units>g/plant</Units>
+	</Constant>
+	<Constant>
+	  <Name>SpecificRootLength</Name>
+	  <Value>40</Value>
+	  <Units>m/g</Units>
+	</Constant>
     <LinearInterpolationFunction>
       <Name>KNO3</Name>
       <XYPairs>

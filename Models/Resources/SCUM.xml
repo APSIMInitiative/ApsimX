@@ -1063,8 +1063,16 @@ This is the proportion of total biomass that is paritioned into the roots and is
       </OrganBiomassRemovalType>
     </Folder>
     <BiomassRemovalDefaults />
-    <InitialDM>0.2</InitialDM>
-    <SpecificRootLength>40000</SpecificRootLength>
+	<Constant>
+	  <Name>InitialDM</Name>
+	  <Value>0.2</Value>
+	  <Units>g/plant</Units>
+	</Constant>
+	<Constant>
+	  <Name>SpecificRootLength</Name>
+	  <Value>40</Value>
+	  <Units>m/g</Units>
+	</Constant>
     <LinearInterpolationFunction>
       <Name>KNO3</Name>
       <XYPairs>

@@ -643,8 +643,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <FractionToResidue>0.05</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <InitialDM>5</InitialDM>
-        <SpecificRootLength>40000</SpecificRootLength>
+        <Constant>
+          <Name>InitialDM</Name>
+          <Value>5</Value>
+          <Units>g/plant</Units>
+        </Constant>
+        <Constant>
+          <Name>SpecificRootLength</Name>
+          <Value>40</Value>
+          <Units>m/g</Units>
+        </Constant>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <Leaf>
@@ -26642,8 +26650,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
               </XYPairs>
               <XProperty>[Leaf].FractionDied</XProperty>
             </LinearInterpolationFunction>
-            <InitialDM>5</InitialDM>
-            <SpecificRootLength>40000</SpecificRootLength>
+			<Constant>
+			  <Name>InitialDM</Name>
+			  <Value>5</Value>
+			  <Units>g/plant</Units>
+			</Constant>
+			<Constant>
+			  <Name>SpecificRootLength</Name>
+			  <Value>40</Value>
+			  <Units>m/g</Units>
+			</Constant>
             <NuptakeSupply>0</NuptakeSupply>
           </Root>
           <Leaf>
@@ -32001,8 +32017,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
               </XYPairs>
               <XProperty>[Leaf].FractionDied</XProperty>
             </LinearInterpolationFunction>
-            <InitialDM>5</InitialDM>
-            <SpecificRootLength>40000</SpecificRootLength>
+			<Constant>
+			  <Name>InitialDM</Name>
+			  <Value>5</Value>
+			  <Units>g/plant</Units>
+			</Constant>
+			<Constant>
+			  <Name>SpecificRootLength</Name>
+			  <Value>40</Value>
+			  <Units>m/g</Units>
+			</Constant>
             <NuptakeSupply>0</NuptakeSupply>
           </Root>
           <Leaf>
