@@ -54,6 +54,16 @@ namespace UserInterface.Views
             radiobutton1.Toggled += OnRadioButton1CheckedChanged;
             spinbutton1.Changed += OnNumericUpDown1ValueChanged;
             combobox1.Changed += OnComboBox1SelectedValueChanged;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            entry1.Changed -= OnTextBox1TextChanged;
+            entry2.Changed -= OnTextBox2TextChanged;
+            radiobutton1.Toggled -= OnRadioButton1CheckedChanged;
+            spinbutton1.Changed -= OnNumericUpDown1ValueChanged;
+            combobox1.Changed -= OnComboBox1SelectedValueChanged;
         }
 
         /// <summary>

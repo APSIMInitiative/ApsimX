@@ -63,11 +63,7 @@ namespace UserInterface.Presenters
         {
             if (graphPresenter != null)
                 graphPresenter.Detach();
-            
             DisconnectViewEvents();
-            if (this.seriesView is SeriesView)
-                (this.seriesView as SeriesView).Destroy();
-            this.seriesView = null;
         }
 
         /// <summary>Connect all view events.</summary>
