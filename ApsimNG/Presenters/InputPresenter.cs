@@ -39,9 +39,6 @@ namespace UserInterface.Presenters
         {
             View.BrowseButtonClicked -= OnBrowseButtonClicked;
             ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-            if (View is InputView)
-                (View as InputView).Destroy();
-            View = null;
         }
 
         /// <summary>

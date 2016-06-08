@@ -46,6 +46,11 @@ namespace UserInterface.Views
         private GridView Grid;
 
         /// <summary>
+        /// Property to provide access to the grid.
+        /// </summary>
+        public IGridView GridView { get { return Grid; } }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public InputView(ViewBase owner) : base(owner)
@@ -58,21 +63,12 @@ namespace UserInterface.Views
             vbox1.PackStart(Grid.MainWidget, true, true, 0);
             button1.Clicked += OnBrowseButtonClick;
             label2.ModifyFg(StateType.Normal, new Gdk.Color(0xFF, 0x0, 0x0));
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
-        /// <summary>
-        /// Property to provide access to the grid.
-        /// </summary>
-        public IGridView GridView { get { return Grid; } }
-
-        public override void Destroy()
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            if (Grid != null)
-            {
-                Grid.Destroy();
-                Grid = null;
-            }
-            base.Destroy();
+            button1.Clicked -= OnBrowseButtonClick;
         }
 
         /// <summary>

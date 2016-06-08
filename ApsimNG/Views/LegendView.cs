@@ -71,6 +71,14 @@ namespace UserInterface.Views
             listview.AppendColumn(column);
             listToggle.Activatable = true;
             listToggle.Toggled += OnItemChecked;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            combobox1.Changed -= OnPositionComboChanged;
+            combobox1.Focused -= OnTitleTextBoxEnter;
+            listToggle.Toggled -= OnItemChecked;
         }
 
         private bool settingCombo = false;
