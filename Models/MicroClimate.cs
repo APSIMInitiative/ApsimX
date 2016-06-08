@@ -518,7 +518,7 @@ namespace Models
 
                 if (MathUtilities.FloatsAreEqual(Canopies[j].Canopy.CoverGreen, 1.0, 1E-05))
                 {
-                    //throw new Exception("Unrealistically high cover value in MicroMet i.e. > 0.99999");
+                    throw new Exception("Unrealistically high cover value in MicroMet i.e. > 0.99999");
                     //TODO: check whether this exception should be really raised
                 }
 

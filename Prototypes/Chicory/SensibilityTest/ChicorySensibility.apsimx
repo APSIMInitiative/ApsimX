@@ -2464,7 +2464,7 @@ namespace Models
             <Name>Defoliate</Name>
             <Script>
               <removeAmountType>ResidualDM</removeAmountType>
-              <cutPasture_StartDate>2010-11-15</cutPasture_StartDate>
+              <cutPasture_StartDate>2008-11-15</cutPasture_StartDate>
               <cutPasture_EndDate>2013-06-10</cutPasture_EndDate>
               <interval2Cut>21</interval2Cut>
               <duration>3</duration>
