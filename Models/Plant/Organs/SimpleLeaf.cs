@@ -179,6 +179,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The initial leaf DM</summary>
         [Link(IsOptional = true)]
+        [Units("g/plant")]
         IFunction InitialDM = null;
 
         #endregion

@@ -1202,8 +1202,8 @@ No effect of soil water content on root growth is currently captured in the mode
         </PhaseLookup>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>40000</Value>
-          <Units>mm/g</Units>
+          <Value>40</Value>
+          <Units>m/g</Units>
         </Constant>
         <MultiplyFunction>
           <Name>SenescenceRateFunction</Name>
@@ -1365,8 +1365,6 @@ No effect of soil water content on root growth is currently captured in the mode
             <FractionToResidue>0.15</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <InitialDM>0.01</InitialDM>
-        <SpecificRootLength>40000</SpecificRootLength>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <GenericBelowGroundOrgan>
