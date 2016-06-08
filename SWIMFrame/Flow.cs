@@ -159,7 +159,7 @@ namespace SWIMFrame
                 */
             }
 
-            if (S.Length != sd.n)
+            if (S.Length - 1 != sd.n) //minus 1 to account for 1 based array
             {
                 Console.WriteLine("solve: Size of S differs from table data.");
                 Environment.Exit(1);
@@ -224,7 +224,7 @@ namespace SWIMFrame
                 for (iflux = 1; iflux <= 2; iflux++) //sometimes need twice to adjust h at satn
                 {
                     nsatlast = nsat; // for detecting onset of profile saturation
-                    nsat = (int)MathUtilities.Sum(isat); //no.of sat layers
+                    nsat = isat.Sum();
                     sig = 0.5;
                     if (nsat != 0)
                         sig = 1.0; //time weighting sigma
@@ -242,9 +242,8 @@ namespace SWIMFrame
                     qprec1 = qprec; //may change qprec1 to maintain pond if required
                     if (h[1] <= 0 && h0 <= 0 && nsat < sd.n) //no ponding
                     {
-                        SoilData sd = new SoilData();
                         ns = 1; //start index for eqns
-                        sd.GetQ(0, new int[] { 0, isat[1] }, new double[] { 0, xtbl[1] }, out q[0], out qya[0], out qyb[0]);
+                        sd.GetQ(0, new int[] {0, 0, isat[1] }, new double[] {0, 0, xtbl[1] }, out q[0], out qya[0], out qyb[0]);
                         if (q[0] < qpme)
                         {
                             q[0] = qpme;
@@ -267,13 +266,13 @@ namespace SWIMFrame
 
                     //get profile fluxes
                     for (i = 1; i <= sd.n - 1; i++)
-                        sd.GetQ(i, new int[] { isat[i], isat[i + 1] }, new double[] { xtbl[i], xtbl[i + 1] }, out q[i], out qya[i], out qyb[i]);
+                        sd.GetQ(i, new int[] {0, isat[i], isat[i + 1] }, new double[] {0, xtbl[i], xtbl[i + 1] }, out q[i], out qya[i], out qyb[i]);
 
                     //get bottom flux
                     switch (botbc)
                     {
                         case "constant head":
-                            sd.GetQ(sd.n, new int[] { isat[sd.n], isatbot }, new double[] { xtbl[sd.n], xtblbot }, out q[sd.n], out qya[sd.n], out qyb[sd.n]);
+                            sd.GetQ(sd.n, new int[] {0, isat[sd.n], isatbot }, new double[] {0, xtbl[sd.n], xtblbot }, out q[sd.n], out qya[sd.n], out qyb[sd.n]);
                             break;
                         case "0.0 flux":
                             q[sd.n] = 0;
@@ -290,7 +289,7 @@ namespace SWIMFrame
                             }
                             else
                             {
-                                sd.GetQ(sd.n, new int[] { isat[sd.n], 1 }, new double[] { xtbl[sd.n], -sd.he[sd.n] }, out q[sd.n], out qya[sd.n], out qyb[sd.n]);
+                                sd.GetQ(sd.n, new int[] {0, isat[sd.n], 1 }, new double[] {0, xtbl[sd.n], -sd.he[sd.n] }, out q[sd.n], out qya[sd.n], out qyb[sd.n]);
                             }
                             break;
                         default:
@@ -316,7 +315,7 @@ namespace SWIMFrame
                     dSdt = MathUtilities.CreateArrayOfValues(0, dSdt.Length);
                     if (extraction)
                     {
-                        for (int x = 0; x < isat.Length; x++)
+                        for (int x = 1; x < isat.Length; x++)
                         {
                             if (isat[x] == 0)
                             {
@@ -328,11 +327,11 @@ namespace SWIMFrame
                     }
                     else
                     {
-                        for (int x = 0; x < isat.Length; x++)
+                        for (int x = 1; x < isat.Length; x++)
                         {
                             if (isat[x] == 0)
                             {
-                                for (int y = 1; y <= sd.n; y++)
+       //                         for (int y = 1; y <= sd.n; y++)
                                     dSdt[x] = Math.Abs(q[x] - q[x - 1]) / (sd.ths[x] * sd.dx[x]);
                             }
                         }
@@ -770,8 +769,8 @@ namespace SWIMFrame
             sig = 0.5;
             rsig = 1.0 / sig;
             tfin = tf;
-            for(int x=1;x<= n-1;x++)
-                dz[x] = 0.5 * (dx[x] + dx[x + 1]);
+            for(int x=2;x<= n;x++)
+                dz[x-1] = 0.5 * (dx[x-1] + dx[x]);
             //get average water fluxes
             //dwex = sum(dwexs, 2) !total changes in sink water extraction since last call
             if (dwexs.GetLength(1) > 0)
@@ -786,7 +785,7 @@ namespace SWIMFrame
             r = 1.0 / (tf - ti);
             qw[0] = r * win;
 
-            for (int x =10; x < thf.Length; x++)
+            for (int x =1; x < thf.Length; x++)
                 tht[x] = r * (thf[x] - thi[x]);
             for (i = 1; i <= n; i++)
                 qw[i] = qw[i - 1] - dx[i] * tht[i] - r * dwex[i];
@@ -851,106 +850,107 @@ namespace SWIMFrame
                             }
                         }
                     }
-                }
-                for (int x = 1; x <= n - 1; x++)
-                {
-                    q[x] = coef1[x] * c[x, j] + coef2[x] * c[x+1, j];
-                    qya[x] = coef1[x] * csm[x];
-                    qyb[x] = coef2[x] * csm[x+1];
-                }
-                q[n] = qw[n] * c[n, j];
-                qya[n] = qw[n] * csm[n];
-                //get time step
-                double[] absQ = new double[n];
-                for (int x = 0; x < n; x++)
-                    absQ[x] = Math.Abs(q[n + 1] - q[n] / dx[x]);
 
-                dmax = MathUtilities.Max(absQ);
-                if (dmax == 0.0)
-                {
-                    dt = tfin - t;
-                }
-                else if (dmax < 0.0)
-                {
-                    Console.WriteLine("solute: errors in fluxes prevent continuation");
-                    Environment.Exit(1);
-                }
-                else
-                    dt = dsmmax / dmax;
-
-                if (t + 1.1 * dt > tfin)
-                {
-                    dt = tfin - t;
-                    t = tfin;
-                }
-                else
-                    t = t + dt;
-
-                sigdt = sig * dt; rsigdt = 1.0 / sigdt;
-                //adjust q for change in theta
-                for (int x = 1; x <= n - 1; x++)
-                    q[x] = q[x] - sigdt * (qya[x] * tht[x] * c[x, j] + qyb[x] * tht[x + 1] * c[x, j]);
-                q[n] = q[n] - sigdt * qya[n] * tht[n] * c[n, j];
-                //get and solve eqns
-                for (int x = 1; x <= n - 1; x++)
-                {
-                    aa[x + 1] = qya[x];
-                    cc[x] = -qyb[x];
-                }
-                Matrix<double> qsexsM = Matrix<double>.Build.DenseOfArray(qsexs);
-                Matrix<double> qsexsdM = Matrix<double>.Build.DenseOfArray(qsexsd);
-                if (extraction)  //get extraction
-                {
-                    double[] ctemp = new double[n-1];
-                    for (int x = 1; x <= n; x++)
-                        ctemp[x] = c[x, j];
-
-                    qsexs = qsexsM.ToArray();
-                    qsexsd = qsexsdM.ToArray();
-                    sink.Ssinks(t, ti, tf, j, dwexs, ctemp, out qsexs, out qsexsd);
-                    qsex = qsexsM.ColumnSums().ToArray();
-                    qsexd = qsexsdM.ColumnSums().ToArray();
-                    for (int x = 1; x <= n; x++)
+                    for (int x = 1; x <= n - 1; x++)
                     {
-                        bb[x] = qyb[x-1] - qya[x] - qsexd[x] * csm[x] - sd.dx[x] * rsigdt;
-                        dd[x] = -(q[x-1] - q[x] - qsex[x]) * rsig;
+                        q[x] = coef1[x] * c[x, j] + coef2[x] * c[x + 1, j];
+                        qya[x] = coef1[x] * csm[x];
+                        qyb[x] = coef2[x] * csm[x + 1];
                     }
-                }
-                else
-                {
+                    q[n] = qw[n] * c[n, j];
+                    qya[n] = qw[n] * csm[n];
+                    //get time step
+                    double[] absQ = new double[n+1];
                     for (int x = 1; x <= n; x++)
+                        absQ[x] = Math.Abs(q[x] - q[x - 1] / dx[x]);
+
+                    dmax = MathUtilities.Max(absQ);
+                    if (dmax == 0.0)
                     {
-                        bb[x] = qyb[x-1] - qya[x] - sd.dx[x] * rsigdt;
-                        dd[x] = -(q[x-1] - q[x]) * rsig;
+                        dt = tfin - t;
                     }
-                }
-
-                Tri(1, n, aa, ref bb, cc, dd, ref ee, ref dy);
-                //update unknowns
-                Matrix<double> smM = Matrix<double>.Build.DenseOfArray(sm);
-                qsexsM = Matrix<double>.Build.DenseOfArray(qsexs);
-                qsexsdM = Matrix<double>.Build.DenseOfArray(qsexsd);
-                sdrn[j] = sdrn[j] + (q[n] + sig * qya[n] * dy[n]) * dt;
-                smM.SetRow(j,  smM.Row(j) + Vector<double>.Build.DenseOfArray(dy.Slice(1,n)));
-                sm = smM.ToArray();
-                if (extraction)
-                {
-                    Matrix<double> sexM = Matrix<double>.Build.Dense(sex.GetLength(0), sex.GetLength(1));
-                    for (int x = 0; x < sex.GetLength(0); x++)
-                        for (int y = 0; y < sex.GetLength(1); y++)
-                            sexM[x, y] = sex[x, y, j];
-
-                    Vector<double> dysub = Vector<double>.Build.DenseOfArray(dy.Slice(1, n));
-                    for (i = 1; i <= nex; i++)
+                    else if (dmax < 0.0)
                     {
-                       sexM.SetColumn(i, sexM.Column(i) + (qsexsM.Column(i) + sig * qsexsdM.Column(i) * Vector<double>.Build.DenseOfArray(csm) * dysub) * dt);
+                        Console.WriteLine("solute: errors in fluxes prevent continuation");
+                        Environment.Exit(1);
+                    }
+                    else
+                        dt = dsmmax / dmax;
+
+                    if (t + 1.1 * dt > tfin)
+                    {
+                        dt = tfin - t;
+                        t = tfin;
+                    }
+                    else
+                        t = t + dt;
+
+                    sigdt = sig * dt; rsigdt = 1.0 / sigdt;
+                    //adjust q for change in theta
+                    for (int x = 1; x <= n - 1; x++)
+                        q[x] = q[x] - sigdt * (qya[x] * tht[x] * c[x, j] + qyb[x] * tht[x + 1] * c[x, j]);
+                    q[n] = q[n] - sigdt * qya[n] * tht[n] * c[n, j];
+                    //get and solve eqns
+                    for (int x = 1; x <= n - 1; x++)
+                    {
+                        aa[x + 1] = qya[x];
+                        cc[x] = -qyb[x];
+                    }
+                    Matrix<double> qsexsM = Matrix<double>.Build.DenseOfArray(qsexs);
+                    Matrix<double> qsexsdM = Matrix<double>.Build.DenseOfArray(qsexsd);
+                    if (extraction)  //get extraction
+                    {
+                        double[] ctemp = new double[n - 1];
+                        for (int x = 1; x <= n; x++)
+                            ctemp[x] = c[x, j];
+
+                        qsexs = qsexsM.ToArray();
+                        qsexsd = qsexsdM.ToArray();
+                        sink.Ssinks(t, ti, tf, j, dwexs, ctemp, out qsexs, out qsexsd);
+                        qsex = qsexsM.ColumnSums().ToArray();
+                        qsexd = qsexsdM.ColumnSums().ToArray();
+                        for (int x = 1; x <= n; x++)
+                        {
+                            bb[x] = qyb[x - 1] - qya[x] - qsexd[x] * csm[x] - dx[x] * rsigdt;
+                            dd[x] = -(q[x - 1] - q[x] - qsex[x]) * rsig;
+                        }
+                    }
+                    else
+                    {
+                        for (int x = 1; x <= n; x++)
+                        {
+                            bb[x] = qyb[x - 1] - qya[x] - dx[x] * rsigdt;
+                            dd[x] = -(q[x - 1] - q[x]) * rsig;
+                        }
                     }
 
-                    for (int x = 0; x < sex.GetLength(0); x++)
-                        for (int y = 0; y < sex.GetLength(1); y++)
-                            sex[x, y, j] = sexM[x, y];
+                    Tri(1, n, aa, ref bb, cc, dd, ref ee, ref dy);
+                    //update unknowns
+                    Matrix<double> smM = Matrix<double>.Build.DenseOfArray(sm);
+                    qsexsM = Matrix<double>.Build.DenseOfArray(qsexs);
+                    qsexsdM = Matrix<double>.Build.DenseOfArray(qsexsd);
+                    sdrn[j] = sdrn[j] + (q[n] + sig * qya[n] * dy[n]) * dt;
+                    smM.SetColumn(j, smM.Column(j) + Vector<double>.Build.DenseOfArray(dy.Slice(1, n)));
+                    sm = smM.ToArray();
+                    if (extraction)
+                    {
+                        Matrix<double> sexM = Matrix<double>.Build.Dense(sex.GetLength(0), sex.GetLength(1));
+                        for (int x = 0; x < sex.GetLength(0); x++)
+                            for (int y = 0; y < sex.GetLength(1); y++)
+                                sexM[x, y] = sex[x, y, j];
+
+                        Vector<double> dysub = Vector<double>.Build.DenseOfArray(dy.Slice(1, n));
+                        for (i = 1; i <= nex; i++)
+                        {
+                            sexM.SetColumn(i, sexM.Column(i) + (qsexsM.Column(i) + sig * qsexsdM.Column(i) * Vector<double>.Build.DenseOfArray(csm) * dysub) * dt);
+                        }
+
+                        for (int x = 0; x < sex.GetLength(0); x++)
+                            for (int y = 0; y < sex.GetLength(1); y++)
+                                sex[x, y, j] = sexM[x, y];
+                    }
+                    nssteps[j] = nssteps[j] + 1;
                 }
-                nssteps[j] = nssteps[j] + 1;
             }
         }
 

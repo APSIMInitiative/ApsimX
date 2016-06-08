@@ -131,8 +131,8 @@ namespace SWIMFrame
                 Ks[i] = sp[i - 1].ks;
                 for (int x = 1; x <= n[i]; x++)
                 {
-                    h[i, x] = sp[i - 1].h[x]; //test this
-                    phi[i, x] = sp[i - 1].phi[x]; //and this
+                    h[i, x] = sp[i - 1].h[x]; 
+                    phi[i, x] = sp[i - 1].phi[x]; 
                 }
             }
 
@@ -414,9 +414,12 @@ namespace SWIMFrame
                                 Console.WriteLine("twotbls: too many iterations at i, j = " + i + " " + j);
                                 Environment.Exit(1);
                             }
-                        }
-                        // Solved
-                        qp[i, j] = q1;
+                        Extensions.Log("twotables", "d", f);
+                        Extensions.Log("twotables", "d", df);
+                        Extensions.Log("twotables", "d", q1);
+                    }
+                    // Solved
+                    qp[i, j] = q1;
                 }
 
                 //interpolate extra fluxes
@@ -446,6 +449,9 @@ namespace SWIMFrame
                 {
                     qi3M.SetColumn(j, Fluxes.quadinterp(phifM.Row(1).ToArray(), qi1M.Column(j).ToArray(), nft[1], phifiM.Row(1).ToArray()));
                 }
+                qi1 = qi1M.ToArray();
+                qi2 = qi2M.ToArray();
+                qi3 = qi3M.ToArray();
                 // Put all the fluxes together
                 i = nft[1] + nfi[1];
                 j = nft[2] + nfi[2];

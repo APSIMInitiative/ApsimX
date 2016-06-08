@@ -21,6 +21,15 @@ namespace UnitTests
     class SWIMTests
     {
         /// <summary>
+        /// Write out the log file at the end of the tests.
+        /// </summary>
+        [TearDown]
+        public void EndTest()
+        {
+            Extensions.WriteLog();
+        }
+
+        /// <summary>
         /// Test method nonlin.
         /// </summary>
         [Test]
@@ -708,7 +717,7 @@ namespace UnitTests
 
             FluxTable res = TwoFluxes.TwoTables(ft1, sp1, ft2, sp2);
             for (int x = 0; x < ftwo.GetLength(0); x++)
-                for (int y = 0; y > ftwo.GetLength(1); y++)
+                for (int y = 0; y < ftwo.GetLength(1); y++)
                     Assert.AreEqual(ftwo[x, y], res.ftable[x, y], 1E-7);
         }
 
@@ -852,8 +861,8 @@ namespace UnitTests
             string iso = "Fr";
             double c = 0;
             double dsmmax = 10;
-            List<double> p = new List<double> { 0, 1, 0.5, 0, 0 };
-            List<double> pOut = new List<double> {0, 1, 0.5, 0.01, 10 };
+            double[] p = new double[] { 0, 1, 0.5, 0, 0 };
+            double[] pOut = new double[] { 0, 1, 0.5, 0.01, 10 };
             double f;
             double fd;
             double fOut = 0;
@@ -861,7 +870,7 @@ namespace UnitTests
 
             sp.Isosub(iso, c, dsmmax, ref p, out f, out fd);
 
-            for (int i = 0; i < p.Count; i++)
+            for (int i = 0; i < p.Length; i++)
                 Assert.AreEqual(pOut[i], p[i], Math.Abs(pOut[i] * 1E-5));
             Assert.AreEqual(fOut, f, Math.Abs(fOut * 1E-5));
             Assert.AreEqual(fdOut, fd, Math.Abs(fdOut * 1E-5));
@@ -871,50 +880,123 @@ namespace UnitTests
         public void SetIso()
         {
             SolProps sp = new SolProps(2, 10);
+            // double[,] tmp;
             int[] j = new int[] { 1, 2 };
             int[] isol = new int[] { 2, 2 };
             string[] isotypeji = new string[] { "Fr", "La" };
             double[][] isoparji = new double[][] { new double[] { 0, 1, 0.5 }, new double[] { 0, 1, 0.01 } };
-            double[][] isopar = new double[][] { new double[] { 0, 1, 0.5, 0, 0 }, new double[] { 0, 1, 0.1 } };
+            double[][] isopar = new double[][] { new double[] { 0, 1, 0.5, 0, 0 }, new double[] { 0, 1, 0.01 } };
 
-            for(int i=0;i <j.Length;i++)
+            for (int i = 0; i < j.Length; i++)
             {
                 sp.Setiso(j[i], isol[i], isotypeji[i], isoparji[i]);
-                for (int count = 1; count < sp.isopar.GetLength(2); count++)
-                    Assert.AreEqual(isopar[j[i]][count], sp.isopar[j[i], count], Math.Abs(isopar[j[i]][count] * 1E-5));
+                for (int count = 1; count < isopar[i].Length; count++)
+                {
+                    Assert.AreEqual(isopar[j[i] - 1][count], sp.isopar[j[i], isol[i]][count], Math.Abs(isopar[j[i] - 1][count] * 1E-5));
+                }
             }
         }
 
         [Test]
         public void Solute()
         {
-            SolProps sp = new SolProps(10, 2);
-            int n = 10;
+            int nt = 2;
             int ns = 2;
+            SolProps sp = new SolProps(nt, ns);
+            double[] bd = new double[nt + 1];
+            double[] dis = new double[nt + 1];
+            string[] isotype = new string[] { "", "Fr", "La" };
+            double[,] isopar = new double[,] { { 0, 0, 0 }, { 0, 1.0, 1.5 }, { 0, 1.0, 0.01 } };
+
+            Array.Copy(new double[] { 0, 1.3, 1.3 }, bd, 3);
+            Array.Copy(new double[] { 0, 20.0, 20.0 }, dis, 3);
+            for (int j = 1; j <= nt; j++)
+            {
+                sp.Solpar(j, bd[j], dis[j]);
+                sp.Setiso(j, 2, isotype[j], Extensions.GetRowCol(isopar, j, true));
+            }
+            int n = 10;
             int nex = 0;
             double ti = 0;
             double tf = 0.421148079;
-            double[] thi = new double[] {0, 0.083295225, 0.083295225, 0.083295225, 0.083295225, 0.418896102, 0.418896102, 0.418896102, 0.418896102, 0.418896102, 0.418896102 };
-            double[] thf = new double[] {0, 0.123293863, 0.083305591, 0.083295228, 0.083318985, 0.418882017, 0.418896098, 0.418896102, 0.418896102, 0.41889605, 0.418896158 };
+            double[] thi = new double[] { 0, 0.083295225, 0.083295225, 0.083295225, 0.083295225, 0.418896102, 0.418896102, 0.418896102, 0.418896102, 0.418896102, 0.418896102 };
+            double[] thf = new double[] { 0, 0.123293863, 0.083305591, 0.083295228, 0.083318985, 0.418882017, 0.418896098, 0.418896102, 0.418896102, 0.41889605, 0.418896158 };
             double[,] dwexs = new double[n, nex];
             double win = 0.400090675;
             double[] cin = new double[] { 0, 0, 0 };
             double[] dx = new double[] { 0, 10, 10, 10, 10, 20, 20, 20, 20, 40, 40 };
             int[] jt = new int[] { 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2 };
             int dsmmax = 10;
-            double[,] sm = new double[,] { { 0, 0, 0 }, {0, 100, 100 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
+            double[,] sm = new double[,] { { 0, 0, 0 }, { 0, 100, 100 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
             double[] sdrn = new double[] { 0, 0, 0 };
             int[] nssteps = new int[] { 0, 0, 0 };
             double[,] c = new double[n + 1, ns + 1];
             double[,,] sex = new double[0, 0, 0];
 
+            double[,] smOUT = new double[,]{ {0,0,0 }, {0,99.97621861,99.98372814},{0,0.023781371,0.016271857},{0,2.26046E-08,9.84694E-11},{0,2.05172E-14,5.69083E-19},{0,1.21616E-18,2.14764E-25},
+                                            {0,4.86706E-24,2.09458E-31},{0,1.95193E-29,2.04717E-37},{0,7.82828E-35,2.00084E-43},{0,1.22095E-40,7.60505E-50},{0,1.70838E-46,2.59326E-56}};
+            double[] sdrnOUT = new double[] { 0, 9.10749E-51, 3.36911E-61 };
+            int[] nsstepsOUT = new int[] { 0, 1, 1 };
+            double[] cOUT = new double[] { 1200.549014, 0, 0, 0, 0, 0, 0, 0, 0, 0, 768.0244548, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
             List<object> res = Flow.TestSolute(ti, tf, thi, thf, dwexs, win, cin, n, ns, nex, dx, jt, dsmmax, sm, sdrn, nssteps, c, sex, false, sp);
+
+            double[,] smRes = res[0] as double[,];
+            for (int i = 1; i < smOUT.GetLength(0); i++)
+                for (int j = 1; j < smOUT.GetLength(1); j++)
+                    Assert.AreEqual(smOUT[i, j], smRes[i, j], Math.Abs(smOUT[i, j] * 1E-5));
+
+            double[] sdrnRes = res[1] as double[];
+            for (int i = 1; i < sdrnOUT.Length; i++)
+                Assert.AreEqual(sdrnOUT[i], sdrnRes[i]);
+
+            int[] nsstepsRes = res[2] as int[];
+            for (int i = 1; i < nsstepsOUT.Length; i++)
+                Assert.AreEqual(nsstepsOUT[i], nsstepsRes[i]);
+
+            double[] cRes = res[3] as double[];
+            for (int i = 1; i < cOUT.Length; i++)
+                Assert.AreEqual(cOUT[i], cRes[i]);
+
         }
 
         [Test]
         public void Solve()
         {
-            
+            SolProps sol = new SolProps(10,2);
+            SoilData sd = new SoilData();
+            sd.GetTables(10, new int[] { 0, 103, 103, 103, 103, 109, 109, 109, 109, 109, 109 }, new double[] { 0, 10, 20, 30, 40, 60, 80, 100, 120, 160, 200 });
+            sd.dx = new double[] {0.0, 10.0, 10.0, 10.0, 10.0, 20.0, 20.0, 20.0, 20.0, 40.0, 40.0 };
+            sd.n = 10;
+            sd.ths = new double[] { 0, 0.400000006, 0.400000006, 0.400000006, 0.400000006, 0.600000024, 0.600000024, 0.600000024, 0.600000024, 0.600000024, 0.600000024 };
+            sd.he = new double[] { 0, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2 };
+            Flow.sd = sd;
+            double ts = 0.0;
+            double tfin=24.0;
+            double qprec=1.0;
+            double qevap=0.05;
+            int nsol=2;
+            int nex=0;
+            double h0=0;
+            double[] S = new double[] {0, 0.208238059, 0.208238059, 0.208238059, 0.208238059, 0.698160143, 0.698160143, 0.698160143, 0.698160143, 0.698160143, 0.698160143 };
+            double evap=0.0;
+            double runoff = 0.0;
+            double infil = 0.0;
+            double drn = 0.0;
+            int nsteps=0;
+            int[] jt=new int[] { 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2 };
+            double[] cin = new double[] { 0.0, 0.0, 0.0 };
+            double[] c0 = new double[] { 0.0, 0.0, 0.0 };
+            double[,] sm = new double[11,3]; sm[1, 1] = 100; sm[1, 2] = 100;
+            double[] soff = new double[] { 0.0, 0.0, 0.0 };
+            double[] sinfil = new double[] { 0.0, 0.0, 0.0 };
+            double[] sdrn = new double[] { 0.0, 0.0, 0.0 };
+            int[] nssteps = new int[] { 0,0,0 };
+            double[,] wex = new double[0, 0];
+            double[,,] sex = new double[0, 0, 0];
+
+            Flow.Solve(sol, ts, tfin, qprec, qevap, nsol, nex, ref h0, ref S, ref evap, ref runoff, ref infil, ref drn,
+                       ref nsteps, jt, cin, ref c0, ref sm, ref soff, ref sinfil, ref sdrn, ref nssteps, ref wex, ref sex);
         }
 
         [Test]
@@ -959,10 +1041,10 @@ namespace UnitTests
                             new double[] {0,9.999809E-03,7.506256E-07,3.027108E-10,5.940790E-06,-2.348000E-06,-3.977598E-10,-1.355787E-14,-3.549756E-12,-8.706725E-09,9.278564E-09},
                             new double[] {0,9.999767E-03,1.188387E-06,4.364717E-10,5.940347E-06,-2.347745E-06,-5.587599E-10,-1.900396E-14,-3.549903E-12,-8.707070E-09,9.278931E-09}};
 
-            for(int i=0;i< aa.GetLength(0);i++)
+            for (int i = 0; i < aa.GetLength(0); i++)
             {
                 List<double[]> res = Flow.TestTri(ns, n, aa[i], bbIN[i], cc[i], dd[i], eeIN[i], dyIN[i]);
-                for(int j=1;j<res[0].Length;j++)
+                for (int j = 1; j < res[0].Length; j++)
                 {
                     Assert.AreEqual(bbOUT[i][j], res[0][j], Math.Abs(res[0][j] * 1E-5));
                     Assert.AreEqual(eeOUT[i][j], res[1][j], Math.Abs(res[1][j] * 1E-5));

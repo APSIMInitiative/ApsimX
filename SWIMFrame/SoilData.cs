@@ -34,7 +34,7 @@ namespace SWIMFrame
             int i, j, ns, np, nc, i1;
             int[] isoil = new int[nin + 1];
             int[,] isid = new int[nin + 1 + 1, 2 + 1];
-            int[] jt = new int[nin + 2]; //0-based FORTRAN array +2 as first and last elements will be copied twice
+            int[] jt = new int[nin + 2]; //0-based FORTRAN array. +2 as first and last elements will be copied twice
             double[,] dz = new double[nin + 1 + 1, 2 + 1];
             double[] hdx = new double[nin + 1+1]; //0-based FORTRAN array
             double x1;

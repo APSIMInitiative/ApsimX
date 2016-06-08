@@ -10,7 +10,7 @@ namespace SWIMFrame
         public string[,] isotype;   // adsorption isotherm code for soil types.
         public double[] bd;         // bulk densities for soil types.
         public double[] dis;        // dispersivities for soil types.
-        public List<double>[,] isopar;    // adsorption isotherm params for soil types.
+        public double[,][] isopar;    // adsorption isotherm params for soil types.
         int np;
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace SWIMFrame
             isotype = new string[nt + 1, ns + 1];
             bd = new double[nt + 1];
             dis = new double[nt + 1];
-            isopar = new List<double>[nt + 1, ns + 1];
+            isopar = new double[nt+1,ns+1][];
         }
 
         /// <summary>
@@ -52,9 +52,10 @@ namespace SWIMFrame
             isotype[j, isol] = isotypeji;
             np = isoparji.Length - 1; // -1 to ignore 0th element
             if (isotypeji == "Fr")
-                isopar = new List<double>[isopar.GetLength(0), np + 2 + 1]; //check these
+                isopar[j, isol] = new double[np + 2 + 1]; //check these
             else
-                isopar = new List<double>[isopar.GetLength(0), np + 1];
+                isopar[j, isol] = new double[np + 1];
+            Array.Copy(isoparji, isopar[j, isol], isoparji.Length);
         }
 
         /// <summary>
@@ -68,7 +69,7 @@ namespace SWIMFrame
         /// <param name="p">Isotherm parameters.</param>
         /// <param name="f">Adsorbed mass per gram of soil.</param>
         /// <param name="fd">Derivitive of f wrt c.</param>
-        public void Isosub(string iso, double c, double dsmmax, ref List<double> p, out double f, out double fd)
+        public void Isosub(string iso, double c, double dsmmax, ref double[] p, out double f, out double fd)
         {
             double x;
             f = 0;
@@ -96,7 +97,7 @@ namespace SWIMFrame
                 case "La":
                     x = 1.0 / (1.0 + p[2] * c);
                     f = p[1] * c * x;
-                    fd = p[1] * (x - p[2] * c * Math.Pow(x, 2)) + p[3];
+                    fd = p[1] * (x - p[2] * c * Math.Pow(x, 2));
                     break;
                 case "Ll":
                     x = 1.0 / (1.0 + p[2] * c);

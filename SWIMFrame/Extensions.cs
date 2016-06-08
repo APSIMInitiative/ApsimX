@@ -13,6 +13,7 @@ namespace SWIMFrame
     /// </summary>
     public static class Extensions
     {
+        static StringBuilder sb = new StringBuilder();
         /// <summary>
         /// Get the array slice between the two indexes.
         /// ... Inclusive for start and end indexes.
@@ -107,6 +108,63 @@ namespace SWIMFrame
                     retVal[i] = m[index,i];
             }
             return retVal;
+        }
+
+        /// <summary>
+        /// Write an object to a log file with formatting.
+        /// </summary>
+        /// <param name="method">The name of the calling method.</param>
+        /// <param name="type">Type representation.</param>
+        /// <param name="obj">The object to write.</param>
+        public static void Log(string method, string type, object obj)
+        {
+            switch (type)
+            {
+                case "i": //int
+                case "d": //double
+                case "s": //string
+                    sb.AppendLine(method + " " + obj.ToString());
+                    break;
+                case "i1": //int 1D
+                    int[] i1 = obj as int[];
+                    sb.Append(method + " ");
+                    foreach (int i in i1.Skip(1))
+                        sb.Append(i + " ");
+                    sb.AppendLine();
+                    break;
+                case "d1": //double 1D
+                    double[] d1 = obj as double[];
+                    sb.Append(method + " ");
+                    foreach (double d in d1.Skip(1))
+                        sb.Append(d + " ");
+                    sb.AppendLine();
+                    break;
+                case "i2": //int 2D
+                    int[,] i2 = obj as int[,];
+                    for (int i = 1; i < i2.GetLength(0); i++)
+                    {
+                        sb.Append(method + " " + i + " ");
+                        for (int j = 1; j < i2.GetLength(0); j++)
+                            sb.Append(i2[i, j] + " ");
+                        sb.AppendLine();
+                    }
+                    break;
+                case "d2": //double 2D
+                    double[,] d2 = obj as double[,];
+                    for (int i = 1; i < d2.GetLength(0); i++)
+                    {
+                        sb.Append(method + " " + i + " ");
+                        for (int j = 1; j < d2.GetLength(0); j++)
+                            sb.Append(d2[i, j] + " ");
+                        sb.AppendLine();
+                    }
+                    break;
+            }
+        }
+
+        public static void WriteLog()
+        {
+            System.IO.File.WriteAllText(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\log.txt", sb.ToString());
         }
     }
 }
