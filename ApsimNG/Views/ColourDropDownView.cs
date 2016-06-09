@@ -42,6 +42,13 @@ namespace UserInterface.Views
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.SetCellDataFunc(comboRender, OnDrawColourCombo);
             combobox1.Changed += OnChanged;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            combobox1.Changed -= OnChanged;
+            combobox1.SetCellDataFunc(comboRender, null);
         }
 
         /// <summary>Invoked when the user changes the selection</summary>

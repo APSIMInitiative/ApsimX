@@ -73,6 +73,10 @@ namespace UserInterface.Views
   else
     myCenter = new google.maps.LatLng(0.0, 0.0);
   var map = null;
+  function SetTitle()
+  {
+     window.document.title = map.getZoom().toString() + ',' + map.getCenter().toString();
+  }
   function initialize()
   {
      var mapProp = {
@@ -94,6 +98,8 @@ namespace UserInterface.Views
      var infowindow = new google.maps.InfoWindow({maxWidth: 120});
      
      map = new google.maps.Map(document.getElementById('googleMap'), mapProp);
+     map.addListener('zoom_changed', SetTitle);
+     map.addListener('center_changed', SetTitle);
 
      var marker, i;
      for (i = 0; i < locations.length; i++)
@@ -146,7 +152,5 @@ google.maps.event.addDomListener(window, 'load', initialize);
             System.Drawing.Bitmap bitmap = new Bitmap(stream);
             return bitmap;
         }
-
-     
     }
 }

@@ -107,6 +107,7 @@
             textEditor.Options = options;
             textEditor.Document.LineChanged += OnTextHasChanged;
             textEditor.LeaveNotifyEvent += OnTextBoxLeave;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
 
             /*
             CompletionForm = new Form();
@@ -149,6 +150,12 @@
             this.searchValue = string.Empty;
             timer1.Interval = 3000;
             */
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            textEditor.Document.LineChanged -= OnTextHasChanged;
+            textEditor.LeaveNotifyEvent -= OnTextBoxLeave;
         }
 
         /// <summary>

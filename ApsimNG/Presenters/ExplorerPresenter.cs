@@ -118,8 +118,9 @@ namespace UserInterface.Presenters
             this.view.Renamed -= this.OnRename;
             this.view.ShortcutKeyPressed -= this.OnShortcutKeyPress;
             if (this.view is Views.ExplorerView)
-                (this.view as Views.ExplorerView).Destroy();
-            this.CommandHistory = null;
+                (this.view as Views.ExplorerView).MainWidget.Destroy();
+            HideRightHandPanel();
+            this.CommandHistory.Clear();
         }
 
         /// <summary>Toggle advanced mode.</summary>
