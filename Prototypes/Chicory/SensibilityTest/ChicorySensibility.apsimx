@@ -6413,18 +6413,18 @@ namespace Models
           <Manager>
             <Name>Defoliate</Name>
             <Script>
-              <removeAmountType>ResidualDM</removeAmountType>
               <cutPasture_StartDate>1994-05-20</cutPasture_StartDate>
               <cutPasture_EndDate>2100-12-31</cutPasture_EndDate>
-              <interval2Cut>21</interval2Cut>
               <defoliationType>Cut</defoliationType>
+              <interval2Cut>21</interval2Cut>
+              <durationOfCut>1</durationOfCut>
+              <removeAmountType>ResidualDM</removeAmountType>
               <herbageAmount>500</herbageAmount>
+              <fracDM2Remove>0.75</fracDM2Remove>
               <fracN2Remove>0.15</fracN2Remove>
               <urineDepth>300</urineDepth>
               <fracN2Dung>0.4</fracN2Dung>
               <fracPopDecline>0.2</fracPopDecline>
-              <durationOfCut>1</durationOfCut>
-              <fracDM2Remove>0.75</fracDM2Remove>
             </Script>
             <Code><![CDATA[// Defoliates on a regular cycle or one-off via a schedule
 // currenty defoliates by the amount specified spread evenly over the specified period
