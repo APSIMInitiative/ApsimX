@@ -131,8 +131,8 @@ namespace SWIMFrame
                 Ks[i] = sp[i - 1].ks;
                 for (int x = 1; x <= n[i]; x++)
                 {
-                    h[i, x] = sp[i - 1].h[x]; 
-                    phi[i, x] = sp[i - 1].phi[x]; 
+                    h[i, x] = sp[i - 1].h[x];
+                    phi[i, x] = sp[i - 1].phi[x];
                 }
             }
 
@@ -145,7 +145,7 @@ namespace SWIMFrame
                 for (int x = 1; x <= j; x++)
                 {
                     phif[i, x] = ft[i - 1].fend[0].phif[x * 2 - 1]; //discard every second
-                    for(int y=1; y<= m;y++)
+                    for (int y = 1; y <= m; y++)
                         qf[i, x, y] = ft[i - 1].ftable[x * 2 - 1, y * 2 - 1];
                 }
                 nft[i] = j;
@@ -166,7 +166,7 @@ namespace SWIMFrame
                     i = 2;
                     j = 1;
                 }
-                double[] hFind= new double[n[i] + 1];
+                double[] hFind = new double[n[i] + 1];
                 for (int x = 1; x <= n[i] + 1; x++)
                     hFind[x - n[i] + 1] = h[i, x];
                 ii = Find(he[j], hFind);
@@ -274,11 +274,11 @@ namespace SWIMFrame
             for (int x = 1; x <= n[i]; x++)
                 hi[id + x] = h[i, x];
 
-               /* hi(1:ni) are h values for the interface tables.
-                * phii(1,1:ni) are corresponding interface phi values for upper layer.
-                * phii(2,1:ni) are corresponding interface phi values for lower layer.
-                * Set up quadratic interpolation coeffs to get phii2 given phii1.
-            */
+            /* hi(1:ni) are h values for the interface tables.
+             * phii(1,1:ni) are corresponding interface phi values for upper layer.
+             * phii(2,1:ni) are corresponding interface phi values for lower layer.
+             * Set up quadratic interpolation coeffs to get phii2 given phii1.
+         */
             Matrix<double> coqM = Matrix<double>.Build.DenseOfArray(coq);
             Vector<double>[] quadcoV = new Vector<double>[ni - 2 + 1];
             for (i = 1; i <= ni - 2; i++)
@@ -294,6 +294,7 @@ namespace SWIMFrame
             double[,] getco = new double[20, 20];
 
             // Set up cubic coeffs to get fluxes q given phi.
+            Extensions.Log("twofluxes h", "d2", h);
             for (j = 1; j <= nft[2]; j++)
             {
                 k = 1;
@@ -317,107 +318,107 @@ namespace SWIMFrame
                         getco[x, y] = co2[1, x, y];
             }
 
-         /*   Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(getco);
-            printMatrix = printMatrix.RemoveRow(0);
-            printMatrix = printMatrix.RemoveColumn(0);
-            MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t", null, "E6", null, null);
-*/
             nco2 = k;
-                
 
-                // Get fluxes
-                nit = 0;
-                for (i = 1; i <= nft[1]; i++) //step through top phis
+
+            // Get fluxes
+            nit = 0;
+            for (i = 1; i <= nft[1]; i++) //step through top phis
+            {
+                vlast = phif[1, i];
+                k = 1;
+                ip = 1;
+                Matrix<double> co1M = Matrix<double>.Build.DenseOfArray(co1);
+                while (true)
                 {
-                    vlast = phif[1, i];
-                    k = 1;
-                    ip = 1;
-                    Matrix<double> co1M = Matrix<double>.Build.DenseOfArray(co1);
-                    while (true)
+                    phico1[k] = phif[1, ip];
+                    co1M.SetColumn(k, Soil.Cuco(new double[5] { 0, phif[1, ip], phif[1, ip + 1], phif[1, ip + 2], phif[1, ip + 3] },
+                                                new double[5] { 0, qf[1, i, ip], qf[1, i, ip + 1], qf[1, i, ip + 2], qf[1, i, ip + 3] }));
+                    ip += 3;
+                    if (ip == nft[1])
+                        break;
+                    if (ip > nft[1])
+                        ip = nft[1] - 3;
+                    k++;
+                }
+                co1 = co1M.ToArray();
+                nco1 = k;
+                for (j = 1; j <= nft[2]; j++) // bottom phis
+                {
+                    v = vlast;
+                    for (k = 1; k <= maxit; k++) // solve for upper interface phi giving same fluxes
                     {
-                        phico1[k] = phif[1, ip];
-                        co1M.SetColumn(k, Soil.Cuco(new double[5] { 0, phif[1, ip], phif[1, ip + 1], phif[1, ip + 2], phif[1, ip + 3] },
-                                                    new double[5] { 0, qf[1, i, ip], qf[1, i, ip + 1], qf[1, i, ip + 2], qf[1, i, ip + 3] }));
-                        ip += 3;
-                        if (ip == nft[1])
+                        fd(v, out f, out df, out q1);
+                        Extensions.Log("twotables f", "d", f);
+                        Extensions.Log("twotables df", "d", df);
+                        Extensions.Log("twotables q1", "d", q1);
+                        nit += 1;
+                        dx = f / df; // Newton's method - almost always works
+                        Extensions.Log("twotables dx", "d", dx);
+                        v = Math.Min(10.0 * phif[1, nft[1]], Math.Max(phii[1, 1], v - dx));
+                        Extensions.Log("twotables v", "d", v);
+                        e = Math.Abs(f / q1);
+                        if (e < rerr)
                             break;
-                        if (ip > nft[1])
-                            ip = nft[1] - 3;
-                        k++;
+                        vlast = v;
                     }
-                    co1 = co1M.ToArray();
-                    nco1 = k;
-                    for (j = 1; j <= nft[2]; j++) // bottom phis
+                    if (k > maxit) //failed - bracket q and use bisection
                     {
-                        v = vlast;
-                        for (k = 1; k <= maxit; k++) // solve for upper interface phi giving same fluxes
+                        v1 = phii[1, 1];
+                        fd(v1, out f1, out df, out q1);
+                        if (f1 <= 0.0) // answer is off table - use end value
                         {
+                            qp[i, j] = q1;
+                            continue;
+                        }
+                        v2 = phii[1, ni];
+                        fd(v2, out f2, out df, out q1);
+                        for (k = 1; k <= maxit; k++)
+                        {
+                            if (f1 * f2 < 0.0)
+                                break;
+                            v1 = v2;
+                            f1 = f2;
+                            v2 = 2.0 * v1;
+                            fd(v2, out f2, out df, out q1);
+                        }
+                        if (k > maxit)
+                        {
+                            Console.WriteLine(v1 + " " + v2 + " " + f1 + " " + f2);
+                            v1 = phii[1, 1];
+                            fd(v1, out f1, out df, out q1);
+                            Console.WriteLine(v1 + " " + f1);
+                            Console.WriteLine("twotbls: too many iterations at i, j = " + i + " " + j);
+                            Environment.Exit(1);
+                        }
+                        for (k = 1; k <= maxit; k++)
+                        {
+                            v = 0.5 * (v1 + v2);
                             fd(v, out f, out df, out q1);
-                            nit += 1;
-                            dx = f / df; // Newton's method - almost always works
-                            v = Math.Min(10.0 * phif[1, nft[1]], Math.Max(phii[1, 1], v - dx));
                             e = Math.Abs(f / q1);
                             if (e < rerr)
                                 break;
-                            vlast = v;
+                            if (f > 0.0)
+                            {
+                                v1 = v;
+                                f1 = f;
+                            }
+                            else
+                            {
+                                v2 = v;
+                                f2 = f;
+                            }
                         }
-                        if (k > maxit) //failed - bracket q and use bisection
+                        vlast = v;
+                        if (k > maxit)
                         {
-                            v1 = phii[1, 1];
-                            fd(v1, out f1, out df, out q1);
-                            if (f1 <= 0.0) // answer is off table - use end value
-                            {
-                                qp[i, j] = q1;
-                                continue;
-                            }
-                            v2 = phii[1, ni];
-                            fd(v2, out f2, out df, out q1);
-                            for (k = 1; k <= maxit; k++)
-                            {
-                                if (f1 * f2 < 0.0)
-                                    break;
-                                v1 = v2;
-                                f1 = f2;
-                                v2 = 2.0 * v1;
-                                fd(v2, out f2, out df, out q1);
-                            }
-                            if (k > maxit)
-                            {
-                                Console.WriteLine(v1 + " " + v2 + " " + f1 + " " + f2);
-                                v1 = phii[1, 1];
-                                fd(v1, out f1, out df, out q1);
-                                Console.WriteLine(v1 + " " + f1);
-                                Console.WriteLine("twotbls: too many iterations at i, j = " + i + " " + j);
-                                Environment.Exit(1);
-                            }
-                            for (k = 1; k <= maxit; k++)
-                            {
-                                v = 0.5 * (v1 + v2);
-                                fd(v, out f, out df, out q1);
-                                e = Math.Abs(f / q1);
-                                if (e < rerr)
-                                    break;
-                                if (f > 0.0)
-                                {
-                                    v1 = v;
-                                    f1 = f;
-                                }
-                                else
-                                {
-                                    v2 = v;
-                                    f2 = f;
-                                }
-                            }
-                            vlast = v;
-                            if (k > maxit)
-                            {
-                                Console.WriteLine("twotbls: too many iterations at i, j = " + i + " " + j);
-                                Environment.Exit(1);
-                            }
-                        Extensions.Log("twotables", "d", f);
-                        Extensions.Log("twotables", "d", df);
-                        Extensions.Log("twotables", "d", q1);
+                            Console.WriteLine("twotbls: too many iterations at i, j = " + i + " " + j);
+                            Environment.Exit(1);
+                        }
                     }
+                    Extensions.Log("twotables f", "d", f);
+                    Extensions.Log("twotables df", "d", df);
+                    Extensions.Log("twotables q1", "d", q1);
                     // Solved
                     qp[i, j] = q1;
                 }
@@ -517,10 +518,10 @@ namespace SWIMFrame
                     qi5Slice[x, y] = qi5[x, y];
             ftwo.ftable = qi5Slice;
 
-          Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(ftwo.ftable);
-          printMatrix = printMatrix.RemoveRow(0);
-          printMatrix = printMatrix.RemoveColumn(0);
-          MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t", null, "E6", null, null);
+            Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(ftwo.ftable);
+            printMatrix = printMatrix.RemoveRow(0);
+            printMatrix = printMatrix.RemoveColumn(0);
+            MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t", null, "E6", null, null);
 
             return ftwo;
         }
@@ -561,6 +562,8 @@ namespace SWIMFrame
             q1 = 0;
             der = 0;
             q1d = 0;
+
+            Extensions.Log("fd phia", "d", phia);
             if (phia != phialast)
             {
                 if (phia > phi1max) // both saturated - calc der and lower interface phi
@@ -575,9 +578,13 @@ namespace SWIMFrame
                     for (int x = 1; x <= ni; x++)
                         phiiFind[x] = phii[1, x];
                     ii = Find(phia, phiiFind);
+                    Extensions.Log("fd ii", "i", ii);
                     v = phia - phii[1, ii];
+                    Extensions.Log("fd v", "d", v);
                     der = coq[2, ii] + v * 2.0 * coq[3, ii];
+                    Extensions.Log("fd der", "d", der);
                     phib = coq[1, ii] + v * (coq[2, ii] + v * coq[3, ii]);
+                    Extensions.Log("fd phib", "d", phib);
                 }
                 // Get upper flux and deriv.
                 v = phif[1, nft[1]];
@@ -633,12 +640,12 @@ namespace SWIMFrame
             double x;
             i1 = 1;
             i2 = nco1 + 1; // allow for last interval in table
-            while(true) //use bisection to find place
+            while (true) //use bisection to find place
             {
                 if (i2 - i1 <= 1)
                     break;
 
-               im = (i1 + i2) / 2;
+                im = (i1 + i2) / 2;
                 if (phico1[im] > phi)
                     i2 = im;
                 else i1 = im;
@@ -695,7 +702,7 @@ namespace SWIMFrame
         public static int Find(double x, double[] xa)
         {
             int i1 = 1;
-            int i2 = Array.IndexOf(xa.Skip(1).ToArray(),0);
+            int i2 = Array.IndexOf(xa.Skip(1).ToArray(), 0);
             int im;
 
             while (true) //use bisection
@@ -712,9 +719,9 @@ namespace SWIMFrame
             return i1;
         }
 
-        public static int MinLoc (double[] array)
+        public static int MinLoc(double[] array)
         {
-            int pos=1;
+            int pos = 1;
             for (int i = 1; i < array.Length; i++)
                 if (array[i] < array[pos])
                     pos = i;
@@ -722,7 +729,7 @@ namespace SWIMFrame
             return pos;
         }
 
-        private static double[] linco (double[] x, double[] y)
+        private static double[] linco(double[] x, double[] y)
         {
             double[] co = new double[4];
             //Return linear interpolation coeffs co.
@@ -732,4 +739,3 @@ namespace SWIMFrame
         }
     }
 }
- 

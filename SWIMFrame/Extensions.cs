@@ -144,7 +144,7 @@ namespace SWIMFrame
                     for (int i = 1; i < i2.GetLength(0); i++)
                     {
                         sb.Append(method + " " + i + " ");
-                        for (int j = 1; j < i2.GetLength(0); j++)
+                        for (int j = 1; j < i2.GetLength(1); j++)
                             sb.Append(i2[i, j] + " ");
                         sb.AppendLine();
                     }
@@ -154,7 +154,7 @@ namespace SWIMFrame
                     for (int i = 1; i < d2.GetLength(0); i++)
                     {
                         sb.Append(method + " " + i + " ");
-                        for (int j = 1; j < d2.GetLength(0); j++)
+                        for (int j = 1; j < d2.GetLength(1); j++)
                             sb.Append(d2[i, j] + " ");
                         sb.AppendLine();
                     }
