@@ -12,7 +12,7 @@ namespace UserInterface.Views
     using Glade;
     using Gtk;
     using Interfaces;
-    using Models.Grazplan;   // For access to the TSuppAttribute enumeration
+    using Models.GrazPlan;   // For access to the TSuppAttribute enumeration
 
     public class SupplementView : ViewBase, ISupplementView
     {
