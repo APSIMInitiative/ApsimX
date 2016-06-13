@@ -1002,7 +1002,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>IncrementPerDegreeDay</Name>
                 <Constant>
                   <Name>PotentialHarvestIndex</Name>
-                  <Value>0.5</Value>
+                  <Value>0.6</Value>
                 </Constant>
                 <VariableReference>
                   <Name>GrainFillingDuration</Name>
@@ -2474,7 +2474,9 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
       </Memo>
       <Cultivar>
         <Name>Amethyst</Name>
-        <Command />
+        <Command>[Phenology].Vegetative.Target.Value = 420</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod =9.5</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
       </Cultivar>
       <Cultivar>
         <Name>Hashem</Name>
@@ -2482,6 +2484,7 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
         <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
         <Command>[Phenology].Vegetative.Target.Value = 550</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
       </Cultivar>
       <Cultivar>
         <Name>Ayaz</Name>
@@ -2489,6 +2492,215 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
         <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
         <Command>[Phenology].Vegetative.Target.Value = 550</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Ghab3</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 510</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Ghab5</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 500</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Ghab4</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 500</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>00_21C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 500</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>00_40C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 430</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>01_36C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 600</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>01_61C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 500</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>01_7C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 485</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>02_03C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 500</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>02_10C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 500</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>02_23C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 400</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 11</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>02_30C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 400</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 11</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>02_35C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 505</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>97_116C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 405</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>97_118C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 420</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>97_120C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 400</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 11</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>97_219C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 430</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 11</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>98_106C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 400</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 11</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>98_107C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 410</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 11</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>98_16C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 430</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>98_55C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 410</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 11</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>98_79C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 410</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 11</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>99_34C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 420</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 11</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>99_66C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 410</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 11</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>99_73C</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 440</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 11</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Anwar</Name>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
+        <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
+        <Command>[Phenology].Vegetative.Target.Value = 490</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 11</Command>
+        <Command>[Grain].HIIncrement.Reproductive.HIIncrement.IncrementPerDegreeDay.PotentialHarvestIndex.Value = 0.5</Command>
       </Cultivar>
       <CropType>Chickpea</CropType>
     </Plant>
@@ -8507,6 +8719,908 @@ namespace Models
         </Graph>
       </Experiment>
       <Experiment>
+        <Name>Lawes1999</Name>
+        <Factors>
+          <Name>Factors</Name>
+          <Factor>
+            <Name>NRate</Name>
+            <Operations>
+              <Name>0</Name>
+              <Operation>
+                <Date>1999-05-26</Date>
+                <Action> [Fertiliser].Apply(0, Fertiliser.Types.NH4NO3N, 10);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>50</Name>
+              <Operation>
+                <Date>1999-05-26</Date>
+                <Action> [Fertiliser].Apply(50, Fertiliser.Types.NH4NO3N, 10);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>100</Name>
+              <Operation>
+                <Date>1999-05-26</Date>
+                <Action> [Fertiliser].Apply(100, Fertiliser.Types.NH4NO3N, 10);</Action>
+              </Operation>
+            </Operations>
+            <Specifications>
+              <string>[NRateSchedule]</string>
+            </Specifications>
+          </Factor>
+        </Factors>
+        <Simulation>
+          <Name>Lawes1999</Name>
+          <Memo>
+            <Name>memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Weather>
+            <Name>Weather</Name>
+            <FileName>X:\ChickpeaModelDevelopment\Gatton1999.met</FileName>
+            <ExcelWorkSheetName />
+          </Weather>
+          <Clock>
+            <Name>clock</Name>
+            <StartDate>1999-05-20T00:00:00</StartDate>
+            <EndDate>1999-12-01T00:00:00</EndDate>
+          </Clock>
+          <Summary>
+            <Name>summaryfile</Name>
+          </Summary>
+          <SoilArbitrator>
+            <Name>Soil Arbitrator</Name>
+          </SoilArbitrator>
+          <Zone>
+            <Name>Field</Name>
+            <MicroClimate>
+              <Name>MicroClimate</Name>
+              <a_interception>0</a_interception>
+              <b_interception>1</b_interception>
+              <c_interception>0</c_interception>
+              <d_interception>0</d_interception>
+              <soil_albedo>0.23</soil_albedo>
+              <air_pressure>1010</air_pressure>
+              <soil_emissivity>0.96</soil_emissivity>
+              <sun_angle>15</sun_angle>
+              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+              <night_interception_fraction>0.5</night_interception_fraction>
+              <windspeed_default>3</windspeed_default>
+              <refheight>2</refheight>
+              <albedo>0.15</albedo>
+              <emissivity>0.96</emissivity>
+              <gsmax>0.01</gsmax>
+              <r50>200</r50>
+            </MicroClimate>
+            <Fertiliser>
+              <Name>Fertiliser</Name>
+            </Fertiliser>
+            <SurfaceOrganicMatter>
+              <Name>SurfaceOrganicMatter</Name>
+              <ResidueTypes>
+                <Name>ResidueTypesList</Name>
+                <LoadFromResource>ResidueTypes</LoadFromResource>
+              </ResidueTypes>
+              <Pools>
+                <Pool>
+                  <PoolName>unknown</PoolName>
+                  <ResidueType>wheat</ResidueType>
+                  <Mass>0</Mass>
+                  <CNRatio>10</CNRatio>
+                  <CPRatio>NaN</CPRatio>
+                  <StandingFraction>0</StandingFraction>
+                </Pool>
+              </Pools>
+              <PoolName>unknown</PoolName>
+              <type>wheat</type>
+              <mass>0</mass>
+              <standing_fraction>0</standing_fraction>
+              <cpr />
+              <cnr>10</cnr>
+              <CriticalResidueWeight>2000</CriticalResidueWeight>
+              <OptimumDecompTemp>20</OptimumDecompTemp>
+              <MaxCumulativeEOS>20</MaxCumulativeEOS>
+              <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+              <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+              <TotalLeachRain>25</TotalLeachRain>
+              <MinRainToLeach>10</MinRainToLeach>
+              <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+              <DefaultCPRatio>0</DefaultCPRatio>
+              <DefaultStandingFraction>0</DefaultStandingFraction>
+              <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+              <FractionFaecesAdded>0.5</FractionFaecesAdded>
+            </SurfaceOrganicMatter>
+            <Operations>
+              <Name>Sowing</Name>
+              <Operation>
+                <Date>1999-05-26</Date>
+                <Action> [Chickpea].Sow(population:40, cultivar:"Amethyst", depth:50, rowSpacing:200);</Action>
+              </Operation>
+            </Operations>
+            <Report>
+              <Name>Report</Name>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[Clock].Today</string>
+                <string>[Soil].SoilWater.SW</string>
+                <string>[Soil].SoilWater.Eo</string>
+                <string>[Soil].SoilWater.Es</string>
+                <string>[Soil].SoilWater.Drainage</string>
+                <string>[Soil].SoilWater.Runoff</string>
+                <string>[Soil].SoilWater.pond</string>
+                <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+                <string>[Soil].NO3N</string>
+                <string>[MicroClimate].net_radn</string>
+                <string>[MicroClimate].peta</string>
+                <string>[MicroClimate].petr</string>
+                <string>[Chickpea].AboveGround.Wt</string>
+                <string>[Chickpea].Leaf.LAI</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
+              </VariableNames>
+              <EventNames>
+                <string>[Clock].DoReport</string>
+              </EventNames>
+            </Report>
+            <Report>
+              <Name>HarvestReport</Name>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[Clock].Today</string>
+                <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
+              </VariableNames>
+              <EventNames>
+                <string>[Chickpea].Harvesting</string>
+              </EventNames>
+            </Report>
+            <Manager>
+              <Name>Harvesting</Name>
+              <Script />
+              <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Chickpea;
+		[Link] Zone zone;
+					
+        
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Chickpea.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			{
+				Chickpea.Harvest();
+				Chickpea.EndCrop();
+			}
+		}
+		
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
+			
+		}
+	}
+}
+	   ]]></Code>
+            </Manager>
+            <Plant>
+              <Name>Chickpea</Name>
+              <CropType>Chickpea</CropType>
+            </Plant>
+            <Soil>
+              <Name>soil</Name>
+              <Water>
+                <Name>Water</Name>
+                <SoilCrop>
+                  <Name>ChickpeaSoil</Name>
+                  <LL>
+                    <double>0.25</double>
+                    <double>0.25</double>
+                    <double>0.23</double>
+                    <double>0.25</double>
+                    <double>0.2</double>
+                    <double>0.2</double>
+                    <double>0.2</double>
+                  </LL>
+                  <KL>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.05</double>
+                    <double>0.04</double>
+                    <double>0.02</double>
+                    <double>0.02</double>
+                  </KL>
+                  <XF>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0</double>
+                    <double>0</double>
+                  </XF>
+                </SoilCrop>
+                <Thickness>
+                  <double>150</double>
+                  <double>150</double>
+                  <double>300</double>
+                  <double>300</double>
+                  <double>300</double>
+                  <double>300</double>
+                  <double>300</double>
+                </Thickness>
+                <BD>
+                  <double>1.38</double>
+                  <double>1.38</double>
+                  <double>1.32</double>
+                  <double>1.46</double>
+                  <double>1.51</double>
+                  <double>1.49</double>
+                  <double>1.47</double>
+                </BD>
+                <AirDry>
+                  <double>0.05</double>
+                  <double>0.19</double>
+                  <double>0.2</double>
+                  <double>0.22</double>
+                  <double>0.19</double>
+                  <double>0.17</double>
+                  <double>0.17</double>
+                </AirDry>
+                <LL15>
+                  <double>0.18</double>
+                  <double>0.19</double>
+                  <double>0.2</double>
+                  <double>0.22</double>
+                  <double>0.19</double>
+                  <double>0.17</double>
+                  <double>0.17</double>
+                </LL15>
+                <DUL>
+                  <double>0.384</double>
+                  <double>0.381</double>
+                  <double>0.44</double>
+                  <double>0.424</double>
+                  <double>0.419</double>
+                  <double>0.376</double>
+                  <double>0.377</double>
+                </DUL>
+                <SAT>
+                  <double>0.434</double>
+                  <double>0.431</double>
+                  <double>0.49</double>
+                  <double>0.448</double>
+                  <double>0.43</double>
+                  <double>0.426</double>
+                  <double>0.427</double>
+                </SAT>
+              </Water>
+              <SoilWater>
+                <Name>SoilWater</Name>
+                <residueinterception>0</residueinterception>
+                <SummerDate>1-Nov</SummerDate>
+                <SummerU>9</SummerU>
+                <SummerCona>3</SummerCona>
+                <WinterDate>1-Apr</WinterDate>
+                <WinterU>9</WinterU>
+                <WinterCona>3</WinterCona>
+                <DiffusConst>88</DiffusConst>
+                <DiffusSlope>35.4</DiffusSlope>
+                <Salb>0.13</Salb>
+                <CN2Bare>50</CN2Bare>
+                <CNRed>20</CNRed>
+                <CNCov>0.8</CNCov>
+                <slope>NaN</slope>
+                <discharge_width>NaN</discharge_width>
+                <catchment_area>NaN</catchment_area>
+                <max_pond>0</max_pond>
+                <Thickness>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <SWCON>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                </SWCON>
+              </SoilWater>
+              <SoilNitrogen>
+                <Name>SoilNitrogen</Name>
+                <fom_type>
+                  <string>default</string>
+                  <string>manure</string>
+                  <string>mucuna</string>
+                  <string>lablab</string>
+                  <string>shemp</string>
+                  <string>stable</string>
+                </fom_type>
+                <fract_carb>
+                  <double>0.2</double>
+                  <double>0.3</double>
+                  <double>0.54</double>
+                  <double>0.57</double>
+                  <double>0.45</double>
+                  <double>0</double>
+                </fract_carb>
+                <fract_cell>
+                  <double>0.7</double>
+                  <double>0.3</double>
+                  <double>0.37</double>
+                  <double>0.37</double>
+                  <double>0.47</double>
+                  <double>0.1</double>
+                </fract_cell>
+                <fract_lign>
+                  <double>0.1</double>
+                  <double>0.4</double>
+                  <double>0.09</double>
+                  <double>0.06</double>
+                  <double>0.08</double>
+                  <double>0.9</double>
+                </fract_lign>
+                <wfpsN2N2O_x>
+                  <double>22</double>
+                  <double>88</double>
+                </wfpsN2N2O_x>
+                <wfpsN2N2O_y>
+                  <double>0.1</double>
+                  <double>1</double>
+                </wfpsN2N2O_y>
+              </SoilNitrogen>
+              <SoilOrganicMatter>
+                <Name>SoilOrganicMatter</Name>
+                <RootCN>45</RootCN>
+                <RootWt>1000</RootWt>
+                <SoilCN>14.5</SoilCN>
+                <EnrACoeff>7.4</EnrACoeff>
+                <EnrBCoeff>0.2</EnrBCoeff>
+                <Thickness>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <Depth>
+                  <string>0-10</string>
+                  <string>10-20</string>
+                  <string>20-30</string>
+                  <string>30-50</string>
+                  <string>50-70</string>
+                  <string>70-90</string>
+                  <string>90-110</string>
+                  <string>110-130</string>
+                  <string>130-150</string>
+                </Depth>
+                <OC>
+                  <double>1.2</double>
+                  <double>1</double>
+                  <double>0.86</double>
+                  <double>0.83</double>
+                  <double>0.58</double>
+                  <double>0.54</double>
+                  <double>0.47</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                </OC>
+                <FBiom>
+                  <double>0.02</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                </FBiom>
+                <FInert>
+                  <double>0.42</double>
+                  <double>0.5</double>
+                  <double>0.58</double>
+                  <double>0.55</double>
+                  <double>0.86</double>
+                  <double>0.9</double>
+                  <double>0.95</double>
+                  <double>0.95</double>
+                  <double>0.95</double>
+                </FInert>
+                <OCUnits>Total</OCUnits>
+              </SoilOrganicMatter>
+              <Analysis>
+                <Name>Analysis</Name>
+                <Thickness>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <PH>
+                  <double>6</double>
+                  <double>6</double>
+                  <double>6</double>
+                  <double>6.2</double>
+                  <double>6.5</double>
+                  <double>6.7</double>
+                  <double>6.8</double>
+                  <double>6.8</double>
+                  <double>6.8</double>
+                </PH>
+                <PHUnits>Water</PHUnits>
+                <BoronUnits>HotWater</BoronUnits>
+              </Analysis>
+              <Sample>
+                <Name>InitialN</Name>
+                <Thickness>
+                  <double>150</double>
+                  <double>150</double>
+                  <double>300</double>
+                  <double>300</double>
+                  <double>300</double>
+                  <double>300</double>
+                  <double>300</double>
+                </Thickness>
+                <NO3>
+                  <double>14.3</double>
+                  <double>5.9</double>
+                  <double>1.8</double>
+                  <double>0.9</double>
+                  <double>1</double>
+                  <double>0.2</double>
+                  <double>0.1</double>
+                </NO3>
+                <NH4>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0</double>
+                </NH4>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
+                <SWUnits>Volumetric</SWUnits>
+                <OCUnits>Total</OCUnits>
+                <PHUnits>Water</PHUnits>
+              </Sample>
+              <Sample>
+                <Name>InitialSW</Name>
+                <Thickness>
+                  <double>150</double>
+                  <double>150</double>
+                  <double>300</double>
+                  <double>300</double>
+                  <double>300</double>
+                  <double>300</double>
+                  <double>300</double>
+                </Thickness>
+                <SW>
+                  <double>0.384</double>
+                  <double>0.381</double>
+                  <double>0.44</double>
+                  <double>0.424</double>
+                  <double>0.419</double>
+                  <double>0.376</double>
+                  <double>0.377</double>
+                </SW>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
+                <SWUnits>Volumetric</SWUnits>
+                <OCUnits>Total</OCUnits>
+                <PHUnits>Water</PHUnits>
+              </Sample>
+              <RecordNumber>0</RecordNumber>
+              <Latitude>0</Latitude>
+              <Longitude>0</Longitude>
+            </Soil>
+            <Operations>
+              <Name>NRateSchedule</Name>
+              <Operation>
+                <Date>1999-05-26</Date>
+                <Action> [Fertiliser].Apply(0, Fertiliser.Types.NH4NO3N, 10);</Action>
+              </Operation>
+            </Operations>
+            <Manager>
+              <Name>AutoIrrigate</Name>
+              <Script>
+                <FASW>0</FASW>
+                <WaterDeficit>0</WaterDeficit>
+                <AutoIrrigationOn>True</AutoIrrigationOn>
+                <StartStageName>Emergence</StartStageName>
+                <EndStageName>EndGrainFill</EndStageName>
+                <FASWThreshold>0.9</FASWThreshold>
+                <FASWDepth>1000</FASWDepth>
+              </Script>
+              <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		public double FASW { get; set; }
+		public double WaterDeficit  { get; set; }
+	
+		[Link] Plant Chickpea;
+		[Link] Zone zone;
+		[Link] Irrigation irrigation;
+		[Link] Soil soil;
+		
+		[Description("Auto irrigation on?")]
+		public bool AutoIrrigationOn { get; set; }
+		
+		[Description("Irrigation window start stage")]
+		public string StartStageName { get; set; }
+		[Description("Irrigation window end stage")]
+		public string EndStageName { get; set; }
+
+		[Description("Threshold fraction available water (0-1)")]
+		public double FASWThreshold { get; set; }
+
+		[Description("Soil depth (mm) to which fraction available water is calculated")]
+		public double FASWDepth { get; set; }
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			CalculateFASW();
+			if (AutoIrrigationOn && Chickpea.Phenology.Between(StartStageName, EndStageName))
+			{
+				if (FASW < FASWThreshold)
+				{
+					double amount = 10;
+					irrigation.Apply(WaterDeficit, depth: 0);
+				}
+			}
+		}
+		
+		private void CalculateFASW()
+		{
+			double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);
+			double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);
+		
+			int nlayr = GetLayerIndex();
+			double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);
+
+			double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);
+
+			// note that results may be strange if swdep < ll15
+			double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)
+			                  - excess_fr * soil.Water[nlayr])
+			                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)
+			                  - excess_fr * LL15[nlayr]);
+
+
+			double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)
+			                      - excess_fr * DUL[nlayr])
+			                      - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)
+			                      - excess_fr * LL15[nlayr]);
+
+			FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);
+			WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);
+		}
+
+		private int GetLayerIndex()
+		{
+			double[] cumThickness = Soil.ToCumThickness(soil.Thickness);
+			for (int i = 1; i < cumThickness.Length; i++)
+			{
+				if (FASWDepth < cumThickness[i])
+					return i - 1;
+			}
+			
+			return cumThickness.Length - 1;
+		}
+
+	}
+}
+	   ]]></Code>
+            </Manager>
+            <Irrigation>
+              <Name>Irrigation</Name>
+            </Irrigation>
+            <Area>1</Area>
+            <Slope>0</Slope>
+          </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
+        </Simulation>
+        <Graph>
+          <Name>AboveGroundWt</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Chickpea.AboveGround.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>ObservedTimeseriesData</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Biomass</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>LAI</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Chickpea.Leaf.LAI</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>ObservedTimeseriesData</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>LAI</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Stress</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Chickpea.Leaf.Fn</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Predicted1</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Chickpea.Leaf.Fw</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>FloweringDate</Name>
+          <Series>
+            <Name>Series1</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObserved</TableName>
+            <XFieldName>Observed.FloweringDAS</XFieldName>
+            <YFieldName>Predicted.FloweringDAS</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+      </Experiment>
+      <Experiment>
         <Name>Hermitage1988</Name>
         <Factors>
           <Name>Factors</Name>
@@ -14196,6 +15310,53 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
+      <Graph>
+        <Name>FloweringDate</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FloweringDAS</XFieldName>
+          <YFieldName>Predicted.FloweringDAS</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
     </Folder>
     <Folder>
       <Name>NewZealand</Name>
@@ -14440,8 +15601,8 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
             <Operations>
               <Name>Sowing</Name>
               <Operation>
-                <Date>1998-11-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:150);</Action>
+                <Date>1998-11-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Anwar", depth:50, rowSpacing:150);</Action>
               </Operation>
             </Operations>
             <Operations>
@@ -15690,6 +16851,53 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
+        <Graph>
+          <Name>FloweringDate</Name>
+          <Series>
+            <Name>Series1</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObserved</TableName>
+            <XFieldName>Observed.FloweringDAS</XFieldName>
+            <YFieldName>Predicted.FloweringDAS</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
       </Experiment>
       <Experiment>
         <Name>Lincoln98_2</Name>
@@ -15960,8 +17168,8 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
             <Operations>
               <Name>Sowing</Name>
               <Operation>
-                <Date>1998-12-07T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:150);</Action>
+                <Date>1998-12-07</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Anwar", depth:50, rowSpacing:150);</Action>
               </Operation>
             </Operations>
             <Operations>
@@ -17444,8 +18652,8 @@ namespace Models
             <Operations>
               <Name>Sowing</Name>
               <Operation>
-                <Date>1999-10-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:150);</Action>
+                <Date>1999-10-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Anwar", depth:50, rowSpacing:150);</Action>
               </Operation>
             </Operations>
             <Operations>
@@ -18903,8 +20111,8 @@ namespace Models
             <Operations>
               <Name>Sowing</Name>
               <Operation>
-                <Date>1999-11-22T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:150);</Action>
+                <Date>1999-11-22</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Anwar", depth:50, rowSpacing:150);</Action>
               </Operation>
             </Operations>
             <Operations>
@@ -20160,7 +21368,7 @@ namespace Models
           <XFieldName>Observed.FloweringDAS</XFieldName>
           <YFieldName>Predicted.FloweringDAS</YFieldName>
           <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -21165,6 +22373,53 @@ namespace Models
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>FloweringDate</Name>
+          <Series>
+            <Name>Series1</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObserved</TableName>
+            <XFieldName>Observed.FloweringDAS</XFieldName>
+            <YFieldName>Predicted.FloweringDAS</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
@@ -28151,7 +29406,7 @@ namespace Models
         </Graph>
       </Experiment>
       <Graph>
-        <Name>FloweringDate</Name>
+        <Name>FloweringDateKabuli</Name>
         <Series>
           <Name>Series1</Name>
           <Regression>
@@ -28194,7 +29449,12 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
+        <DisabledSeries>
+          <string>Beverley1989</string>
+          <string>Kununurra1989</string>
+          <string>Ayr1989</string>
+          <string>Tamworth1989</string>
+        </DisabledSeries>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Experiment>
@@ -28204,178 +29464,178 @@ namespace Models
           <Factor>
             <Name>CV</Name>
             <Operations>
-              <Name>82_150C</Name>
+              <Name>Ghab3</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab3", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>00_21C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"00_21C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>00_40C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"00_40C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_36C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_36C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_61C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_61C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_7C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_7C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_03C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_03C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_10C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_10C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_23C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_23C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_30C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_30C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_35C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_35C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
-              <Name>88_85C</Name>
+              <Name>Ghab5</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab5", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
-              <Name>93_93C</Name>
+              <Name>Ghab4</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab4", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_116C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_116C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_118C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_118C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_120C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_120C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_219C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_219", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_106C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_106C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_107C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_107C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_16C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_16C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_55C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_55C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_79C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_79C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_34C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_34C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_66C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_66C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_73C</Name>
               <Operation>
-                <Date>2004-12-06T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-12-06</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_73C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Specifications>
@@ -28972,178 +30232,178 @@ namespace Models
           <Factor>
             <Name>CV</Name>
             <Operations>
-              <Name>82_150C</Name>
+              <Name>Ghab3</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab3", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>00_21C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"00_21C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>00_40C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"00_40C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_36C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_36C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_61C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_61C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_7C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_7C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_03C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_03C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_10C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_10C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_23C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_23C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_30C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_30C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_35C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_35C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
-              <Name>88_85C</Name>
+              <Name>Ghab5</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab5", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
-              <Name>93_93C</Name>
+              <Name>Ghab4</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab4", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_116C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_116C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_118C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_118C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_120C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_120C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_219C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_219C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_106C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_106C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_107C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_107C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_16C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_16C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_55C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_55C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_79C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_79C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_34C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_34C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_66C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_66C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_73C</Name>
               <Operation>
-                <Date>2005-11-27T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-27</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_73C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Specifications>
@@ -29676,178 +30936,178 @@ namespace Models
           <Factor>
             <Name>CV</Name>
             <Operations>
-              <Name>82_150C</Name>
+              <Name>Ghab3</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab3", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>00_21C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"00_21C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>00_40C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"00_40C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_36C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_36C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_61C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_61C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_7C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_7C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_03C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_03C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_10C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_10C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_23C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_23C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_30C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_30C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_35C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_35C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
-              <Name>88_85C</Name>
+              <Name>Ghab5</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab5", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
-              <Name>93_93C</Name>
+              <Name>Ghab4</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab4", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_116C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_116C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_118C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_118C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_120C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_120C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_219C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_219C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_106C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_106C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_107C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_107C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_16C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_16C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_55C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_55C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_79C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_79C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_34C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_34C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_66C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_66C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_73C</Name>
               <Operation>
-                <Date>2004-11-21T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-21</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_73C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Specifications>
@@ -30486,178 +31746,178 @@ namespace Models
           <Factor>
             <Name>CV</Name>
             <Operations>
-              <Name>82_150C</Name>
+              <Name>Ghab3</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab3", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>00_21C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"00_21C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>00_40C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"00_40C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_36C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_36C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_61C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_61C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_7C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_7C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_03C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_03C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_10C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_10C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_23C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_23C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_30C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_30C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_35C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_35C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
-              <Name>88_85C</Name>
+              <Name>Ghab5</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab5", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
-              <Name>93_93C</Name>
+              <Name>Ghab4</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab4", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_116C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_116C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_118C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_118C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_120C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_120C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_219C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_219C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_106C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_106C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_107C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_107C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_16C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_16C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_55C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_55C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_79C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_79C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_34C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_34C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_66C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_66C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_73C</Name>
               <Operation>
-                <Date>2005-03-09T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-03-09</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_73C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Specifications>
@@ -31296,178 +32556,178 @@ namespace Models
           <Factor>
             <Name>CV</Name>
             <Operations>
-              <Name>82_150C</Name>
+              <Name>Ghab3</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab3", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>00_21C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"00_21C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>00_40C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"00_40C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_36C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_36C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_61C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_61C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_7C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_7C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_03C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_03C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_10C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_10C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_23C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_23C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_30C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_30C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_35C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_35C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
-              <Name>88_85C</Name>
+              <Name>Ghab5</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab5", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
-              <Name>93_93C</Name>
+              <Name>Ghab4</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab4", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_116C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_116C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_118C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_118C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_120C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_120C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_219C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_219C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_106C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_106C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_107C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_107C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_16C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_16C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_55C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_55C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_79C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_79C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_34C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_34C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_66C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_66C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_73C</Name>
               <Operation>
-                <Date>2006-03-03T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2006-03-03</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_73C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Specifications>
@@ -32106,178 +33366,178 @@ namespace Models
           <Factor>
             <Name>CV</Name>
             <Operations>
-              <Name>82_150C</Name>
+              <Name>Ghab3</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab3", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>00_21C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"00_21C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>00_40C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"00_40C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_36C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_36C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_61C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_61C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_7C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_7C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_03C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_03C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_10C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_10C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_23C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_23C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_30C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_30C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_35C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_35C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
-              <Name>88_85C</Name>
+              <Name>Ghab5</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab5", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
-              <Name>93_93C</Name>
+              <Name>Ghab4</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab4", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_116C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_116C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_118C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_118C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_120C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_120C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_219C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_219C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_106C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_106C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_107C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_107C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_16C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_16C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_55C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_55C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_79C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_79C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_34C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_34C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_66C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_66C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_73C</Name>
               <Operation>
-                <Date>2004-11-17T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2004-11-17</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_73C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Specifications>
@@ -32895,178 +34155,178 @@ namespace Models
           <Factor>
             <Name>CV</Name>
             <Operations>
-              <Name>82_150C</Name>
+              <Name>Ghab3</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab3", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>00_21C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"00_21C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>00_40C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"00_40C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_36C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_36C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_61C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_61C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>01_7C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"01_7C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_03C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_03C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_10C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_10C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_23C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_23C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_30C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_30C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>02_35C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"02_35C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
-              <Name>88_85C</Name>
+              <Name>Ghab5</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab5", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
-              <Name>93_93C</Name>
+              <Name>Ghab4</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"Ghab4", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_116C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_116C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_118C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_118C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_120C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_120C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>97_219C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"97_219C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_106C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_106C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_107C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_107C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_16C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_16C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_55C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_55C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>98_79C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"98_79C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_34C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_34C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_66C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_66C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Operations>
               <Name>99_73C</Name>
               <Operation>
-                <Date>2005-11-18T00:00:00</Date>
-                <Action> [Chickpea].Sow(population:50, cultivar:"Amethyst", depth:50, rowSpacing:250);</Action>
+                <Date>2005-11-18</Date>
+                <Action> [Chickpea].Sow(population:50, cultivar:"99_73C", depth:50, rowSpacing:250);</Action>
               </Operation>
             </Operations>
             <Specifications>
@@ -33677,6 +34937,61 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
       </Experiment>
+      <Graph>
+        <Name>FloweringDateAmethyst</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FloweringDAS</XFieldName>
+          <YFieldName>Predicted.FloweringDAS</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries>
+          <string>Gorgan_2004</string>
+          <string>Gorgan_2005</string>
+          <string>Terbol_2004</string>
+          <string>Terbol_2005</string>
+          <string>Terbol_2006</string>
+          <string>Elvas_2004</string>
+          <string>Elvas_2005</string>
+        </DisabledSeries>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
     </Folder>
     <Folder>
       <Name>Iran</Name>
