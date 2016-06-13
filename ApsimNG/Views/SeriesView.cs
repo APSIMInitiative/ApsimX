@@ -30,17 +30,17 @@ namespace UserInterface.Views
         private DropDownView dropDownView6;
         private DropDownView dropDownView7;
         private DropDownView dropDownView8;
+        private ColourDropDownView dropDownView9;
+        private DropDownView dropDownView10;
+        private DropDownView dropDownView11;
         private CheckBoxView checkBoxView1;
         private CheckBoxView checkBoxView2;
         private CheckBoxView checkBoxView3;
         private CheckBoxView checkBoxView4;
         private CheckBoxView checkBoxView5;
-        private GraphView graphView1;
-        private ColourDropDownView dropDownView9;
-        private EditView editView1;
-        private DropDownView dropDownView10;
-        private DropDownView dropDownView11;
         private CheckBoxView checkBoxView6;
+        private GraphView graphView1;
+        private EditView editView1;
 
         /// <summary>Initializes a new instance of the <see cref="SeriesView" /> class</summary>
         public SeriesView(ViewBase owner) : base(owner)

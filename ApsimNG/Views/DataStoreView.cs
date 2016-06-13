@@ -64,7 +64,7 @@ namespace UserInterface.Views
             hbox1.PackStart(editView2.MainWidget, false, false, 0);
         }
 
-    /// <summary>List of all tables.</summary>
+        /// <summary>List of all tables.</summary>
         public IDropDownView TableList { get { return dropDownView1; } }
 
         /// <summary>Editable column filter.</summary>

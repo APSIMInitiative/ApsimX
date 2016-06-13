@@ -123,6 +123,12 @@ namespace UserInterface.Views
                 labelText.SizePoints = 8;  // Works in GTKSharp 2, but not in 3
             }
             eventbox1.ButtonPressEvent += on_eventbox1_button_press_event;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            eventbox1.ButtonPressEvent -= on_eventbox1_button_press_event;
         }
 
         /// <summary>

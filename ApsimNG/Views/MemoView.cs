@@ -53,6 +53,13 @@ namespace UserInterface.Views
             _mainWidget = vbox1;
             textView.FocusOutEvent += richTextBox1_Leave;
             textView.Buffer.Changed += richTextBox1_TextChanged;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            textView.FocusOutEvent -= richTextBox1_Leave;
+            textView.Buffer.Changed -= richTextBox1_TextChanged;
         }
 
         /// <summary>

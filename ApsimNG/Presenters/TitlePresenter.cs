@@ -78,10 +78,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            // Trap change event from the model.
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-
-            // Trap events from the view.
             this.view.OnTitleChanged -= this.OnTitleChanged;
         }
         

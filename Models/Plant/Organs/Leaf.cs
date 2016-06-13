@@ -315,7 +315,7 @@ namespace Models.PMF.Organs
         public double KDead { get; set; }
         
         /// <value>The Maximum Number of Leaves that will be produced.  Used for determining the number of members in cohort properties</value>
-        [Description("Maximum number of Main-Stem leaves.  Used for determoining the number of members in cohort properties (Dead)")]
+        [Description("Maximum number of Main-Stem leaves")]
         public int MaximumMainStemLeafNumber { get; set; }
 
         #endregion

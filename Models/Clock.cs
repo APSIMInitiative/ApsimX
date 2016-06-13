@@ -97,6 +97,8 @@ namespace Models
         public event EventHandler DoReportCalculations;
         /// <summary>Occurs when [do report].</summary>
         public event EventHandler DoReport;
+        /// <summary> Process stock methods in GrazPlan Stock </summary>
+        public event EventHandler DoStock;
 
         // Public properties available to other models.
         /// <summary>Gets the today.</summary>
@@ -202,6 +204,9 @@ namespace Models
 
                 if (DoManagementCalculations != null)
                     DoManagementCalculations.Invoke(this, args);
+
+                if (DoStock != null)
+                    DoStock.Invoke(this, args);
 
                 if (DoReportCalculations != null)
                     DoReportCalculations.Invoke(this, args);
