@@ -357,6 +357,8 @@ namespace SWIMFrame
                         Extensions.Log("twotables dx", "d", dx);
                         v = Math.Min(10.0 * phif[1, nft[1]], Math.Max(phii[1, 1], v - dx));
                         Extensions.Log("twotables v", "d", v);
+                        Extensions.Log("twotables phif", "d2", phif);
+                        Extensions.Log("twotables phii", "d2", phii);
                         e = Math.Abs(f / q1);
                         if (e < rerr)
                             break;
@@ -467,6 +469,7 @@ namespace SWIMFrame
                   phii5(2,1:j:2)=phif(2,1:nft[2])
                   phii5(2,2:j:2)=phifi(2,1:nfi[2])
                 */
+                Extensions.Log("twofluxes qp", "d2", qp);
                 for (int a = 1; a <= i; a += 2)
                     for (int b = 1; b <= j; b += 2)
                         for (int c = 1; c <= nft[1]; c++)
@@ -564,6 +567,8 @@ namespace SWIMFrame
             q1d = 0;
 
             Extensions.Log("fd phia", "d", phia);
+            Extensions.Log("fd phialast", "d", phialast);
+            Extensions.Log("fd phi1max", "d", phi1max);
             if (phia != phialast)
             {
                 if (phia > phi1max) // both saturated - calc der and lower interface phi
@@ -588,6 +593,7 @@ namespace SWIMFrame
                 }
                 // Get upper flux and deriv.
                 v = phif[1, nft[1]];
+                Extensions.Log("fd v-upper", "d", v);
                 if (phia > v) // off table - extrapolate
                 {
                     vm1 = phif[1, nft[1] - 1];
@@ -599,11 +605,14 @@ namespace SWIMFrame
                 else // use cubic interpolation
                 {
                     ceval1(phia, out q1, out q1d);
+                    Extensions.Log("fd q1", "d", q1);
+                    Extensions.Log("fd q1d", "d", q1d);
                 }
                 phialast = phia;
             }
             // Get lower flux and deriv in same way.
             v = phif[2, nft[2]];
+            Extensions.Log("fd v-lower", "d", v);
             if (phib > v)
             {
                 vm1 = phif[2, nft[2] - 1];
@@ -618,6 +627,13 @@ namespace SWIMFrame
             f = q1 - q2;
             d = q1d - q2d * der;
             q = q1;
+            Extensions.Log("fd j", "d", j);
+            Extensions.Log("fd q2", "d", q2);
+            Extensions.Log("fd q2d", "d", q2d);
+            Extensions.Log("fd der", "d", der);
+            Extensions.Log("fd f", "d", f);
+            Extensions.Log("fd d", "d", d);
+            Extensions.Log("fd q", "d", q);
         }
 
 
@@ -704,6 +720,9 @@ namespace SWIMFrame
             int i1 = 1;
             int i2 = Array.IndexOf(xa.Skip(1).ToArray(), 0);
             int im;
+
+            if (i2 == -1) //in case there are no 0's in xa
+                i2 = xa.Length;
 
             while (true) //use bisection
             {
