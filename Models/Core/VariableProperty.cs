@@ -448,6 +448,10 @@ namespace Models.Core
                 {
                     this.property.SetValue(this.Object, value, null);
                 }
+                else if (this.DataType == typeof(bool))
+                {
+                    this.property.SetValue(this.Object, Convert.ToBoolean(value), null);
+                }
                 else
                 {
                     this.Value = value;
