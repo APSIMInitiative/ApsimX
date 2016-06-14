@@ -6242,7 +6242,7 @@ namespace Models
                 <CultivarName>Amethyst</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>170</RowSpacing>
-                <Population>20</Population>
+                <Population>14</Population>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -6300,7 +6300,7 @@ namespace Models
                 <CultivarName>Amethyst</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>350</RowSpacing>
-                <Population>20</Population>
+                <Population>26</Population>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -6358,7 +6358,7 @@ namespace Models
                 <CultivarName>Amethyst</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>700</RowSpacing>
-                <Population>20</Population>
+                <Population>25</Population>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -6416,7 +6416,7 @@ namespace Models
                 <CultivarName>Amethyst</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>170</RowSpacing>
-                <Population>45</Population>
+                <Population>27</Population>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -6474,7 +6474,7 @@ namespace Models
                 <CultivarName>Amethyst</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>350</RowSpacing>
-                <Population>90</Population>
+                <Population>85</Population>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -6532,7 +6532,7 @@ namespace Models
                 <CultivarName>Amethyst</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>700</RowSpacing>
-                <Population>90</Population>
+                <Population>56</Population>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -6590,7 +6590,7 @@ namespace Models
                 <CultivarName>Amethyst</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>170</RowSpacing>
-                <Population>20</Population>
+                <Population>17</Population>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -6648,7 +6648,7 @@ namespace Models
                 <CultivarName>Amethyst</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>350</RowSpacing>
-                <Population>20</Population>
+                <Population>37</Population>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -6706,7 +6706,7 @@ namespace Models
                 <CultivarName>Amethyst</CultivarName>
                 <SowingDepth>50</SowingDepth>
                 <RowSpacing>700</RowSpacing>
-                <Population>20</Population>
+                <Population>39</Population>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -7194,13 +7194,13 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <SW>
-                  <double>0.384</double>
-                  <double>0.381</double>
-                  <double>0.44</double>
-                  <double>0.424</double>
-                  <double>0.419</double>
-                  <double>0.376</double>
-                  <double>0.377</double>
+                  <double>0.184</double>
+                  <double>0.181</double>
+                  <double>0.24</double>
+                  <double>0.324</double>
+                  <double>0.319</double>
+                  <double>0.276</double>
+                  <double>0.277</double>
                 </SW>
                 <NO3Units>ppm</NO3Units>
                 <NH4Units>ppm</NH4Units>
@@ -7340,7 +7340,7 @@ namespace Models
               <Script>
                 <FASW>0</FASW>
                 <WaterDeficit>0</WaterDeficit>
-                <AutoIrrigationOn>True</AutoIrrigationOn>
+                <AutoIrrigationOn>False</AutoIrrigationOn>
                 <StartStageName>Emergence</StartStageName>
                 <EndStageName>EndGrainFill</EndStageName>
                 <FASWThreshold>0.9</FASWThreshold>
@@ -29406,7 +29406,7 @@ namespace Models
         </Graph>
       </Experiment>
       <Graph>
-        <Name>FloweringDateKabuli</Name>
+        <Name>FloweringDate</Name>
         <Series>
           <Name>Series1</Name>
           <Regression>
@@ -29449,12 +29449,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries>
-          <string>Beverley1989</string>
-          <string>Kununurra1989</string>
-          <string>Ayr1989</string>
-          <string>Tamworth1989</string>
-        </DisabledSeries>
+        <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Experiment>
@@ -34937,61 +34932,6 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
       </Experiment>
-      <Graph>
-        <Name>FloweringDateAmethyst</Name>
-        <Series>
-          <Name>Series1</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.FloweringDAS</XFieldName>
-          <YFieldName>Predicted.FloweringDAS</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries>
-          <string>Gorgan_2004</string>
-          <string>Gorgan_2005</string>
-          <string>Terbol_2004</string>
-          <string>Terbol_2005</string>
-          <string>Terbol_2006</string>
-          <string>Elvas_2004</string>
-          <string>Elvas_2005</string>
-        </DisabledSeries>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </Graph>
     </Folder>
     <Folder>
       <Name>Iran</Name>
