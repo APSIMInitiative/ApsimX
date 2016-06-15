@@ -596,7 +596,7 @@ namespace Models
         /// <param name="fileName">The file name to create</param>
         private static void WriteSummaryFile(DataStore dataStore, string fileName)
         {
-            StreamWriter report = report = new StreamWriter(fileName);
+            StreamWriter report = new StreamWriter(fileName);
             foreach (string simulationName in dataStore.SimulationNames)
             {
                 Summary.WriteReport(dataStore, simulationName, report, null, outtype: Summary.OutputType.html);

@@ -18,6 +18,7 @@ namespace Models
         /// <summary>
         /// Class for representing a latitude and longitude.
         /// </summary>
+        [Serializable]
         public class Coordinate
         {
             /// <summary>The latitude</summary>
@@ -49,6 +50,16 @@ namespace Models
 
             return coordinates;
         }
+
+        /// <summary>
+        /// Coordinate of the center of the map
+        /// </summary>
+        public Coordinate Center = new Coordinate() { Latitude = 0.0, Longitude = 0.0 };
+
+        /// <summary>
+        /// Zoom factor for the map
+        /// </summary>
+        public Double Zoom = 1.4;
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
