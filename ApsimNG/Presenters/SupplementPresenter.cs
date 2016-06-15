@@ -13,7 +13,7 @@ namespace UserInterface.Presenters
     using Views;
     using Models;
     using Models.Core;
-    using Models.Grazplan;
+    using Models.GrazPlan;
     using System.Reflection;
     using Interfaces;
 

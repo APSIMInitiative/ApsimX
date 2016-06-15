@@ -47,6 +47,10 @@ namespace UserInterface.Presenters
 
             // Tell the view to populate the axis.
             this.PopulateView();
+            this.view.Zoom = map.Zoom;
+            this.view.Center = map.Center;
+            this.view.ZoomChanged += OnZoomChanged;
+            this.view.PositionChanged += OnPositionChanged;
         }
 
         /// <summary>
@@ -54,6 +58,8 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            this.view.ZoomChanged -= OnZoomChanged;
+            this.view.PositionChanged -= OnPositionChanged;
         }
 
         /// <summary>
@@ -64,6 +70,26 @@ namespace UserInterface.Presenters
             view.ShowMap(map.GetCoordinates());
         }
 
+        /// <summary>
+        /// Respond to changes in the map zoom level
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnZoomChanged(object sender, System.EventArgs e)
+        {
+            map.Zoom = view.Zoom;
+        }
+
+        /// <summary>
+        /// Respond to changes in the map position by saving the new position
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPositionChanged(object sender, System.EventArgs e)
+        {
+            map.Center = view.Center;
+        }
+
         /// <summary>Export the map to PDF</summary>
         /// <param name="workingDirectory"></param>
         /// <returns></returns>
@@ -71,6 +97,7 @@ namespace UserInterface.Presenters
         {
             string path = Apsim.FullPath(map).Replace(".Simulations.", "");
             string fileName = Path.Combine(folder, path + ".png");
+
             Image rawImage = view.Export();
             rawImage.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 

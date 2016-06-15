@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace Models.Grazplan
+namespace Models.GrazPlan
 {
     using Models.Core;
     using System;
@@ -175,12 +175,12 @@ namespace Models.Grazplan
         /// <summary>
         /// Gets the fed suppt.
         /// </summary>
-        /// <param name="paddId">The padd identifier.</param>
+        /// <param name="paddIdx">The padd identifier.</param>
         /// <param name="amount">The amount.</param>
         /// <returns></returns>
-        public TSupplement GetFedSuppt(int paddId, ref double amount)
+        public TSupplement GetFedSuppt(int paddIdx, ref double amount)
         {
-            return FindFedSuppt(PaddockIndexOf(paddId), ref amount);
+            return FindFedSuppt(paddIdx, ref amount);
         }
 
         /// <summary>
@@ -316,8 +316,8 @@ namespace Models.Grazplan
         /// <exception cref="System.Exception">
         /// Supplement \ + suppName + \ not recognised
         /// or
-        /// Paddock \ + paddName + \ not recognised
         /// </exception>
+        /// Paddock \ + paddName + \ not recognised
         public void FeedOut(string suppName, double fedKg, string paddName)
         {
             int iSupp = IndexOf(suppName);
@@ -479,19 +479,23 @@ namespace Models.Grazplan
         {
             if (srcIdx < 0 || srcIdx >= src.Count || destIdx < 0 || destIdx > dest.Count)
                 throw new Exception("Invalid transfer of feed");
-
-            if (amount > 0.0)
+            if (src[srcIdx].Amount > 0)
             {
-                if (destIdx < dest.Count)
-                    SuppIntoRation(dest, destIdx, src[srcIdx], amount);
-                else
+                if (amount > 0.0)
                 {
-                    TSupplement copy = new TSupplement();
-                    copy.Assign(src[srcIdx]);
-                    dest.Add(copy, amount);
+                    if (destIdx < dest.Count)
+                        SuppIntoRation(dest, destIdx, src[srcIdx], amount);
+                    else
+                    {
+                        TSupplement copy = new TSupplement();
+                        copy.Assign(src[srcIdx]);
+                        dest.Add(copy, amount);
+                    }
+                    src[srcIdx].Amount -= amount;
                 }
-                src[srcIdx].Amount -= amount;
             }
+            else
+                dest[destIdx].Amount = 0; 
         }
     }
 
@@ -702,6 +706,12 @@ namespace Models.Grazplan
         Simulation Simulation = null;
 
         /// <summary>
+        /// Link to the Stock component.
+        /// </summary>
+        [Link]
+        Stock Animals = null;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Supplement" /> class.
         /// </summary>
         public Supplement()
@@ -908,7 +918,7 @@ namespace Models.Grazplan
                     result[i] = new SuppToStockType();
                     double amount = 0.0;
                     TSupplement supp = theModel.GetFedSuppt(i, ref amount);
-                    result[i].Paddock = supp.sName;
+                    result[i].Paddock = theModel.PaddockName(i);
                     result[i].Amount = amount;
                     result[i].IsRoughage = supp.IsRoughage;
                     result[i].DMContent = supp.DM_Propn;
@@ -980,22 +990,6 @@ namespace Models.Grazplan
             }
         }
 
-        // How should this be done in ApsimX? This probably isn't the best way to go about it...
-        /// <summary>
-        /// Sets the supp eaten.
-        /// </summary>
-        /// <value>
-        /// The supp eaten.
-        /// </value>
-        public SuppEatenType[] SuppEaten
-        {
-            set
-            {
-                for (int i = 0; i < value.Length; i++)
-                    theModel.RemoveEaten(value[i].Paddock, value[i].Eaten);
-            }
-        }
-
         /// <summary>
         /// Runs at the start of the simulation
         /// Sets up the list of paddocks, if that hasn't been provided explicitly
@@ -1038,11 +1032,17 @@ namespace Models.Grazplan
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
-        [EventSubscribe("DoUpdate")]
-        private void OnDoUpdate(object sender, EventArgs e)
+        [EventSubscribe("EndOfDay")]
+        private void OnEndOfDay(object sender, EventArgs e)
         {
-            // TODO: In the original version, this sent out a query to the stock components
-            // to get "supp_eaten" values. How should we do this now?
+            if (Animals != null)
+            {
+                // get the supplement eaten from the Stock component
+                TSupplementEaten[] eaten = Animals.SuppEaten;
+
+                for (int Idx = 0; Idx < eaten.Length; Idx++)
+                    theModel.RemoveEaten(eaten[Idx].paddock, eaten[Idx].eaten);
+            }
             theModel.CompleteTimeStep();
         }
 
