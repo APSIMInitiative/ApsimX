@@ -37,7 +37,7 @@ namespace UserInterface.Views
 
     }
 
-    interface IBrowserWidget
+    public interface IBrowserWidget
     {
         void Navigate(string uri);
         void LoadHTML(string html);
@@ -75,6 +75,26 @@ namespace UserInterface.Views
             IntPtr browser_handle = wb.Handle;
             IntPtr window_handle = (IntPtr)socket.Id;
             SetParent(browser_handle, window_handle);
+
+            /// Another interesting issue is that on Windows, the WebBrowser control by default is
+            /// effectively an IE7 browser, and I don't think you can easily change that without
+            /// changing registry settings. The lack of JSON parsing in IE7 triggers errors in google maps.
+            /// See https://code.google.com/p/gmaps-api-issues/issues/detail?id=9004 for the details.
+            /// Including the meta tag of <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+            /// fixes the problem, but we can't do that in the HTML that we set as InnerHtml in the
+            /// LoadHTML function, as the meta tag triggers a restart of the browser, so it 
+            /// just reloads "about:blank", without the new innerHTML, and we get a blank browser.
+            /// Hence we set the browser type here.
+            /// Another way to get around this problem is to add JSON.Parse support available from
+            /// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON
+            /// into the HTML Script added when loading Google Maps
+
+            wb.DocumentText = @"<!DOCTYPE html>
+                   <html>
+                   <head>
+                   <meta http-equiv=""X-UA-Compatible"" content=""IE=edge,10,9,8,7""/>
+                   </head>
+                   </html>";
         }
 
         public void Remap()
@@ -187,7 +207,7 @@ namespace UserInterface.Views
         [Widget]
         private HBox hbox1 = null;
 
-        private IBrowserWidget browser = null;
+        protected IBrowserWidget browser = null;
         private MemoView memoView1;
 
         /// <summary>
@@ -203,7 +223,10 @@ namespace UserInterface.Views
             {
                 Gtk.Window win = new Gtk.Window(Gtk.WindowType.Popup);
                 win.SetSizeRequest(500, 500);
-                win.Move(-10000, -10000); // Move the window offscreen; the user doesn't need to see it.
+                // Move the window offscreen; the user doesn't need to see it.
+                // This works with IE, but not with WebKit
+                if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
+                    win.Move(-10000, -10000); 
                 win.Add(MainWidget);
                 win.ShowAll();
                 while (Gtk.Application.EventsPending())
@@ -224,7 +247,7 @@ namespace UserInterface.Views
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        protected void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             memoView1.MemoChange -= this.TextUpdate;
             frame1.ExposeEvent -= OnWidgetExpose;
@@ -234,7 +257,10 @@ namespace UserInterface.Views
                 if (vbox2.Toplevel is Window)
                     (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
                 frame1.Unrealized -= Frame1_Unrealized;
+                (browser as TWWebBrowserIE).wb.DocumentTitleChanged -= IE_TitleChanged;
             }
+            else if ((browser as TWWebBrowserWK) != null)
+                (browser as TWWebBrowserWK).wb.TitleChanged -= WK_TitleChanged;
             if (tempWindow && _mainWidget != null && _mainWidget.IsRealized)
             {
                 MainWidget.ParentWindow.Destroy();
@@ -296,14 +322,32 @@ namespace UserInterface.Views
                     /// 
                     /// Well, this hack works, more or less.
                     if (vbox2.Toplevel is Window)
-                       (vbox2.Toplevel as Window).SetFocus += MainWindow_SetFocus;
+                        (vbox2.Toplevel as Window).SetFocus += MainWindow_SetFocus;
                     frame1.Unrealized += Frame1_Unrealized;
+                    (browser as TWWebBrowserIE).wb.DocumentTitleChanged += IE_TitleChanged;
                 }
                 else
+                {
                     browser = new TWWebBrowserWK(vbox2);
+                    (browser as TWWebBrowserWK).wb.TitleChanged += WK_TitleChanged;
+                }
             }
             browser.LoadHTML(contents);
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
+        }
+
+        protected virtual void NewTitle(string title)
+        {
+        }
+
+        private void WK_TitleChanged(object o, TitleChangedArgs args)
+        {
+            NewTitle(args.Title);        
+        }
+
+        private void IE_TitleChanged(object sender, EventArgs e)
+        {
+            NewTitle((browser as TWWebBrowserIE).wb.DocumentTitle);
         }
 
         // Although this isn't the obvious way to handle window resizing,
