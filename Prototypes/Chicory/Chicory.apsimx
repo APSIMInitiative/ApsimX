@@ -11993,7 +11993,7 @@ namespace Models
         </Memo>
         <Weather>
           <Name>Weather</Name>
-          <FileName>Ruakura.met</FileName>
+          <FileName>Lincoln-Broadfields.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
@@ -13981,12 +13981,13 @@ namespace Models
         </Memo>
         <Weather>
           <Name>Weather</Name>
-          <FileName>Ruakura.met</FileName>
+          <FileName>Lincoln-Broadfields.met</FileName>
+          <ExcelWorkSheetName />
         </Weather>
         <Clock>
           <Name>clock</Name>
           <StartDate>2014-01-01T00:00:00</StartDate>
-          <EndDate>2015-02-28T00:00:00</EndDate>
+          <EndDate>2016-03-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
@@ -15187,7 +15188,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>LURFDM</TableName>
           <XFieldName>Date</XFieldName>
-          <YFieldName>DW (kg/ha)</YFieldName>
+          <YFieldName>kgDMha </YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
