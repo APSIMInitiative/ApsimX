@@ -515,7 +515,7 @@ private void OnDoManagement(object sender, EventArgs e)
               <Name>Description</Name>
               <MemoText><![CDATA[The extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover]]></MemoText>
             </Memo>
-            <Value>0.8</Value>
+            <Value>0.75</Value>
           </Constant>
           <LinearInterpolationFunction>
             <Name>PopulationEffect</Name>
@@ -523,9 +523,9 @@ private void OnDoManagement(object sender, EventArgs e)
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>100</double>
-                <double>200</double>
-                <double>300</double>
+                <double>50</double>
+                <double>150</double>
+                <double>250</double>
               </X>
               <Y>
                 <double>0</double>
@@ -620,25 +620,18 @@ DM demand is based on ...
             </MaximumFunction>
           </MultiplyFunction>
         </DivideFunction>
-        <AddFunction>
+        <MultiplyFunction>
           <Name>LAIFunction</Name>
           <Constant>
-            <Name>BaseLAI</Name>
-            <Value>0.1</Value>
+            <Name>SpecificLeafArea</Name>
+            <Value>0.04</Value>
+            <Units>m^2/g</Units>
           </Constant>
-          <MultiplyFunction>
-            <Name>LAIFunction</Name>
-            <Constant>
-              <Name>SpecificLeafArea</Name>
-              <Value>0.04</Value>
-              <Units>m^2/g</Units>
-            </Constant>
-            <VariableReference>
-              <Name>LeafWeight</Name>
-              <VariableName>[Leaf].Live.Wt</VariableName>
-            </VariableReference>
-          </MultiplyFunction>
-        </AddFunction>
+          <VariableReference>
+            <Name>LeafWeight</Name>
+            <VariableName>[Leaf].Live.Wt</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
           <XYPairs>
@@ -732,26 +725,37 @@ DM demand is based on ...
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.01</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
             <Name>Harvest</Name>
             <FractionRemoved>0</FractionRemoved>
             <FractionToResidue>0.3</FractionToResidue>
           </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
-          </OrganBiomassRemovalType>
         </Folder>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Value>0</Value>
+        </Constant>
         <BiomassYesterday>0</BiomassYesterday>
         <CohortsInitialised>false</CohortsInitialised>
         <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
@@ -787,10 +791,12 @@ DM demand is based on ...
               <double>5</double>
               <double>5.5</double>
               <double>6</double>
+              <double>6.5</double>
             </X>
             <Y>
               <double>0.01</double>
               <double>0.01</double>
+              <double>0.007</double>
               <double>0.007</double>
             </Y>
           </XYPairs>
@@ -956,26 +962,37 @@ DM demand is based on ...
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionRemoved>0.5</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
             <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
+            <FractionToResidue>0.01</FractionToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.1</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Value>0.1</Value>
+        </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Value>0</Value>
+        </Constant>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Inflorescence</Name>
@@ -1116,26 +1133,37 @@ DM demand is based on ...
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionRemoved>0.5</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
+            <FractionRemoved>0</FractionRemoved>
             <FractionToResidue>0</FractionToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
-            <Name>Prune</Name>
+            <Name>Graze</Name>
             <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
+            <FractionToResidue>0.01</FractionToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <Name>Harvest</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.05</FractionToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Value>0</Value>
+        </Constant>
       </GenericAboveGroundOrgan>
       <Root>
         <Name>Root</Name>
@@ -1373,26 +1401,37 @@ No effect of soil water content on root growth is currently captured in the mode
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
             <Name>Cut</Name>
             <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.3</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionToResidue>0.15</FractionToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
             <FractionRemoved>0</FractionRemoved>
             <FractionToResidue>0.15</FractionToResidue>
           </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0.2</FractionToResidue>
+          </OrganBiomassRemovalType>
         </Folder>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Value>0.1</Value>
+        </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Value>0</Value>
+        </Constant>
         <InitialDM>0.01</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <NuptakeSupply>0</NuptakeSupply>
@@ -1456,6 +1495,10 @@ No effect of soil water content on root growth is currently captured in the mode
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
           <Value>0</Value>
         </Constant>
         <MultiplyFunction>
@@ -1519,17 +1562,7 @@ No effect of soil water content on root growth is currently captured in the mode
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
             <FractionRemoved>0</FractionRemoved>
             <FractionToResidue>0</FractionToResidue>
           </OrganBiomassRemovalType>
@@ -1538,8 +1571,44 @@ No effect of soil water content on root growth is currently captured in the mode
             <FractionRemoved>0</FractionRemoved>
             <FractionToResidue>0</FractionToResidue>
           </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionRemoved>0</FractionRemoved>
+            <FractionToResidue>0</FractionToResidue>
+          </OrganBiomassRemovalType>
         </Folder>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Value>0</Value>
+        </Constant>
       </GenericBelowGroundOrgan>
+      <CompositeBiomass>
+        <Name>AboveGroundLive</Name>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Stem].Live</string>
+          <string>[Inflorescence].Live</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>BelowGroundLive</Name>
+        <Propertys>
+          <string>[Root].Live</string>
+          <string>[Taproot].Live</string>
+        </Propertys>
+      </CompositeBiomass>
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <Propertys>
@@ -1639,10 +1708,10 @@ No effect of soil water content on root growth is currently captured in the mode
         <string>[AutomaticIrrigation].Script.TopSWC</string>
         <string>[AutomaticIrrigation].Script.AmountToApply</string>
         <string>[AutomaticIrrigation].Script.SeasonAppliedAmount</string>
-        <string>[Irrigation].IrrigationApplied as Irrigation Applied (mm)</string>
+        <string>[Irrigation].IrrigationApplied</string>
         <string />
-        <string>[AutomaticFertiliser].Script.TopMineralN as TopMineralN</string>
-        <string>[Fertiliser].NitrogenApplied as Nitrogen Applied</string>
+        <string>[AutomaticFertiliser].Script.TopMineralN</string>
+        <string>[Fertiliser].NitrogenApplied</string>
         <string />
         <string>[Defoliate].Script.PreHarvestDM</string>
         <string>[Defoliate].Script.PostHarvestDM</string>
@@ -1660,6 +1729,7 @@ No effect of soil water content on root growth is currently captured in the mode
         <string>[Chicory].Phenology.CurrentPhaseName</string>
         <string>[Chicory].Phenology.Stage</string>
         <string>[Chicory].Root.LengthDensity</string>
+        <string>[Chicory].Leaf.ExtinctionCoefficientFunction.Value</string>
         <string />
         <string>[Chicory].Arbitrator.DMSupply</string>
         <string>[Chicory].Arbitrator.DMDemand</string>
@@ -1667,6 +1737,17 @@ No effect of soil water content on root growth is currently captured in the mode
         <string>[Chicory].Arbitrator.DMSinkLimitation</string>
         <string>[Chicory].Arbitrator.DMNutrientLimitation</string>
         <string>[Chicory].Arbitrator.FDM</string>
+        <string>[ExtraVariables].Script.Leaf_DMSupply</string>
+        <string>[ExtraVariables].Script.Stem_DMSupply</string>
+        <string>[ExtraVariables].Script.Inflorescence_DMSupply</string>
+        <string>[ExtraVariables].Script.Root_DMSupply</string>
+        <string>[ExtraVariables].Script.Taproot_DMSupply</string>
+        <string>[ExtraVariables].Script.Leaf_DMDemand</string>
+        <string>[ExtraVariables].Script.Stem_DMDemand</string>
+        <string>[ExtraVariables].Script.Inflorescence_DMDemand</string>
+        <string>[ExtraVariables].Script.Root_DMDemand</string>
+        <string>[ExtraVariables].Script.Taproot_DMDemand</string>
+        <string />
         <string>[Chicory].Arbitrator.NSupply</string>
         <string>[Chicory].Arbitrator.NDemand</string>
         <string>[Chicory].Arbitrator.NAllocated</string>
@@ -1675,62 +1756,89 @@ No effect of soil water content on root growth is currently captured in the mode
         <string>[Chicory].Arbitrator.WDemand</string>
         <string>[Chicory].Arbitrator.WAllocated</string>
         <string>[Chicory].Arbitrator.FW</string>
-        <string>sum([Chicory].Arbitrator.PotentialNO3NUptake) as PotentialNO3NUptake</string>
-        <string>sum([Chicory].Arbitrator.PotentialNH4NUptake) as PotentialNH4NUptake</string>
-        <string>(sum([Chicory].Arbitrator.PotentialNO3NUptake)+sum([Chicory].Arbitrator.PotentialNH4NUptake)) as PotentialPlantAvailable </string>
+        <string>sum([Chicory].Arbitrator.PotentialNO3NUptake) as PotentialPlantAvailableNO3</string>
+        <string>sum([Chicory].Arbitrator.PotentialNH4NUptake) as PotentialPlantAvailableNH4</string>
+        <string>(sum([Chicory].Arbitrator.PotentialNO3NUptake)+ sum([Chicory].Arbitrator.PotentialNH4NUptake)) as PotentialPlantAvailableN</string>
+        <string>[Chicory].Root.NSupplyUptake</string>
+        <string>[Chicory].Root.NTakenUp</string>
+        <string>[Chicory].Root.NSupply</string>
+        <string>[Chicory].Root.NUptake</string>
         <string />
-        <string>[ExtraVariables].Script.ShootRootRatio as currentSR</string>
+        <string>[ExtraVariables].Script.ShootRootRatio</string>
         <string>[Chicory].TargetShootRootRatio.Value</string>
         <string>[Chicory].AdjustedShootRootRatio.Value</string>
         <string />
-        <string>[Chicory].Total.Wt as Total Weight</string>
-        <string>[Chicory].Total.N as Total N</string>
-        <string>[Chicory].AboveGround.Wt as Above Ground Weight</string>
-        <string>[Chicory].BelowGround.Wt as Below Ground Weight</string>
-        <string>[Chicory].Leaf.Wt as Leaf Weight</string>
-        <string>[Chicory].Leaf.Live.Wt as Leaf Live Weight</string>
-        <string>[Chicory].Leaf.Live.N as Leaf Live N</string>
-        <string>[Chicory].Leaf.Live.NConc as Leaf Live N Concentration</string>
-        <string>[Chicory].Leaf.Dead.Wt as Leaf dead weight</string>
-        <string>[Chicory].Leaf.CoverTotal as Leaf Total Cover</string>
-        <string>[Chicory].Leaf.CoverDead as Leaf Dead Cover</string>
-        <string>[Chicory].Leaf.LAI as LAI Green</string>
-        <string>[Chicory].Leaf.LAIDead as LAI Dead</string>
-        <string>[Chicory].Leaf.Height as Leaf Height</string>
-        <string>[Chicory].Leaf.PotentialBiomass.Value as Leaf Potential Biomass</string>
-        <string>[Chicory].Leaf.Transpiration as LeafTranspiration</string>
+        <string>[Chicory].Total.Wt</string>
+        <string>[Chicory].Total.N</string>
+        <string>[Chicory].Total.NConc</string>
+        <string>[Chicory].AboveGround.Wt</string>
+        <string>[Chicory].BelowGround.Wt</string>
+        <string>[Chicory].AboveGround.NConc</string>
+        <string>[Chicory].BelowGround.NConc</string>
+        <string>[Chicory].AboveGroundLive.NConc</string>
+        <string>[Chicory].BelowGroundLive.NConc</string>
+        <string>[Chicory].Leaf.Wt</string>
+        <string>[Chicory].Leaf.Live.Wt</string>
+        <string>[Chicory].Leaf.Live.N</string>
+        <string>[Chicory].Leaf.Live.NConc</string>
+        <string>[Chicory].Leaf.Dead.Wt</string>
+        <string>[Chicory].Leaf.Dead.NConc</string>
+        <string>[Chicory].Leaf.CoverTotal</string>
+        <string>[Chicory].Leaf.CoverGreen</string>
+        <string>[Chicory].Leaf.CoverDead</string>
+        <string>[Chicory].Leaf.LAITotal</string>
+        <string>[Chicory].Leaf.LAI</string>
+        <string>[Chicory].Leaf.LAIDead</string>
+        <string>[Chicory].Leaf.Height</string>
+        <string>[Chicory].Leaf.PotentialBiomass.Value</string>
+        <string>[Chicory].Leaf.Transpiration</string>
         <string>[Chicory].Leaf.Fw</string>
         <string>[Chicory].Leaf.Fn</string>
         <string />
-        <string>[Chicory].Stem.Live.Wt as Stem Live Weight</string>
-        <string>[Chicory].Stem.Live.N as Stem Live N</string>
-        <string>[Chicory].Stem.Live.NConc as Stem Live N Concentration</string>
-        <string>[Chicory].Stem.Dead.Wt as Stem dead weight</string>
+        <string>[Chicory].Stem.Live.Wt</string>
+        <string>[Chicory].Stem.Live.N</string>
+        <string>[Chicory].Stem.Live.NConc</string>
+        <string>[Chicory].Stem.Dead.Wt</string>
+        <string>[Chicory].Stem.Dead.NConc</string>
         <string />
-        <string>[Chicory].Inflorescence.Live.Wt as Inflorescence Live Weight</string>
-        <string>[Chicory].Inflorescence.Live.N as Inflorescence Live N</string>
-        <string>[Chicory].Inflorescence.Live.NConc as Inflorescence Live N Concentration</string>
-        <string>[Chicory].Inflorescence.Dead.Wt as Inflorescence dead weight</string>
+        <string>[Chicory].Inflorescence.Live.Wt</string>
+        <string>[Chicory].Inflorescence.Live.N</string>
+        <string>[Chicory].Inflorescence.Live.NConc</string>
+        <string>[Chicory].Inflorescence.Dead.Wt</string>
+        <string>[Chicory].Inflorescence.Dead.NConc</string>
         <string />
-        <string>[Chicory].Taproot.Live.Wt as Taproot Live Weight</string>
-        <string>[Chicory].Taproot.Live.N as Taproot Live N</string>
-        <string>[Chicory].Taproot.Live.NConc as Taproot Live N Concentration</string>
-        <string>[Chicory].Taproot.Dead.Wt as Taproot dead weight</string>
+        <string>[Chicory].Taproot.Live.Wt</string>
+        <string>[Chicory].Taproot.Live.N</string>
+        <string>[Chicory].Taproot.Live.NConc</string>
+        <string>[Chicory].Taproot.Dead.Wt</string>
+        <string>[Chicory].Taproot.Dead.NConc</string>
         <string />
-        <string>[Chicory].Root.Live.Wt as Fine roots live Weight</string>
-        <string>[Chicory].Root.Live.N as Fine roots live N</string>
-        <string>[Chicory].Root.Live.NConc as Root Live N Concentration</string>
-        <string>[Chicory].Root.Dead.Wt as Fine roots dead weight</string>
-        <string>[Chicory].Root.Depth as Root Depth</string>
-        <string>[Chicory].Root.WaterDemand as WaterDemand</string>
-        <string>[Chicory].Root.WaterUptake as WaterUptake</string>
+        <string>[Chicory].Root.Live.Wt</string>
+        <string>[Chicory].Root.Live.N</string>
+        <string>[Chicory].Root.Live.NConc</string>
+        <string>[Chicory].Root.Dead.Wt</string>
+        <string>[Chicory].Root.Dead.NConc</string>
+        <string>[Chicory].Root.Depth</string>
+        <string>[Chicory].Root.WaterDemand</string>
+        <string>[Chicory].Root.WaterUptake</string>
         <string />
         <string>[Chicory].Leaf.Live.StructuralWt</string>
         <string>[Chicory].Leaf.Live.NonStructuralWt</string>
+        <string>[Chicory].Leaf.Live.MetabolicWt</string>
         <string>[Chicory].Leaf.Live.StructuralN</string>
         <string>[Chicory].Leaf.Live.NonStructuralN</string>
+        <string>[Chicory].Leaf.Live.MetabolicN</string>
+        <string />
+        <string>[Chicory].Leaf.Dead.StructuralWt</string>
+        <string>[Chicory].Leaf.Dead.NonStructuralWt</string>
+        <string>[Chicory].Leaf.Dead.MetabolicWt</string>
+        <string>[Chicory].Leaf.Dead.StructuralN</string>
+        <string>[Chicory].Leaf.Dead.NonStructuralN</string>
+        <string>[Chicory].Leaf.Dead.MetabolicN</string>
+        <string />
         <string>[Chicory].Stem.Live.StructuralWt</string>
         <string>[Chicory].Stem.Live.NonStructuralWt</string>
+        <string>[Chicory].Stem.Live.MetabolicWt</string>
         <string>[Chicory].Stem.Live.StructuralN</string>
         <string>[Chicory].Stem.Live.NonStructuralN</string>
         <string>[Chicory].Inflorescence.Live.StructuralWt</string>
@@ -1750,12 +1858,12 @@ No effect of soil water content on root growth is currently captured in the mode
         <string>[Chicory].Root.Live.StructuralNConc</string>
         <string>[Chicory].Root.Live.NonStructuralNConc</string>
         <string />
-        <string>[Chicory].Phenology.Vernalisation.DaysVernalised as DaysVernalised</string>
-        <string>[Chicory].Leaf.DMDemandFunction.PartitionFraction.Value as LeafFraction</string>
-        <string>[Chicory].Stem.DMDemandFunction.PartitionFraction.Value as StemFraction</string>
-        <string>[Chicory].Inflorescence.DMDemandFunction.PartitionFraction.Value as InflorescenceFraction</string>
-        <string>[Chicory].Root.PartitionFraction.Value as FineRootFraction</string>
-        <string>[Chicory].Taproot.DMDemandFunction.PartitionFraction.Value as TaprootFraction</string>
+        <string>[Chicory].Phenology.Vernalisation.DaysVernalised</string>
+        <string>[Chicory].Leaf.DMDemandFunction.PartitionFraction.Value</string>
+        <string>[Chicory].Stem.DMDemandFunction.PartitionFraction.Value</string>
+        <string>[Chicory].Inflorescence.DMDemandFunction.PartitionFraction.Value</string>
+        <string>[Chicory].Root.PartitionFraction.Value</string>
+        <string>[Chicory].Taproot.DMDemandFunction.PartitionFraction.Value</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -1764,8 +1872,7 @@ No effect of soil water content on root growth is currently captured in the mode
     <Manager>
       <Name>Defoliate</Name>
       <Script>
-        <Crop>
-        </Crop>
+        <Crop>Chicory</Crop>
         <cutPasture_StartDate>2050-05-20</cutPasture_StartDate>
         <cutPasture_EndDate>2100-12-31</cutPasture_EndDate>
         <defoliateType>Cut</defoliateType>
@@ -2488,7 +2595,8 @@ namespace Models
 		[Link] Irrigation Irrig;
 		[Link] Plant Chicory;
 		[Link] Zone zone;
-					
+		[Link] ISummary summary;
+		
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
 		[XmlIgnore] public double AccumPlantN { get; set; }
@@ -2530,7 +2638,26 @@ namespace Models
 		[XmlIgnore] public double MineralN { get; set; }
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
-		
+
+
+		[XmlIgnore] public double ShootRootRatio { get; set; }
+
+		[XmlIgnore] public double Leaf_DMSupply { get; set; }
+		[XmlIgnore] public double Stem_DMSupply { get; set; }
+		[XmlIgnore] public double Inflorescence_DMSupply { get; set; }
+		[XmlIgnore] public double Root_DMSupply { get; set; }
+		[XmlIgnore] public double Taproot_DMSupply { get; set; }
+		[XmlIgnore] public double Leaf_DMDemand { get; set; }
+		[XmlIgnore] public double Stem_DMDemand { get; set; }
+		[XmlIgnore] public double Inflorescence_DMDemand { get; set; }
+		[XmlIgnore] public double Root_DMDemand { get; set; }
+		[XmlIgnore] public double Taproot_DMDemand { get; set; }
+		[XmlIgnore] public double Root_NSupply { get; set; }
+
+		[XmlIgnore] public double Leaf_NSupplyReallocation { get; set; }
+		[XmlIgnore] public double Stem_NSupplyReallocation { get; set; }
+		[XmlIgnore] public double Root_NSupplyReallocation { get; set; }
+
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
@@ -2578,6 +2705,50 @@ namespace Models
 			SoilWaterDeficit = (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
+			
+			
+			//!!!!!! Plant DM components !!!!!!
+			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+			ShootRootRatio = MathUtilities.Divide((double)zone.Get("Chicory.AboveGroundLive.Wt"), (double)zone.Get("Chicory.BelowGroundLive.Wt"), 0.0);
+			PMF.Interfaces.BiomassSupplyType Leaf_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("Chicory.Leaf.DMSupply");
+			PMF.Interfaces.BiomassSupplyType Stem_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("Chicory.Stem.DMSupply");
+			PMF.Interfaces.BiomassSupplyType Inflorescence_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("Chicory.Inflorescence.DMSupply");
+			PMF.Interfaces.BiomassSupplyType Root_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("Chicory.Root.DMSupply");
+			PMF.Interfaces.BiomassSupplyType Taproot_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("Chicory.Taproot.DMSupply");
+			PMF.Interfaces.BiomassPoolType Leaf_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("Chicory.Leaf.DMDemand");
+			PMF.Interfaces.BiomassPoolType Stem_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("Chicory.Stem.DMDemand");
+			PMF.Interfaces.BiomassPoolType Inflorescence_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("Chicory.Inflorescence.DMDemand");
+			PMF.Interfaces.BiomassPoolType Root_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("Chicory.Root.DMDemand");
+			PMF.Interfaces.BiomassPoolType Taproot_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("Chicory.Taproot.DMDemand");
+
+			PMF.Interfaces.BiomassSupplyType Leaf_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("Chicory.Leaf.NSupply");
+			PMF.Interfaces.BiomassSupplyType Stem_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("Chicory.Stem.NSupply");
+			PMF.Interfaces.BiomassSupplyType Root_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("Chicory.Root.NSupply");
+			
+			Leaf_DMSupply = Leaf_DMSupplies.Fixation + Leaf_DMSupplies.Uptake + Leaf_DMSupplies.Reallocation + Leaf_DMSupplies.Retranslocation;
+			Stem_DMSupply = Stem_DMSupplies.Fixation + Stem_DMSupplies.Uptake + Stem_DMSupplies.Reallocation + Stem_DMSupplies.Retranslocation;
+			Inflorescence_DMSupply = Inflorescence_DMSupplies.Fixation + Inflorescence_DMSupplies.Uptake + Inflorescence_DMSupplies.Reallocation + Inflorescence_DMSupplies.Retranslocation;
+			Root_DMSupply = Root_DMSupplies.Fixation + Root_DMSupplies.Uptake + Root_DMSupplies.Reallocation + Root_DMSupplies.Retranslocation;
+			Taproot_DMSupply = Taproot_DMSupplies.Fixation + Taproot_DMSupplies.Uptake + Taproot_DMSupplies.Reallocation + Taproot_DMSupplies.Retranslocation;
+			Leaf_DMDemand = Leaf_DMDemands.Structural + Leaf_DMDemands.NonStructural + Leaf_DMDemands.Metabolic;
+			Stem_DMDemand = Stem_DMDemands.Structural + Stem_DMDemands.NonStructural + Stem_DMDemands.Metabolic;
+			Inflorescence_DMDemand = Inflorescence_DMDemands.Structural + Inflorescence_DMDemands.NonStructural + Inflorescence_DMDemands.Metabolic;
+			Root_DMDemand = Root_DMDemands.Structural + Root_DMDemands.NonStructural + Root_DMDemands.Metabolic;
+			Taproot_DMDemand = Taproot_DMDemands.Structural + Taproot_DMDemands.NonStructural + Taproot_DMDemands.Metabolic;
+			Root_NSupply = Root_NSupplies.Fixation + Root_NSupplies.Uptake + Root_NSupplies.Reallocation + Root_NSupplies.Retranslocation;
+
+			Leaf_NSupplyReallocation = Leaf_NSupplies.Reallocation;
+			Stem_NSupplyReallocation = Stem_NSupplies.Reallocation;
+			Root_NSupplyReallocation = Root_NSupplies.Reallocation;
+			
+			summary.WriteMessage(this, "   Root.Fixation: " + Root_NSupplies.Fixation.ToString());
+			summary.WriteMessage(this, "   Root.Uptake: " + Root_NSupplies.Uptake.ToString());
+			summary.WriteMessage(this, "   Root.Reallocation: " + Root_NSupplies.Reallocation.ToString());
+			summary.WriteMessage(this, "   Root.Retranslocation: " + Root_NSupplies.Retranslocation.ToString());
+			summary.WriteMessage(this, "   Stem.Fixation: " + Stem_NSupplies.Fixation.ToString());
+			summary.WriteMessage(this, "   Stem.Uptake: " + Stem_NSupplies.Uptake.ToString());
+			summary.WriteMessage(this, "   Stem.Reallocation: " + Stem_NSupplies.Reallocation.ToString());
+			summary.WriteMessage(this, "   Stem.Retranslocation: " + Stem_NSupplies.Retranslocation.ToString());
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]
@@ -2900,21 +3071,6 @@ namespace Models
 				double stemFracToRemove = leafFracToRemove;
 				double flowerFracToRemove = leafFracToRemove;
 				//double leafFracToRemove = removeAmount * (leafLiveWt + leafDeadWt) / existingWt / existingWt;
-				//double stemFracToRemove = removeAmount * (stemLiveWt + stemDeadWt) / existingWt / existingWt;
-				//double flowerFracToRemove = removeAmount * (flowerLiveWt + flowerDeadWt) / existingWt / existingWt;
-
-				summary.WriteMessage(this, "   removeAmount: " + removeAmount.ToString());
-				summary.WriteMessage(this, "   LiveleafWt: " + leafLiveWt.ToString());
-				summary.WriteMessage(this, "   LivestemWt: " + stemLiveWt.ToString());
-				summary.WriteMessage(this, "   LiveflowerWt: " + flowerLiveWt.ToString());
-				summary.WriteMessage(this, "   DeadleafWt: " + leafDeadWt.ToString());
-				summary.WriteMessage(this, "   DeadstemWt: " + stemDeadWt.ToString());
-				summary.WriteMessage(this, "   DeadflowerWt: " + flowerDeadWt.ToString());
-				summary.WriteMessage(this, "   existingWt: " + existingWt.ToString());
-
-				summary.WriteMessage(this, "   leafFracToRemoveT: " + leafFracToRemove.ToString());
-				summary.WriteMessage(this, "   stemFracToRemoveT: " + stemFracToRemove.ToString());
-				summary.WriteMessage(this, "   flowerFracToRemoveT: " + flowerFracToRemove.ToString());
 
 				// get the fraction to residue (wastage - will override the default values)
 				// the default is [Chicory].Leaf.BiomassRemovalDefaults.Cut.FractionToResidue, or equivalent
@@ -2926,13 +3082,6 @@ namespace Models
 				leafFracToRemove = leafFracToRemove - leafFracToResidue;
 				stemFracToRemove = stemFracToRemove - stemFracToResidue;
 				flowerFracToRemove = flowerFracToRemove - flowerFracToResidue;
-
-				summary.WriteMessage(this, "   leafFracToRemove: " + leafFracToRemove.ToString());
-				summary.WriteMessage(this, "   stemFracToRemove: " + stemFracToRemove.ToString());
-				summary.WriteMessage(this, "   flowerFracToRemove: " + flowerFracToRemove.ToString());
-				summary.WriteMessage(this, "   leafFracToResidue: " + leafFracToResidue.ToString());
-				summary.WriteMessage(this, "   stemFracToResidue: " + stemFracToResidue.ToString());
-				summary.WriteMessage(this, "   flowerFracToResidue: " + flowerFracToResidue.ToString());
 
 				// get total defoliation (plant loss)
 				DefoliatedDM = (leafLiveWt + leafDeadWt) * (leafFracToRemove + leafFracToResidue)
@@ -2988,14 +3137,6 @@ namespace Models
 				flowerDeadN = (double)zone.Get("Chicory.Inflorescence.Dead.N");
 
 				existingWt = leafLiveWt + leafDeadWt + stemLiveWt + stemDeadWt + flowerLiveWt + flowerDeadWt;
-				summary.WriteMessage(this, "   removeAmount: " + removeAmount.ToString());
-				summary.WriteMessage(this, "   LiveleafWt: " + leafLiveWt.ToString());
-				summary.WriteMessage(this, "   LivestemWt: " + stemLiveWt.ToString());
-				summary.WriteMessage(this, "   LiveflowerWt: " + flowerLiveWt.ToString());
-				summary.WriteMessage(this, "   DeadleafWt: " + leafDeadWt.ToString());
-				summary.WriteMessage(this, "   DeadstemWt: " + stemDeadWt.ToString());
-				summary.WriteMessage(this, "   DeadflowerWt: " + flowerDeadWt.ToString());
-				summary.WriteMessage(this, "   existingWt: " + existingWt.ToString());
 			}
 		}
 
@@ -3456,6 +3597,42 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string />
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>Report1</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[MyDefoliate].Script.PreHarvestDM</string>
+            <string>[MyDefoliate].Script.PostHarvestDM</string>
+            <string>[MyDefoliate].Script.DefoliatedDM</string>
+            <string>[MyDefoliate].Script.HarvestedDM</string>
+            <string>[MyDefoliate].Script.RemovedDM</string>
+            <string>[MyDefoliate].Script.DefoliatedN</string>
+            <string>[MyDefoliate].Script.HarvestedN</string>
+            <string>[MyDefoliate].Script.RemovedN</string>
+            <string>[MyDefoliate].Script.NReturnedInDung</string>
+            <string>[MyDefoliate].Script.NReturnedInUrine</string>
+            <string />
+            <string />
+            <string>[Chicory].Arbitrator.NSupply</string>
+            <string>[Chicory].Arbitrator.NDemand</string>
+            <string>[Chicory].Arbitrator.NAllocated</string>
+            <string>sum([Chicory].Arbitrator.PotentialNO3NUptake) as PotentialPlantAvailableNO3</string>
+            <string>sum([Chicory].Arbitrator.PotentialNH4NUptake) as PotentialPlantAvailableNH4</string>
+            <string>(sum([Chicory].Arbitrator.PotentialNO3NUptake)+ sum([Chicory].Arbitrator.PotentialNH4NUptake)) as PotentialPlantAvailableN</string>
+            <string>[Chicory].Root.NSupplyUptake</string>
+            <string>[Chicory].Root.NTakenUp</string>
+            <string>[ExtraVariables].Script.Root_NSupply</string>
+            <string>[Chicory].Root.NUptake</string>
+            <string>[ExtraVariables].Script.Root_NSupplyReallocation</string>
+            <string>[ExtraVariables].Script.Stem_NSupplyReallocation</string>
+            <string>[ExtraVariables].Script.Leaf_NSupplyReallocation</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -4202,208 +4379,280 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
       </Folder>
-      <Graph>
-        <Name>Crop structure</Name>
-        <Series>
+      <Folder>
+        <Name>CropStructure</Name>
+        <Graph>
           <Name>LAI</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16711936</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Date</XFieldName>
-          <YFieldName>LAI Green</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>CoverTotal</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Date</XFieldName>
-          <YFieldName>Leaf Total Cover</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>Root</Name>
-        <Series>
-          <Name>Root Depth</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Date</XFieldName>
-          <YFieldName>Root Depth</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Layer1</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-3376729</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Date</XFieldName>
-          <YFieldName>Chicory.Root.LengthDensity(1)</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Layer2</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-2793984</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Date</XFieldName>
-          <YFieldName>Chicory.Root.LengthDensity(2)</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Layer3</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-1663232</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Date</XFieldName>
-          <YFieldName>Chicory.Root.LengthDensity(3)</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Layer4</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-990142</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Date</XFieldName>
-          <YFieldName>Chicory.Root.LengthDensity(4)</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
+          <Series>
+            <Name>LAIGreen</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.LAI</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>LAIDead</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.LAIDead</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Cover</Name>
+          <Series>
+            <Name>CoverGreen</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.CoverGreen</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>CoverDead</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.CoverDead</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>RootDepth</Name>
+          <Series>
+            <Name>Root Depth</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Root.Depth</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>RootLengthDensity</Name>
+          <Series>
+            <Name>Layer1</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-3376729</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Root.LengthDensity(1)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Layer2</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Root.LengthDensity(2)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Layer3</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Root.LengthDensity(3)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Layer4</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-990142</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Root.LengthDensity(4)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Right</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+      </Folder>
       <Graph>
         <Name>Phenology</Name>
         <Series>
@@ -4548,14 +4797,14 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>WaterUptake</YFieldName>
+            <YFieldName>Chicory.Arbitrator.WAllocated</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>Transpiration</Name>
+            <Name>Evaporation</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4569,14 +4818,14 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>LeafTranspiration</YFieldName>
+            <YFieldName>Soil.SoilWater.Es</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>PotentialT</Name>
+            <Name>PET</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4632,7 +4881,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Irrigation Applied (mm)</YFieldName>
+            <YFieldName>Irrigation.IrrigationApplied</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -4753,7 +5002,7 @@ namespace Models
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
+            <Line>Dash</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
@@ -4864,9 +5113,9 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>PotentialPlantAvailable</YFieldName>
+            <YFieldName>PotentialPlantAvailableN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -4906,7 +5155,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Nitrogen Applied</YFieldName>
+            <YFieldName>Fertiliser.NitrogenApplied</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5012,7 +5261,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>PotentialPlantAvailable</YFieldName>
+            <YFieldName>PotentialPlantAvailableN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5033,7 +5282,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>TopMineralN</YFieldName>
+            <YFieldName>AutomaticFertiliser.Script.TopMineralN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5079,7 +5328,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Above Ground Weight</YFieldName>
+            <YFieldName>Chicory.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5100,7 +5349,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Below Ground Weight</YFieldName>
+            <YFieldName>Chicory.BelowGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5121,7 +5370,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Total Weight</YFieldName>
+            <YFieldName>Chicory.Total.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5163,7 +5412,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Leaf Live Weight</YFieldName>
+            <YFieldName>Chicory.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5184,7 +5433,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Stem Live Weight</YFieldName>
+            <YFieldName>Chicory.Stem.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5205,7 +5454,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Inflorescence Live Weight</YFieldName>
+            <YFieldName>Chicory.Inflorescence.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5226,7 +5475,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Fine roots live Weight</YFieldName>
+            <YFieldName>Chicory.Root.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5247,7 +5496,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Taproot Live Weight</YFieldName>
+            <YFieldName>Chicory.Taproot.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5290,7 +5539,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Leaf dead weight</YFieldName>
+            <YFieldName>Chicory.Leaf.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5311,7 +5560,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Stem dead weight</YFieldName>
+            <YFieldName>Chicory.Stem.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5332,7 +5581,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Inflorescence dead weight</YFieldName>
+            <YFieldName>Chicory.Inflorescence.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5353,7 +5602,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Fine roots dead weight</YFieldName>
+            <YFieldName>Chicory.Root.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5374,7 +5623,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Taproot dead weight</YFieldName>
+            <YFieldName>Chicory.Taproot.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5417,7 +5666,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Stem Live Weight</YFieldName>
+            <YFieldName>Chicory.Stem.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5438,7 +5687,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Stem dead weight</YFieldName>
+            <YFieldName>Chicory.Stem.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5459,7 +5708,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Inflorescence Live Weight</YFieldName>
+            <YFieldName>Chicory.Inflorescence.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5480,7 +5729,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Inflorescence dead weight</YFieldName>
+            <YFieldName>Chicory.Inflorescence.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5507,7 +5756,7 @@ namespace Models
         </Graph>
       </Folder>
       <Folder>
-        <Name>PlantWt</Name>
+        <Name>PlantWtStructure</Name>
         <Graph>
           <Name>Leaf</Name>
           <Series>
@@ -5547,6 +5796,27 @@ namespace Models
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>Chicory.Leaf.Live.NonStructuralWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Metabolic</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.Live.MetabolicWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5611,6 +5881,27 @@ namespace Models
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>Chicory.Stem.Live.NonStructuralWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Metabolic</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Stem.Live.MetabolicWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5828,6 +6119,91 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
+        <Graph>
+          <Name>LeafDead</Name>
+          <Series>
+            <Name>Structural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.Dead.StructuralWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>NonStructural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.Dead.NonStructuralWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Metabolic</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.Dead.MetabolicWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
       </Folder>
       <Folder>
         <Name>DMPartition</Name>
@@ -5918,7 +6294,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>LeafFraction</YFieldName>
+            <YFieldName>Chicory.Leaf.DMDemandFunction.PartitionFraction.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5939,7 +6315,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>StemFraction</YFieldName>
+            <YFieldName>Chicory.Stem.DMDemandFunction.PartitionFraction.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5960,7 +6336,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>InflorescenceFraction</YFieldName>
+            <YFieldName>Chicory.Inflorescence.DMDemandFunction.PartitionFraction.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6024,14 +6400,14 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>currentSR</YFieldName>
+            <YFieldName>ExtraVariables.Script.ShootRootRatio</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>Adjuted</Name>
+            <Name>Adjusted</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -6088,7 +6464,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>FineRootFraction</YFieldName>
+            <YFieldName>Chicory.Root.PartitionFraction.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6109,7 +6485,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>TaprootFraction</YFieldName>
+            <YFieldName>Chicory.Taproot.DMDemandFunction.PartitionFraction.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6138,7 +6514,7 @@ namespace Models
         </Graph>
       </Folder>
       <Folder>
-        <Name>PlantN</Name>
+        <Name>PlantNStructure</Name>
         <Graph>
           <Name>Leaf</Name>
           <Series>
@@ -6158,7 +6534,7 @@ namespace Models
             <XFieldName>Date</XFieldName>
             <YFieldName>Chicory.Leaf.Live.StructuralN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -6179,7 +6555,28 @@ namespace Models
             <XFieldName>Date</XFieldName>
             <YFieldName>Chicory.Leaf.Live.NonStructuralN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Metabolic</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.Live.MetabolicN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -6222,7 +6619,7 @@ namespace Models
             <XFieldName>Date</XFieldName>
             <YFieldName>Chicory.Stem.Live.StructuralN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -6243,7 +6640,7 @@ namespace Models
             <XFieldName>Date</XFieldName>
             <YFieldName>Chicory.Stem.Live.NonStructuralN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -6286,7 +6683,7 @@ namespace Models
             <XFieldName>Date</XFieldName>
             <YFieldName>Chicory.Root.Live.StructuralN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -6307,7 +6704,7 @@ namespace Models
             <XFieldName>Date</XFieldName>
             <YFieldName>Chicory.Root.Live.NonStructuralN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -6350,7 +6747,7 @@ namespace Models
             <XFieldName>Date</XFieldName>
             <YFieldName>Chicory.Taproot.Live.StructuralN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -6371,7 +6768,7 @@ namespace Models
             <XFieldName>Date</XFieldName>
             <YFieldName>Chicory.Taproot.Live.NonStructuralN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -6414,7 +6811,7 @@ namespace Models
             <XFieldName>Date</XFieldName>
             <YFieldName>Chicory.Inflorescence.Live.StructuralN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -6435,7 +6832,92 @@ namespace Models
             <XFieldName>Date</XFieldName>
             <YFieldName>Chicory.Inflorescence.Live.NonStructuralN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Leafdead</Name>
+          <Series>
+            <Name>Structural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.Dead.StructuralN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>NonStructural</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.Dead.NonStructuralN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Metabolic</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.Dead.MetabolicN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -6465,7 +6947,7 @@ namespace Models
         <Graph>
           <Name>Arbitration</Name>
           <Series>
-            <Name>Supply</Name>
+            <Name>Demand</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -6486,11 +6968,11 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>Demand</Name>
+            <Name>Supply</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16736653</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6511,7 +6993,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16736653</ColourArgb>
+            <ColourArgb>-11094807</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6610,6 +7092,326 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
+        <Graph>
+          <Name>Leaf</Name>
+          <Series>
+            <Name>DMdemand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>ExtraVariables.Script.Leaf_DMDemand</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>DMsupply</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>ExtraVariables.Script.Leaf_DMSupply</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Stem</Name>
+          <Series>
+            <Name>DMdemand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>ExtraVariables.Script.Stem_DMDemand</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>DMsupply</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>ExtraVariables.Script.Stem_DMSupply</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Flower</Name>
+          <Series>
+            <Name>DMdemand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>ExtraVariables.Script.Inflorescence_DMDemand</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>DMsupply</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>ExtraVariables.Script.Inflorescence_DMSupply</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Root</Name>
+          <Series>
+            <Name>DMdemand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>ExtraVariables.Script.Root_DMDemand</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>DMsupply</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>ExtraVariables.Script.Root_DMSupply</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Taproot</Name>
+          <Series>
+            <Name>DMdemand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>ExtraVariables.Script.Taproot_DMDemand</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>DMsupply</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>ExtraVariables.Script.Taproot_DMSupply</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Graph>
       </Folder>
       <Folder>
         <Name>Harvests</Name>
@@ -6628,9 +7430,9 @@ namespace Models
             <MarkerSize>Small</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
+            <TableName>Report1</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Defoliate.Script.DefoliatedDM</YFieldName>
+            <YFieldName>MyDefoliate.Script.DefoliatedDM</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6642,16 +7444,16 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-2793984</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Small</MarkerSize>
             <Line>Dash</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
+            <TableName>Report1</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Defoliate.Script.HarvestedDM</YFieldName>
+            <YFieldName>MyDefoliate.Script.HarvestedDM</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6664,16 +7466,16 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-1663232</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Small</MarkerSize>
             <Line>Dot</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
+            <TableName>Report1</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Defoliate.Script.RemovedDM</YFieldName>
+            <YFieldName>MyDefoliate.Script.RemovedDM</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6685,40 +7487,19 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Right</YAxis>
             <ColourArgb>-990142</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Small</MarkerSize>
             <Line>Dot</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
+            <TableName>Report1</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Defoliate.Script.RemovedDM</YFieldName>
+            <YFieldName>MyDefoliate.Script.RemovedDM</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>true</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16747854</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Small</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Harvests</TableName>
-            <XFieldName>Date</XFieldName>
-            <YFieldName>DefoliatedDM</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
@@ -6761,9 +7542,9 @@ namespace Models
             <MarkerSize>Small</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
+            <TableName>Report1</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Defoliate.Script.DefoliatedN</YFieldName>
+            <YFieldName>MyDefoliate.Script.DefoliatedN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6782,9 +7563,9 @@ namespace Models
             <MarkerSize>Small</MarkerSize>
             <Line>Dash</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
+            <TableName>Report1</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Defoliate.Script.HarvestedN</YFieldName>
+            <YFieldName>MyDefoliate.Script.HarvestedN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6803,9 +7584,9 @@ namespace Models
             <MarkerSize>Small</MarkerSize>
             <Line>Dot</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
+            <TableName>Report1</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Defoliate.Script.RemovedN</YFieldName>
+            <YFieldName>MyDefoliate.Script.RemovedN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6824,9 +7605,9 @@ namespace Models
             <MarkerSize>Small</MarkerSize>
             <Line>Dot</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
+            <TableName>Report1</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Defoliate.Script.RemovedN</YFieldName>
+            <YFieldName>MyDefoliate.Script.RemovedN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>true</Cumulative>
@@ -6865,16 +7646,16 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16747854</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Small</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
+            <TableName>Report1</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Defoliate.Script.PreHarvestDM</YFieldName>
+            <YFieldName>MyDefoliate.Script.PreHarvestDM</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6886,16 +7667,16 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-2793984</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Small</MarkerSize>
             <Line>Dash</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
+            <TableName>Report1</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Defoliate.Script.PostHarvestDM</YFieldName>
+            <YFieldName>MyDefoliate.Script.PostHarvestDM</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6927,16 +7708,16 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16747854</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Small</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
+            <TableName>Report1</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Defoliate.Script.NReturnedInDung</YFieldName>
+            <YFieldName>MyDefoliate.Script.NReturnedInDung</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>true</Cumulative>
@@ -6948,16 +7729,16 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-2793984</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Small</MarkerSize>
             <Line>Dash</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
+            <TableName>Report1</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Defoliate.Script.NReturnedInUrine</YFieldName>
+            <YFieldName>MyDefoliate.Script.NReturnedInUrine</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>true</Cumulative>
@@ -6973,6 +7754,408 @@ namespace Models
           </Axis>
           <Axis>
             <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+      </Folder>
+      <Folder>
+        <Name>PlantN</Name>
+        <Graph>
+          <Name>Plant</Name>
+          <Series>
+            <Name>AboveGround</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.AboveGround.NConc</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>BelowGround</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.BelowGround.NConc</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Total</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Total.NConc</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>N concentration (g/g)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>LivePools</Name>
+          <Series>
+            <Name>AboveGroundLive</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.AboveGroundLive.NConc</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>BelowGroundLive</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.BelowGroundLive.NConc</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Crop Biomass (g/m2)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Leaf</Name>
+          <Series>
+            <Name>Live</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.Live.NConc</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Dead</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.Dead.NConc</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>N concentration (g/g)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Stem</Name>
+          <Series>
+            <Name>Live</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Stem.Live.NConc</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Dead</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Stem.Dead.NConc</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>N concentration (g/g)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Root</Name>
+          <Series>
+            <Name>Live</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Root.Live.NConc</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Dead</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Root.Dead.NConc</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>N concentration (g/g)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Taproot</Name>
+          <Series>
+            <Name>Live</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Taproot.Live.NConc</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Dead</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Taproot.Dead.NConc</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>N concentration (g/g)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -7772,76 +8955,6 @@ namespace Models
         <Slope>0</Slope>
       </Zone>
       <Graph>
-        <Name>CropStructure</Name>
-        <Series>
-          <Name>LAI</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16711936</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Date</XFieldName>
-          <YFieldName>LAI Green</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>CoverTotal</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Date</XFieldName>
-          <YFieldName>Leaf Total Cover</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
         <Name>Phenology</Name>
         <Series>
           <Name>Phenology Stage</Name>
@@ -7884,6 +8997,280 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Folder>
+        <Name>CropStructure</Name>
+        <Graph>
+          <Name>LAI</Name>
+          <Series>
+            <Name>LAIGreen</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.LAI</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>LAIDead</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.LAIDead</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Cover</Name>
+          <Series>
+            <Name>CoverGreen</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.CoverGreen</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>CoverDead</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Leaf.CoverDead</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>RootDepth</Name>
+          <Series>
+            <Name>Root Depth</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Root.Depth</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>RootLengthDensity</Name>
+          <Series>
+            <Name>Layer1</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-3376729</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Root.LengthDensity(1)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Layer2</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Root.LengthDensity(2)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Layer3</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Root.LengthDensity(3)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Layer4</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-990142</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Chicory.Root.LengthDensity(4)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Right</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+      </Folder>
+      <Folder>
         <Name>PlantDM</Name>
         <Graph>
           <Name>PlantBiomass</Name>
@@ -7902,7 +9289,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Above Ground Weight</YFieldName>
+            <YFieldName>Chicory.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7923,7 +9310,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Below Ground Weight</YFieldName>
+            <YFieldName>Chicory.BelowGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7944,7 +9331,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Total Weight</YFieldName>
+            <YFieldName>Chicory.Total.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7986,7 +9373,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Leaf Live Weight</YFieldName>
+            <YFieldName>Chicory.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8007,7 +9394,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Stem Live Weight</YFieldName>
+            <YFieldName>Chicory.Stem.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8028,7 +9415,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Inflorescence Live Weight</YFieldName>
+            <YFieldName>Chicory.Inflorescence.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8049,7 +9436,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Fine roots live Weight</YFieldName>
+            <YFieldName>Chicory.Root.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8070,7 +9457,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Taproot Live Weight</YFieldName>
+            <YFieldName>Chicory.Taproot.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8113,7 +9500,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Leaf dead weight</YFieldName>
+            <YFieldName>Chicory.Leaf.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8134,7 +9521,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Stem dead weight</YFieldName>
+            <YFieldName>Chicory.Stem.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8155,7 +9542,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Inflorescence dead weight</YFieldName>
+            <YFieldName>Chicory.Inflorescence.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8176,7 +9563,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Fine roots dead weight</YFieldName>
+            <YFieldName>Chicory.Root.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8197,7 +9584,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Taproot dead weight</YFieldName>
+            <YFieldName>Chicory.Taproot.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8240,7 +9627,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Stem Live Weight</YFieldName>
+            <YFieldName>Chicory.Stem.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8261,7 +9648,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Stem dead weight</YFieldName>
+            <YFieldName>Chicory.Stem.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8282,7 +9669,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Inflorescence Live Weight</YFieldName>
+            <YFieldName>Chicory.Inflorescence.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8303,7 +9690,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Inflorescence dead weight</YFieldName>
+            <YFieldName>Chicory.Inflorescence.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
