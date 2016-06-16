@@ -764,18 +764,31 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Soil.Thickness != null)
+                return new BiomassSupplyType()
                 {
-                    double[] no3supply = new double[Soil.Thickness.Length];
-                    double[] nh4supply = new double[Soil.Thickness.Length];
-                    SoilNSupply(no3supply, nh4supply);
-                    double NSupply = (Math.Min(MathUtilities.Sum(no3supply), MaxDailyNUptake.Value) + Math.Min(MathUtilities.Sum(nh4supply), MaxDailyNUptake.Value)) * kgha2gsm;
-                    NuptakeSupply = NSupply;
-                    return new BiomassSupplyType { Uptake = NSupply };
-                    
-                }
-                else
-                    return new BiomassSupplyType();
+                    Reallocation = 0.0,
+                    Retranslocation = 0.0,
+                    Uptake = availableNUptake()
+                };
+            }
+        }
+
+        /// <summary>Gets the N amount available for uptake</summary>
+        /// <returns>N available to be taken up</returns>
+        public double availableNUptake()
+        {
+            if (Soil.Thickness != null)
+            {
+                double[] no3supply = new double[Soil.Thickness.Length];
+                double[] nh4supply = new double[Soil.Thickness.Length];
+                SoilNSupply(no3supply, nh4supply);
+                double NSupply = (Math.Min(MathUtilities.Sum(no3supply), MaxDailyNUptake.Value) +
+                                  Math.Min(MathUtilities.Sum(nh4supply), MaxDailyNUptake.Value)) * kgha2gsm;
+                return NSupply;
+            }
+            else
+            { //Soil not initialised yet
+                return 0.0;
             }
         }
 

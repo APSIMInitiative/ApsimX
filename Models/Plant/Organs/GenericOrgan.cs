@@ -193,25 +193,36 @@ namespace Models.PMF.Organs
                 PotentialDMAllocation = value.Structural + value.Metabolic;
             }
         }
+
         /// <summary>Gets or sets the dm supply.</summary>
         /// <value>The dm supply.</value>
         public override BiomassSupplyType DMSupply
         {
             get
             {
-                double _DMRetranslocationFactor = 0;
-                if (DMRetranslocationFactor != null) //Default of 0 means retranslocation is always truned off!!!!
-                    _DMRetranslocationFactor = DMRetranslocationFactor.Value;
                 return new BiomassSupplyType
                 {
-                    Fixation = 0,
-                    Retranslocation = StartLive.NonStructuralWt * _DMRetranslocationFactor,
-                    Reallocation = 0
+                    Fixation = 0.0,
+                    Retranslocation = availableDMRetranslocation(),
+                    Reallocation = 0.0
                 };
             }
         }
-        /// <summary>Gets or sets the n demand.</summary>
-        /// <value>The n demand.</value>
+
+        /// <summary>Gets the amount of DM available for retranslocation</summary>
+        /// <returns>DM available to retranslocate</returns>
+        public double availableDMRetranslocation()
+        {
+            if (DMRetranslocationFactor != null)
+                return StartLive.NonStructuralWt * DMRetranslocationFactor.Value;
+            else
+            { //Default of 0 means retranslocation is always turned off!!!!
+                return 0.0;
+            }
+        }
+
+        /// <summary>Gets or sets the N demand.</summary>
+        /// <value>The N demand.</value>
         public override BiomassPoolType NDemand
         {
             get
@@ -226,30 +237,49 @@ namespace Models.PMF.Organs
                 return new BiomassPoolType { Structural = StructuralNDemand, NonStructural = NonStructuralNDemand };
             }
         }
-        /// <summary>Gets or sets the n supply.</summary>
-        /// <value>The n supply.</value>
+        /// <summary>Gets or sets the N supply.</summary>
+        /// <value>The N supply.</value>
         public override BiomassSupplyType NSupply
         {
             get
             {
-                BiomassSupplyType Supply = new BiomassSupplyType();
-
-                // Calculate Reallocation Supply.
-                double _NReallocationFactor = 0;
-                if (NReallocationFactor != null) //Default of zero means N reallocation is truned off
-                    _NReallocationFactor = NReallocationFactor.Value;
-                Supply.Reallocation = SenescenceRate * StartLive.NonStructuralN * _NReallocationFactor;
-
-                // Calculate Retranslocation Supply.
-                double _NRetranslocationFactor = 0;
-                if (NRetranslocationFactor != null) //Default of zero means retranslocation is turned off
-                    _NRetranslocationFactor = NRetranslocationFactor.Value;
-                double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
-                Supply.Retranslocation = (LabileN - StartNReallocationSupply) * _NRetranslocationFactor;
-
-                return Supply;
+                return new BiomassSupplyType()
+                {
+                    Reallocation = availableNReallocation(),
+                    Retranslocation = availableNRetranslocation(),
+                    Uptake = 0.0
+                };
             }
         }
+
+        /// <summary>Gets the N amount available for retranslocation</summary>
+        /// <returns>N available to retranslocate</returns>
+        public double availableNRetranslocation()
+        {
+            if (NRetranslocationFactor != null)
+            {
+                double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
+                return (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value;
+            }
+            else
+            {
+                //Default of 0 means retranslocation is always turned off!!!!
+                return 0.0;
+            }
+        }
+
+        /// <summary>Gets the N amount available for reallocation</summary>
+        /// <returns>DM available to reallocate</returns>
+        public double availableNReallocation()
+        {
+            if (NReallocationFactor != null)
+                return SenescenceRate * StartLive.NonStructuralN * NReallocationFactor.Value;
+            else
+            { //Default of 0 means reallocation is always turned off!!!!
+                return 0.0;
+            }
+        }
+
         /// <summary>Sets the dm allocation.</summary>
         /// <value>The dm allocation.</value>
         /// <exception cref="System.Exception">

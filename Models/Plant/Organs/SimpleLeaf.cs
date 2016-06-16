@@ -310,17 +310,24 @@ namespace Models.PMF.Organs
                 return new BiomassPoolType { Structural = Demand };
             }
         }
+
         /// <summary>Gets or sets the dm supply.</summary>
         /// <value>The dm supply.</value>
         public override BiomassSupplyType DMSupply
         {
             get
             {
-                if (Math.Round(Photosynthesis.Value, 8) < 0)
+                if (Math.Round(Photosynthesis.Value + availableDMRetranslocation(), 8) < 0)
                     throw new Exception(this.Name + " organ is returning a negative DM supply.  Check your parameterisation");
-                return new BiomassSupplyType { Fixation = Photosynthesis.Value, Retranslocation = 0, Reallocation = 0 };
+                return new BiomassSupplyType
+                {
+                    Fixation = Photosynthesis.Value,
+                    Retranslocation = availableDMRetranslocation(),
+                    Reallocation = 0.0
+                };
             }
         }
+
         /// <summary>Sets the dm allocation.</summary>
         /// <value>The dm allocation.</value>
         public override BiomassAllocationType DMAllocation

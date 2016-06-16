@@ -146,11 +146,29 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets or sets the population.</summary>
+
+        /// <summary>Holds the number of plants.</summary>
+        private double plantPopulation = 0.0;
+
+        /// <summary>Gets or sets the plant population.</summary>
         [XmlIgnore]
         [Description("Number of plants per meter2")]
         [Units("/m2")]
-        public double Population { get; set; }
+        public double Population
+        {
+            get { return plantPopulation; }
+            set
+            {
+                if (value <= 0.0)
+                {
+                    // the plant is dead
+                    plantPopulation = 0.0;
+                    SowingData = null;
+                }
+                else
+                    plantPopulation = value;
+            }
+        }
 
         /// <summary>Return true if plant is alive and in the ground.</summary>
         public bool IsAlive { get { return SowingData != null; } }
