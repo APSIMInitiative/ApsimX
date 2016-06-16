@@ -508,14 +508,36 @@ private void OnDoManagement(object sender, EventArgs e)
             <VariableName>[Leaf].RadIntTot</VariableName>
           </VariableReference>
         </RUEModel>
-        <Constant>
+        <MultiplyFunction>
           <Name>ExtinctionCoefficientFunction</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[The extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover]]></MemoText>
-          </Memo>
-          <Value>0.8</Value>
-        </Constant>
+          <Constant>
+            <Name>MaxExtinctionCoefficient</Name>
+            <Memo>
+              <Name>Description</Name>
+              <MemoText><![CDATA[The extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover]]></MemoText>
+            </Memo>
+            <Value>0.75</Value>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>PopulationEffect</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>50</double>
+                <double>150</double>
+                <double>250</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0.65</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Chicory].Population</XProperty>
+          </LinearInterpolationFunction>
+        </MultiplyFunction>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <Memo>
@@ -599,25 +621,18 @@ DM demand is based on ...
             </MaximumFunction>
           </MultiplyFunction>
         </DivideFunction>
-        <AddFunction>
+        <MultiplyFunction>
           <Name>LAIFunction</Name>
           <Constant>
-            <Name>BaseLAI</Name>
-            <Value>0.1</Value>
+            <Name>SpecificLeafArea</Name>
+            <Value>0.04</Value>
+            <Units>m^2/g</Units>
           </Constant>
-          <MultiplyFunction>
-            <Name>LAIFunction</Name>
-            <Constant>
-              <Name>SpecificLeafArea</Name>
-              <Value>0.04</Value>
-              <Units>m^2/g</Units>
-            </Constant>
-            <VariableReference>
-              <Name>LeafWeight</Name>
-              <VariableName>[Leaf].Live.Wt</VariableName>
-            </VariableReference>
-          </MultiplyFunction>
-        </AddFunction>
+          <VariableReference>
+            <Name>LeafWeight</Name>
+            <VariableName>[Leaf].Live.Wt</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
           <XYPairs>
@@ -13828,6 +13843,10 @@ namespace Models
               <Date>2015-01-15</Date>
               <Action> [Defoliate].Script.addDefoliation(1,106)</Action>
             </Operation>
+            <Operation>
+              <Date>2015-02-11</Date>
+              <Action> [Defoliate].Script.addDefoliation(1,106)</Action>
+            </Operation>
           </Operations>
           <Operations>
             <Name>50</Name>
@@ -13854,6 +13873,10 @@ namespace Models
             <Operation>
               <Date>2015-01-15</Date>
               <Action> [Defoliate].Script.addDefoliation(1,113)</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-02-11</Date>
+              <Action> [Defoliate].Script.addDefoliation(1,106)</Action>
             </Operation>
           </Operations>
           <Operations>
@@ -13882,6 +13905,10 @@ namespace Models
               <Date>2015-01-15</Date>
               <Action> [Defoliate].Script.addDefoliation(1,127)</Action>
             </Operation>
+            <Operation>
+              <Date>2015-02-11</Date>
+              <Action> [Defoliate].Script.addDefoliation(1,106)</Action>
+            </Operation>
           </Operations>
           <Operations>
             <Name>200</Name>
@@ -13908,6 +13935,10 @@ namespace Models
             <Operation>
               <Date>2015-01-15</Date>
               <Action> [Defoliate].Script.addDefoliation(1,114)</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-02-11</Date>
+              <Action> [Defoliate].Script.addDefoliation(1,106)</Action>
             </Operation>
           </Operations>
           <Operations>
@@ -13936,6 +13967,10 @@ namespace Models
               <Date>2015-01-15</Date>
               <Action> [Defoliate].Script.addDefoliation(1,120)</Action>
             </Operation>
+            <Operation>
+              <Date>2015-02-11</Date>
+              <Action> [Defoliate].Script.addDefoliation(1,106)</Action>
+            </Operation>
           </Operations>
           <Operations>
             <Name>500</Name>
@@ -13963,6 +13998,10 @@ namespace Models
               <Date>2015-01-15</Date>
               <Action> [Defoliate].Script.addDefoliation(1,104)</Action>
             </Operation>
+            <Operation>
+              <Date>2015-02-11</Date>
+              <Action> [Defoliate].Script.addDefoliation(1,106)</Action>
+            </Operation>
           </Operations>
           <Specifications>
             <string>[NRate]</string>
@@ -13987,7 +14026,7 @@ namespace Models
         <Clock>
           <Name>clock</Name>
           <StartDate>2014-01-01T00:00:00</StartDate>
-          <EndDate>2016-03-31T00:00:00</EndDate>
+          <EndDate>2015-02-25T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
