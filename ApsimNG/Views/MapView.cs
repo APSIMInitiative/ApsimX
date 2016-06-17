@@ -121,7 +121,7 @@ var locations = [";
        center:myCenter,
        zoom: 1,
 ";
-            if (tempWindow) // When exporting into a report, leave off the controls
+            if (popupWin != null) // When exporting into a report, leave off the controls
             {
                 html += "zoomControl: false,";
                 html += "mapTypeControl: false,";
@@ -163,10 +163,10 @@ google.maps.event.addDomListener(window, 'load', initialize);
             SetContents(html, false);
         }
 
-    /// <summary>
-    /// Export the map to an image.
-    /// </summary>
-    public Image Export()
+        /// <summary>
+        /// Export the map to an image.
+        /// </summary>
+        public Image Export()
         {
             // Create a Bitmap and draw the DataGridView on it.
             int width;
