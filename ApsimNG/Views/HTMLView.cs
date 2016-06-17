@@ -112,7 +112,7 @@ namespace UserInterface.Views
             unmapped = false;
         }
 
-        private void Socket_UnmapEvent(object o, UnmapEventArgs args)
+        internal void Socket_UnmapEvent(object o, UnmapEventArgs args)
         {
             unmapped = true;
         }
@@ -209,6 +209,7 @@ namespace UserInterface.Views
 
         protected IBrowserWidget browser = null;
         private MemoView memoView1;
+        protected Gtk.Window popupWin = null;
 
         /// <summary>
         /// Constructor
@@ -221,17 +222,16 @@ namespace UserInterface.Views
             // Handle a temporary browser created when we want to export a map.
             if (owner == null)
             {
-                Gtk.Window win = new Gtk.Window(Gtk.WindowType.Popup);
-                win.SetSizeRequest(500, 500);
+                popupWin = new Gtk.Window(Gtk.WindowType.Popup);
+                popupWin.SetSizeRequest(500, 500);
                 // Move the window offscreen; the user doesn't need to see it.
                 // This works with IE, but not with WebKit
                 if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
-                    win.Move(-10000, -10000); 
-                win.Add(MainWidget);
-                win.ShowAll();
+                    popupWin.Move(-10000, -10000); 
+                popupWin.Add(MainWidget);
+                popupWin.ShowAll();
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
-                tempWindow = true;
             }
             memoView1 = new MemoView(this);
             hbox1.PackStart(memoView1.MainWidget, true, true, 0);
@@ -258,12 +258,13 @@ namespace UserInterface.Views
                     (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
                 frame1.Unrealized -= Frame1_Unrealized;
                 (browser as TWWebBrowserIE).wb.DocumentTitleChanged -= IE_TitleChanged;
+                (browser as TWWebBrowserIE).socket.UnmapEvent += (browser as TWWebBrowserIE).Socket_UnmapEvent;
             }
             else if ((browser as TWWebBrowserWK) != null)
                 (browser as TWWebBrowserWK).wb.TitleChanged -= WK_TitleChanged;
-            if (tempWindow && _mainWidget != null && _mainWidget.IsRealized)
+            if (popupWin != null)
             {
-                MainWidget.ParentWindow.Destroy();
+                popupWin.Destroy();
             }
         }
 
@@ -301,7 +302,6 @@ namespace UserInterface.Views
             }
         }
 
-        protected bool tempWindow = false;
         /// <summary>
         /// Populate the view given the specified text.
         /// </summary>
@@ -325,6 +325,8 @@ namespace UserInterface.Views
                         (vbox2.Toplevel as Window).SetFocus += MainWindow_SetFocus;
                     frame1.Unrealized += Frame1_Unrealized;
                     (browser as TWWebBrowserIE).wb.DocumentTitleChanged += IE_TitleChanged;
+                    if (this is MapView) // If we're only displaying a map, remove the unneeded scrollbar
+                        (browser as TWWebBrowserIE).wb.ScrollBarsEnabled = false;
                 }
                 else
                 {
