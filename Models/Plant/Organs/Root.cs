@@ -768,14 +768,14 @@ namespace Models.PMF.Organs
                 {
                     Reallocation = 0.0,
                     Retranslocation = 0.0,
-                    Uptake = availableNUptake()
+                    Uptake = AvailableNUptake()
                 };
             }
         }
 
         /// <summary>Gets the N amount available for uptake</summary>
         /// <returns>N available to be taken up</returns>
-        public double availableNUptake()
+        public double AvailableNUptake()
         {
             if (Soil.Thickness != null)
             {

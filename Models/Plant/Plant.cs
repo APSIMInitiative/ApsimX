@@ -159,11 +159,10 @@ namespace Models.PMF
             get { return plantPopulation; }
             set
             {
-                if (value <= 0.0)
+                if (value <= 0.5)
                 {
-                    // the plant is dead
-                    plantPopulation = 0.0;
-                    SowingData = null;
+                    // the plant is dead due to population decline
+                    EndCrop();
                 }
                 else
                     plantPopulation = value;
@@ -357,7 +356,7 @@ namespace Models.PMF
         private void Clear()
         {
             SowingData = null;
-            Population = 0;
+            plantPopulation = 0.0;
         }
         #endregion
         

@@ -203,7 +203,7 @@ namespace Models.PMF.Organs
                 return new BiomassSupplyType
                 {
                     Fixation = 0.0,
-                    Retranslocation = availableDMRetranslocation(),
+                    Retranslocation = AvailableDMRetranslocation(),
                     Reallocation = 0.0
                 };
             }
@@ -211,7 +211,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the amount of DM available for retranslocation</summary>
         /// <returns>DM available to retranslocate</returns>
-        public double availableDMRetranslocation()
+        public double AvailableDMRetranslocation()
         {
             if (DMRetranslocationFactor != null)
                 return StartLive.NonStructuralWt * DMRetranslocationFactor.Value;
@@ -245,8 +245,8 @@ namespace Models.PMF.Organs
             {
                 return new BiomassSupplyType()
                 {
-                    Reallocation = availableNReallocation(),
-                    Retranslocation = availableNRetranslocation(),
+                    Reallocation = AvailableNReallocation(),
+                    Retranslocation = AvailableNRetranslocation(),
                     Uptake = 0.0
                 };
             }
@@ -254,7 +254,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the N amount available for retranslocation</summary>
         /// <returns>N available to retranslocate</returns>
-        public double availableNRetranslocation()
+        public double AvailableNRetranslocation()
         {
             if (NRetranslocationFactor != null)
             {
@@ -270,7 +270,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the N amount available for reallocation</summary>
         /// <returns>DM available to reallocate</returns>
-        public double availableNReallocation()
+        public double AvailableNReallocation()
         {
             if (NReallocationFactor != null)
                 return SenescenceRate * StartLive.NonStructuralN * NReallocationFactor.Value;

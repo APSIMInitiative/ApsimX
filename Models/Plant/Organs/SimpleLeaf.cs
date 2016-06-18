@@ -317,12 +317,12 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Math.Round(Photosynthesis.Value + availableDMRetranslocation(), 8) < 0)
+                if (Math.Round(Photosynthesis.Value + AvailableDMRetranslocation(), 8) < 0)
                     throw new Exception(this.Name + " organ is returning a negative DM supply.  Check your parameterisation");
                 return new BiomassSupplyType
                 {
                     Fixation = Photosynthesis.Value,
-                    Retranslocation = availableDMRetranslocation(),
+                    Retranslocation = AvailableDMRetranslocation(),
                     Reallocation = 0.0
                 };
             }
