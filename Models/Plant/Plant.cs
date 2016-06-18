@@ -159,9 +159,9 @@ namespace Models.PMF
             get { return plantPopulation; }
             set
             {
-                if (value <= 0.5)
+                if (IsAlive && value <= 0.1)
                 {
-                    // the plant is dead due to population decline
+                    // the plant is dying due to population decline
                     EndCrop();
                 }
                 else
