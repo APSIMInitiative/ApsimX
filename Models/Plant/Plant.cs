@@ -146,11 +146,28 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets or sets the population.</summary>
+
+        /// <summary>Holds the number of plants.</summary>
+        private double plantPopulation = 0.0;
+
+        /// <summary>Gets or sets the plant population.</summary>
         [XmlIgnore]
         [Description("Number of plants per meter2")]
         [Units("/m2")]
-        public double Population { get; set; }
+        public double Population
+        {
+            get { return plantPopulation; }
+            set
+            {
+                if (IsAlive && value <= 0.1)
+                {
+                    // the plant is dying due to population decline
+                    EndCrop();
+                }
+                else
+                    plantPopulation = value;
+            }
+        }
 
         /// <summary>Return true if plant is alive and in the ground.</summary>
         public bool IsAlive { get { return SowingData != null; } }
@@ -339,7 +356,7 @@ namespace Models.PMF
         private void Clear()
         {
             SowingData = null;
-            Population = 0;
+            plantPopulation = 0.0;
         }
         #endregion
         
