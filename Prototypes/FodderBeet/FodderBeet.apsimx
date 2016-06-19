@@ -1076,7 +1076,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           </LinearInterpolationFunction>
         </PartitionFractionDemandFunction>
         <VariableReference>
-          <Name>SenescenceRateFunction</Name>
+          <Name>SenescenceRate</Name>
           <VariableName>[Leaf].FractionDied</VariableName>
         </VariableReference>
         <Constant>

@@ -665,7 +665,7 @@ DM demand is based on ...
           <End>Ripening</End>
         </PhaseBasedSwitch>
         <MultiplyFunction>
-          <Name>SenescenceRateFunction</Name>
+          <Name>SenescenceRate</Name>
           <Constant>
             <Name>MaxRate</Name>
             <Value>0.1</Value>
@@ -898,7 +898,7 @@ DM demand is based on ...
           </PhaseLookup>
         </PartitionFractionDemandFunction>
         <MultiplyFunction>
-          <Name>SenescenceRateFunction</Name>
+          <Name>SenescenceRate</Name>
           <Constant>
             <Name>MaxRate</Name>
             <Value>1</Value>
@@ -1071,7 +1071,7 @@ DM demand is based on ...
           </PhaseLookup>
         </PartitionFractionDemandFunction>
         <MultiplyFunction>
-          <Name>SenescenceRateFunction</Name>
+          <Name>SenescenceRate</Name>
           <Constant>
             <Name>MaxRate</Name>
             <Value>1</Value>
@@ -1262,7 +1262,7 @@ No effect of soil water content on root growth is currently captured in the mode
           <Units>mm/g</Units>
         </Constant>
         <MultiplyFunction>
-          <Name>SenescenceRateFunction</Name>
+          <Name>SenescenceRate</Name>
           <Constant>
             <Name>MaxRate</Name>
             <Value>0.1</Value>
@@ -1502,7 +1502,7 @@ No effect of soil water content on root growth is currently captured in the mode
           <Value>0</Value>
         </Constant>
         <MultiplyFunction>
-          <Name>SenescenceRateFunction</Name>
+          <Name>SenescenceRate</Name>
           <Constant>
             <Name>MaxRate</Name>
             <Value>0.1</Value>

@@ -94,13 +94,16 @@ namespace Models.PMF.Organs
 
                 if (Plant.IsAlive)
                 {
+                    double greenCover = 0.0;
                     if (CoverFunction == null)
-                        return 1.0 - Math.Exp((-1 * ExtinctionCoefficientFunction.Value) * LAI);
-                    return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
+                        greenCover = 1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value * LAI);
+                    else
+                        greenCover = CoverFunction.Value;
+                    return Math.Min(Math.Max(greenCover, 0.0), 0.999999999); // limiting to within 10^-9, so MicroClimate doesn't complain
                 }
                 else
                 {
-                    return 0;
+                    return 0.0;
                 }
 
             }
@@ -620,7 +623,7 @@ namespace Models.PMF.Organs
                    | (child.Name != "NReallocationFactor")
                    | (child.Name != "NRetranslocationFactor")
                    | (child.Name != "DMRetranslocationFactor")
-                   | (child.Name != "SenescenceRateFunction")
+                   | (child.Name != "SenescenceRate")
                    | (child.Name != "DetachmentRateFunctionFunction")
                    | (child.Name != "LAIFunction")
                    | (child.Name != "CoverFunction")
@@ -649,7 +652,7 @@ namespace Models.PMF.Organs
                        | (child.Name == "NReallocationFactor")
                        | (child.Name == "NRetranslocationFactor")
                        | (child.Name == "DMRetranslocationFactor")
-                       | (child.Name == "SenescenceRateFunction")
+                       | (child.Name == "SenescenceRate")
                        | (child.Name == "DetachmentRateFunctionFunction")
                        | (child.Name == "LAIFunction")
                        | (child.Name == "CoverFunction")

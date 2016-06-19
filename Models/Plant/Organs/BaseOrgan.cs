@@ -177,8 +177,7 @@ namespace Models.PMF.Organs
         /// <param name="value">The fractions of biomass to remove</param>
         virtual public void DoRemoveBiomass(OrganBiomassRemovalType value)
         {
-            double totalFractionToRemove = value.FractionLiveToRemove + value.FractionDeadToRemove
-                                           + value.FractionLiveToResidue + value.FractionDeadToResidue;
+            double totalFractionToRemove = value.FractionRemoved + value.FractionToResidue;
             if (totalFractionToRemove > 1.0)
             {
                 throw new Exception("The sum of FractionToResidue and FractionToRemove sent with your "
@@ -188,15 +187,15 @@ namespace Models.PMF.Organs
             }
             else  if (totalFractionToRemove > 0.0)
             {
-                double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
-                double removedOff = (value.FractionLiveToRemove + value.FractionDeadToRemove) / totalFractionToRemove * 100;
+                double toResidue = (value.FractionToResidue) / totalFractionToRemove * 100;
+                double removedOff = (value.FractionRemoved) / totalFractionToRemove * 100;
                 Summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
                                          + "% of " + Name + " Biomass from " + Plant.Name
                                          + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
                                          + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
 
-                double detachingWt = Live.Wt * value.FractionLiveToResidue + Dead.Wt * value.FractionDeadToResidue;
-                double detachingN = Live.N * value.FractionLiveToResidue + Dead.N * value.FractionDeadToResidue;
+                double detachingWt = Wt * value.FractionToResidue;
+                double detachingN = N * value.FractionToResidue;
 
                 SurfaceOrganicMatter.Add(detachingWt  * 10, detachingN * 10, 0.0, Plant.CropType, Name);
                 //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
@@ -204,14 +203,14 @@ namespace Models.PMF.Organs
                 DetachedWt += detachingWt;
                 DetachedN += detachingN;
 
-                Live.StructuralWt *= (1.0 - value.FractionLiveToRemove);
-                Live.NonStructuralWt *= (1.0 - value.FractionLiveToRemove);
-                Live.StructuralN *= (1.0 - value.FractionLiveToRemove);
-                Live.NonStructuralN *= (1.0 - value.FractionLiveToRemove);
-                Dead.StructuralWt *= (1.0 - value.FractionDeadToRemove);
-                Dead.NonStructuralWt *= (1.0 - value.FractionDeadToRemove);
-                Dead.StructuralN *= (1.0 - value.FractionDeadToRemove);
-                Dead.NonStructuralN *= (1.0 - value.FractionDeadToRemove);
+                Live.StructuralWt *= (1.0 - value.FractionRemoved);
+                Live.NonStructuralWt *= (1.0 - value.FractionRemoved);
+                Live.StructuralN *= (1.0 - value.FractionRemoved);
+                Live.NonStructuralN *= (1.0 - value.FractionRemoved);
+                Dead.StructuralWt *= (1.0 - value.FractionRemoved);
+                Dead.NonStructuralWt *= (1.0 - value.FractionRemoved);
+                Dead.StructuralN *= (1.0 - value.FractionRemoved);
+                Dead.NonStructuralN *= (1.0 - value.FractionRemoved);
             }
         }
 
