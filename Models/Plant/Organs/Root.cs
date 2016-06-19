@@ -1030,9 +1030,9 @@ namespace Models.PMF.Organs
         public override void DoRemoveBiomass(OrganBiomassRemovalType value)
         {
             //NOTE: roots don't have dead biomass
-            if (value.FractionToResidue + value.FractionRemoved <= 1.0)
+            if (value.FractionLiveToResidue + value.FractionLiveToRemove <= 1.0)
             {
-                double RemainingFraction = 1 - value.FractionRemoved;
+                double RemainingFraction = 1 - value.FractionLiveToRemove;
                 for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
                     LayerLive[layer].StructuralWt *= RemainingFraction;
@@ -1041,8 +1041,8 @@ namespace Models.PMF.Organs
                     LayerLive[layer].NonStructuralN *= RemainingFraction;
                 }
 
-                if (value.FractionToResidue > 0.0)
-                    DoRootDetachment(value.FractionToResidue);
+                if (value.FractionLiveToResidue > 0.0)
+                    DoRootDetachment(value.FractionLiveToResidue);
             }
             else
                 throw new Exception("The sum of FractionToResidue and FractionToRemove sent with your " 

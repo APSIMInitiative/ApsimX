@@ -302,10 +302,14 @@ namespace Models.PMF
                     OrganBiomassRemovalType userFractions = removalData.GetFractionsForOrgan(organ.Name);
                     if (userFractions != null)
                     {
-                        if (userFractions.FractionRemoved >= 0)
-                            biomassRemoved.FractionRemoved = userFractions.FractionRemoved;
-                        if (userFractions.FractionToResidue >= 0)
-                            biomassRemoved.FractionToResidue = userFractions.FractionToResidue;
+                        if (userFractions.FractionLiveToRemove >= 0.0)
+                            biomassRemoved.FractionLiveToRemove = userFractions.FractionLiveToRemove;
+                        if (userFractions.FractionDeadToRemove >= 0.0)
+                            biomassRemoved.FractionDeadToRemove = userFractions.FractionDeadToRemove;
+                        if (userFractions.FractionLiveToResidue >= 0.0)
+                            biomassRemoved.FractionLiveToResidue = userFractions.FractionLiveToResidue;
+                        if (userFractions.FractionDeadToResidue >= 0.0)
+                            biomassRemoved.FractionDeadToResidue = userFractions.FractionDeadToResidue;
                     }
                 }
                 allData.removalData.Add(organ.Name, biomassRemoved);

@@ -1078,16 +1078,19 @@ namespace Models.PMF.Organs
         /// <summary>
         /// remove biomass from the leaf.
         /// </summary>
-        /// <param name="value">The biomass removal fractions</param>
+        /// <param name="value">The frations of biomass to remove</param>
         public override void DoRemoveBiomass(OrganBiomassRemovalType value)
         {
             foreach (LeafCohort L in Leaves)
                 L.DoBiomassRemoval(value);
 
-            double TotalFracRemoved = value.FractionRemoved + value.FractionToResidue;
-            double PcToResidue = value.FractionToResidue / TotalFracRemoved * 100;
-            double PcRemoved = value.FractionRemoved / TotalFracRemoved * 100;
-            Summary.WriteMessage(this, "Removing " + TotalFracRemoved * 100 + "% of " + Name + " Biomass from " + Plant.Name + ".  Of this " + PcRemoved + "% is removed from the system and " + PcToResidue + "% is returned to the surface organic matter");
+            double totalFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
+            double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
+            double removedOff = (value.FractionLiveToRemove + value.FractionDeadToRemove) / totalFractionToRemove * 100;
+            Summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
+                                     + "% of " + Name + " Biomass from " + Plant.Name
+                                     + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
+                                     + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
         }
 
         /// <summary>

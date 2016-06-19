@@ -1053,48 +1053,47 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Removes leaf area and biomass on thinning event</summary>
-        /// <param name="value">The fraction.</param>
+        /// <param name="value">The fractions of biomass to remove.</param>
         virtual public void DoBiomassRemoval(OrganBiomassRemovalType value)
         {
             if (IsInitialised)
             {
-                LiveArea *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                LiveArea *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
 
-                double WtToResidue = 0;
+                double detachingWt = 0.0;
+                detachingWt += Dead.StructuralWt * value.FractionDeadToResidue;
+                Dead.StructuralWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+                detachingWt += Live.StructuralWt * value.FractionLiveToResidue;
+                Live.StructuralWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
 
-                WtToResidue += Dead.StructuralWt * value.FractionToResidue;
-                Dead.StructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                WtToResidue += Live.StructuralWt * value.FractionToResidue;
-                Live.StructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                detachingWt += Dead.NonStructuralWt * value.FractionDeadToResidue;
+                Dead.NonStructuralWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+                detachingWt += Live.NonStructuralWt * value.FractionLiveToResidue;
+                Live.NonStructuralWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
 
-                WtToResidue += Dead.NonStructuralWt * value.FractionToResidue;
-                Dead.NonStructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                WtToResidue += Live.NonStructuralWt * value.FractionToResidue;
-                Live.NonStructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                detachingWt += Dead.MetabolicWt * value.FractionDeadToResidue;
+                Dead.MetabolicWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+                detachingWt += Live.MetabolicWt * value.FractionLiveToResidue;
+                Live.MetabolicWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove)); ;
 
-                WtToResidue += Dead.MetabolicWt * value.FractionToResidue;
-                Dead.MetabolicWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                WtToResidue += Live.MetabolicWt * value.FractionToResidue;
-                Live.MetabolicWt *= (1 - (value.FractionToResidue + value.FractionRemoved)); ;
+                double detachingN = 0.0;
+                detachingN += Dead.StructuralN * value.FractionDeadToResidue;
+                Dead.StructuralN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+                detachingN += Live.StructuralN * value.FractionLiveToResidue;
+                Live.StructuralN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
 
-                double NToResidue = 0;
+                detachingN += Dead.NonStructuralN * value.FractionDeadToResidue;
+                Dead.NonStructuralN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+                detachingN += Live.NonStructuralN * value.FractionLiveToResidue;
+                Live.NonStructuralN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
 
-                NToResidue += Dead.StructuralN * value.FractionToResidue;
-                Dead.StructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                NToResidue += Live.StructuralN * value.FractionToResidue;
-                Live.StructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                detachingN += Dead.MetabolicN * value.FractionDeadToResidue;
+                Dead.MetabolicN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+                detachingN += Live.MetabolicN * value.FractionLiveToResidue;
+                Live.MetabolicN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove)); ;
 
-                NToResidue += Dead.NonStructuralN * value.FractionToResidue;
-                Dead.NonStructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                NToResidue += Live.NonStructuralN * value.FractionToResidue;
-                Live.NonStructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
-
-                NToResidue += Dead.MetabolicN * value.FractionToResidue;
-                Dead.MetabolicN *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                NToResidue += Live.MetabolicN * value.FractionToResidue;
-                Live.MetabolicN *= (1 - (value.FractionToResidue + value.FractionRemoved)); ;
-
-                SurfaceOrganicMatter.Add(WtToResidue * 10, NToResidue * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0, Plant.CropType, Name);
+                //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
             }
         }
         /// <summary>Removes leaves for cohort due to thin event.  </summary>

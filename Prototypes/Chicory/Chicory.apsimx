@@ -44,8 +44,8 @@ private void OnDoManagement(object sender, EventArgs e)
 {  
   if (Clock.Today.Date == HarvestDate2)  
   {  
-    Remove.SetFractionRemoved("Product", 1.0);  
-    Remove.SetFractionRemoved("Stover", 0.05);  
+    Remove.SetFractionToRemove("Product", 1.0);  
+    Remove.SetFractionToRemove("Stover", 0.05);  
     Remove.SetFractionToResidue("Stover",0.95)
     SCUM.Harvest(Remove);  
     SCUM.EndCrop();  
@@ -727,23 +727,31 @@ DM demand is based on ...
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.3</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
         <BiomassYesterday>0</BiomassYesterday>
@@ -949,23 +957,31 @@ DM demand is based on ...
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0.5</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
       </GenericAboveGroundOrgan>
@@ -1109,23 +1125,31 @@ DM demand is based on ...
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0.5</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
       </GenericAboveGroundOrgan>
@@ -1366,23 +1390,31 @@ No effect of soil water content on root growth is currently captured in the mode
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.3</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.15</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
         <InitialDM>0.01</InitialDM>
@@ -1512,23 +1544,31 @@ No effect of soil water content on root growth is currently captured in the mode
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
       </GenericBelowGroundOrgan>
@@ -2771,12 +2811,12 @@ namespace Models
 				leafFracToRemove = leafFracToRemove - leafFracToResidue;
 				stemFracToRemove = stemFracToRemove - stemFracToResidue;
 				
-				removalFractions.SetFractionRemoved("Leaf", leafFracToRemove);
+				removalFractions.SetFractionToRemove("Leaf", leafFracToRemove);
 				removalFractions.SetFractionToResidue("Leaf", leafFracToResidue);
-				removalFractions.SetFractionRemoved("Stem", stemFracToRemove);
+				removalFractions.SetFractionToRemove("Stem", stemFracToRemove);
 				removalFractions.SetFractionToResidue("Stem", stemFracToResidue);  
 				
-				removalFractions.SetFractionRemoved("Root", 0.0);
+				removalFractions.SetFractionToRemove("Root", 0.0);
 				removalFractions.SetFractionToResidue("Root", 0.0);
 				
 			
@@ -5252,12 +5292,12 @@ namespace Models
 				leafFracToRemove = leafFracToRemove - leafFracToResidue;
 				stemFracToRemove = stemFracToRemove - stemFracToResidue;
 				
-				removalFractions.SetFractionRemoved("Leaf", leafFracToRemove);
+				removalFractions.SetFractionToRemove("Leaf", leafFracToRemove);
 				removalFractions.SetFractionToResidue("Leaf", leafFracToResidue);
-				removalFractions.SetFractionRemoved("Stem", stemFracToRemove);
+				removalFractions.SetFractionToRemove("Stem", stemFracToRemove);
 				removalFractions.SetFractionToResidue("Stem", stemFracToResidue);  
 				
-				removalFractions.SetFractionRemoved("Root", 0.0);
+				removalFractions.SetFractionToRemove("Root", 0.0);
 				removalFractions.SetFractionToResidue("Root", 0.0);
 				
 			
@@ -7761,12 +7801,12 @@ namespace Models
 				leafFracToRemove = leafFracToRemove - leafFracToResidue;
 				stemFracToRemove = stemFracToRemove - stemFracToResidue;
 				
-				removalFractions.SetFractionRemoved("Leaf", leafFracToRemove);
+				removalFractions.SetFractionToRemove("Leaf", leafFracToRemove);
 				removalFractions.SetFractionToResidue("Leaf", leafFracToResidue);
-				removalFractions.SetFractionRemoved("Stem", stemFracToRemove);
+				removalFractions.SetFractionToRemove("Stem", stemFracToRemove);
 				removalFractions.SetFractionToResidue("Stem", stemFracToResidue);  
 				
-				removalFractions.SetFractionRemoved("Root", 0.0);
+				removalFractions.SetFractionToRemove("Root", 0.0);
 				removalFractions.SetFractionToResidue("Root", 0.0);
 				
 			
@@ -10924,12 +10964,12 @@ namespace Models
 				leafFracToRemove = leafFracToRemove - leafFracToResidue;
 				stemFracToRemove = stemFracToRemove - stemFracToResidue;
 				
-				removalFractions.SetFractionRemoved("Leaf", leafFracToRemove);
+				removalFractions.SetFractionToRemove("Leaf", leafFracToRemove);
 				removalFractions.SetFractionToResidue("Leaf", leafFracToResidue);
-				removalFractions.SetFractionRemoved("Stem", stemFracToRemove);
+				removalFractions.SetFractionToRemove("Stem", stemFracToRemove);
 				removalFractions.SetFractionToResidue("Stem", stemFracToResidue);  
 				
-				removalFractions.SetFractionRemoved("Root", 0.0);
+				removalFractions.SetFractionToRemove("Root", 0.0);
 				removalFractions.SetFractionToResidue("Root", 0.0);
 				
 			
@@ -12578,12 +12618,12 @@ namespace Models
 				leafFracToRemove = leafFracToRemove - leafFracToResidue;
 				stemFracToRemove = stemFracToRemove - stemFracToResidue;
 				
-				removalFractions.SetFractionRemoved("Leaf", leafFracToRemove);
+				removalFractions.SetFractionToRemove("Leaf", leafFracToRemove);
 				removalFractions.SetFractionToResidue("Leaf", leafFracToResidue);
-				removalFractions.SetFractionRemoved("Stem", stemFracToRemove);
+				removalFractions.SetFractionToRemove("Stem", stemFracToRemove);
 				removalFractions.SetFractionToResidue("Stem", stemFracToResidue);  
 				
-				removalFractions.SetFractionRemoved("Root", 0.0);
+				removalFractions.SetFractionToRemove("Root", 0.0);
 				removalFractions.SetFractionToResidue("Root", 0.0);
 				
 			
@@ -15074,12 +15114,12 @@ namespace Models
 				leafFracToRemove = leafFracToRemove - leafFracToResidue;
 				stemFracToRemove = stemFracToRemove - stemFracToResidue;
 				
-				removalFractions.SetFractionRemoved("Leaf", leafFracToRemove);
+				removalFractions.SetFractionToRemove("Leaf", leafFracToRemove);
 				removalFractions.SetFractionToResidue("Leaf", leafFracToResidue);
-				removalFractions.SetFractionRemoved("Stem", stemFracToRemove);
+				removalFractions.SetFractionToRemove("Stem", stemFracToRemove);
 				removalFractions.SetFractionToResidue("Stem", stemFracToResidue);  
 				
-				removalFractions.SetFractionRemoved("Root", 0.0);
+				removalFractions.SetFractionToRemove("Root", 0.0);
 				removalFractions.SetFractionToResidue("Root", 0.0);
 				
 			
@@ -16113,13 +16153,13 @@ namespace Models
 			LeafHarvested = LeafWt * LeafRemoved;
 			StemHarvested = StemWt * StemRemoved;
 
-			removalFractions.SetFractionRemoved("Leaf", LeafRemoved);
+			removalFractions.SetFractionToRemove("Leaf", LeafRemoved);
 			removalFractions.SetFractionToResidue("Leaf", LeafResidue);
 
-			removalFractions.SetFractionRemoved("Stem", StemRemoved);
+			removalFractions.SetFractionToRemove("Stem", StemRemoved);
 			removalFractions.SetFractionToResidue("Stem", StemResidue);  
 			
-			removalFractions.SetFractionRemoved("Root", 0.0);
+			removalFractions.SetFractionToRemove("Root", 0.0);
 			removalFractions.SetFractionToResidue("Root", 0.0);
 			
 			Chicory.RemoveBiomass("Cut", removalFractions);
@@ -18953,12 +18993,12 @@ namespace Models
 				leafFracToRemove = leafFracToRemove - leafFracToResidue;
 				stemFracToRemove = stemFracToRemove - stemFracToResidue;
 				
-				removalFractions.SetFractionRemoved("Leaf", leafFracToRemove);
+				removalFractions.SetFractionToRemove("Leaf", leafFracToRemove);
 				removalFractions.SetFractionToResidue("Leaf", leafFracToResidue);
-				removalFractions.SetFractionRemoved("Stem", stemFracToRemove);
+				removalFractions.SetFractionToRemove("Stem", stemFracToRemove);
 				removalFractions.SetFractionToResidue("Stem", stemFracToResidue);  
 				
-				removalFractions.SetFractionRemoved("Root", 0.0);
+				removalFractions.SetFractionToRemove("Root", 0.0);
 				removalFractions.SetFractionToResidue("Root", 0.0);
 				
 			
@@ -19473,9 +19513,12 @@ namespace Models
           <RecordNumber>0</RecordNumber>
           <SoilType>Typic Udivitrand (US), Typic Orthic
  Allophanic Soil (NZ)</SoilType>
-          <LocalName>Horotiu silt loam</LocalName>
-          <Site>Ruakura</Site>
-          <NearestTown>Hamilton</NearestTown>
+          <LocalName>Horotiu silt loam
+</LocalName>
+          <Site>Ruakura
+</Site>
+          <NearestTown>Hamilton
+</NearestTown>
           <Region>Waikato</Region>
           <State />
           <Country>New Zealand</Country>
