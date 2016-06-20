@@ -36507,7 +36507,8 @@ namespace Models
 				Remove.SetFractionToRemove("Spike", 0);
 				Remove.SetFractionToRemove("Root", 0);
 				Remove.SetFractionToResidue("Grain", ProportionNibbled);
-				Remove.SetFractionToResidue("Leaf", ProportionNibbled);
+				Remove.SetFractionToResidue("Leaf", ProportionNibbled,"live");
+				Remove.SetFractionToResidue("Leaf", ProportionNibbled, "dead");
 				Remove.SetFractionToResidue("Stem", ProportionNibbled);
 				Remove.SetFractionToResidue("Spike", ProportionNibbled);
 				Remove.SetFractionToResidue("Root", 0);
