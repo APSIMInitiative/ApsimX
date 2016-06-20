@@ -1549,7 +1549,7 @@ The model consists of:
             <Name>Cut</Name>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0.8</FractionDeadToRemove>
-            <FractionLiveToResidue>0.0</FractionLiveToResidue>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
@@ -36502,12 +36502,13 @@ namespace Models
 			{
 				//Harvest with manager specified removal fractions
 				Remove.SetFractionToRemove("Grain", 0);
-				Remove.SetFractionToRemove("Leaf", 0);
+				Remove.SetFractionToRemove("Leaf", 0, "live");
+				Remove.SetFractionToRemove("Leaf", 0, "dead");
 				Remove.SetFractionToRemove("Stem", 0);
 				Remove.SetFractionToRemove("Spike", 0);
 				Remove.SetFractionToRemove("Root", 0);
 				Remove.SetFractionToResidue("Grain", ProportionNibbled);
-				Remove.SetFractionToResidue("Leaf", ProportionNibbled,"live");
+				Remove.SetFractionToResidue("Leaf", ProportionNibbled, "live");
 				Remove.SetFractionToResidue("Leaf", ProportionNibbled, "dead");
 				Remove.SetFractionToResidue("Stem", ProportionNibbled);
 				Remove.SetFractionToResidue("Spike", ProportionNibbled);
