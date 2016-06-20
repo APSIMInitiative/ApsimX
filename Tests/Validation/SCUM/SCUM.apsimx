@@ -3141,11 +3141,11 @@ namespace Models
 			else if (Clock.Today.Date == CutDate)
 			{
 				Remove.SetPhenologyStage = 3.5;
-				Remove.SetFractionRemoved("Stover", 0.5);
+				Remove.SetFractionToRemove("Stover", 0.5);
 				Remove.SetFractionToResidue("Stover", 0.2);
-				Remove.SetFractionRemoved("Product", 0.8);
+				Remove.SetFractionToRemove("Product", 0.8);
 				Remove.SetFractionToResidue("Product", 0.1);
-				Remove.SetFractionRemoved("Root", 0.0);
+				Remove.SetFractionToRemove("Root", 0.0);
 				Remove.SetFractionToResidue("Root", 0.2);
 				SCUM.RemoveBiomass("Cut", Remove);
 			}
@@ -3158,8 +3158,8 @@ namespace Models
 			else if (Clock.Today.Date == CutDate2)
 			{
 				//Harvest with manager specified removal fractions
-				Remove.SetFractionRemoved("Product", 0.3);
-				Remove.SetFractionRemoved("Stover", 0.1);
+				Remove.SetFractionToRemove("Product", 0.3);
+				Remove.SetFractionToRemove("Stover", 0.1);
 				Remove.SetFractionToResidue("Product", 0.3);
 				Remove.SetFractionToResidue("Stover", 0.7);
 				SCUM.RemoveBiomass("Cut", Remove);
@@ -3172,8 +3172,8 @@ namespace Models
 				SCUM.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 			else if (Clock.Today.Date == CutDate3)
 			{
-				Remove.SetFractionRemoved("Product", 0.5);
-				Remove.SetFractionRemoved("Stover", 0.3);
+				Remove.SetFractionToRemove("Product", 0.5);
+				Remove.SetFractionToRemove("Stover", 0.3);
 				Remove.SetFractionToResidue("Product", 0.3);
 				Remove.SetFractionToResidue("Stover", 0.7);
 				SCUM.RemoveBiomass("Cut", Remove);
@@ -12380,11 +12380,11 @@ namespace Models
 			Yields = textFile.ToTable();
 			textFile.Close();
 			
-			Remove.SetFractionRemoved("Stover", 0);
+			Remove.SetFractionToRemove("Stover", 0);
 			Remove.SetFractionToResidue("Stover", 1);
-			Remove.SetFractionRemoved("Product", 1);
+			Remove.SetFractionToRemove("Product", 1);
 			Remove.SetFractionToResidue("Product", 0);
-			Remove.SetFractionRemoved("Root", 0.0);
+			Remove.SetFractionToRemove("Root", 0.0);
 			Remove.SetFractionToResidue("Root", 0.2);
 		}
 		

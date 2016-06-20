@@ -2186,13 +2186,13 @@ namespace Models
 			if (existingWt >= removeAmount)
 			{
 				// get the fraction to remove for each organ (will override the default values)
-				// the default is [Chicory].Leaf.BiomassRemovalDefaults.Cut.FractionRemoved, or equivalent
+				// the default is [Chicory].Leaf.BiomassRemovalDefaults.Cut.FractionLiveToRemove, or equivalent
 				double leafFracToRemove = removeAmount * (leafLiveWt + leafDeadWt) / existingWt / existingWt;
 				double stemFracToRemove = removeAmount * (stemLiveWt + stemDeadWt) / existingWt / existingWt;
 				double flowerFracToRemove = removeAmount * (flowerLiveWt + flowerDeadWt) / existingWt / existingWt;
 
 				// get the fraction to residue (wastage - will override the default values)
-				// the default is [Chicory].Leaf.BiomassRemovalDefaults.Cut.FractionToResidue, or equivalent
+				// the default is [Chicory].Leaf.BiomassRemovalDefaults.Cut.FractionLiveToResidue, or equivalent
 				double leafFracToResidue = leafResidueFrac * leafFracToRemove;
 				double stemFracToResidue = stemResidueFrac * stemFracToRemove;
 				double flowerFracToResidue = flowerResidueFrac * flowerFracToRemove;
@@ -3096,14 +3096,14 @@ namespace Models
 			if (existingWt >= removeAmount)
 			{
 				// get the fraction to remove for each organ (will override the default values)
-				// the default is [Chicory].Leaf.BiomassRemovalDefaults.Cut.FractionRemoved, or equivalent
+				// the default is [Chicory].Leaf.BiomassRemovalDefaults.Cut.FractionLiveToRemove, or equivalent
 				double leafFracToRemove = removeAmount / existingWt;
 				double stemFracToRemove = leafFracToRemove;
 				double flowerFracToRemove = leafFracToRemove;
 				//double leafFracToRemove = removeAmount * (leafLiveWt + leafDeadWt) / existingWt / existingWt;
 
 				// get the fraction to residue (wastage - will override the default values)
-				// the default is [Chicory].Leaf.BiomassRemovalDefaults.Cut.FractionToResidue, or equivalent
+				// the default is [Chicory].Leaf.BiomassRemovalDefaults.Cut.FractionLiveToResidue, or equivalent
 				double leafFracToResidue = leafResidueFrac * leafFracToRemove;
 				double stemFracToResidue = stemResidueFrac * stemFracToRemove;
 				double flowerFracToResidue = flowerResidueFrac * flowerFracToRemove;

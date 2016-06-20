@@ -2822,23 +2822,23 @@ This is important in SLURP as it is set for each species to represent their diff
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
                 <Name>Harvest</Name>
-                <FractionRemoved>0.5</FractionRemoved>
-                <FractionToResidue>0.1</FractionToResidue>
+                <FractionLiveToRemove>0.5</FractionLiveToRemove>
+                <FractionLiveToResidue>0.1</FractionLiveToResidue>
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Cut</Name>
-                <FractionRemoved>0.8</FractionRemoved>
-                <FractionToResidue>0</FractionToResidue>
+                <FractionLiveToRemove>0.8</FractionLiveToRemove>
+                <FractionLiveToResidue>0</FractionLiveToResidue>
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Prune</Name>
-                <FractionRemoved>0</FractionRemoved>
-                <FractionToResidue>0.6</FractionToResidue>
+                <FractionLiveToRemove>0</FractionLiveToRemove>
+                <FractionLiveToResidue>0.6</FractionLiveToResidue>
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Graze</Name>
-                <FractionRemoved>0.6</FractionRemoved>
-                <FractionToResidue>0.2</FractionToResidue>
+                <FractionLiveToRemove>0.6</FractionLiveToRemove>
+                <FractionLiveToResidue>0.2</FractionLiveToResidue>
               </OrganBiomassRemovalType>
             </Folder>
             <LinearInterpolationFunction>
@@ -2999,23 +2999,23 @@ This is important in SLURP as it is set for each species to represent their diff
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
                 <Name>Harvest</Name>
-                <FractionRemoved>0.5</FractionRemoved>
-                <FractionToResidue>0.1</FractionToResidue>
+                <FractionLiveToRemove>0.5</FractionLiveToRemove>
+                <FractionLiveToResidue>0.1</FractionLiveToResidue>
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Cut</Name>
-                <FractionRemoved>0.8</FractionRemoved>
-                <FractionToResidue>0</FractionToResidue>
+                <FractionLiveToRemove>0.8</FractionLiveToRemove>
+                <FractionLiveToResidue>0</FractionLiveToResidue>
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Prune</Name>
-                <FractionRemoved>0</FractionRemoved>
-                <FractionToResidue>0.6</FractionToResidue>
+                <FractionLiveToRemove>0</FractionLiveToRemove>
+                <FractionLiveToResidue>0.6</FractionLiveToResidue>
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Graze</Name>
-                <FractionRemoved>0.6</FractionRemoved>
-                <FractionToResidue>0.2</FractionToResidue>
+                <FractionLiveToRemove>0.6</FractionLiveToRemove>
+                <FractionLiveToResidue>0.2</FractionLiveToResidue>
               </OrganBiomassRemovalType>
             </Folder>
             <BiomassYesterday>0</BiomassYesterday>
@@ -3204,23 +3204,23 @@ This is important in SLURP as it is set for each species to represent their diff
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
                 <Name>Harvest</Name>
-                <FractionRemoved>0.5</FractionRemoved>
-                <FractionToResidue>0.1</FractionToResidue>
+                <FractionLiveToRemove>0.5</FractionLiveToRemove>
+                <FractionLiveToResidue>0.1</FractionLiveToResidue>
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Cut</Name>
-                <FractionRemoved>0.8</FractionRemoved>
-                <FractionToResidue>0</FractionToResidue>
+                <FractionLiveToRemove>0.8</FractionLiveToRemove>
+                <FractionLiveToResidue>0</FractionLiveToResidue>
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Prune</Name>
-                <FractionRemoved>0</FractionRemoved>
-                <FractionToResidue>0.6</FractionToResidue>
+                <FractionLiveToRemove>0</FractionLiveToRemove>
+                <FractionLiveToResidue>0.6</FractionLiveToResidue>
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Graze</Name>
-                <FractionRemoved>0.6</FractionRemoved>
-                <FractionToResidue>0.2</FractionToResidue>
+                <FractionLiveToRemove>0.6</FractionLiveToRemove>
+                <FractionLiveToResidue>0.2</FractionLiveToResidue>
               </OrganBiomassRemovalType>
             </Folder>
             <LinearInterpolationFunction>
@@ -3381,23 +3381,23 @@ This is important in SLURP as it is set for each species to represent their diff
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
                 <Name>Harvest</Name>
-                <FractionRemoved>0.5</FractionRemoved>
-                <FractionToResidue>0.1</FractionToResidue>
+                <FractionLiveToRemove>0.5</FractionLiveToRemove>
+                <FractionLiveToResidue>0.1</FractionLiveToResidue>
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Cut</Name>
-                <FractionRemoved>0.8</FractionRemoved>
-                <FractionToResidue>0</FractionToResidue>
+                <FractionLiveToRemove>0.8</FractionLiveToRemove>
+                <FractionLiveToResidue>0</FractionLiveToResidue>
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Prune</Name>
-                <FractionRemoved>0</FractionRemoved>
-                <FractionToResidue>0.6</FractionToResidue>
+                <FractionLiveToRemove>0</FractionLiveToRemove>
+                <FractionLiveToResidue>0.6</FractionLiveToResidue>
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Graze</Name>
-                <FractionRemoved>0.6</FractionRemoved>
-                <FractionToResidue>0.2</FractionToResidue>
+                <FractionLiveToRemove>0.6</FractionLiveToRemove>
+                <FractionLiveToResidue>0.2</FractionLiveToResidue>
               </OrganBiomassRemovalType>
             </Folder>
             <BiomassYesterday>0</BiomassYesterday>
