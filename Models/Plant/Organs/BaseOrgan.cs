@@ -165,6 +165,14 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public double DetachedN { get; set; }
 
+        /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
+        [XmlIgnore]
+        public double RemovedWt { get; set; }
+
+        /// <summary>Gets the N amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
+        [XmlIgnore]
+        public double RemovedN { get; set; }
+
         /// <summary>Gets the dm supply photosynthesis.</summary>
         /// <value>The dm supply photosynthesis.</value>
         [Units("g/m^2")]
@@ -188,30 +196,41 @@ namespace Models.PMF.Organs
             }
             else  if (totalFractionToRemove > 0.0)
             {
+                double detachingWt = Live.Wt * value.FractionLiveToResidue + Dead.Wt * value.FractionDeadToResidue;
+                double detachingN = Live.N * value.FractionLiveToResidue + Dead.N * value.FractionDeadToResidue;
+                double removingWt = Live.Wt * value.FractionLiveToRemove + Dead.Wt * value.FractionDeadToRemove;
+                double removingN = Live.N * value.FractionLiveToRemove + Dead.N * value.FractionDeadToRemove;
+
+                Live.StructuralWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
+                Dead.StructuralWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+                Live.NonStructuralWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
+                Dead.NonStructuralWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+                Live.MetabolicWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
+                Dead.MetabolicWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+
+                DetachedN += Live.N * value.FractionLiveToResidue + Dead.N * value.FractionDeadToResidue;
+                RemovedN += Live.N * value.FractionLiveToRemove + Dead.N * value.FractionDeadToRemove;
+                Live.StructuralN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
+                Dead.StructuralN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+                Live.NonStructuralN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
+                Dead.NonStructuralN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+                Live.MetabolicN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
+                Dead.MetabolicN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+
+                SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0.0, Plant.CropType, Name);
+                //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
+
+                DetachedWt += detachingWt;
+                DetachedN += detachingN;
+                RemovedWt += removingWt;
+                RemovedN += removingN;
+
                 double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
                 double removedOff = (value.FractionLiveToRemove + value.FractionDeadToRemove) / totalFractionToRemove * 100;
                 Summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
                                          + "% of " + Name + " Biomass from " + Plant.Name
                                          + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
                                          + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
-
-                double detachingWt = Live.Wt * value.FractionLiveToResidue + Dead.Wt * value.FractionDeadToResidue;
-                double detachingN = Live.N * value.FractionLiveToResidue + Dead.N * value.FractionDeadToResidue;
-
-                SurfaceOrganicMatter.Add(detachingWt  * 10, detachingN * 10, 0.0, Plant.CropType, Name);
-                //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
-
-                DetachedWt += detachingWt;
-                DetachedN += detachingN;
-
-                Live.StructuralWt *= (1.0 - value.FractionLiveToRemove);
-                Live.NonStructuralWt *= (1.0 - value.FractionLiveToRemove);
-                Live.StructuralN *= (1.0 - value.FractionLiveToRemove);
-                Live.NonStructuralN *= (1.0 - value.FractionLiveToRemove);
-                Dead.StructuralWt *= (1.0 - value.FractionDeadToRemove);
-                Dead.NonStructuralWt *= (1.0 - value.FractionDeadToRemove);
-                Dead.StructuralN *= (1.0 - value.FractionDeadToRemove);
-                Dead.NonStructuralN *= (1.0 - value.FractionDeadToRemove);
             }
         }
 
@@ -226,7 +245,7 @@ namespace Models.PMF.Organs
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (Plant.IsAlive)
-                DailyCleanup();
+                DoDailyCleanup();
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -300,10 +319,12 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Does the zeroing of some varibles.</summary>
-        virtual protected void DailyCleanup()
+        virtual protected void DoDailyCleanup()
         {
             DetachedWt = 0.0;
             DetachedN = 0.0;
+            RemovedWt = 0.0;
+            RemovedN = 0.0;
         }
 
         /// <summary>Does the potential nutrient.</summary>

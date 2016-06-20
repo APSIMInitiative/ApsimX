@@ -233,9 +233,23 @@ namespace Models.PMF.Organs
         /// <summary>The delta wt</summary>
         [XmlIgnore]
         public double DeltaWt = 0;
-        //public double StructuralNDemand = 0;
-        //public double MetabolicNDemand = 0;
-        //public double NonStructuralNDemand = 0;
+
+        /// <summary>Gets the DM amount detached (send to surface OM) (g/m2)</summary>
+        [XmlIgnore]
+        public double DetachedWt { get; set; }
+        
+        /// <summary>Gets the N amount detached (send to surface OM) (g/m2)</summary>
+        [XmlIgnore]
+        public double DetachedN { get; set; }
+        
+        /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
+        [XmlIgnore]
+        public double RemovedWt { get; set; }
+
+        /// <summary>Gets the N amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
+        [XmlIgnore]
+        public double RemovedN { get; set; }
+
         /// <summary>The potential area growth</summary>
         [XmlIgnore]
         public double PotentialAreaGrowth = 0;
@@ -1058,44 +1072,43 @@ namespace Models.PMF.Organs
         {
             if (IsInitialised)
             {
-                LiveArea *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
+                double totalFractionBeingRemoved = value.FractionLiveToRemove + value.FractionDeadToRemove
+                                                   + value.FractionLiveToResidue + value.FractionDeadToResidue;
+                if (totalFractionBeingRemoved > 1.0)
+                {
+                    throw new Exception("The sum of FractionToResidue and FractionToRemove sent with your "
+                                        + "!!!!PLACE HOLDER FOR EVENT SENDER!!!!"
+                                        + " is greater than 1.  Had this execption not triggered you would be removing more biomass from "
+                                        + Name + " than there is to remove");
+                }
+                else if (totalFractionBeingRemoved > 0.0)
+                {
+                    LiveArea *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
 
-                double detachingWt = 0.0;
-                detachingWt += Dead.StructuralWt * value.FractionDeadToResidue;
-                Dead.StructuralWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
-                detachingWt += Live.StructuralWt * value.FractionLiveToResidue;
-                Live.StructuralWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
+                    DetachedWt += Live.Wt * value.FractionLiveToResidue + Dead.Wt * value.FractionDeadToResidue;
+                    RemovedWt += Live.Wt * value.FractionLiveToRemove + Dead.Wt * value.FractionDeadToRemove;
+                    Live.StructuralWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
+                    Dead.StructuralWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+                    Live.NonStructuralWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
+                    Dead.NonStructuralWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+                    Live.MetabolicWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
+                    Dead.MetabolicWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
 
-                detachingWt += Dead.NonStructuralWt * value.FractionDeadToResidue;
-                Dead.NonStructuralWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
-                detachingWt += Live.NonStructuralWt * value.FractionLiveToResidue;
-                Live.NonStructuralWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
+                    DetachedN += Live.N * value.FractionLiveToResidue + Dead.N * value.FractionDeadToResidue;
+                    RemovedN += Live.N * value.FractionLiveToRemove + Dead.N * value.FractionDeadToRemove;
+                    Live.StructuralN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
+                    Dead.StructuralN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+                    Live.NonStructuralN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
+                    Dead.NonStructuralN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+                    Live.MetabolicN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
+                    Dead.MetabolicN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
 
-                detachingWt += Dead.MetabolicWt * value.FractionDeadToResidue;
-                Dead.MetabolicWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
-                detachingWt += Live.MetabolicWt * value.FractionLiveToResidue;
-                Live.MetabolicWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove)); ;
-
-                double detachingN = 0.0;
-                detachingN += Dead.StructuralN * value.FractionDeadToResidue;
-                Dead.StructuralN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
-                detachingN += Live.StructuralN * value.FractionLiveToResidue;
-                Live.StructuralN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
-
-                detachingN += Dead.NonStructuralN * value.FractionDeadToResidue;
-                Dead.NonStructuralN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
-                detachingN += Live.NonStructuralN * value.FractionLiveToResidue;
-                Live.NonStructuralN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
-
-                detachingN += Dead.MetabolicN * value.FractionDeadToResidue;
-                Dead.MetabolicN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
-                detachingN += Live.MetabolicN * value.FractionLiveToResidue;
-                Live.MetabolicN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove)); ;
-
-                SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0, Plant.CropType, Name);
-                //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
+                    SurfaceOrganicMatter.Add(DetachedWt * 10, DetachedN * 10, 0, Plant.CropType, Name);
+                    //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
+                }
             }
         }
+
         /// <summary>Removes leaves for cohort due to thin event.  </summary>
         /// <param name="ProportionRemoved">The fraction.</param>
         virtual public void DoThin(double ProportionRemoved)
@@ -1137,6 +1150,16 @@ namespace Models.PMF.Organs
             if (IsAppeared)
                 DoKill(fraction);
         }
+
+        /// <summary>Does the zeroing of some varibles.</summary>
+        virtual protected void DoDailyCleanup()
+        {
+            DetachedWt = 0.0;
+            DetachedN = 0.0;
+            RemovedWt = 0.0;
+            RemovedN = 0.0;
+        }
+
         /// <summary>Potential delta LAI</summary>
         /// <param name="TT">thermal-time</param>
         /// <returns>(mm2 leaf/cohort position/m2 soil/day)</returns>
@@ -1234,6 +1257,7 @@ namespace Models.PMF.Organs
             return FracDetach;
 
         }
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1241,6 +1265,16 @@ namespace Models.PMF.Organs
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             //MyPaddock.Subscribe(Structure.InitialiseStage, DoInitialisation);
+        }
+
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (Plant.IsAlive)
+                DoDailyCleanup();
         }
         #endregion
 

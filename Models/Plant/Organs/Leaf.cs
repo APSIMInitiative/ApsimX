@@ -1081,8 +1081,14 @@ namespace Models.PMF.Organs
         /// <param name="value">The frations of biomass to remove</param>
         public override void DoRemoveBiomass(OrganBiomassRemovalType value)
         {
-            foreach (LeafCohort L in Leaves)
-                L.DoBiomassRemoval(value);
+            foreach (LeafCohort leaf in Leaves)
+            {
+                leaf.DoBiomassRemoval(value);
+                DetachedWt += leaf.DetachedWt;
+                DetachedN += leaf.DetachedN;
+                RemovedWt += leaf.RemovedWt;
+                RemovedN += leaf.RemovedN;
+            }
 
             double totalFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
             double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
@@ -1099,8 +1105,8 @@ namespace Models.PMF.Organs
         /// <param name="ProportionRemoved">The proportion of stems removed by thinning</param>
         public void DoThin(double ProportionRemoved)
         {
-            foreach (LeafCohort L in Leaves)
-                L.DoThin(ProportionRemoved);
+            foreach (LeafCohort leaf in Leaves)
+                leaf.DoThin(ProportionRemoved);
         }
         #endregion
 
