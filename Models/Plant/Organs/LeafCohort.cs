@@ -1068,7 +1068,7 @@ namespace Models.PMF.Organs
         }
         /// <summary>Removes leaf area and biomass on thinning event</summary>
         /// <param name="value">The fractions of biomass to remove.</param>
-        virtual public void DoBiomassRemoval(OrganBiomassRemovalType value)
+        virtual public void DoLeafBiomassRemoval(OrganBiomassRemovalType value)
         {
             if (IsInitialised)
             {

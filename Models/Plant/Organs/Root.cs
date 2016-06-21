@@ -402,7 +402,7 @@ namespace Models.PMF.Organs
 
                 // Do Root Senescence
                 if (mySenescenceRate > 0.0)
-                    DoRootDetachment(mySenescenceRate);
+                    DoRootBiomassRemoval(mySenescenceRate);
             }
         }
 
@@ -528,7 +528,7 @@ namespace Models.PMF.Organs
         public override void DoPlantEnding()
         {
             //Send all root biomass to soil FOM
-            DoRootDetachment(1.0);
+            DoRootBiomassRemoval(1.0);
             Clear();
         }
 
@@ -564,43 +564,33 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Performs the detachment of senesced roots</summary>
-        /// <param name="detachFraction">Fraction to remove (send to soil FOM)</param>
-        private void DoRootDetachment(double detachFraction)
+        /// <summary>Performs the removal of roots</summary>
+        /// <param name="detachFraction">Fraction to send to residue (soil FOM)</param>
+        /// <param name="removeFraction">Fraction to remove from the system</param>
+        private void DoRootBiomassRemoval(double detachFraction, double removeFraction = 0.0)
         {
             FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.Thickness.Length];
-            double detachingDM = 0.0;
+            double totalFractionToRemove = detachFraction + removeFraction;
+            double detachingWt = 0.0;
             double detachingN = 0.0;
             for (int layer = 0; layer < Soil.Thickness.Length; layer++)
             {
-                if (detachFraction > 0.999999)
-                {
-                    // detach all material
-                    LayerLive[layer].StructuralWt = 0.0;
-                    LayerLive[layer].NonStructuralWt = 0.0;
-                    LayerLive[layer].StructuralN = 0.0;
-                    LayerLive[layer].NonStructuralN = 0.0;
-                    detachingDM = LayerLive[layer].Wt + LayerDead[layer].Wt;
-                    detachingN = LayerLive[layer].N + LayerDead[layer].N;
-                }
-                else
-                {
-                    // detach a fraction of existing material
-                    LayerLive[layer].StructuralWt *= (1.0 - detachFraction);
-                    LayerLive[layer].NonStructuralWt *= (1.0 - detachFraction);
-                    LayerLive[layer].StructuralN *= (1.0 - detachFraction);
-                    LayerLive[layer].NonStructuralN *= (1.0 - detachFraction);
-                    detachingDM = (LayerLive[layer].Wt + LayerDead[layer].Wt) * detachFraction;
-                    detachingN = (LayerLive[layer].N + LayerDead[layer].N) * detachFraction;
-                }
+                detachingWt = (LayerLive[layer].Wt + LayerDead[layer].Wt) * detachFraction;
+                detachingN = (LayerLive[layer].N + LayerDead[layer].N) * detachFraction;
+                RemovedWt += (LayerLive[layer].Wt + LayerDead[layer].Wt) * removeFraction;
+                RemovedN += (LayerLive[layer].N + LayerDead[layer].N) * removeFraction;
+                LayerLive[layer].StructuralWt *= (1.0 - totalFractionToRemove);
+                LayerLive[layer].NonStructuralWt *= (1.0 - totalFractionToRemove);
+                LayerLive[layer].StructuralN *= (1.0 - totalFractionToRemove);
+                LayerLive[layer].NonStructuralN *= (1.0 - totalFractionToRemove);
 
-                DetachedWt += detachingDM;
+                DetachedWt += detachingWt;
                 DetachedN += detachingN;
 
                 FOMType fom = new FOMType();
-                fom.amount = (float) (detachingDM * 10);
+                fom.amount = (float) (detachingWt * 10);
                 fom.N = (float) (detachingN * 10);
-                fom.C = (float) (0.40 * detachingDM * 10);
+                fom.C = (float) (0.40 * detachingWt * 10);
                 fom.P = 0.0;
                 fom.AshAlk = 0.0;
 
@@ -1030,25 +1020,18 @@ namespace Models.PMF.Organs
         public override void DoRemoveBiomass(OrganBiomassRemovalType value)
         {
             //NOTE: roots don't have dead biomass
-            if (value.FractionLiveToResidue + value.FractionLiveToRemove <= 1.0)
+            double totalFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
+            if (totalFractionToRemove > 1.0)
             {
-                double RemainingFraction = 1 - value.FractionLiveToRemove;
-                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
-                {
-                    LayerLive[layer].StructuralWt *= RemainingFraction;
-                    LayerLive[layer].NonStructuralWt *= RemainingFraction;
-                    LayerLive[layer].StructuralN *= RemainingFraction;
-                    LayerLive[layer].NonStructuralN *= RemainingFraction;
-                }
-
-                if (value.FractionLiveToResidue > 0.0)
-                    DoRootDetachment(value.FractionLiveToResidue);
-            }
-            else
-                throw new Exception("The sum of FractionToResidue and FractionToRemove sent with your " 
-                                    + "Place holder for event sender" 
-                                    + " is greater than 1.  Had this execption not triggered you would be removing more biomass from " 
+                throw new Exception("The sum of FractionToResidue and FractionToRemove sent with your "
+                                    + "!!!!PLACE HOLDER FOR EVENT SENDER!!!!"
+                                    + " is greater than 1.  Had this execption not triggered you would be removing more biomass from "
                                     + Name + " than there is to remove");
+            }
+            else if (totalFractionToRemove > 0.0)
+            {
+                DoRootBiomassRemoval(value.FractionLiveToResidue, value.FractionLiveToRemove);
+            }
         }
 
         #endregion

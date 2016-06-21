@@ -1083,7 +1083,7 @@ namespace Models.PMF.Organs
         {
             foreach (LeafCohort leaf in Leaves)
             {
-                leaf.DoBiomassRemoval(value);
+                leaf.DoLeafBiomassRemoval(value);
                 DetachedWt += leaf.DetachedWt;
                 DetachedN += leaf.DetachedN;
                 RemovedWt += leaf.RemovedWt;
