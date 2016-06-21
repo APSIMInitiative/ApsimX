@@ -569,26 +569,27 @@ namespace Models.PMF.Organs
         /// <param name="removeFraction">Fraction to remove from the system</param>
         private void DoRootBiomassRemoval(double detachFraction, double removeFraction = 0.0)
         {
-            //NOTE: there is no dead pool for roots
+            //NOTE: at the moment Root has no Dead pool
             FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.Thickness.Length];
+            double RemainingFraction = 1.0 - (detachFraction + removeFraction);
             double detachingWt = 0.0;
             double detachingN = 0.0;
             for (int layer = 0; layer < Soil.Thickness.Length; layer++)
             {
                 detachingWt = LayerLive[layer].Wt * detachFraction;
-                detachingN = LayerLive[layer].N  * detachFraction;
+                detachingN = LayerLive[layer].N * detachFraction;
                 RemovedWt += LayerLive[layer].Wt * removeFraction;
                 RemovedN += LayerLive[layer].N * removeFraction;
                 DetachedWt += detachingWt;
                 DetachedN += detachingN;
 
-                LayerLive[layer].StructuralWt *= (1.0 - (detachFraction + removeFraction));
-                LayerLive[layer].NonStructuralWt *= (1.0 - (detachFraction + removeFraction));
-                LayerLive[layer].MetabolicWt *= (1.0 - (detachFraction + removeFraction));
+                LayerLive[layer].StructuralWt *= RemainingFraction;
+                LayerLive[layer].NonStructuralWt *= RemainingFraction;
+                LayerLive[layer].MetabolicWt *= RemainingFraction;
 
-                LayerLive[layer].StructuralN *= (1.0 - (detachFraction + removeFraction));
-                LayerLive[layer].NonStructuralN *= (1.0 - (detachFraction + removeFraction));
-                LayerLive[layer].MetabolicN *= (1.0 - (detachFraction + removeFraction));
+                LayerLive[layer].StructuralN *= RemainingFraction;
+                LayerLive[layer].NonStructuralN *= RemainingFraction;
+                LayerLive[layer].MetabolicN *= RemainingFraction;
 
                 FOMType fom = new FOMType();
                 fom.amount = (float) (detachingWt * 10);

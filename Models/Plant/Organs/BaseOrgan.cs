@@ -196,6 +196,9 @@ namespace Models.PMF.Organs
             }
             else  if (totalFractionToRemove > 0.0)
             {
+                double RemainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
+                double RemainingDeadFraction = 1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove);
+
                 double detachingWt = Live.Wt * value.FractionLiveToResidue + Dead.Wt * value.FractionDeadToResidue;
                 double detachingN = Live.N * value.FractionLiveToResidue + Dead.N * value.FractionDeadToResidue;
                 RemovedWt += Live.Wt * value.FractionLiveToRemove + Dead.Wt * value.FractionDeadToRemove;
@@ -203,19 +206,19 @@ namespace Models.PMF.Organs
                 DetachedWt += detachingWt;
                 DetachedN += detachingN;
 
-                Live.StructuralWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
-                Dead.StructuralWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
-                Live.NonStructuralWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
-                Dead.NonStructuralWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
-                Live.MetabolicWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
-                Dead.MetabolicWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+                Live.StructuralWt *= RemainingLiveFraction;
+                Live.NonStructuralWt *= RemainingLiveFraction;
+                Live.MetabolicWt *= RemainingLiveFraction;
+                Dead.StructuralWt *= RemainingDeadFraction;
+                Dead.NonStructuralWt *= RemainingDeadFraction;
+                Dead.MetabolicWt *= RemainingDeadFraction;
 
-                Live.StructuralN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
-                Dead.StructuralN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
-                Live.NonStructuralN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
-                Dead.NonStructuralN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
-                Live.MetabolicN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
-                Dead.MetabolicN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
+                Live.StructuralN *= RemainingLiveFraction;
+                Live.NonStructuralN *= RemainingLiveFraction;
+                Live.MetabolicN *= RemainingLiveFraction;
+                Dead.StructuralN *= RemainingDeadFraction;
+                Dead.NonStructuralN *= RemainingDeadFraction;
+                Dead.MetabolicN *= RemainingDeadFraction;
 
                 SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0.0, Plant.CropType, Name);
                 //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
