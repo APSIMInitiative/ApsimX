@@ -1085,8 +1085,11 @@ namespace Models.PMF.Organs
                 {
                     LiveArea *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
 
-                    DetachedWt += Live.Wt * value.FractionLiveToResidue + Dead.Wt * value.FractionDeadToResidue;
                     RemovedWt += Live.Wt * value.FractionLiveToRemove + Dead.Wt * value.FractionDeadToRemove;
+                    RemovedN += Live.N * value.FractionLiveToRemove + Dead.N * value.FractionDeadToRemove;
+                    DetachedWt += Live.Wt * value.FractionLiveToResidue + Dead.Wt * value.FractionDeadToResidue;
+                    DetachedN += Live.N * value.FractionLiveToResidue + Dead.N * value.FractionDeadToResidue;
+
                     Live.StructuralWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
                     Dead.StructuralWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
                     Live.NonStructuralWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
@@ -1094,8 +1097,6 @@ namespace Models.PMF.Organs
                     Live.MetabolicWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
                     Dead.MetabolicWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
 
-                    DetachedN += Live.N * value.FractionLiveToResidue + Dead.N * value.FractionDeadToResidue;
-                    RemovedN += Live.N * value.FractionLiveToRemove + Dead.N * value.FractionDeadToRemove;
                     Live.StructuralN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
                     Dead.StructuralN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
                     Live.NonStructuralN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));

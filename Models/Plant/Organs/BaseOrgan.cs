@@ -198,8 +198,10 @@ namespace Models.PMF.Organs
             {
                 double detachingWt = Live.Wt * value.FractionLiveToResidue + Dead.Wt * value.FractionDeadToResidue;
                 double detachingN = Live.N * value.FractionLiveToResidue + Dead.N * value.FractionDeadToResidue;
-                double removingWt = Live.Wt * value.FractionLiveToRemove + Dead.Wt * value.FractionDeadToRemove;
-                double removingN = Live.N * value.FractionLiveToRemove + Dead.N * value.FractionDeadToRemove;
+                RemovedWt += Live.Wt * value.FractionLiveToRemove + Dead.Wt * value.FractionDeadToRemove;
+                RemovedN += Live.N * value.FractionLiveToRemove + Dead.N * value.FractionDeadToRemove;
+                DetachedWt += detachingWt;
+                DetachedN += detachingN;
 
                 Live.StructuralWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
                 Dead.StructuralWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
@@ -208,8 +210,6 @@ namespace Models.PMF.Organs
                 Live.MetabolicWt *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
                 Dead.MetabolicWt *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
 
-                DetachedN += Live.N * value.FractionLiveToResidue + Dead.N * value.FractionDeadToResidue;
-                RemovedN += Live.N * value.FractionLiveToRemove + Dead.N * value.FractionDeadToRemove;
                 Live.StructuralN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
                 Dead.StructuralN *= (1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove));
                 Live.NonStructuralN *= (1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove));
@@ -219,11 +219,6 @@ namespace Models.PMF.Organs
 
                 SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0.0, Plant.CropType, Name);
                 //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
-
-                DetachedWt += detachingWt;
-                DetachedN += detachingN;
-                RemovedWt += removingWt;
-                RemovedN += removingN;
 
                 double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
                 double removedOff = (value.FractionLiveToRemove + value.FractionDeadToRemove) / totalFractionToRemove * 100;
