@@ -14,6 +14,7 @@ namespace Models.PMF
     using Models.PMF.Organs;
     using Models.PMF.Phen;
     using Models.Soils.Arbitrator;
+    using APSIM.Shared.Utilities;
 
     ///<summary>
     /// The generic plant model
@@ -292,23 +293,28 @@ namespace Models.PMF
             allData.biomassRemoveType = biomassRemoveType;
             foreach (IOrgan organ in Organs)
             {
-                OrganBiomassRemovalType biomassRemoved = Apsim.Get(organ as IModel, "BiomassRemovalDefaults." + biomassRemoveType) as OrganBiomassRemovalType;
-                if (biomassRemoved == null)
-                    throw new Exception("Cannot find biomass removal defaults: " + organ.Name + ".BiomassRemovalDefaults.Harvest");
+                // Get the default removal fractions
+                OrganBiomassRemovalType biomassRemoval = Apsim.Get(organ as IModel, "BiomassRemovalDefaults." + biomassRemoveType) as OrganBiomassRemovalType;
+                if (biomassRemoval == null)
+                    throw new Exception("Cannot find biomass removal defaults: " + organ.Name + ".BiomassRemovalDefaults." + biomassRemoveType);
 
-                // Override the defaults if values were supplied as arguments.
+                // Override the defaults if values were supplied as arguments
                 if (removalData != null)
                 {
                     OrganBiomassRemovalType userFractions = removalData.GetFractionsForOrgan(organ.Name);
                     if (userFractions != null)
                     {
-                        if (userFractions.FractionRemoved >= 0)
-                            biomassRemoved.FractionRemoved = userFractions.FractionRemoved;
-                        if (userFractions.FractionToResidue >= 0)
-                            biomassRemoved.FractionToResidue = userFractions.FractionToResidue;
+                        if(!MathUtilities.FloatsAreEqual(userFractions.FractionLiveToRemove, biomassRemoval.FractionLiveToRemove, 1E-9))
+                            biomassRemoval.FractionLiveToRemove = userFractions.FractionLiveToRemove;
+                        if (!MathUtilities.FloatsAreEqual(userFractions.FractionDeadToRemove, biomassRemoval.FractionDeadToRemove, 1E-9))
+                            biomassRemoval.FractionDeadToRemove = userFractions.FractionDeadToRemove;
+                        if (!MathUtilities.FloatsAreEqual(userFractions.FractionLiveToResidue, biomassRemoval.FractionLiveToResidue, 1E-9))
+                            biomassRemoval.FractionLiveToResidue = userFractions.FractionLiveToResidue;
+                        if (!MathUtilities.FloatsAreEqual(userFractions.FractionDeadToResidue, biomassRemoval.FractionDeadToResidue, 1E-9))
+                            biomassRemoval.FractionDeadToResidue = userFractions.FractionDeadToResidue;
                     }
                 }
-                allData.removalData.Add(organ.Name, biomassRemoved);
+                allData.removalData.Add(organ.Name, biomassRemoval);
             }
 
             Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType + "ing"));

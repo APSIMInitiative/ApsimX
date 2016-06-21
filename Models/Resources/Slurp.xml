@@ -110,8 +110,8 @@ This is important in SLURP as it is set for each species to represent their diff
           </Memo>
           <XProperty>[Root].LayerMidPointDepth</XProperty>
         </LinearInterpolationFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0</FractionLiveToResidue>
         <InitialDM>50</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <LinearInterpolationFunction>
@@ -149,23 +149,23 @@ This is important in SLURP as it is set for each species to represent their diff
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.3</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0.3</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.</FractionRemoved>
-            <FractionToResidue>0.15</FractionToResidue>
+            <FractionLiveToRemove>0.</FractionLiveToRemove>
+            <FractionLiveToResidue>0.15</FractionLiveToResidue>
           </OrganBiomassRemovalType>
         </Folder>
         <LinearInterpolationFunction>
@@ -294,8 +294,8 @@ This is important in SLURP as it is set for each species to represent their diff
           <Value>400</Value>
           <Units>mm</Units>
         </Constant>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0</FractionLiveToResidue>
         <BiomassYesterday>0</BiomassYesterday>
         <Albedo>0.018</Albedo>
         <Gsmax>0.01</Gsmax>
@@ -313,23 +313,23 @@ This is important in SLURP as it is set for each species to represent their diff
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.3</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0.3</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
           </OrganBiomassRemovalType>
         </Folder>
       </SimpleLeaf>
