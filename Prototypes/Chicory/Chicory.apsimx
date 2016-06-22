@@ -24555,13 +24555,13 @@ namespace Models
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
+            <Marker>FilledCircle</Marker>
             <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
+            <Line>Dot</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>IversenNContent</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Stem N Concentration</YFieldName>
+            <YFieldName>Chicory.Stem.Live.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -24618,13 +24618,13 @@ namespace Models
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
+            <Marker>FilledCircle</Marker>
             <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
+            <Line>Dot</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>IversenNContent</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Leaf N Concentration</YFieldName>
+            <YFieldName>Chicory.Leaf.Live.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -24674,6 +24674,10 @@ namespace Models
           <Name>POAboveground</Name>
           <Series>
             <Name>PO</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -24686,8 +24690,8 @@ namespace Models
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>POIversen</TableName>
-            <XFieldName>Predicted.Above Ground Weight</XFieldName>
-            <YFieldName>Observed.Above Ground Weight</YFieldName>
+            <XFieldName>Predicted.Chicory.AboveGround.Wt</XFieldName>
+            <YFieldName>Observed.Chicory.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -29046,7 +29050,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Above Ground Weight</YFieldName>
+            <YFieldName>Chicory.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>

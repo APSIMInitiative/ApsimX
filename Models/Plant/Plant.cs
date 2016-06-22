@@ -10,6 +10,7 @@ namespace Models.PMF
     using System.Xml.Serialization;
     using Models.Core;
     using Models.Interfaces;
+    using Models.PMF.Functions;
     using Models.PMF.Interfaces;
     using Models.PMF.Organs;
     using Models.PMF.Phen;
@@ -193,6 +194,17 @@ namespace Models.PMF
         /// <summary>Harvest the crop</summary>
         public void Harvest() { Harvest(null); }
 
+        /// <summary>The plant mortality rate</summary>
+        [Link(IsOptional = true)]
+        [Units("")]
+        IFunction MortalityRate = null;
+
+        /// <summary>Gets or sets a modifier for the plant mortality rate.</summary>
+        [XmlIgnore]
+        [Description("Modifier for the plant mortality rate")]
+        [Units("")]
+        public double MortalityRateModifier { get; set; }
+
         #endregion
 
         #region Class Events
@@ -241,6 +253,20 @@ namespace Models.PMF
                     message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
                 }
                 Summary.WriteMessage(this, message);
+            }
+        }
+
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        {
+            //Reduce plant population in case of mortality
+            if (Population > 0.0 && MortalityRate != null)
+            {
+                double DeltaPopulation = Population * MortalityRate.Value * MortalityRateModifier;
+                Population -= DeltaPopulation;
             }
         }
 
@@ -363,6 +389,7 @@ namespace Models.PMF
         {
             SowingData = null;
             plantPopulation = 0.0;
+            MortalityRateModifier = 1.0;
         }
         #endregion
         

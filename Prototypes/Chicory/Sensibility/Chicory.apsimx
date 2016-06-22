@@ -246,6 +246,55 @@ private void OnDoManagement(object sender, EventArgs e)
           <PhaseNameToGoto>Vegetative</PhaseNameToGoto>
         </GotoPhase>
       </Phenology>
+      <MultiplyFunction>
+        <Name>MortalityRate</Name>
+        <Constant>
+          <Name>baseRate</Name>
+          <Value>0.0005</Value>
+          <Units>/day</Units>
+        </Constant>
+        <AirTemperatureFunction>
+          <Name>TemperatureEffect</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[Progression through each of the phenological stages is driven by thermal time.  As temperature increases from zero to 30 degrees, development acelerates and then slows down again above 30 degress]]></MemoText>
+          </Memo>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>-10</double>
+              <double>0</double>
+              <double>10</double>
+              <double>35</double>
+              <double>45</double>
+            </X>
+            <Y>
+              <double>2</double>
+              <double>1.2</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1.5</double>
+            </Y>
+          </XYPairs>
+        </AirTemperatureFunction>
+        <LinearInterpolationFunction>
+          <Name>FN</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+              <double>1.5</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+              <double>2</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Arbitrator].FN</XProperty>
+        </LinearInterpolationFunction>
+      </MultiplyFunction>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
         <NArbitrationOption>RelativeAllocation</NArbitrationOption>
