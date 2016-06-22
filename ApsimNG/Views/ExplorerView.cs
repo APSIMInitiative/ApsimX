@@ -353,16 +353,27 @@ namespace UserInterface.Views
                 toolStrip.Remove(child);
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {
-                Gdk.Pixbuf pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage, 20, 20);
-                ToolButton button = new ToolButton(new Gtk.Image(pixbuf), description.Name);
-                button.Homogeneous = false;
-                button.LabelWidget = new Label(description.Name);
-                Pango.FontDescription font = new Pango.FontDescription();
-                font.Size = (int)(8 * Pango.Scale.PangoScale);
-                button.LabelWidget.ModifyFont(font);
-                if (description.OnClick != null)
-                    button.Clicked += description.OnClick;
-                toolStrip.Add(button);
+                if (!hasResource(description.ResourceNameForImage))
+                {
+                    MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Error, ButtonsType.Ok,
+                        "Program error. Could not locate the resource named " + description.ResourceNameForImage);
+                    md.Run();
+                    md.Destroy();
+                }
+                else
+                {
+
+                    Gdk.Pixbuf pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage, 20, 20);
+                    ToolButton button = new ToolButton(new Gtk.Image(pixbuf), description.Name);
+                    button.Homogeneous = false;
+                    button.LabelWidget = new Label(description.Name);
+                    Pango.FontDescription font = new Pango.FontDescription();
+                    font.Size = (int)(8 * Pango.Scale.PangoScale);
+                    button.LabelWidget.ModifyFont(font);
+                    if (description.OnClick != null)
+                        button.Clicked += description.OnClick;
+                    toolStrip.Add(button);
+                }
             }
             ToolItem item = new ToolItem();
             item.Expand = true;
@@ -391,14 +402,8 @@ namespace UserInterface.Views
             foreach (MenuDescriptionArgs Description in menuDescriptions)
             {
                 ImageMenuItem item = new ImageMenuItem(Description.Name);
-                if (!String.IsNullOrEmpty(Description.ResourceNameForImage))
-                    try
-                    {
-                        item.Image = new Image(null, Description.ResourceNameForImage);
-                    }
-                    catch (Exception /*e*/)
-                    {
-                    }
+                if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage) )
+                    item.Image = new Image(null, Description.ResourceNameForImage);
                 item.Activated += Description.OnClick;
                 Popup.Append(item);
             }
@@ -656,14 +661,10 @@ namespace UserInterface.Views
         private void RefreshNode(TreeIter node, NodeDescriptionArgs description)
         {
             Gdk.Pixbuf pixbuf;
-            try
-            {
+            if (hasResource(description.ResourceNameForImage))
                 pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage);
-            }
-            catch (ArgumentException /*e*/)
-            {
-                pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // Something else we could use as a default?
-            }
+            else
+                pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // It there something else we could use as a default?
 
             treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip);
 

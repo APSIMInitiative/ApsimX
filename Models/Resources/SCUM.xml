@@ -41,9 +41,9 @@ private void OnDoManagement(object sender, EventArgs e)
 {  
   if (Clock.Today.Date == HarvestDate2)  
   {  
-    Remove.SetFractionRemoved("Product", 1.0);  
-    Remove.SetFractionRemoved("Stover", 0.05);  
-    Remove.SetFractionToResidue("Stover",0.95)
+    Remove.SetFractionLiveToRemove("Product", 1.0);
+    Remove.SetFractionLiveToRemove("Stover", 0.05);  
+    Remove.SetFractionLiveToResidue("Stover",0.95)
     SCUM.Harvest(Remove);  
     SCUM.EndCrop();  
   }  
@@ -340,23 +340,23 @@ This is the Product yield (g/m2 fresh weight) that SCUM will predict provided ni
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
-        <FractionRemoved>0.5</FractionRemoved>
-        <FractionToResidue>0.1</FractionToResidue>
+        <FractionLiveToRemove>0.5</FractionLiveToRemove>
+        <FractionLiveToResidue>0.1</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
-        <FractionRemoved>0.8</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <FractionLiveToRemove>0.8</FractionLiveToRemove>
+        <FractionLiveToResidue>0</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0.6</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.6</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
-        <FractionRemoved>0.6</FractionRemoved>
-        <FractionToResidue>0.2</FractionToResidue>
+        <FractionLiveToRemove>0.6</FractionLiveToRemove>
+        <FractionLiveToResidue>0.2</FractionLiveToResidue>
       </OrganBiomassRemovalType>
     </Folder>
     <BiomassRemovalDefaults />
@@ -795,23 +795,23 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0.3</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.3</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
-        <FractionRemoved>0.8</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <FractionLiveToRemove>0.8</FractionLiveToRemove>
+        <FractionLiveToResidue>0</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0.6</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.6</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
-        <FractionRemoved>0.6</FractionRemoved>
-        <FractionToResidue>0.1</FractionToResidue>
+        <FractionLiveToRemove>0.6</FractionLiveToRemove>
+        <FractionLiveToResidue>0.1</FractionLiveToResidue>
       </OrganBiomassRemovalType>
     </Folder>
     <BiomassRemovalDefaults />
@@ -1043,23 +1043,23 @@ This is the proportion of total biomass that is paritioned into the roots and is
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0.2</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.2</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0.3</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.3</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0.1</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.1</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0.15</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.15</FractionLiveToResidue>
       </OrganBiomassRemovalType>
     </Folder>
     <BiomassRemovalDefaults />
@@ -1148,23 +1148,23 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0</FractionLiveToResidue>
       </OrganBiomassRemovalType>
     </Folder>
     <BiomassRemovalDefaults />

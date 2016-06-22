@@ -59,6 +59,8 @@
             this.mapControl.Size = new System.Drawing.Size(810, 516);
             this.mapControl.TabIndex = 0;
             this.mapControl.Zoom = 0D;
+            this.mapControl.OnPositionChanged += new GMap.NET.PositionChanged(this.mapControl_OnPositionChanged);
+            this.mapControl.OnMapZoomChanged += new GMap.NET.MapZoomChanged(this.mapControl_OnMapZoomChanged);
             // 
             // MapView
             // 
