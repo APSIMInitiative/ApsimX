@@ -44,8 +44,8 @@ private void OnDoManagement(object sender, EventArgs e)
 {  
   if (Clock.Today.Date == HarvestDate2)  
   {  
-    Remove.SetFractionRemoved("Product", 1.0);  
-    Remove.SetFractionRemoved("Stover", 0.05);  
+    Remove.SetFractionToRemove("Product", 1.0);  
+    Remove.SetFractionToRemove("Stover", 0.05);  
     Remove.SetFractionToResidue("Stover",0.95)
     SCUM.Harvest(Remove);  
     SCUM.EndCrop();  
@@ -1246,8 +1246,8 @@ No effect of soil water content on root growth is currently captured in the mode
         </PhaseLookup>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>40000</Value>
-          <Units>mm/g</Units>
+          <Value>40</Value>
+          <Units>m/g</Units>
         </Constant>
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
@@ -1417,8 +1417,6 @@ No effect of soil water content on root growth is currently captured in the mode
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <InitialDM>0.01</InitialDM>
-        <SpecificRootLength>40000</SpecificRootLength>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <GenericBelowGroundOrgan>

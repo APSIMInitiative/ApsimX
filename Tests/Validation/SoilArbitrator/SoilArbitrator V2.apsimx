@@ -797,8 +797,16 @@ This is important in SLURP as it is set for each species to represent their diff
               </XYPairs>
               <XProperty>[Root].RWC</XProperty>
             </LinearInterpolationFunction>
-            <InitialDM>50</InitialDM>
-            <SpecificRootLength>40000</SpecificRootLength>
+			<Constant>
+			  <Name>InitialDM</Name>
+			  <Value>50</Value>
+			  <Units>g/plant</Units>
+			</Constant>
+			<Constant>
+			  <Name>SpecificRootLength</Name>
+			  <Value>40</Value>
+			  <Units>m/g</Units>
+			</Constant>
             <NuptakeSupply>0</NuptakeSupply>
           </Root>
           <SimpleLeaf>
@@ -1179,8 +1187,16 @@ This is important in SLURP as it is set for each species to represent their diff
               </XYPairs>
               <XProperty>[Root].RWC</XProperty>
             </LinearInterpolationFunction>
-            <InitialDM>50</InitialDM>
-            <SpecificRootLength>40000</SpecificRootLength>
+			<Constant>
+			  <Name>InitialDM</Name>
+			  <Value>50</Value>
+			  <Units>g/plant</Units>
+			</Constant>
+			<Constant>
+			  <Name>SpecificRootLength</Name>
+			  <Value>40</Value>
+			  <Units>m/g</Units>
+			</Constant>
             <NuptakeSupply>0</NuptakeSupply>
           </Root>
           <SimpleLeaf>
