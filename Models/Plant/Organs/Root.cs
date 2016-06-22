@@ -96,13 +96,17 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Parameters
-        /// <summary>Gets or sets the initial dm.</summary>
-        /// <value>The initial dm.</value>
-        public double InitialDM { get; set; }
-        /// <summary>Gets or sets the length of the specific root.</summary>
-        /// <value>The length of the specific root.</value>
-        public double SpecificRootLength { get; set; }
-        
+
+        /// <summary>Gets or sets the initial DM for this organ.</summary>
+        [Link]
+        [Units("g/plant")]
+        IFunction InitialDM = null;
+
+        /// <summary>Gets or sets the the specific root length.</summary>
+        [Link]
+        [Units("m/g")]
+        IFunction SpecificRootLength = null;
+
         /// <summary>The nitrogen demand switch</summary>
         [Link]
         IFunction NitrogenDemandSwitch = null;
@@ -232,23 +236,23 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the length density.</summary>
-        /// <value>The length density.</value>
-        [Units("??mm/mm3")]
+        /// <summary>Gets the root length density.</summary>
+        /// <value>The current length density.</value>
+        [Units("mm/mm3")]
         public double[] LengthDensity
         {
             get
             {
                 double[] value = new double[Soil.Thickness.Length];
                 for (int i = 0; i < Soil.Thickness.Length; i++)
-                    value[i] = LayerLive[i].Wt * SpecificRootLength / 1000000 / Soil.Thickness[i];
+                    value[i] = LayerLive[i].Wt * SpecificRootLength.Value * 1000 / 1000000 / Soil.Thickness[i];
                 return value;
             }
         }
 
-        /// <summary>Gets the RLV.</summary>
-        /// <value>The RLV.</value>
-        [Units("??km/mm3")]
+        /// <summary>Gets the root length density (for SWIM).</summary>
+        /// <value>The current length density.</value>
+        [Units("mm/mm3")]
         double[] rlv
         {
             get
@@ -325,8 +329,8 @@ namespace Models.PMF.Organs
                     if (layer <= InitialLayers - 1)
                     {
                         //distribute root biomass evently through root depth
-                        LayerLive[layer].StructuralWt = InitialDM / InitialLayers * Plant.Population;
-                        LayerLive[layer].StructuralN = InitialDM / InitialLayers * MaxNconc * Plant.Population;
+                        LayerLive[layer].StructuralWt = InitialDM.Value / InitialLayers * Plant.Population;
+                        LayerLive[layer].StructuralN = InitialDM.Value / InitialLayers * MaxNconc * Plant.Population;
                     }
                 }
             }
