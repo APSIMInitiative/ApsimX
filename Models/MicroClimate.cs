@@ -516,10 +516,9 @@ namespace Models
             {
                 CanopyType componentData = Canopies[j];
 
-                if (MathUtilities.FloatsAreEqual(Canopies[j].Canopy.CoverGreen, 1.0, 1E-05))
+                if (MathUtilities.FloatsAreEqual(Canopies[j].Canopy.CoverGreen, 1.0, 1E-10))
                 {
-                    throw new Exception("Unrealistically high cover value in MicroMet i.e. > 0.99999");
-                    //TODO: check whether this exception should be really raised
+                    throw new Exception("Unrealistically high cover value in MicroMet i.e. > 0.999999999");
                 }
 
                 componentData.K = MathUtilities.Divide(-Math.Log(1.0 - componentData.Canopy.CoverGreen), componentData.Canopy.LAI, 0.0);
