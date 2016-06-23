@@ -778,7 +778,7 @@ namespace Models.GrazPlan
                     result[i].EEConc = theModel[i].EtherExtract;
                     result[i].ADIP2CP = theModel[i].ADIP_2_CP;
                     result[i].AshAlk = theModel[i].AshAlkalinity;
-                    result[i].MaxPassage = theModel[i].AshAlkalinity;
+                    result[i].MaxPassage = theModel[i].MaxPassage;
                 }
                 return result;
             }
@@ -931,7 +931,7 @@ namespace Models.GrazPlan
                     result[i].EEConc = supp.EtherExtract;
                     result[i].ADIP2CP = supp.ADIP_2_CP;
                     result[i].AshAlk = supp.AshAlkalinity;
-                    result[i].MaxPassage = supp.AshAlkalinity;
+                    result[i].MaxPassage = supp.MaxPassage;
                 }
                 return result;
             }
@@ -966,7 +966,7 @@ namespace Models.GrazPlan
                 result.EEConc = theModel[i].EtherExtract;
                 result.ADIP2CP = theModel[i].ADIP_2_CP;
                 result.AshAlk = theModel[i].AshAlkalinity;
-                result.MaxPassage = theModel[i].AshAlkalinity;
+                result.MaxPassage = theModel[i].MaxPassage;
                 return result;
             }
         }
