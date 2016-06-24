@@ -299,7 +299,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                int[] numbers = new int[FModel.Count()];
+                int[] numbers = new int[FModel.Count()];   
                 StockVars.PopulateNumberValue(FModel, StockVars.CountType.eBoth, false, false, false, ref numbers);
                 return numbers;
             }
@@ -565,7 +565,7 @@ namespace Models.GrazPlan
 
         // =========== Ages ==================
         /// <summary>
-        /// Age of animals by group
+        /// Age of animals by group.
         /// </summary>
         [Description("Age of animals by group")]
         [Units("d")]
@@ -3841,6 +3841,8 @@ namespace Models.GrazPlan
 
                 FFirstStep = false;
             }
+
+            GetTimeAndWeather();
         }
 
         /// <summary>
@@ -3861,7 +3863,7 @@ namespace Models.GrazPlan
         [EventSubscribe("DoStock")]
         private void OnDoStock(object sender, EventArgs e)
         {
-            GetTimeAndWeather();
+            // Weather is retrieved at StartOfDay
 
             // for each paddock
             //FModel.Paddocks.byID(1).fWaterlog = 0.0;    // TODO
