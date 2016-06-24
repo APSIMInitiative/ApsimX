@@ -732,7 +732,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Fill the double[] with values from the model
+        /// Fill the double[] with values from the model.
         /// </summary>
         /// <param name="Model"></param>
         /// <param name="varCode"></param>
@@ -828,7 +828,7 @@ namespace Models.GrazPlan
                         if (!bUseTag && !bUseAll)
                             aValue[Idx - 1] = dValue;
                         else if (varCode == StockProps.prpDSE)                                     // Sum DSE's; take a weighted average of 
-                            dTotal = dTotal + dValue;                                            //   all other values                    
+                            dTotal = dTotal + dValue;                                              //   all other values                    
                         else if (aGroup != null)
                         {
                             dTotal = dTotal + aGroup.NoAnimals * dValue;
