@@ -518,7 +518,7 @@ namespace Models.PMF.Organs
                 foreach (LeafCohort L in Leaves)
                     if (L.IsAppeared)
                         n += L.CohortPopulation;
-                return n;
+                return n / Plant.Population;
             }
         }
 
@@ -531,7 +531,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return PlantAppearedLeafNo/ Plant.Population - PlantAppearedGreenLeafNo;
+                return PlantAppearedLeafNo - PlantAppearedGreenLeafNo;
             }
         }
 
@@ -609,6 +609,106 @@ namespace Models.PMF.Organs
             }
         }
         //Cohort State variable outputs
+
+
+        /// <summary>Gets the growth duration of the cohort.</summary>
+        /// <value>The growth duration of the cohort.</value>
+        [XmlIgnore]
+        [Units("mm3")]
+        public double[] CohortGrowthDuration
+        {
+            get
+            {
+                int i = 0;
+
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
+                    values[i] = 0;
+                i = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.GrowthDuration;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
+
+        /// <summary>Gets the lag duration of the cohort.</summary>
+        /// <value>The lag duration of the cohort.</value>
+        [XmlIgnore]
+        [Units("mm3")]
+        public double[] CohortLagDuration
+        {
+            get
+            {
+                int i = 0;
+
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
+                    values[i] = 0;
+                i = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.LagDuration;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
+
+        /// <summary>Gets the delta water constrained area of the cohort.</summary>
+        /// <value>The delta water constrained area of the cohort.</value>
+        [XmlIgnore]
+        [Units("mm3")]
+        public double[] CohortDeltaWaterConstrainedArea
+        {
+            get
+            {
+                int i = 0;
+
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
+                    values[i] = 0;
+                i = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.DeltaWaterConstrainedArea;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+        /// <summary>Gets the delta carbon constrained area of the cohort.</summary>
+        /// <value>The delta carbon constrained area of the cohort.</value>
+        [XmlIgnore]
+        [Units("mm3")]
+        public double[] CohortDeltaCarbonConstrainedArea
+        {
+            get
+            {
+                int i = 0;
+
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
+                    values[i] = 0;
+                i = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.DeltaCarbonConstrainedArea;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
+
 
         /// <summary>Gets the size of the cohort.</summary>
         /// <value>The size of the cohort.</value>
