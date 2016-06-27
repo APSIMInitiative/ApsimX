@@ -121,6 +121,16 @@ namespace UserInterface.Views
             entryMax.Changed += OnMaximumChanged;
             entryInterval.Changed += OnIntervalChanged;
             checkbutton1.Toggled += OnCheckedChanged;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            entryTitle.Changed -= TitleTextBox_TextChanged;
+            entryMin.Changed -= OnMinimumChanged;
+            entryMax.Changed -= OnMaximumChanged;
+            entryInterval.Changed -= OnIntervalChanged;
+            checkbutton1.Toggled -= OnCheckedChanged;
         }
 
         /// <summary>

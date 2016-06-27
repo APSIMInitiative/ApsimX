@@ -107,6 +107,7 @@
             textEditor.Options = options;
             textEditor.Document.LineChanged += OnTextHasChanged;
             textEditor.LeaveNotifyEvent += OnTextBoxLeave;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
 
             /*
             CompletionForm = new Form();
@@ -149,6 +150,12 @@
             this.searchValue = string.Empty;
             timer1.Interval = 3000;
             */
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            textEditor.Document.LineChanged -= OnTextHasChanged;
+            textEditor.LeaveNotifyEvent -= OnTextBoxLeave;
         }
 
         /// <summary>
@@ -281,7 +288,7 @@
             else
             {
                 return "";/* TBI
-                int PosDelimiter = TextBox.Text.LastIndexOfAny(" \r\n(".ToCharArray(), Pos - 1);
+                int PosDelimiter = TextBox.Text.LastIndexOfAny(" \r\n(+-/*".ToCharArray(), Pos - 1);
                 return TextBox.Text.Substring(PosDelimiter + 1, Pos - PosDelimiter - 1).TrimEnd(".".ToCharArray());
                 */
             }

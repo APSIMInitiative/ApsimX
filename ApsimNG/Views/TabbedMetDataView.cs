@@ -187,6 +187,16 @@ namespace UserInterface.Views
             alignment10.Add(worksheetCombo.MainWidget);
             worksheetCombo.IsVisible = true;
             worksheetCombo.Changed += WorksheetCombo_Changed;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            button1.Clicked -= OnButton1Click;
+            spinStartYear.ValueChanged -= OnGraphStartYearValueChanged;
+            spinNYears.ValueChanged -= OnGraphShowYearsValueChanged;
+            notebook1.SwitchPage -= TabControl1_SelectedIndexChanged;
+            worksheetCombo.Changed -= WorksheetCombo_Changed;
         }
 
         /// <summary>Gets or sets the filename.</summary>

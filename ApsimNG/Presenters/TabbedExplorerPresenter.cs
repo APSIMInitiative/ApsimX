@@ -60,6 +60,8 @@ namespace UserInterface.Presenters
             this.view.PopulateStartPage -= this.OnPopulateStartPage;
             this.view.MruFileClick -= this.OnMruApsimOpenFile;
             this.view.TabClosing -= this.OnTabClosing;
+            this.view = null;
+            this.Presenters = null;
         }
 
         /// <summary>
@@ -244,6 +246,8 @@ namespace UserInterface.Presenters
             if (e.tabIndex > 0 && e.tabIndex <= this.Presenters.Count)
             {
                 this.Presenters[e.tabIndex - 1].SaveIfChanged();
+                this.Presenters[e.tabIndex - 1].Detach();
+                //this.Presenters[e.tabIndex - 1] = null;
                 this.Presenters.RemoveAt(e.tabIndex - 1);
             }
         }

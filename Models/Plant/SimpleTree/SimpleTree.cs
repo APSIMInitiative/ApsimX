@@ -35,7 +35,7 @@ namespace Models.PMF
 
         /// <summary>Gets the cover green.</summary>
         [Units("0-1")]
-        public double CoverGreen { get { return 1.0 - Math.Exp(-0.5 * LAI); } }
+        public double CoverGreen { get { return Math.Min(1.0 - Math.Exp(-0.5 * LAI),0.999999999); } }
 
         /// <summary>Gets the cover total.</summary>
         [Units("0-1")]

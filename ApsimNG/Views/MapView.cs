@@ -19,11 +19,30 @@ namespace UserInterface.Views
     /// </summary>
     interface IMapView
     {
+        /// <summary>
+        /// Invoked when the zoom level is changed
+        /// </summary>
+        event EventHandler ZoomChanged;
+
+        /// <summary>
+        /// Invoked when the map center is changed
+        /// </summary>
+        event EventHandler PositionChanged;
+
         /// <summary>Show the map</summary>
         void ShowMap(List<Models.Map.Coordinate> coordinates);
 
         /// <summary>Export the map to an image.</summary>
         Image Export();
+        /// <summary>
+        /// Get or set the zoom factor of the map
+        /// </summary>
+        double Zoom { get; set; }
+
+        /// <summary>
+        /// Get or set the center position of the map
+        /// </summary>
+        Models.Map.Coordinate Center { get; set; }
     }
 
     /// It would be good if we could retrieve the current center and zoom values for a map,
@@ -42,6 +61,16 @@ namespace UserInterface.Views
     /// </summary>
     public class MapView : HTMLView, IMapView
     {
+        /// <summary>
+        /// Invoked when the zoom level is changed
+        /// </summary>
+        public event EventHandler ZoomChanged;
+
+        /// <summary>
+        /// Invoked when the map center is changed
+        /// </summary>
+        public event EventHandler PositionChanged;
+
         /// <summary>Construtor</summary>
         public MapView(ViewBase owner) : base(owner)
         {
@@ -53,10 +82,10 @@ namespace UserInterface.Views
             string html =
 @"<html>
 <head>
- <script src='http://maps.googleapis.com/maps/api/js?key=AIzaSyC6OF6s7DwSHwibtQqAKC9GtOQEwTkCpkw'>
- </script>
- <script>
-  var locations = [";
+<script src='http://maps.googleapis.com/maps/api/js?key=AIzaSyC6OF6s7DwSHwibtQqAKC9GtOQEwTkCpkw'>
+</script>
+<script>
+var locations = [";
 
             for (int i = 0; i < coordinates.Count; i++)
             {
@@ -73,13 +102,26 @@ namespace UserInterface.Views
   else
     myCenter = new google.maps.LatLng(0.0, 0.0);
   var map = null;
+  function SetTitle()
+  {
+     window.document.title = map.getZoom().toString() + ',' + map.getCenter().toString();
+  }
+  function SetZoom(newZoom)
+  {
+     map.setZoom(newZoom);
+  }
+  function SetCenter(lat, long)
+  {
+     var center = new google.maps.LatLng(lat, long);
+     map.setCenter(center);
+  }
   function initialize()
   {
      var mapProp = {
        center:myCenter,
-       zoom: 6,
+       zoom: 1,
 ";
-            if (tempWindow) // When exporting into a report, leave off the controls
+            if (popupWin != null) // When exporting into a report, leave off the controls
             {
                 html += "zoomControl: false,";
                 html += "mapTypeControl: false,";
@@ -94,6 +136,8 @@ namespace UserInterface.Views
      var infowindow = new google.maps.InfoWindow({maxWidth: 120});
      
      map = new google.maps.Map(document.getElementById('googleMap'), mapProp);
+     map.addListener('zoom_changed', SetTitle);
+     map.addListener('center_changed', SetTitle);
 
      var marker, i;
      for (i = 0; i < locations.length; i++)
@@ -119,10 +163,10 @@ google.maps.event.addDomListener(window, 'load', initialize);
             SetContents(html, false);
         }
 
-    /// <summary>
-    /// Export the map to an image.
-    /// </summary>
-    public Image Export()
+        /// <summary>
+        /// Export the map to an image.
+        /// </summary>
+        public Image Export()
         {
             // Create a Bitmap and draw the DataGridView on it.
             int width;
@@ -147,6 +191,73 @@ google.maps.event.addDomListener(window, 'load', initialize);
             return bitmap;
         }
 
-     
+        private double _zoom = 1.0;
+
+        private Models.Map.Coordinate _center = new Models.Map.Coordinate() { Latitude = 0.0, Longitude = 0.0 };
+
+        /// <summary>
+        /// Get or set the zoom factor of the map
+        /// </summary>
+        public double Zoom
+        {
+            get
+            {
+                return _zoom;
+            }
+            set
+            {
+                if (browser is TWWebBrowserIE)
+                    (browser as TWWebBrowserIE).wb.Document.InvokeScript("SetZoom", new object[] { value });
+                else if (browser is TWWebBrowserWK)
+                    (browser as TWWebBrowserWK).wb.ExecuteScript("SetZoom(" + (int)Math.Round(value) + ")");
+            }
+        }
+
+        /// <summary>
+        /// Get or set the center position of the map
+        /// </summary>
+        public Models.Map.Coordinate Center
+        {
+            get
+            {
+                return _center;
+            }
+            set
+            {
+                if (browser is TWWebBrowserIE)
+                    (browser as TWWebBrowserIE).wb.Document.InvokeScript("SetCenter", new object[] { value.Latitude, value.Longitude });
+                else if (browser is TWWebBrowserWK)
+                    (browser as TWWebBrowserWK).wb.ExecuteScript("SetCenter(" + value.Latitude + ", " + value.Longitude + ")");
+            }
+        }
+
+        protected override void NewTitle(string title)
+        {
+            if (!String.IsNullOrEmpty(title))
+            {
+                double newLat, newLong, newZoom;
+                // Incoming title should look like "6, (-27.15, 151.25)"
+                // That is Zoom, then lat, long pair
+                // We remove the brackets and split on the commas
+                title = title.Replace("(", "");
+                title = title.Replace(")", "");
+                string[] parts = title.Split(new char[] { ',' });
+                if (Double.TryParse(parts[0], out newZoom) && newZoom != _zoom)
+                {
+                    _zoom = newZoom;
+                    if (ZoomChanged != null)
+                        ZoomChanged.Invoke(this, EventArgs.Empty);
+                }
+                if (Double.TryParse(parts[1], out newLat) &&
+                    Double.TryParse(parts[2], out newLong) &&
+                    (newLat != _center.Latitude || newLong != Center.Longitude))
+                {
+                    _center.Latitude = newLat;
+                    _center.Longitude = newLong;
+                    if (PositionChanged != null)
+                        PositionChanged.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
     }
 }

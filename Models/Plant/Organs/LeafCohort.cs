@@ -233,9 +233,23 @@ namespace Models.PMF.Organs
         /// <summary>The delta wt</summary>
         [XmlIgnore]
         public double DeltaWt = 0;
-        //public double StructuralNDemand = 0;
-        //public double MetabolicNDemand = 0;
-        //public double NonStructuralNDemand = 0;
+
+        /// <summary>Gets the DM amount detached (send to surface OM) (g/m2)</summary>
+        [XmlIgnore]
+        public double DetachedWt { get; set; }
+        
+        /// <summary>Gets the N amount detached (send to surface OM) (g/m2)</summary>
+        [XmlIgnore]
+        public double DetachedN { get; set; }
+        
+        /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
+        [XmlIgnore]
+        public double RemovedWt { get; set; }
+
+        /// <summary>Gets the N amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
+        [XmlIgnore]
+        public double RemovedN { get; set; }
+
         /// <summary>The potential area growth</summary>
         [XmlIgnore]
         public double PotentialAreaGrowth = 0;
@@ -1055,50 +1069,52 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Removes leaf area and biomass on thinning event</summary>
-        /// <param name="value">The fraction.</param>
-        virtual public void DoBiomassRemoval(OrganBiomassRemovalType value)
+        /// <param name="value">The fractions of biomass to remove.</param>
+        virtual public void DoLeafBiomassRemoval(OrganBiomassRemovalType value)
         {
             if (IsInitialised)
             {
-                LiveArea *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                double totalFractionBeingRemoved = value.FractionLiveToRemove + value.FractionDeadToRemove
+                                                   + value.FractionLiveToResidue + value.FractionDeadToResidue;
+                if (totalFractionBeingRemoved > 1.0)
+                {
+                    throw new Exception("The sum of FractionToResidue and FractionToRemove sent with your "
+                                        + "!!!!PLACE HOLDER FOR EVENT SENDER!!!!"
+                                        + " is greater than 1.  Had this execption not triggered you would be removing more biomass from "
+                                        + Name + " than there is to remove");
+                }
+                else if (totalFractionBeingRemoved > 0.0)
+                {
+                    double RemainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
+                    double RemainingDeadFraction = 1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove);
 
-                double WtToResidue = 0;
+                    LiveArea *= RemainingLiveFraction;
 
-                WtToResidue += Dead.StructuralWt * value.FractionToResidue;
-                Dead.StructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                WtToResidue += Live.StructuralWt * value.FractionToResidue;
-                Live.StructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                    RemovedWt += (Live.Wt * value.FractionLiveToRemove) + (Dead.Wt * value.FractionDeadToRemove);
+                    RemovedN += (Live.N * value.FractionLiveToRemove) + (Dead.N * value.FractionDeadToRemove);
+                    DetachedWt += (Live.Wt * value.FractionLiveToResidue) + (Dead.Wt * value.FractionDeadToResidue);
+                    DetachedN += (Live.N * value.FractionLiveToResidue) + (Dead.N * value.FractionDeadToResidue);
 
-                WtToResidue += Dead.NonStructuralWt * value.FractionToResidue;
-                Dead.NonStructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                WtToResidue += Live.NonStructuralWt * value.FractionToResidue;
-                Live.NonStructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                    Live.StructuralWt *= RemainingLiveFraction;
+                    Live.NonStructuralWt *= RemainingLiveFraction;
+                    Live.MetabolicWt *= RemainingLiveFraction;
+                    Dead.StructuralWt *= RemainingDeadFraction;
+                    Dead.NonStructuralWt *= RemainingDeadFraction;
+                    Dead.MetabolicWt *= RemainingDeadFraction;
 
-                WtToResidue += Dead.MetabolicWt * value.FractionToResidue;
-                Dead.MetabolicWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                WtToResidue += Live.MetabolicWt * value.FractionToResidue;
-                Live.MetabolicWt *= (1 - (value.FractionToResidue + value.FractionRemoved)); ;
+                    Live.StructuralN *= RemainingLiveFraction;
+                    Live.NonStructuralN *= RemainingLiveFraction;
+                    Live.MetabolicN *= RemainingLiveFraction;
+                    Dead.StructuralN *= RemainingDeadFraction;
+                    Dead.NonStructuralN *= RemainingDeadFraction;
+                    Dead.MetabolicN *= RemainingDeadFraction;
 
-                double NToResidue = 0;
-
-                NToResidue += Dead.StructuralN * value.FractionToResidue;
-                Dead.StructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                NToResidue += Live.StructuralN * value.FractionToResidue;
-                Live.StructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
-
-                NToResidue += Dead.NonStructuralN * value.FractionToResidue;
-                Dead.NonStructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                NToResidue += Live.NonStructuralN * value.FractionToResidue;
-                Live.NonStructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
-
-                NToResidue += Dead.MetabolicN * value.FractionToResidue;
-                Dead.MetabolicN *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                NToResidue += Live.MetabolicN * value.FractionToResidue;
-                Live.MetabolicN *= (1 - (value.FractionToResidue + value.FractionRemoved)); ;
-
-                SurfaceOrganicMatter.Add(WtToResidue * 10, NToResidue * 10, 0, Plant.CropType, Name);
+                    SurfaceOrganicMatter.Add(DetachedWt * 10, DetachedN * 10, 0, Plant.CropType, Name);
+                    //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
+                }
             }
         }
+
         /// <summary>Removes leaves for cohort due to thin event.  </summary>
         /// <param name="ProportionRemoved">The fraction.</param>
         virtual public void DoThin(double ProportionRemoved)
@@ -1140,6 +1156,16 @@ namespace Models.PMF.Organs
             if (IsAppeared)
                 DoKill(fraction);
         }
+
+        /// <summary>Does the zeroing of some varibles.</summary>
+        virtual protected void DoDailyCleanup()
+        {
+            DetachedWt = 0.0;
+            DetachedN = 0.0;
+            RemovedWt = 0.0;
+            RemovedN = 0.0;
+        }
+
         /// <summary>Potential delta LAI</summary>
         /// <param name="TT">thermal-time</param>
         /// <returns>(mm2 leaf/cohort position/m2 soil/day)</returns>
@@ -1237,6 +1263,7 @@ namespace Models.PMF.Organs
             return FracDetach;
 
         }
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1244,6 +1271,16 @@ namespace Models.PMF.Organs
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             //MyPaddock.Subscribe(Structure.InitialiseStage, DoInitialisation);
+        }
+
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (Plant.IsAlive)
+                DoDailyCleanup();
         }
         #endregion
 

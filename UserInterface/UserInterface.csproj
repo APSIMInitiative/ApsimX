@@ -733,6 +733,12 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\LargeImages\Chicory.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Chicory.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GenericBelowGroundOrgan.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SimpleLeaf.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Stock.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Supplement.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Chickpea.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CultivarFolder.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Map.png" />

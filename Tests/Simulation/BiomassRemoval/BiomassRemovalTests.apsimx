@@ -501,8 +501,8 @@ namespace Models
 			else if (Clock.Today.Date == HarvestDate2)
 			{
 				//Harvest with manager specified removal fractions
-				Remove.SetFractionRemoved("Product", 0.3);
-				Remove.SetFractionRemoved("Stover", 0.1);
+				Remove.SetFractionToRemove("Product", 0.3);
+				Remove.SetFractionToRemove("Stover", 0.1);
 				Remove.SetFractionToResidue("Product", 0.3);
 				Remove.SetFractionToResidue("Stover", 0.7);
 				MCSP.Harvest(Remove);
@@ -515,8 +515,8 @@ namespace Models
 				MCSP.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 			else if (Clock.Today.Date == HarvestDate3)
 			{
-				Remove.SetFractionRemoved("Product", 0.5);
-				Remove.SetFractionRemoved("Stover", 0.3);
+				Remove.SetFractionToRemove("Product", 0.5);
+				Remove.SetFractionToRemove("Stover", 0.3);
 				Remove.SetFractionToResidue("Product", 0.3);
 				Remove.SetFractionToResidue("Stover", 0.7);
 				MCSP.Harvest(Remove);
@@ -2638,8 +2638,8 @@ namespace Models
 			else if (Clock.Today.Date == CutDate2)
 			{
 				//Harvest with manager specified removal fractions
-				Remove.SetFractionRemoved("Product", 0.3);
-				Remove.SetFractionRemoved("Stover", 0.1);
+				Remove.SetFractionToRemove("Product", 0.3);
+				Remove.SetFractionToRemove("Stover", 0.1);
 				Remove.SetFractionToResidue("Product", 0.3);
 				Remove.SetFractionToResidue("Stover", 0.7);
 				MCSP.RemoveBiomass("Cut", Remove);
@@ -2652,8 +2652,8 @@ namespace Models
 				MCSP.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 			else if (Clock.Today.Date == CutDate3)
 			{
-				Remove.SetFractionRemoved("Product", 0.5);
-				Remove.SetFractionRemoved("Stover", 0.3);
+				Remove.SetFractionToRemove("Product", 0.5);
+				Remove.SetFractionToRemove("Stover", 0.3);
 				Remove.SetFractionToResidue("Product", 0.3);
 				Remove.SetFractionToResidue("Stover", 0.7);
 				MCSP.RemoveBiomass("Cut", Remove);
@@ -4775,8 +4775,8 @@ namespace Models
 			else if (Clock.Today.Date == PruneDate2)
 			{
 				//Harvest with manager specified removal fractions
-				Remove.SetFractionRemoved("Product", 0.3);
-				Remove.SetFractionRemoved("Stover", 0.1);
+				Remove.SetFractionToRemove("Product", 0.3);
+				Remove.SetFractionToRemove("Stover", 0.1);
 				Remove.SetFractionToResidue("Product", 0.3);
 				Remove.SetFractionToResidue("Stover", 0.7);
 				MCSP.RemoveBiomass("Prune", Remove);
@@ -4789,8 +4789,8 @@ namespace Models
 				MCSP.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 			else if (Clock.Today.Date == PruneDate3)
 			{
-				Remove.SetFractionRemoved("Product", 0.1);
-				Remove.SetFractionRemoved("Stover", 0.3);
+				Remove.SetFractionToRemove("Product", 0.1);
+				Remove.SetFractionToRemove("Stover", 0.3);
 				Remove.SetFractionToResidue("Product", 0.7);
 				Remove.SetFractionToResidue("Stover", 0.3);
 				MCSP.RemoveBiomass("Prune", Remove);
@@ -6912,8 +6912,8 @@ namespace Models
 			else if (Clock.Today.Date == GrazeDate2)
 			{
 				//Harvest with manager specified removal fractions
-				Remove.SetFractionRemoved("Product", 0.3);
-				Remove.SetFractionRemoved("Stover", 0.1);
+				Remove.SetFractionToRemove("Product", 0.3);
+				Remove.SetFractionToRemove("Stover", 0.1);
 				Remove.SetFractionToResidue("Product", 0.3);
 				Remove.SetFractionToResidue("Stover", 0.7);
 				MCSP.RemoveBiomass("Graze", Remove);
@@ -6926,8 +6926,8 @@ namespace Models
 				MCSP.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 			else if (Clock.Today.Date == GrazeDate3)
 			{
-				Remove.SetFractionRemoved("Product", 0.1);
-				Remove.SetFractionRemoved("Stover", 0.3);
+				Remove.SetFractionToRemove("Product", 0.1);
+				Remove.SetFractionToRemove("Stover", 0.3);
 				Remove.SetFractionToResidue("Product", 0.7);
 				Remove.SetFractionToResidue("Stover", 0.3);
 				MCSP.RemoveBiomass("Graze", Remove);

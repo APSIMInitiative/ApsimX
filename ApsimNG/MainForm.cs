@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Utilities;
 using Glade;
@@ -26,22 +27,20 @@ namespace UserInterface
 
     public class ViewBase
     {
+        static string[] resources = Assembly.GetExecutingAssembly().GetManifestResourceNames();
         protected ViewBase _owner = null;
         protected Widget _mainWidget = null;
         public ViewBase Owner { get { return _owner; } }
         public Widget MainWidget { get { return _mainWidget; } }
         public ViewBase(ViewBase owner) { _owner = owner; }
-        public virtual void Destroy()
-        {
-            if (_mainWidget != null && _mainWidget.IsRealized)
-                _mainWidget.Destroy();
-            _mainWidget = null;
-            _owner = null;
-        }
 
         protected Gdk.Window mainWindow { get { return MainWidget == null ? null : MainWidget.Toplevel.GdkWindow; } }
         private bool waiting = false;
 
+        protected bool hasResource(string name)
+        {
+            return resources.Contains(name);
+        }
         public bool WaitCursor
         {
             get
@@ -126,10 +125,10 @@ namespace UserInterface
             // Depending on how the resources are added, they are read in 
             // slightly different ways, apparently. So we might instead have:
             // Builder Gui = new Builder();
-            // Gui.AddFromString(GTKUserInterface.Properties.Resources.MainForm);
+            // Gui.AddFromString(ApsimNG.Properties.Resources.MainForm);
 
             // Here's how we load the form description using an embedded GtkBuilder file
-            // Builder Gui = new Builder("GTKUserInterface.Resources.Glade.MainForm.glade");
+            // Builder Gui = new Builder("ApsimNG.Resources.Glade.MainForm.glade");
             // window1 = (Window)Gui.GetObject("window1");
             // hpaned1 = (HPaned)Gui.GetObject("hpaned1");
 
