@@ -272,3 +272,36 @@ mergedDF %>%
 
 ```
 
+
+Analysing starts across sowing dates
+
+```{r}
+
+levels(mergedDF$SowingDate_Treat) <- c("Sep","Oct", "Nov", "Dec")
+mergedDF$SowDate <- mergedDF$SowingDate_Treat
+levels(mergedDF$SowDate) <- c("1/09/2000","1/10/2000", "1/11/2000", "1/12/2000")
+mergedDF$SowDate <- dmy(mergedDF$SowDate)
+
+mergedDF %>%
+ # mutate(SimpleName = factor(levels(SimpleName)[c("Sep","Oct", "Nov", "Dec")])) %>%
+  filter(Experiment =="Lincoln2014" & Cultivar_Treat == "Riv") %>%
+  group_by(SimpleName,SowDate, Cultivar_Treat) %>%
+  summarise(
+    n = n(),
+    r2 = round(br2(Predicted,Observed)*100,0),
+  #  rmse = round(rmse(Predicted,Observed),0),
+    r_rmse = round(rmse(Predicted,Observed)/mean(Observed)*100,1),
+    nse = round(NSE(Predicted,Observed),1),
+    sb = gauchStats(Predicted,Observed)[1],
+  nu = gauchStats(Predicted,Observed)[2],
+  lc = gauchStats(Predicted,Observed)[3]
+  ) %>%
+  ggplot(aes(x=SowDate, y=r_rmse)) +
+  geom_point()+
+  geom_line() +
+  facet_wrap(~SimpleName, scale="free", ncol=4) +
+  ylab("Relative Root Mean Squated Error (rRMSE, %) ") +
+  xlab("Sowing Date ")
+
+```
+
