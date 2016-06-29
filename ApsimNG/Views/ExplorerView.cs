@@ -406,8 +406,10 @@ namespace UserInterface.Views
                     item.Image = new Image(null, Description.ResourceNameForImage);
                 item.Activated += Description.OnClick;
                 Popup.Append(item);
+
             }
-            Popup.AttachToWidget(treeview1, null);
+            if (Popup.AttachWidget == null)
+                Popup.AttachToWidget(treeview1, null);
             Popup.ShowAll();
             //Popup.Popup();
 

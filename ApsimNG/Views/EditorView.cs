@@ -1,6 +1,7 @@
 ﻿namespace UserInterface.Views
 {
     using System;
+    using System.Collections.Generic;
     using EventArguments;
     using Gtk;
     using Mono.TextEditor;
@@ -55,7 +56,7 @@
         /// <summary>
         /// The completion form
         /// </summary>
-        /// TBI private Form CompletionForm;
+        private Window CompletionForm;
 
         /// <summary>
         /// The find-and-replace form
@@ -65,13 +66,7 @@
         /// <summary>
         /// The completion list
         /// </summary>
-        /// TBI private ListView CompletionView;
-
-        /// <summary>
-        /// The search string for the listbox. 
-        /// Reset by the timer or backspace
-        /// </summary>
-        private string searchValue;
+        private TreeView CompletionView;
 
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
@@ -90,6 +85,9 @@
 
         private ScrolledWindow scroller;
         private Mono.TextEditor.TextEditor textEditor;
+        private ListStore completionModel;
+        private Gdk.Pixbuf functionPixbuf;
+        private Gdk.Pixbuf propertyPixbuf;
 
         /// <summary>
         /// Default constructor that configures the Completion form.
@@ -109,53 +107,59 @@
             textEditor.LeaveNotifyEvent += OnTextBoxLeave;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
 
-            /*
-            CompletionForm = new Form();
-            CompletionForm.TopLevel = false;
-            CompletionForm.FormBorderStyle = FormBorderStyle.None;
-
-            CompletionView = new ListView();
-            CompletionView.Dock = DockStyle.Fill;
-            CompletionForm.Controls.Add(this.CompletionView);
-            CompletionView.KeyDown += new KeyEventHandler(this.OnContextListKeyDown);
-            CompletionView.KeyUp += new KeyEventHandler(this.OnContextListKeyUp);
-            CompletionView.MouseDoubleClick += new MouseEventHandler(this.OnComtextListMouseDoubleClick);
-            CompletionForm.StartPosition = FormStartPosition.Manual;
-            CompletionView.Leave += new EventHandler(this.OnLeaveCompletion);
-            CompletionView.View = View.Details;
-            CompletionView.MultiSelect = false;
-
-            // add some columns
-            ColumnHeader col1 = new ColumnHeader();
-            col1.Text = "Item";
-            col1.Width = 150;
-            CompletionView.Columns.Add(col1);
-            ColumnHeader col2 = new ColumnHeader();
-            col2.Text = "Units";
-            col2.Width = 50;
-            CompletionView.Columns.Add(col2); 
-            ColumnHeader col3 = new ColumnHeader();
-            col3.Text = "Type";
-            col3.Width = 60;
-            CompletionView.Columns.Add(col3);
-            ColumnHeader col4 = new ColumnHeader();
-            col4.Text = "Descr";
-            col4.Width = 200;
-            CompletionView.Columns.Add(col4);
-            CompletionView.SmallImageList = imageList1;
-
-            TextBox.ActiveTextAreaControl.TextArea.KeyPress += this.OnKeyPress;
-            TextBox.ActiveTextAreaControl.TextArea.KeyDown += this.OnKeyDown;
+            CompletionForm = new Window(WindowType.Popup);
+            Frame completionFrame = new Frame();
+            CompletionForm.Add(completionFrame);
+            ScrolledWindow completionScroller = new ScrolledWindow();
+            completionFrame.Add(completionScroller);
+            completionModel = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
+            CompletionView = new TreeView(completionModel);
+            completionScroller.Add(CompletionView);
+            TreeViewColumn column = new TreeViewColumn();
+            CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();
+            column.PackStart(iconRender, false);
+            CellRendererText textRender = new Gtk.CellRendererText();
+            textRender.Editable = false;
+            column.PackStart(textRender, true);
+            column.SetAttributes(iconRender, "pixbuf", 0);
+            column.SetAttributes(textRender, "text", 1);
+            column.Title = "Item";
+            column.Resizable = true;
+            CompletionView.AppendColumn(column);
+            textRender = new CellRendererText();
+            column = new TreeViewColumn("Units", textRender, "text", 2);
+            column.Resizable = true;
+            CompletionView.AppendColumn(column);
+            textRender = new CellRendererText();
+            column = new TreeViewColumn("Type", textRender, "text", 3);
+            column.Resizable = true;
+            CompletionView.AppendColumn(column);
+            textRender = new CellRendererText();
+            column = new TreeViewColumn("Descr", textRender, "text", 4);
+            column.Resizable = true;
+            CompletionView.AppendColumn(column);
+            functionPixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Function.png", 16, 16);
+            propertyPixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Property.png", 16, 16);
+            textEditor.TextArea.KeyPressEvent += OnKeyPress;
+            CompletionView.HasTooltip = true;
+            CompletionView.TooltipColumn = 5;
+            CompletionForm.FocusOutEvent += OnLeaveCompletion;
+            CompletionView.ButtonPressEvent += OnContextListMouseDoubleClick;
+            CompletionView.KeyPressEvent += OnContextListKeyDown;
+            CompletionView.KeyReleaseEvent += CompletionView_KeyReleaseEvent;
             IntelliSenseChars = ".";
-            this.searchValue = string.Empty;
-            timer1.Interval = 3000;
-            */
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             textEditor.Document.LineChanged -= OnTextHasChanged;
             textEditor.LeaveNotifyEvent -= OnTextBoxLeave;
+            textEditor.TextArea.KeyPressEvent -= OnKeyPress;
+            CompletionForm.FocusOutEvent -= OnLeaveCompletion;
+            CompletionView.ButtonPressEvent -= OnContextListMouseDoubleClick;
+            CompletionView.KeyReleaseEvent -= CompletionView_KeyReleaseEvent;
+            if (CompletionForm.IsRealized)
+                CompletionForm.Destroy();
         }
 
         /// <summary>
@@ -244,14 +248,18 @@
                 e.Handled = false;
             }
         }
+        */
 
         /// <summary>
         /// Preprocesses key strokes so that the ContextList can be displayed when needed. 
         /// </summary>
         /// <param name="sender">Sending object</param>
         /// <param name="e">Key arguments</param>
+        [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
+            char keyChar = (char)Gdk.Keyval.ToUnicode(e.Event.KeyValue);
+            /* TBI 
             if ((e.KeyChar == (char)6))
             {
                 _findForm.ShowFor(TextBox, false);
@@ -262,19 +270,20 @@
                 _findForm.ShowFor(TextBox, true);
                 e.Handled = true;
             }
+            
             // If user one of the IntelliSenseChars, then display contextlist.
-            else if (IntelliSenseChars.Contains(e.KeyChar) && ContextItemsNeeded != null)
+            else*/ if (IntelliSenseChars.Contains(keyChar.ToString()) && ContextItemsNeeded != null)
             {
-                if (ShowCompletionWindow(e.KeyChar))
+                if (ShowCompletionWindow(keyChar))
                 {
-                    e.Handled = false;
+                    e.RetVal = false; // true to prevent further processing
                 }
             }
             else
             {
-                e.Handled = false;
+                e.RetVal = false;
             }
-        } */
+        }
 
         /// <summary>
         /// Retrieve the word before the specified character position. 
@@ -287,84 +296,71 @@
                 return "";
             else
             {
-                return "";/* TBI
-                int PosDelimiter = TextBox.Text.LastIndexOfAny(" \r\n(+-/*".ToCharArray(), Pos - 1);
-                return TextBox.Text.Substring(PosDelimiter + 1, Pos - PosDelimiter - 1).TrimEnd(".".ToCharArray());
-                */
+                int PosDelimiter = textEditor.Text.LastIndexOfAny(" \r\n(+-/*".ToCharArray(), Pos - 1);
+                return textEditor.Text.Substring(PosDelimiter + 1, Pos - PosDelimiter - 1).TrimEnd(".".ToCharArray());
             }
         }
 
+        private bool initingCompletion = false;
         /// <summary>
         /// Show the context list. Return true if popup box shown
         /// </summary>
         /// <param name="characterPressed">Character pressed</param>
-        /// <returns>Completion form showing</returns>
-        /* TBI
+        /// <returns>Completion form showing</returns>        
         private bool ShowCompletionWindow(char characterPressed)
         {
             // Get a list of items to show and put into completion window.
-            string TextBeforePeriod = GetWordBeforePosition(TextBox.ActiveTextAreaControl.TextArea.Caret.Offset);
+            string TextBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset);
             List<string> Items = new List<string>();
             List<NeedContextItemsArgs.ContextItem> allitems = new List<NeedContextItemsArgs.ContextItem>();
             ContextItemsNeeded(this, new NeedContextItemsArgs() { ObjectName = TextBeforePeriod, Items = Items, AllItems = allitems });
 
-            CompletionView.Items.Clear();
+            completionModel.Clear();
             foreach (NeedContextItemsArgs.ContextItem item in allitems)
             {
-                int imageIndex = 0;
-                if (item.IsEvent)
-                    imageIndex = 0;
-                else if (item.IsProperty)
-                    imageIndex = 1;
-
-                ListViewItem newItem = new ListViewItem();
-                newItem.Text = item.Name;
-                newItem.ImageIndex = imageIndex;
-                newItem.SubItems.Add(item.Units);
-                newItem.SubItems.Add(item.TypeName);
-                newItem.SubItems.Add(item.Descr);
-                newItem.ToolTipText = item.ParamString;
-                CompletionView.ShowItemToolTips = true;
-                CompletionView.Items.Add(newItem);
+                TreeIter iter = completionModel.AppendValues(item.IsEvent ? functionPixbuf : propertyPixbuf, item.Name, item.Units, item.TypeName, item.Descr, item.ParamString);
             }
-
-            if (CompletionView.Items.Count > 0)
+            if (completionModel.IterNChildren() > 0)
             {
-                TextBox.ActiveTextAreaControl.TextArea.InsertChar(characterPressed);
+                initingCompletion = true;
+                textEditor.TextArea.InsertAtCaret(characterPressed.ToString());
 
                 // Turn readonly on so that the editing window doesn't process keystrokes.
-                TextBox.Document.ReadOnly = true;
+                textEditor.Document.ReadOnly = true;
 
                 // Work out where to put the completion window.
-                Point p = TextBox.ActiveTextAreaControl.TextArea.Caret.ScreenPosition;
-                Point EditorLocation = TextBox.PointToScreen(p);
+                // This should probably be done a bit more intelligently to detect when we are too near the bottom or right
+                // of the screen, and move accordingly. Left as an exercise for the student.
+                Cairo.Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
+                // Need to convert to screen coordinates....
+                int x, y;
+                int retVal = textEditor.GdkWindow.GetOrigin(out x, out y);
+                CompletionForm.Move(p.X + x, p.Y + y + 20);
+                CompletionForm.ShowAll();
+                CompletionForm.Resize(CompletionView.Requisition.Width, 300);
+                if (CompletionForm.GdkWindow != null)
+                  CompletionForm.GdkWindow.Focus(0);
+                while (Gtk.Application.EventsPending())
+                    Gtk.Application.RunIteration();
 
-                Point EditorLocation1 = Application.OpenForms[0].PointToClient(EditorLocation);
-                // Display completion window.
-                CompletionForm.Parent = Application.OpenForms[0];
-                CompletionForm.Left = EditorLocation1.X;
-                CompletionForm.Top = EditorLocation1.Y + 20;  // Would be nice not to use a constant number of pixels.
-                CompletionForm.Show();
-                CompletionForm.BringToFront();
-                CompletionForm.Controls[0].Focus();
-
-                CompletionView.Items[0].Selected = true;
-
+                CompletionView.SetCursor(new TreePath("0"), null, false);
+                initingCompletion = false;
                 return true;
 
             }
-            return false;
+            return false; 
         }
-        */
+        
 
         /// <summary>
         /// Event handler for when the completion window loses focus
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">Event arguments</param>
-        private void OnLeaveCompletion(object sender, EventArgs e)
+        private void OnLeaveCompletion(object sender, FocusOutEventArgs e)
         {
-            HideCompletionWindow();
+            if (!initingCompletion)
+              HideCompletionWindow();
         }
 
         /// <summary>
@@ -372,55 +368,18 @@
         /// </summary>
         private void HideCompletionWindow()
         {
-            /* TBI
-            CompletionForm.Visible = false;
-            TextBox.Document.ReadOnly = false;
-            this.Focus();
-            this.searchValue = string.Empty;
-            timer1.Enabled = false;
-            */
+            CompletionForm.Hide();
+            textEditor.Document.ReadOnly = false;
+            textEditor.GrabFocus();
         }
 
         /// <summary>
-        /// When the key is entered build a search string before the timer times out.
-        /// The item found will become the top most item in the list and will 
-        /// be selected.
+        /// We handle this because we don't see the return key in the KeyPress event handler
         /// </summary>
-        /// <param name="sender">Sender object</param>
-        /// <param name="e">Event arguments</param>
-        /* TBI
-        private void OnContextListKeyUp(object sender, KeyEventArgs e)
+        private void CompletionView_KeyReleaseEvent(object o, KeyReleaseEventArgs args)
         {
-            // search the list
-            char key = (char)e.KeyValue;
-            if (Char.IsLetter(key) || e.KeyCode == Keys.OemMinus)
-            {
-                timer1.Enabled = false;
-                // handle _ (not sure if this is correct)
-                if (e.KeyCode == Keys.OemMinus)
-                {
-                    this.searchValue = this.searchValue + '_';
-                }
-                else
-                {
-                    this.searchValue = this.searchValue + key.ToString().ToLower();
-                }
-
-                ListViewItem foundItem = CompletionView.FindItemWithText(searchValue);
-                if (foundItem != null)
-                {
-                    foundItem.Selected = true;
-                    CompletionView.TopItem = foundItem;
-                }
-                timer1.Enabled = true;
-                e.Handled = true;
-            }
-            else if (e.KeyCode == Keys.Back)
-            {   // backspace resets the search string
-                this.searchValue = string.Empty;
-                this.timer1.Enabled = false;
-            }
-            e.SuppressKeyPress = false;
+            if (args.Event.Key == Gdk.Key.Return && CompletionView.Visible)
+                InsertCompletionItemIntoTextBox();
         }
 
         /// <summary>
@@ -428,35 +387,32 @@
         /// </summary>
         /// <param name="sender">Sending object</param>
         /// <param name="e">Event arguments</param>
-        private void OnContextListKeyDown(object sender, KeyEventArgs e)
+        private void OnContextListKeyDown(object sender, KeyPressEventArgs e)
         {
             // If user clicks ENTER and the context list is visible then insert the currently
             // selected item from the list into the TextBox and close the list.
-            if (e.KeyCode == Keys.Enter && CompletionView.Visible && CompletionView.SelectedItems[0].Index != -1)
+            if (e.Event.Key == Gdk.Key.Return && CompletionView.Visible)
             {
                 InsertCompletionItemIntoTextBox();
-                e.Handled = true;
+                e.RetVal = true;
             }
 
             // If the user presses ESC and the context list is visible then close the list.
-            else if (e.KeyCode == Keys.Escape && CompletionView.Visible)
+            else if (e.Event.Key == Gdk.Key.Escape && CompletionView.Visible)
             {
                 HideCompletionWindow();
-                e.Handled = true;
-            }
-            if ((e.KeyCode != Keys.Up) && (e.KeyCode != Keys.Down))
-            {
-                e.SuppressKeyPress = true;  // don't want the list handling selection itself
+                e.RetVal = true;
             }
         }
-        */
 
         /// <summary>
         /// User has double clicked on a completion list item. 
         /// </summary>
-        private void OnComtextListMouseDoubleClick(object sender, /* TBI Mouse*/ EventArgs e)
+        [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
+        private void OnContextListMouseDoubleClick(object sender, ButtonPressEventArgs e)
         {
-            InsertCompletionItemIntoTextBox();
+            if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1)
+               InsertCompletionItemIntoTextBox();
         }
 
         /// <summary>
@@ -464,17 +420,19 @@
         /// </summary>
         private void InsertCompletionItemIntoTextBox()
         {
-            /* TBI
-            int Line = TextBox.ActiveTextAreaControl.TextArea.Caret.Line;
-            int Column = TextBox.ActiveTextAreaControl.TextArea.Caret.Column;
-            string TextToInsert = ""; /// TBI CompletionView.SelectedItems[0].Text as string;
-            TextBox.Text = TextBox.Text.Insert(TextBox.ActiveTextAreaControl.TextArea.Caret.Offset, TextToInsert);
-
+            string insertText = null;
+            TreePath selPath;
+            TreeViewColumn selCol;
+            CompletionView.GetCursor(out selPath, out selCol);
+            if (selPath != null)
+            { 
+                TreeIter iter;
+                completionModel.GetIter(out iter, selPath);
+                insertText = (string)completionModel.GetValue(iter, 1);
+            }
+            if (!String.IsNullOrEmpty(insertText))
+              textEditor.InsertAtCaret(insertText);
             HideCompletionWindow();
-
-            TextBox.ActiveTextAreaControl.TextArea.Caret.Line = Line;
-            TextBox.ActiveTextAreaControl.TextArea.Caret.Column = Column + TextToInsert.Length;
-            */
         }
 
         /// <summary>
@@ -492,10 +450,6 @@
                 LeaveEditor.Invoke(this, e);
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            searchValue = string.Empty;
-        }
         #region Code related to Edit menu
 
         /// <summary>Performs an action encapsulated in IEditAction.</summary>
