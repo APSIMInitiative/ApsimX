@@ -90,7 +90,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Glade\DataStoreView.glade" />
     <EmbeddedResource Include="Resources\Glade\ProfileView.glade" />
-    <EmbeddedResource Include="Resources\Glade\AxisView.glade" />
+    <EmbeddedResource Include="Resources\Glade\AxisView.glade">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Glade\TitleView.glade" />
     <EmbeddedResource Include="Resources\Glade\LegendView.glade" />
     <EmbeddedResource Include="Resources\Glade\MemoView.glade" />
@@ -329,6 +331,9 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Chicory.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GenericBelowGroundOrgan.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SimpleLeaf.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Stock.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Supplement.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Chickpea.png" />
@@ -367,6 +372,9 @@
     <EmbeddedResource Include="Resources\LargeImages\Sugar.png" />
     <EmbeddedResource Include="Resources\LargeImages\Swim.png" />
     <EmbeddedResource Include="Resources\LargeImages\Wheat.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Chicory.png" />
+    <EmbeddedResource Include="Resources\Function.png" />
+    <EmbeddedResource Include="Resources\Property.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
