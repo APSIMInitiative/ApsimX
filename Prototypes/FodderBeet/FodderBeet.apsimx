@@ -728,8 +728,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
         </Folder>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -742,6 +740,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
+        <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
         <FractionDied>0</FractionDied>
       </Leaf>
       <Root>
@@ -907,8 +906,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           </XYPairs>
           <XProperty>[Root].Depth</XProperty>
         </LinearInterpolationFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
         <InitialDM>5</InitialDM>
         <SpecificRootLength>40000</SpecificRootLength>
         <NuptakeSupply>0</NuptakeSupply>
@@ -981,8 +978,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
         </Folder>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Petiole</Name>
@@ -1060,8 +1055,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
         </Folder>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
