@@ -10251,5 +10251,9 @@ namespace Models
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
+  <Memo>
+    <Name>References</Name>
+    <MemoText><![CDATA[]]></MemoText>
+  </Memo>
   <ExplorerWidth>377</ExplorerWidth>
 </Simulations>
