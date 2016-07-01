@@ -215,6 +215,10 @@ namespace Models.Core
         [XmlElement(typeof(Models.Aqua.PondWater))]
         [XmlElement(typeof(Models.Aqua.FoodInPond))]
         [XmlElement(typeof(Models.Aqua.Prawns))]
+        [XmlElement(typeof(Models.WholeFarm.LabourFamily))]
+        [XmlElement(typeof(Models.WholeFarm.LabourFamilyPerson))]
+        //[XmlElement(typeof(Models.WholeFarm.LabourHired))]
+        //[XmlElement(typeof(Models.WholeFarm.LabourHiredPerson))]
         [XmlElement(typeof(Map))]
         public List<Model> Children { get; set; }
 
