@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Text;
-///using System.Windows.Forms;
-using ICSharpCode.TextEditor.Document;
-using ICSharpCode.TextEditor;
+using Gtk;
+using Glade;
+using Mono.TextEditor;
 using System.Diagnostics;
 using System.IO;
-
-// This unit blatantly stolen from http://www.codeproject.com/Articles/30936/Using-ICSharpCode-TextEditor
 
 namespace TextEditor
 {
@@ -34,245 +30,308 @@ namespace TextEditor
                 (one.B + two.B) >> 1);
         }
     }
-    public partial class FindAndReplaceForm {/* TBI : Form
-	{
-		public FindAndReplaceForm()
-		{
-			InitializeComponent();
-			_search = new TextEditorSearcher();
-		}
+    public class FindAndReplaceForm
+    {
+        [Widget]
+        private Window window1 = null;
+        [Widget]
+        private CheckButton chkMatchCase = null;
+        [Widget]
+        private CheckButton chkMatchWholeWord = null;
+        [Widget]
+        private Entry txtLookFor = null;
+        [Widget]
+        private Entry txtReplaceWith = null;
+        [Widget]
+        private Button btnReplace = null;
+        [Widget]
+        private Button btnReplaceAll = null;
+        [Widget]
+        private Button btnCancel = null;
+        [Widget]
+        private Button btnFindPrevious = null;
+        [Widget]
+        private Button btnFindNext = null;
 
-		TextEditorSearcher _search;
-		TextEditorControl _editor;
-		TextEditorControl Editor { 
-			get { return _editor; } 
-			set { 
-				_editor = value;
-				_search.Document = _editor.Document;
-				UpdateTitleBar();
-			}
-		}
 
-		private void UpdateTitleBar()
-		{
-			string text = ReplaceMode ? "Find & replace" : "Find";
-			if (_editor != null && _editor.FileName != null)
-				text += " - " + Path.GetFileName(_editor.FileName);
-			if (_search.HasScanRegion)
-				text += " (selection only)";
-			this.Text = text;
-		}
+        public FindAndReplaceForm()
+        {
+            /// TBI _search = new TextEditorSearcher();
+            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.FindAndReplace.glade", "window1");
+            gxml.Autoconnect(this);
+        }
 
-		public void ShowFor(TextEditorControl editor, bool replaceMode)
-		{
-			Editor = editor;
+        /// TBI TextEditorSearcher _search;
 
-			_search.ClearScanRegion();
-			var sm = editor.ActiveTextAreaControl.SelectionManager;
-			if (sm.HasSomethingSelected && sm.SelectionCollection.Count == 1) {
-				var sel = sm.SelectionCollection[0];
-				if (sel.StartPosition.Line == sel.EndPosition.Line)
-					txtLookFor.Text = sm.SelectedText;
-				else
-					_search.SetScanRegion(sel);
-			} else {
-				// Get the current word that the caret is on
-				Caret caret = editor.ActiveTextAreaControl.Caret;
-				int start = TextUtilities.FindWordStart(editor.Document, caret.Offset);
-				int endAt = TextUtilities.FindWordEnd(editor.Document, caret.Offset);
-				txtLookFor.Text = editor.Document.GetText(start, endAt - start);
-			}
-			
-			ReplaceMode = replaceMode;
+        Mono.TextEditor.TextEditor _editor;
+        Mono.TextEditor.TextEditor Editor
+        {
+            get { return _editor; }
+            set
+            {
+                _editor = value;
+                /// TBI _search.Document = _editor.Document;
+                UpdateTitleBar();
+            }
+        }
 
-			this.Owner = (Form)editor.TopLevelControl;
-			this.Show();
-			
-			txtLookFor.SelectAll();
-			txtLookFor.Focus();
-		}
+        private void UpdateTitleBar()
+        {
+            string text = ReplaceMode ? "Find & replace" : "Find";
+            if (_editor != null && _editor.FileName != null)
+                text += " - " + Path.GetFileName(_editor.FileName);
+            /// TBI if (_search.HasScanRegion)
+            /// TBI     text += " (selection only)";
+            window1.Title = text;
+        }
 
-		public bool ReplaceMode
-		{
-			get { return txtReplaceWith.Visible; }
-			set {
-				btnReplace.Visible = btnReplaceAll.Visible = value;
-				lblReplaceWith.Visible = txtReplaceWith.Visible = value;
-				btnHighlightAll.Visible = !value;
-				this.AcceptButton = value ? btnReplace : btnFindNext;
-				UpdateTitleBar();
-			}
-		}
+        public void ShowFor(Mono.TextEditor.TextEditor editor, bool replaceMode)
+        {
+            /* TBI
+            Editor = editor;
 
-		private void btnFindPrevious_Click(object sender, EventArgs e)
-		{
-			FindNext(false, true, "Text not found");
-		}
-		private void btnFindNext_Click(object sender, EventArgs e)
-		{
-			FindNext(false, false, "Text not found");
-		}
+            _search.ClearScanRegion();
+            var sm = editor.ActiveTextAreaControl.SelectionManager;
+            if (sm.HasSomethingSelected && sm.SelectionCollection.Count == 1)
+            {
+                var sel = sm.SelectionCollection[0];
+                if (sel.StartPosition.Line == sel.EndPosition.Line)
+                    txtLookFor.Text = sm.SelectedText;
+                else
+                    _search.SetScanRegion(sel);
+            }
+            else
+            {
+                // Get the current word that the caret is on
+                Caret caret = editor.ActiveTextAreaControl.Caret;
+                int start = TextUtilities.FindWordStart(editor.Document, caret.Offset);
+                int endAt = TextUtilities.FindWordEnd(editor.Document, caret.Offset);
+                txtLookFor.Text = editor.Document.GetText(start, endAt - start);
+            }
 
-		public bool _lastSearchWasBackward = false;
-		public bool _lastSearchLoopedAround;
+            ReplaceMode = replaceMode;
 
-		public TextRange FindNext(bool viaF3, bool searchBackward, string messageIfNotFound)
-		{
-			if (string.IsNullOrEmpty(txtLookFor.Text))
-			{
-				MessageBox.Show("No string specified to look for!");
-				return null;
-			}
-			_lastSearchWasBackward = searchBackward;
-			_search.LookFor = txtLookFor.Text;
-			_search.MatchCase = chkMatchCase.Checked;
-			_search.MatchWholeWordOnly = chkMatchWholeWord.Checked;
+            window1.Parent = editor.Toplevel;
+            window1.Show();
 
-			var caret = _editor.ActiveTextAreaControl.Caret;
-			if (viaF3 && _search.HasScanRegion && !caret.Offset.
-				IsInRange(_search.BeginOffset, _search.EndOffset)) {
-				// user moved outside of the originally selected region
-				_search.ClearScanRegion();
-				UpdateTitleBar();
-			}
+            txtLookFor.SelectAll();
+            txtLookFor.Focus();
+            */
+        }
 
-			int startFrom = caret.Offset - (searchBackward ? 1 : 0);
-			TextRange range = _search.FindNext(startFrom, searchBackward, out _lastSearchLoopedAround);
-			if (range != null)
-				SelectResult(range);
-			else if (messageIfNotFound != null)
-				MessageBox.Show(messageIfNotFound);
-			return range;
-		}
+        public bool ReplaceMode
+        {
+            get { return txtReplaceWith.Visible; }
+            set
+            {
+                /* TBI
+                btnReplace.Visible = btnReplaceAll.Visible = value;
+                lblReplaceWith.Visible = txtReplaceWith.Visible = value;
+                btnHighlightAll.Visible = !value;
+                this.AcceptButton = value ? btnReplace : btnFindNext;
+                UpdateTitleBar();
+                */
+            }
+        }
 
-		private void SelectResult(TextRange range)
-		{
-			TextLocation p1 = _editor.Document.OffsetToPosition(range.Offset);
-			TextLocation p2 = _editor.Document.OffsetToPosition(range.Offset + range.Length);
-			_editor.ActiveTextAreaControl.SelectionManager.SetSelection(p1, p2);
-			_editor.ActiveTextAreaControl.ScrollTo(p1.Line, p1.Column);
-			// Also move the caret to the end of the selection, because when the user 
-			// presses F3, the caret is where we start searching next time.
-			_editor.ActiveTextAreaControl.Caret.Position = 
-				_editor.Document.OffsetToPosition(range.Offset + range.Length);
-		}
+        private void btnFindPrevious_Click(object sender, EventArgs e)
+        {
+            /* TBI
+            FindNext(false, true, "Text not found");
+            */
+        }
+        private void btnFindNext_Click(object sender, EventArgs e)
+        {
+            /* TBI
+            FindNext(false, false, "Text not found");
+            */
+        }
 
-		Dictionary<TextEditorControl, HighlightGroup> _highlightGroups = new Dictionary<TextEditorControl, HighlightGroup>();
+        public bool _lastSearchWasBackward = false;
+        public bool _lastSearchLoopedAround;
 
-		private void btnHighlightAll_Click(object sender, EventArgs e)
-		{
-			if (!_highlightGroups.ContainsKey(_editor))
-				_highlightGroups[_editor] = new HighlightGroup(_editor);
-			HighlightGroup group = _highlightGroups[_editor];
+        /*
+        public TextRange FindNext(bool viaF3, bool searchBackward, string messageIfNotFound)
+        {
+            if (string.IsNullOrEmpty(txtLookFor.Text))
+            {
+                MessageBox.Show("No string specified to look for!");
+                return null;
+            }
+            _lastSearchWasBackward = searchBackward;
+            _search.LookFor = txtLookFor.Text;
+            _search.MatchCase = chkMatchCase.Checked;
+            _search.MatchWholeWordOnly = chkMatchWholeWord.Checked;
 
-			if (string.IsNullOrEmpty(LookFor))
-				// Clear highlights
-				group.ClearMarkers();
-			else {
-				_search.LookFor = txtLookFor.Text;
-				_search.MatchCase = chkMatchCase.Checked;
-				_search.MatchWholeWordOnly = chkMatchWholeWord.Checked;
+            var caret = _editor.ActiveTextAreaControl.Caret;
+            if (viaF3 && _search.HasScanRegion && !caret.Offset.
+                IsInRange(_search.BeginOffset, _search.EndOffset))
+            {
+                // user moved outside of the originally selected region
+                _search.ClearScanRegion();
+                UpdateTitleBar();
+            }
 
-				bool looped = false;
-				int offset = 0, count = 0;
-				for(;;) {
-					TextRange range = _search.FindNext(offset, false, out looped);
-					if (range == null || looped)
-						break;
-					offset = range.Offset + range.Length;
-					count++;
-
-					var m = new TextMarker(range.Offset, range.Length, 
-							TextMarkerType.SolidBlock, Color.Yellow, Color.Black);
-					group.AddMarker(m);
-				}
-				if (count == 0)
-					MessageBox.Show("Search text not found.");
-				else
-					Close();
-			}
-		}
-		
-		private void FindAndReplaceForm_FormClosing(object sender, FormClosingEventArgs e)
-		{	// Prevent dispose, as this form can be re-used
-			if (e.CloseReason != CloseReason.FormOwnerClosing)
-			{
-				if (this.Owner != null)
-					this.Owner.Select(); // prevent another app from being activated instead
-				
-				e.Cancel = true;
-				Hide();
-				
-				// Discard search region
-				_search.ClearScanRegion();
-				_editor.Refresh(); // must repaint manually
-			}
-		}
-
-		private void btnCancel_Click(object sender, EventArgs e)
-		{
-			Close();
-		}
-
-		private void btnReplace_Click(object sender, EventArgs e)
-		{
-			var sm = _editor.ActiveTextAreaControl.SelectionManager;
-			if (string.Equals(sm.SelectedText, txtLookFor.Text, StringComparison.OrdinalIgnoreCase))
-				InsertText(txtReplaceWith.Text);
-			FindNext(false, _lastSearchWasBackward, "Text not found.");
-		}
-
-		private void btnReplaceAll_Click(object sender, EventArgs e)
-		{
-			int count = 0;
-			// BUG FIX: if the replacement string contains the original search string
-			// (e.g. replace "red" with "very red") we must avoid looping around and
-			// replacing forever! To fix, start replacing at beginning of region (by 
-			// moving the caret) and stop as soon as we loop around.
-			_editor.ActiveTextAreaControl.Caret.Position = 
-				_editor.Document.OffsetToPosition(_search.BeginOffset);
-
-			_editor.Document.UndoStack.StartUndoGroup();
-			try {
-				while (FindNext(false, false, null) != null)
-				{
-					if (_lastSearchLoopedAround)
-						break;
-
-					// Replace
-					count++;
-					InsertText(txtReplaceWith.Text);
-				}
-			} finally {
-				_editor.Document.UndoStack.EndUndoGroup();
-			}
-			if (count == 0)
-				MessageBox.Show("No occurrances found.");
-			else {
-				MessageBox.Show(string.Format("Replaced {0} occurrances.", count));
-				Close();
-			}
-		}
-
-		private void InsertText(string text)
-		{
-			var textArea = _editor.ActiveTextAreaControl.TextArea;
-			textArea.Document.UndoStack.StartUndoGroup();
-			try {
-				if (textArea.SelectionManager.HasSomethingSelected) {
-					textArea.Caret.Position = textArea.SelectionManager.SelectionCollection[0].StartPosition;
-					textArea.SelectionManager.RemoveSelectedText();
-				}
-				textArea.InsertString(text);
-			} finally {
-				textArea.Document.UndoStack.EndUndoGroup();
-			}
-		}
-
-		public string LookFor { get { return txtLookFor.Text; } }
+            int startFrom = caret.Offset - (searchBackward ? 1 : 0);
+            TextRange range = _search.FindNext(startFrom, searchBackward, out _lastSearchLoopedAround);
+            if (range != null)
+                SelectResult(range);
+            else if (messageIfNotFound != null)
+                MessageBox.Show(messageIfNotFound);
+            return range;
+        }
         */
-	}
 
+        private void SelectResult(/* TBI TextRange range */)
+        { /* TBI
+            TextLocation p1 = _editor.Document.OffsetToPosition(range.Offset);
+            TextLocation p2 = _editor.Document.OffsetToPosition(range.Offset + range.Length);
+            _editor.ActiveTextAreaControl.SelectionManager.SetSelection(p1, p2);
+            _editor.ActiveTextAreaControl.ScrollTo(p1.Line, p1.Column);
+            // Also move the caret to the end of the selection, because when the user 
+            // presses F3, the caret is where we start searching next time.
+            _editor.ActiveTextAreaControl.Caret.Position =
+                _editor.Document.OffsetToPosition(range.Offset + range.Length);
+            */
+        }
+
+        /// TBI Dictionary<TextEditorControl, HighlightGroup> _highlightGroups = new Dictionary<TextEditorControl, HighlightGroup>();
+
+        private void btnHighlightAll_Click(object sender, EventArgs e)
+        {
+            /* TBI
+            if (!_highlightGroups.ContainsKey(_editor))
+                _highlightGroups[_editor] = new HighlightGroup(_editor);
+            HighlightGroup group = _highlightGroups[_editor];
+
+            if (string.IsNullOrEmpty(LookFor))
+                // Clear highlights
+                group.ClearMarkers();
+            else
+            {
+                _search.LookFor = txtLookFor.Text;
+                _search.MatchCase = chkMatchCase.Checked;
+                _search.MatchWholeWordOnly = chkMatchWholeWord.Checked;
+
+                bool looped = false;
+                int offset = 0, count = 0;
+                for (;;)
+                {
+                    TextRange range = _search.FindNext(offset, false, out looped);
+                    if (range == null || looped)
+                        break;
+                    offset = range.Offset + range.Length;
+                    count++;
+
+                    var m = new TextMarker(range.Offset, range.Length,
+                            TextMarkerType.SolidBlock, Color.Yellow, Color.Black);
+                    group.AddMarker(m);
+                }
+                if (count == 0)
+                    MessageBox.Show("Search text not found.");
+                else
+                    Close();
+            }
+            */
+        }
+
+        private void FindAndReplaceForm_FormClosing(object sender, /* TBI FormClosing*/  EventArgs e)
+        {   // Prevent dispose, as this form can be re-used
+            /* TBI
+            if (e.CloseReason != CloseReason.FormOwnerClosing)
+            {
+                if (this.Owner != null)
+                    this.Owner.Select(); // prevent another app from being activated instead
+
+                e.Cancel = true;
+                Hide();
+
+                // Discard search region
+                _search.ClearScanRegion();
+                _editor.Refresh(); // must repaint manually
+            }
+            */
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            /* TBI
+            Close();
+            */
+        }
+
+        private void btnReplace_Click(object sender, EventArgs e)
+        {
+            /* TBI
+            var sm = _editor.ActiveTextAreaControl.SelectionManager;
+            if (string.Equals(sm.SelectedText, txtLookFor.Text, StringComparison.OrdinalIgnoreCase))
+                InsertText(txtReplaceWith.Text);
+            FindNext(false, _lastSearchWasBackward, "Text not found.");
+            */
+        }
+
+        private void btnReplaceAll_Click(object sender, EventArgs e)
+        {
+            /* TBI
+            int count = 0;
+            // BUG FIX: if the replacement string contains the original search string
+            // (e.g. replace "red" with "very red") we must avoid looping around and
+            // replacing forever! To fix, start replacing at beginning of region (by 
+            // moving the caret) and stop as soon as we loop around.
+            _editor.ActiveTextAreaControl.Caret.Position =
+                _editor.Document.OffsetToPosition(_search.BeginOffset);
+
+            _editor.Document.UndoStack.StartUndoGroup();
+            try
+            {
+                while (FindNext(false, false, null) != null)
+                {
+                    if (_lastSearchLoopedAround)
+                        break;
+
+                    // Replace
+                    count++;
+                    InsertText(txtReplaceWith.Text);
+                }
+            }
+            finally
+            {
+                _editor.Document.UndoStack.EndUndoGroup();
+            }
+            if (count == 0)
+                MessageBox.Show("No occurrances found.");
+            else
+            {
+                MessageBox.Show(string.Format("Replaced {0} occurrances.", count));
+                Close();
+            }
+            */
+        }
+
+        private void InsertText(string text)
+        {
+            /* TBI
+            var textArea = _editor.ActiveTextAreaControl.TextArea;
+            textArea.Document.UndoStack.StartUndoGroup();
+            try
+            {
+                if (textArea.SelectionManager.HasSomethingSelected)
+                {
+                    textArea.Caret.Position = textArea.SelectionManager.SelectionCollection[0].StartPosition;
+                    textArea.SelectionManager.RemoveSelectedText();
+                }
+                textArea.InsertString(text);
+            }
+            finally
+            {
+                textArea.Document.UndoStack.EndUndoGroup();
+            }
+            */
+        }
+
+        public string LookFor { get { return txtLookFor.Text; } }
+    }
+    /* TBI
 	public class TextRange : AbstractSegment
 	{
 		IDocument _document;
@@ -494,5 +553,5 @@ namespace TextEditor
 		~HighlightGroup() { Dispose(); }
 
 		public IList<TextMarker> Markers { get { return _markers.AsReadOnly(); } }
-	}
+	} */
 }

@@ -5,6 +5,7 @@
     using EventArguments;
     using Gtk;
     using Mono.TextEditor;
+    using TextEditor;
 
 
     /// <summary>
@@ -61,7 +62,7 @@
         /// <summary>
         /// The find-and-replace form
         /// </summary>
-        /// TBI private FindAndReplaceForm _findForm = new FindAndReplaceForm();
+        private FindAndReplaceForm _findForm = new FindAndReplaceForm();
 
         /// <summary>
         /// The completion list
@@ -107,7 +108,10 @@
             textEditor.LeaveNotifyEvent += OnTextBoxLeave;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
 
-            CompletionForm = new Window(WindowType.Popup);
+            CompletionForm = new Window(WindowType.Toplevel);
+            CompletionForm.Decorated = false;
+            CompletionForm.SkipPagerHint = true;
+            CompletionForm.SkipTaskbarHint = true;
             Frame completionFrame = new Frame();
             CompletionForm.Add(completionFrame);
             ScrolledWindow completionScroller = new ScrolledWindow();
@@ -154,6 +158,7 @@
         {
             textEditor.Document.LineChanged -= OnTextHasChanged;
             textEditor.LeaveNotifyEvent -= OnTextBoxLeave;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
             textEditor.TextArea.KeyPressEvent -= OnKeyPress;
             CompletionForm.FocusOutEvent -= OnLeaveCompletion;
             CompletionView.ButtonPressEvent -= OnContextListMouseDoubleClick;
@@ -335,6 +340,7 @@
                 // Need to convert to screen coordinates....
                 int x, y;
                 int retVal = textEditor.GdkWindow.GetOrigin(out x, out y);
+                CompletionForm.TransientFor = MainWidget.Toplevel as Window;
                 CompletionForm.Move(p.X + x, p.Y + y + 20);
                 CompletionForm.ShowAll();
                 CompletionForm.Resize(CompletionView.Requisition.Width, 300);
