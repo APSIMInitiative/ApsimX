@@ -2464,7 +2464,7 @@ namespace Models
     <MaximumResultsPerPage>100000</MaximumResultsPerPage>
   </DataStore>
   <Folder>
-    <Name>Validation1</Name>
+    <Name>Validation</Name>
     <Folder>
       <Name>New Zealand</Name>
       <Folder>
