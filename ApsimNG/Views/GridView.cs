@@ -11,6 +11,7 @@ namespace UserInterface.Views
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
+    using System.Reflection;
     using Classes;
     using DataGridViewAutoFilter;
     using EventArguments;
@@ -49,14 +50,14 @@ namespace UserInterface.Views
         private string defaultNumericFormat = "F2";
 
         [Widget]
-        private ScrolledWindow scrolledwindow1;
+        private ScrolledWindow scrolledwindow1 = null;
 
         [Widget]
-        public TreeView gridview;
+        public TreeView gridview = null;
         [Widget]
-        private HBox hbox1;
+        private HBox hbox1 = null;
         [Widget]
-        private Gtk.Image image1;
+        private Gtk.Image image1 = null;
 
         private Gdk.Pixbuf imagePixbuf;
 
@@ -80,6 +81,52 @@ namespace UserInterface.Views
             AddContextAction("Delete", OnDeleteClick);
             gridview.ButtonReleaseEvent += OnButtonUp;
             image1.Visible = false;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            gridview.ButtonReleaseEvent -= OnButtonUp;
+            // It's good practice to disconnect the event handlers, as it makes memory leaks
+            // less likely. However, we may not "own" the event handlers, so how do we 
+            // know what to disconnect?
+            // We can do this via reflection. Here's how it currently can be done in Gtk#.
+            // Windows.Forms would do it differently.
+            // This may break if Gtk# changes the way they implement event handlers.
+            foreach (Widget w in Popup)
+            {
+                if (w is ImageMenuItem)
+                {
+                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (pi != null)
+                    {
+                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
+                        if (handlers != null && handlers.ContainsKey("activate"))
+                        {
+                            EventHandler handler = (EventHandler)handlers["activate"];
+                            (w as ImageMenuItem).Activated -= handler;
+                        }
+                    }
+                }
+            }
+            ClearGridColumns();
+        }
+
+        private void ClearGridColumns()
+        {
+            while (gridview.Columns.Length > 0)
+            {
+                TreeViewColumn col = gridview.GetColumn(0);
+                foreach (CellRenderer render in col.CellRenderers)
+                    if (render is CellRendererText)
+                    {
+                        CellRendererText textRender = render as CellRendererText;
+                        textRender.EditingStarted -= OnCellBeginEdit;
+                        textRender.Edited -= OnCellValueChanged;
+                        col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
+                    }
+                gridview.RemoveColumn(gridview.GetColumn(0));
+            }
         }
 
         /// <summary>
@@ -341,7 +388,7 @@ namespace UserInterface.Views
                     return false;
                 }
             }
-            return true;
+            /// TBI return true;
         }
 
         /// <summary>
@@ -359,11 +406,29 @@ namespace UserInterface.Views
             /// TBI this.Grid.Columns[number - 1].Frozen = true;
         }
 
+        /// <summary>Get screenshot of grid.</summary>
+        /// THIS CODE HAS NOT BEEN TESTED.
+        public System.Drawing.Image GetScreenshot()
+        {
+            // Create a Bitmap and draw the DataGridView on it.
+            int width;
+            int height;
+            Gdk.Window gridWindow = gridview.GdkWindow;
+            gridWindow.GetSize(out width, out height);
+            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(gridWindow, gridWindow.Colormap, 0, 0, 0, 0, width, height);
+            byte[] buffer = screenshot.SaveToBuffer("png");
+            MemoryStream stream = new MemoryStream(buffer);
+            System.Drawing.Bitmap bitmap = new Bitmap(stream);
+            return bitmap;
+        }
+
         /// <summary>
         /// Populate the grid from the DataSource.
         /// </summary>
         private void PopulateGrid()
         {
+            ClearGridColumns();
+            colLookup.Clear();
             // Begin by creating a new ListStore with the appropriate number of
             // columns. Use the string column type for everything.
             int nCols = DataSource != null ? this.DataSource.Columns.Count : 0;
@@ -372,9 +437,6 @@ namespace UserInterface.Views
                 colTypes[i] = typeof(string);
             gridmodel = new ListStore(colTypes);
 
-            while (gridview.Columns.Length > 0)
-                gridview.RemoveColumn(gridview.GetColumn(0));
-            colLookup.Clear();
             image1.Visible = false;
             // Now set up the grid columns
             for (int i = 0; i < nCols; i++)

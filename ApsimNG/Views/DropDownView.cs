@@ -41,6 +41,12 @@ namespace UserInterface.Views
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Changed += OnSelectionChanged;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            combobox1.Changed -= OnSelectionChanged;
         }
 
         /// <summary>Get or sets the list of valid values.</summary>

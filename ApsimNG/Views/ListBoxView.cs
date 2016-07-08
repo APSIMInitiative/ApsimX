@@ -49,6 +49,15 @@ namespace UserInterface.Views
             TreeViewColumn column = new TreeViewColumn("Values", textRender, "text", 0);
             listview.AppendColumn(column);
             listview.HeadersVisible = false;
+            listview.CursorChanged += OnSelectionChanged;
+            listview.ButtonPressEvent += OnDoubleClick;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            listview.CursorChanged -= OnSelectionChanged;
+            listview.ButtonPressEvent -= OnDoubleClick;
         }
 
         /// <summary>Get or sets the list of valid values.</summary>
@@ -119,9 +128,10 @@ namespace UserInterface.Views
         /// <summary>User has double clicked the list box.</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnDoubleClick(object sender, EventArgs e)
+        [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
+        private void OnDoubleClick(object sender, ButtonPressEventArgs e)
         {
-            if (DoubleClicked != null)
+            if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1 && DoubleClicked != null)
                 DoubleClicked.Invoke(this, e);
         }
     }

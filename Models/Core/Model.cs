@@ -100,7 +100,8 @@ namespace Models.Core
         [XmlElement(typeof(Soils.Arbitrator.SoilArbitrator))]
         [XmlElement(typeof(Soils.Sample))]
         [XmlElement(typeof(Models.Sugarcane))]
-        [XmlElement(typeof(Models.Grazplan.Supplement))]
+        [XmlElement(typeof(Models.GrazPlan.Stock))]
+        [XmlElement(typeof(Models.GrazPlan.Supplement))]
         [XmlElement(typeof(Models.PMF.OrganArbitrator))]
         [XmlElement(typeof(Models.PMF.Structure))]
         [XmlElement(typeof(Models.PMF.Biomass))]
@@ -135,6 +136,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Phen.PhaseSetFunction))]
         [XmlElement(typeof(Models.PMF.Phen.Vernalisation))]
         [XmlElement(typeof(Models.PMF.Phen.VernalisationCW))]
+        [XmlElement(typeof(Models.PMF.Phen.QualitativePPEffect))]
         [XmlElement(typeof(Models.PMF.Phen.ZadokPMF))]
         [XmlElement(typeof(Models.PMF.Functions.AccumulateFunction))]
         [XmlElement(typeof(Models.PMF.Functions.MovingAverageFunction))]
@@ -213,6 +215,10 @@ namespace Models.Core
         [XmlElement(typeof(Models.Aqua.PondWater))]
         [XmlElement(typeof(Models.Aqua.FoodInPond))]
         [XmlElement(typeof(Models.Aqua.Prawns))]
+        [XmlElement(typeof(Models.WholeFarm.LabourFamily))]
+        [XmlElement(typeof(Models.WholeFarm.LabourFamilyPerson))]
+        //[XmlElement(typeof(Models.WholeFarm.LabourHired))]
+        //[XmlElement(typeof(Models.WholeFarm.LabourHiredPerson))]
         [XmlElement(typeof(Map))]
         public List<Model> Children { get; set; }
 

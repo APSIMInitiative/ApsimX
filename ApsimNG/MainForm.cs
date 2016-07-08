@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Utilities;
 using Glade;
@@ -26,6 +27,7 @@ namespace UserInterface
 
     public class ViewBase
     {
+        static string[] resources = Assembly.GetExecutingAssembly().GetManifestResourceNames();
         protected ViewBase _owner = null;
         protected Widget _mainWidget = null;
         public ViewBase Owner { get { return _owner; } }
@@ -35,6 +37,10 @@ namespace UserInterface
         protected Gdk.Window mainWindow { get { return MainWidget == null ? null : MainWidget.Toplevel.GdkWindow; } }
         private bool waiting = false;
 
+        protected bool hasResource(string name)
+        {
+            return resources.Contains(name);
+        }
         public bool WaitCursor
         {
             get
@@ -46,11 +52,11 @@ namespace UserInterface
                 if (mainWindow != null)
                 {
                     if (value == true)
-                    {
                         mainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
-                    }
                     else
                         mainWindow.Cursor = null;
+                    while (Gtk.Application.EventsPending())
+                        Gtk.Application.RunIteration();
                     waiting = value;
                 }
             }
@@ -64,9 +70,9 @@ namespace UserInterface
         private string[] commandLineArguments;
 
         [Widget]
-        private Window mainWindow;
+        private new Window mainWindow = null;
         [Widget]
-        private HPaned hpaned1;
+        private HPaned hpaned1 = null;
 
         /// <summary>
         /// The error message will be set if an error results from a startup script.
@@ -119,10 +125,10 @@ namespace UserInterface
             // Depending on how the resources are added, they are read in 
             // slightly different ways, apparently. So we might instead have:
             // Builder Gui = new Builder();
-            // Gui.AddFromString(GTKUserInterface.Properties.Resources.MainForm);
+            // Gui.AddFromString(ApsimNG.Properties.Resources.MainForm);
 
             // Here's how we load the form description using an embedded GtkBuilder file
-            // Builder Gui = new Builder("GTKUserInterface.Resources.Glade.MainForm.glade");
+            // Builder Gui = new Builder("ApsimNG.Resources.Glade.MainForm.glade");
             // window1 = (Window)Gui.GetObject("window1");
             // hpaned1 = (HPaned)Gui.GetObject("hpaned1");
 

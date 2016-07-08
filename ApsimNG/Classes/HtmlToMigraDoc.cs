@@ -119,7 +119,11 @@
             HtmlAttribute srcAttribute = node.Attributes["src"];
             if (srcAttribute != null)
             {
-                string fullPath = Path.Combine(imagePath, srcAttribute.Value);
+                string fullPath;
+                if (String.IsNullOrEmpty(imagePath))
+                    fullPath = srcAttribute.Value;
+                else
+                    fullPath = Path.Combine(imagePath, srcAttribute.Value);
                 if (!File.Exists(fullPath))
                 {
                     // Look in documentation folder.
@@ -131,7 +135,7 @@
                 if (File.Exists(fullPath))
                 {
                     Paragraph para = section.Section.AddParagraph();
-                    Image image1 = para.AddImage(fullPath);
+                    para.AddImage(fullPath);
                 }
             }
             return section;
@@ -314,8 +318,15 @@
         /// <returns>The newly created paragraph.</returns>
         private static DocumentObject AddHeading(DocumentObject parentObject, int headingNumber)
         {
-            Paragraph paragraph = ((Section)parentObject).AddParagraph();
-            paragraph.Style = "Heading" + headingNumber;
+            Paragraph paragraph = null;
+            if (parentObject is Section)
+                paragraph = (parentObject as Section).AddParagraph();
+            else if (parentObject is Paragraph)
+                paragraph = (parentObject as Paragraph).Section.AddParagraph();
+            if (paragraph != null)
+            {
+                paragraph.Style = "Heading" + headingNumber;
+            }
             return paragraph;
         }
 

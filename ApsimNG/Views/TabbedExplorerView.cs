@@ -18,7 +18,7 @@ namespace UserInterface.Views
 
         event EventHandler MruFileClick;
 
-        event EventHandler TabClosing;
+        event EventHandler<TabClosingArgs> TabClosing;
 
         /// <summary>
         /// Add a tab form to the tab control. Optionally select the tab if SelectTab is true.
@@ -70,22 +70,22 @@ namespace UserInterface.Views
 
         public event EventHandler<PopulateStartPageArgs> PopulateStartPage;
         public event EventHandler MruFileClick;
-        public event EventHandler TabClosing;
+        public event EventHandler<TabClosingArgs> TabClosing;
 
         private ListStore standardList = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(EventHandler));
         private ListStore recentFileList = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(EventHandler));
         [Widget]
-        private Notebook notebook1;
+        private Notebook notebook1 = null;
         [Widget]
-        private IconView standardView;
+        private IconView standardView = null;
         [Widget]
-        private IconView recentFilesView;
+        private IconView recentFilesView = null;
         [Widget]
-        private Label label4;
+        private Label label4 = null;
         [Widget]
-        private EventBox eventbox1;
+        private EventBox eventbox1 = null;
         [Widget]
-        private VBox vbox1;
+        private VBox vbox1 = null;
 
         private const string indexTabText = "Home";
 
@@ -122,6 +122,13 @@ namespace UserInterface.Views
                 labelText.WrapMode = Pango.WrapMode.Word;
                 labelText.SizePoints = 8;  // Works in GTKSharp 2, but not in 3
             }
+            eventbox1.ButtonPressEvent += on_eventbox1_button_press_event;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            eventbox1.ButtonPressEvent -= on_eventbox1_button_press_event;
         }
 
         /// <summary>
@@ -198,7 +205,11 @@ namespace UserInterface.Views
                 if (tabPage > 0)
                 {
                     if (TabClosing != null)
-                        TabClosing.Invoke(this, e);
+                    {
+                        TabClosingArgs args = new TabClosingArgs();
+                        args.tabIndex = tabPage;
+                        TabClosing.Invoke(this, args);
+                    }
                     notebook1.RemovePage(tabPage);
                 }
             }
@@ -232,7 +243,11 @@ namespace UserInterface.Views
             if (tabPage > 0)
             {
                 if (TabClosing != null)
-                    TabClosing.Invoke(this, e);
+                {
+                    TabClosingArgs args = new TabClosingArgs();
+                    args.tabIndex = tabPage;
+                    TabClosing.Invoke(this, args);
+                }
                 notebook1.RemovePage(tabPage);
             }
         }
@@ -401,6 +416,10 @@ namespace UserInterface.Views
         }
     }
 
+    public class TabClosingArgs : EventArgs
+    {
+        public int tabIndex;
+    }
 
     public class PopulateStartPageArgs : EventArgs
     {

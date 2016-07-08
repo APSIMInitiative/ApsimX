@@ -42,8 +42,15 @@ namespace Utility
                 string summaryJpg = Path.Combine(ConfigurationFolder, "ApsimSummary.png");
                 if (!File.Exists(summaryJpg))
                 {
-                    Bitmap b = UserInterface.Properties.Resources.ResourceManager.GetObject("ApsimSummary") as Bitmap;
-                    b.Save(summaryJpg);
+                    try
+                    {
+                        Bitmap b = UserInterface.Properties.Resources.ResourceManager.GetObject("ApsimSummary") as Bitmap;
+                        b.Save(summaryJpg);
+                    }
+                    catch
+                    {
+
+                    }
                 }
                 return summaryJpg;
             }

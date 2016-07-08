@@ -431,9 +431,10 @@ namespace Models.PMF.Phen
 
                 if (Emerged)
                     AccumulatedEmergedTT += CurrentPhase.TTForToday;
-               
-                if (Emerged && PostPhenology != null)
-                    PostPhenology.Invoke(this, new EventArgs());
+
+                if (Plant != null)
+                    if (Plant.IsAlive && PostPhenology != null)
+                        PostPhenology.Invoke(this, new EventArgs());
 
                 Util.Debug("Phenology.CurrentPhaseName=%s", CurrentPhase.Name.ToLower());
                 Util.Debug("Phenology.CurrentStage=%f", Stage);
@@ -460,7 +461,8 @@ namespace Models.PMF.Phen
                     
             private set
             {
-                string OldPhaseName = CurrentPhase.Name;
+                string oldPhaseName = CurrentPhase.Name;
+                string stageOnEvent = CurrentPhase.End;
                 //double TTRewound;
                 double OldPhaseINdex = IndexOfPhase(CurrentPhase.Name);
                 CurrentPhaseIndex = IndexOfPhase(value.Name);
@@ -508,9 +510,9 @@ namespace Models.PMF.Phen
                 {
                     //_AccumulatedTT += CurrentPhase.TTinPhase;
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
-                    PhaseChangedData.OldPhaseName = OldPhaseName;
+                    PhaseChangedData.OldPhaseName = oldPhaseName;
                     PhaseChangedData.NewPhaseName = CurrentPhase.Name;
-                    PhaseChangedData.EventStageName = CurrentPhase.Start;
+                    PhaseChangedData.EventStageName = stageOnEvent;
                     PhaseChanged.Invoke(PhaseChangedData);
                 }
             }

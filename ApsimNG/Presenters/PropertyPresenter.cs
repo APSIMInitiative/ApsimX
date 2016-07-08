@@ -12,6 +12,7 @@ namespace UserInterface.Presenters
     using System.Reflection;
     using EventArguments;
     using Interfaces;
+    using UserInterface.Views;
     using Models;
     using Models.Core;
     using APSIM.Shared.Utilities;
@@ -92,7 +93,7 @@ namespace UserInterface.Presenters
                 FormatTestGrid();
             }
 
-                this.grid.CellsChanged += this.OnCellValueChanged;
+            this.grid.CellsChanged += this.OnCellValueChanged;
             this.grid.ButtonClick += OnFileBrowseClick;
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
             if (model != null)
@@ -182,7 +183,6 @@ namespace UserInterface.Presenters
 
                     if (includeProperty)
                     {
-                        Attribute descriptionAttribute = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), true);
                         this.properties.Add(new VariableProperty(this.model, property));
                     }
 

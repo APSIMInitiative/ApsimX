@@ -625,23 +625,23 @@ Though tillering is common in some maize varieties under certain agronomic condi
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
-        <FractionRemoved>1.0</FractionRemoved>
-        <FractionToResidue>0.0</FractionToResidue>
+        <FractionLiveToRemove>1.0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.0</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
-        <FractionRemoved>1.0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <FractionLiveToRemove>1.0</FractionLiveToRemove>
+        <FractionLiveToResidue>0</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0.8</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.8</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
-        <FractionRemoved>0.6</FractionRemoved>
-        <FractionToResidue>0.2</FractionToResidue>
+        <FractionLiveToRemove>0.6</FractionLiveToRemove>
+        <FractionLiveToResidue>0.2</FractionLiveToResidue>
       </OrganBiomassRemovalType>
     </Folder>
     <RipeStage />
@@ -808,27 +808,35 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
-        <FractionRemoved>0.0</FractionRemoved>
-        <FractionToResidue>0.2</FractionToResidue>
+        <FractionLiveToRemove>0.0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.2</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
-        <FractionRemoved>0.0</FractionRemoved>
-        <FractionToResidue>0.3</FractionToResidue>
+        <FractionLiveToRemove>0.0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.3</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0.1</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.1</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0.15</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.15</FractionLiveToResidue>
       </OrganBiomassRemovalType>
     </Folder>
-    <InitialDM>0.2</InitialDM>
-    <SpecificRootLength>40000</SpecificRootLength>
+	<Constant>
+	  <Name>InitialDM</Name>
+	  <Value>0.2</Value>
+	  <Units>g/plant</Units>
+	</Constant>
+	<Constant>
+	  <Name>SpecificRootLength</Name>
+	  <Value>40</Value>
+	  <Units>m/g</Units>
+	</Constant>
     <LinearInterpolationFunction>
       <Name>KNO3</Name>
       <XYPairs>
@@ -1400,23 +1408,23 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0.3</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.3</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
-        <FractionRemoved>0.8</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <FractionLiveToRemove>0.8</FractionLiveToRemove>
+        <FractionLiveToResidue>0</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0.6</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.6</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
-        <FractionRemoved>0.6</FractionRemoved>
-        <FractionToResidue>0.1</FractionToResidue>
+        <FractionLiveToRemove>0.6</FractionLiveToRemove>
+        <FractionLiveToResidue>0.1</FractionLiveToResidue>
       </OrganBiomassRemovalType>
     </Folder>
     <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -1511,23 +1519,23 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
-        <FractionRemoved>0.5</FractionRemoved>
-        <FractionToResidue>0.1</FractionToResidue>
+        <FractionLiveToRemove>0.5</FractionLiveToRemove>
+        <FractionLiveToResidue>0.1</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
-        <FractionRemoved>0.8</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <FractionLiveToRemove>0.8</FractionLiveToRemove>
+        <FractionLiveToResidue>0</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0.6</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.6</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
-        <FractionRemoved>0.6</FractionRemoved>
-        <FractionToResidue>0.2</FractionToResidue>
+        <FractionLiveToRemove>0.6</FractionLiveToRemove>
+        <FractionLiveToResidue>0.2</FractionLiveToResidue>
       </OrganBiomassRemovalType>
     </Folder>
   </GenericAboveGroundOrgan>
@@ -1641,23 +1649,23 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
-        <FractionRemoved>0.5</FractionRemoved>
-        <FractionToResidue>0.1</FractionToResidue>
+        <FractionLiveToRemove>0.5</FractionLiveToRemove>
+        <FractionLiveToResidue>0.1</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
-        <FractionRemoved>0.8</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <FractionLiveToRemove>0.8</FractionLiveToRemove>
+        <FractionLiveToResidue>0</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0.6</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.6</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
-        <FractionRemoved>0.6</FractionRemoved>
-        <FractionToResidue>0.2</FractionToResidue>
+        <FractionLiveToRemove>0.6</FractionLiveToRemove>
+        <FractionLiveToResidue>0.2</FractionLiveToResidue>
       </OrganBiomassRemovalType>
     </Folder>
   </GenericAboveGroundOrgan>
@@ -1796,23 +1804,23 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
-        <FractionRemoved>0.5</FractionRemoved>
-        <FractionToResidue>0.1</FractionToResidue>
+        <FractionLiveToRemove>0.5</FractionLiveToRemove>
+        <FractionLiveToResidue>0.1</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
-        <FractionRemoved>0.8</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <FractionLiveToRemove>0.8</FractionLiveToRemove>
+        <FractionLiveToResidue>0</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0.6</FractionToResidue>
+        <FractionLiveToRemove>0</FractionLiveToRemove>
+        <FractionLiveToResidue>0.6</FractionLiveToResidue>
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
-        <FractionRemoved>0.6</FractionRemoved>
-        <FractionToResidue>0.2</FractionToResidue>
+        <FractionLiveToRemove>0.6</FractionLiveToRemove>
+        <FractionLiveToResidue>0.2</FractionLiveToResidue>
       </OrganBiomassRemovalType>
     </Folder>
   </GenericAboveGroundOrgan>

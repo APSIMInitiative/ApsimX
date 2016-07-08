@@ -412,7 +412,7 @@ namespace UserInterface.Presenters
             Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("UserInterface.Resources.Toolboxes.ManagementToolbox.apsimx");
             StreamReader streamReader = new StreamReader(s);
             bool onLeftTabControl = (sender as Control).Parent.Parent.Name.Contains("1");
-            this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd(), onLeftTabControl);
+            this.OpenApsimXFromMemoryInTab("Management toolbox", streamReader.ReadToEnd(), onLeftTabControl);
         }
 
         /// <summary>
