@@ -36,14 +36,19 @@ namespace UserInterface.Views
         public event EventHandler<OpenDialogArgs> BrowseButtonClicked;
 
         [Widget]
-        private VBox vbox1;
+        private VBox vbox1 = null;
         [Widget]
-        private Button button1;
+        private Button button1 = null;
         [Widget]
-        private Label label1;
+        private Label label1 = null;
         [Widget]
-        private Label label2;
+        private Label label2 = null;
         private GridView Grid;
+
+        /// <summary>
+        /// Property to provide access to the grid.
+        /// </summary>
+        public IGridView GridView { get { return Grid; } }
 
         /// <summary>
         /// Constructor
@@ -58,12 +63,13 @@ namespace UserInterface.Views
             vbox1.PackStart(Grid.MainWidget, true, true, 0);
             button1.Clicked += OnBrowseButtonClick;
             label2.ModifyFg(StateType.Normal, new Gdk.Color(0xFF, 0x0, 0x0));
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
-        /// <summary>
-        /// Property to provide access to the grid.
-        /// </summary>
-        public IGridView GridView { get { return Grid; } }
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            button1.Clicked -= OnBrowseButtonClick;
+        }
 
         /// <summary>
         /// Property to provide access to the filename label.

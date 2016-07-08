@@ -180,8 +180,8 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Accept Tests", AppliesTo = new Type[] { typeof(Tests) })]
         public void AcceptTests(object sender, EventArgs e)
         {
-            /// TBI DialogResult result = MessageBox.Show("You are about to change the officially accepted stats for this model. Are you sure?", "Replace official stats?", MessageBoxButtons.YesNo);
-            ///if(result != DialogResult.Yes)
+            int result = explorerPresenter.ShowMsgDialog("You are about to change the officially accepted stats for this model. Are you sure?", "Replace official stats?", Gtk.MessageType.Question, Gtk.ButtonsType.YesNo);
+            if ((Gtk.ResponseType)result != Gtk.ResponseType.Yes)
             {
                 return;
             }
@@ -278,10 +278,16 @@ namespace UserInterface.Presenters
                         tables.Add(table);
                     }
                 }
-                /// TBI Cursor.Current = Cursors.WaitCursor; 
-                string fileName = Path.ChangeExtension(dataStore.Filename, ".xlsx");
-                Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
-                /// TBI Cursor.Current = Cursors.Default; 
+                explorerPresenter.ShowWaitCursor(true);
+                try
+                {
+                    string fileName = Path.ChangeExtension(dataStore.Filename, ".xlsx");
+                    Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
+                }
+                finally
+                {
+                    explorerPresenter.ShowWaitCursor(false);
+                }
             }
         }
 
@@ -297,7 +303,7 @@ namespace UserInterface.Presenters
             if (destinationFolder != null)
             {
                 explorerPresenter.ShowMessage("Creating documentation...", DataStore.ErrorLevel.Information);
-                /// TBI Cursor.Current = Cursors.WaitCursor;
+                explorerPresenter.ShowWaitCursor(true);
 
                 try
                 {
@@ -310,8 +316,7 @@ namespace UserInterface.Presenters
                 {
                     explorerPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
                 }
-
-                /// TBI Cursor.Current = Cursors.Default;
+                explorerPresenter.ShowWaitCursor(false);
             }
         }
 

@@ -19,6 +19,7 @@ namespace UserInterface.Views
     using Interfaces;
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Runtime.Serialization;
     using System.Runtime.InteropServices;
     using APSIM.Shared.Utilities;
@@ -57,27 +58,24 @@ namespace UserInterface.Views
         private string nodePathBeforeRename;
 
         [Widget]
-        private VPaned vpaned1;
+        private VPaned vpaned1 = null;
         [Widget]
-        private TextView statusWindow;
+        private TextView statusWindow = null;
         [Widget]
-        private Toolbar toolStrip;
+        private Toolbar toolStrip = null;
         [Widget]
-        private ProgressBar progressbar1;
+        private ProgressBar progressbar1 = null;
         [Widget]
-        private HBox hbox1;
+        private TreeView treeview1 = null;
         [Widget]
-        private TreeView treeview1;
+        private Viewport RightHandView = null;
         [Widget]
-        private ScrolledWindow RightHandPanel;
-        [Widget]
-        private Viewport RightHandView;
-        [Widget]
-        private Label toolbarlabel;
+        private Label toolbarlabel = null;
 
         private Menu Popup = new Menu();
 
         private TreeStore treemodel = new TreeStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string));
+        private CellRendererText textRender;
 
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
@@ -92,7 +90,7 @@ namespace UserInterface.Views
             TreeViewColumn column = new TreeViewColumn();
             CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();
             column.PackStart(iconRender, false);
-            CellRendererText textRender = new Gtk.CellRendererText();
+            textRender = new Gtk.CellRendererText();
             textRender.Editable = true;
             textRender.EditingStarted += OnBeforeLabelEdit;
             textRender.Edited += OnAfterLabelEdit;
@@ -131,23 +129,85 @@ namespace UserInterface.Views
             tag = new TextTag("normal");
             tag.Foreground = "blue";
             statusWindow.ModifyBase(StateType.Normal, new Gdk.Color(0xff, 0xff, 0xf0));
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
-//        public void treecelldatafunc(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
-//        {
-//            If a grid value is numeric or a dateTime, we can set the text property of its renderer by formatting the value here, I think
-//            TreePath path = model.GetPath(iter);
-//            if (path.Depth > 1 && path.Indices[1] % 2 == 0)
-//            {
-//                col.Cells[0].Visible = true;
-//                col.Cells[1].Visible = false;
-//            }
-//            else
-//            {
-//                col.Cells[1].Visible = true;
-//                col.Cells[0].Visible = false;
-//            }
-//        }
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            if (RightHandView != null)
+            {
+                foreach (Widget child in RightHandView.Children)
+                {
+                    RightHandView.Remove(child);
+                    child.Destroy();
+                }
+            }
+            textRender.EditingStarted -= OnBeforeLabelEdit;
+            textRender.Edited -= OnAfterLabelEdit;
+            treeview1.CursorChanged -= OnAfterSelect;
+            treeview1.ButtonReleaseEvent -= OnButtonUp;
+            treeview1.DragMotion -= OnDragOver;
+            treeview1.DragDrop -= OnDragDrop;
+            treeview1.DragBegin -= OnDragBegin;
+            treeview1.DragDataGet -= OnDragDataGet;
+            treeview1.DragDataReceived -= OnDragDataReceived;
+            treeview1.DragEnd -= OnDragEnd;
+            treeview1.DragDataDelete -= OnDragDataDelete;
+            foreach (Widget child in toolStrip.Children)
+            {
+                if (child is ToolButton)
+                {
+                    PropertyInfo pi = child.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (pi != null)
+                    {
+                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(child);
+                        if (handlers != null && handlers.ContainsKey("clicked"))
+                        {
+                            EventHandler handler = (EventHandler)handlers["clicked"];
+                            (child as ToolButton).Clicked -= handler;
+                        }
+                    }
+                }
+            }
+            ClearPopup();
+        }
+
+        private void ClearPopup()
+        {
+            foreach (Widget w in Popup)
+            {
+                if (w is ImageMenuItem)
+                {
+                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (pi != null)
+                    {
+                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
+                        if (handlers != null && handlers.ContainsKey("activate"))
+                        {
+                            EventHandler handler = (EventHandler)handlers["activate"];
+                            (w as ImageMenuItem).Activated -= handler;
+                        }
+                    }
+                    Popup.Remove(w);
+                }
+            }
+        }
+
+        //        public void treecelldatafunc(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
+        //        {
+        //            If a grid value is numeric or a dateTime, we can set the text property of its renderer by formatting the value here, I think
+        //            TreePath path = model.GetPath(iter);
+        //            if (path.Depth > 1 && path.Indices[1] % 2 == 0)
+        //            {
+        //                col.Cells[0].Visible = true;
+        //                col.Cells[1].Visible = false;
+        //            }
+        //            else
+        //            {
+        //                col.Cells[1].Visible = true;
+        //                col.Cells[0].Visible = false;
+        //            }
+        //        }
 
         /// <summary>
         /// This event will be invoked when a node is selected not by the user
@@ -163,7 +223,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the view wants to know if a drop is allowed on the specified Node.
         /// </summary>
-        public new event EventHandler<AllowDropArgs> AllowDrop;
+        public event EventHandler<AllowDropArgs> AllowDrop;
 
         /// <summary>Invoked when a drop has occurred.</summary>
         public event EventHandler<DropArgs> Droped;
@@ -293,16 +353,27 @@ namespace UserInterface.Views
                 toolStrip.Remove(child);
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {
-                Gdk.Pixbuf pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage, 20, 20);
-                ToolButton button = new ToolButton(new Gtk.Image(pixbuf), description.Name);
-                button.Homogeneous = false;
-                button.LabelWidget = new Label(description.Name);
-                Pango.FontDescription font = new Pango.FontDescription();
-                font.Size = (int)(8 * Pango.Scale.PangoScale);
-                button.LabelWidget.ModifyFont(font);
-                if (description.OnClick != null)
-                    button.Clicked += description.OnClick;
-                toolStrip.Add(button);
+                if (!hasResource(description.ResourceNameForImage))
+                {
+                    MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Error, ButtonsType.Ok,
+                        "Program error. Could not locate the resource named " + description.ResourceNameForImage);
+                    md.Run();
+                    md.Destroy();
+                }
+                else
+                {
+
+                    Gdk.Pixbuf pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage, 20, 20);
+                    ToolButton button = new ToolButton(new Gtk.Image(pixbuf), description.Name);
+                    button.Homogeneous = false;
+                    button.LabelWidget = new Label(description.Name);
+                    Pango.FontDescription font = new Pango.FontDescription();
+                    font.Size = (int)(8 * Pango.Scale.PangoScale);
+                    button.LabelWidget.ModifyFont(font);
+                    if (description.OnClick != null)
+                        button.Clicked += description.OnClick;
+                    toolStrip.Add(button);
+                }
             }
             ToolItem item = new ToolItem();
             item.Expand = true;
@@ -325,24 +396,20 @@ namespace UserInterface.Views
         /// <param name="menuDescriptions">Menu descriptions for each menu item.</param>
         public void PopulateContextMenu(List<MenuDescriptionArgs> menuDescriptions)
         {
-            Popup = new Menu();
+            ClearPopup();
             ///AccelGroup accel = new AccelGroup();
             ///(treeview1.Toplevel as Window).AddAccelGroup(accel);
             foreach (MenuDescriptionArgs Description in menuDescriptions)
             {
                 ImageMenuItem item = new ImageMenuItem(Description.Name);
-                if (!String.IsNullOrEmpty(Description.ResourceNameForImage))
-                    try
-                    {
-                        item.Image = new Image(null, Description.ResourceNameForImage);
-                    }
-                    catch (Exception e)
-                    {
-                    }
+                if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage) )
+                    item.Image = new Image(null, Description.ResourceNameForImage);
                 item.Activated += Description.OnClick;
                 Popup.Append(item);
+
             }
-            Popup.AttachToWidget(treeview1, null);
+            if (Popup.AttachWidget == null)
+                Popup.AttachToWidget(treeview1, null);
             Popup.ShowAll();
             //Popup.Popup();
 
@@ -406,7 +473,7 @@ namespace UserInterface.Views
             if (owner != null)
             {
                 Notebook notebook = owner.MainWidget as Notebook;
-                string name = notebook.GetMenuLabelText(notebook.CurrentPageWidget);
+                string name = notebook.GetMenuLabelText(MainWidget);
                 string message = "Do you want to save changes for " + name + " ?";
                 MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Question, ButtonsType.YesNo, message);
                 md.Title = "Save changes";
@@ -485,6 +552,19 @@ namespace UserInterface.Views
                 //this.toolTip1.SetToolTip(this.StatusWindow, message);
                 progressbar1.Visible = false;
             });
+        }
+
+        /// <summary>Add a status message to the explorer window</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="errorLevel">The error level.</param>
+        public int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType)
+        {
+            Gtk.MessageDialog md = new Gtk.MessageDialog(MainWidget.Toplevel as Window, Gtk.DialogFlags.Modal,
+                msgType, buttonType, message);
+            md.Title = title;
+            int result = md.Run();
+            md.Destroy();
+            return result;
         }
 
         /// <summary>
@@ -583,14 +663,10 @@ namespace UserInterface.Views
         private void RefreshNode(TreeIter node, NodeDescriptionArgs description)
         {
             Gdk.Pixbuf pixbuf;
-            try
-            {
+            if (hasResource(description.ResourceNameForImage))
                 pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage);
-            }
-            catch (ArgumentException e)
-            {
-                pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // Something else we could use as a default?
-            }
+            else
+                pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // It there something else we could use as a default?
 
             treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip);
 
@@ -739,7 +815,7 @@ namespace UserInterface.Views
 
         private void OnDragEnd(object sender, DragEndArgs e)
         {
-            if (dragSourceHandle != null)
+            if (dragSourceHandle.IsAllocated)
             {
                 dragSourceHandle.Free();
             }

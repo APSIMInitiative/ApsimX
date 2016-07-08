@@ -113,7 +113,9 @@ namespace UserInterface.Classes
 
                     case EditorTypeEnum.Button:
                         {
-                            this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new DataGridViewButtonCell();
+                            DataGridViewButtonCell buttonCell = new DataGridViewButtonCell();
+                            this.gridView.Grid[this.ColumnIndex, this.RowIndex] = buttonCell;
+                            buttonCell.Tag = DropDownStrings;
                             break;
                         }
 
@@ -146,6 +148,8 @@ namespace UserInterface.Classes
             }
         }
 
+        private string[] _DropDownStrings = null;
+
         /// <summary>
         /// Gets or sets the strings to be used in the drop down editor for this cell
         /// </summary>
@@ -161,9 +165,10 @@ namespace UserInterface.Classes
                     {
                         strings.Add(comboItem.ToString());
                     }
+                    return strings.ToArray();
                 }
-
-                return null;
+                else
+                  return _DropDownStrings;
             }
 
             set
@@ -186,6 +191,8 @@ namespace UserInterface.Classes
                         }
                     }
                 }
+                else
+                    _DropDownStrings = value;
             }
         }
 

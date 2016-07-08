@@ -16,12 +16,31 @@ namespace UserInterface.Views
     /// </summary>
     interface IMapView
     {
+        /// <summary>
+        /// Invoked when the zoom level is changed
+        /// </summary>
+        event EventHandler ZoomChanged;
+
+        /// <summary>
+        /// Invoked when the map center is changed
+        /// </summary>
+        event EventHandler PositionChanged;
+
         /// <summary>Show the map</summary>
         void ShowMap(List<Models.Map.Coordinate> coordinates);
 
         /// <summary>Export the map to an image.</summary>
         Image Export();
 
+        /// <summary>
+        /// Get or set the zoom factor of the map
+        /// </summary>
+        double Zoom { get; set; }
+
+        /// <summary>
+        /// Get or set the center position of the map
+        /// </summary>
+        Models.Map.Coordinate Center { get; set; }
     }
 
     /// <summary>
@@ -29,6 +48,16 @@ namespace UserInterface.Views
     /// </summary>
     public partial class MapView : UserControl, IMapView
     {
+        /// <summary>
+        /// Invoked when the zoom level is changed
+        /// </summary>
+        public event EventHandler ZoomChanged;
+
+        /// <summary>
+        /// Invoked when the map center is changed
+        /// </summary>
+        public event EventHandler PositionChanged;
+
         /// <summary>Construtor</summary>
         public MapView()
         {
@@ -56,6 +85,39 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Get or set the zoom factor of the map
+        /// </summary>
+        public double Zoom
+        {
+            get
+            {
+                return mapControl.Zoom;
+            }
+            set
+            {
+                mapControl.Zoom = value;
+            }
+        }
+
+        /// <summary>
+        /// Get or set the center position of the map
+        /// </summary>
+        public Models.Map.Coordinate Center
+        {
+            get
+            {
+                Models.Map.Coordinate center = new Models.Map.Coordinate();
+                center.Latitude = mapControl.Position.Lat;
+                center.Longitude = mapControl.Position.Lng;
+                return center;
+            }
+            set
+            {
+                mapControl.Position = new GMap.NET.PointLatLng(value.Latitude, value.Longitude);
+            }
+        }
+
+        /// <summary>
         /// Export the map to an image.
         /// </summary>
         public Image Export()
@@ -63,6 +125,21 @@ namespace UserInterface.Views
             return mapControl.ToImage();
         }
 
-     
+        private void mapControl_OnPositionChanged(GMap.NET.PointLatLng point)
+        {
+            if (PositionChanged != null)
+            {
+                PositionChanged.Invoke(mapControl, EventArgs.Empty);
+            }
+
+        }
+
+        private void mapControl_OnMapZoomChanged()
+        {
+            if (ZoomChanged != null)
+            {
+                ZoomChanged.Invoke(mapControl, EventArgs.Empty);
+            }
+        }
     }
 }

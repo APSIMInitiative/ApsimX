@@ -30,6 +30,12 @@ namespace UserInterface.Views
             textentry1 = new Entry();
             _mainWidget = textentry1;
             textentry1.FocusOutEvent += OnSelectionChanged;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            textentry1.FocusOutEvent -= OnSelectionChanged;
         }
 
         /// <summary>Gets or sets the Text.</summary>

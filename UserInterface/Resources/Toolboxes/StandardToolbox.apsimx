@@ -813,6 +813,29 @@
     </Folder>
   </Folder>
   <Folder>
+    <Name>Animals</Name>
+    <Stock>
+      <Name>Stock</Name>
+      <RandSeed>0</RandSeed>
+      <GenoTypes />
+      <Sheep />
+      <Cattle />
+      <PaddockList>
+        <TPaddInit>
+          <forages />
+          <name />
+          <area>1</area>
+          <slope>0</slope>
+        </TPaddInit>
+      </PaddockList>
+      <EnterpriseList />
+      <GrazingPeriods />
+    </Stock>
+    <Supplement>
+      <Name>Supplement</Name>
+    </Supplement>
+  </Folder>
+  <Folder>
     <Name>Graphs</Name>
     <Graph>
       <Name>Graph</Name>
@@ -844,7 +867,13 @@
     <Input>
       <Name>Input</Name>
     </Input>
-    <ExcelInput />
+    <ExcelInput>
+      <Name>ExcelInput</Name>
+      <FileNameMetadata>
+        <string>Excel files (*.xlsx)|*.xlsx</string>
+        <string>All files (*.*)|*.*</string>
+      </FileNameMetadata>
+    </ExcelInput>
     <PredictedObserved/>
     <TimeSeriesStats>
       <TableName>PredictedObserved</TableName>

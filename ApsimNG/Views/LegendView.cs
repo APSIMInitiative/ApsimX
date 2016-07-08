@@ -33,11 +33,11 @@ namespace UserInterface.Views
         public event EventHandler DisabledSeriesChanged;
 
         [Widget]
-        private ComboBox combobox1;
+        private ComboBox combobox1 = null;
         [Widget]
-        private HBox hbox1;
+        private HBox hbox1 = null;
         [Widget]
-        private TreeView listview;
+        private TreeView listview = null;
 
         private ListStore comboModel = new ListStore(typeof(string));
         private CellRendererText comboRender = new CellRendererText();
@@ -71,6 +71,14 @@ namespace UserInterface.Views
             listview.AppendColumn(column);
             listToggle.Activatable = true;
             listToggle.Toggled += OnItemChecked;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            combobox1.Changed -= OnPositionComboChanged;
+            combobox1.Focused -= OnTitleTextBoxEnter;
+            listToggle.Toggled -= OnItemChecked;
         }
 
         private bool settingCombo = false;

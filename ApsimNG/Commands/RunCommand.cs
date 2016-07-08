@@ -25,7 +25,7 @@
         private ExplorerPresenter explorerPresenter;
 
         /// <summary>The stop watch we can use to time the runs.</summary>
-        private System.Timers.Timer timer = null;
+        private Timer timer = null;
 
         /// <summary>The stop watch we can use to time the runs.</summary>
         private Stopwatch stopwatch = new Stopwatch();
@@ -72,7 +72,7 @@
 
                 showNumberRunning = true;
 
-                timer = new System.Timers.Timer();
+                timer = new Timer();
                 timer.Interval = 1000;
                 timer.AutoReset = true;
                 timer.Elapsed += OnTimerTick;
@@ -95,7 +95,7 @@
             if (duplicates.ToList().Count > 0)
             {
                 string errorMessage = "Duplicate simulation names found " + StringUtilities.BuildString(duplicates.ToArray(), ", ");
-                explorerPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
                 return true;
             }
             return false;
@@ -118,10 +118,10 @@
 
             string errorMessage = GetErrorsFromSimulations();
             if (errorMessage == null)
-                explorerPresenter.ShowMessage(modelClicked.Name + " complete "
+                explorerPresenter.MainPresenter.ShowMessage(modelClicked.Name + " complete "
                         + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
             else
-                explorerPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
 
             SoundPlayer player = new SoundPlayer();
             if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
@@ -167,11 +167,11 @@
                 if (showNumberRunning)
                 {
                     showNumberRunning = false;
-                    explorerPresenter.ShowMessage(modelClicked.Name + " running (" + numSimulationsToRun + ")", Models.DataStore.ErrorLevel.Information);
+                    explorerPresenter.MainPresenter.ShowMessage(modelClicked.Name + " running (" + (numSimulationsToRun-1) + ")", Models.DataStore.ErrorLevel.Information);
                 }
 
                 double percent = numSimulationsRun * 1.0 / numSimulationsToRun * 100.0;
-                explorerPresenter.ShowProgress(Convert.ToInt32(percent));
+                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(percent));
                 if (jobManager.JobCount == 0)
                     timer.Stop();
             }

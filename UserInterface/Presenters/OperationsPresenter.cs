@@ -8,6 +8,8 @@ using System.Reflection;
 using UserInterface.EventArguments;
 using Models.Core;
 using Models.Factorial;
+using System.Text.RegularExpressions;
+using APSIM.Shared.Utilities;
 
 namespace UserInterface.Presenters
 {
@@ -20,6 +22,7 @@ namespace UserInterface.Presenters
         private Operations Operations;
         private EditorView View;
         private ExplorerPresenter ExplorerPresenter;
+
 
         /// <summary>
         /// Attach model to view.
@@ -54,7 +57,9 @@ namespace UserInterface.Presenters
             string st = "";
             foreach (Operation operation in Operations.Schedule)
             {
-                st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
+                //st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
+                string dateStr = DateUtilities.validateDateString(operation.Date);
+                st += dateStr + " " + operation.Action + Environment.NewLine;
             }
             View.Text = st;
         }
@@ -72,9 +77,7 @@ namespace UserInterface.Presenters
                 if (Pos != -1)
                 {
                     Operation operation = new Operation();
-                    DateTime d;
-                    if (DateTime.TryParse(line.Substring(0, Pos), out d))
-                        operation.Date = d;
+                    operation.Date = DateUtilities.validateDateString(line.Substring(0, Pos));
                     operation.Action = line.Substring(Pos + 1);
                     operations.Add(operation);
                 }
