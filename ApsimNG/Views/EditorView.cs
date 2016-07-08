@@ -5,8 +5,7 @@
     using EventArguments;
     using Gtk;
     using Mono.TextEditor;
-    using TextEditor;
-
+    using Utility;
 
     /// <summary>
     /// This is IEditorView interface
@@ -85,7 +84,7 @@
         public event EventHandler LeaveEditor;
 
         private ScrolledWindow scroller;
-        private Mono.TextEditor.TextEditor textEditor;
+        private Mono.TextEditor.MonoTextEditor textEditor;
         private ListStore completionModel;
         private Gdk.Pixbuf functionPixbuf;
         private Gdk.Pixbuf propertyPixbuf;
@@ -96,7 +95,7 @@
         public EditorView(ViewBase owner) : base(owner)
         {
             scroller = new ScrolledWindow();
-            textEditor = new TextEditor();
+            textEditor = new MonoTextEditor();
             scroller.Add(textEditor);
             _mainWidget = scroller;
             TextEditorOptions options = new TextEditorOptions();
@@ -165,6 +164,7 @@
             CompletionView.KeyReleaseEvent -= CompletionView_KeyReleaseEvent;
             if (CompletionForm.IsRealized)
                 CompletionForm.Destroy();
+            _findForm.Destroy();
         }
 
         /// <summary>
@@ -227,35 +227,6 @@
         }
 
         /// <summary>
-        /// Preprocesses key strokes. Similar to OnKeyPress, but allow function keys to be handled
-        /// </summary>
-        /// <param name="sender">Sending object</param>
-        /// <param name="e">Key arguments</param>
-        /* TBI
-        private void OnKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.F3)
-            {
-                if (string.IsNullOrEmpty(_findForm.LookFor))
-                {
-                    _findForm.ShowFor(TextBox, false);
-                    e.Handled = true;
-                }
-                else
-                {
-                    _findForm.FindNext(true, e.Shift,
-                        string.Format("Search text «{0}» not found.", _findForm.LookFor));
-                }
-                e.Handled = true;
-            }
-            else
-            {
-                e.Handled = false;
-            }
-        }
-        */
-
-        /// <summary>
         /// Preprocesses key strokes so that the ContextList can be displayed when needed. 
         /// </summary>
         /// <param name="sender">Sending object</param>
@@ -264,24 +235,34 @@
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
             char keyChar = (char)Gdk.Keyval.ToUnicode(e.Event.KeyValue);
-            /* TBI 
-            if ((e.KeyChar == (char)6))
+            if (e.Event.Key == Gdk.Key.F3)
             {
-                _findForm.ShowFor(TextBox, false);
-                e.Handled = true;
+                if (string.IsNullOrEmpty(_findForm.LookFor))
+                    _findForm.ShowFor(textEditor, false);
+                else
+                    _findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) != 0,
+                        string.Format("Search text «{0}» not found.", _findForm.LookFor));
+                e.RetVal = true;
             }
-            else if (e.KeyChar == (char)8)
-            {
-                _findForm.ShowFor(TextBox, true);
-                e.Handled = true;
+            else if ((e.Event.State & Gdk.ModifierType.ControlMask) != 0)
+            { 
+               if (e.Event.Key == Gdk.Key.F || e.Event.Key == Gdk.Key.f)
+               {
+                  _findForm.ShowFor(textEditor, false);
+                  e.RetVal = true; // true to prevent further processing
+                }
+            else if (e.Event.Key == Gdk.Key.H || e.Event.Key == Gdk.Key.h)
+               {
+                  _findForm.ShowFor(textEditor, true);
+                  e.RetVal = true;
+               }
             }
-            
             // If user one of the IntelliSenseChars, then display contextlist.
-            else*/ if (IntelliSenseChars.Contains(keyChar.ToString()) && ContextItemsNeeded != null)
+            else if (IntelliSenseChars.Contains(keyChar.ToString()) && ContextItemsNeeded != null)
             {
                 if (ShowCompletionWindow(keyChar))
                 {
-                    e.RetVal = false; // true to prevent further processing
+                    e.RetVal = false;
                 }
             }
             else
@@ -471,9 +452,9 @@
         /// Clipboard commands could also be done by calling methods in
         /// editor.ActiveTextAreaControl.TextArea.ClipboardHandler.
         /// </remarks>
+        /* TBI
         private void DoEditAction(ICSharpCode.TextEditor.Actions.IEditAction action)
         {
-            /* TBI
             if (TextBox != null && action != null)
             {
                 var area = TextBox.ActiveTextAreaControl.TextArea;
@@ -498,9 +479,9 @@
                     area.Caret.UpdateCaretPosition();
                 }
             }
-            */
+            
         }
-
+        */
         // The following block comes from the example code provided at 
         // http://www.codeproject.com/Articles/30936/Using-ICSharpCode-TextEditor
         // I leave it here because it provides the handlers needed for a popup menu
