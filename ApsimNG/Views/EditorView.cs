@@ -418,7 +418,10 @@
                 insertText = (string)completionModel.GetValue(iter, 1);
             }
             if (!String.IsNullOrEmpty(insertText))
-              textEditor.InsertAtCaret(insertText);
+            {
+                textEditor.Document.ReadOnly = false;
+                textEditor.InsertAtCaret(insertText);
+            }
             HideCompletionWindow();
         }
 
