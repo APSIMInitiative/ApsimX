@@ -5123,30 +5123,30 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Sowing.Script.FlagLeafDAS</Name>
             <n>135</n>
-            <Slope>1.145759594475783</Slope>
-            <Intercept>-8.1913642901606067</Intercept>
-            <SEslope>0.042367868206970256</SEslope>
-            <SEintercept>6.4143277545618282</SEintercept>
-            <R2>0.84612370437825346</R2>
-            <RMSE>26.629140262335003</RMSE>
-            <NSE>0.6611870778061526</NSE>
-            <ME>12.844444444444445</ME>
-            <MAE>21.111111111111111</MAE>
-            <RSR>0.57991654299930384</RSR>
+            <Slope>1.2688232547223621</Slope>
+            <Intercept>-17.255433124116905</Intercept>
+            <SEslope>0.022279524293189013</SEslope>
+            <SEintercept>3.3730319008291736</SEintercept>
+            <R2>0.96060805430268437</R2>
+            <RMSE>27.448537706446626</RMSE>
+            <NSE>0.6400152518313944</NSE>
+            <ME>21.540740740740741</ME>
+            <MAE>21.940740740740743</MAE>
+            <RSR>0.597760984406366</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Sowing.Script.FloweringDAS</Name>
             <n>134</n>
-            <Slope>1.0510009451614724</Slope>
-            <Intercept>3.2459961447692365</Intercept>
-            <SEslope>0.038494765164114826</SEslope>
-            <SEintercept>6.8091890605590111</SEintercept>
-            <R2>0.84955947066938864</R2>
-            <RMSE>24.956977907364038</RMSE>
-            <NSE>0.743338619674115</NSE>
-            <ME>11.91044776119403</ME>
-            <MAE>20.46268656716418</MAE>
-            <RSR>0.50472368370289222</RSR>
+            <Slope>1.176759240166827</Slope>
+            <Intercept>-9.6188365850583466</Intercept>
+            <SEslope>0.022731814965077823</SEslope>
+            <SEintercept>4.0209422015425558</SEintercept>
+            <R2>0.953055459247441</R2>
+            <RMSE>25.65020147719888</RMSE>
+            <NSE>0.72888215866297235</NSE>
+            <ME>20.410447761194028</ME>
+            <MAE>21.798507462686565</MAE>
+            <RSR>0.51874326392191672</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -27784,59 +27784,19 @@ namespace Models
         </Folder>
       </Experiment>
       <Experiment>
-        <Name>Wakanui2015</Name>
+        <Name>Leeston2014</Name>
         <Factors>
           <Name>Factors</Name>
           <Factor>
             <Name>Sow</Name>
-            <Operations>
-              <Name>5May</Name>
-              <Operation>
-                <Date>1992-05-05T00:00:00</Date>
-                <Action>[Wheat].Sow(population:300, cultivar:"BattenWinter", depth:20, rowSpacing:150);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>5Aug</Name>
-              <Operation>
-                <Date>1992-08-05T00:00:00</Date>
-                <Action>[Wheat].Sow(population:300, cultivar:"BattenWinter", depth:20, rowSpacing:150);</Action>
-              </Operation>
-            </Operations>
             <Specifications>
-              <string>[Operations]</string>
+              <string>[Sowing].Script.SowDate = 20-Feb,10-Mar,26-Mar,04-Apr</string>
             </Specifications>
           </Factor>
           <Factor>
-            <Name>Cv</Name>
-            <Operations>
-              <Name>Nil</Name>
-            </Operations>
-            <Operations>
-              <Name>Some</Name>
-              <Operation>
-                <Date>1991-08-30T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-11-25T00:00:00</Date>
-                <Action>[Irrigation].Apply(60);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-11-26T00:00:00</Date>
-                <Action>[Irrigation].Apply(50);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-12-31T00:00:00</Date>
-                <Action>[Irrigation].Apply(60);</Action>
-              </Operation>
-            </Operations>
+            <Name>Popn</Name>
             <Specifications>
-              <string>[IrrigationEvents]</string>
+              <string>[Sowing].Script.Population = 50,100,150,200</string>
             </Specifications>
           </Factor>
         </Factors>
@@ -27844,8 +27804,8 @@ namespace Models
           <Name>Wakanui2015Base</Name>
           <Clock>
             <Name>Clock</Name>
-            <StartDate>1992-05-01T00:00:00</StartDate>
-            <EndDate>1993-05-01T00:00:00</EndDate>
+            <StartDate>2014-02-01T00:00:00</StartDate>
+            <EndDate>2015-02-01T00:00:00</EndDate>
           </Clock>
           <Summary>
             <Name>summaryfile</Name>
@@ -27859,18 +27819,65 @@ namespace Models
             <Folder>
               <Name>Manager folder</Name>
               <Operations>
-                <Name>Operations</Name>
-                <Operation>
-                  <Date>1991-06-08T00:00:00</Date>
-                  <Action>[Wheat].Sow(population:300, cultivar:"Rongotea", depth:40, rowSpacing:250);</Action>
-                </Operation>
-              </Operations>
-              <Operations>
                 <Name>IrrigationEvents</Name>
               </Operations>
               <Operations>
                 <Name>FertiliserEvents</Name>
               </Operations>
+              <Manager>
+                <Name>Sowing</Name>
+                <Script>
+                  <SowDate>24-Jul</SowDate>
+                  <CultivarName>Wakanui</CultivarName>
+                  <SowingDepth>50</SowingDepth>
+                  <RowSpacing>150</RowSpacing>
+                  <Population>150</Population>
+                </Script>
+                <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Summary Summary;
+		[Link] Soil Soil;
+		[Link] Plant Wheat;
+		Accumulator accumulatedRain;
+		
+		[Description("Sowing date (d-mmm)")]
+		public string SowDate { get; set; }
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set; }
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set; }
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set; }
+		[Description("Plant population (/m2)")]
+		public double Population { get; set; }
+		
+
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))
+			{
+				Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+              </Manager>
             </Folder>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -33327,7 +33334,7 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <Cultivar>Claire</Cultivar>
+                <Cultivar>Wakanui</Cultivar>
               </Script>
               <Code><![CDATA[
 using System;
@@ -33890,7 +33897,7 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <Cultivar>Otane</Cultivar>
+                <Cultivar>BattenSpring</Cultivar>
               </Script>
               <Code><![CDATA[
 using System;
@@ -34453,7 +34460,7 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <Cultivar>Otane</Cultivar>
+                <Cultivar>BattenWinter</Cultivar>
               </Script>
               <Code><![CDATA[
 using System;
