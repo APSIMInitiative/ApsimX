@@ -4775,31 +4775,31 @@ VShort duration variety released in New Zealand by Pioneer
         <AcceptedStats>
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
-            <n>1</n>
-            <Slope>NaN</Slope>
-            <Intercept>NaN</Intercept>
-            <SEslope>NaN</SEslope>
-            <SEintercept>NaN</SEintercept>
-            <R2>NaN</R2>
-            <RMSE>0.61623965087030186</RMSE>
-            <NSE>-INF</NSE>
-            <ME>-0.61623965087030186</ME>
-            <MAE>0.61623965087030186</MAE>
-            <RSR>NaN</RSR>
+            <n>48</n>
+            <Slope>1.3057329211664501</Slope>
+            <Intercept>-0.71343064006811652</Intercept>
+            <SEslope>0.060080455543512726</SEslope>
+            <SEintercept>0.74575616384339827</SEintercept>
+            <R2>0.91125284218821523</R2>
+            <RMSE>4.0246493040942664</RMSE>
+            <NSE>0.5533818620358727</NSE>
+            <ME>2.6049419093808091</ME>
+            <MAE>3.2519901383589671</MAE>
+            <RSR>0.66129690262635288</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
-            <n>5</n>
-            <Slope>0.63349909000703308</Slope>
-            <Intercept>442.65766832828615</Intercept>
-            <SEslope>0.43658010596378177</SEslope>
-            <SEintercept>620.01153684376538</SEintercept>
-            <R2>0.41240333818953734</R2>
-            <RMSE>171.58990184619782</RMSE>
-            <NSE>0.13563664470811032</NSE>
-            <ME>-73.416432897312049</ME>
-            <MAE>154.78354269706003</MAE>
-            <RSR>0.831559188653166</RSR>
+            <n>176</n>
+            <Slope>0.94012922361331985</Slope>
+            <Intercept>-23.542477628873712</Intercept>
+            <SEslope>0.037471594585110742</SEslope>
+            <SEintercept>50.975185416208866</SEintercept>
+            <R2>0.78343765963213818</R2>
+            <RMSE>306.4785671211086</RMSE>
+            <NSE>0.72443398278017734</NSE>
+            <ME>-97.1066884084821</ME>
+            <MAE>230.12838110247395</MAE>
+            <RSR>0.52345038085084217</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
@@ -4845,17 +4845,31 @@ VShort duration variety released in New Zealand by Pioneer
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.FloweringDAS.Value</Name>
-            <n>221</n>
-            <Slope>0.99786849433836644</Slope>
-            <Intercept>-1.1287067645583022</Intercept>
-            <SEslope>0.021166017692608948</SEslope>
-            <SEintercept>3.53077106894843</SEintercept>
-            <R2>0.910306034649894</R2>
-            <RMSE>16.570977191097491</RMSE>
-            <NSE>0.9011093479894392</NSE>
-            <ME>-1.4660633484162897</ME>
-            <MAE>10.126696832579187</MAE>
-            <RSR>0.31375656646027084</RSR>
+            <n>219</n>
+            <Slope>0.99749544764583031</Slope>
+            <Intercept>-1.0540940053863039</Intercept>
+            <SEslope>0.021424016243813678</SEslope>
+            <SEintercept>3.5853579502407036</SEintercept>
+            <R2>0.9090072074192892</R2>
+            <RMSE>16.641533561225852</RMSE>
+            <NSE>0.89962906351970784</NSE>
+            <ME>-1.452054794520548</ME>
+            <MAE>10.191780821917808</MAE>
+            <RSR>0.31608957860366621</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Phenology.MaturityDAS.Value</Name>
+            <n>2</n>
+            <Slope>2</Slope>
+            <Intercept>-133</Intercept>
+            <SEslope>0</SEslope>
+            <SEintercept>0</SEintercept>
+            <R2>1</R2>
+            <RMSE>3.5355339059327378</RMSE>
+            <NSE>-49</NSE>
+            <ME>-3.5</ME>
+            <MAE>3.5</MAE>
+            <RSR>5</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4866,7 +4880,7 @@ VShort duration variety released in New Zealand by Pioneer
       <FieldNameUsedForMatch>Wheat.Phenology.CurrentStageName</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>1000</MaximumResultsPerPage>
+    <MaximumResultsPerPage>3000</MaximumResultsPerPage>
   </DataStore>
   <Memo>
     <Name>Combined Results</Name>
