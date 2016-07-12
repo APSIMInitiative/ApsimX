@@ -59,13 +59,13 @@ namespace UserInterface.Presenters
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
+            explorerPresenter.CommandHistory.ModelChanged -= OnGraphModelChanged;
             if (currentPresenter != null)
                 currentPresenter.Detach();
             graphView.OnAxisClick -= OnAxisClick;
             graphView.OnLegendClick -= OnLegendClick;
             graphView.OnCaptionClick -= OnCaptionClick;
             graphView.OnHoverOverPoint -= OnHoverOverPoint;
-            explorerPresenter.CommandHistory.ModelChanged -= OnGraphModelChanged;
         }
 
         /// <summary>Draw the graph on the screen.</summary>
@@ -143,13 +143,11 @@ namespace UserInterface.Presenters
             double maximumX = graphView.AxisMaximum(Axis.AxisType.Bottom);
             double minimumY = graphView.AxisMinimum(Axis.AxisType.Left);
             double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
-            double majorStepY = graphView.AxisMajorStep(Axis.AxisType.Left);
             double lowestAxisScale = Math.Min(minimumX, minimumY);
             double largestAxisScale = Math.Max(maximumX, maximumY);
             
             for (int i = 0; i < annotations.Count; i++)
             {
-                int numLines = StringUtilities.CountSubStrings(annotations[i].text, "\r\n") + 1;
                 double interval = (largestAxisScale - lowestAxisScale) / 10; // fit 10 annotations on graph.
 
                 double yPosition = largestAxisScale - i * interval;
@@ -238,6 +236,8 @@ namespace UserInterface.Presenters
         /// <param name="axisType">Type of the axis.</param>
         private void OnAxisClick(Axis.AxisType axisType)
         {
+            if (currentPresenter != null)
+                currentPresenter.Detach();
             AxisPresenter AxisPresenter = new AxisPresenter();
             currentPresenter = AxisPresenter;
             AxisView A = new AxisView(graphView as GraphView);
@@ -250,6 +250,8 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnCaptionClick(object sender, EventArgs e)
         {
+            if (currentPresenter != null)
+                currentPresenter.Detach();
             TitlePresenter titlePresenter = new TitlePresenter();
             currentPresenter = titlePresenter;
             titlePresenter.ShowCaption = true;
@@ -283,7 +285,8 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnLegendClick(object sender, LegendClickArgs e)
         {
-            
+            if (currentPresenter != null)
+                currentPresenter.Detach();
             LegendPresenter presenter = new LegendPresenter(this);
             currentPresenter = presenter;
 

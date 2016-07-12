@@ -60,6 +60,8 @@ namespace UserInterface.Presenters
             this.view.PopulateStartPage -= this.OnPopulateStartPage;
             this.view.MruFileClick -= this.OnMruApsimOpenFile;
             this.view.TabClosing -= this.OnTabClosing;
+            this.view = null;
+            this.Presenters = null;
         }
 
         /// <summary>
@@ -239,10 +241,15 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void OnTabClosing(object sender, EventArgs e)
+        private void OnTabClosing(object sender, TabClosingArgs e)
         {
-            this.Presenters[this.view.CurrentTabIndex-1].SaveIfChanged();
-            this.Presenters.RemoveAt(this.view.CurrentTabIndex-1);
+            if (e.tabIndex > 0 && e.tabIndex <= this.Presenters.Count)
+            {
+                this.Presenters[e.tabIndex - 1].SaveIfChanged();
+                this.Presenters[e.tabIndex - 1].Detach();
+                //this.Presenters[e.tabIndex - 1] = null;
+                this.Presenters.RemoveAt(e.tabIndex - 1);
+            }
         }
 
         /// <summary>
@@ -266,7 +273,7 @@ namespace UserInterface.Presenters
         {
             Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Toolboxes.ManagementToolbox.apsimx");
             StreamReader streamReader = new StreamReader(s);
-            this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd());
+            this.OpenApsimXFromMemoryInTab("Management toolbox", streamReader.ReadToEnd());
         }
 
         /// <summary>

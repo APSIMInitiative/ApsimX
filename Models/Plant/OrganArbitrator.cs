@@ -12,8 +12,8 @@ using APSIM.Shared.Utilities;
 
 namespace Models.PMF
 {
-    ///<summary>    /// The Arbitrator class determines the allocation of dry matter (DM) and Nitrogen between each of the organs in the crop model. Eacn organ potentially has three pools of biomass:    ///     /// * **Structural biomass** which is fixed within an organ once it is partitioned    /// * **Non-structural biomass** which is available for re-translocation to other organs with high priority demand and is reallocated to other organs when this organ senesces.    /// * **Metabolic biomass** which is generally fixed in an organ but is able to be reallocated and retranslocated in some cases.    ///     /// The process followed for biomass arbitration is shown in Figure 1. Arbitration responds to events broadcast daily by the central APSIM infrastructure:     ///     /// 1. **doPotentialPlantGrowth**.  When this event is broadcast the attached method executes code to determine the potential growth of each organ, the extent of moisture stress that a crop encounters and the potential biomass supplies and demands of each organ based on these.  In addition to demands for structural, non-structural and metabolic biomass (DM and N) each organ may have the following biomass supplies:     /// 	* **Fixation supply**.  From photosynthesis (DM) or symbiotic fixation (N)    /// 	* **Uptake supply**.  Typically uptake of N from the soil by the roots but could be uptake by other organs.    /// 	* **Retranslocation supply**.  Non-structural biomass that may be moved from one organ to meet demands of other organs.    /// 	* **Reallocation supply**. Biomass that can be moved from senescing organs to meet the demands of other organs.    /// 2. **doPotentialPlantPartitioning.** On this event the Arbitrator first executes the DoDMSetup() method to establish the DM supplies and demands from each organ.  It then executes the DoPotentialDMAllocation() method which works out how much biomass each organ would be allocated assuming N supply is not limiting and sends these allocations to the organs.  Each organ then uses their potential DM allocation to determine their N demand (how much N is needed to produce that much DM) and the arbitrator calls DoNSetup() establish N supplies and Demands and begin N arbitration.  Firstly DoNReallocation() is called to redistribute N that the plant has available from senescing organs.  After this step any unmet N demand is considered the plants demand for N uptake from the soil (N Uptake Demand).    /// 3. **doNutrientArbitration.** When this event is broadcast by the model framework the soil arbitrator gets the N uptake demands from each plant (where multiple plants are growing in competition) and their potential uptake from the soil and determines how nuch of their demand that the soil is able to provide.  This value is then passed back to each plant instance as their Nuptake and doNUptakeAllocation() is called to distribute this N between organs.      /// 4. **doActualPlantPartitioning.**  On this event the arbitrator call DoNRetranslocation() and DoNFixation() to satisify any unmet N demands from these sources.  Finally, DoActualDMAllocation is called where DM allocations to each organ are reduced if the N allocation is insufficient to achieve the organs minimum N conentration and final allocations are sent to organs.     /// 
-    /// ![Alt Text](..\\..\\Documentation\\Images\\ArbitrationDiagram.PNG)    ///     /// **Figure 1.**  Schematic showing procedure for arbitration of biomass partitioning.  Orange boxes contain properties that make up the organ/arbitrator interface.  Green boxes are organ specific properties, pink boxes are events that are broadcast each day by the model infrastructure and blue boxes are methods that are triggered by these events.    /// </summary>
+    ///<summary>    /// The Arbitrator class determines the allocation of dry matter (DM) and Nitrogen between each of the organs in the crop model. Each organ can have up to three differnt pools of biomass:    ///     /// * **Structural biomass** which remains within an organ once it is partitioned there    /// * **Metabolic biomass** which generally remains within an organ but is able to be re-allocated when the organ senesses and may be re-translocated when demand is high relative to supply.    /// * **Non-structural biomass** which is partitioned to organs when supply is high relative to demand and is available for re-translocation to other organs whenever supply from uptake, fixation and re-allocation is lower than demand .    ///     /// The process followed for biomass arbitration is shown in Figure 1. Arbitration responds to events broadcast daily by the central APSIM infrastructure:     ///     /// 1. **doPotentialPlantGrowth**.  When this event is broadcast each organ class executes code to determine their potential growth, biomass supplies and demands.  In addition to demands for structural, non-structural and metabolic biomass (DM and N) each organ may have the following biomass supplies:     /// 	* **Fixation supply**.  From photosynthesis (DM) or symbiotic fixation (N)    /// 	* **Uptake supply**.  Typically uptake of N from the soil by the roots but could also be uptake by other organs (eg foliage application of N).    /// 	* **Retranslocation supply**.  Non-structural biomass that may be moved from organs to meet demands of other organs.    /// 	* **Reallocation supply**. Biomass that can be moved from senescing organs to meet the demands of other organs.    /// 2. **doPotentialPlantPartitioning.** On this event the Arbitrator first executes the DoDMSetup() method to establish the DM supplies and demands from each organ.  It then executes the DoPotentialDMAllocation() method which works out how much biomass each organ would be allocated assuming N supply is not limiting and sends these allocations to the organs.  Each organ then uses their potential DM allocation to determine their N demand (how much N is needed to produce that much DM) and the arbitrator calls DoNSetup() establish N supplies and Demands and begin N arbitration.  Firstly DoNReallocation() is called to redistribute N that the plant has available from senescing organs.  After this step any unmet N demand is considered the plants demand for N uptake from the soil (N Uptake Demand).    /// 3. **doNutrientArbitration.** When this event is broadcast by the model framework the soil arbitrator gets the N uptake demands from each plant (where multiple plants are growing in competition) and their potential uptake from the soil and determines how nuch of their demand that the soil is able to provide.  This value is then passed back to each plant instance as their Nuptake and doNUptakeAllocation() is called to distribute this N between organs.      /// 4. **doActualPlantPartitioning.**  On this event the arbitrator call DoNRetranslocation() and DoNFixation() to satisify any unmet N demands from these sources.  Finally, DoActualDMAllocation is called where DM allocations to each organ are reduced if the N allocation is insufficient to achieve the organs minimum N conentration and final allocations are sent to organs.     /// 
+    /// ![Alt Text](..\\..\\Documentation\\Images\\ArbitrationDiagram.PNG)    ///     /// **Figure 1.**  Schematic showing procedure for arbitration of biomass partitioning.  Pink boxes are events that are broadcast each day by the model infrastructure and their numbering shows the order of procedure. Blue boxes are methods that are called when these events are broadcast.  Orange boxes contain properties that make up the organ/arbitrator interface.  Green boxes are organ specific properties.    /// </summary>
 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -21,16 +21,20 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Plant))]
     public class OrganArbitrator : Model, IUptake
     {
-        #region Class Members
-        // Input paramaters
+        #region Links and Input parameters
+
+
+        /// <summary>APSIMs clock model</summary>
+        [Link]
+        public Clock Clock = null;
 
         /// <summary>The top level plant object in the Plant Modelling Framework</summary>
         [Link]
         public Plant Plant = null;
 
-        /// <summary>APSIMs clock model</summary>
+        /// <summary>The soil</summary>
         [Link]
-        public Clock Clock = null;
+        public Soils.Soil Soil = null;
 
         /// <summary>
         /// The list of posible methods that can be used for arbitrating biomass allocation
@@ -58,9 +62,11 @@ namespace Models.PMF
         /// <summary>The method used to arbitrate N allocations</summary>
         [Description("Select method used for Nitrogen Arbitration")]
         public ArbitrationType NArbitrationOption { get; set; }
+        
         /// <summary>The mentod used to arbitrate DM allocations </summary>
         [Description("Select method used for Dry Matter Arbitration")]
         public ArbitrationType DMArbitrationOption { get; set; }
+        
         /// <summary>The nutrient drivers</summary>
         [Description("List of nutrients that the arbitrator will consider")]
         public string[] NutrientDrivers = null;
@@ -68,26 +74,10 @@ namespace Models.PMF
         /// <summary>The kgha2gsm</summary>
         private const double kgha2gsm = 0.1;
 
-        /// <summary>Called when [initialize].</summary>
-        [EventSubscribe("Initialised")]
-        private void OnInit()
-        {
-            //NAware Array.Exists(NutrientDrivers, element => element == "Nitrogen");  Fixme  Need to put this into .xml and write code to handle N unaware crops
-            PAware = Array.Exists(NutrientDrivers, element => element == "Phosphorus");
-            KAware = Array.Exists(NutrientDrivers, element => element == "Potasium");
-        }
+        /// <summary>The list of organs</summary>
+        private IArbitration[] Organs;
 
-        /// <summary>Ors the specified p.</summary>
-        /// <param name="p">if set to <c>true</c> [p].</param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        private void Or(bool p)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Contains the variables need for arbitration</summary>
         [Serializable]
         public class BiomassArbitrationType
         {
@@ -262,33 +252,17 @@ namespace Models.PMF
             }
         }
 
-        private IArbitration[] Organs;
-
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, SowPlant2Type data)
-        {
-            if (data.Plant == Plant)
-            {
-                List<IArbitration> organsToArbitrate = new List<IArbitration>();
-
-                foreach (IOrgan organ in Plant.Organs)
-                    if (organ is IArbitration)
-                        organsToArbitrate.Add(organ as IArbitration);
-
-                Organs = organsToArbitrate.ToArray();
-            }
-        }
-
-        /// <summary>The dm</summary>
+        /// <summary>The variables for DM</summary>
         public BiomassArbitrationType DM = null;
-        /// <summary>The n</summary>
+
+        /// <summary>The variables for N</summary>
         public BiomassArbitrationType N = null;
         //private BiomassArbitrationType P = null;
         //private BiomassArbitrationType K = null;
 
+        #endregion
+
+        #region Main outputs
 
         /// <summary>Gets the dm supply.</summary>
         /// <value>Supply of DM from photosynthesising organs</value>
@@ -405,6 +379,43 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Gets the n supply relative to N demand.</summary>
+        /// <value>The n supply.</value>
+        [XmlIgnore]
+        public double FDM
+        {
+            get
+            {
+                if (Plant != null && Plant.IsAlive)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (DM != null)
+                        {
+                            if ((Plant.Phenology.Emerged == true) && (DM.TotalPlantDemand > 0) && (DM.TotalPlantSupply > 0))
+                                return DM.TotalPlantSupply / DM.TotalPlantDemand;
+                            else return 1;
+                        }
+                        else return 1;
+                    }
+                    else
+                        return DM.TotalPlantSupply / DM.TotalPlantDemand;
+                }
+                else
+                    return 1;
+            }
+        }
+
+        /// <summary>Gets the delta wt.</summary>
+        /// <value>The delta wt.</value>
+        public double DeltaWt
+        {
+            get
+            {
+                return DM.End - DM.Start;
+            }
+        }
+
         /// <summary>Gets the n demand.</summary>
         /// <value>The n demand.</value>
         [XmlIgnore]
@@ -473,6 +484,7 @@ namespace Models.PMF
                     return 0.0;
             }
         }
+        
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [XmlIgnore]
@@ -500,10 +512,88 @@ namespace Models.PMF
             }
         }
 
+        /// TODO: the water outputs calculation need to be upgraded
+
+        /// <summary>the water supply</summary>
+        private double waterSupply = 0.0;
+        /// <summary>the water demand</summary>
+        private double waterDemand = 0.0;
+        /// <summary>the water uptake</summary>
+        private double waterUptake = 0.0;
+
+        /// <summary>Gets the water supply.</summary>
+        /// <value>The water supply.</value>
+        [XmlIgnore]
+        public double WSupply
+        {
+            get
+            {
+                if (Plant.IsAlive)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                            return waterSupply;
+                        else return 0.0;
+                    }
+                    else
+                        return waterSupply;
+                }
+                else
+                    return 0.0;
+            }
+        }
+
+        /// <summary>Gets the water demand.</summary>
+        /// <value>The water demand.</value>
+        [XmlIgnore]
+        public double WDemand
+        {
+            get
+            {
+                if (Plant.IsAlive)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                            return waterDemand;
+                        else return 0.0;
+                    }
+                    else
+                        return waterDemand;
+                }
+                else
+                    return 0.0;
+            }
+        }
+
+        /// <summary>Gets the water allocated in the plant (taken up).</summary>
+        /// <value>The water uptake.</value>
+        [XmlIgnore]
+        public double WAllocated
+        {
+            get
+            {
+                if (Plant.IsAlive)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                            return waterUptake;
+                        else return 0.0;
+                    }
+                    else
+                        return waterUptake;
+                }
+                else
+                    return 0.0;
+            }
+        }
+
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [XmlIgnore]
-        public double FDM
+        public double FW
         {
             get
             {
@@ -511,49 +601,27 @@ namespace Models.PMF
                 {
                     if (Plant.Phenology != null)
                     {
-                        if (DM != null)
+                        if (N != null)
                         {
-                            if ((Plant.Phenology.Emerged == true) && (DM.TotalPlantDemand > 0) && (DM.TotalPlantSupply > 0))
-                                return DM.TotalPlantSupply / DM.TotalPlantDemand;
+                            if ((Plant.Phenology.Emerged == true) && (waterDemand > 0) && (waterSupply > 0))
+                                return waterSupply / waterDemand;
                             else return 1;
                         }
                         else return 1;
                     }
                     else
-                        return DM.TotalPlantSupply / DM.TotalPlantDemand;
+                        return waterSupply / waterDemand;
                 }
                 else
                     return 1;
             }
         }
-        /// <summary>Gets the delta wt.</summary>
-        /// <value>The delta wt.</value>
-        public double DeltaWt
-        {
-            get
-            {
-                return DM.End - DM.Start;
-            }
-        }
+
 
         /// <summary>Gets and Sets NO3 Supply</summary>
         /// <value>NO3 supplies from each soil layer</value>
         [XmlIgnore]
         public double[] PotentialNO3NUptake { get; set; }
-
-        /// <summary>Gets and Sets NO3 Supply</summary>
-        /// <value>NO3 supplies from each soil layer</value>
-        [XmlIgnore]
-        public double TotalPotentialNO3Uptake
-        {
-            get
-            {
-                if (PotentialNO3NUptake != null)
-                    return MathUtilities.Sum(PotentialNO3NUptake);
-                else
-                    return 0;
-            }
-        }
 
         /// <summary>Gets and Sets NH4 Supply</summary>
         /// <value>NH4 supplies from each soil layer</value>
@@ -564,23 +632,19 @@ namespace Models.PMF
         /// <summary>The n aware</summary>
         [XmlIgnore]
         public bool NAware = true;
+        
         /// <summary>The p aware</summary>
         [XmlIgnore]
         public bool PAware = false;
+        
         /// <summary>The k aware</summary>
         [XmlIgnore]
         public bool KAware = false;
 
         #endregion
 
-        /// <summary>Clears this instance.</summary>
-        public void Clear()
-        {
-            DM = null;
-            N = null;
-        }
-
         #region IUptake interface
+
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>
@@ -640,18 +704,22 @@ namespace Models.PMF
                     MyZone = Z;
 
             double[] uptake = MyZone.Water;
-            double Supply = MathUtilities.Sum(uptake);
-            double Demand = 0;
+            waterSupply = MathUtilities.Sum(uptake);
+            waterDemand = 0.0;
             foreach (IArbitration o in Organs)
-                Demand += o.WaterDemand;
+                waterDemand += o.WaterDemand;
 
             double fraction = 1;
-            if (Demand > 0)
-                fraction = Math.Min(1.0, Supply / Demand);
+            if (waterDemand > 0)
+                fraction = Math.Min(1.0, waterSupply / waterDemand);
 
+            waterUptake = 0.0;
             foreach (IArbitration o in Organs)
                 if (o.WaterDemand > 0)
+                {
                     o.WaterAllocation = fraction * o.WaterDemand;
+                    waterUptake += o.WaterAllocation;
+                }
 
             Plant.Root.DoWaterUptake(uptake);
         }
@@ -708,6 +776,7 @@ namespace Models.PMF
             else
                 return null;
         }
+        
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
@@ -743,7 +812,17 @@ namespace Models.PMF
         }
         #endregion
 
-        #region Interface methods called by Plant.cs
+        #region Plant interface methods
+
+        /// <summary>Called when [initialize].</summary>
+        [EventSubscribe("Initialised")]
+        private void OnInit()
+        {
+            //NAware Array.Exists(NutrientDrivers, element => element == "Nitrogen");  Fixme  Need to put this into .xml and write code to handle N unaware crops
+            PAware = Array.Exists(NutrientDrivers, element => element == "Phosphorus");
+            KAware = Array.Exists(NutrientDrivers, element => element == "Potasium");
+        }
+
         /// <summary>Things the plant model does when the simulation starts</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -751,6 +830,26 @@ namespace Models.PMF
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Clear();
+            PotentialNH4NUptake = new double[Soil.Thickness.Length];
+            PotentialNO3NUptake = new double[Soil.Thickness.Length];
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, SowPlant2Type data)
+        {
+            if (data.Plant == Plant)
+            {
+                List<IArbitration> organsToArbitrate = new List<IArbitration>();
+
+                foreach (IOrgan organ in Plant.Organs)
+                    if (organ is IArbitration)
+                        organsToArbitrate.Add(organ as IArbitration);
+
+                Organs = organsToArbitrate.ToArray();
+            }
         }
 
         /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply
@@ -771,12 +870,14 @@ namespace Models.PMF
                 DoReAllocation(Organs, N, NArbitrationOption);           //Allocate N available from reallocation to each organ
             }
         }
+        
         /// <summary>Calculates how much N the roots will take up in the absence of competition</summary>
         /// <param name="soilstate">The state of the soil.</param>
         public void DoNUptakeDemandCalculations(SoilState soilstate)
         {
             DoPotentialNutrientUptake(Organs, ref N, soilstate);  //Work out how much N the uptaking organs (roots) would take up in the absence of competition
         }
+
         /// <summary>Allocates the NUptake that the soil arbitrator has returned</summary>
         /// <param name="AllocatedNO3Nuptake">AllocatedNO3Nuptake</param>
         /// <param name="AllocatedNH4Nuptake">AllocatedNH4Nuptake</param>
@@ -803,6 +904,7 @@ namespace Models.PMF
             //Allocate N that the SoilArbitrator has allocated the plant to each organ
             DoUptake(Organs, N, NArbitrationOption);                 
         }
+        
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -828,9 +930,18 @@ namespace Models.PMF
             if (sender == Plant)
                 Clear();
         }
+
+        /// <summary>Clears this instance.</summary>
+        public void Clear()
+        {
+            DM = null;
+            N = null;
+        }
+
         #endregion
 
         #region Arbitration step functions
+
         /// <summary>Does the dm setup.</summary>
         /// <param name="Organs">The organs.</param>
         virtual public void DoDMSetup(IArbitration[] Organs)
@@ -899,6 +1010,7 @@ namespace Models.PMF
                     DM.RelativeNonStructuralDemand[i] = DM.NonStructuralDemand[i] / DM.TotalNonStructuralDemand;
             }
         }
+
         /// <summary>Sends the potential dm allocations.</summary>
         /// <param name="Organs">The organs.</param>
         /// <exception cref="System.Exception">Mass Balance Error in Photosynthesis DM Allocation</exception>
@@ -927,6 +1039,7 @@ namespace Models.PMF
                 };
             }
         }
+        
         /// <summary>Does the nutrient set up.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="N">The bat.</param>
@@ -993,6 +1106,7 @@ namespace Models.PMF
                     N.RelativeNonStructuralDemand[i] = N.NonStructuralDemand[i] / N.TotalNonStructuralDemand;
             }
         }
+     
         /// <summary>Does the re allocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
@@ -1024,6 +1138,7 @@ namespace Models.PMF
                 BAT.TotalReallocation = MathUtilities.Sum(BAT.Reallocation);
             }
         }
+       
         /// <summary>Does the uptake.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
@@ -1071,6 +1186,7 @@ namespace Models.PMF
             }
 
         }
+        
         /// <summary>Does the uptake.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
@@ -1101,6 +1217,7 @@ namespace Models.PMF
                 }
             }
         }
+        
         /// <summary>Does the retranslocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
@@ -1131,6 +1248,7 @@ namespace Models.PMF
                 }
             }
         }
+        
         /// <summary>Does the fixation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
@@ -1229,6 +1347,7 @@ namespace Models.PMF
                 }
             }
         }
+        
         /// <summary>Determines Nutrient limitations to DM allocations</summary>
         /// <param name="Organs">The organs.</param>
         virtual public void DoNutrientConstrainedDMAllocation(IArbitration[] Organs)
@@ -1274,6 +1393,7 @@ namespace Models.PMF
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
             DM.NutrientLimitation = (PreNStressDMAllocation - DM.Allocated);
         }
+       
         /// <summary>Sends the dm allocations.</summary>
         /// <param name="Organs">The organs.</param>
         virtual public void SendDMAllocations(IArbitration[] Organs)
@@ -1292,6 +1412,7 @@ namespace Models.PMF
                 };
             }
         }
+        
         /// <summary>Sends the nutrient allocations.</summary>
         /// <param name="Organs">The organs.</param>
         /// <exception cref="System.Exception">
@@ -1350,9 +1471,11 @@ namespace Models.PMF
             if (DM.BalanceError > 0.0001)
                 throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than the sum of structural DM demand, metabolic DM demand and NonStructural DM capacity");
         }
+        
         #endregion
 
         #region Arbitrator generic allocation functions
+        
         /// <summary>Relatives the allocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="TotalSupply">The total supply.</param>
@@ -1394,6 +1517,7 @@ namespace Models.PMF
             //it must be caught in that step.  Currently only using to catch DM not allocated so we can report as sink limitaiton
             BAT.NotAllocated = NotAllocated;
         }
+        
         /// <summary>Priorities the allocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="TotalSupply">The total supply.</param>
@@ -1431,6 +1555,7 @@ namespace Models.PMF
                 }
             }
         }
+        
         /// <summary>Prioritythens the relative allocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="TotalSupply">The total supply.</param>
@@ -1469,6 +1594,7 @@ namespace Models.PMF
                 }
             }
         }
+        
         /// <summary>Partitions biomass between organs based on their relative demand in a single pass so non-structural always gets some if there is a non-structural demand</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="TotalSupply">The total supply.</param>
@@ -1501,11 +1627,21 @@ namespace Models.PMF
                 }
             }
         }
+
         #endregion
-            /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-            /// <param name="tags">The list of tags to add to.</param>
-            /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-            /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+
+        /// <summary>Ors the specified p.</summary>
+        /// <param name="p">if set to <c>true</c> [p].</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void Or(bool p)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             // add a heading.

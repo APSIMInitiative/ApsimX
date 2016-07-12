@@ -47,6 +47,10 @@ namespace UserInterface.Presenters
 
             // Tell the view to populate the axis.
             this.PopulateView();
+            this.view.Zoom = map.Zoom;
+            this.view.Center = map.Center;
+            this.view.ZoomChanged += OnZoomChanged;
+            this.view.PositionChanged += OnPositionChanged;
         }
 
         /// <summary>
@@ -54,6 +58,8 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            this.view.ZoomChanged -= OnZoomChanged;
+            this.view.PositionChanged -= OnPositionChanged;
         }
 
         /// <summary>
@@ -62,6 +68,26 @@ namespace UserInterface.Presenters
         private void PopulateView()
         {
             view.ShowMap(map.GetCoordinates());
+        }
+
+        /// <summary>
+        /// Respond to changes in the map zoom level
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnZoomChanged(object sender, System.EventArgs e)
+        {
+            map.Zoom = view.Zoom;
+        }
+
+        /// <summary>
+        /// Respond to changes in the map position by saving the new position
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPositionChanged(object sender, System.EventArgs e)
+        {
+            map.Center = view.Center;
         }
 
         /// <summary>Export the map to PDF</summary>
@@ -75,28 +101,7 @@ namespace UserInterface.Presenters
             Image rawImage = view.Export();
             rawImage.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 
-            
-            // The numbers below are optimised for generation of PDF document
-            // on a computer that has its display settings at 100%.
-            //double targetWidth = 650;
-            //double targetHeight = 450;
-
-            //// Determine scaling.
-            //double scale = Math.Min(targetWidth / rawImage.Width, targetHeight / rawImage.Height);
-            //var scaleWidth = (int)(rawImage.Width * scale);
-            //var scaleHeight = (int)(rawImage.Height * scale);
-            //var scaleRectangle = new Rectangle(((int)targetWidth - scaleWidth) / 2, ((int)targetHeight - scaleHeight) / 2, scaleWidth, scaleHeight);
-
-            //// Create a scaled image.
-            //Bitmap scaledImage = new Bitmap((int) targetWidth, (int) targetHeight);
-            //using (var graph = Graphics.FromImage(scaledImage))
-            //{
-            //    graph.DrawImage(rawImage, scaleRectangle);
-
-            //    scaledImage.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
-
-                return fileName;
-            //}
+            return fileName;
         }
     }
 }

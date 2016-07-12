@@ -58,6 +58,5 @@ namespace Models.PMF.Phen
                 throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
             }
         }
-
     }
 }

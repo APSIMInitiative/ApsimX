@@ -42,11 +42,9 @@ namespace UserInterface.Presenters
             allowableChildModels = Apsim.GetAllowableChildModels(this.model);
 
             this.view.List.Values = allowableChildModels.Select(m => m.Name).ToArray();
-            /////this.view.Button.Value = "Add";
             this.view.AddButton("Add", null, this.OnAddButtonClicked);
 
             // Trap events from the view.
-            /////this.view.Button.Clicked += this.OnAddButtonClicked; /////
             this.view.List.DoubleClicked += this.OnAddButtonClicked;
         }
 
@@ -54,7 +52,6 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             // Trap events from the view.
-            /////this.view.Button.Clicked -= this.OnAddButtonClicked; /////
             this.view.List.DoubleClicked -= this.OnAddButtonClicked;
         }
 
@@ -66,7 +63,7 @@ namespace UserInterface.Presenters
             Type selectedModelType = allowableChildModels.Find(m => m.Name == view.List.SelectedValue);
             if (selectedModelType != null)
             {
-                explorerPresenter.ShowWaitCursor(true);
+                explorerPresenter.MainPresenter.ShowWaitCursor(true);
                 try
                 {
                     // Use the pre built serialization assembly.
@@ -80,7 +77,7 @@ namespace UserInterface.Presenters
                 }
                 finally
                 {
-                    explorerPresenter.ShowWaitCursor(false);
+                    explorerPresenter.MainPresenter.ShowWaitCursor(false);
                 }
             }
         }

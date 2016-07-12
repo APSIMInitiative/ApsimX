@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Models.Core;
 using System.IO;
 using System.Reflection;
@@ -17,9 +18,11 @@ namespace Models
     [Serializable]
     public class Operation
     {
+        //public DateTime Date { get; set; }
+
         /// <summary>Gets or sets the date.</summary>
-        /// <value>The date.</value>
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
+
         /// <summary>Gets or sets the action.</summary>
         /// <value>The action.</value>
         public string Action { get; set; }
@@ -34,8 +37,6 @@ namespace Models
 
             return "";
         }
-
-
     }
 
     /// <summary>This class encapsulates an operations schedule.</summary>
@@ -47,7 +48,6 @@ namespace Models
     {
         /// <summary>The clock</summary>
         [Link] Clock Clock = null;
-
 
         /// <summary>Gets or sets the schedule.</summary>
         /// <value>The schedule.</value>
@@ -69,9 +69,11 @@ namespace Models
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
+            DateTime operationDate;
             foreach (Operation operation in Schedule)
             {
-                if (operation.Date == Clock.Today)
+                operationDate = DateUtilities.validateDateString(operation.Date, Clock.Today.Year);
+                if (operationDate == Clock.Today)
                 {
                     string st = operation.Action;
                     int posComment = operation.Action.IndexOf("//");
@@ -180,7 +182,6 @@ namespace Models
                     parameterValues[argumentIndex] = Enum.Parse(parameters[argumentIndex].ParameterType, value);
                 }
             }
-
 
             //if there were missing named arguments in the method call then use the default values for them.
             for (int i = 0; i < parameterValues.Length; i++)

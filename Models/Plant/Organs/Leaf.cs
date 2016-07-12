@@ -127,7 +127,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (Plant != null && Plant.IsAlive)
-                    return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover));
+                    return Math.Min(MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover)), 0.999999999);
                 else
                     return 0;
             }
@@ -315,7 +315,7 @@ namespace Models.PMF.Organs
         public double KDead { get; set; }
         
         /// <value>The Maximum Number of Leaves that will be produced.  Used for determining the number of members in cohort properties</value>
-        [Description("Maximum number of Main-Stem leaves.  Used for determoining the number of members in cohort properties (Dead)")]
+        [Description("Maximum number of Main-Stem leaves")]
         public int MaximumMainStemLeafNumber { get; set; }
 
         #endregion
@@ -1078,16 +1078,25 @@ namespace Models.PMF.Organs
         /// <summary>
         /// remove biomass from the leaf.
         /// </summary>
-        /// <param name="value">The biomass removal fractions</param>
+        /// <param name="value">The frations of biomass to remove</param>
         public override void DoRemoveBiomass(OrganBiomassRemovalType value)
         {
-            foreach (LeafCohort L in Leaves)
-                L.DoBiomassRemoval(value);
+            foreach (LeafCohort leaf in Leaves)
+            {
+                leaf.DoLeafBiomassRemoval(value);
+                DetachedWt += leaf.DetachedWt;
+                DetachedN += leaf.DetachedN;
+                RemovedWt += leaf.RemovedWt;
+                RemovedN += leaf.RemovedN;
+            }
 
-            double TotalFracRemoved = value.FractionRemoved + value.FractionToResidue;
-            double PcToResidue = value.FractionToResidue / TotalFracRemoved * 100;
-            double PcRemoved = value.FractionRemoved / TotalFracRemoved * 100;
-            Summary.WriteMessage(this, "Removing " + TotalFracRemoved * 100 + "% of " + Name + " Biomass from " + Plant.Name + ".  Of this " + PcRemoved + "% is removed from the system and " + PcToResidue + "% is returned to the surface organic matter");
+            double totalFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
+            double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
+            double removedOff = (value.FractionLiveToRemove + value.FractionDeadToRemove) / totalFractionToRemove * 100;
+            Summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
+                                     + "% of " + Name + " Biomass from " + Plant.Name
+                                     + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
+                                     + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
         }
 
         /// <summary>
@@ -1096,8 +1105,8 @@ namespace Models.PMF.Organs
         /// <param name="ProportionRemoved">The proportion of stems removed by thinning</param>
         public void DoThin(double ProportionRemoved)
         {
-            foreach (LeafCohort L in Leaves)
-                L.DoThin(ProportionRemoved);
+            foreach (LeafCohort leaf in Leaves)
+                leaf.DoThin(ProportionRemoved);
         }
         #endregion
 
