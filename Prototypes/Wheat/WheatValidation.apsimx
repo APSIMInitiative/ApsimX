@@ -4866,7 +4866,7 @@ VShort duration variety released in New Zealand by Pioneer
       <FieldNameUsedForMatch>Wheat.Phenology.CurrentStageName</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>1000</MaximumResultsPerPage>
+    <MaximumResultsPerPage>3000</MaximumResultsPerPage>
   </DataStore>
   <Memo>
     <Name>Combined Results</Name>
