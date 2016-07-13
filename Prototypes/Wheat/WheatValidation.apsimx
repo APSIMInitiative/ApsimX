@@ -44974,7 +44974,7 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <Axis>
+        <Axis> 
           <Type>Left</Type>
           <Title>Predicted Yield</Title>
           <Inverted>false</Inverted>
