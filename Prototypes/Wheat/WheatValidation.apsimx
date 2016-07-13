@@ -5237,17 +5237,17 @@ VShort duration variety released in New Zealand by Pioneer
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.FloweringDAS.Value</Name>
-            <n>221</n>
-            <Slope>0.99786849433836644</Slope>
-            <Intercept>-1.1287067645583022</Intercept>
-            <SEslope>0.021166017692608948</SEslope>
-            <SEintercept>3.53077106894843</SEintercept>
-            <R2>0.910306034649894</R2>
-            <RMSE>16.570977191097491</RMSE>
-            <NSE>0.9011093479894392</NSE>
-            <ME>-1.4660633484162897</ME>
-            <MAE>10.126696832579187</MAE>
-            <RSR>0.31375656646027084</RSR>
+            <n>298</n>
+            <Slope>0.989445697616834</Slope>
+            <Intercept>0.55053483944902837</Intercept>
+            <SEslope>0.016870918183718178</SEslope>
+            <SEintercept>2.6065782039894958</SEintercept>
+            <R2>0.92076215066030043</R2>
+            <RMSE>14.750156409135455</RMSE>
+            <NSE>0.915257054423244</NSE>
+            <ME>-0.98993288590604023</ME>
+            <MAE>9.0234899328859051</MAE>
+            <RSR>0.29061757220815609</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
