@@ -101,7 +101,7 @@ namespace UserInterface.Views
         event EventHandler<AllowCloseArgs> AllowClose;
 
         /// <summary>Invoked when a tab is closing.</summary>
-        event EventHandler<TabEventArgs> TabClosing;
+        event EventHandler<TabClosingEventArgs> TabClosing;
     }
 
     /// <summary>
@@ -111,7 +111,6 @@ namespace UserInterface.Views
     public class MainView : ViewBase, IMainView
     {
         private static string indexTabText = "Home";
-        private List<EventHandler<TabEventArgs>> tabClosingEvents = new List<EventHandler<TabEventArgs>>();
         Point tabControlRightClickLocation;
 
         /// <summary>Get the list and button view</summary>
@@ -124,7 +123,7 @@ namespace UserInterface.Views
         public event EventHandler<AllowCloseArgs> AllowClose;
 
         /// <summary>Invoked when a tab is closing.</summary>
-        public event EventHandler<TabEventArgs> TabClosing;
+        public event EventHandler<TabClosingEventArgs> TabClosing;
 
         private Views.ListButtonView listButtonView1;
         private Views.ListButtonView listButtonView2;
@@ -231,15 +230,16 @@ namespace UserInterface.Views
                     notebook.CurrentPage = tabPage;
                 if (tabPage > 0)
                 {
+                    TabClosingEventArgs args = new TabClosingEventArgs();
                     if (TabClosing != null)
                     {
-                        TabEventArgs args = new TabEventArgs();
                         args.LeftTabControl = IsControlOnLeft(o);
                         args.Name = tabText;
                         args.Index = tabPage;
                         TabClosing.Invoke(this, args);
                     }
-                    notebook.RemovePage(tabPage);
+                    if (args.AllowClose)
+                        notebook.RemovePage(tabPage);
                 }
             }
         }
@@ -314,15 +314,16 @@ namespace UserInterface.Views
             int tabPage = GetTabOfWidget(o, ref notebook, ref tabText);
             if (tabPage > 0)
             {
+                TabClosingEventArgs args = new TabClosingEventArgs();
                 if (TabClosing != null)
                 {
-                    TabEventArgs args = new TabEventArgs();
                     args.LeftTabControl = IsControlOnLeft(o);
                     args.Name = tabText;
                     args.Index = tabPage;
                     TabClosing.Invoke(this, args);
                 }
-                notebook.RemovePage(tabPage);
+                if (args.AllowClose)
+                    notebook.RemovePage(tabPage);
             }
         }
 
@@ -586,7 +587,7 @@ namespace UserInterface.Views
             }
             else
                 e.RetVal = false;
-            if (!(bool)e.RetVal)
+            if ((bool)e.RetVal == false)
             {
                 Close(false);
             }
@@ -594,11 +595,12 @@ namespace UserInterface.Views
     }
 
     /// <summary>An event argument structure with a string.</summary>
-    public class TabEventArgs : EventArgs
+    public class TabClosingEventArgs : EventArgs
     {
         public bool LeftTabControl;
         public string Name;
         public int Index;
+        public bool AllowClose = true;
     }
 
     /// <summary>An event argument structure with a field for allow to close.</summary>

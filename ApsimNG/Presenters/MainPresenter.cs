@@ -74,7 +74,12 @@ namespace UserInterface.Presenters
 
         /// <summary>Detach this presenter from the view.</summary>
         /// <param name="view">The view used for this object</param>
-        public void Detach(object view) { }
+        public void Detach(object view) {
+            this.view.AllowClose -= OnClosing;
+            this.view.StartPage1.List.DoubleClicked -= OnFileDoubleClicked1;
+            this.view.StartPage2.List.DoubleClicked -= OnFileDoubleClicked2;
+            this.view.TabClosing -= OnTabClosing;
+        }
 
         /// <summary>Allow the form to close?</summary>
         /// <returns>True if can be closed</returns>
@@ -370,17 +375,19 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void OnTabClosing(object sender, TabEventArgs e)
+        private void OnTabClosing(object sender, TabClosingEventArgs e)
         {
             if (e.LeftTabControl)
             {
-                this.presenters1[e.Index - 1].SaveIfChanged();
-                this.presenters1.RemoveAt(e.Index - 1);
+                e.AllowClose = this.presenters1[e.Index - 1].SaveIfChanged();
+                if (e.AllowClose)
+                    this.presenters1.RemoveAt(e.Index - 1);
             }
             else
             {
-                this.presenters2[e.Index - 1].SaveIfChanged();
-                this.presenters2.RemoveAt(e.Index - 1);
+                e.AllowClose = this.presenters2[e.Index - 1].SaveIfChanged();
+                if (e.AllowClose)
+                    this.presenters2.RemoveAt(e.Index - 1);
             }
         }
 
@@ -529,10 +536,13 @@ namespace UserInterface.Presenters
         /// <param name="e">Close arguments</param>
         private void OnClosing(object sender, AllowCloseArgs e)
         {
-            Utility.Configuration.Settings.MainFormLocation = view.WindowLocation;
-            Utility.Configuration.Settings.MainFormSize = view.WindowSize;
-            Utility.Configuration.Settings.MainFormMaximized = view.WindowMaximised;
-            e.AllowClose = true; /// FIXME
+            e.AllowClose = AllowClose();
+            if (e.AllowClose)
+            {
+                Utility.Configuration.Settings.MainFormLocation = view.WindowLocation;
+                Utility.Configuration.Settings.MainFormSize = view.WindowSize;
+                Utility.Configuration.Settings.MainFormMaximized = view.WindowMaximised;
+            }
         }
     }
 }
