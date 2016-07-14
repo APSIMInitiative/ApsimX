@@ -85,25 +85,93 @@ The model consists of:
         </EmergingPhase>
         <GenericPhase>
           <Name>Vegetative</Name>
-          <Constant>
-            <Name>Target</Name>
-            <Value>401</Value>
-          </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <MinimumFunction>
-            <Name>Stress</Name>
+          <MultiplyFunction>
+            <Name>Target</Name>
+            <DivideFunction>
+              <Name>HsTs</Name>
+              <SubtractFunction>
+                <Name>FLNlessIntercept</Name>
+                <AddFunction>
+                  <Name>FLN</Name>
+                  <VariableReference>
+                    <Name>MineafNumber</Name>
+                    <VariableName>[Phenology].MinimumLeafNumber</VariableName>
+                  </VariableReference>
+                  <MultiplyFunction>
+                    <Name>VernalLeaves</Name>
+                    <VariableReference>
+                      <Name>UnVernalisedLeaves</Name>
+                      <VariableName>[Phenology].VrnSensitivity</VariableName>
+                    </VariableReference>
+                    <MaximumFunction>
+                      <Name>RelativeVernalisation</Name>
+                      <Constant>
+                        <Name>Zero</Name>
+                        <Value>0</Value>
+                      </Constant>
+                      <SubtractFunction>
+                        <Name>RelativeVernalisation</Name>
+                        <Constant>
+                          <Name>One</Name>
+                          <Value>1</Value>
+                        </Constant>
+                        <DivideFunction>
+                          <Name>InverseRelativeVernalisation</Name>
+                          <VariableReference>
+                            <Name>CumulativeVernalisationDays</Name>
+                            <VariableName>[Phenology].Vernalisation.CumulativeVD</VariableName>
+                          </VariableReference>
+                          <Constant>
+                            <Name>VernDaySaturation</Name>
+                            <Value>15</Value>
+                            <Units>VrnDays</Units>
+                          </Constant>
+                        </DivideFunction>
+                      </SubtractFunction>
+                    </MaximumFunction>
+                  </MultiplyFunction>
+                  <MultiplyFunction>
+                    <Name>PhotoPLeaves</Name>
+                    <VariableReference>
+                      <Name>ShortPpLeaves</Name>
+                      <VariableName>[Phenology].PpSensitivity</VariableName>
+                    </VariableReference>
+                    <LinearInterpolationFunction>
+                      <Name>PhotoPeriodReductionFactor</Name>
+                      <XYPairs>
+                        <Name>XYPairs</Name>
+                        <X>
+                          <double>8</double>
+                          <double>16</double>
+                        </X>
+                        <Y>
+                          <double>1</double>
+                          <double>0</double>
+                        </Y>
+                      </XYPairs>
+                      <XProperty>[Phenology].Photoperiod.Value</XProperty>
+                    </LinearInterpolationFunction>
+                  </MultiplyFunction>
+                </AddFunction>
+                <Constant>
+                  <Name>Intercept</Name>
+                  <Value>2.85</Value>
+                </Constant>
+              </SubtractFunction>
+              <Constant>
+                <Name>Slope</Name>
+                <Value>1.1</Value>
+              </Constant>
+            </DivideFunction>
             <VariableReference>
-              <Name>VernalisationEffect</Name>
-              <VariableName>[Phenology].Vernalisation.VernEff</VariableName>
+              <Name>Phyllochron</Name>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
             </VariableReference>
-            <VariableReference>
-              <Name>PhotoperiodEffect</Name>
-              <VariableName> [Phenology].Vernalisation.PhotopEff</VariableName>
-            </VariableReference>
-          </MinimumFunction>
+          </MultiplyFunction>
           <Start>Emergence</Start>
           <End>TerminalSpikelet</End>
         </GenericPhase>
@@ -151,7 +219,7 @@ The model consists of:
                     </X>
                     <Y>
                       <double>0</double>
-                      <double>2</double>
+                      <double>0</double>
                       <double>0</double>
                     </Y>
                   </XYPairs>
@@ -331,6 +399,33 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <SetEvent>Maturity</SetEvent>
           <ReSetEvent>never</ReSetEvent>
         </OnEventFunction>
+        <Constant>
+          <Name>MinimumLeafNumber</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Number of leaves the plant will produce when fully vernalised early and grown in long photoperiod
+]]></MemoText>
+          </Memo>
+          <Value>7</Value>
+        </Constant>
+        <Constant>
+          <Name>VrnSensitivity</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[The difference between Inherent earlyness leaf number and the number of leaves produced when the plant is unvernalisaed and grown in long photoperiod]]></MemoText>
+          </Memo>
+          <Value>8</Value>
+        </Constant>
+        <Constant>
+          <Name>PpSensitivity</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[The reduction in leaf number going from 8 to 16 h Pp]]></MemoText>
+          </Memo>
+          <Value>0</Value>
+          <Units>3</Units>
+        </Constant>
+        <SowDate>0001-01-01T00:00:00</SowDate>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -2059,8 +2154,9 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Claire</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 3.0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+            <Command>[Phenology].Vernalisation.VernSens = 4.0</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 2.0</Command>
+            <Command>[Phenology].Vegetative.Target.Value = 900</Command>
           </Cultivar>
           <Cultivar>
             <Name>Conquest</Name>
@@ -2090,7 +2186,9 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Otane</Name>
             <Command>[Phenology].Vernalisation.VernSens = 0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 2</Command>
+            <Command>[Phenology].Vegetative.Target.Value = 260</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Pennant</Name>
@@ -2154,11 +2252,10 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Wakanui</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 0</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3</Command>
+            <Command>[Phenology].Vernalisation.VernSens = 3</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 1</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
             <Command>[Leaf].ExtinctionCoeff.PotentialExtinctionCoeff.XYPairs.Y = 0.9,0.9</Command>
-            <Command>[Phenology].EarlyReproductive.Target.Multiplier.Value = 2.5</Command>
             <Command>[Leaf].CohortParameters.SpecificLeafAreaMin.XYPairs.Y = 1000,1000</Command>
             <Command>[Phenology].Vegetative.Target.Value = 660</Command>
           </Cultivar>
@@ -2619,6 +2716,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <SetEvent>Maturity</SetEvent>
           <ReSetEvent>never</ReSetEvent>
         </OnEventFunction>
+        <SowDate>0001-01-01T00:00:00</SowDate>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -4627,6 +4725,9 @@ VShort duration variety released in New Zealand by Pioneer
         <string>[Wheat].Grain.Size</string>
         <string>[Wheat].Structure.MainStemPopn</string>
         <string>[Wheat].SowingData.Cultivar</string>
+        <string>[Wheat].Structure.HaunStageAtTerminalSpikelet.Value</string>
+        <string>[Wheat].Structure.MainStemFinalNodeNumber</string>
+        <string>[Wheat].SowingData.</string>
       </VariableNames>
       <EventNames>
         <string>[Wheat].Harvesting</string>
@@ -33665,6 +33766,17 @@ namespace Models
 }
 				]]></Code>
             </Manager>
+            <Report>
+              <Name>DailyReport</Name>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string />
+              </VariableNames>
+              <EventNames>
+                <string />
+              </EventNames>
+            </Report>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -33674,6 +33786,47 @@ namespace Models
           <Area>0</Area>
           <Slope>0</Slope>
         </Simulation>
+        <Graph>
+          <Name>Graph</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>0</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>HarvestReport</TableName>
+            <XFieldName>Wheat.Structure.HaunStageAtTerminalSpikelet.Value</XFieldName>
+            <YFieldName>Wheat.Structure.MainStemFinalNodeNumber</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
       </Experiment>
       <Experiment>
         <Name>CPTCultAmarok</Name>
@@ -34752,6 +34905,47 @@ namespace Models
           <Area>0</Area>
           <Slope>0</Slope>
         </Simulation>
+        <Graph>
+          <Name>Graph</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>0</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>HarvestReport</TableName>
+            <XFieldName>Wheat.Structure.HaunStageAtTerminalSpikelet.Value</XFieldName>
+            <YFieldName>Wheat.Structure.MainStemFinalNodeNumber</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
       </Experiment>
       <Experiment>
         <Name>CPTCultWakanui</Name>
