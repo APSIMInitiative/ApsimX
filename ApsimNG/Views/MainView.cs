@@ -93,6 +93,11 @@ namespace UserInterface.Views
         /// <param name="wait">Shows wait cursor if true, normal cursor if false.</param>
         void ShowWaitCursor(bool wait);
 
+        /// <summary>
+        /// Display the window.
+        /// </summary>
+        void Show();
+
         /// <summary>Close the application.</summary>
         /// <param name="askToSave">If true, will ask user whether they want to save.</param>
         void Close(bool askToSave = true);
@@ -180,6 +185,14 @@ namespace UserInterface.Views
             StatusWindow.ModifyBase(StateType.Normal, new Gdk.Color(0xff, 0xff, 0xf0));
             StatusWindow.Visible = false;
             window1.DeleteEvent += OnClosing;
+            //window1.ShowAll();
+        }
+
+        /// <summary>
+        /// Display the window.
+        /// </summary>
+        public void Show()
+        {
             window1.ShowAll();
         }
 
@@ -335,12 +348,12 @@ namespace UserInterface.Views
             get
             {
                 int x, y;
-                mainWindow.GetPosition(out x, out y);
+                window1.GetPosition(out x, out y);
                 return new Point(x, y);
             }
             set
             {
-                mainWindow.Move(value.X, value.Y);
+                window1.Move(value.X, value.Y);
             }
         }
 
@@ -350,12 +363,12 @@ namespace UserInterface.Views
             get
             {
                 int width, height;
-                mainWindow.GetSize(out width, out height);
+                window1.GetSize(out width, out height);
                 return new Size(width, height);
             }
             set
             {
-                mainWindow.Resize(value.Width, value.Height);
+                window1.Resize(value.Width, value.Height);
             }
         }
 
@@ -364,15 +377,17 @@ namespace UserInterface.Views
         {
             get
             {
-                Gdk.WindowState state = _mainWidget.GdkWindow.State;
-                return state == Gdk.WindowState.Maximized;
+                if (window1.GdkWindow != null)
+                    return window1.GdkWindow.State == Gdk.WindowState.Maximized;
+                else
+                    return false;
             }
             set
             {
                 if (value)
-                    _mainWidget.GdkWindow.Maximize();
+                    window1.Maximize();
                 else
-                    _mainWidget.GdkWindow.Unmaximize();
+                    window1.Unmaximize();
             }
         }
 

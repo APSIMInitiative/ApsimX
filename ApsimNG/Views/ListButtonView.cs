@@ -62,6 +62,7 @@ namespace UserInterface.Views
                 if (btnToolbar == null)
                 {
                     btnToolbar = new Toolbar();
+                    btnToolbar.ToolbarStyle = ToolbarStyle.Both;
                     buttonPanel.PackStart(btnToolbar, true, true, 0);
                 }
                 ToolButton button = new ToolButton(image, null);

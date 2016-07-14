@@ -67,6 +67,7 @@ namespace UserInterface.Presenters
             this.view.StartPage1.List.DoubleClicked += OnFileDoubleClicked1;
             this.view.StartPage2.List.DoubleClicked += OnFileDoubleClicked2;
             this.view.TabClosing += OnTabClosing;
+            this.view.Show();
 
             // Process command line.
             ProcessCommandLineArguments(commandLineArguments);
