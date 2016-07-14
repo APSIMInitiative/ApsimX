@@ -71,9 +71,6 @@
     <EmbeddedResource Include="Resources\Glade\ExplorerView.glade">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Glade\MainForm.glade">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\Glade\GridView.glade" />
     <EmbeddedResource Include="Resources\Glade\TabbedMetDataView.glade" />
