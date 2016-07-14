@@ -74,9 +74,6 @@
     <EmbeddedResource Include="Resources\Glade\MainForm.glade">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Glade\TabbedExplorerView.glade">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\Glade\GridView.glade" />
     <EmbeddedResource Include="Resources\Glade\TabbedMetDataView.glade" />
@@ -95,7 +92,9 @@
     <EmbeddedResource Include="Resources\Glade\MemoView.glade" />
     <EmbeddedResource Include="Resources\Glade\InitialWaterView.glade" />
     <EmbeddedResource Include="Resources\Glade\SeriesView.glade" />
-    <EmbeddedResource Include="Resources\Glade\SupplementView.glade" />
+    <EmbeddedResource Include="Resources\Glade\SupplementView.glade">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Glade\InputView.glade" />
     <EmbeddedResource Include="Resources\Glade\ReportView.glade" />
     <EmbeddedResource Include="Resources\Fonts\arial.ttf" />
@@ -104,6 +103,7 @@
     <EmbeddedResource Include="Resources\Fonts\ariali.ttf" />
     <EmbeddedResource Include="Resources\Fonts\cour.ttf" />
     <EmbeddedResource Include="Resources\Glade\FindAndReplace.glade" />
+    <EmbeddedResource Include="Resources\Glade\MainView.glade" />
     <None Include="Resources\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Test.xshd" />
@@ -156,7 +156,7 @@
     <Compile Include="Interfaces\ISummaryView.cs" />
     <Compile Include="Interfaces\ISupplementView.cs" />
     <Compile Include="Interfaces\ITestView.cs" />
-    <Compile Include="MainForm.cs" />
+    <Compile Include="Main.cs" />
     <Compile Include="Menus\ContextMenu.cs" />
     <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
@@ -173,6 +173,7 @@
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\IPresenter.cs" />
     <Compile Include="Presenters\LegendPresenter.cs" />
+    <Compile Include="Presenters\MainPresenter.cs" />
     <Compile Include="Presenters\ManagerPresenter.cs" />
     <Compile Include="Presenters\MapPresenter.cs" />
     <Compile Include="Presenters\MemoPresenter.cs" />
@@ -184,7 +185,6 @@
     <Compile Include="Presenters\SeriesPresenter.cs" />
     <Compile Include="Presenters\SummaryPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
-    <Compile Include="Presenters\TabbedExplorerPresenter.cs" />
     <Compile Include="Presenters\TitlePresenter.cs" />
     <Compile Include="Presenters\TreeProxyPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
@@ -222,6 +222,7 @@
     <Compile Include="Views\LegendView.cs" />
     <Compile Include="Views\ListBoxView.cs" />
     <Compile Include="Views\ListButtonView.cs" />
+    <Compile Include="Views\MainView.cs" />
     <Compile Include="Views\ManagerView.cs" />
     <Compile Include="Views\MapView.cs" />
     <Compile Include="Views\MemoView.cs" />
@@ -230,16 +231,13 @@
     <Compile Include="Views\SeriesView.cs" />
     <Compile Include="Views\SummaryView.cs" />
     <Compile Include="Views\SupplementView.cs" />
-    <Compile Include="Views\TabbedExplorerView.cs">
-      <SubType>
-      </SubType>
-    </Compile>
     <Compile Include="Views\TabbedMetDataView.cs" />
     <Compile Include="Views\TitleView.cs" />
     <Compile Include="Views\TreeProxyView.cs" />
     <Compile Include="Views\TreeProxyView.Designer.cs">
       <DependentUpon>TreeProxyView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\ViewBase.cs" />
     <Compile Include="Views\XYPairsView.cs" />
   </ItemGroup>
   <ItemGroup>
