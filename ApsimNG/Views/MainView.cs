@@ -146,6 +146,8 @@ namespace UserInterface.Views
         private HPaned hpaned1;
         [Widget]
         private VPaned vpaned1;
+        [Widget]
+        private HBox hbox1;
 
         /// <summary>Constructor</summary>
         public MainView(ViewBase owner = null) : base(owner)
@@ -165,6 +167,7 @@ namespace UserInterface.Views
             hpaned1.Child2.NoShowAll = true;
             notebook1.SetMenuLabel(vbox1, new Label(indexTabText));
             notebook2.SetMenuLabel(vbox2, new Label(indexTabText));
+            hbox1.HeightRequest = 20;
 
             TextTag tag = new TextTag("error");
             tag.Foreground = "red";
@@ -172,7 +175,6 @@ namespace UserInterface.Views
             tag = new TextTag("warning");
             tag.Foreground = "brown";
             StatusWindow.Buffer.TagTable.Add(tag);
-            StatusWindow.HeightRequest = 20;
             tag = new TextTag("normal");
             tag.Foreground = "blue";
             StatusWindow.ModifyBase(StateType.Normal, new Gdk.Color(0xff, 0xff, 0xf0));
@@ -215,7 +217,7 @@ namespace UserInterface.Views
             eventbox.Add(headerBox);
             eventbox.ShowAll();
             Notebook notebook = onLeftTabControl ? notebook1 : notebook2;
-            notebook1.CurrentPage = notebook.AppendPageMenu(control, eventbox, new Label(tabLabel.Text));
+            notebook.CurrentPage = notebook.AppendPageMenu(control, eventbox, new Label(tabLabel.Text));
         }
 
         public void on_eventbox1_button_press_event(object o, ButtonPressEventArgs e)
