@@ -95,7 +95,7 @@ namespace UserInterface.Views
         event EventHandler<AllowCloseArgs> AllowClose;
 
         /// <summary>Invoked when a tab is closing.</summary>
-        event EventHandler<TabEventArgs> TabClosing;
+        event EventHandler<TabClosingEventArgs> TabClosing;
     }
 
     /// <summary>
@@ -105,7 +105,6 @@ namespace UserInterface.Views
     public partial class MainView : Form, IMainView
     {
         private static string indexTabText = "+";
-        private List<EventHandler<TabEventArgs>> tabClosingEvents = new List<EventHandler<TabEventArgs>>();
         Point tabControlRightClickLocation;
 
         /// <summary>Get the list and button view</summary>
@@ -118,7 +117,7 @@ namespace UserInterface.Views
         public event EventHandler<AllowCloseArgs> AllowClose;
 
         /// <summary>Invoked when a tab is closing.</summary>
-        public event EventHandler<TabEventArgs> TabClosing;
+        public event EventHandler<TabClosingEventArgs> TabClosing;
 
         /// <summary>Constructor</summary>
         public MainView()
@@ -376,6 +375,7 @@ namespace UserInterface.Views
                 AllowClose.Invoke(this, args);
                 e.Cancel = !args.AllowClose;
             }
+            else
                 e.Cancel = false;
         }
 
@@ -414,7 +414,7 @@ namespace UserInterface.Views
         /// <summary>User is closing a tab.</summary>
         private void OnCloseTabClick1(object sender, EventArgs e)
         {
-            TabEventArgs args = new TabEventArgs();
+            TabClosingEventArgs args = new TabClosingEventArgs();
             args.LeftTabControl = true;
 
             if (TabClosing != null)
@@ -424,14 +424,14 @@ namespace UserInterface.Views
                 TabClosing.Invoke(this, args);
             }
 
-            if (tabControl1.SelectedTab.Text != indexTabText)
+            if (args.AllowClose && tabControl1.SelectedTab.Text != indexTabText)
                 tabControl1.TabPages.Remove(tabControl1.SelectedTab);
         }
 
         /// <summary>User is closing a tab.</summary>
         private void OnCloseTabClick2(object sender, EventArgs e)
         {
-            TabEventArgs args = new TabEventArgs();
+            TabClosingEventArgs args = new TabClosingEventArgs();
             args.LeftTabControl = false;
 
             if (TabClosing != null)
@@ -441,18 +441,19 @@ namespace UserInterface.Views
                 TabClosing.Invoke(this, args);
             }
 
-            if (tabControl2.SelectedTab.Text != indexTabText)
+            if (args.AllowClose && tabControl2.SelectedTab.Text != indexTabText)
                 tabControl2.TabPages.Remove(tabControl2.SelectedTab);
         }
 
     }
 
     /// <summary>An event argument structure with a string.</summary>
-    public class TabEventArgs : EventArgs
+    public class TabClosingEventArgs : EventArgs
     {
         public bool LeftTabControl;
         public string Name;
         public int Index;
+        public bool AllowClose = true;
     }
 
     /// <summary>An event argument structure with a field for allow to close.</summary>
