@@ -4900,17 +4900,17 @@ VShort duration variety released in New Zealand by Pioneer
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.AppearedCohortNo</Name>
-            <n>449</n>
-            <Slope>0.80294075677771981</Slope>
-            <Intercept>2.2326692527520322</Intercept>
-            <SEslope>0.029865198335295207</SEslope>
-            <SEintercept>0.29438091739628758</SEintercept>
-            <R2>0.6178932147227042</R2>
-            <RMSE>2.3584858911211222</RMSE>
-            <NSE>0.54831906277287779</NSE>
-            <ME>0.41752777944938191</ME>
-            <MAE>1.3164517049046438</MAE>
-            <RSR>0.671323294933341</RSR>
+            <n>248</n>
+            <Slope>0.92083462830812624</Slope>
+            <Intercept>0.13882570074081535</Intercept>
+            <SEslope>0.037287171690303565</SEslope>
+            <SEintercept>0.41583432959590377</SEintercept>
+            <R2>0.7125765336102996</R2>
+            <RMSE>2.5260569433022577</RMSE>
+            <NSE>0.62436722889284135</NSE>
+            <ME>-0.681537377317493</ME>
+            <MAE>0.88594643472507206</MAE>
+            <RSR>0.61165196217830065</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CoverTotal</Name>
