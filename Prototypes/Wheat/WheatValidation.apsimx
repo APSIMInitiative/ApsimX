@@ -19,8 +19,15 @@ The wheat model consists of:
 * an arbitrator to allocate resources (N, biomass) to the various plant organs  
 ]]></MemoText>
   </Memo>
+  <Memo>
+    <Name>Combined Results</Name>
+    <MemoText><![CDATA[
+#Combined Results
+Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date).
+]]></MemoText>
+  </Memo>
   <Replacements>
-    <Name>Replacements</Name> 
+    <Name>Replacements</Name>
     <Plant>
       <Name>Wheat</Name>
       <Memo>
@@ -5286,24 +5293,6 @@ VShort duration variety released in New Zealand by Pioneer
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>3000</MaximumResultsPerPage>
   </DataStore>
-  <Memo>
-    <Name>Combined Results</Name>
-    <Memo>
-      <Name>Combined Results</Name>
-      <MemoText><![CDATA[**Combined Results**
-
-Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date).
-
-The map below shows the location of the experimental sites used in the validation.
-]]></MemoText>
-    </Memo>
-    <MemoText><![CDATA[**Combined Results**
-
-Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date).
-
-The map below shows the location of the experimental sites used in the validation.
-]]></MemoText>
-  </Memo>
   <Map>
     <Name>Map</Name>
     <Center>
@@ -58828,12 +58817,5 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Folder>
-  <Memo>
-    <Name>Combined Results</Name>
-    <MemoText><![CDATA[
-#Combined Results
-Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date).
-]]></MemoText>
-  </Memo>
   <ExplorerWidth>314</ExplorerWidth>
 </Simulations>
