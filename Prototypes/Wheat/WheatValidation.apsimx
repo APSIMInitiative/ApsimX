@@ -20,7 +20,7 @@ The wheat model consists of:
 ]]></MemoText>
   </Memo>
   <Replacements>
-    <Name>Replacements</Name>
+    <Name>Replacements</Name> 
     <Plant>
       <Name>Wheat</Name>
       <Memo>
