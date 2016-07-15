@@ -12,7 +12,6 @@ namespace UserInterface.Presenters
     using System.Reflection;
     using EventArguments;
     using Interfaces;
-    using UserInterface.Views;
     using Models;
     using Models.Core;
     using APSIM.Shared.Utilities;
@@ -431,7 +430,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnFileBrowseClick(object sender, GridCellsChangedArgs e)
         {
-            string fileName = explorerPresenter.AskUserForFile("Select file");
+            string fileName = explorerPresenter.MainPresenter.AskUserForOpenFileName("Select file");
             if (fileName != null)
             {
                 e.ChangedCells[0].Value = fileName;
