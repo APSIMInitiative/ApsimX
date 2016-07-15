@@ -477,8 +477,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
       </Phenology>
       <Structure>
         <Name>Structure</Name>
+        <VariableReference>
+          <Name>ThermalTime</Name>
+          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+        </VariableReference>
         <PhaseLookup>
-          <Name>MainStemPrimordiaInitiationRate</Name>
+          <Name>MainStemVegetativePrimordiaRate</Name>
           <PhaseLookupValue>
             <Name>VegetativePrimordiaInitiationRate</Name>
             <MultiplyFunction>
@@ -492,7 +496,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Value>0.5</Value>
               </Constant>
             </MultiplyFunction>
-            <Start>Emergence</Start>
+            <Start>Germination</Start>
             <End>FlagLeaf</End>
           </PhaseLookupValue>
           <Memo>
@@ -534,45 +538,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <MemoText><![CDATA[Based on [Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7]]></MemoText>
           </Memo>
         </MultiplyFunction>
-        <HeightFunction>
-          <Name>HeightModel</Name>
-          <LinearInterpolationFunction>
-            <Name>PotentialHeight</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>3</double>
-                <double>4</double>
-                <double>5</double>
-                <double>6</double>
-                <double>7</double>
-              </X>
-              <Y>
-                <double>10</double>
-                <double>200</double>
-                <double>1000</double>
-                <double>1100</double>
-                <double>1200</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Phenology].Stage</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>WaterStress</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0.3</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
-          </LinearInterpolationFunction>
-        </HeightFunction>
+        <VariableReference>
+          <Name>MainStemFinalNodeNumber</Name>
+          <VariableName>[Phenology].FinalLeafNumber.Value</VariableName>
+        </VariableReference>
         <MultiplyFunction>
           <Name>BranchingRate</Name>
           <PhaseLookup>
@@ -683,30 +652,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </LinearInterpolationFunction>
           </MinimumFunction>
         </MultiplyFunction>
-        <VariableReference>
-          <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
-        </VariableReference>
-        <MovingAverageFunction>
-          <Name>MeanTillerGrowthRate</Name>
-          <DivideFunction>
-            <Name>TillerGrowthRate</Name>
-            <VariableReference>
-              <Name>DailyGrowth</Name>
-              <VariableName>[Arbitrator].DMSupply</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>ThermalTime</Name>
-              <VariableName>[Phenology].ThermalTime.Value</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>StemPopulation</Name>
-              <VariableName>[Structure].TotalStemPopn</VariableName>
-            </VariableReference>
-          </DivideFunction>
-          <NumberOfDays>5</NumberOfDays>
-          <InitialValue>0</InitialValue>
-        </MovingAverageFunction>
         <PhaseLookup>
           <Name>BranchMortality</Name>
           <PhaseLookupValue>
@@ -732,6 +677,74 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <End>Flowering</End>
           </PhaseLookupValue>
         </PhaseLookup>
+        <HeightFunction>
+          <Name>HeightModel</Name>
+          <LinearInterpolationFunction>
+            <Name>PotentialHeight</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>3</double>
+                <double>4</double>
+                <double>5</double>
+                <double>6</double>
+                <double>7</double>
+              </X>
+              <Y>
+                <double>10</double>
+                <double>200</double>
+                <double>1000</double>
+                <double>1100</double>
+                <double>1200</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Phenology].Stage</XProperty>
+          </LinearInterpolationFunction>
+          <LinearInterpolationFunction>
+            <Name>WaterStress</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0.3</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
+          </LinearInterpolationFunction>
+        </HeightFunction>
+        <MovingAverageFunction>
+          <Name>MeanTillerGrowthRate</Name>
+          <DivideFunction>
+            <Name>TillerGrowthRate</Name>
+            <VariableReference>
+              <Name>DailyGrowth</Name>
+              <VariableName>[Arbitrator].DMSupply</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>ThermalTime</Name>
+              <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>StemPopulation</Name>
+              <VariableName>[Structure].TotalStemPopn</VariableName>
+            </VariableReference>
+          </DivideFunction>
+          <NumberOfDays>5</NumberOfDays>
+          <InitialValue>0</InitialValue>
+        </MovingAverageFunction>
+        <MovingAverageFunction>
+          <Name>MeanPhyllochron</Name>
+          <VariableReference>
+            <Name>Phyllochron</Name>
+            <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+          </VariableReference>
+          <NumberOfDays>300</NumberOfDays>
+          <InitialValue>80</InitialValue>
+        </MovingAverageFunction>
         <OnEventFunction>
           <Name>ReproductiveNodes</Name>
           <SubtractFunction>
@@ -751,23 +764,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Constant>
           <SetEvent>TerminalSpikelet</SetEvent>
         </OnEventFunction>
-        <MainStemFinalNodeNumberFunction>
-          <Name>MainStemFinalNodeNumber</Name>
-          <VariableReference>
-            <Name>FinalLeafNumber</Name>
-            <VariableName>[Phenology].FinalLeafNumber.Value</VariableName>
-          </VariableReference>
-          <MaximumMainStemNodeNumber>30</MaximumMainStemNodeNumber>
-        </MainStemFinalNodeNumberFunction>
-        <MovingAverageFunction>
-          <Name>MeanPhyllochron</Name>
-          <VariableReference>
-            <Name>Phyllochron</Name>
-            <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
-          </VariableReference>
-          <NumberOfDays>300</NumberOfDays>
-          <InitialValue>80</InitialValue>
-        </MovingAverageFunction>
         <InitialiseStage>Emergence</InitialiseStage>
         <PrimaryBudNo>1</PrimaryBudNo>
       </Structure>
@@ -4812,7 +4808,7 @@ VShort duration variety released in New Zealand by Pioneer
         <string>[Wheat].Phenology.CurrentPhaseName</string>
         <string>[Wheat].Phenology.CurrentStageName</string>
         <string>[Wheat].Phenology.FinalLeafNumber.Value</string>
-        <string>[Wheat].Phenology.HaunStageAtTerminalSpikelet.Value</string>
+        <string>[Wheat].Phenology.HaunStageTerminalSpikelet.Value</string>
         <string>[Wheat].Phenology.Stage</string>
         <string>[Wheat].Phenology.ThermalTime.Value</string>
         <string>[Wheat].Phenology.Zadok.Stage</string>
@@ -34440,7 +34436,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Structure.HaunStageAtTerminalSpikelet.Value</YFieldName>
+            <YFieldName>Wheat.Phenology.FinalLeafNumber.Value</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>

@@ -183,6 +183,8 @@ namespace Models.PMF
     /// and population.
     /// </remarks>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
     public class Structure : Model
     {
@@ -216,9 +218,6 @@ namespace Models.PMF
         /// <summary>The thermal time</summary>
         [Link]
         IFunction ThermalTime = null;
-        /// <summary>The main stem primordia initiation rate</summary>
-        [Link]
-        IFunction MainStemPrimordiaInitiationRate = null;
         /// <summary>The main stem node appearance rate</summary>
         [Link]
         public IFunction MainStemNodeAppearanceRate = null;
@@ -244,7 +243,10 @@ namespace Models.PMF
         #endregion
 
         #region States
-
+        /// <summary>Test if Initialisation done</summary>
+        public bool Initialised = false;
+        /// <summary>Test if Initialisation done</summary>
+        public bool Emerged = false;
 
         /// <summary>Gets or sets the total stem popn.</summary>
         /// <value>The total stem popn.</value>
@@ -283,7 +285,11 @@ namespace Models.PMF
         /// <value>The proportion plant mortality.</value>
         [XmlIgnore]
         public double ProportionPlantMortality { get; set; }
-        
+
+        /// <value>The change in HaunStage each day.</value>
+        [XmlIgnore]
+        public double DeltaHaunStage { get; set; }
+
         /// <value>The delta node number.</value>
         [XmlIgnore]
         public double DeltaNodeNumber { get; set; }
@@ -291,6 +297,12 @@ namespace Models.PMF
         /// <value>number of tillers.</value>
         [XmlIgnore]
         public double BranchNumber { get; set; }
+
+        /// <summary>The difference between integer and double values for FLN</summary>
+        /// <value>number of tillers.</value>
+        [XmlIgnore]
+        public double FinalLeafFraction { get; set; }
+
 
         /// <summary>Clears this instance.</summary>
         public void Clear()
@@ -302,6 +314,7 @@ namespace Models.PMF
             ProportionBranchMortality = 0;
             ProportionPlantMortality = 0;
             DeltaNodeNumber = 0;
+            DeltaHaunStage = 0;
         }
 
         #endregion
@@ -361,61 +374,80 @@ namespace Models.PMF
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            //Fixme.  I have added the line below so If this value is set from a manager it updates.  Need to review if MaximumNodeNumber and MainStemFinalNodeNumber are both needed to fix this
-            //MaximumNodeNumber = (int)_MainStemFinalNodeNo;
+            if (Plant.IsGerminated)
+            {
+                if (MainStemNodeAppearanceRate.Value > 0)
+                    DeltaHaunStage = ThermalTime.Value / MainStemNodeAppearanceRate.Value;
 
-            if (Phenology.OnDayOf(InitialiseStage) == false) // We have no leaves set up and nodes have just started appearing - Need to initialise Leaf cohorts
-                if (MainStemPrimordiaInitiationRate.Value > 0.0)
+                if (Phenology.OnDayOf(InitialiseStage) == false) // We have no leaves set up and nodes have just started appearing - Need to initialise Leaf cohorts
                 {
-                    MainStemPrimordiaNo += ThermalTime.Value / MainStemPrimordiaInitiationRate.Value;
+                    //On the day of germination set up the first cohorts
+                    Leaf.InitialiseCohorts();
+                    Initialised = true;
                 }
 
-            double StartOfDayMainStemNodeNo = (int)MainStemNodeNo;
+                if (Plant.IsEmerged)
+                {
+                    if(Emerged==false)
+                    {
+                        //On the day the crop emerges, initialise Mainstem node number and add the first new leaf cohort
+                        MainStemNodeNo = 0.1;
+                        Emerged = true;
+                        Leaf.AddCohort();
+                    }
 
-            //_MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
-            MainStemPrimordiaNo = Math.Min(MainStemPrimordiaNo, MainStemFinalNodeNumber.Value);
+                    double StartOfDayMainStemNodeNo = (int)MainStemNodeNo;
 
-            if (MainStemNodeNo > 0)
-            {
-                DeltaNodeNumber = 0;
-                if (MainStemNodeAppearanceRate.Value > 0)
-                    DeltaNodeNumber = ThermalTime.Value / MainStemNodeAppearanceRate.Value;
-                MainStemNodeNo += DeltaNodeNumber;
-                MainStemNodeNo = Math.Min(MainStemNodeNo, MainStemFinalNodeNumber.Value);
-            }
+                    //Increment MainStemNode Number based on phyllochorn and theremal time
+                    DeltaNodeNumber = DeltaHaunStage; //DeltaNodeNumber is only positive after emergence whereas deltaHaunstage is positive from germination
+                    MainStemNodeNo += DeltaHaunStage;
+                    MainStemNodeNo = Math.Min(MainStemNodeNo, MainStemFinalNodeNumber.Value);
+                    
+                    if ((MainStemNodeNo >= Leaf.AppearedCohortNo+1)&&(Leaf.InitialisedCohortNo<=(int)MainStemFinalNodeNumber.Value))
+                    {
+                        //Each time main-stem node number increases by one add another cohort until cohort number reaches final leaf number
+                        Leaf.AddCohort();
 
-            //Fixme  This is redundant now and could be removed
-            //Set stem population at emergence
-            if (Phenology.OnDayOf(InitialiseStage))
-            {
-                TotalStemPopn = MainStemPopn;
-            }
+                        //If it is the last partial leaf, calculate the fraction
+                        if (MainStemFinalNodeNumber.Value < Leaf.InitialisedCohortNo)
+                            FinalLeafFraction = 1 - (Leaf.InitialisedCohortNo - MainStemFinalNodeNumber.Value);
+                        else
+                            FinalLeafFraction = 0;
+                    }
 
-            double InitialStemPopn = TotalStemPopn;
+                    //Set stem population at emergence
+                    if (Phenology.OnDayOf(InitialiseStage))
+                    {
+                        TotalStemPopn = MainStemPopn;
+                    }
 
-            //Increment total stem population if main-stem node number has increased by one.
-            if ((MainStemNodeNo - StartOfDayMainStemNodeNo) >= 1.0)
-            {
-                TotalStemPopn += BranchingRate.Value * MainStemPopn;
-                BranchNumber += BranchingRate.Value;
-            }
+                    double InitialStemPopn = TotalStemPopn;
 
-            //Reduce plant population incase of mortality
-            if (PlantMortality != null)
-            {
-                double DeltaPopn = Plant.Population * PlantMortality.Value;
-                Plant.Population -= DeltaPopn;
-                TotalStemPopn -= DeltaPopn * TotalStemPopn / Plant.Population;
-                ProportionPlantMortality = PlantMortality.Value;
-            }
+                    //Increment total stem population if main-stem node number has increased by one.
+                    if ((MainStemNodeNo - StartOfDayMainStemNodeNo) >= 1.0)
+                    {
+                        TotalStemPopn += BranchingRate.Value * MainStemPopn;
+                        BranchNumber += BranchingRate.Value;
+                    }
 
-            //Reduce stem number incase of mortality
-            double PropnMortality = 0;
-            PropnMortality = BranchMortality.Value;
-            {
-                double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
-                TotalStemPopn -= DeltaPopn;
-                ProportionBranchMortality = PropnMortality;
+                    //Reduce plant population incase of mortality
+                    if (PlantMortality != null)
+                    {
+                        double DeltaPopn = Plant.Population * PlantMortality.Value;
+                        Plant.Population -= DeltaPopn;
+                        TotalStemPopn -= DeltaPopn * TotalStemPopn / Plant.Population;
+                        ProportionPlantMortality = PlantMortality.Value;
+                    }
+
+                    //Reduce stem number incase of mortality
+                    double PropnMortality = 0;
+                    PropnMortality = BranchMortality.Value;
+                    {
+                        double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
+                        TotalStemPopn -= DeltaPopn;
+                        ProportionBranchMortality = PropnMortality;
+                    }
+                }
             }
         }
         /// <summary>Does the actual growth.</summary>

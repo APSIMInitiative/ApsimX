@@ -50,6 +50,22 @@ namespace Models.PMF.Organs
         /// <summary>
         /// 
         /// </summary>
+        public double InitialisedCohortNo { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public double AppearedCohortNo { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public void AddCohort() { }
+        /// <summary>
+        /// 
+        /// </summary>
+        public void InitialiseCohorts() { }
+        /// <summary>
+        /// 
+        /// </summary>
         public double PlantAppearedLeafNo { get; set; }
         /// <summary>
         /// 

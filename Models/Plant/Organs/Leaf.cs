@@ -84,6 +84,7 @@ namespace Models.PMF.Organs
     [Description("Leaf Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Plant))]
     public class Leaf : BaseOrgan, AboveGround, ICanopy, ILeaf
     {
         #region Canopy interface
@@ -883,9 +884,23 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Functions
-        /// <summary>1 based rank of the current leaf.</summary>
-        /// <value>The current rank.</value>
-        private int CurrentRank { get; set; }
+        /// <summary>Method to initialise new cohorts</summary>
+         public void AddCohort()
+        {
+            if (CohortsInitialised == false)
+                throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeInitiationRate.  Your NodeInitiationRate is triggering a new leaf cohort before leaves have been initialised.");
+
+            LeafCohort NewLeaf = InitialLeaves[0].Clone();
+            NewLeaf.CohortPopulation = 0;
+            NewLeaf.Age = 0;
+            NewLeaf.Rank = (int)Math.Truncate(Structure.MainStemNodeNo);
+            NewLeaf.Area = 0.0;
+            NewLeaf.DoInitialisation();
+            Leaves.Add(NewLeaf);
+        }
+    /// <summary>1 based rank of the current leaf.</summary>
+    /// <value>The current rank.</value>
+    private int CurrentRank { get; set; }
         /*private int CurrentRank
         {
             get
@@ -936,30 +951,32 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
+            // On the initial day set up initial cohorts and set their properties
+            // if (Phenology.OnDayOf(Structure.InitialiseStage))
+            //     InitialiseCohorts();
+
             if (Plant.IsEmerged)
             {
+
+                /*    //When primordia number is 1 more than current cohort number produce a new cohort
+                    if (Structure.MainStemPrimordiaNo >= Leaves.Count + FinalLeafFraction)
+                    {
+                        if (CohortsInitialised == false)
+                            throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeInitiationRate.  Your NodeInitiationRate is triggering a new leaf cohort before leaves have been initialised.");
+
+                        LeafCohort NewLeaf = InitialLeaves[0].Clone();
+                        NewLeaf.CohortPopulation = 0;
+                        NewLeaf.Age = 0;
+                        NewLeaf.Rank = (int)Math.Truncate(Structure.MainStemNodeNo);
+                        NewLeaf.Area = 0.0;
+                        NewLeaf.DoInitialisation();
+                        Leaves.Add(NewLeaf);
+                    }
+                    */
+
                 if (FrostFraction.Value > 0)
                     foreach (LeafCohort L in Leaves)
                         L.DoFrost(FrostFraction.Value);
-
-                // On the initial day set up initial cohorts and set their properties
-                if (Phenology.OnDayOf(Structure.InitialiseStage))
-                    InitialiseCohorts();
-
-                //When primordia number is 1 more than current cohort number produce a new cohort
-                if (Structure.MainStemPrimordiaNo >= Leaves.Count + FinalLeafFraction)
-                {
-                    if (CohortsInitialised == false)
-                        throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeInitiationRate.  Your NodeInitiationRate is triggering a new leaf cohort before leaves have been initialised.");
-
-                    LeafCohort NewLeaf = InitialLeaves[0].Clone();
-                    NewLeaf.CohortPopulation = 0;
-                    NewLeaf.Age = 0;
-                    NewLeaf.Rank = (int)Math.Truncate(Structure.MainStemNodeNo);
-                    NewLeaf.Area = 0.0;
-                    NewLeaf.DoInitialisation();
-                    Leaves.Add(NewLeaf);
-                }
 
                 //When Node number is 1 more than current appeared leaf number make a new leaf appear and start growing
                 double FinalFraction = 1;
@@ -1002,6 +1019,7 @@ namespace Models.PMF.Organs
                 _ExpandedNodeNo = ExpandedCohortNo + FractionNextleafExpanded;
 
                 FRGR = FRGRFunction.Value;
+
             }
         }
         /// <summary>Clears this instance.</summary>
@@ -1023,8 +1041,8 @@ namespace Models.PMF.Organs
                     Leaf.CohortPopulation = Structure.TotalStemPopn;
 
                     Leaf.DoInitialisation();
-                    Structure.MainStemNodeNo += 1.0;
-                    Leaf.DoAppearance(1.0, CohortParameters);
+                    //Structure.MainStemNodeNo += 1.0;
+                    //Leaf.DoAppearance(1.0, CohortParameters);
                 }
                 else //Leaves are primordia and have not yet emerged, initialise but do not set appeared values yet
                     Leaf.DoInitialisation();
@@ -1109,7 +1127,6 @@ namespace Models.PMF.Organs
                 leaf.DoThin(ProportionRemoved);
         }
         #endregion
-
 
         #region Arbitrator methods
 
