@@ -304,7 +304,7 @@
             completionModel.Clear();
             foreach (NeedContextItemsArgs.ContextItem item in allitems)
             {
-                TreeIter iter = completionModel.AppendValues(item.IsEvent ? functionPixbuf : propertyPixbuf, item.Name, item.Units, item.TypeName, item.Descr, item.ParamString);
+                completionModel.AppendValues(item.IsEvent ? functionPixbuf : propertyPixbuf, item.Name, item.Units, item.TypeName, item.Descr, item.ParamString);
             }
             if (completionModel.IterNChildren() > 0)
             {
@@ -320,7 +320,7 @@
                 Cairo.Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
                 // Need to convert to screen coordinates....
                 int x, y;
-                int retVal = textEditor.GdkWindow.GetOrigin(out x, out y);
+                textEditor.GdkWindow.GetOrigin(out x, out y);
                 CompletionForm.TransientFor = MainWidget.Toplevel as Window;
                 CompletionForm.Move(p.X + x, p.Y + y + 20);
                 CompletionForm.ShowAll();
@@ -418,7 +418,10 @@
                 insertText = (string)completionModel.GetValue(iter, 1);
             }
             if (!String.IsNullOrEmpty(insertText))
-              textEditor.InsertAtCaret(insertText);
+            {
+                textEditor.Document.ReadOnly = false;
+                textEditor.InsertAtCaret(insertText);
+            }
             HideCompletionWindow();
         }
 

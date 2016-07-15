@@ -92,7 +92,7 @@ namespace UserInterface.Views
             wb.DocumentText = @"<!DOCTYPE html>
                    <html>
                    <head>
-                   <meta http-equiv=""X-UA-Compatible"" content=""IE=edge,10,9,8,7""/>
+                   <meta http-equiv=""X-UA-Compatible"" content=""IE=edge,10""/>
                    </head>
                    </html>";
         }

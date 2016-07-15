@@ -58,13 +58,9 @@ namespace UserInterface.Views
         private string nodePathBeforeRename;
 
         [Widget]
-        private VPaned vpaned1 = null;
-        [Widget]
-        private TextView statusWindow = null;
+        private VBox vbox1;
         [Widget]
         private Toolbar toolStrip = null;
-        [Widget]
-        private ProgressBar progressbar1 = null;
         [Widget]
         private TreeView treeview1 = null;
         [Widget]
@@ -80,12 +76,10 @@ namespace UserInterface.Views
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.ExplorerView.glade", "vpaned1");
+            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.ExplorerView.glade", "vbox1");
             gxml.Autoconnect(this);
-            _mainWidget = vpaned1;
+            _mainWidget = vbox1;
 
-            progressbar1.Visible = false;
-            statusWindow.HeightRequest = 20;
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
             CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();
@@ -119,16 +113,6 @@ namespace UserInterface.Views
             treeview1.DragDataReceived += OnDragDataReceived;
             treeview1.DragEnd += OnDragEnd;
             treeview1.DragDataDelete += OnDragDataDelete;
-
-            TextTag tag = new TextTag("error");
-            tag.Foreground = "red";
-            statusWindow.Buffer.TagTable.Add(tag);
-            tag = new TextTag("warning");
-            tag.Foreground = "brown";
-            statusWindow.Buffer.TagTable.Add(tag);
-            tag = new TextTag("normal");
-            tag.Foreground = "blue";
-            statusWindow.ModifyBase(StateType.Normal, new Gdk.Color(0xff, 0xff, 0xf0));
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -387,11 +371,6 @@ namespace UserInterface.Views
             toolStrip.ShowAll();
         }
 
-        private void Button_Clicked(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>Populate the context menu from the descriptions passed in.</summary>
         /// <param name="menuDescriptions">Menu descriptions for each menu item.</param>
         public void PopulateContextMenu(List<MenuDescriptionArgs> menuDescriptions)
@@ -469,6 +448,7 @@ namespace UserInterface.Views
         /// <returns>Choice for saving the simulation</returns>
         public Int32 AskToSave()
         {
+            /*
             TabbedExplorerView owner = Owner as TabbedExplorerView;
             if (owner != null)
             {
@@ -486,6 +466,7 @@ namespace UserInterface.Views
                     default: return -1;
                 }
             }
+            */
             return -1;
         }
 
@@ -519,71 +500,6 @@ namespace UserInterface.Views
             return fileName;
         }
 
-        /// <summary>Add a status message to the explorer window</summary>
-        /// <param name="message">The message.</param>
-        /// <param name="errorLevel">The error level.</param>
-        public void ShowMessage(string message, Models.DataStore.ErrorLevel errorLevel)
-        {
-            Gtk.Application.Invoke(delegate
-            {
-                statusWindow.Visible = message != null;
-                statusWindow.Buffer.Clear();
-
-                string tagName;
-                // Output the message
-                if (errorLevel == Models.DataStore.ErrorLevel.Error)
-                {
-                    tagName = "error";
-                }
-                else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
-                {
-                    tagName = "warning";
-                }
-                else
-                {
-                    tagName = "normal";
-                }
-                message = message.TrimEnd("\n".ToCharArray());
-                message = message.Replace("\n", "\n                      ");
-                message += "\n";
-                TextIter insertIter = statusWindow.Buffer.StartIter;
-                statusWindow.Buffer.InsertWithTagsByName(ref insertIter, message, tagName);
-
-                //this.toolTip1.SetToolTip(this.StatusWindow, message);
-                progressbar1.Visible = false;
-            });
-        }
-
-        /// <summary>Add a status message to the explorer window</summary>
-        /// <param name="message">The message.</param>
-        /// <param name="errorLevel">The error level.</param>
-        public int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType)
-        {
-            Gtk.MessageDialog md = new Gtk.MessageDialog(MainWidget.Toplevel as Window, Gtk.DialogFlags.Modal,
-                msgType, buttonType, message);
-            md.Title = title;
-            int result = md.Run();
-            md.Destroy();
-            return result;
-        }
-
-        /// <summary>
-        /// Show progress bar with the specified percent.
-        /// </summary>
-        /// <param name="percent"></param>
-        public void ShowProgress(int percent)
-        {
-            // We need to use "Invoke" if the timer is running in a
-            // different thread. That means we can use either
-            // System.Timers.Timer or Windows.Forms.Timer in 
-            // RunCommand.cs
-            Gtk.Application.Invoke(delegate
-            {
-                progressbar1.Visible = true;
-                progressbar1.Fraction = percent / 100.0;
-            });
-        }
-
         /// <summary>Show the wait cursor</summary>
         /// <param name="wait">If true will show the wait cursor otherwise the normal cursor.</param>
         public void ShowWaitCursor(bool wait)
@@ -591,62 +507,8 @@ namespace UserInterface.Views
             WaitCursor = wait;
         }
 
-        /// <summary>
-        /// A helper function that asks user for a SaveAs name and returns their new choice.
-        /// </summary>
-        /// <param name="oldFilename">The old filename.</param>
-        /// <returns>
-        /// Returns the new file name or null if action cancelled by user.
-        /// </returns>
-        public string SaveAs(string oldFilename)
-        {
-            TabbedExplorerView parentView = Owner as TabbedExplorerView;
-            return parentView.AskUserForSaveFileName(oldFilename);
-        }
-
-        /// <summary>Change the name of the tab.</summary>
-        /// <param name="newTabName">New name of the tab.</param>
-        public void ChangeTabText(string newTabName)
-        {
-            TabbedExplorerView ownerview = Owner as TabbedExplorerView;
-            if (Owner != null)
-                ownerview.SetTabLabelText(this.MainWidget, newTabName);
-        }
-
-        /// <summary>Toggle the 2nd right hand side explorer view on/off</summary>
-        public void ToggleSecondExplorerViewVisible()
-        {
-            ViewBase view = Owner;
-            while (view != null)
-            {
-                if (view is UserInterface.MainForm)
-                {
-                    (view as UserInterface.MainForm).ToggleSecondExplorerViewVisible();
-                    return;
-                }
-                view = view.Owner;
-            }
-        }
-
-        /// <summary>
-        /// Close down APSIMX user interface.
-        /// </summary>
-        public void Close()
-        {
-            ViewBase view = Owner;
-            while (view != null)
-            {
-                if (view is UserInterface.MainForm)
-                {
-                    (view as UserInterface.MainForm).MainWidget.Destroy();
-                    return;
-                }
-                view = view.Owner;
-            }
-        }
-
-    /// <summary>Gets or sets the width of the tree view.</summary>
-    public Int32 TreeWidth
+        /// <summary>Gets or sets the width of the tree view.</summary>
+        public Int32 TreeWidth
         {
             get { return treeview1.Allocation.Width; } 
             set { treeview1.WidthRequest = value; }

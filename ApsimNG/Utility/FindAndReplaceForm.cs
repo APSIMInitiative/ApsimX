@@ -35,6 +35,7 @@ namespace Utility
         [Widget]
         private Label lblReplaceWith = null;
 
+        private bool selectionOnly = false;
 
         public FindAndReplaceForm()
         {
@@ -80,7 +81,6 @@ namespace Utility
             set
             {
                 _editor = value;
-                UpdateTitleBar();
             }
         }
 
@@ -99,14 +99,15 @@ namespace Utility
             string text = ReplaceMode ? "Find & replace" : "Find";
             if (_editor != null && _editor.FileName != null)
                 text += " - " + System.IO.Path.GetFileName(_editor.FileName);
-            /// TBI if (_search.HasScanRegion)
-            /// TBI     text += " (selection only)";
+            if (selectionOnly)
+              text += " (selection only)";
             window1.Title = text;
         }
 
         public void ShowFor(MonoTextEditor editor, bool replaceMode)
         {
             Editor = editor;
+            selectionOnly = false;
             window1.TransientFor = Editor.Toplevel as Window;
             Mono.TextEditor.Selection selected = Editor.MainSelection;
             if (Editor.SelectedText != null)
@@ -114,7 +115,10 @@ namespace Utility
                 if (selected.MaxLine == selected.MinLine)
                     txtLookFor.Text = Editor.SelectedText;
                 else
+                {
                     Editor.SearchEngine.SearchRequest.SearchRegion = Editor.SelectionRange;
+                    selectionOnly = true;
+                }
             }
             else
             {
@@ -127,8 +131,8 @@ namespace Utility
             ReplaceMode = replaceMode;
 
             window1.Parent = editor.Toplevel;
+            UpdateTitleBar();
             window1.Show();
-            //txtLookFor.SelectAll();
             txtLookFor.GrabFocus();
         }
 
@@ -143,7 +147,6 @@ namespace Utility
                 lblReplaceWith.Visible = txtReplaceWith.Visible = value;
                 btnHighlightAll.Visible = !value;
                 window1.Default = value ? btnReplace : btnFindNext;
-                UpdateTitleBar();
             }
         }
 
