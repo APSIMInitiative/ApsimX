@@ -413,7 +413,7 @@ namespace Models.PMF.Phen
                         if (CurrentPhaseIndex + 1 >= Phases.Count)
                             throw new Exception("Cannot transition to the next phase. No more phases exist");
 
-                        if (Stage >= 2)
+                        if (Stage >= 1)
                             Germinated = true;
 
                         if (CurrentPhase is EmergingPhase)

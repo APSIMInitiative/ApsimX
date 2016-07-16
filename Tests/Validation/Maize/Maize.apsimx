@@ -26497,7 +26497,7 @@ namespace Models
                 <string>[Maize].Leaf.DeadCohortNo</string>
                 <string>[Maize].Leaf.InitialisedCohortNo</string>
                 <string>[Maize].Structure.MainStemFinalNodeNo</string>
-                <string>[Maize].Structure.MainStemNodeNo</string>
+                <string>[Maize].Structure.LeafTipsAppeared</string>
                 <string>[Maize].Structure.MainStemPrimordiaNo</string>
                 <string>[Maize].Leaf.CohortArea[1:30]</string>
                 <string>[Maize].Leaf.CohortSLA[1:30]</string>
@@ -26697,7 +26697,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Structure.MainStemNodeNo</YFieldName>
+                <YFieldName>Maize.Structure.LeafTipsAppeared</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -28104,7 +28104,7 @@ namespace Models
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
-                <XFieldName>Maize.Structure.MainStemNodeNo</XFieldName>
+                <XFieldName>Maize.Structure.LeafTipsAppeared</XFieldName>
                 <YFieldName>Maize.Structure.MainStemNodeAppearanceRate.Value</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -35492,7 +35492,7 @@ namespace Models
                 <string>[Maize].Leaf.DeadCohortNo</string>
                 <string>[Maize].Leaf.InitialisedCohortNo</string>
                 <string>[Maize].Structure.MainStemFinalNodeNo</string>
-                <string>[Maize].Structure.MainStemNodeNo</string>
+                <string>[Maize].Structure.LeafTipsAppeared</string>
                 <string>[Maize].Structure.MainStemPrimordiaNo</string>
                 <string>[Maize].Leaf.CohortArea[1:30]</string>
                 <string>[Maize].Leaf.CohortSLA[1:30]</string>
@@ -36816,7 +36816,7 @@ namespace Models
                 <string>[Maize].Leaf.DeadCohortNo</string>
                 <string>[Maize].Leaf.InitialisedCohortNo</string>
                 <string>[Maize].Structure.MainStemFinalNodeNo</string>
-                <string>[Maize].Structure.MainStemNodeNo</string>
+                <string>[Maize].Structure.LeafTipsAppeared</string>
                 <string>[Maize].Structure.MainStemPrimordiaNo</string>
                 <string>[Maize].Leaf.CohortArea[1:30]</string>
                 <string>[Maize].Leaf.CohortSLA[1:30]</string>

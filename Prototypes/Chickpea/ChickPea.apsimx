@@ -62,7 +62,7 @@ The model consists of:
         <string>[Chickpea].Leaf.LAI</string>
         <string>[Chickpea].Leaf.Fn</string>
         <string>[Chickpea].Leaf.Fw</string>
-        <string>[Chickpea].Structure.MainStemNodeNo</string>
+        <string>[Chickpea].Structure.LeafTipsAppeared</string>
         <string>[Chickpea].Structure.PlantTotalNodeNo</string>
         <string>[Chickpea].Leaf.SenescingCohortNo</string>
         <string>[Chickpea].Structure.TotalStemPopn</string>
@@ -542,7 +542,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>0</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>Cover_response</Name>
@@ -930,7 +930,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <double>50</double>
             </Y>
           </XYPairs>
-          <XProperty>[Structure].MainStemNodeNo</XProperty>
+          <XProperty>[Structure].LeafTipsAppeared</XProperty>
         </LinearInterpolationFunction>
         <InitialiseStage>Emergence</InitialiseStage>
         <PrimaryBudNo>0</PrimaryBudNo>
@@ -1551,7 +1551,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                 <double>850</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>MaxArea</Name>
@@ -1575,7 +1575,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                 <double>1080</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <MultiplyFunction>
             <Name>GrowthDuration</Name>
@@ -4389,7 +4389,7 @@ namespace Models
                 <string>[MicroClimate].peta</string>
                 <string>[MicroClimate].petr</string>
                 <string>[Chickpea].Leaf.LAI</string>
-                <string>[Chickpea].Structure.MainStemNodeNo</string>
+                <string>[Chickpea].Structure.LeafTipsAppeared</string>
                 <string>[Chickpea].Structure.PlantTotalNodeNo</string>
                 <string>[Chickpea].Leaf.SenescingCohortNo</string>
                 <string>[Chickpea].Structure.TotalStemPopn</string>
@@ -4923,7 +4923,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Structure.MainStemNodeNo</YFieldName>
+            <YFieldName>Chickpea.Structure.LeafTipsAppeared</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>

@@ -48,7 +48,7 @@ namespace Models.PMF
     /// \retval TotalStemPopn Number of stems including main and branch stems 
     /// (m<sup>-2</sup>).
     /// \retval MainStemPrimordiaNo Number of primordia initiated in main stem.
-    /// \retval MainStemNodeNo Number of nodes appeared in main stem.
+    /// \retval LeafTipsAppeared Number of nodes appeared in main stem.
     /// \retval PlantTotalNodeNo Number of leaves appeared per plant including 
     /// all main stem and branch leaves.
     /// \retval ProportionBranchMortality Proportion of branch mortality.
@@ -188,8 +188,17 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Plant))]
     public class Structure : Model
     {
-        //private double _MainStemFinalNodeNumber;
-        private double _Height;
+        /// <summary>Occurs when plant Germinates.</summary>
+        public event EventHandler InitialiseLeafCohorts;
+        /// <summary>Occurs when ever an new vegetative leaf cohort is initiated on the stem apex.</summary>
+        public event EventHandler AddLeafCohort;
+        /// <summary>Occurs when ever an new leaf tip appears.</summary>
+        public event EventHandler<ApparingLeafParams> LeafTipAppearance;
+        /// <summary>The Leaf Appearance DAta </summary>
+        [XmlIgnore]
+        public ApparingLeafParams CohortParams { get; set; }
+        /// <summary>The arguments</summary>
+        private EventArgs args = new EventArgs();
 
         #region Links
         /// <summary>The plant</summary>
@@ -246,7 +255,11 @@ namespace Models.PMF
         /// <summary>Test if Initialisation done</summary>
         public bool Initialised = false;
         /// <summary>Test if Initialisation done</summary>
+        public bool Germinated = false;
+        /// <summary>Test if Initialisation done</summary>
         public bool Emerged = false;
+
+        private double _Height;
 
         /// <summary>Gets or sets the total stem popn.</summary>
         /// <value>The total stem popn.</value>
@@ -256,18 +269,11 @@ namespace Models.PMF
         public double TotalStemPopn { get; set; }
 
         //Plant leaf number state variables
-
-        /// <summary>Gets or sets the main stem primordia no.</summary>
-        /// <value>The main stem primordia no.</value>
-        [XmlIgnore]
-        [Description("Number of mainstem primordia initiated")]
-        public double MainStemPrimordiaNo { get; set; }
-
         /// <summary>Gets or sets the main stem node no.</summary>
         /// <value>The main stem node no.</value>
         [XmlIgnore]
-        [Description("Number of mainstem nodes appeared")]
-        public double MainStemNodeNo { get; set; }
+        [Description("Number of mainstem nodes which have their tips appeared")]
+        public double LeafTipsAppeared { get; set; }
 
         /// <summary>Gets or sets the plant total node no.</summary>
         /// <value>The plant total node no.</value>
@@ -281,6 +287,7 @@ namespace Models.PMF
         /// <value>The proportion branch mortality.</value>
         [XmlIgnore]
         public double ProportionBranchMortality { get; set; }
+
         /// <summary>Gets or sets the proportion plant mortality.</summary>
         /// <value>The proportion plant mortality.</value>
         [XmlIgnore]
@@ -293,23 +300,29 @@ namespace Models.PMF
         /// <value>The delta node number.</value>
         [XmlIgnore]
         public double DeltaNodeNumber { get; set; }
+
         /// <summary>The number of branches, used by zadoc class for calcualting zadoc score in the 20's</summary>
         /// <value>number of tillers.</value>
         [XmlIgnore]
         public double BranchNumber { get; set; }
 
-        /// <summary>The difference between integer and double values for FLN</summary>
-        /// <value>number of tillers.</value>
+        /// <summary>The relative size of the current cohort.  Is always 1.0 apart for the final cohort where it can be less than 1.0 if final leaf number is not an interger value</summary>
         [XmlIgnore]
-        public double FinalLeafFraction { get; set; }
+        public double LeafFraction { get; set; }
 
+        /// <summary>
+        /// Gets a value indicating whether [final leaf appeared].
+        /// </summary>
+        /// <value><c>true</c> if [final leaf appeared]; otherwise, <c>false</c>.</value>
+        [XmlIgnore]
+        [Description("Returns true if the final leaf has appeared")]
+        public bool FinalLeafInitiated { get; set; }
 
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
             TotalStemPopn = 0;
-            MainStemPrimordiaNo = 0;
-            MainStemNodeNo = 0;
+            LeafTipsAppeared = 0;
             PlantTotalNodeNo = 0;
             ProportionBranchMortality = 0;
             ProportionPlantMortality = 0;
@@ -329,11 +342,13 @@ namespace Models.PMF
 
         /// <summary>Gets the remaining node no.</summary>
         /// <value>The remaining node no.</value>
+        [XmlIgnore]
         [Description("Number of leaves yet to appear")]
-        public double RemainingNodeNo { get { return MainStemFinalNodeNumber.Value - MainStemNodeNo; } }
+        public double RemainingNodeNo { get { return MainStemFinalNodeNumber.Value - LeafTipsAppeared; } }
 
         /// <summary>Gets the height.</summary>
         /// <value>The height.</value>
+        [XmlIgnore]
         [Units("mm")]
         public double Height { get { return _Height; } } 
 
@@ -344,24 +359,16 @@ namespace Models.PMF
         [Description("Number of appeared leaves per primary bud unit including all main stem and branch leaves")]
         public double PrimaryBudTotalNodeNo { get { return PlantTotalNodeNo / PrimaryBudNo; } }
 
-        // <summary>Gets the main stem final node no.</summary>
-        // <value>The main stem final node no.</value>
-        //[XmlIgnore]
-        //[Description("Number of leaves that will appear on the mainstem before it terminates")]
-        //public double MainStemFinalNodeNo { get; set; } 
-
         /// <summary>Gets the relative node apperance.</summary>
         /// <value>The relative node apperance.</value>
         [Units("0-1")]
+        [XmlIgnore]
         [Description("Relative progress toward final leaf")]
         public double RelativeNodeApperance
         {
             get
             {
-                if (Leaf.CohortsInitialised == false) //FIXME introduced to removed colateral damage during testing.  Need to remove and fix max leaf area parameterisation in potato.xml
-                    return 0;
-                else
-                    return MainStemNodeNo / MainStemFinalNodeNumber.Value;
+                return LeafTipsAppeared / MainStemFinalNodeNumber.Value;
             }
         }
         
@@ -379,10 +386,11 @@ namespace Models.PMF
                 if (MainStemNodeAppearanceRate.Value > 0)
                     DeltaHaunStage = ThermalTime.Value / MainStemNodeAppearanceRate.Value;
 
-                if (Phenology.OnDayOf(InitialiseStage) == false) // We have no leaves set up and nodes have just started appearing - Need to initialise Leaf cohorts
+                if (Germinated==false) // We have no leaves set up and nodes have just started appearing - Need to initialise Leaf cohorts
                 {
+                    Germinated = true;
                     //On the day of germination set up the first cohorts
-                    Leaf.InitialiseCohorts();
+                    InitialiseLeafCohorts.Invoke(this, args);
                     Initialised = true;
                 }
 
@@ -390,44 +398,51 @@ namespace Models.PMF
                 {
                     if(Emerged==false)
                     {
-                        //On the day the crop emerges, initialise Mainstem node number and add the first new leaf cohort
-                        MainStemNodeNo = 0.1;
+                        //On the day the crop emerges, initialise Mainstem node number and add the first new leaf cohorts and make the first leaf cohorts appear
                         Emerged = true;
-                        Leaf.AddCohort();
+                        int i = 1;
+                        for (i = 1; i <= (Leaf.TipsAtEmergence); i++)
+                        {
+                            LeafTipsAppeared += 1;
+                            AddLeafCohort.Invoke(this, args);
+                            DoLeafTipAppearance();
+                        }
                     }
 
-                    double StartOfDayMainStemNodeNo = (int)MainStemNodeNo;
+                    if (Leaf.InitialisedCohortNo >= MainStemFinalNodeNumber.Value)
+                    {
+                        FinalLeafInitiated = true;
+                        LeafFraction = Leaf.InitialisedCohortNo - MainStemFinalNodeNumber.Value;
+                    }
+                    else
+                    {
+                        FinalLeafInitiated = false;
+                        LeafFraction = 1.0;
+                    }
 
                     //Increment MainStemNode Number based on phyllochorn and theremal time
                     DeltaNodeNumber = DeltaHaunStage; //DeltaNodeNumber is only positive after emergence whereas deltaHaunstage is positive from germination
-                    MainStemNodeNo += DeltaHaunStage;
-                    MainStemNodeNo = Math.Min(MainStemNodeNo, MainStemFinalNodeNumber.Value);
-                    
-                    if ((MainStemNodeNo >= Leaf.AppearedCohortNo+1)&&(Leaf.InitialisedCohortNo<=(int)MainStemFinalNodeNumber.Value))
-                    {
-                        //Each time main-stem node number increases by one add another cohort until cohort number reaches final leaf number
-                        Leaf.AddCohort();
+                    LeafTipsAppeared += DeltaHaunStage;
+                    LeafTipsAppeared = Math.Min(LeafTipsAppeared, MainStemFinalNodeNumber.Value);
 
-                        //If it is the last partial leaf, calculate the fraction
-                        if (MainStemFinalNodeNumber.Value < Leaf.InitialisedCohortNo)
-                            FinalLeafFraction = 1 - (Leaf.InitialisedCohortNo - MainStemFinalNodeNumber.Value);
-                        else
-                            FinalLeafFraction = 0;
+                    //Each time main-stem node number increases by one initiate another cohort until final leaf number is reached
+                    if ((LeafTipsAppeared >= Leaf.AppearedCohortNo + 1)&&(FinalLeafInitiated== false))
+                    {
+                        AddLeafCohort.Invoke(this, args);
+                    }
+
+                    //Each time main-stem node number increases by one appear another cohort until all cohorts have appeared
+                    if ((LeafTipsAppeared >= Leaf.AppearedCohortNo+1)&&(Leaf.AppearedCohortNo < Leaf.InitialisedCohortNo))
+                    {
+                        DoLeafTipAppearance();
+                        TotalStemPopn += BranchingRate.Value * MainStemPopn;
+                        BranchNumber += BranchingRate.Value;
                     }
 
                     //Set stem population at emergence
                     if (Phenology.OnDayOf(InitialiseStage))
                     {
                         TotalStemPopn = MainStemPopn;
-                    }
-
-                    double InitialStemPopn = TotalStemPopn;
-
-                    //Increment total stem population if main-stem node number has increased by one.
-                    if ((MainStemNodeNo - StartOfDayMainStemNodeNo) >= 1.0)
-                    {
-                        TotalStemPopn += BranchingRate.Value * MainStemPopn;
-                        BranchNumber += BranchingRate.Value;
                     }
 
                     //Reduce plant population incase of mortality
@@ -450,6 +465,7 @@ namespace Models.PMF
                 }
             }
         }
+
         /// <summary>Does the actual growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -465,6 +481,16 @@ namespace Models.PMF
         #endregion
 
         #region Component Process Functions
+        /// <summary>Method that calculates parameters for leaf cohort to appear and then calls event so leaf calss can make cohort appear</summary>
+        public void DoLeafTipAppearance()
+        {
+            CohortParams = new ApparingLeafParams() { };
+            CohortParams.AppearingNode = (int)(LeafTipsAppeared + (1 - LeafFraction));
+            CohortParams.TotalStemPopn = TotalStemPopn;
+            CohortParams.CohortAge = (LeafTipsAppeared - CohortParams.AppearingNode) * MainStemNodeAppearanceRate.Value * LeafFraction;
+            CohortParams.FinalFraction = LeafFraction;
+            LeafTipAppearance.Invoke(this, CohortParams);
+        }
         /// <summary>Updates the height.</summary>
         public void UpdateHeight()
         {
@@ -521,6 +547,18 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Called when crop is being cut.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Cutting")]
+        private void OnCutting(object sender, EventArgs e)
+        {
+            LeafTipsAppeared = 0;
+            Clear();
+            ResetStemPopn();
+            InitialiseLeafCohorts.Invoke(this, args);
+        }
+        
         /// <summary>Called when crop recieves a remove biomass event from manager</summary>
         /// /// <param name="ProportionRemoved">The cultivar.</param>
         public void doThin(double ProportionRemoved)

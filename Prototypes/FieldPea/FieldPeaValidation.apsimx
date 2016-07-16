@@ -187,7 +187,7 @@
             <Name>PostEventValue</Name>
             <VariableReference>
               <Name>PostEventValue</Name>
-              <VariableName>[Structure].MainStemNodeNo</VariableName>
+              <VariableName>[Structure].LeafTipsAppeared</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>PostEventValue1</Name>
@@ -261,7 +261,7 @@
                 <double>0</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>Cover_response</Name>
@@ -972,7 +972,7 @@
               <Name>FloweringNodes</Name>
               <VariableReference>
                 <Name>TotalNodes</Name>
-                <VariableName>[Structure].MainStemNodeNo</VariableName>
+                <VariableName>[Structure].LeafTipsAppeared</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>VegetativeNodes</Name>
@@ -2569,7 +2569,7 @@ namespace Models
             <string>[FieldPea].Phenology.Stage</string>
             <string>[FieldPea].Pod.Wt</string>
             <string>[FieldPea].Pod.N</string>
-            <string>[FieldPea].Structure.MainStemNodeNo</string>
+            <string>[FieldPea].Structure.LeafTipsAppeared</string>
             <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
             <string>[FieldPea].Leaf.CohortArea[1]</string>
             <string>[FieldPea].Leaf.CohortArea[2]</string>
@@ -4264,7 +4264,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Structure.MainStemNodeNo</YFieldName>
+          <YFieldName>FieldPea.Structure.LeafTipsAppeared</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6105,9 +6105,9 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[FieldPea].Structure.MainStemNodeNo </string>
+            <string>[FieldPea].Structure.LeafTipsAppeared </string>
             <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-            <string>[FieldPea].Structure.MainStemNodeNo as FNN</string>
+            <string>[FieldPea].Structure.LeafTipsAppeared as FNN</string>
             <string>[FieldPea].Leaf.DeadCohortNo</string>
             <string>[FieldPea].Phenology.Stage</string>
             <string>[FieldPea].Phenology.NFF.Value as NFF</string>
@@ -7718,7 +7718,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Structure.MainStemNodeNo</YFieldName>
+          <YFieldName>FieldPea.Structure.LeafTipsAppeared</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -8117,7 +8117,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Structure.MainStemNodeNo</YFieldName>
+          <YFieldName>FieldPea.Structure.LeafTipsAppeared</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -8139,7 +8139,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Structure.MainStemNodeNo</YFieldName>
+          <YFieldName>Structure.LeafTipsAppeared</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -8965,7 +8965,7 @@ namespace Models
             <string>[FieldPea].Phenology.Stage</string>
             <string>[FieldPea].Pod.Wt</string>
             <string>[FieldPea].Pod.N</string>
-            <string>[FieldPea].Structure.MainStemNodeNo</string>
+            <string>[FieldPea].Structure.LeafTipsAppeared</string>
             <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
             <string>[FieldPea].Leaf.CohortArea[1]</string>
             <string>[FieldPea].Leaf.CohortArea[2]</string>
@@ -10599,7 +10599,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Structure.MainStemNodeNo</YFieldName>
+          <YFieldName>FieldPea.Structure.LeafTipsAppeared</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -12369,7 +12369,7 @@ namespace Models
             <string>[FieldPea].Shell.MaximumNConc.Value</string>
             <string>[FieldPea].Shell.MinimumNConc.Value</string>
             <string>[FieldPea].Structure.Height.Value</string>
-            <string>[FieldPea].Structure.MainStemNodeNo</string>
+            <string>[FieldPea].Structure.LeafTipsAppeared</string>
             <string>[FieldPea].Structure.PlantTotalNodeNo</string>
             <string>[FieldPea].Structure.PrimaryBudTotalNodeNo</string>
             <string>[FieldPea].Structure.TotalStemPopn</string>
@@ -15040,7 +15040,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Structure.MainStemNodeNo</YFieldName>
+              <YFieldName>FieldPea.Structure.LeafTipsAppeared</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>

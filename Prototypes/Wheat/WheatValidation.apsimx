@@ -4,7 +4,7 @@
   <Memo>
     <Name>TitlePage</Name>
     <MemoText><![CDATA[# The APSIM Wheat Model
-
+ 
 _Brown, H.E., Huth, N.I. and Holzworth, D.P._]]></MemoText>
   </Memo>
   <Memo>
@@ -481,29 +481,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>ThermalTime</Name>
           <VariableName>[Phenology].ThermalTime.Value</VariableName>
         </VariableReference>
-        <PhaseLookup>
-          <Name>MainStemVegetativePrimordiaRate</Name>
-          <PhaseLookupValue>
-            <Name>VegetativePrimordiaInitiationRate</Name>
-            <MultiplyFunction>
-              <Name>MultiplyFunction</Name>
-              <VariableReference>
-                <Name>Phyllochron</Name>
-                <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
-              </VariableReference>
-              <Constant>
-                <Name>Constant</Name>
-                <Value>0.5</Value>
-              </Constant>
-            </MultiplyFunction>
-            <Start>Germination</Start>
-            <End>FlagLeaf</End>
-          </PhaseLookupValue>
-          <Memo>
-            <Name>Rational</Name>
-            <MemoText><![CDATA[[Brown_Anthesis_2013] showed final leaf number (FLN) could be estimated as 2.86 + HSTS * 1.1 where HS<sup>TS</sup> is the the Haun stage at terminal spikelet.  To caputre this in the wheat model we have set the initial number of primordia (determined by the number of initialleaf objects on the leaf class) to 3 and have set this function to produce primordia 10% faster than mainstem leaves.  Primordia are initiated until the therminal spikelet stage and then the number remains fixed, giving final leaf number.]]></MemoText>
-          </Memo>
-        </PhaseLookup>
         <MultiplyFunction>
           <Name>MainStemNodeAppearanceRate</Name>
           <LinearInterpolationFunction>
@@ -527,7 +504,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>1.3</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>BasePhyllochron</Name>
@@ -755,7 +732,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </VariableReference>
             <VariableReference>
               <Name>AppearedLeaves</Name>
-              <VariableName>[Structure].MainStemNodeNo</VariableName>
+              <VariableName>[Structure].LeafTipsAppeared</VariableName>
             </VariableReference>
           </SubtractFunction>
           <Constant>
@@ -764,7 +741,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Constant>
           <SetEvent>TerminalSpikelet</SetEvent>
         </OnEventFunction>
-        <InitialiseStage>Emergence</InitialiseStage>
+        <Initialised>false</Initialised>
+        <Germinated>false</Germinated>
+        <Emerged>false</Emerged>
+        <InitialiseStage>Germination</InitialiseStage>
         <PrimaryBudNo>1</PrimaryBudNo>
       </Structure>
       <ReproductiveOrgan>
@@ -1256,7 +1236,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
           <Rank>2</Rank>
-          <Area>0</Area>
+          <Area>50</Area>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[3]</Name>
@@ -1792,6 +1772,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <PotentialEP>0</PotentialEP>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
+        <TipsAtEmergence>0</TipsAtEmergence>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -2803,43 +2784,12 @@ Though tillering is common in some maize varieties under certain agronomic condi
                   <double>42</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Structure].MainStemNodeNo</XProperty>
+              <XProperty>[Structure].LeafTipsAppeared</XProperty>
             </LinearInterpolationFunction>
             <Start>Emergence</Start>
             <End>FlagLeaf</End>
           </PhaseLookupValue>
         </PhaseLookup>
-        <MainStemFinalNodeNumberFunction>
-          <Name>MainStemFinalNodeNumber</Name>
-          <OnEventFunction>
-            <Name>FinalLeafNumber</Name>
-            <AddFunction>
-              <Name>PreEventValue</Name>
-              <Constant>
-                <Name>PrimordiaAtEmergence</Name>
-                <Value>6</Value>
-              </Constant>
-              <DivideFunction>
-                <Name>PrimordiaDuringJuvenilePhase</Name>
-                <VariableReference>
-                  <Name>JuvenilePhaseDuration</Name>
-                  <VariableName>[Phenology].Juvenile.Target.Value</VariableName>
-                </VariableReference>
-                <Constant>
-                  <Name>ApproximatePlastochron</Name>
-                  <Value>15</Value>
-                </Constant>
-              </DivideFunction>
-            </AddFunction>
-            <VariableReference>
-              <Name>PostEventValue</Name>
-              <VariableName>[Structure].MainStemPrimordiaNo</VariableName>
-            </VariableReference>
-            <SetEvent>FloralInitiation</SetEvent>
-            <ReSetEvent />
-          </OnEventFunction>
-          <MaximumMainStemNodeNumber>30</MaximumMainStemNodeNumber>
-        </MainStemFinalNodeNumberFunction>
         <HeightFunction>
           <Name>HeightModel</Name>
           <LinearInterpolationFunction>
@@ -2889,6 +2839,9 @@ Though tillering is common in some maize varieties under certain agronomic condi
           <Name>DroughtInducedBranchMortality</Name>
           <Value>0</Value>
         </Constant>
+        <Initialised>false</Initialised>
+        <Germinated>false</Germinated>
+        <Emerged>false</Emerged>
         <InitialiseStage>Emergence</InitialiseStage>
         <PrimaryBudNo>1</PrimaryBudNo>
       </Structure>
@@ -3533,7 +3486,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>0.03</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>CriticalNConc</Name>
@@ -3587,7 +3540,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>25000</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>SpecificLeafAreaMin</Name>
@@ -3602,7 +3555,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>8000</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>StructuralFraction</Name>
@@ -3810,6 +3763,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <PotentialEP>0</PotentialEP>
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
+        <TipsAtEmergence>0</TipsAtEmergence>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -4020,7 +3974,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
               <double>0.005</double>
             </Y>
           </XYPairs>
-          <XProperty>[Structure].MainStemNodeNo</XProperty>
+          <XProperty>[Structure].LeafTipsAppeared</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -4824,7 +4778,7 @@ VShort duration variety released in New Zealand by Pioneer
         <string>[Wheat].Stem.NConc</string>
         <string>[Wheat].Stem.Wt</string>
         <string>[Wheat].Structure.Height</string>
-        <string>[Wheat].Structure.MainStemNodeNo</string>
+        <string>[Wheat].Structure.LeafTipsAppeared</string>
         <string>[Wheat].Structure.MainStemPopn</string>
         <string>[Wheat].Structure.TotalStemPopn</string>
         <string>[Wheat].Total.N</string>
@@ -7811,7 +7765,7 @@ namespace Models
               <string>[Wheat].Total.Wt</string>
               <string>Wheat.Structure.TotalStemPopn</string>
               <string>Wheat.Structure.PercentWSC.Value</string>
-              <string>Wheat.Structure.MainStemNodeNo</string>
+              <string>Wheat.Structure.LeafTipsAppeared</string>
               <string>Wheat.Phenology.FloweringDAS.Value</string>
               <string>Wheat.Phenology.MaturityDAS.Value</string>
             </VariableNames>
@@ -26543,7 +26497,7 @@ namespace Models
               <string>[Wheat].Stem.Live.StructuralWt</string>
               <string>[Wheat].Structure.MainStemFinalNodeNo</string>
               <string>[Wheat].Structure.MainStemNodeAppearanceRate.Value</string>
-              <string>[Wheat].Structure.MainStemNodeNo</string>
+              <string>[Wheat].Structure.LeafTipsAppeared</string>
               <string>[Wheat].Structure.MainStemPrimordiaNo</string>
               <string>[Wheat].Structure.MainStemPrimordiaNo</string>
               <string>[Wheat].Structure.ReproductiveNodes.Value</string>
@@ -31238,7 +31192,7 @@ namespace Models
               <string>[Wheat].Stem.Live.StructuralWt</string>
               <string>[Wheat].Structure.MainStemFinalNodeNo</string>
               <string>[Wheat].Structure.MainStemNodeAppearanceRate.Value</string>
-              <string>[Wheat].Structure.MainStemNodeNo</string>
+              <string>[Wheat].Structure.LeafTipsAppeared</string>
               <string>[Wheat].Structure.MainStemPrimordiaNo</string>
               <string>[Wheat].Structure.MainStemPrimordiaNo</string>
               <string>[Wheat].Structure.ReproductiveNodes.Value</string>
@@ -31821,7 +31775,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Structure.MainStemNodeNo</YFieldName>
+              <YFieldName>Wheat.Structure.LeafTipsAppeared</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>

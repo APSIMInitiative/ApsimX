@@ -436,7 +436,7 @@ A function is used to provide flowering date as days after sowing(DAS).
                   <double>150</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Structure].MainStemNodeNo</XProperty>
+              <XProperty>[Structure].LeafTipsAppeared</XProperty>
             </LinearInterpolationFunction>
             <Start>Emergence</Start>
             <End>FlagLeaf</End>

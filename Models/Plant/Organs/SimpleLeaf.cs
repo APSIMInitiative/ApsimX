@@ -50,19 +50,15 @@ namespace Models.PMF.Organs
         /// <summary>
         /// 
         /// </summary>
+        public int TipsAtEmergence { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public double InitialisedCohortNo { get; set; }
         /// <summary>
         /// 
         /// </summary>
         public double AppearedCohortNo { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public void AddCohort() { }
-        /// <summary>
-        /// 
-        /// </summary>
-        public void InitialiseCohorts() { }
         /// <summary>
         /// 
         /// </summary>
@@ -436,7 +432,7 @@ namespace Models.PMF.Organs
                 if (Phenology.OnDayOf("Emergence"))
                 {
                     if (Structure != null)
-                        Structure.MainStemNodeNo = 1.0;
+                        Structure.LeafTipsAppeared = 1.0;
                 }
 
             EP = 0;

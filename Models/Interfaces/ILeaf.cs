@@ -26,20 +26,16 @@ namespace Models.Interfaces
         /// 
         /// </summary>
         double AppearedCohortNo { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        int TipsAtEmergence { get; }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="ProportionRemoved"></param>
         void DoThin(double ProportionRemoved);
-        /// <summary>
-        /// 
-        /// </summary>
-        void InitialiseCohorts();
-        /// <summary>
-        /// 
-        /// </summary>
-        void AddCohort();
-
     }
 }
 

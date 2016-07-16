@@ -286,7 +286,7 @@ The model consists of:
                 <double>1.3</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>BasePhyllochron</Name>
@@ -479,7 +479,7 @@ The model consists of:
             </VariableReference>
             <VariableReference>
               <Name>AppearedLeaves</Name>
-              <VariableName>[Structure].MainStemNodeNo</VariableName>
+              <VariableName>[Structure].LeafTipsAppeared</VariableName>
             </VariableReference>
           </SubtractFunction>
           <Constant>
@@ -2528,7 +2528,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
                   <double>42</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Structure].MainStemNodeNo</XProperty>
+              <XProperty>[Structure].LeafTipsAppeared</XProperty>
             </LinearInterpolationFunction>
             <Start>Emergence</Start>
             <End>FlagLeaf</End>
@@ -3258,7 +3258,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>0.03</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>CriticalNConc</Name>
@@ -3312,7 +3312,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>25000</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>SpecificLeafAreaMin</Name>
@@ -3327,7 +3327,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>8000</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>StructuralFraction</Name>
@@ -3745,7 +3745,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
               <double>0.005</double>
             </Y>
           </XYPairs>
-          <XProperty>[Structure].MainStemNodeNo</XProperty>
+          <XProperty>[Structure].LeafTipsAppeared</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -5063,7 +5063,7 @@ VShort duration variety released in New Zealand by Pioneer
             <string>Wheat.Stem.Live.Wt</string>
             <string>Wheat.Structure.TotalStemPopn</string>
             <string>Wheat.Structure.MainStemPrimordiaNo</string>
-            <string>Wheat.Structure.MainStemNodeNo</string>
+            <string>Wheat.Structure.LeafTipsAppeared</string>
             <string>Wheat.Structure.PlantTotalNodeNo</string>
             <string>Wheat.Grain.Number</string>
             <string>Wheat.Grain.Wt</string>
@@ -5548,7 +5548,7 @@ namespace Models
             <string>Wheat.Stem.Live.Wt</string>
             <string>Wheat.Structure.TotalStemPopn</string>
             <string>Wheat.Structure.MainStemPrimordiaNo</string>
-            <string>Wheat.Structure.MainStemNodeNo</string>
+            <string>Wheat.Structure.LeafTipsAppeared</string>
             <string>Wheat.Structure.PlantTotalNodeNo</string>
             <string>Wheat.Grain.Number</string>
             <string>Wheat.Grain.Wt</string>
@@ -6069,7 +6069,7 @@ namespace Models
             <string>Wheat.Stem.Live.Wt</string>
             <string>Wheat.Structure.TotalStemPopn</string>
             <string>Wheat.Structure.MainStemPrimordiaNo</string>
-            <string>Wheat.Structure.MainStemNodeNo</string>
+            <string>Wheat.Structure.LeafTipsAppeared</string>
             <string>Wheat.Structure.PlantTotalNodeNo</string>
             <string>Wheat.Grain.Number</string>
             <string>Wheat.Grain.Wt</string>
@@ -6553,7 +6553,7 @@ namespace Models
             <string>Wheat.Stem.Live.Wt</string>
             <string>Wheat.Structure.TotalStemPopn</string>
             <string>Wheat.Structure.MainStemPrimordiaNo</string>
-            <string>Wheat.Structure.MainStemNodeNo</string>
+            <string>Wheat.Structure.LeafTipsAppeared</string>
             <string>Wheat.Structure.PlantTotalNodeNo</string>
             <string>Wheat.Grain.Number</string>
             <string>Wheat.Grain.Wt</string>
@@ -7037,7 +7037,7 @@ namespace Models
             <string>Wheat.Stem.Live.Wt</string>
             <string>Wheat.Structure.TotalStemPopn</string>
             <string>Wheat.Structure.MainStemPrimordiaNo</string>
-            <string>Wheat.Structure.MainStemNodeNo</string>
+            <string>Wheat.Structure.LeafTipsAppeared</string>
             <string>Wheat.Structure.PlantTotalNodeNo</string>
             <string>Wheat.Grain.Number</string>
             <string>Wheat.Grain.Wt</string>
@@ -7559,7 +7559,7 @@ namespace Models
             <string>[Wheat].Total.Wt</string>
             <string>[Wheat].Phenology.Zadok.Stage</string>
             <string>[Wheat].Leaf.AppearedCohortNo</string>
-            <string>[Wheat].Structure.MainStemNodeNo</string>
+            <string>[Wheat].Structure.LeafTipsAppeared</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -7679,7 +7679,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Wheat.Structure.MainStemNodeNo</YFieldName>
+        <YFieldName>Wheat.Structure.LeafTipsAppeared</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>

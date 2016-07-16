@@ -299,7 +299,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
               <double>42</double>
             </Y>
           </XYPairs>
-          <XProperty>[Structure].MainStemNodeNo</XProperty>
+          <XProperty>[Structure].LeafTipsAppeared</XProperty>
         </LinearInterpolationFunction>
         <Start>Emergence</Start>
         <End>FlagLeaf</End>
@@ -1138,7 +1138,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>0.03</double>
           </Y>
         </XYPairs>
-        <XProperty>[Structure].MainStemNodeNo</XProperty>
+        <XProperty>[Structure].LeafTipsAppeared</XProperty>
       </LinearInterpolationFunction>
       <Constant>
         <Name>CriticalNConc</Name>
@@ -1192,7 +1192,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>25000</double>
           </Y>
         </XYPairs>
-        <XProperty>[Structure].MainStemNodeNo</XProperty>
+        <XProperty>[Structure].LeafTipsAppeared</XProperty>
       </LinearInterpolationFunction>
       <LinearInterpolationFunction>
         <Name>SpecificLeafAreaMin</Name>
@@ -1207,7 +1207,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>8000</double>
           </Y>
         </XYPairs>
-        <XProperty>[Structure].MainStemNodeNo</XProperty>
+        <XProperty>[Structure].LeafTipsAppeared</XProperty>
       </LinearInterpolationFunction>
       <Constant>
         <Name>StructuralFraction</Name>
@@ -1696,7 +1696,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <double>0.005</double>
         </Y>
       </XYPairs>
-      <XProperty>[Structure].MainStemNodeNo</XProperty>
+      <XProperty>[Structure].LeafTipsAppeared</XProperty>
     </LinearInterpolationFunction>
     <Constant>
       <Name>MinimumNConc</Name>

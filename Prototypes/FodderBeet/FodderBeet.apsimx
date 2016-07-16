@@ -230,7 +230,7 @@
               <double>2500</double>
             </Y>
           </XYPairs>
-          <XProperty>[Structure].MainStemNodeNo</XProperty>
+          <XProperty>[Structure].LeafTipsAppeared</XProperty>
         </LinearInterpolationFunction>
         <PhaseLookupValue>
           <Name>MainStemPrimordiaInitiationRate</Name>
@@ -273,7 +273,7 @@ Two stage phyllochron (100oCd to 50oCd) is an empirical fix to get first leaves 
 
 There seems to be a seasonal difference in leaf appearance rates across sowing dates. So we should check thermal-time model.]]></MemoText>
             </Memo>
-            <XProperty>[FodderBeet].Structure.MainStemNodeNo</XProperty>
+            <XProperty>[FodderBeet].Structure.LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <Start>PreEmerge</Start>
           <End>Maturity</End>
@@ -493,7 +493,7 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
               <MemoText><![CDATA[Pattern of max leaf area assumed from sugar beet: Milford et al. 1985
 Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoText>
             </Memo>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>GrowthDuration</Name>
@@ -525,7 +525,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
               <MemoText><![CDATA[Assumed shape as maize data (Teixeira et al 2011). 
 ]]></MemoText>
             </Memo>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <MultiplyFunction>
             <Name>LagDuration</Name>
@@ -578,7 +578,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
                   <double>80</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Structure].MainStemNodeNo</XProperty>
+              <XProperty>[Structure].LeafTipsAppeared</XProperty>
             </LinearInterpolationFunction>
           </MultiplyFunction>
           <MultiplyFunction>
@@ -995,7 +995,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
               <Name>Memo</Name>
               <MemoText><![CDATA[Allocation determined by Node number]]></MemoText>
             </Memo>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
         </PartitionFractionDemandFunction>
         <Folder>
@@ -1080,7 +1080,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
               <Name>Memo</Name>
               <MemoText><![CDATA[Allocation determined by Node number]]></MemoText>
             </Memo>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
         </PartitionFractionDemandFunction>
         <VariableReference>
@@ -1298,7 +1298,7 @@ in file: C:\ApsimX\Prototypes\FodderBeet\Observations\FRNL_N_Uptake.txt</ErrorMe
             <RSR>0.24922047933837915</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>FodderBeet.Structure.MainStemNodeNo</Name>
+            <Name>FodderBeet.Structure.LeafTipsAppeared</Name>
             <n>207</n>
             <Slope>1.0449866368423864</Slope>
             <Intercept>-2.1237553816687793</Intercept>
@@ -1799,7 +1799,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
             <string>[FodderBeet].Petiole.Live.Wt</string>
             <string>[FodderBeet].Bulb.Live.Wt</string>
             <string>[FodderBeet].Leaf.LAI</string>
-            <string>[FodderBeet].Structure.MainStemNodeNo</string>
+            <string>[FodderBeet].Structure.LeafTipsAppeared</string>
             <string>[FodderBeet].Leaf.PlantAppearedLeafNo</string>
             <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
             <string>[FodderBeet].Leaf.PlantsenescedLeafNo</string>
@@ -2266,7 +2266,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Structure.MainStemNodeNo</YFieldName>
+          <YFieldName>FodderBeet.Structure.LeafTipsAppeared</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2287,7 +2287,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Structure.MainStemNodeNo</YFieldName>
+          <YFieldName>FodderBeet.Structure.LeafTipsAppeared</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2856,8 +2856,8 @@ namespace Models
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>PredictedObserved</TableName>
-            <XFieldName>Observed.FodderBeet.Structure.MainStemNodeNo</XFieldName>
-            <YFieldName>Predicted.FodderBeet.Structure.MainStemNodeNo</YFieldName>
+            <XFieldName>Observed.FodderBeet.Structure.LeafTipsAppeared</XFieldName>
+            <YFieldName>Predicted.FodderBeet.Structure.LeafTipsAppeared</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
