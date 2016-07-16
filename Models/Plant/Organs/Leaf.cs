@@ -332,8 +332,6 @@ namespace Models.PMF.Organs
         public double StartFractionExpanded = 0;
         /// <summary>The fraction nextleaf expanded</summary>
         public double FractionNextleafExpanded = 0;
-        /// <summary>The _ expanded node no</summary>
-        public double _ExpandedNodeNo = 0;
         /// <summary>The dead nodes yesterday</summary>
         public double DeadNodesYesterday = 0;//Fixme This needs to be set somewhere
         #endregion
@@ -404,26 +402,10 @@ namespace Models.PMF.Organs
         [Description("Number of leaf cohorts that have appeared but not yet fully expanded")]
         public double ExpandingCohortNo { get { return CohortCounter("IsGrowing"); } }
 
-        //FIXME ExpandedNodeNo and Expanded Cohort need to be merged
-        /// <summary>Gets the expanded node no.</summary>
-        /// <value>The expanded node no.</value>
-        [Description("Number of leaf cohorts that are fully expanded")]
-        public double ExpandedNodeNo
-        {
-            get
-            {
-                //HamishB  I have had to change this back because it was not returning the correct values
-                //foreach (LeafCohort L in Leaves)
-                //    if (!L.IsFullyExpanded)
-                //        return ExpandedCohortNo + L.FractionExpanded;
-                return _ExpandedNodeNo;
-            }
-        }
-
         /// <summary>Gets the expanded cohort no.</summary>
         /// <value>The expanded cohort no.</value>
         [Description("Number of leaf cohorts that are fully expanded")]
-        public double ExpandedCohortNo { get { return Math.Min(CohortCounter("IsFullyExpanded"), Structure.MainStemFinalNodeNumber.Value); } }
+        public double ExpandedCohortNo { get { return CohortCounter("IsFullyExpanded"); } }
 
         /// <summary>Gets the green cohort no.</summary>
         /// <value>The green cohort no.</value>
@@ -915,8 +897,7 @@ namespace Models.PMF.Organs
                         FractionNextleafExpanded = (L.FractionExpanded - StartFractionExpanded) / (1 - StartFractionExpanded);
                     }
                 }
-                _ExpandedNodeNo = ExpandedCohortNo + FractionNextleafExpanded;
-
+               
                 FRGR = FRGRFunction.Value;
 
             }
