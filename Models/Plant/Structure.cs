@@ -386,7 +386,6 @@ namespace Models.PMF
                         NextLeafProportion = 1.0;
 
                         //On the day the crop emerges, initialise Mainstem node number and add the first new leaf cohorts and make the first leaf cohorts appear
-                        Emerged = true;
                         TotalStemPopn = MainStemPopn;
                         int i = 1;
                         for (i = 1; i <= (Leaf.TipsAtEmergence); i++)
@@ -412,8 +411,17 @@ namespace Models.PMF
                     }
 
                     //Increment MainStemNode Number based on phyllochorn and theremal time
-                    DeltaNodeNumber = DeltaHaunStage; //DeltaNodeNumber is only positive after emergence whereas deltaHaunstage is positive from germination
-                    LeafTipsAppeared += DeltaHaunStage;
+                    if (Emerged == false)
+                    {
+                        Emerged = true;
+                        DeltaNodeNumber = 0; //Don't increment node number on day of emergence
+                    }
+                    else
+                    {
+                        DeltaNodeNumber = DeltaHaunStage; //DeltaNodeNumber is only positive after emergence whereas deltaHaunstage is positive from germination
+                    }
+
+                    LeafTipsAppeared += DeltaNodeNumber;
                     LeafTipsAppeared = Math.Min(LeafTipsAppeared, MainStemFinalNodeNumber.Value);
 
                     bool TimeForAnotherLeaf = (LeafTipsAppeared >= (Leaf.AppearedCohortNo + NextLeafProportion));

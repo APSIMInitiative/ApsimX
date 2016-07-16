@@ -18,114 +18,114 @@
           <RegrStats>
             <Name>Biomass</Name>
             <n>88</n>
-            <Slope>1.0745493369152621</Slope>
-            <Intercept>-105.39442492578496</Intercept>
-            <SEslope>0.045453096642361406</SEslope>
-            <SEintercept>62.298134909696017</SEintercept>
-            <R2>0.866643771914506</R2>
-            <RMSE>251.52076592565666</RMSE>
-            <NSE>0.81627281404869079</NSE>
-            <ME>-13.054843212550603</ME>
-            <MAE>192.02910148612619</MAE>
-            <RSR>0.42619171392701238</RSR>
+            <Slope>1.0402397197362507</Slope>
+            <Intercept>-133.91501860609537</Intercept>
+            <SEslope>0.044790681109784319</SEslope>
+            <SEintercept>61.390226422415857</SEintercept>
+            <R2>0.86248270680161</R2>
+            <RMSE>258.90959919379617</RMSE>
+            <NSE>0.80531968767406936</NSE>
+            <ME>-84.07260494483458</ME>
+            <MAE>209.40254632452096</MAE>
+            <RSR>0.438711791555116</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FinalLeafNo</Name>
             <n>21</n>
-            <Slope>0.7984994640943549</Slope>
-            <Intercept>4.1786862655023178</Intercept>
-            <SEslope>0.16231227118434816</SEslope>
-            <SEintercept>3.0553040895425059</SEintercept>
-            <R2>0.56020287514603306</R2>
-            <RMSE>0.79582242575422135</RMSE>
-            <NSE>0.28724544480171543</NSE>
-            <ME>0.39047619047619025</ME>
-            <MAE>0.63809523809523794</MAE>
-            <RSR>0.82390160947385249</RSR>
+            <Slope>0.744908896034333</Slope>
+            <Intercept>6.0909508497926339</Intercept>
+            <SEslope>0.12404415561864009</SEslope>
+            <SEintercept>2.3349597241174238</SEintercept>
+            <R2>0.654936466121814</R2>
+            <RMSE>1.4125289714685836</RMSE>
+            <NSE>-1.2454448017148971</NSE>
+            <ME>1.2952380952380949</ME>
+            <MAE>1.2952380952380949</MAE>
+            <RSR>1.4623675525585531</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FloweringDAS</Name>
             <n>90</n>
-            <Slope>0.66963417371137979</Slope>
-            <Intercept>20.066856188124923</Intercept>
-            <SEslope>0.07619449051959308</SEslope>
-            <SEintercept>4.30466279638195</SEintercept>
-            <R2>0.46743316609923558</R2>
-            <RMSE>5.4751965971805774</RMSE>
-            <NSE>0.32719882297199565</NSE>
-            <ME>1.5333333333333334</ME>
-            <MAE>4.2444444444444445</MAE>
-            <RSR>0.8156749403986614</RSR>
+            <Slope>0.65013341313184</Slope>
+            <Intercept>22.738626634414885</Intercept>
+            <SEslope>0.081012639842489437</SEslope>
+            <SEintercept>4.5768676237421575</SEintercept>
+            <R2>0.42257978476862079</R2>
+            <RMSE>6.392704174812617</RMSE>
+            <NSE>0.082815889878057769</NSE>
+            <ME>3.1111111111111112</ME>
+            <MAE>5.0666666666666664</MAE>
+            <RSR>0.95236189317140973</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GPSM</Name>
             <n>84</n>
-            <Slope>0.93756066240992664</Slope>
-            <Intercept>81.63018877189279</Intercept>
-            <SEslope>0.041961500058534079</SEslope>
-            <SEintercept>100.59284444226564</SEintercept>
-            <R2>0.85891877992055721</R2>
-            <RMSE>468.14042607340326</RMSE>
-            <NSE>0.85016878721081013</NSE>
-            <ME>-47.608655663501459</ME>
-            <MAE>353.5715158887906</MAE>
-            <RSR>0.38476942169958467</RSR>
+            <Slope>0.96104965372334861</Slope>
+            <Intercept>91.3930679075163</Intercept>
+            <SEslope>0.043165112569852913</SEslope>
+            <SEintercept>103.47822284749347</SEintercept>
+            <R2>0.85805977254442622</R2>
+            <RMSE>475.1951845738231</RMSE>
+            <NSE>0.84561892354466628</NSE>
+            <ME>10.772453765172065</ME>
+            <MAE>350.36030275007096</MAE>
+            <RSR>0.39056780012890485</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainSize</Name>
             <n>78</n>
-            <Slope>0.45439592459171385</Slope>
-            <Intercept>0.18489573590466588</Intercept>
-            <SEslope>0.12372565545384413</SEslope>
-            <SEintercept>0.0355165689548877</SEintercept>
-            <R2>0.15072464156802412</R2>
-            <RMSE>0.073976492635050531</RMSE>
-            <NSE>-0.77791803264575066</NSE>
-            <ME>0.031228164698962869</ME>
-            <MAE>0.053773518438655438</MAE>
-            <RSR>1.3248110098102275</RSR>
+            <Slope>0.48131099078851225</Slope>
+            <Intercept>0.17688403315970316</Intercept>
+            <SEslope>0.11947237593999377</SEslope>
+            <SEintercept>0.034295626583768633</SEintercept>
+            <R2>0.17597245525754912</R2>
+            <RMSE>0.071523629147516546</RMSE>
+            <NSE>-0.66197063740405282</NSE>
+            <ME>0.03079700073243153</ME>
+            <MAE>0.051717764797259674</MAE>
+            <RSR>1.2808838048550297</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainWt</Name>
             <n>103</n>
-            <Slope>0.88701144066273563</Slope>
-            <Intercept>81.155940773928592</Intercept>
-            <SEslope>0.040649066153829287</SEslope>
-            <SEintercept>28.305508587160162</SEintercept>
-            <R2>0.82500665641644877</R2>
-            <RMSE>146.1298236013358</RMSE>
-            <NSE>0.81897629248788828</NSE>
-            <ME>12.713851506953418</ME>
-            <MAE>116.63534777591519</MAE>
-            <RSR>0.42339838897744186</RSR>
+            <Slope>0.89591731335372371</Slope>
+            <Intercept>88.5560217991382</Intercept>
+            <SEslope>0.040209454846146651</SEslope>
+            <SEintercept>27.999390321182453</SEintercept>
+            <R2>0.83094948172303917</R2>
+            <RMSE>145.57273908411571</RMSE>
+            <NSE>0.82035387959102646</NSE>
+            <ME>25.508607331913879</ME>
+            <MAE>114.68066994492041</MAE>
+            <RSR>0.42178428529003342</RSR>
           </RegrStats>
           <RegrStats>
             <Name>LAImax</Name>
             <n>74</n>
-            <Slope>0.981273708694993</Slope>
-            <Intercept>0.13393961385707787</Intercept>
-            <SEslope>0.048289954479601487</SEslope>
-            <SEintercept>0.14538445684202028</SEintercept>
-            <R2>0.85152213783175168</R2>
-            <RMSE>0.55801578262561491</RMSE>
-            <NSE>0.82789741406520467</NSE>
-            <ME>0.083500938695601309</ME>
-            <MAE>0.43907130118533089</MAE>
-            <RSR>0.41203989529419938</RSR>
+            <Slope>1.1007735560028424</Slope>
+            <Intercept>0.037876888530380626</Intercept>
+            <SEslope>0.05423731227274517</SEslope>
+            <SEintercept>0.1632899071933267</SEintercept>
+            <R2>0.8512112208016096</R2>
+            <RMSE>0.70516141785761</RMSE>
+            <NSE>0.725165331182837</NSE>
+            <ME>0.30930728407993119</ME>
+            <MAE>0.54060450736055321</MAE>
+            <RSR>0.520692506961758</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
             <n>90</n>
-            <Slope>0.883541179558095</Slope>
-            <Intercept>14.997510894005288</Intercept>
-            <SEslope>0.051587312878193105</SEslope>
-            <SEintercept>5.8706447681597327</SEintercept>
-            <R2>0.76923336911746421</R2>
-            <RMSE>8.2307013336923145</RMSE>
-            <NSE>0.73864387065984172</NSE>
-            <ME>1.8777777777777778</ME>
-            <MAE>6.1444444444444448</MAE>
-            <RSR>0.50838191583443437</RSR>
+            <Slope>0.87437444898880734</Slope>
+            <Intercept>17.51908290780537</Intercept>
+            <SEslope>0.048759544491978057</SEslope>
+            <SEintercept>5.5488442564467384</SEintercept>
+            <R2>0.78514055634808222</R2>
+            <RMSE>8.345990387938123</RMSE>
+            <NSE>0.73127085864630925</NSE>
+            <ME>3.3666666666666667</ME>
+            <MAE>6.677777777777778</MAE>
+            <RSR>0.51550292143237786</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -39953,26 +39953,6 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
           <Rank>2</Rank>
           <Area>0</Area>
         </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[3]</Name>
-          <Rank>3</Rank>
-          <Area>0</Area>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[4]</Name>
-          <Rank>4</Rank>
-          <Area>0</Area>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[5]</Name>
-          <Rank>5</Rank>
-          <Area>0</Area>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[6]</Name>
-          <Rank>6</Rank>
-          <Area>0</Area>
-        </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
           <Propertys>
@@ -40032,11 +40012,11 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <Name>XYPairs</Name>
                 <X>
                   <double>0</double>
-                  <double>1</double>
-                  <double>6</double>
-                  <double>11</double>
-                  <double>16</double>
-                  <double>21</double>
+                  <double>2</double>
+                  <double>7</double>
+                  <double>12</double>
+                  <double>17</double>
+                  <double>22</double>
                 </X>
                 <Y>
                   <double>32530</double>
@@ -40144,8 +40124,8 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>0.2</double>
-                <double>0.4</double>
+                <double>0.3</double>
+                <double>0.5</double>
               </X>
               <Y>
                 <double>300</double>
@@ -40161,8 +40141,8 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>0.2</double>
-                <double>0.4</double>
+                <double>0.3</double>
+                <double>0.5</double>
               </X>
               <Y>
                 <double>150</double>

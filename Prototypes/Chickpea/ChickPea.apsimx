@@ -877,10 +877,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>BranchMortality</Name>
           <Value>0</Value>
         </Constant>
-        <VariableReference>
-          <Name>MainStemPrimordiaInitiationRate</Name>
-          <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
-        </VariableReference>
         <PhaseLookup>
           <Name>MainStemNodeAppearanceRate</Name>
           <PhaseLookupValue>
@@ -932,8 +928,9 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </XYPairs>
           <XProperty>[Structure].LeafTipsAppeared</XProperty>
         </LinearInterpolationFunction>
-        <InitialiseStage>Emergence</InitialiseStage>
-        <PrimaryBudNo>0</PrimaryBudNo>
+        <Initialised>false</Initialised>
+        <Germinated>false</Germinated>
+        <Emerged>false</Emerged>
       </Structure>
       <HIReproductiveOrgan>
         <Name>Grain</Name>
@@ -2106,7 +2103,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
-        <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
         <Albedo>0.2</Albedo>
@@ -2116,6 +2112,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <PotentialEP>0</PotentialEP>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
+        <TipsAtEmergence>0</TipsAtEmergence>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
