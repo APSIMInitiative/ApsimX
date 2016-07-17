@@ -1215,12 +1215,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
           <Rank>2</Rank>
-          <Area>50</Area>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[3]</Name>
-          <Rank>3</Rank>
-          <Area>10</Area>
+          <Area>0</Area>
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>

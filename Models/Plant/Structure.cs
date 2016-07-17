@@ -368,6 +368,7 @@ namespace Models.PMF
         {
             if (Plant.IsGerminated)
             {
+                DeltaHaunStage = 0;
                 if (MainStemNodeAppearanceRate.Value > 0)
                     DeltaHaunStage = ThermalTime.Value / MainStemNodeAppearanceRate.Value;
 
@@ -384,17 +385,7 @@ namespace Models.PMF
                     if(Emerged==false)
                     {
                         NextLeafProportion = 1.0;
-
-                        //On the day the crop emerges, initialise Mainstem node number and add the first new leaf cohorts and make the first leaf cohorts appear
-                        TotalStemPopn = MainStemPopn;
-                        int i = 1;
-                        for (i = 1; i <= (Leaf.TipsAtEmergence); i++)
-                        {
-                            LeafTipsAppeared += 1;
-                            Rank += 1;
-                            AddLeafCohort.Invoke(this, args);
-                            DoLeafTipAppearance();
-                        }
+                        DoCohortEmergence();
                     }
 
                     bool AllCohortsInitialised = (Leaf.InitialisedCohortNo >= MainStemFinalNodeNumber.Value);
@@ -425,20 +416,29 @@ namespace Models.PMF
                     LeafTipsAppeared = Math.Min(LeafTipsAppeared, MainStemFinalNodeNumber.Value);
 
                     bool TimeForAnotherLeaf = (LeafTipsAppeared >= (Leaf.AppearedCohortNo + NextLeafProportion));
+                    int LeavesToAppear = (int)(LeafTipsAppeared - (Leaf.AppearedCohortNo - (1- NextLeafProportion)));
 
-                    //Each time main-stem node number increases by one initiate another cohort until final leaf number is reached
+                    //Each time main-stem node number increases by one or more initiate the additional cohorts until final leaf number is reached
                     if (TimeForAnotherLeaf && (AllCohortsInitialised == false))
                     {
-                        AddLeafCohort.Invoke(this, args);
+                        int i = 1;
+                        for (i = 1; i <= LeavesToAppear; i++)
+                        {
+                            AddLeafCohort.Invoke(this, args);
+                        }
                     }
 
                     //Each time main-stem node number increases by one appear another cohort until all cohorts have appeared
                     if (TimeForAnotherLeaf && (AllLeavesAppeared == false))
                     {
-                        DoLeafTipAppearance();
-                        Rank += 1;
-                        TotalStemPopn += BranchingRate.Value * MainStemPopn;
-                        BranchNumber += BranchingRate.Value;
+                        int i = 1;
+                        for (i = 1; i <= LeavesToAppear; i++)
+                        {
+                            Rank += 1;
+                            DoLeafTipAppearance();
+                            TotalStemPopn += BranchingRate.Value * MainStemPopn;
+                            BranchNumber += BranchingRate.Value;
+                        }
                     }
 
                     //Reduce plant population incase of mortality
@@ -475,7 +475,20 @@ namespace Models.PMF
             }
         }
         #endregion
-
+        /// <summary>
+        /// Called on the day of emergence to get the initials leaf cohorts to appear
+        /// </summary>
+        public void DoCohortEmergence()
+        {
+            int i = 1;
+            for (i = 1; i <= (Leaf.TipsAtEmergence); i++)
+            {
+                LeafTipsAppeared += 1;
+                Rank += 1;
+                AddLeafCohort.Invoke(this, args);
+                DoLeafTipAppearance();
+            }
+        }
         #region Component Process Functions
         /// <summary>Method that calculates parameters for leaf cohort to appear and then calls event so leaf calss can make cohort appear</summary>
         public void DoLeafTipAppearance()
@@ -518,6 +531,10 @@ namespace Models.PMF
         {
             if (sender == Plant)
                 Clear();
+            Germinated = false;
+            Emerged = false;
+            Rank = 0;
+            LeafTipsAppeared = 0;
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -532,14 +549,7 @@ namespace Models.PMF
                 if (Sow.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 PrimaryBudNo = Sow.BudNumber;
-                TotalStemPopn = Sow.Population * PrimaryBudNo;
-                //MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
-                //if (MainStemFinalNodeNumber is MainStemFinalNodeNumberFunction)
-                //    _MainStemFinalNodeNo = (MainStemFinalNodeNumber as MainStemFinalNodeNumberFunction).MaximumMainStemNodeNumber;
-                //else
-                //    _MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
-                //MaximumNodeNumber = (int)_MainStemFinalNodeNo;
-                //_Height = HeightModel.Value;
+                TotalStemPopn = MainStemPopn;
             }
         }
 
@@ -550,11 +560,29 @@ namespace Models.PMF
         private void OnCutting(object sender, EventArgs e)
         {
             LeafTipsAppeared = 0;
+            Rank = 0;
+            Emerged = false;
             Clear();
             ResetStemPopn();
             InitialiseLeafCohorts.Invoke(this, args);
+            NextLeafProportion = 1.0;
+            DoCohortEmergence();
+            Emerged = true;
         }
         
+        /// <summary>Called when crop is being cut.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Harvesting")]
+        private void OnHarvesting(object sender, EventArgs e)
+        {
+            LeafTipsAppeared = 0;
+            Clear();
+            ResetStemPopn();
+            Germinated = false;
+            Emerged = false;
+            Rank = 0;
+        }
         /// <summary>Called when crop recieves a remove biomass event from manager</summary>
         /// /// <param name="ProportionRemoved">The cultivar.</param>
         public void doThin(double ProportionRemoved)
