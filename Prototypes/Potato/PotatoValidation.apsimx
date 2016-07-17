@@ -1502,142 +1502,142 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <RegrStats>
             <Name>Potato.Leaf.LAI</Name>
             <n>146</n>
-            <Slope>0.71049814029834857</Slope>
-            <Intercept>0.17183215081439518</Intercept>
-            <SEslope>0.031650683301626591</SEslope>
-            <SEintercept>0.10224983693125109</SEintercept>
-            <R2>0.77774958927323634</R2>
-            <RMSE>1.0090853047880912</RMSE>
-            <NSE>0.62395831004089031</NSE>
-            <ME>-0.63300284870191892</ME>
-            <MAE>0.79714869798919363</MAE>
-            <RSR>0.61111869710040057</RSR>
+            <Slope>0.69223181328936823</Slope>
+            <Intercept>0.18595547578113592</Intercept>
+            <SEslope>0.030751533908181153</SEslope>
+            <SEintercept>0.099345069347547638</SEintercept>
+            <R2>0.77870725694494913</R2>
+            <RMSE>1.0361806874372168</RMSE>
+            <NSE>0.60349267061245071</NSE>
+            <ME>-0.66966116397952358</ME>
+            <MAE>0.814857867835535</MAE>
+            <RSR>0.62752810754707011</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Leaf.Live.Wt</Name>
             <n>234</n>
-            <Slope>0.22207554115112529</Slope>
-            <Intercept>30.792272308203547</Intercept>
-            <SEslope>0.03004449292042102</SEslope>
-            <SEintercept>3.9771178808528891</SEintercept>
-            <R2>0.19060853257659649</R2>
-            <RMSE>87.107393469300789</RMSE>
-            <NSE>-0.30418641913178579</NSE>
-            <ME>-53.371075549890335</ME>
-            <MAE>57.074719462056862</MAE>
-            <RSR>1.1395670111477341</RSR>
+            <Slope>0.21655798441014304</Slope>
+            <Intercept>30.928589333383186</Intercept>
+            <SEslope>0.02967439045447276</SEslope>
+            <SEintercept>3.928125836321823</SEintercept>
+            <R2>0.18670113878392358</R2>
+            <RMSE>87.506382125025951</RMSE>
+            <NSE>-0.31616123067423185</NSE>
+            <ME>-53.831700865365775</ME>
+            <MAE>57.300716079177526</MAE>
+            <RSR>1.1447867094049988</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Leaf.SpecificArea</Name>
             <n>146</n>
-            <Slope>0.0033431516024072156</Slope>
-            <Intercept>31318.84887097713</Intercept>
-            <SEslope>0.06104874536420405</SEslope>
-            <SEintercept>1792.7015596724107</SEintercept>
-            <R2>2.0825101157195824E-05</R2>
-            <RMSE>6358.8258300620064</RMSE>
-            <NSE>-0.793439116759733</NSE>
-            <ME>2437.0764152508546</ME>
-            <MAE>4555.6803038876105</MAE>
-            <RSR>1.3345992983637018</RSR>
+            <Slope>0.0028042841129051364</Slope>
+            <Intercept>31128.040140873312</Intercept>
+            <SEslope>0.060936416464088393</SEslope>
+            <SEintercept>1789.4030120408045</SEintercept>
+            <R2>1.4706906196537695E-05</R2>
+            <RMSE>6280.9927772909</RMSE>
+            <NSE>-0.74980384503863928</NSE>
+            <ME>2230.6520314337217</ME>
+            <MAE>4452.5816897954955</MAE>
+            <RSR>1.3182635879049032</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Stem.Live.N</Name>
             <n>144</n>
-            <Slope>0.1215299460956958</Slope>
-            <Intercept>1.7951084358928711</Intercept>
-            <SEslope>0.059351489861801061</SEslope>
-            <SEintercept>0.18416042743680053</SEintercept>
-            <R2>0.028679884532614719</R2>
-            <RMSE>2.1050600932833272</RMSE>
-            <NSE>-0.32083217813258935</NSE>
-            <ME>-0.405093019142417</ME>
-            <MAE>1.4882862858846127</MAE>
-            <RSR>1.14527714220232</RSR>
+            <Slope>0.12248447095029617</Slope>
+            <Intercept>1.804288382579883</Intercept>
+            <SEslope>0.05822441257445507</SEslope>
+            <SEintercept>0.18066324420727664</SEintercept>
+            <R2>0.030222851147804985</R2>
+            <RMSE>2.0864523407455846</RMSE>
+            <NSE>-0.29758429975509992</NSE>
+            <ME>-0.39352238541419682</ME>
+            <MAE>1.4760530367326969</MAE>
+            <RSR>1.1351534247287753</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Stem.Live.Wt</Name>
             <n>243</n>
-            <Slope>0.18714171484602168</Slope>
-            <Intercept>64.850050683591775</Intercept>
-            <SEslope>0.037058096105840196</SEslope>
-            <SEintercept>5.6543851119721795</SEintercept>
-            <R2>0.095691741298330135</R2>
-            <RMSE>96.620623074172016</RMSE>
-            <NSE>-0.14206622482631093</NSE>
-            <ME>-35.058461372533188</ME>
-            <MAE>68.797187766320121</MAE>
-            <RSR>1.0664737989368494</RSR>
+            <Slope>0.19606198414709733</Slope>
+            <Intercept>62.034479302398609</Intercept>
+            <SEslope>0.034931803740958937</SEslope>
+            <SEintercept>5.3299519339333878</SEintercept>
+            <R2>0.11560438363015135</R2>
+            <RMSE>95.076823033151044</RMSE>
+            <NSE>-0.10586202147201052</NSE>
+            <ME>-36.777641354035374</ME>
+            <MAE>67.716942229594565</MAE>
+            <RSR>1.0494337277578154</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.TotalLive.N</Name>
             <n>184</n>
-            <Slope>0.99906201707522668</Slope>
-            <Intercept>0.55585039621066912</Intercept>
-            <SEslope>0.055741607087524535</SEslope>
-            <SEintercept>1.0491452562632408</SEintercept>
-            <R2>0.63834157098984545</R2>
-            <RMSE>6.4843182352766391</RMSE>
-            <NSE>0.43055070957068631</NSE>
-            <ME>0.54014331141643279</ME>
-            <MAE>4.8536073504969748</MAE>
-            <RSR>0.75256525121025508</RSR>
+            <Slope>0.98753010513067219</Slope>
+            <Intercept>0.78970543436600948</Intercept>
+            <SEslope>0.056209757651004159</SEslope>
+            <SEintercept>1.05795659071437</SEintercept>
+            <R2>0.62906938730012962</R2>
+            <RMSE>6.5427655513745986</RMSE>
+            <NSE>0.42023882141463575</NSE>
+            <ME>0.58088959037295651</ME>
+            <MAE>4.8459639842274491</MAE>
+            <RSR>0.7593486041435723</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.TotalLive.Wt</Name>
             <n>281</n>
-            <Slope>0.7382928667405888</Slope>
-            <Intercept>340.60362964232991</Intercept>
-            <SEslope>0.034689723363902789</SEslope>
-            <SEintercept>37.851705800837522</SEintercept>
-            <R2>0.618829359650179</R2>
-            <RMSE>459.79623621412247</RMSE>
-            <NSE>0.5656676966126909</NSE>
-            <ME>121.0414592772464</ME>
-            <MAE>276.48049965945444</MAE>
-            <RSR>0.657865211747218</RSR>
+            <Slope>0.73804364109131027</Slope>
+            <Intercept>338.54838215387429</Intercept>
+            <SEslope>0.03440703912382554</SEslope>
+            <SEintercept>37.54325477695096</SEintercept>
+            <R2>0.62252320170865261</R2>
+            <RMSE>456.37755443101832</RMSE>
+            <NSE>0.57210238986731521</NSE>
+            <ME>118.77712110110176</ME>
+            <MAE>273.66410360700758</MAE>
+            <RSR>0.65297384544623149</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.Live.N</Name>
             <n>190</n>
-            <Slope>1.0397635952386024</Slope>
-            <Intercept>0.27654098067310073</Intercept>
-            <SEslope>0.026717121394681784</SEslope>
-            <SEintercept>0.36464001702886</SEintercept>
-            <R2>0.88957881729578636</R2>
-            <RMSE>3.0687226958218181</RMSE>
-            <NSE>0.85646797966595312</NSE>
-            <ME>0.71333151638672454</ME>
-            <MAE>2.323259144935236</MAE>
-            <RSR>0.37785789478066789</RSR>
+            <Slope>1.039245898487267</Slope>
+            <Intercept>0.32405447352515004</Intercept>
+            <SEslope>0.026860732616486027</SEslope>
+            <SEintercept>0.3666000484854921</SEintercept>
+            <R2>0.88842253634047585</R2>
+            <RMSE>3.0936555210188947</RMSE>
+            <NSE>0.85412616053674117</NSE>
+            <ME>0.75515827392230639</ME>
+            <MAE>2.3386618574767848</MAE>
+            <RSR>0.38092792285871124</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.Live.Wt</Name>
             <n>295</n>
-            <Slope>0.92997538615989606</Slope>
-            <Intercept>12.716369894953914</Intercept>
-            <SEslope>0.01527395819115205</SEslope>
-            <SEintercept>14.623638885603853</SEintercept>
-            <R2>0.92675267711628906</R2>
-            <RMSE>164.32489989654258</RMSE>
-            <NSE>0.9220892667150864</NSE>
-            <ME>-40.154487839429763</ME>
-            <MAE>114.01926945899275</MAE>
-            <RSR>0.27865144733930008</RSR>
+            <Slope>0.9290478172253479</Slope>
+            <Intercept>12.572159422522077</Intercept>
+            <SEslope>0.01525424270350517</SEslope>
+            <SEintercept>14.604762824258566</SEintercept>
+            <R2>0.92679254309131665</R2>
+            <RMSE>164.48529541538761</RMSE>
+            <NSE>0.92193709706395344</NSE>
+            <ME>-40.999042983370281</ME>
+            <MAE>113.53629171195195</MAE>
+            <RSR>0.27892343559854166</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.LiveFWt</Name>
             <n>259</n>
-            <Slope>0.94802560113184109</Slope>
-            <Intercept>-122.18992869125577</Intercept>
-            <SEslope>0.018668381914538474</SEslope>
-            <SEintercept>86.917011569121527</SEintercept>
-            <R2>0.90937474619332348</R2>
-            <RMSE>904.41217636895112</RMSE>
-            <NSE>0.89490915474787014</NSE>
-            <ME>-315.91907423075287</ME>
-            <MAE>626.28580147574712</MAE>
-            <RSR>0.32355075195841415</RSR>
+            <Slope>0.94709860046090022</Slope>
+            <Intercept>-122.28620093545169</Intercept>
+            <SEslope>0.018695425505466691</SEslope>
+            <SEintercept>87.042922219350288</SEintercept>
+            <R2>0.90897410591701522</R2>
+            <RMSE>907.19124165443759</RMSE>
+            <NSE>0.89426231907326925</NSE>
+            <ME>-319.47064469497332</ME>
+            <MAE>628.88504635233551</MAE>
+            <RSR>0.32454495425506019</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -1669,86 +1669,86 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <RegrStats>
             <Name>Potato.Stem.Live.Wt</Name>
             <n>4</n>
-            <Slope>0.72075951590254361</Slope>
-            <Intercept>92.6644054018786</Intercept>
-            <SEslope>0.30924654644036448</SEslope>
-            <SEintercept>32.387143129246688</SEintercept>
-            <R2>0.73089854782198682</R2>
-            <RMSE>65.234633897870737</RMSE>
-            <NSE>-7.0447562104525705</NSE>
-            <ME>64.133706869996331</ME>
-            <MAE>64.133706869996331</MAE>
-            <RSR>2.4563320536603812</RSR>
+            <Slope>0.64687150921403247</Slope>
+            <Intercept>89.747306984654671</Intercept>
+            <SEslope>0.28346959947277095</SEslope>
+            <SEintercept>29.687544118411992</SEintercept>
+            <R2>0.72250840536437866</R2>
+            <RMSE>55.055927445612653</RMSE>
+            <NSE>-4.73013158046964</NSE>
+            <ME>53.667286044292823</ME>
+            <MAE>53.667286044292823</MAE>
+            <RSR>2.0730650460977413</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.TotalLive.N</Name>
             <n>25</n>
-            <Slope>1.1067564681678059</Slope>
-            <Intercept>4.6692912138711193</Intercept>
-            <SEslope>0.10351038398397847</SEslope>
-            <SEintercept>1.7829058446066937</SEintercept>
-            <R2>0.832512531882995</R2>
-            <RMSE>7.241031415835077</RMSE>
-            <NSE>-0.12521270911818383</NSE>
-            <ME>6.3575379990333412</ME>
-            <MAE>6.5026350126997414</MAE>
-            <RSR>1.0393287260311133</RSR>
+            <Slope>1.0971970739799495</Slope>
+            <Intercept>4.8916220208448316</Intercept>
+            <SEslope>0.10218537379316853</SEslope>
+            <SEintercept>1.7600833187649954</SEintercept>
+            <R2>0.83368289356093539</R2>
+            <RMSE>7.2773230296678619</RMSE>
+            <NSE>-0.1365199707546112</NSE>
+            <ME>6.4286965465390891</ME>
+            <MAE>6.5267890839399607</MAE>
+            <RSR>1.0445377790795443</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.TotalLive.Wt</Name>
             <n>35</n>
-            <Slope>0.38563092100170732</Slope>
-            <Intercept>1061.5464884432745</Intercept>
-            <SEslope>0.10182531251246062</SEslope>
-            <SEintercept>121.43237139860504</SEintercept>
-            <R2>0.3029554608622248</R2>
-            <RMSE>717.833394772348</RMSE>
-            <NSE>-0.18800413587440934</NSE>
-            <ME>450.73583459338261</ME>
-            <MAE>460.32926865943068</MAE>
-            <RSR>1.0742723865778698</RSR>
+            <Slope>0.391789461145762</Slope>
+            <Intercept>1049.8325873743647</Intercept>
+            <SEslope>0.10137110734496438</SEslope>
+            <SEintercept>120.89070637220193</SEintercept>
+            <R2>0.31160325530161392</R2>
+            <RMSE>711.11820372933221</RMSE>
+            <NSE>-0.16588100814997575</NSE>
+            <ME>445.14480340959818</ME>
+            <MAE>454.50495798724558</MAE>
+            <RSR>1.0642227784645628</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.Live.N</Name>
             <n>33</n>
-            <Slope>1.1221418195429211</Slope>
-            <Intercept>0.13564291397004524</Intercept>
-            <SEslope>0.063892228545404536</SEslope>
-            <SEintercept>1.1142654805215193</SEintercept>
-            <R2>0.90867859796336026</R2>
-            <RMSE>3.310665243355067</RMSE>
-            <NSE>0.76381644658436976</NSE>
-            <ME>2.096537287849376</ME>
-            <MAE>2.9937537217220331</MAE>
-            <RSR>0.4785671071431874</RSR>
+            <Slope>1.1254659382425136</Slope>
+            <Intercept>0.067650414133247239</Intercept>
+            <SEslope>0.0621695375056838</SEslope>
+            <SEintercept>1.0842221528294753</SEintercept>
+            <R2>0.91358280377327994</R2>
+            <RMSE>3.2596271888318524</RMSE>
+            <NSE>0.77104244604195415</NSE>
+            <ME>2.0819109952668189</ME>
+            <MAE>2.9280678410209116</MAE>
+            <RSR>0.47118939532033988</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.Live.Wt</Name>
             <n>39</n>
-            <Slope>1.0046354643232547</Slope>
-            <Intercept>-24.642805964011814</Intercept>
-            <SEslope>0.047176845489863367</SEslope>
-            <SEintercept>57.884899187300753</SEintercept>
-            <R2>0.92456386546640057</R2>
-            <RMSE>130.42120958589248</RMSE>
-            <NSE>0.91577522486459173</NSE>
-            <ME>-19.350420258566977</ME>
-            <MAE>107.40088267661672</MAE>
-            <RSR>0.28647018259594087</RSR>
+            <Slope>1.0059815619284538</Slope>
+            <Intercept>-27.693189299561482</Intercept>
+            <SEslope>0.046092475638533865</SEslope>
+            <SEintercept>56.554402438859967</SEintercept>
+            <R2>0.9279234636296041</R2>
+            <RMSE>127.74075205030908</RMSE>
+            <NSE>0.91920167642428019</NSE>
+            <ME>-20.863941863103747</ME>
+            <MAE>105.65010047624438</MAE>
+            <RSR>0.28058255770657392</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.LiveFWt</Name>
             <n>39</n>
-            <Slope>1.0275266568817361</Slope>
-            <Intercept>-255.90309438108216</Intercept>
-            <SEslope>0.045732344415772584</SEslope>
-            <SEintercept>270.1893647380266</SEintercept>
-            <R2>0.931712035773984</R2>
-            <RMSE>584.61140999499548</RMSE>
-            <NSE>0.919332130255069</NSE>
-            <ME>-103.46307891884794</ME>
-            <MAE>506.83641426561042</MAE>
-            <RSR>0.28035595736205488</RSR>
+            <Slope>1.0280330528399442</Slope>
+            <Intercept>-264.02434916143193</Intercept>
+            <SEslope>0.045660911000401434</SEslope>
+            <SEintercept>269.76733194336538</SEintercept>
+            <R2>0.93197318632491488</R2>
+            <RMSE>584.803180787287</RMSE>
+            <NSE>0.91927919841587469</NSE>
+            <ME>-108.779960904096</ME>
+            <MAE>512.95782942233689</MAE>
+            <RSR>0.28044792286794096</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
