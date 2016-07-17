@@ -43,6 +43,7 @@ namespace Models.PMF.Phen
             First = true;
         }
 
+        
         /// <summary>Do our timestep development</summary>
         /// <param name="PropOfDayToUse">The property of day to use.</param>
         /// <returns></returns>
@@ -58,7 +59,7 @@ namespace Models.PMF.Phen
 
             FractionCompleteYesterday = FractionComplete;
 
-            if (Leaf.ExpandedCohortNo >= (int)(Structure.MainStemFinalNodeNumber.Value + 1 - RemainingLeaves))
+            if (Leaf.ExpandedCohortNo >= (Leaf.InitialisedCohortNo - RemainingLeaves))
                 return 0.00001;
             else
                 return 0;
@@ -79,7 +80,7 @@ namespace Models.PMF.Phen
 
             FractionCompleteYesterday = FractionComplete;
 
-            if (Leaf.ExpandedCohortNo >= (int)(Structure.MainStemFinalNodeNumber.Value - RemainingLeaves))
+            if (Leaf.ExpandedCohortNo >= (Leaf.InitialisedCohortNo - RemainingLeaves))
                 return 0.00001;
             else
                 return 0;
@@ -92,7 +93,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = (Structure.LeafTipsAppeared - CohortNoAtStart) / ((Structure.MainStemFinalNodeNumber.Value - RemainingLeaves) - CohortNoAtStart);
+                double F = (Structure.LeafTipsAppeared - CohortNoAtStart) / ((Leaf.InitialisedCohortNo - RemainingLeaves) - CohortNoAtStart);
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.

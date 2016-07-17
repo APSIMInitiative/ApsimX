@@ -389,13 +389,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the appeared cohort no.</summary>
         /// <value>The appeared cohort no.</value>
         [Description("Number of leaf cohort that have appeared")] //Note:  AppearedCohortNo is an interger of AppearedNodeNo, increasing every time AppearedNodeNo increses by one and a new cohort is appeared
-        public double AppearedCohortNo
-        {
-            get
-            {
-               return CohortCounter("IsAppeared");
-            }
-        }
+        public double AppearedCohortNo { get { return CohortCounter("IsAppeared"); } }
 
         /// <summary>Gets the expanding cohort no.</summary>
         /// <value>The expanding cohort no.</value>
@@ -410,13 +404,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the green cohort no.</summary>
         /// <value>The green cohort no.</value>
         [Description("Number of leaf cohorts that are have expanded but not yet fully senesced")]
-        public double GreenCohortNo
-        {
-            get
-            {
-                return CohortCounter("IsGreen");
-            }
-        }
+        public double GreenCohortNo  { get { return CohortCounter("IsGreen"); } }
 
         /// <summary>Gets the senescing cohort no.</summary>
         /// <value>The senescing cohort no.</value>
