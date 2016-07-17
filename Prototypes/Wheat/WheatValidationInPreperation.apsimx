@@ -4789,8 +4789,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Operations>
           <Name>ega_gregory</Name>
           <Operation>
-            <Date>2015-05-21T00:00:00</Date>
-            <Action>[wheat].Sow(cultivar:"ega_gregory", population:150, depth:40, rowSpacing:250);</Action>
+            <Date>2015-05-21</Date>
+            <Action>[wheat].Sow(cultivar:"EGAGregory", population:150, depth:40, rowSpacing:250);</Action>
           </Operation>
         </Operations>
         <Operations>
@@ -5268,8 +5268,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Operations>
           <Name>Sowing</Name>
           <Operation>
-            <Date>2015-05-21T00:00:00</Date>
-            <Action>[wheat].Sow(cultivar:"ega_gregory", population:150, depth:50, rowSpacing:250);</Action>
+            <Date>2015-05-21</Date>
+            <Action>[wheat].Sow(cultivar:"EGAGregory", population:150, depth:50, rowSpacing:250);</Action>
           </Operation>
         </Operations>
         <MicroClimate>
