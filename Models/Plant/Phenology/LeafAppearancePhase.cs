@@ -58,7 +58,7 @@ namespace Models.PMF.Phen
 
             FractionCompleteYesterday = FractionComplete;
 
-            if (Leaf.ExpandedCohortNo >= (int)(Structure.MainStemFinalNodeNumber.Value - RemainingLeaves))
+            if (Leaf.ExpandedCohortNo >= (int)(Structure.MainStemFinalNodeNumber.Value + 1 - RemainingLeaves))
                 return 0.00001;
             else
                 return 0;

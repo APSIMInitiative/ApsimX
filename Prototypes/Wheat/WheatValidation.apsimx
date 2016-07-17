@@ -54,26 +54,72 @@ The model consists of:
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
-        <AirTemperatureFunction>
+        <AddFunction>
           <Name>ThermalTime</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>26</double>
-              <double>37</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>26</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
-          </Memo>
-        </AirTemperatureFunction>
+          <AirTemperatureFunction>
+            <Name>ThermalTime</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>26</double>
+                <double>37</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>26</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
+            </Memo>
+          </AirTemperatureFunction>
+          <PhaseLookup>
+            <Name>SoilTemperatureCorrection</Name>
+            <PhaseLookupValue>
+              <Name>ApexBelowGround</Name>
+              <MultiplyFunction>
+                <Name>NetDailyRadiativeHeating</Name>
+                <LinearInterpolationFunction>
+                  <Name>DaylengthRadiationFactor</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <X>
+                      <double>4</double>
+                      <double>12</double>
+                      <double>20</double>
+                    </X>
+                    <Y>
+                      <double>-4</double>
+                      <double>0</double>
+                      <double>4</double>
+                    </Y>
+                  </XYPairs>
+                  <XProperty>[Phenology].Photoperiod.Value</XProperty>
+                </LinearInterpolationFunction>
+                <LinearInterpolationFunction>
+                  <Name>CanopyInsulationEffect</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <X>
+                      <double>0</double>
+                      <double>1</double>
+                    </X>
+                    <Y>
+                      <double>1</double>
+                      <double>0.3</double>
+                    </Y>
+                  </XYPairs>
+                  <XProperty>[Leaf].RadIntTot</XProperty>
+                </LinearInterpolationFunction>
+              </MultiplyFunction>
+              <Start>Germination</Start>
+              <End>TerminalSpikelet</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
+        </AddFunction>
         <GerminatingPhase>
           <Name>Germinating</Name>
           <Start>Sowing</Start>
@@ -394,49 +440,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>UnVernalisedLeaves</Name>
                 <VariableName>[Phenology].VrnSensitivity.Value</VariableName>
               </VariableReference>
-              <MaximumFunction>
-                <Name>RelativeVernalisation</Name>
+              <SubtractFunction>
+                <Name>VernalisationReductionFactor</Name>
                 <Constant>
-                  <Name>Zero</Name>
-                  <Value>0</Value>
+                  <Name>One</Name>
+                  <Value>1</Value>
                 </Constant>
-                <SubtractFunction>
-                  <Name>RelativeVernalisation</Name>
-                  <Constant>
-                    <Name>One</Name>
-                    <Value>1</Value>
-                  </Constant>
-                  <AccumulateFunction>
-                    <Name>AccumVern</Name>
-                    <MultiplyFunction>
-                      <Name>DailyVrn</Name>
-                      <DivideFunction>
-                        <Name>DeltaHS</Name>
-                        <VariableReference>
-                          <Name>ThermalTime</Name>
-                          <VariableName>[Phenology].ThermalTime.Value</VariableName>
-                        </VariableReference>
-                        <VariableReference>
-                          <Name>Phyllochron</Name>
-                          <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
-                        </VariableReference>
-                      </DivideFunction>
-                      <ExponentialFunction>
-                        <Name>ExponentialFunction</Name>
-                        <VariableReference>
-                          <Name>MeanTemperature</Name>
-                          <VariableName>[Phenology].MeanTemp.Value</VariableName>
-                        </VariableReference>
-                        <A>0</A>
-                        <B>0.4</B>
-                        <C>-0.19</C>
-                      </ExponentialFunction>
-                    </MultiplyFunction>
-                    <StartStageName>Germination</StartStageName>
-                    <EndStageName>FlagLeaf</EndStageName>
-                  </AccumulateFunction>
-                </SubtractFunction>
-              </MaximumFunction>
+                <VariableReference>
+                  <Name>RelativeVrn1Expression</Name>
+                  <VariableName>[Phenology].Vrn1.Value</VariableName>
+                </VariableReference>
+              </SubtractFunction>
             </MultiplyFunction>
             <MultiplyFunction>
               <Name>PhotoPLeaves</Name>
@@ -449,8 +463,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <XYPairs>
                   <Name>XYPairs</Name>
                   <X>
-                    <double>11</double>
-                    <double>18</double>
+                    <double>9</double>
+                    <double>15</double>
                   </X>
                   <Y>
                     <double>1</double>
@@ -481,6 +495,107 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Value>1.1</Value>
           </Constant>
         </DivideFunction>
+        <MultiplyFunction>
+          <Name>XYZDailyVernalisation</Name>
+          <DivideFunction>
+            <Name>DeltaHS</Name>
+            <VariableReference>
+              <Name>ThermalTime</Name>
+              <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>Phyllochron</Name>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+            </VariableReference>
+          </DivideFunction>
+          <ExponentialFunction>
+            <Name>ExponentialFunction</Name>
+            <VariableReference>
+              <Name>MeanTemperature</Name>
+              <VariableName>[Phenology].MeanTemp.Value</VariableName>
+            </VariableReference>
+            <A>0</A>
+            <B>0.9</B>
+            <C>-0.19</C>
+          </ExponentialFunction>
+        </MultiplyFunction>
+        <MinimumFunction>
+          <Name>Vrn4</Name>
+          <Constant>
+            <Name>Saturation</Name>
+            <Value>1</Value>
+            <Units>Relative Experssion</Units>
+          </Constant>
+          <AccumulateFunction>
+            <Name>CurrentExpression</Name>
+            <VariableReference>
+              <Name>VernalisationConditioning</Name>
+              <VariableName>[Phenology].DailyVernalisation.Value</VariableName>
+            </VariableReference>
+            <StartStageName>Germination</StartStageName>
+            <EndStageName>TerminalSpikelet</EndStageName>
+          </AccumulateFunction>
+        </MinimumFunction>
+        <MinimumFunction>
+          <Name>Vrn1</Name>
+          <Constant>
+            <Name>Saturation</Name>
+            <Value>1</Value>
+            <Units>Relative Experssion</Units>
+          </Constant>
+          <AccumulateFunction>
+            <Name>CurrentExpression</Name>
+            <LessThanFunction>
+              <Name>Vernalisation</Name>
+              <VariableReference>
+                <Name>If_Vrn4</Name>
+                <VariableName>[Phenology].Vrn4.Value</VariableName>
+              </VariableReference>
+              <LinearInterpolationFunction>
+                <Name>LessThanLag</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>10</double>
+                    <double>13</double>
+                  </X>
+                  <Y>
+                    <double>1.2</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Phenology].Photoperiod.Value</XProperty>
+              </LinearInterpolationFunction>
+              <Constant>
+                <Name>Return_Zero</Name>
+                <Value>0</Value>
+              </Constant>
+              <VariableReference>
+                <Name>elseReturn_Vernalisation</Name>
+                <VariableName>[Phenology].DailyVernalisation.Value</VariableName>
+              </VariableReference>
+            </LessThanFunction>
+            <StartStageName>Germination</StartStageName>
+            <EndStageName>TerminalSpikelet</EndStageName>
+          </AccumulateFunction>
+        </MinimumFunction>
+        <LinearInterpolationFunction>
+          <Name>DailyVernalisation</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>6</double>
+              <double>15</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>0.04</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].MeanTemp.Value</XProperty>
+        </LinearInterpolationFunction>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -501,6 +616,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>7</double>
                 <double>8</double>
                 <double>14</double>
+                <double>15</double>
               </X>
               <Y>
                 <double>0.6</double>
@@ -509,6 +625,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>1</double>
                 <double>1.3</double>
                 <double>1.3</double>
+                <double>1.6</double>
               </Y>
             </XYPairs>
             <XProperty>[Structure].LeafTipsAppeared</XProperty>
@@ -2140,14 +2257,14 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>BattenWinter</Name>
             <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].VrnSensitivity.Value = 11</Command>
+            <Command>[Phenology].PpSensitivity.Value = 4</Command>
           </Cultivar>
           <Cultivar>
             <Name>BattenSpring</Name>
             <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].VrnSensitivity.Value = 0</Command>
+            <Command>[Phenology].PpSensitivity.Value = 4</Command>
           </Cultivar>
           <Cultivar>
             <Name>Centaur</Name>
@@ -2158,8 +2275,9 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Claire</Name>
             <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
+            <Command>[Phenology].VrnSensitivity.Value = 11</Command>
             <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
           </Cultivar>
           <Cultivar>
             <Name>Conquest</Name>
@@ -2193,9 +2311,10 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Otane</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.Value = 7</Command>
+            <Command>[Phenology].VrnSensitivity.Value = 0</Command>
+            <Command>[Phenology].PpSensitivity.Value = 2</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
           </Cultivar>
           <Cultivar>
             <Name>Pennant</Name>
@@ -2271,10 +2390,10 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Wakanui</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 130</Command>
+            <Command>[Phenology].MinimumLeafNumber.Value = 12</Command>
+            <Command>[Phenology].VrnSensitivity.Value = 10</Command>
+            <Command>[Phenology].PpSensitivity.Value = 0</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
           </Cultivar>
           <Cultivar>
             <Name>Weston</Name>
@@ -2525,6 +2644,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         </CultivarFolder>
       </CultivarFolder>
       <CropType>Wheat</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Report>
       <Name>HarvestReport</Name>
@@ -2549,6 +2669,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].Grain.Size</string>
         <string>[Wheat].Structure.MainStemPopn</string>
         <string>[Wheat].SowingData.Cultivar</string>
+        <string>[Wheat].SowingDate.DayOfYear</string>
       </VariableNames>
       <EventNames>
         <string>[Wheat].Harvesting</string>
@@ -2594,11 +2715,15 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].Leaf.Transpiration</string>
         <string>[Wheat].Phenology.CurrentPhaseName</string>
         <string>[Wheat].Phenology.CurrentStageName</string>
+        <string>[Wheat].Phenology.DailyVernalisation.Value</string>
         <string>[Wheat].Phenology.FinalLeafNumber.Value</string>
         <string>[Wheat].Phenology.HaunStageTerminalSpikelet.Value</string>
         <string>[Wheat].Phenology.HaunStage.Value</string>
+        <string>[Wheat].Phenology.MeanTemp.Value</string>
         <string>[Wheat].Phenology.Stage</string>
         <string>[Wheat].Phenology.ThermalTime.Value</string>
+        <string>[Wheat].Phenology.Vrn1.Value</string>
+        <string>[Wheat].Phenology.Vrn4.Value</string>
         <string>[Wheat].Phenology.Zadok.Stage</string>
         <string>[Wheat].Root.Depth</string>
         <string>[Wheat].Root.N</string>
@@ -5087,6 +5212,7 @@ VShort duration variety released in New Zealand by Pioneer
         <Command>[Grain].MaximumGrainsPerCob.Value =  550</Command>
       </Cultivar>
       <CropType>Maize</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
   </Replacements>
   <DataStore>
@@ -6242,6 +6368,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Operations>
             <Name>IrrigationSchedule</Name>
@@ -7973,6 +8100,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Operations>
             <Name>ApplyFertiliser</Name>
@@ -9789,6 +9917,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Operations>
             <Name>IrrigationSchedule</Name>
@@ -10709,6 +10838,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -11511,6 +11641,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -12744,6 +12875,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -13687,6 +13819,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -14630,6 +14763,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -15573,6 +15707,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -16554,6 +16689,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -17735,6 +17871,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -18618,6 +18755,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -19959,6 +20097,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Operations>
             <Name>IrrigationSchedule</Name>
@@ -22015,6 +22154,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -22905,6 +23045,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Operations>
             <Name>CropSchedule</Name>
@@ -23916,6 +24057,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Operations>
             <Name>CropSchedule</Name>
@@ -25544,6 +25686,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>ResetSW</Name>
@@ -27061,6 +27204,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Folder>
             <Name>Manager folder</Name>
@@ -30160,6 +30304,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Report>
             <Name>DailyReport</Name>
@@ -31563,7 +31708,7 @@ namespace Models
         <Factor>
           <Name>Popn</Name>
           <Specifications>
-            <string>[Sowing].Script.Population = 50,100,150,200</string>
+            <string>[Sowing].Script.Population = 50,100</string>
           </Specifications>
         </Factor>
       </Factors>
@@ -32141,6 +32286,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Report>
             <Name>DailyReport</Name>
@@ -32794,7 +32940,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
+              <YFieldName>Wheat.Structure.LeafTipsAppeared</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -34062,6 +34208,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>HarvestReport</Name>
@@ -34139,6 +34286,17 @@ namespace Models
 }
 				]]></Code>
             </Manager>
+            <Report>
+              <Name>DailyReport</Name>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string />
+              </VariableNames>
+              <EventNames>
+                <string />
+              </EventNames>
+            </Report>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -34148,6 +34306,47 @@ namespace Models
           <Area>0</Area>
           <Slope>0</Slope>
         </Simulation>
+        <Graph>
+          <Name>Graph1</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>0</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>HarvestReport</TableName>
+            <XFieldName>Wheat.SowingDate.DayOfYear</XFieldName>
+            <YFieldName>Wheat.Phenology.FinalLeafNumber.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>20</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
       </Experiment>
       <Experiment>
         <Name>CPTCultAmarok</Name>
@@ -34601,6 +34800,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>HarvestReport</Name>
@@ -35140,6 +35340,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>HarvestReport</Name>
@@ -35217,6 +35418,17 @@ namespace Models
 }
 				]]></Code>
             </Manager>
+            <Report>
+              <Name>DailyReport</Name>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string />
+              </VariableNames>
+              <EventNames>
+                <string />
+              </EventNames>
+            </Report>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -35226,6 +35438,357 @@ namespace Models
           <Area>0</Area>
           <Slope>0</Slope>
         </Simulation>
+        <Graph>
+          <Name>FLNdynamics</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>0</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Phenology.FinalLeafNumber.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Series1</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Structure.LeafTipsAppeared</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Series11</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Series111</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-11094807</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Series1111</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Leaf.InitialisedCohortNo</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>20</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Graph1</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>0</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>HarvestReport</TableName>
+            <XFieldName>Wheat.SowingDate.DayOfYear</XFieldName>
+            <YFieldName>Wheat.Phenology.FinalLeafNumber.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>20</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>HSTSDynamics</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>0</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Phenology.HaunStageTerminalSpikelet.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>20</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>FLNdynamics1</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>0</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Phenology.FinalLeafNumber.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>20</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Graph11</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>0</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Wheat.Phenology.MeanTemp.Value</XFieldName>
+            <YFieldName>Wheat.Phenology.FinalLeafNumber.ValueToHold.VernalLeaves.RelativeVernalisation.RelativeVernalisation.AccumVern.DailyVrn.Vrn1Expression.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>2</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Graph111</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>0</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Phenology.Vrn4.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Series1</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>0</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Phenology.Vrn1.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
       </Experiment>
       <Experiment>
         <Name>CPTCultWakanui</Name>
@@ -35679,6 +36242,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>HarvestReport</Name>
@@ -36218,6 +36782,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>HarvestReport</Name>
@@ -36304,6 +36869,109 @@ namespace Models
           <Area>0</Area>
           <Slope>0</Slope>
         </Simulation>
+        <Graph>
+          <Name>Graph1</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>0</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>HarvestReport</TableName>
+            <XFieldName>Wheat.SowingDate.DayOfYear</XFieldName>
+            <YFieldName>Wheat.Phenology.FinalLeafNumber.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Series1</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>0</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>HarvestReport</TableName>
+            <XFieldName>Wheat.SowingDate.DayOfYear</XFieldName>
+            <YFieldName>Wheat.Phenology.FinalLeafNumber.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>20</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>FLNdynamics1</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>0</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Phenology.FinalLeafNumber.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>20</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
       </Experiment>
       <Experiment>
         <Name>CPTCultBattenWinter</Name>
@@ -36757,6 +37425,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>HarvestReport</Name>
@@ -37296,6 +37965,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>HarvestReport</Name>
@@ -37835,6 +38505,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>HarvestReport</Name>
@@ -38374,6 +39045,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>HarvestReport</Name>
@@ -38913,6 +39585,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>HarvestReport</Name>
@@ -39452,6 +40125,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>HarvestReport</Name>
@@ -39991,6 +40665,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>HarvestReport</Name>
@@ -40530,6 +41205,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>HarvestReport</Name>
@@ -40966,6 +41642,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Operations>
               <Name>CropSchedule</Name>
@@ -41559,6 +42236,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Operations>
               <Name>CropSchedule</Name>
@@ -42671,6 +43349,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -44519,6 +45198,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Operations>
             <Name>IrrigationSchedule</Name>
@@ -45832,6 +46512,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -46814,6 +47495,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -47796,6 +48478,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -48739,6 +49422,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -49460,6 +50144,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -50129,6 +50814,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -50798,6 +51484,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -52399,6 +53086,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -53655,6 +54343,7 @@ namespace Models
               <Name>Wheat</Name>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -54261,6 +54950,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -54922,6 +55612,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -55583,6 +56274,7 @@ namespace Models
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -56642,6 +57334,7 @@ namespace Models
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -57925,6 +58618,7 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             <Name>Wheat</Name>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Report>
             <Name>DailyReport</Name>
@@ -58467,5 +59161,5 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Folder>
-  <ExplorerWidth>314</ExplorerWidth>
+  <ExplorerWidth>365</ExplorerWidth>
 </Simulations>
