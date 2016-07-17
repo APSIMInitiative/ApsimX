@@ -249,7 +249,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>0</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>LinearInterpolationFunction</Name>
@@ -4046,7 +4046,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Structure.MainStemNodeNo</YFieldName>
+            <YFieldName>Potato.Structure.LeafTipsAppeared</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -4390,7 +4390,7 @@ namespace Models
           <string>Potato.Stem.MaximumNConc.Value</string>
           <string>Potato.Stem.MinimumNConc.Value</string>
           <string>Potato.Structure.Height</string>
-          <string>Potato.Structure.MainStemNodeNo</string>
+          <string>Potato.Structure.LeafTipsAppeared</string>
           <string>Potato.Structure.PlantTotalNodeNo</string>
           <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
           <string>Potato.Structure.TotalStemPopn</string>

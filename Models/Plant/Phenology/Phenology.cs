@@ -181,6 +181,9 @@ namespace Models.PMF.Phen
         /// <summary>The emerged</summary>
         [XmlIgnore]
         public bool Emerged = false;
+        /// <summary>Germinated test</summary>
+        [XmlIgnore]
+        public bool Germinated = false;
         /// <summary>
         /// This is the difference in phase index between the current phase and the phas it runs parallel with.
         /// It is 0 for phases that are not run parallel
@@ -199,6 +202,7 @@ namespace Models.PMF.Phen
             AccumulatedEmergedTT = 0;
             JustInitialised = true;
             Emerged = false;
+            Germinated = false;
             SowDate = Clock.Today;
             CurrentlyOnFirstDayOfPhase = new string[] { "", "", "", "", "", "" };
             CurrentPhaseIndex = 0;
@@ -408,6 +412,9 @@ namespace Models.PMF.Phen
                     {
                         if (CurrentPhaseIndex + 1 >= Phases.Count)
                             throw new Exception("Cannot transition to the next phase. No more phases exist");
+
+                        if (Stage >= 1)
+                            Germinated = true;
 
                         if (CurrentPhase is EmergingPhase)
                             Emerged = true;

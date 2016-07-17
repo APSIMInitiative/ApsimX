@@ -50,13 +50,13 @@ namespace Models.PMF.Phen
 
             if (First)
             {
-                CohortNoAtStart = Structure.MainStemNodeNo;
+                CohortNoAtStart = Structure.LeafTipsAppeared;
                 First = false;
             }
 
             FractionCompleteYesterday = FractionComplete;
 
-            if (Structure.MainStemNodeNo >= CompletionNodeNumber.Value)
+            if (Structure.LeafTipsAppeared >= CompletionNodeNumber.Value)
                 return 0.00001;
             else
                 return 0;
@@ -71,13 +71,13 @@ namespace Models.PMF.Phen
             base.AddTT(PropOfDayToUse);
             if (First)
             {
-                CohortNoAtStart = Structure.MainStemNodeNo;
+                CohortNoAtStart = Structure.LeafTipsAppeared;
                 First = false;
             }
 
             FractionCompleteYesterday = FractionComplete;
 
-            if (Structure.MainStemNodeNo >= CompletionNodeNumber.Value)
+            if (Structure.LeafTipsAppeared >= CompletionNodeNumber.Value)
                 return 0.00001;
             else
                 return 0;
@@ -90,7 +90,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = (Structure.MainStemNodeNo - CohortNoAtStart) / (CompletionNodeNumber.Value - CohortNoAtStart);
+                double F = (Structure.LeafTipsAppeared - CohortNoAtStart) / (CompletionNodeNumber.Value - CohortNoAtStart);
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.

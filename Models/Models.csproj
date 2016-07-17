@@ -295,7 +295,6 @@
     <Compile Include="Plant\Functions\StageBasedInterpolation.cs" />
     <Compile Include="Plant\Functions\StructureFunctions\HeightFunction.cs" />
     <Compile Include="Plant\Functions\StructureFunctions\InPhaseTemperatureFunction.cs" />
-    <Compile Include="Plant\Functions\StructureFunctions\MainStemFinalNodeNumberFunction.cs" />
     <Compile Include="Plant\Functions\SubtractFunction.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\RUECO2Function.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\RUEModel.cs" />
