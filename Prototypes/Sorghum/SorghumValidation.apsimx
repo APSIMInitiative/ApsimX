@@ -524,10 +524,10 @@ Though tillering is common in some sorghum varieties under certain agronomic con
             <Value>20</Value>
           </Constant>
         </LessThanFunction>
-        <MainStemFinalNodeNumberFunction>
+        <HoldFunction>
           <Name>MainStemFinalNodeNumber</Name>
           <AddFunction>
-            <Name>FinalLeafNumber</Name>
+            <Name>ValueToHold</Name>
             <VariableReference>
               <Name>LeafNumSeed</Name>
               <VariableName>[Structure].LeafNumSeed.Value</VariableName>
@@ -544,8 +544,8 @@ Though tillering is common in some sorghum varieties under certain agronomic con
               </VariableReference>
             </DivideFunction>
           </AddFunction>
-          <MaximumMainStemNodeNumber>30</MaximumMainStemNodeNumber>
-        </MainStemFinalNodeNumberFunction>
+          <WhenToHold>FloralInitiation</WhenToHold>
+        </HoldFunction>
         <HeightFunction>
           <Name>HeightModel</Name>
           <LinearInterpolationFunction>
@@ -600,8 +600,9 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <Name>BranchMortality</Name>
           <Value>0</Value>
         </Constant>
-        <InitialiseStage>Emergence</InitialiseStage>
-        <PrimaryBudNo>1</PrimaryBudNo>
+        <Initialised>false</Initialised>
+        <Germinated>false</Germinated>
+        <Emerged>false</Emerged>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -1472,6 +1473,9 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </Constant>
         <BiomassYesterday>0</BiomassYesterday>
         <CohortsInitialised>false</CohortsInitialised>
+        <TipsAtEmergence>0</TipsAtEmergence>
+        <InitialisedCohortNo>0</InitialisedCohortNo>
+        <AppearedCohortNo>0</AppearedCohortNo>
         <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
         <Albedo>0</Albedo>
         <Gsmax>0</Gsmax>

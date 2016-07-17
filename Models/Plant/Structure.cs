@@ -376,7 +376,8 @@ namespace Models.PMF
                 {
                     Germinated = true;
                     //On the day of germination set up the first cohorts
-                    InitialiseLeafCohorts.Invoke(this, args);
+                    if(InitialiseLeafCohorts !=null)
+                        InitialiseLeafCohorts.Invoke(this, args);
                     Initialised = true;
                 }
 
@@ -424,7 +425,8 @@ namespace Models.PMF
                         int i = 1;
                         for (i = 1; i <= LeavesToAppear; i++)
                         {
-                            AddLeafCohort.Invoke(this, args);
+                            if(AddLeafCohort != null)
+                                AddLeafCohort.Invoke(this, args);
                         }
                     }
 
@@ -485,7 +487,8 @@ namespace Models.PMF
             {
                 LeafTipsAppeared += 1;
                 Rank += 1;
-                AddLeafCohort.Invoke(this, args);
+                if(AddLeafCohort != null)
+                    AddLeafCohort.Invoke(this, args);
                 DoLeafTipAppearance();
             }
         }
@@ -498,6 +501,7 @@ namespace Models.PMF
             CohortParams.TotalStemPopn = TotalStemPopn;
             CohortParams.CohortAge = (LeafTipsAppeared - Rank) * MainStemNodeAppearanceRate.Value * NextLeafProportion;
             CohortParams.FinalFraction = NextLeafProportion;
+            if(LeafTipAppearance != null)
             LeafTipAppearance.Invoke(this, CohortParams);
         }
         /// <summary>Updates the height.</summary>
