@@ -2113,6 +2113,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
         <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -2545,6 +2546,7 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
         <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
       </Cultivar>
       <CropType>Chickpea</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
   </Replacements>
   <DataStore>
@@ -3800,6 +3802,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -4792,6 +4795,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -7123,6 +7127,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>SowingRule</Name>
@@ -8383,6 +8388,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -9181,6 +9187,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -9986,6 +9993,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -10757,6 +10765,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -11178,6 +11187,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>soil</Name>
@@ -12253,6 +12263,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>soil</Name>
@@ -13380,6 +13391,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -14032,6 +14044,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -14595,6 +14608,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>Iversen 12</Name>
@@ -16115,6 +16129,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>Iversen 12</Name>
@@ -17599,6 +17614,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>Iversen 12</Name>
@@ -19058,6 +19074,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>Iversen 12</Name>
@@ -20480,6 +20497,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>Iversen 12</Name>
@@ -21446,6 +21464,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>Iversen 12</Name>
@@ -22472,6 +22491,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>soil</Name>
@@ -23478,6 +23498,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>soil</Name>
@@ -24573,6 +24594,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>soil</Name>
@@ -25528,6 +25550,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>Soil</Name>
@@ -26258,6 +26281,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>Soil</Name>
@@ -26981,6 +27005,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>Soil</Name>
@@ -27704,6 +27729,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>Soil</Name>
@@ -28617,6 +28643,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>soil</Name>
@@ -29385,6 +29412,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>soil</Name>
@@ -30089,6 +30117,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>WI_VRLB006</Name>
@@ -30899,6 +30928,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>WI_VRLB006</Name>
@@ -31709,6 +31739,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>WI_VRLB006</Name>
@@ -32519,6 +32550,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>WI_LVPT007</Name>
@@ -33308,6 +33340,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>WI_LVPT007</Name>
@@ -34627,6 +34660,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -36527,6 +36561,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -37667,6 +37702,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>WI_SCAF005</Name>
@@ -39051,6 +39087,7 @@ namespace Models
             <Plant>
               <Name>Chickpea</Name>
               <CropType>Chickpea</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>WI_SCAF005</Name>

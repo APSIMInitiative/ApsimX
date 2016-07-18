@@ -1474,6 +1474,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         <BiomassYesterday>0</BiomassYesterday>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <InitialisedCohortNo>0</InitialisedCohortNo>
         <AppearedCohortNo>0</AppearedCohortNo>
         <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
@@ -1701,6 +1702,7 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
 </body></html>]]></MemoText>
       </Memo>
       <CropType>Sorghum</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
   </Replacements>
   <DataStore>
@@ -2486,6 +2488,7 @@ namespace Models
             <Name>Sorghum</Name>
             <ResourceName>Sorghum</ResourceName>
             <CropType>Sorghum</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
