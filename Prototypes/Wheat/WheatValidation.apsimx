@@ -5893,7 +5893,7 @@ VShort duration variety released in New Zealand by Pioneer
       <TableName>HarvestObsPred</TableName>
       <XFieldName>Observed.Wheat.AboveGround.Wt</XFieldName>
       <YFieldName>Predicted.Wheat.AboveGround.Wt</YFieldName>
-      <ShowInLegend>true</ShowInLegend>
+      <ShowInLegend>false</ShowInLegend>
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
@@ -6035,7 +6035,7 @@ VShort duration variety released in New Zealand by Pioneer
       <TableName>HarvestObsPred</TableName>
       <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
       <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
-      <ShowInLegend>true</ShowInLegend>
+      <ShowInLegend>false</ShowInLegend>
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
@@ -6083,7 +6083,7 @@ VShort duration variety released in New Zealand by Pioneer
       <TableName>HarvestObsPred</TableName>
       <XFieldName>Observed.Wheat.AboveGround.N</XFieldName>
       <YFieldName>Predicted.Wheat.AboveGround.N</YFieldName>
-      <ShowInLegend>true</ShowInLegend>
+      <ShowInLegend>false</ShowInLegend>
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
@@ -6130,7 +6130,7 @@ VShort duration variety released in New Zealand by Pioneer
       <TableName>HarvestObsPred</TableName>
       <XFieldName>Observed.Wheat.Grain.N</XFieldName>
       <YFieldName>Predicted.Wheat.Grain.N</YFieldName>
-      <ShowInLegend>true</ShowInLegend>
+      <ShowInLegend>false</ShowInLegend>
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
@@ -6224,7 +6224,7 @@ VShort duration variety released in New Zealand by Pioneer
       <TableName>DailyObsPred</TableName>
       <XFieldName>Observed.Wheat.Structure.HaunStage.Value</XFieldName>
       <YFieldName>Predicted.Wheat.Structure.HaunStage.Value</YFieldName>
-      <ShowInLegend>true</ShowInLegend>
+      <ShowInLegend>false</ShowInLegend>
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
@@ -6292,7 +6292,7 @@ VShort duration variety released in New Zealand by Pioneer
       <Maximum>NaN</Maximum>
       <Interval>NaN</Interval>
     </Axis>
-    <LegendPosition>BottomRight</LegendPosition>
+    <LegendPosition>TopLeft</LegendPosition>
     <DisabledSeries />
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
@@ -6318,10 +6318,11 @@ VShort duration variety released in New Zealand by Pioneer
       <TableName>HarvestObsPred</TableName>
       <XFieldName>Observed.Wheat.Phenology.FlagLeafDAS.Value</XFieldName>
       <YFieldName>Predicted.Wheat.Phenology.FlagLeafDAS.Value</YFieldName>
-      <ShowInLegend>true</ShowInLegend>
+      <ShowInLegend>false</ShowInLegend>
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
+      <Filter />
     </Series>
     <Axis>
       <Type>Bottom</Type>
@@ -6365,7 +6366,7 @@ VShort duration variety released in New Zealand by Pioneer
       <TableName>HarvestObsPred</TableName>
       <XFieldName>Observed.Wheat.Phenology.FloweringDAS.Value</XFieldName>
       <YFieldName>Predicted.Wheat.Phenology.FloweringDAS.Value</YFieldName>
-      <ShowInLegend>true</ShowInLegend>
+      <ShowInLegend>false</ShowInLegend>
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
@@ -17367,7 +17368,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Phenology.HaunStage.Value</YFieldName>
+          <YFieldName>Wheat.Structure.HaunStage.Value</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -17388,7 +17389,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Phenology.HaunStage.Value</YFieldName>
+          <YFieldName>Wheat.Structure.HaunStage.Value</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
