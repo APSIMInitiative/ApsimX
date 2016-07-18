@@ -3,7 +3,7 @@ title: "Stats"
 output: word_document
 ---
 
-Table of stats
+## Load observed
 
 ```{r ReadObserved, echo=FALSE, include=FALSE}
 library(dplyr)
@@ -49,8 +49,9 @@ print(unique(obsData$Name))
 
 ```
 
+## Define stats
 
-```{r CustumStats}
+```{r CustomStats}
 
 gauchStats <- function(sim, meas) {
   
@@ -96,47 +97,78 @@ x[4]
 
 ```
 
-
-
-
+## Load simulated
 
 ```{r, ReadSimulated, echo=FALSE, include=FALSE}
-# load Justin's function (FIXME: not used yet, reading from output csv file)
+
+
+# create function to read data (Justin's script)
 GetApsimNGTable <- function(dbLoc, table) 
 {
-    connection <- dbConnect(SQLite(), dbname = dbLoc, flags = SQLITE_RW)
-    table <- dbReadTable(connection, table, row.names=NULL)
-    dbDisconnect(connection)
-    return(table)
+  connection <- dbConnect(SQLite(), dbname = dbLoc, flags = SQLITE_RW)
+  table <- dbReadTable(connection, table, row.names=NULL)
+  dbDisconnect(connection)
+  return(table)
 }
 
-dbPath <- "C:\\GitHubRepos\\ApsimX\\Prototypes\\FodderBeet\\"
 
-dbName <- "FodderBeet.db.Report.csv"
-#dbName <- "SimData.txt"
+# load address of db
+db.address <- "C:\\GitHubRepos\\ApsimX\\Prototypes\\FodderBeet\\FodderBeet.db"
 
-# FIXME: can I call myDb as simData ?
-myDb <- read.csv(paste0(dbPath,dbName), header=TRUE)
-#myDb <- read.table("C:\\GitHubRepos\\ApsimX\\Prototypes\\FodderBeet\\SimData.txt", header=TRUE)
+# check what's inside db
+con <- dbConnect(SQLite(), dbname = db.address, flags = SQLITE_RW)
+alltables <- dbListTables(con)
+alltables
 
-# get date sorted
-myDb$Date <- dmy(myDb$Clock.Today)
+# set table to be enquierd
+tableName <- "Report" # 
+
+# load table into an object
+myDbTable <- GetApsimNGTable(db.address,tableName)
+
+# make it a dataframe
+df <- as.data.frame(myDbTable)
+
+# change date to corerct format 
+df$Date <- ymd_hms(df$Clock.Today)
+
+# explore the df
+head(df)
+summary(df)
+str(df)
+
+
+# add sim names (FIXME: this should com efrom DF????)
+simNameDf <- data.frame(
+  Name = c(
+"Lincoln2014CvRiv_Sep",
+"Lincoln2014CvRiv_Oct",
+"Lincoln2014CvRiv_Nov",
+"Lincoln2014CvRiv_Dec",
+"Lincoln2014CvBri_Oct",
+"Lincoln2014CvBri_Sep",
+"Lincoln2014CvBri_Nov",
+"LincolnP21_Cv2011",
+"Lincoln2014CvBri_Dec",
+"LincolnP21_Cv2012"
+),
+  SimulationID = c(1,2,3,4,5,6,7,8,9,10)
+)
+
+
+# merge names
+myDb <- merge(df, simNameDf, by=("SimulationID"))
 
 # remove unecessary variables
 myDb <- myDb %>%
   dplyr::select(-FodderBeet.Phenology.CurrentPhaseName, 
-         -Phenology.Photoperiod.Value)
+         -Phenology.Photoperiod.Value) 
 
-summary(myDb)
+
+# explore the df
 head(myDb)
+summary(myDb)
 str(myDb)
-
-myDb$Name <- gsub(" ", "", myDb$SimName, fixed = TRUE)
-
-myDb %>%
-  filter(Name == "LincolnP21_Cv2012") %>%
-  summary()
-
 
 ```
 
@@ -148,7 +180,7 @@ myDb %>%
 # Remove extra variables that are not for comparing with observed data
 varsToDelete <- grep("ExtraVariables|Phenology|irrigation",
                      names(myDb)) # find output variables
-
+varsToDelete
 myDb <- myDb %>% select(-varsToDelete)
 
 # re-arrange
@@ -227,6 +259,7 @@ mergedDF <- merge(mergedDF, maxAxesValues, by=c("Calib_Test", "SimpleName"))
 mergedDF %>%
 #  filter(Name == "LincolnP21_Cv2011" | Name == "LincolnP21_Cv2012") %>%
 #  filter(W_lim == "No", N_lim == "No") %>%
+ # filter(Cultivar_Treat != "Bri") %>% # get rid of Brigarier
   filter(Calib_Test == "Calib") %>%
   ggplot(aes(x=Observed, y= Predicted)) +
   geom_point(aes(colour= Name, shape = Cultivar_Treat , size = 1)) +
@@ -238,6 +271,7 @@ mergedDF %>%
 
 mergedDF %>%
   mutate(Calib_Test = ifelse(Calib_Test=="Calib","Calibration", "Testing"))  %>%
+#  filter(Cultivar_Treat != "Bri") %>% # get rid of Brigarier
 #  filter(Name == "LincolnP21_Cv2011" | Name == "LincolnP21_Cv2012") %>%
 #  filter(W_lim == "No", N_lim == "No") %>%
  # filter(Calib_Test == "Calib") %>%
@@ -257,6 +291,7 @@ Stats table
 ```{r, echo=FALSE ,fig.align='right'}
 # Give stats
 mergedDF %>%
+  filter(Cultivar_Treat != "Bri") %>% # get rid of Brigarier
   group_by(Calib_Test,SimpleName) %>%
   summarise(
     n = n(),
