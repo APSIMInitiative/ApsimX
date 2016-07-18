@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This phase extends from the end of the previous phase until the end of leaf appearance.  The duration of this phase is determined by leaf appearance and the final main stem leaf number.  
+    /// This phase extends from the end of the previous phase until the final main-stem leaf has finished expansion.  The duration of this phase is determined by leaf appearance rate and the final main stem node number.  
     /// As such, the model parameterisation of leaf appearance and final leaf number (set in the Structure object) are important for predicting the duration of the crop correctly.
     /// </summary>
     [Serializable]
@@ -92,7 +92,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = (Leaf.ExpandedNodeNo - CohortNoAtStart) / ((Structure.MainStemFinalNodeNumber.Value - RemainingLeaves) - CohortNoAtStart);
+                double F = (Structure.LeafTipsAppeared - CohortNoAtStart) / ((Structure.MainStemFinalNodeNumber.Value - RemainingLeaves) - CohortNoAtStart);
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
@@ -102,7 +102,27 @@ namespace Models.PMF.Phen
                 throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
             }
         }
-     }
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
+
+            // Describe the start and end stages
+            tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
+
+            // write memos.
+            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                memo.Document(tags, -1, indent);
+
+            // get description of this class.
+            AutoDocumentation.GetClassDescription(this, tags, indent);
+        }
+
+    }
 }
 
       

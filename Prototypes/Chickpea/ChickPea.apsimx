@@ -62,7 +62,7 @@ The model consists of:
         <string>[Chickpea].Leaf.LAI</string>
         <string>[Chickpea].Leaf.Fn</string>
         <string>[Chickpea].Leaf.Fw</string>
-        <string>[Chickpea].Structure.MainStemNodeNo</string>
+        <string>[Chickpea].Structure.LeafTipsAppeared</string>
         <string>[Chickpea].Structure.PlantTotalNodeNo</string>
         <string>[Chickpea].Leaf.SenescingCohortNo</string>
         <string>[Chickpea].Structure.TotalStemPopn</string>
@@ -542,7 +542,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>0</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>Cover_response</Name>
@@ -877,10 +877,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>BranchMortality</Name>
           <Value>0</Value>
         </Constant>
-        <VariableReference>
-          <Name>MainStemPrimordiaInitiationRate</Name>
-          <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
-        </VariableReference>
         <PhaseLookup>
           <Name>MainStemNodeAppearanceRate</Name>
           <PhaseLookupValue>
@@ -930,10 +926,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <double>50</double>
             </Y>
           </XYPairs>
-          <XProperty>[Structure].MainStemNodeNo</XProperty>
+          <XProperty>[Structure].LeafTipsAppeared</XProperty>
         </LinearInterpolationFunction>
-        <InitialiseStage>Emergence</InitialiseStage>
-        <PrimaryBudNo>0</PrimaryBudNo>
+        <Initialised>false</Initialised>
+        <Germinated>false</Germinated>
+        <Emerged>false</Emerged>
       </Structure>
       <HIReproductiveOrgan>
         <Name>Grain</Name>
@@ -1551,7 +1548,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                 <double>850</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>MaxArea</Name>
@@ -1575,7 +1572,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
                 <double>1080</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <MultiplyFunction>
             <Name>GrowthDuration</Name>
@@ -2106,7 +2103,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
-        <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
         <Albedo>0.2</Albedo>
@@ -2116,6 +2112,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <PotentialEP>0</PotentialEP>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
+        <TipsAtEmergence>0</TipsAtEmergence>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -2574,30 +2571,30 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>Chickpea.AboveGround.Wt</Name>
             <n>73</n>
-            <Slope>0.91339721206752655</Slope>
-            <Intercept>305.12660970964237</Intercept>
-            <SEslope>0.1122620719950423</SEslope>
-            <SEintercept>88.822161018691091</SEintercept>
-            <R2>0.48250456724732804</R2>
-            <RMSE>358.97074033786743</RMSE>
-            <NSE>-0.64318402887584969</NSE>
-            <ME>241.04158231404855</ME>
-            <MAE>288.79492177892507</MAE>
-            <RSR>1.2730572094832486</RSR>
+            <Slope>0.92053480582051772</Slope>
+            <Intercept>252.42153398919697</Intercept>
+            <SEslope>0.11549442619605577</SEslope>
+            <SEintercept>91.379611457736431</SEintercept>
+            <R2>0.47222492390959736</R2>
+            <RMSE>335.0418423315449</RMSE>
+            <NSE>-0.43141709596108813</NSE>
+            <ME>193.61824061301743</ME>
+            <MAE>265.92977737090763</MAE>
+            <RSR>1.1881955405537248</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chickpea.Shell.PodNumber.Value</Name>
             <n>197</n>
-            <Slope>1.4988784502966128</Slope>
-            <Intercept>2994.5053060715986</Intercept>
-            <SEslope>0.15510192431672049</SEslope>
-            <SEintercept>147.78028288309756</SEintercept>
-            <R2>0.32383134434595129</R2>
-            <RMSE>3697.6018394800426</RMSE>
-            <NSE>-21.65484844724709</NSE>
-            <ME>3269.7103995398365</ME>
-            <MAE>3291.3257779935238</MAE>
-            <RSR>4.747615108299156</RSR>
+            <Slope>0.10067802847417431</Slope>
+            <Intercept>199.27719834457537</Intercept>
+            <SEslope>0.01040595538936394</SEslope>
+            <SEintercept>9.9147385687420346</SEintercept>
+            <R2>0.32433927865363332</R2>
+            <RMSE>767.43272662866286</RMSE>
+            <NSE>0.024108570925508443</NSE>
+            <ME>-296.83159746461428</ME>
+            <MAE>344.98605938992006</MAE>
+            <RSR>0.98536169271751606</RSR>
           </RegrStats>
           <RegrStats>
             <Name>EmergenceDAS</Name>
@@ -2630,16 +2627,16 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>GrainWt</Name>
             <n>312</n>
-            <Slope>0.6800459644275445</Slope>
-            <Intercept>202.33092325445966</Intercept>
-            <SEslope>0.0910663956299885</SEslope>
-            <SEintercept>19.709620481593777</SEintercept>
-            <R2>0.15246084345216138</R2>
-            <RMSE>230.59080428200113</RMSE>
-            <NSE>-3.3373280322680738</NSE>
-            <ME>142.8303712346096</ME>
-            <MAE>178.27205554253274</MAE>
-            <RSR>2.0792850549785036</RSR>
+            <Slope>0.63320707206286864</Slope>
+            <Intercept>205.64983492565841</Intercept>
+            <SEslope>0.0895967460657002</SEslope>
+            <SEintercept>19.391542282136378</SEintercept>
+            <R2>0.13876144350206621</R2>
+            <RMSE>225.93436789847814</RMSE>
+            <NSE>-3.1639249935388563</NSE>
+            <ME>137.43884439950753</ME>
+            <MAE>176.03810863617736</MAE>
+            <RSR>2.03729700340869</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
@@ -4389,7 +4386,7 @@ namespace Models
                 <string>[MicroClimate].peta</string>
                 <string>[MicroClimate].petr</string>
                 <string>[Chickpea].Leaf.LAI</string>
-                <string>[Chickpea].Structure.MainStemNodeNo</string>
+                <string>[Chickpea].Structure.LeafTipsAppeared</string>
                 <string>[Chickpea].Structure.PlantTotalNodeNo</string>
                 <string>[Chickpea].Leaf.SenescingCohortNo</string>
                 <string>[Chickpea].Structure.TotalStemPopn</string>
@@ -4923,7 +4920,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Structure.MainStemNodeNo</YFieldName>
+            <YFieldName>Chickpea.Structure.LeafTipsAppeared</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>

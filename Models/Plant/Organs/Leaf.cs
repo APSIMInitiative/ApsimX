@@ -84,6 +84,7 @@ namespace Models.PMF.Organs
     [Description("Leaf Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Plant))]
     public class Leaf : BaseOrgan, AboveGround, ICanopy, ILeaf
     {
         #region Canopy interface
@@ -331,8 +332,6 @@ namespace Models.PMF.Organs
         public double StartFractionExpanded = 0;
         /// <summary>The fraction nextleaf expanded</summary>
         public double FractionNextleafExpanded = 0;
-        /// <summary>The _ expanded node no</summary>
-        public double _ExpandedNodeNo = 0;
         /// <summary>The dead nodes yesterday</summary>
         public double DeadNodesYesterday = 0;//Fixme This needs to be set somewhere
         #endregion
@@ -357,6 +356,10 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>
+        /// The number of leaves that have visiable tips on the day of emergence
+        /// </summary>
+        public int TipsAtEmergence {get; set;}
 
         /// <summary>Gets or sets the fraction died.</summary>
         /// <value>The fraction died.</value>
@@ -390,52 +393,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int Count = CohortCounter("IsAppeared");
-                if (FinalLeafAppeared)
-                    return Count - (1 - FinalLeafFraction);
-                else
-                    return Count;
-            }
-        }
-
-        /// <summary>Gets the final leaf fraction.</summary>
-        /// <value>The final leaf fraction.</value>
-        [Description("If last leaf has appeared, return the fraction of the final part leaf")]
-        public double FinalLeafFraction
-        {
-            get
-            {
-                double FLF = 1;
-                //int Count = CohortCounter("IsIniated");
-                if (InitialisedCohortNo < Structure.MainStemFinalNodeNumber.Value)
-                    FLF = Math.Min(Structure.MainStemFinalNodeNumber.Value - InitialisedCohortNo, 1);
-                else
-                    FLF = 1 - Math.Min(InitialisedCohortNo - Structure.MainStemFinalNodeNumber.Value, 1);
-                return FLF;
-                    
-                //int Count = CohortCounter("IsAppeared");
-                // DeanH: I don't think this next if statement will ever be true. Isn't MaximumNodeNumber
-                // always equal to MainStemFinalNodeNo?
-                //if (Count == (int)Structure.MainStemFinalNodeNo && Count < Structure.MaximumNodeNumber) 
-                //    return Leaves[Count-1].FractionExpanded;
-                //else
-                    //return 1.0;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether [final leaf appeared].
-        /// </summary>
-        /// <value><c>true</c> if [final leaf appeared]; otherwise, <c>false</c>.</value>
-        [Description("Returns true if the final leaf has appeared")]
-        public bool FinalLeafAppeared
-        {
-            get
-            {
-                if (Structure != null && Structure.MainStemNodeNo >= Structure.MainStemFinalNodeNumber.Value)
-                    return true;
-                else
-                    return false;
+               return CohortCounter("IsAppeared");
             }
         }
 
@@ -444,26 +402,10 @@ namespace Models.PMF.Organs
         [Description("Number of leaf cohorts that have appeared but not yet fully expanded")]
         public double ExpandingCohortNo { get { return CohortCounter("IsGrowing"); } }
 
-        //FIXME ExpandedNodeNo and Expanded Cohort need to be merged
-        /// <summary>Gets the expanded node no.</summary>
-        /// <value>The expanded node no.</value>
-        [Description("Number of leaf cohorts that are fully expanded")]
-        public double ExpandedNodeNo
-        {
-            get
-            {
-                //HamishB  I have had to change this back because it was not returning the correct values
-                //foreach (LeafCohort L in Leaves)
-                //    if (!L.IsFullyExpanded)
-                //        return ExpandedCohortNo + L.FractionExpanded;
-                return _ExpandedNodeNo;
-            }
-        }
-
         /// <summary>Gets the expanded cohort no.</summary>
         /// <value>The expanded cohort no.</value>
         [Description("Number of leaf cohorts that are fully expanded")]
-        public double ExpandedCohortNo { get { return Math.Min(CohortCounter("IsFullyExpanded"), Structure.MainStemFinalNodeNumber.Value); } }
+        public double ExpandedCohortNo { get { return CohortCounter("IsFullyExpanded"); } }
 
         /// <summary>Gets the green cohort no.</summary>
         /// <value>The green cohort no.</value>
@@ -472,11 +414,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int Count = CohortCounter("IsGreen");
-                if (FinalLeafAppeared)
-                    return Count - (1 - FinalLeafFraction);
-                else
-                    return Count;
+                return CohortCounter("IsGreen");
             }
         }
 
@@ -1007,8 +945,8 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Functions
-        /// <summary>1 based rank of the current leaf.</summary>
-        /// <value>The current rank.</value>
+         /// <summary>1 based rank of the current leaf.</summary>
+    /// <value>The current rank.</value>
         private int CurrentRank { get; set; }
         /*private int CurrentRank
         {
@@ -1060,52 +998,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
+
             if (Plant.IsEmerged)
             {
                 if (FrostFraction.Value > 0)
                     foreach (LeafCohort L in Leaves)
                         L.DoFrost(FrostFraction.Value);
-
-                // On the initial day set up initial cohorts and set their properties
-                if (Phenology.OnDayOf(Structure.InitialiseStage))
-                    InitialiseCohorts();
-
-                //When primordia number is 1 more than current cohort number produce a new cohort
-                if (Structure.MainStemPrimordiaNo >= Leaves.Count + FinalLeafFraction)
-                {
-                    if (CohortsInitialised == false)
-                        throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeInitiationRate.  Your NodeInitiationRate is triggering a new leaf cohort before leaves have been initialised.");
-
-                    LeafCohort NewLeaf = InitialLeaves[0].Clone();
-                    NewLeaf.CohortPopulation = 0;
-                    NewLeaf.Age = 0;
-                    NewLeaf.Rank = (int)Math.Truncate(Structure.MainStemNodeNo);
-                    NewLeaf.Area = 0.0;
-                    NewLeaf.DoInitialisation();
-                    Leaves.Add(NewLeaf);
-                }
-
-                //When Node number is 1 more than current appeared leaf number make a new leaf appear and start growing
-                double FinalFraction = 1;
-                if (Structure.MainStemFinalNodeNumber.Value - AppearedCohortNo <= 1)
-                    FinalFraction = FinalLeafFraction;
-                if ((Structure.MainStemNodeNo >= AppearedCohortNo + FinalFraction) && (FinalFraction > 0.0))
-                {
-
-                    if (CohortsInitialised == false)
-                        throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeAppearanceRate.  Your NodeAppearanceRate is triggering a new leaf cohort before the initial leaves have been triggered.");
-                    int AppearingNode = (int)(Structure.MainStemNodeNo + (1 - FinalFraction));
-                    double CohortAge = (Structure.MainStemNodeNo - AppearingNode) * Structure.MainStemNodeAppearanceRate.Value * FinalFraction;
-                    if (AppearingNode > InitialisedCohortNo)
-                        throw new Exception("MainStemNodeNumber exceeds the number of leaf cohorts initialised.  Check primordia parameters to make sure primordia are being initiated fast enough and for long enough");
-                    int i = AppearingNode - 1;
-                    Leaves[i].Rank = AppearingNode;
-                    Leaves[i].CohortPopulation = Structure.TotalStemPopn;
-                    Leaves[i].Age = CohortAge;
-                    Leaves[i].DoAppearance(FinalFraction, CohortParameters);
-                    if (NewLeaf != null)
-                        NewLeaf.Invoke();
-                }
 
                 bool NextExpandingLeaf = false;
                 foreach (LeafCohort L in Leaves)
@@ -1123,9 +1021,9 @@ namespace Models.PMF.Organs
                         FractionNextleafExpanded = (L.FractionExpanded - StartFractionExpanded) / (1 - StartFractionExpanded);
                     }
                 }
-                _ExpandedNodeNo = ExpandedCohortNo + FractionNextleafExpanded;
-
+               
                 FRGR = FRGRFunction.Value;
+
             }
         }
         /// <summary>Clears this instance.</summary>
@@ -1136,25 +1034,50 @@ namespace Models.PMF.Organs
             WaterAllocation = 0;
         }
         /// <summary>Initialises the cohorts.</summary>
-        public virtual void InitialiseCohorts() //This sets up cohorts on the day growth starts (eg at emergence)
+        [EventSubscribe("InitialiseLeafCohorts")]
+        private void OnInitialiseLeafCohorts(object sender, EventArgs e) //This sets up cohorts on the day growth starts (eg at emergence)
         {
             Leaves = new List<LeafCohort>();
             CopyLeaves(InitialLeaves, Leaves);
             foreach (LeafCohort Leaf in Leaves)
             {
-                if (Leaf.Area > 0)//If initial cohorts have an area set the are considered to be appeared on day of emergence so we do appearance and count up the appeared nodes on the first day
-                {
-                    Leaf.CohortPopulation = Structure.TotalStemPopn;
-
-                    Leaf.DoInitialisation();
-                    Structure.MainStemNodeNo += 1.0;
-                    Leaf.DoAppearance(1.0, CohortParameters);
-                }
-                else //Leaves are primordia and have not yet emerged, initialise but do not set appeared values yet
-                    Leaf.DoInitialisation();
-                Structure.MainStemPrimordiaNo += 1.0;
+                if (Leaf.Area > 0)
+                    TipsAtEmergence += 1;
+                Leaf.DoInitialisation();
             }
         }
+        /// <summary>Method to initialise new cohorts</summary>
+        [EventSubscribe("AddLeafCohort")]
+        private void OnAddLeafCohort(object sender, EventArgs e)
+        {
+            if (CohortsInitialised == false)
+                throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeInitiationRate.  Your NodeInitiationRate is triggering a new leaf cohort before leaves have been initialised.");
+
+            LeafCohort NewLeaf = InitialLeaves[0].Clone();
+            NewLeaf.CohortPopulation = 0;
+            NewLeaf.Age = 0;
+            NewLeaf.Rank = (int)Math.Truncate(Structure.LeafTipsAppeared);
+            NewLeaf.Area = 0.0;
+            NewLeaf.DoInitialisation();
+            Leaves.Add(NewLeaf);
+        }
+        /// <summary>Method to make leaf cohort appear and start expansion</summary>
+        [EventSubscribe("LeafTipAppearance")]
+        private void OnLeafTipAppearance(object sender, ApparingLeafParams CohortParams)
+        {
+            if (CohortsInitialised == false)
+                throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeAppearanceRate.  Your NodeAppearanceRate is triggering a new leaf cohort before the initial leaves have been triggered.");
+            if (CohortParams.AppearingNode > InitialisedCohortNo)
+                throw new Exception("MainStemNodeNumber exceeds the number of leaf cohorts initialised.  Check primordia parameters to make sure primordia are being initiated fast enough and for long enough");
+            int i = CohortParams.AppearingNode - 1;
+            Leaves[i].Rank = CohortParams.AppearingNode;
+            Leaves[i].CohortPopulation = CohortParams.TotalStemPopn;
+            Leaves[i].Age = CohortParams.CohortAge;
+            Leaves[i].DoAppearance(CohortParams.FinalFraction, CohortParameters);
+            if (NewLeaf != null)
+                NewLeaf.Invoke();
+        }
+
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1182,7 +1105,7 @@ namespace Models.PMF.Organs
         /// <summary>Zeroes the leaves.</summary>
         public virtual void ZeroLeaves()
         {
-            Structure.MainStemNodeNo = 0;
+            Structure.LeafTipsAppeared = 0;
             Structure.Clear();
             Leaves.Clear();
             Summary.WriteMessage(this, "Removing leaves from plant");
@@ -1233,7 +1156,6 @@ namespace Models.PMF.Organs
                 leaf.DoThin(ProportionRemoved);
         }
         #endregion
-
 
         #region Arbitrator methods
 
@@ -1802,8 +1724,7 @@ namespace Models.PMF.Organs
             Summary.WriteMessage(this, "Removing lowest Leaf");
             Leaves.RemoveAt(0);
         }
-
-
+        
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1843,14 +1764,9 @@ namespace Models.PMF.Organs
 
                 if (Wt > 0)
                     SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
-
-                Structure.MainStemNodeNo = 0;
-                Structure.Clear();
                 Live.Clear();
                 Dead.Clear();
                 Leaves.Clear();
-                Structure.ResetStemPopn();
-                InitialiseCohorts();
             }
         }
 

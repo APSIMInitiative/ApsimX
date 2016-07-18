@@ -64,20 +64,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Utility\FindAndReplaceForm.resx">
-      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\TreeProxyView.resx">
       <DependentUpon>TreeProxyView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="App.config" />
     <EmbeddedResource Include="Resources\Glade\ExplorerView.glade">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Glade\MainForm.glade">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Glade\TabbedExplorerView.glade">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -90,13 +81,17 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Glade\DataStoreView.glade" />
     <EmbeddedResource Include="Resources\Glade\ProfileView.glade" />
-    <EmbeddedResource Include="Resources\Glade\AxisView.glade" />
+    <EmbeddedResource Include="Resources\Glade\AxisView.glade">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Glade\TitleView.glade" />
     <EmbeddedResource Include="Resources\Glade\LegendView.glade" />
     <EmbeddedResource Include="Resources\Glade\MemoView.glade" />
     <EmbeddedResource Include="Resources\Glade\InitialWaterView.glade" />
     <EmbeddedResource Include="Resources\Glade\SeriesView.glade" />
-    <EmbeddedResource Include="Resources\Glade\SupplementView.glade" />
+    <EmbeddedResource Include="Resources\Glade\SupplementView.glade">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Glade\InputView.glade" />
     <EmbeddedResource Include="Resources\Glade\ReportView.glade" />
     <EmbeddedResource Include="Resources\Fonts\arial.ttf" />
@@ -104,6 +99,8 @@
     <EmbeddedResource Include="Resources\Fonts\arialbi.ttf" />
     <EmbeddedResource Include="Resources\Fonts\ariali.ttf" />
     <EmbeddedResource Include="Resources\Fonts\cour.ttf" />
+    <EmbeddedResource Include="Resources\Glade\FindAndReplace.glade" />
+    <EmbeddedResource Include="Resources\Glade\MainView.glade" />
     <None Include="Resources\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Test.xshd" />
@@ -156,7 +153,7 @@
     <Compile Include="Interfaces\ISummaryView.cs" />
     <Compile Include="Interfaces\ISupplementView.cs" />
     <Compile Include="Interfaces\ITestView.cs" />
-    <Compile Include="MainForm.cs" />
+    <Compile Include="Main.cs" />
     <Compile Include="Menus\ContextMenu.cs" />
     <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
@@ -173,6 +170,7 @@
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\IPresenter.cs" />
     <Compile Include="Presenters\LegendPresenter.cs" />
+    <Compile Include="Presenters\MainPresenter.cs" />
     <Compile Include="Presenters\ManagerPresenter.cs" />
     <Compile Include="Presenters\MapPresenter.cs" />
     <Compile Include="Presenters\MemoPresenter.cs" />
@@ -184,7 +182,6 @@
     <Compile Include="Presenters\SeriesPresenter.cs" />
     <Compile Include="Presenters\SummaryPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
-    <Compile Include="Presenters\TabbedExplorerPresenter.cs" />
     <Compile Include="Presenters\TitlePresenter.cs" />
     <Compile Include="Presenters\TreeProxyPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
@@ -201,9 +198,6 @@
     <Compile Include="Utility\DateTimeCellType.cs" />
     <Compile Include="Utility\Excel.cs" />
     <Compile Include="Utility\FindAndReplaceForm.cs" />
-    <Compile Include="Utility\FindAndReplaceForm.designer.cs">
-      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Utility\Graph.cs" />
     <Compile Include="Utility\LineSeriesWithTracker.cs" />
     <Compile Include="Views\AxisView.cs" />
@@ -225,6 +219,7 @@
     <Compile Include="Views\LegendView.cs" />
     <Compile Include="Views\ListBoxView.cs" />
     <Compile Include="Views\ListButtonView.cs" />
+    <Compile Include="Views\MainView.cs" />
     <Compile Include="Views\ManagerView.cs" />
     <Compile Include="Views\MapView.cs" />
     <Compile Include="Views\MemoView.cs" />
@@ -233,16 +228,13 @@
     <Compile Include="Views\SeriesView.cs" />
     <Compile Include="Views\SummaryView.cs" />
     <Compile Include="Views\SupplementView.cs" />
-    <Compile Include="Views\TabbedExplorerView.cs">
-      <SubType>
-      </SubType>
-    </Compile>
     <Compile Include="Views\TabbedMetDataView.cs" />
     <Compile Include="Views\TitleView.cs" />
     <Compile Include="Views\TreeProxyView.cs" />
     <Compile Include="Views\TreeProxyView.Designer.cs">
       <DependentUpon>TreeProxyView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\ViewBase.cs" />
     <Compile Include="Views\XYPairsView.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -329,6 +321,9 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Chicory.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GenericBelowGroundOrgan.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SimpleLeaf.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Stock.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Supplement.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Chickpea.png" />
@@ -367,6 +362,9 @@
     <EmbeddedResource Include="Resources\LargeImages\Sugar.png" />
     <EmbeddedResource Include="Resources\LargeImages\Swim.png" />
     <EmbeddedResource Include="Resources\LargeImages\Wheat.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Chicory.png" />
+    <EmbeddedResource Include="Resources\Function.png" />
+    <EmbeddedResource Include="Resources\Property.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
@@ -565,10 +563,6 @@
     </Reference>
     <Reference Include="ICSharpCode.NRefactory.Xml, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
       <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.Xml.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="ICSharpCode.TextEditor, Version=3.2.1.6466, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
-      <HintPath>..\packages\ICSharpCode.TextEditor.3.2.1.6466\lib\Net20\ICSharpCode.TextEditor.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MarkdownDeep, Version=1.5.4615.26275, Culture=neutral, processorArchitecture=MSIL">

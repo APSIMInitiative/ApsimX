@@ -188,6 +188,19 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Return true if plant has germinated</summary>
+        public bool IsGerminated
+        {
+            get
+            {
+                if (Phenology != null)
+                    return Phenology.Germinated;
+                //If the crop model has phenology and the crop is emerged return true
+                else
+                    return IsAlive;
+                //Else if the crop is in the grown returen true
+            }
+        }
         /// <summary>Returns true if the crop is ready for harvesting</summary>
         public bool IsReadyForHarvesting { get { return Phenology.CurrentPhaseName == "ReadyForHarvesting"; } }
 
