@@ -2418,6 +2418,11 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].PpSensitivity.Value = 3</Command>
           </Cultivar>
           <Cultivar>
+            <Name>Suntop</Name>
+            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+          </Cultivar>
+          <Cultivar>
             <Name>Ventura</Name>
             <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
             <Command>[Phenology].VrnSensitivity.Value = 7</Command>
