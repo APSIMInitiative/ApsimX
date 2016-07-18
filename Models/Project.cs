@@ -88,9 +88,9 @@ namespace Models
                     // pass the job to a job runner.
                     JobManager.IRunnable job;
                     if (fileName.Contains('*') || fileName.Contains('?'))
-                        job = Runner.ForFolder(fileName, args.Contains("/Recurse"));
+                        job = Runner.ForFolder(fileName, args.Contains("/Recurse"), args.Contains("/RunTests"));
                     else
-                        job = Runner.ForFile(fileName);
+                        job = Runner.ForFile(fileName, args.Contains("/RunTests"));
                     JobManager jobManager = new JobManager();
                     jobManager.AddJob(job);
                     jobManager.Start(waitUntilFinished: true);
