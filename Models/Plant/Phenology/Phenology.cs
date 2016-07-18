@@ -393,6 +393,8 @@ namespace Models.PMF.Phen
         {
             if (PlantIsAlive)
             {
+                if(ThermalTime.Value <0)
+                    throw new Exception("Negative Thermal Time, check the set up of the ThermalTime Function in" + this);
                 // If this is the first time through here then setup some variables.
                 if (Phases == null || Phases.Count == 0)
                     OnSimulationCommencing(null, null);

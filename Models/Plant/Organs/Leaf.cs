@@ -862,7 +862,6 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-
             if (Plant.IsEmerged)
             {
                 if (FrostFraction.Value > 0)

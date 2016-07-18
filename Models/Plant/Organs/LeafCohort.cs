@@ -471,7 +471,10 @@ namespace Models.PMF.Organs
                 if (IsGrowing)
                 {
                     double TotalDMDemand = Math.Min(DeltaPotentialArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2), DeltaWaterConstrainedArea / SpecificLeafAreaMin);
+                    if(TotalDMDemand < 0)
+                        throw new Exception("Negative DMDemand in" + this);
                     return TotalDMDemand * StructuralFraction;
+
                 }
                 else return 0;
             }
@@ -1172,7 +1175,9 @@ namespace Models.PMF.Organs
             double BranchNo = Structure.TotalStemPopn - Structure.MainStemPopn;  //Fixme, this line appears redundant
             double leafSizeDelta = SizeFunction(Age + TT) - SizeFunction(Age); //mm2 of leaf expanded in one day at this cohort (Today's minus yesterday's Area/cohort)
             double growth = CohortPopulation * leafSizeDelta; // Daily increase in leaf area for that cohort position in a per m2 basis (mm2/m2/day)
-            return growth;                              // FIXME-EIT Unit conversion to m2/m2 could happen here and population could be considered at higher level only (?)
+            if (growth < 0)
+                throw new Exception("Netagive potential leaf area expansion in" + this);
+            return growth;                              
         }
         /// <summary>Potential average leaf size for today per cohort (no stress)</summary>
         /// <param name="TT">Thermal-time accumulation since cohort initiation</param>
