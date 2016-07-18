@@ -1328,6 +1328,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Name>CultivarFolder</Name>
       </CultivarFolder>
       <CropType>Potato</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Report>
       <Name>Report</Name>
@@ -2286,6 +2287,7 @@ All potatoes were planted on 20/10/2003 and irrigated, fertiliser and pesticide 
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Folder>
           <Name>Management</Name>
@@ -6312,6 +6314,7 @@ Fertiliser and pesticide were applied to ensure the crop remaind unstressed and 
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Folder>
           <Name>DiagnoisticGraphs</Name>
@@ -9773,6 +9776,7 @@ This trial was run in A Block of the Plant and Food Research farm on a templeton
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Folder>
           <Name>Manager folder</Name>
@@ -13524,6 +13528,7 @@ This trial was run in A Block of the Plant and Food Research farm on a templeton
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Folder>
           <Name>Folder</Name>
@@ -17448,6 +17453,7 @@ namespace Models
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Folder>
           <Name>Manager folder</Name>
@@ -22155,6 +22161,7 @@ A range of excelent experimental data has been collected by Plant and Food Resea
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Folder>
           <Name>Manager folder</Name>
@@ -27279,6 +27286,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Command />
           </Cultivar>
           <CropType>Potato</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Folder>
           <Name>Manager folder</Name>
@@ -32641,6 +32649,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Command />
           </Cultivar>
           <CropType>Potato</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Folder>
           <Name>Manager folder</Name>
