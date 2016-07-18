@@ -18,16 +18,16 @@
           <RegrStats>
             <Name>Biomass</Name>
             <n>88</n>
-            <Slope>1.0360068838254533</Slope>
-            <Intercept>-139.49271316458248</Intercept>
-            <SEslope>0.04467074597683332</SEslope>
-            <SEintercept>61.225843010834822</SEintercept>
-            <R2>0.8621511928309894</R2>
-            <RMSE>261.80498422799712</RMSE>
-            <NSE>0.80094112272953077</NSE>
-            <ME>-94.893247511136664</ME>
-            <MAE>212.27133783559671</MAE>
-            <RSR>0.44361790380260124</RSR>
+            <Slope>0.97047391025239371</Slope>
+            <Intercept>-132.52171512680502</Intercept>
+            <SEslope>0.043507825906436773</SEslope>
+            <SEintercept>59.631941675469314</SEintercept>
+            <R2>0.8526250778973552</R2>
+            <RMSE>291.45671876064353</RMSE>
+            <NSE>0.75329731734091743</NSE>
+            <ME>-169.09382816947957</ME>
+            <MAE>240.93355766460587</MAE>
+            <RSR>0.4938615626705638</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FinalLeafNo</Name>
@@ -46,86 +46,86 @@
           <RegrStats>
             <Name>FloweringDAS</Name>
             <n>90</n>
-            <Slope>0.65013341313184</Slope>
-            <Intercept>22.738626634414885</Intercept>
-            <SEslope>0.081012639842489437</SEslope>
-            <SEintercept>4.5768676237421575</SEintercept>
-            <R2>0.42257978476862079</R2>
-            <RMSE>6.392704174812617</RMSE>
-            <NSE>0.082815889878057769</NSE>
-            <ME>3.1111111111111112</ME>
-            <MAE>5.0666666666666664</MAE>
-            <RSR>0.95236189317140973</RSR>
+            <Slope>0.63519612977233142</Slope>
+            <Intercept>25.121052675327761</Intercept>
+            <SEslope>0.084213395126161827</SEslope>
+            <SEintercept>4.7576966062051937</SEintercept>
+            <R2>0.39265224873818527</R2>
+            <RMSE>7.4438639906375981</RMSE>
+            <NSE>-0.24360988504027348</NSE>
+            <ME>4.6555555555555559</ME>
+            <MAE>5.9888888888888889</MAE>
+            <RSR>1.1089598718748639</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GPSM</Name>
             <n>84</n>
-            <Slope>0.96489936298323908</Slope>
-            <Intercept>79.711883199698832</Intercept>
-            <SEslope>0.043401554369568732</SEslope>
-            <SEintercept>104.04503654922684</SEintercept>
-            <R2>0.8577025601951469</R2>
-            <RMSE>477.26534431124884</RMSE>
-            <NSE>0.84427088954024654</NSE>
-            <ME>7.0595146436039151</ME>
-            <MAE>353.02602147887995</MAE>
-            <RSR>0.39226928566749869</RSR>
+            <Slope>0.96516023231755232</Slope>
+            <Intercept>5.7934471465368915</Intercept>
+            <SEslope>0.044374164516532831</SEslope>
+            <SEintercept>106.3766410218994</SEintercept>
+            <R2>0.8522746686796161</R2>
+            <RMSE>492.28381042494135</RMSE>
+            <NSE>0.83431579442562021</NSE>
+            <ME>-66.318966108675923</ME>
+            <MAE>373.49268971652583</MAE>
+            <RSR>0.40461311713244935</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainSize</Name>
             <n>78</n>
-            <Slope>0.47488244020446313</Slope>
-            <Intercept>0.17910086087702362</Intercept>
-            <SEslope>0.1199060330922154</SEslope>
-            <SEintercept>0.034420111793349153</SEintercept>
-            <R2>0.17107671372228495</R2>
-            <RMSE>0.072012188199214053</RMSE>
-            <NSE>-0.68475314963069067</NSE>
-            <ME>0.031203248582135388</ME>
-            <MAE>0.052024336077587933</MAE>
-            <RSR>1.2896331843886659</RSR>
+            <Slope>0.46050894482070381</Slope>
+            <Intercept>0.184118040729349</Intercept>
+            <SEslope>0.12103562890538215</SEslope>
+            <SEintercept>0.034744372492897087</SEintercept>
+            <R2>0.15999857316025945</R2>
+            <RMSE>0.073197889404295141</RMSE>
+            <NSE>-0.74068977732615537</NSE>
+            <ME>0.032172181317344006</ME>
+            <MAE>0.052633635897588765</MAE>
+            <RSR>1.31086736236715</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainWt</Name>
             <n>103</n>
-            <Slope>0.89557932448808875</Slope>
-            <Intercept>87.070275726724958</Intercept>
-            <SEslope>0.040119482571185763</SEslope>
-            <SEintercept>27.936739164772753</SEintercept>
-            <R2>0.83147217276378182</R2>
-            <RMSE>145.0180723348048</RMSE>
-            <NSE>0.82172026037231827</NSE>
-            <ME>23.818126689481133</ME>
-            <MAE>113.91375615380456</MAE>
-            <RSR>0.42017718687377659</RSR>
+            <Slope>0.87666484780774534</Slope>
+            <Intercept>73.312801836120912</Intercept>
+            <SEslope>0.039778003008968</SEslope>
+            <SEintercept>27.698953808422466</SEintercept>
+            <R2>0.82785499868198842</R2>
+            <RMSE>143.69410894835437</RMSE>
+            <NSE>0.82496066182558658</NSE>
+            <ME>-1.3966691546665484</ME>
+            <MAE>111.58881383690688</MAE>
+            <RSR>0.4163411187045743</RSR>
           </RegrStats>
           <RegrStats>
             <Name>LAImax</Name>
             <n>74</n>
-            <Slope>1.1026948239237262</Slope>
-            <Intercept>0.00530695005014481</Intercept>
-            <SEslope>0.054573768672452658</SEslope>
-            <SEintercept>0.16430286178087261</SEintercept>
-            <R2>0.85008295185240679</R2>
-            <RMSE>0.6975188503652654</RMSE>
-            <NSE>0.73109038639164492</NSE>
-            <ME>0.2819122201640849</ME>
-            <MAE>0.5424848429142981</MAE>
-            <RSR>0.51504922086238025</RSR>
+            <Slope>1.0109240408314464</Slope>
+            <Intercept>-0.01495840537227533</Intercept>
+            <SEslope>0.051701807507869534</SEslope>
+            <SEintercept>0.15565637373829908</SEintercept>
+            <R2>0.84152095824263262</R2>
+            <RMSE>0.59045896430769806</RMSE>
+            <NSE>0.80730347991314555</NSE>
+            <ME>0.014465154155536586</ME>
+            <MAE>0.48332709002661473</MAE>
+            <RSR>0.4359960011957148</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
             <n>90</n>
-            <Slope>0.87437444898880734</Slope>
-            <Intercept>17.51908290780537</Intercept>
-            <SEslope>0.048759544491978057</SEslope>
-            <SEintercept>5.5488442564467384</SEintercept>
-            <R2>0.78514055634808222</R2>
-            <RMSE>8.345990387938123</RMSE>
-            <NSE>0.73127085864630925</NSE>
-            <ME>3.3666666666666667</ME>
-            <MAE>6.677777777777778</MAE>
-            <RSR>0.51550292143237786</RSR>
+            <Slope>0.89312847663950767</Slope>
+            <Intercept>16.906337503911473</Intercept>
+            <SEslope>0.048885345990196186</SEslope>
+            <SEintercept>5.5631604878248826</SEintercept>
+            <R2>0.79136429371562111</R2>
+            <RMSE>9.0086378301913967</RMSE>
+            <NSE>0.686904187518367</NSE>
+            <ME>4.8666666666666671</ME>
+            <MAE>7.4</MAE>
+            <RSR>0.5564323589806095</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -323,6 +323,7 @@ Note.  The BMW1 trail consists of data from unreplicated plots.
               <Name>Maize</Name>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -1397,6 +1398,7 @@ namespace Models
               <Name>Maize</Name>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -11889,6 +11891,7 @@ namespace Models
               <Name>Maize</Name>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -13461,6 +13464,7 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
               <Name>Maize</Name>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -14607,6 +14611,7 @@ namespace Models
               <Name>Maize</Name>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -15749,6 +15754,7 @@ namespace Models
               <Name>Maize</Name>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -16690,6 +16696,7 @@ namespace Models
               <Name>Maize</Name>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -17551,6 +17558,7 @@ namespace Models
               <Name>Maize</Name>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -18500,6 +18508,7 @@ namespace Models
               <Name>Maize</Name>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -19928,6 +19937,7 @@ namespace Models
               <Name>Maize</Name>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -21255,6 +21265,7 @@ namespace Models
               <Name>Maize</Name>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -22639,6 +22650,7 @@ Testing of APSIM Maize, Soil Water, Soil Nitrogen, Manure, and Soil Temperature 
               <Name>Maize</Name>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -23435,6 +23447,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -24441,6 +24454,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -26191,6 +26205,7 @@ namespace Models
               <Name>Maize</Name>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>ExtraVariables</Name>
@@ -32506,6 +32521,7 @@ TreatNo = 2
               <Name>Maize</Name>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>ExtraVariables</Name>
@@ -35328,6 +35344,7 @@ namespace Models
               <Name>Maize</Name>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Operations>
               <Name>Fert</Name>
@@ -36659,6 +36676,7 @@ namespace Models
               <Name>Maize</Name>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Operations>
               <Name>Fert</Name>
@@ -38705,6 +38723,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
