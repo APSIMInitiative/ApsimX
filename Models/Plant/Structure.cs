@@ -370,7 +370,7 @@ namespace Models.PMF
         {
             get
             {
-                return Math.Truncate(LeafTipsAppeared) - LeafTipsAppeared;
+                return LeafTipsAppeared -Math.Truncate(LeafTipsAppeared);
             }
         }
 
@@ -403,7 +403,7 @@ namespace Models.PMF
                     if(Emerged==false)
                     {
                         NextLeafProportion = 1.0;
-                        DoCohortEmergence();
+                        DoEmergence();
                     }
 
                     bool AllCohortsInitialised = (Leaf.InitialisedCohortNo >= MainStemFinalNodeNumber.Value);
@@ -501,7 +501,7 @@ namespace Models.PMF
         /// <summary>
         /// Called on the day of emergence to get the initials leaf cohorts to appear
         /// </summary>
-        public void DoCohortEmergence()
+        public void DoEmergence()
         {
             CohortToInitialise = Leaf.CohortsAtInitialisation;
             int i = 1;
@@ -566,6 +566,7 @@ namespace Models.PMF
             Germinated = false;
             Emerged = false;
             CohortToInitialise = 0;
+            TipToAppear = 0;
             LeafTipsAppeared = 0;
         }
 
@@ -593,12 +594,13 @@ namespace Models.PMF
         {
             LeafTipsAppeared = 0;
             CohortToInitialise = 0;
+            TipToAppear = 0;
             Emerged = false;
             Clear();
             ResetStemPopn();
             InitialiseLeafCohorts.Invoke(this, args);
             NextLeafProportion = 1.0;
-            DoCohortEmergence();
+            DoEmergence();
             Emerged = true;
         }
         
@@ -614,6 +616,7 @@ namespace Models.PMF
             Germinated = false;
             Emerged = false;
             CohortToInitialise = 0;
+            TipToAppear = 0;
         }
         /// <summary>Called when crop recieves a remove biomass event from manager</summary>
         /// /// <param name="ProportionRemoved">The cultivar.</param>
