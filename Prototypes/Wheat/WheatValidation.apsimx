@@ -5672,6 +5672,20 @@ VShort duration variety released in New Zealand by Pioneer
             <RSR>1.1089703113754135</RSR>
           </RegrStats>
           <RegrStats>
+            <Name>Wheat.Structure.HaunStage.Value</Name>
+            <n>255</n>
+            <Slope>0.83210262082284958</Slope>
+            <Intercept>1.6120750360319684</Intercept>
+            <SEslope>0.03497107370228221</SEslope>
+            <SEintercept>0.26799092418129056</SEintercept>
+            <R2>0.6911453890691337</R2>
+            <RMSE>1.2206414957371314</RMSE>
+            <NSE>0.6282155069510218</NSE>
+            <ME>0.37011906682535334</ME>
+            <MAE>0.93783126044301279</MAE>
+            <RSR>0.60854458722830207</RSR>
+          </RegrStats>
+          <RegrStats>
             <Name>Wheat.Structure.LeafTipsAppeared</Name>
             <n>179</n>
             <Slope>0.72462877925167279</Slope>
@@ -29397,14 +29411,14 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
+              <YFieldName>Wheat.Structure.LeafTipsAppeared</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
             <Series>
-              <Name>VegComits</Name>
+              <Name>Liguals</Name>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
@@ -29418,7 +29432,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Leaf.InitialisedCohortNo</YFieldName>
+              <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
