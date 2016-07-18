@@ -185,7 +185,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.FillingRateFunction))]
         [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.HeightFunction))]
         [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.InPhaseTemperatureFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.MainStemFinalNodeNumberFunction))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.RUECO2Function))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.RUEModel))]
         [XmlElement(typeof(Models.PMF.OldPlant.Plant15))]
