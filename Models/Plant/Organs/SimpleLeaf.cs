@@ -54,6 +54,10 @@ namespace Models.PMF.Organs
         /// <summary>
         /// 
         /// </summary>
+        public int CohortsAtInitialisation { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public double InitialisedCohortNo { get; set; }
         /// <summary>
         /// 
