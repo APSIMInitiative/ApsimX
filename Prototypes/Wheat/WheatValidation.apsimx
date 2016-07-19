@@ -246,21 +246,10 @@ The model consists of:
                 <Name>If_Vrn4</Name>
                 <VariableName>[Phenology].Vrn4.Value</VariableName>
               </VariableReference>
-              <LinearInterpolationFunction>
-                <Name>LessThanLag</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>8</double>
-                    <double>16</double>
-                  </X>
-                  <Y>
-                    <double>1</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Phenology].PercievedPhotoPeriod.Value</XProperty>
-              </LinearInterpolationFunction>
+              <VariableReference>
+                <Name>IsLessThanLag</Name>
+                <VariableName>[Phenology].VernLag.Value</VariableName>
+              </VariableReference>
               <Constant>
                 <Name>Return_Zero</Name>
                 <Value>0</Value>
@@ -311,11 +300,10 @@ The model consists of:
         </MinimumFunction>
         <MinimumFunction>
           <Name>Vrn4</Name>
-          <Constant>
-            <Name>Saturation</Name>
-            <Value>1</Value>
-            <Units>Relative Experssion</Units>
-          </Constant>
+          <VariableReference>
+            <Name>MaxExpression</Name>
+            <VariableName>[Phenology].VernLag.Value</VariableName>
+          </VariableReference>
           <AccumulateFunction>
             <Name>CurrentExpression</Name>
             <VariableReference>
@@ -578,13 +566,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Units>Leaves</Units>
         </Constant>
         <Constant>
-          <Name>SDVrnSensitivity</Name>
+          <Name>VernLag</Name>
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[The reduction in leaf number going from 8 to 16 h Pp]]></MemoText>
           </Memo>
-          <Value>0</Value>
-          <Units>Leaves</Units>
+          <Value>1</Value>
+          <Units>Unitless</Units>
         </Constant>
       </Phenology>
       <Structure>
@@ -2476,6 +2464,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.Value = 12</Command>
             <Command>[Phenology].VrnSensitivity.Value = 10</Command>
             <Command>[Phenology].PpSensitivity.Value = 0</Command>
+            <Command>[Phenology].VernLag.Value = 3</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>

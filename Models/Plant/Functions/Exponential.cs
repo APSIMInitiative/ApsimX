@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [Description("Takes the value of the child as the x value and returns the y value from a exponential of the form y = A * B * exp(x * C)")]
+    [Description("Takes the value of the child as the x value and returns the y value from a exponential of the form y = A + B * exp(x * C)")]
     public class ExponentialFunction : Model, IFunction
     {
         /// <summary>ExponentialFunction Constructor</summary>
