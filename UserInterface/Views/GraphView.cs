@@ -627,11 +627,16 @@ namespace UserInterface.Views
                 do
                 {
                     DateTime d = Convert.ToDateTime(enumerator.Current);
-                    dataPointValues.Add(DateTimeAxis.ToDouble(d));
-                    if (d < smallestDate)
-                        smallestDate = d;
-                    if (d > largestDate)
-                        largestDate = d;
+                    if (d != DateTime.MinValue)
+                    {
+                        dataPointValues.Add(DateTimeAxis.ToDouble(d));
+                        if (d < smallestDate)
+                            smallestDate = d;
+                        if (d > largestDate)
+                            largestDate = d;
+                    }
+                    else
+                        dataPointValues.Add(double.NaN);
                 }
                 while (enumerator.MoveNext());
             }
