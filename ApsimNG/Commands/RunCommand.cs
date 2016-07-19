@@ -64,7 +64,7 @@
             {
                 stopwatch.Start();
 
-                JobManager.IRunnable job = Runner.ForSimulations(simulations, modelClicked);
+                JobManager.IRunnable job = Runner.ForSimulations(simulations, modelClicked, false);
 
                 jobManager.AddJob(job);
                 jobManager.AllJobsCompleted += OnComplete;
