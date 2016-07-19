@@ -139,7 +139,7 @@ The model consists of:
           </PhaseLookup>
         </AddFunction>
         <AirTemperatureFunction>
-          <Name>DailyVernalisation</Name>
+          <Name>xDailyVernalisation</Name>
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
@@ -148,16 +148,51 @@ The model consists of:
             <Name>XYPairs</Name>
             <X>
               <double>0</double>
+              <double>1</double>
+              <double>2</double>
+              <double>3</double>
+              <double>4</double>
+              <double>5</double>
               <double>6</double>
-              <double>15</double>
+              <double>7</double>
+              <double>8</double>
+              <double>9</double>
+              <double>10</double>
+              <double>11</double>
             </X>
             <Y>
               <double>0</double>
-              <double>0.03</double>
+              <double>0.014</double>
+              <double>0.0252</double>
+              <double>0.0336</double>
+              <double>0.0392</double>
+              <double>0.042</double>
+              <double>0.042</double>
+              <double>0.0392</double>
+              <double>0.0336</double>
+              <double>0.0252</double>
+              <double>0.014</double>
               <double>0</double>
             </Y>
           </XYPairs>
         </AirTemperatureFunction>
+        <MultiplyFunction>
+          <Name>DailyVernalisation</Name>
+          <ExponentialFunction>
+            <Name>ExponentialFunction</Name>
+            <VariableReference>
+              <Name>ThermalTime</Name>
+              <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            </VariableReference>
+            <A>0</A>
+            <B>1.6</B>
+            <C>-0.19</C>
+          </ExponentialFunction>
+          <VariableReference>
+            <Name>DeltaHaunStage</Name>
+            <VariableName>[Structure].DeltaHaunStage</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
         <PhotoperiodFunction>
           <Name>Photoperiod</Name>
           <Twilight>-6</Twilight>
@@ -209,7 +244,7 @@ The model consists of:
                   </X>
                   <Y>
                     <double>1</double>
-                    <double>0</double>
+                    <double>1</double>
                   </Y>
                 </XYPairs>
                 <XProperty>[Phenology].PercievedPhotoPeriod.Value</XProperty>
@@ -223,6 +258,41 @@ The model consists of:
                 <VariableName>[Phenology].DailyVernalisation.Value</VariableName>
               </VariableReference>
             </LessThanFunction>
+            <StartStageName>Germination</StartStageName>
+            <EndStageName>TerminalSpikelet</EndStageName>
+          </AccumulateFunction>
+        </MinimumFunction>
+        <MinimumFunction>
+          <Name>Vrn2</Name>
+          <Constant>
+            <Name>Saturation</Name>
+            <Value>0.24</Value>
+            <Units>Relative Experssion</Units>
+          </Constant>
+          <AccumulateFunction>
+            <Name>CurrentExpression</Name>
+            <MultiplyFunction>
+              <Name>Vrn2Expression</Name>
+              <LinearInterpolationFunction>
+                <Name>PhotoPeriodResponse</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>8</double>
+                    <double>16</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>0.026</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Phenology].PercievedPhotoPeriod.Value</XProperty>
+              </LinearInterpolationFunction>
+              <VariableReference>
+                <Name>DeltaHaunStage</Name>
+                <VariableName>[Structure].DeltaHaunStage</VariableName>
+              </VariableReference>
+            </MultiplyFunction>
             <StartStageName>Germination</StartStageName>
             <EndStageName>TerminalSpikelet</EndStageName>
           </AccumulateFunction>
@@ -483,7 +553,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Memo</Name>
             <MemoText><![CDATA[The difference between Inherent earlyness leaf number and the number of leaves produced when the plant is unvernalisaed and grown in long photoperiod]]></MemoText>
           </Memo>
-          <Value>8</Value>
+          <Value>0</Value>
           <Units>Leaves</Units>
         </Constant>
         <Constant>
@@ -493,6 +563,15 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <MemoText><![CDATA[The reduction in leaf number going from 8 to 16 h Pp]]></MemoText>
           </Memo>
           <Value>3</Value>
+          <Units>Leaves</Units>
+        </Constant>
+        <Constant>
+          <Name>SDVrnSensitivity</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[The reduction in leaf number going from 8 to 16 h Pp]]></MemoText>
+          </Memo>
+          <Value>0</Value>
           <Units>Leaves</Units>
         </Constant>
       </Phenology>
@@ -514,12 +593,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>3</double>
                 <double>7</double>
                 <double>8</double>
-                <double>14</double>
-                <double>15</double>
+                <double>12</double>
+                <double>13</double>
               </X>
               <Y>
-                <double>0.6</double>
-                <double>0.6</double>
+                <double>0.75</double>
+                <double>0.75</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1.4</double>
@@ -544,12 +623,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <X>
                 <double>8</double>
                 <double>12</double>
-                <double>16</double>
+                <double>14</double>
               </X>
               <Y>
-                <double>1.4</double>
+                <double>1.6</double>
                 <double>1</double>
-                <double>0.6</double>
+                <double>0.7</double>
               </Y>
             </XYPairs>
             <XProperty>[Phenology].Photoperiod.Value</XProperty>
@@ -2270,6 +2349,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
             <Command>[Phenology].VrnSensitivity.Value = 13</Command>
             <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].SDVrnSensitivity.Value = 5</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
           </Cultivar>
           <Cultivar>
@@ -2386,7 +2466,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.Value = 12</Command>
             <Command>[Phenology].VrnSensitivity.Value = 10</Command>
             <Command>[Phenology].PpSensitivity.Value = 0</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Weston</Name>
@@ -2715,6 +2795,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].Phenology.Stage</string>
         <string>[Wheat].Phenology.ThermalTime.Value</string>
         <string>[Wheat].Phenology.Vrn1.Value</string>
+        <string>[Wheat].Phenology.Vrn2.Value</string>
         <string>[Wheat].Phenology.Vrn4.Value</string>
         <string>[Wheat].Phenology.Zadok.Stage</string>
         <string>[Wheat].Root.Depth</string>
@@ -28484,8 +28565,29 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
+              <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
               <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed1</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16776961</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -32622,21 +32724,42 @@ namespace Models
               <CumulativeX>false</CumulativeX>
             </Series>
             <Series>
-              <Name>Predicted1</Name>
+              <Name>Predicted11</Name>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-8388608</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
-              <Line>Dash</Line>
+              <Line>Dot</Line>
               <LineThickness>Thin</LineThickness>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
+              <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed1</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16776961</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>Circle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -57920,5 +58043,5 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Folder>
-  <ExplorerWidth>365</ExplorerWidth>
+  <ExplorerWidth>412</ExplorerWidth>
 </Simulations>
