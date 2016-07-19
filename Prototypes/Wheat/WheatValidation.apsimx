@@ -2349,8 +2349,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
             <Command>[Phenology].VrnSensitivity.Value = 13</Command>
             <Command>[Phenology].PpSensitivity.Value = 3</Command>
-            <Command>[Phenology].SDVrnSensitivity.Value = 5</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
           </Cultivar>
           <Cultivar>
             <Name>Conquest</Name>
@@ -2466,7 +2464,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.Value = 12</Command>
             <Command>[Phenology].VrnSensitivity.Value = 10</Command>
             <Command>[Phenology].PpSensitivity.Value = 0</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Weston</Name>
