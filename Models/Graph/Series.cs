@@ -192,6 +192,9 @@ namespace Models.Graph
             foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
                 series.GetSeriesToPutOnGraph(ourDefinitions);
 
+            // Remove series that have no data.
+            ourDefinitions.RemoveAll(d => !MathUtilities.ValuesInArray(d.x) || !MathUtilities.ValuesInArray(d.y));
+
             definitions.AddRange(ourDefinitions);
         }
 

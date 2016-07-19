@@ -1096,6 +1096,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
         <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -27094,6 +27095,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <KDead>0.3</KDead>
             <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
             <TipsAtEmergence>0</TipsAtEmergence>
+            <CohortsAtInitialisation>0</CohortsAtInitialisation>
             <FractionDied>0</FractionDied>
           </Leaf>
           <GenericAboveGroundOrgan>
@@ -32457,6 +32459,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <KDead>0.3</KDead>
             <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
             <TipsAtEmergence>0</TipsAtEmergence>
+            <CohortsAtInitialisation>0</CohortsAtInitialisation>
             <FractionDied>0</FractionDied>
           </Leaf>
           <GenericAboveGroundOrgan>

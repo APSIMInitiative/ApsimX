@@ -31,6 +31,11 @@ namespace Models.Interfaces
         /// 
         /// </summary>
         int TipsAtEmergence { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        int CohortsAtInitialisation { get; }
         /// <summary>
         /// 
         /// </summary>

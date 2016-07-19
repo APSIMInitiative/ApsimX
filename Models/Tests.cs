@@ -232,15 +232,6 @@ namespace Models
             }
         }
 
-        /// <summary>All simulations have run - write all tables</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("AllCompleted")]
-        private void OnAllSimulationsCompleted(object sender, EventArgs e)
-        {
-            Test();
-        }
-
         /// <summary>Document the stats.</summary>
         /// <param name="tags"></param>
         /// <param name="headingLevel"></param>

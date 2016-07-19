@@ -18,31 +18,34 @@
         /// <summary>Runs the specified simulations.</summary>
         /// <param name="model">Simulations to run.</param>
         /// <param name="simulations">Simulations model.</param>
+        /// <param name="runTests">Run the test nodes?</param>
         /// <returns>A runnable job or null if nothing to run.</returns>
-        public static JobManager.IRunnable ForSimulations(Simulations simulations, Model model)
+        public static JobManager.IRunnable ForSimulations(Simulations simulations, Model model, bool runTests)
         {
-            return new RunOrganiser(simulations, model);
+            return new RunOrganiser(simulations, model, runTests);
         }
 
         /// <summary>Run simulations in files specified by a file specification.</summary>
         /// <param name="fileSpec">The file specification</param>
         /// <param name="recurse">Recurse throug sub directories?</param>
+        /// <param name="runTests">Run the test nodes?</param>
         /// <returns>The file of jobs that were run.</returns>
-        public static JobManager.IRunnable ForFolder(string fileSpec, bool recurse)
+        public static JobManager.IRunnable ForFolder(string fileSpec, bool recurse, bool runTests)
         {
-            return new RunDirectoryOfApsimFiles(fileSpec, recurse);
+            return new RunDirectoryOfApsimFiles(fileSpec, recurse, runTests);
         }
 
         /// <summary>Run simulations in files specified by a file specification.</summary>
         /// <param name="fileName">The file specification</param>
+        /// <param name="runTests">Run the test nodes?</param>
         /// <returns>The file of jobs that were run.</returns>
-        public static JobManager.IRunnable ForFile(string fileName)
+        public static JobManager.IRunnable ForFile(string fileName, bool runTests)
         {
             if (!File.Exists(fileName))
                 throw new Exception("Cannot find file: " + fileName);
 
             Simulations simulations =Simulations.Read(fileName);
-            return ForSimulations(simulations, simulations);
+            return ForSimulations(simulations, simulations, runTests);
         }
 
 
@@ -64,14 +67,17 @@
         {
             private Simulations simulations;
             private Model model;
+            private bool runTests;
 
             /// <summary>Constructor</summary>
             /// <param name="model">The model to run.</param>
             /// <param name="simulations">simulations object.</param>
-            public RunOrganiser(Simulations simulations, Model model)
+            /// <param name="runTests">Run the test nodes?</param>
+            public RunOrganiser(Simulations simulations, Model model, bool runTests)
             {
                 this.simulations = simulations;
                 this.model = model;
+                this.runTests = runTests;
             }
 
             /// <summary>Error message goes here. Set by JobMangager.</summary>
@@ -163,6 +169,23 @@
                     }
                 }
 
+                // Optionally run the test nodes.
+                if (runTests)
+                {
+                    foreach (Tests tests in Apsim.ChildrenRecursively(simulations, typeof(Tests)))
+                    {
+                        try
+                        {
+                            tests.Test();
+                        }
+                        catch (Exception err)
+                        {
+                            ErrorMessage += "Error in file: " + simulations.FileName + Environment.NewLine;
+                            ErrorMessage += err.ToString() + Environment.NewLine + Environment.NewLine;
+                        }
+                    }
+                }
+
                 if (ErrorMessage != null)
                     throw new Exception(ErrorMessage);
             }
@@ -177,6 +200,9 @@
         {
             /// <summary>Gets or sets the filespec that we will look for.</summary>
             private string fileSpec;
+
+            /// <summary>Run the test nodes?</summary>
+            private bool runTests;
 
             /// <summary>Gets or sets a value indicating whether we search recursively for files matching </summary>
             private bool recurse;
@@ -193,10 +219,12 @@
             /// <summary>Constructor</summary>
             /// <param name="fileSpec">The filespec to search for simulations.</param>
             /// <param name="recurse">True if need to recurse through folder structure.</param>
-            public RunDirectoryOfApsimFiles(string fileSpec, bool recurse)
+            /// <param name="runTests">Run the test nodes?</param>
+            public RunDirectoryOfApsimFiles(string fileSpec, bool recurse, bool runTests)
             {
                 this.fileSpec = fileSpec;
                 this.recurse = recurse;
+                this.runTests = runTests;
             }
 
             /// <summary>Run this job.</summary>
@@ -232,7 +260,10 @@
                 List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
                 foreach (string apsimxFileName in files)
                 {
-                    JobManager.IRunnable job = new RunExternal(apsimExe, StringUtilities.DQuote(apsimxFileName), workingDirectory);
+                    string arguments = StringUtilities.DQuote(apsimxFileName);
+                    if (runTests)
+                        arguments += " /RunTests";
+                    JobManager.IRunnable job = new RunExternal(apsimExe, arguments, workingDirectory);
                     jobs.Add(job);
                     jobManager.AddJob(job);
                 }

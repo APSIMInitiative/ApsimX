@@ -360,7 +360,12 @@ namespace Models.PMF.Organs
         /// The number of leaves that have visiable tips on the day of emergence
         /// </summary>
         public int TipsAtEmergence {get; set;}
-
+        
+        /// <summary>
+        /// The number of leaf cohorts to initialised
+        /// </summary>
+        public int CohortsAtInitialisation { get; set; }
+        
         /// <summary>Gets or sets the fraction died.</summary>
         /// <value>The fraction died.</value>
         public double FractionDied { get; set; }
@@ -898,20 +903,22 @@ namespace Models.PMF.Organs
         }
         /// <summary>Initialises the cohorts.</summary>
         [EventSubscribe("InitialiseLeafCohorts")]
-        private void OnInitialiseLeafCohorts(object sender, EventArgs e) //This sets up cohorts on the day growth starts (eg at emergence)
+        private void OnInitialiseLeafCohorts(object sender, EventArgs e) //This sets up cohorts (eg at germination)
         {
             Leaves = new List<LeafCohort>();
             CopyLeaves(InitialLeaves, Leaves);
             foreach (LeafCohort Leaf in Leaves)
             {
+                CohortsAtInitialisation += 1;
                 if (Leaf.Area > 0)
                     TipsAtEmergence += 1;
                 Leaf.DoInitialisation();
             }
         }
+
         /// <summary>Method to initialise new cohorts</summary>
         [EventSubscribe("AddLeafCohort")]
-        private void OnAddLeafCohort(object sender, EventArgs e)
+        private void OnAddLeafCohort(object sender, CohortInitParams InitParams)
         {
             if (CohortsInitialised == false)
                 throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeInitiationRate.  Your NodeInitiationRate is triggering a new leaf cohort before leaves have been initialised.");
@@ -919,7 +926,7 @@ namespace Models.PMF.Organs
             LeafCohort NewLeaf = InitialLeaves[0].Clone();
             NewLeaf.CohortPopulation = 0;
             NewLeaf.Age = 0;
-            NewLeaf.Rank = (int)Math.Truncate(Structure.LeafTipsAppeared);
+            NewLeaf.Rank = InitParams.Rank;
             NewLeaf.Area = 0.0;
             NewLeaf.DoInitialisation();
             Leaves.Add(NewLeaf);
@@ -930,10 +937,9 @@ namespace Models.PMF.Organs
         {
             if (CohortsInitialised == false)
                 throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeAppearanceRate.  Your NodeAppearanceRate is triggering a new leaf cohort before the initial leaves have been triggered.");
-            if (CohortParams.AppearingNode > InitialisedCohortNo)
+            if (CohortParams.CohortToAppear > InitialisedCohortNo)
                 throw new Exception("MainStemNodeNumber exceeds the number of leaf cohorts initialised.  Check primordia parameters to make sure primordia are being initiated fast enough and for long enough");
-            int i = CohortParams.AppearingNode - 1;
-            Leaves[i].Rank = CohortParams.AppearingNode;
+            int i = CohortParams.CohortToAppear - 1;
             Leaves[i].CohortPopulation = CohortParams.TotalStemPopn;
             Leaves[i].Age = CohortParams.CohortAge;
             Leaves[i].DoAppearance(CohortParams.FinalFraction, CohortParameters);

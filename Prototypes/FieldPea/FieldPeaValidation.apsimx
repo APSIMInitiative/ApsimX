@@ -1522,6 +1522,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
         <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -1768,6 +1769,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
  **Wilson DR, Robertson MJ.** **1996.** Pea phenology responses to temperature and photoperiod. _Australian Agronomy Society_.]]></MemoText>
       </Memo>
       <CropType>FieldPea</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
   </Replacements>
   <DataStore>
@@ -2814,6 +2816,7 @@ namespace Models
           <Name>FieldPea</Name>
           <ResourceName>FieldPea</ResourceName>
           <CropType>FieldPea</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -6069,6 +6072,7 @@ namespace Models
           <Name>FieldPea</Name>
           <ResourceName>FieldPea</ResourceName>
           <CropType>FieldPea</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -8724,6 +8728,7 @@ namespace Models
           <Name>FieldPea</Name>
           <ResourceName>FieldPea</ResourceName>
           <CropType>FieldPea</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -15375,6 +15380,7 @@ namespace Models
           <Name>FieldPea</Name>
           <ResourceName>FieldPea</ResourceName>
           <CropType>FieldPea</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Area>1</Area>
         <Slope>0</Slope>
