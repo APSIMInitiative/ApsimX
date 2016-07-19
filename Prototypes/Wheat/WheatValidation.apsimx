@@ -5606,16 +5606,16 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
             <n>607</n>
-            <Slope>0.5898674488066884</Slope>
-            <Intercept>17.509124230407984</Intercept>
-            <SEslope>0.032657637704258641</SEslope>
-            <SEintercept>1.9763343798301534</SEintercept>
-            <R2>0.35032970491278992</R2>
-            <RMSE>24.795122363621623</RMSE>
-            <NSE>0.15615951769666225</NSE>
-            <ME>-4.705173072424313</ME>
-            <MAE>14.175870778353534</MAE>
-            <RSR>0.91785091397767771</RSR>
+            <Slope>0.49957833528389828</Slope>
+            <Intercept>20.204353890259657</Intercept>
+            <SEslope>0.035169639727430042</SEslope>
+            <SEintercept>2.1283526000564481</SEintercept>
+            <R2>0.25010243616876082</R2>
+            <RMSE>27.843747739097086</RMSE>
+            <NSE>-0.064101916803320114</NSE>
+            <ME>-6.9003360555577213</ME>
+            <MAE>15.782909037087624</MAE>
+            <RSR>1.0307030929756356</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Spike.N</Name>
@@ -5676,16 +5676,16 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>Wheat.Structure.HaunStage.Value</Name>
             <n>255</n>
-            <Slope>0.83210262082284958</Slope>
-            <Intercept>1.6120750360319684</Intercept>
-            <SEslope>0.03497107370228221</SEslope>
-            <SEintercept>0.26799092418129056</SEintercept>
-            <R2>0.6911453890691337</R2>
-            <RMSE>1.2206414957371314</RMSE>
-            <NSE>0.6282155069510218</NSE>
-            <ME>0.37011906682535334</ME>
-            <MAE>0.93783126044301279</MAE>
-            <RSR>0.60854458722830207</RSR>
+            <Slope>0.82604221904972353</Slope>
+            <Intercept>1.7038139595796515</Intercept>
+            <SEslope>0.034598494796368416</SEslope>
+            <SEintercept>0.26513577120039206</SEintercept>
+            <R2>0.69259555535012529</R2>
+            <RMSE>1.2283778407620205</RMSE>
+            <NSE>0.6234878815603474</NSE>
+            <ME>0.41702851063479629</ME>
+            <MAE>0.97406400649523173</MAE>
+            <RSR>0.61240150255214476</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.LeafTipsAppeared</Name>
@@ -16311,9 +16311,9 @@ namespace Models
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (((Clock.Today.DayOfYear == 120) && (TOS == 1)) ||
+			if (((Clock.Today.DayOfYear == 116) && (TOS == 1)) ||
 			    ((Clock.Today.DayOfYear == 150) && (TOS == 2)) ||
-			    ((Clock.Today.DayOfYear == 177) && (TOS == 3)))
+			    ((Clock.Today.DayOfYear == 185) && (TOS == 3)))
 			{
 				Wheat.Sow(population: 100, cultivar: Cultivar, depth: 30, rowSpacing: 250);
 			}
