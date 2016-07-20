@@ -53,7 +53,7 @@ namespace Models.PMF.Functions
                 }
                 else
                 {
-                    throw new Exception("Sigmoid function must have only one argument");
+                    throw new Exception("Exponential function must have only one argument");
                 }
             }
         }

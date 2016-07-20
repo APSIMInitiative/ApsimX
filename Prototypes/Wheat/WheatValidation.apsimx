@@ -138,6 +138,15 @@ The model consists of:
             </PhaseLookupValue>
           </PhaseLookup>
         </AddFunction>
+        <MovingAverageFunction>
+          <Name>MeanThermalTime</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <NumberOfDays>10</NumberOfDays>
+          <InitialValue>15</InitialValue>
+        </MovingAverageFunction>
         <MultiplyFunction>
           <Name>DailyVernalisation</Name>
           <VariableReference>
@@ -264,41 +273,6 @@ The model consists of:
           </AccumulateFunction>
         </MinimumFunction>
         <MinimumFunction>
-          <Name>Vrn2</Name>
-          <Constant>
-            <Name>Saturation</Name>
-            <Value>0.24</Value>
-            <Units>Relative Experssion</Units>
-          </Constant>
-          <AccumulateFunction>
-            <Name>CurrentExpression</Name>
-            <MultiplyFunction>
-              <Name>Vrn2Expression</Name>
-              <LinearInterpolationFunction>
-                <Name>PhotoPeriodResponse</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>8</double>
-                    <double>16</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>0.026</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Phenology].PercievedPhotoPeriod.Value</XProperty>
-              </LinearInterpolationFunction>
-              <VariableReference>
-                <Name>DeltaHaunStage</Name>
-                <VariableName>[Structure].DeltaHaunStage</VariableName>
-              </VariableReference>
-            </MultiplyFunction>
-            <StartStageName>Germination</StartStageName>
-            <EndStageName>TerminalSpikelet</EndStageName>
-          </AccumulateFunction>
-        </MinimumFunction>
-        <MinimumFunction>
           <Name>Vrn4</Name>
           <VariableReference>
             <Name>MaxExpression</Name>
@@ -367,50 +341,37 @@ The model consists of:
           </VariableReference>
           <MultiplyFunction>
             <Name>Target</Name>
-            <Constant>
-              <Name>Multiplier</Name>
-              <Value>2.5</Value>
-            </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
               <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value</VariableName>
             </VariableReference>
             <AddFunction>
-              <Name>PhotoPeriodResponse</Name>
-              <Constant>
-                <Name>Base</Name>
-                <Value>1</Value>
-              </Constant>
+              <Name>Phyllochrons</Name>
+              <VariableReference>
+                <Name>LongDayBase</Name>
+                <VariableName>[Phenology].EarlyReproductiveLongDayBase.Value</VariableName>
+              </VariableReference>
               <MultiplyFunction>
-                <Name>IncreaseDueToPhotoPeriod</Name>
+                <Name>IncreaseDueToShortPhotoPeriod</Name>
                 <LinearInterpolationFunction>
                   <Name>PhotoPeriodResponse</Name>
                   <XYPairs>
                     <Name>XYPairs</Name>
                     <X>
-                      <double>10.99</double>
-                      <double>11</double>
+                      <double>10</double>
                       <double>16</double>
                     </X>
                     <Y>
-                      <double>0</double>
-                      <double>0</double>
+                      <double>1</double>
                       <double>0</double>
                     </Y>
                   </XYPairs>
                   <XProperty>[Phenology].Photoperiod.Value</XProperty>
                 </LinearInterpolationFunction>
-                <DivideFunction>
-                  <Name>RelativePhotoPeriodSensitivity</Name>
-                  <VariableReference>
-                    <Name>PpSensitivity</Name>
-                    <VariableName>[Phenology].PpSensitivity.Value</VariableName>
-                  </VariableReference>
-                  <Constant>
-                    <Name>MaxPpSensitivity</Name>
-                    <Value>5</Value>
-                  </Constant>
-                </DivideFunction>
+                <VariableReference>
+                  <Name>PpSensitivity</Name>
+                  <VariableName>[Phenology].EarlyReproductivePpSensitivity.Value</VariableName>
+                </VariableReference>
               </MultiplyFunction>
             </AddFunction>
           </MultiplyFunction>
@@ -569,10 +530,26 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>VernLag</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[The reduction in leaf number going from 8 to 16 h Pp]]></MemoText>
+            <MemoText><![CDATA[The amount of vernalising temperature required before vernalisation response will be evident.  Value of relative to the amount offl vernalisation temperature required from the end of the lag until vernalisation saturation.  A value of 0 means there is no lag, a value of 1 means the lag is the same (in vernal time) as the vernalisation requirement and a value of 2 means the lag is twice as long as the vernalisation response phase]]></MemoText>
           </Memo>
           <Value>1</Value>
           <Units>Unitless</Units>
+        </Constant>
+        <Constant>
+          <Name>EarlyReproductivePpSensitivity</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp compared to the phyllochron duration for the same phase at 8 h Pp.  ]]></MemoText>
+          </Memo>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>EarlyReproductiveLongDayBase</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp.]]></MemoText>
+          </Memo>
+          <Value>2.5</Value>
         </Constant>
       </Phenology>
       <Structure>
@@ -593,8 +570,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>3</double>
                 <double>7</double>
                 <double>8</double>
+                <double>11</double>
                 <double>12</double>
-                <double>13</double>
               </X>
               <Y>
                 <double>0.75</double>
@@ -603,7 +580,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>1</double>
                 <double>1.4</double>
                 <double>1.4</double>
-                <double>1.6</double>
+                <double>1.4</double>
               </Y>
             </XYPairs>
             <XProperty>[Structure].LeafTipsAppeared</XProperty>
@@ -628,7 +605,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Y>
                 <double>1.6</double>
                 <double>1</double>
-                <double>0.7</double>
+                <double>1</double>
               </Y>
             </XYPairs>
             <XProperty>[Phenology].Photoperiod.Value</XProperty>
@@ -874,7 +851,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <XYPairs>
                   <Name>XYPairs</Name>
                   <X>
-                    <double>8</double>
+                    <double>10</double>
                     <double>16</double>
                   </X>
                   <Y>
@@ -2317,8 +2294,10 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Amarok</Name>
             <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].VrnSensitivity.Value = 10</Command>
+            <Command>[Phenology].PpSensitivity.Value = 6</Command>
+            <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 5</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Aspiring</Name>
@@ -2328,15 +2307,19 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>BattenWinter</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 11</Command>
-            <Command>[Phenology].PpSensitivity.Value = 4</Command>
+            <Command>[Phenology].MinimumLeafNumber.Value = 8</Command>
+            <Command>[Phenology].VrnSensitivity.Value = 8</Command>
+            <Command>[Phenology].PpSensitivity.Value = 5</Command>
+            <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>BattenSpring</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.Value = 7</Command>
             <Command>[Phenology].VrnSensitivity.Value = 0</Command>
-            <Command>[Phenology].PpSensitivity.Value = 4</Command>
+            <Command>[Phenology].PpSensitivity.Value = 5</Command>
+            <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Centaur</Name>
@@ -2346,10 +2329,11 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Claire</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 11</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 140</Command>
+            <Command>[Phenology].MinimumLeafNumber.Value = 8</Command>
+            <Command>[Phenology].VrnSensitivity.Value = 8</Command>
+            <Command>[Phenology].PpSensitivity.Value = 8</Command>
+            <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Conquest</Name>
@@ -2386,6 +2370,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.Value = 7</Command>
             <Command>[Phenology].VrnSensitivity.Value = 0</Command>
             <Command>[Phenology].PpSensitivity.Value = 2</Command>
+            <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Pennant</Name>
@@ -2413,9 +2399,11 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Rongotea</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.Value = 7</Command>
+            <Command>[Phenology].VrnSensitivity.Value = 0</Command>
+            <Command>[Phenology].PpSensitivity.Value = 2</Command>
+            <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rubric</Name>
@@ -2461,11 +2449,12 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Wakanui</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 12</Command>
+            <Command>[Phenology].MinimumLeafNumber.Value = 8</Command>
             <Command>[Phenology].VrnSensitivity.Value = 10</Command>
             <Command>[Phenology].PpSensitivity.Value = 0</Command>
-            <Command>[Phenology].VernLag.Value = 3</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
+            <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.X = 0,1,8</Command>
+            <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.Y = 0,1.204,0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Weston</Name>
@@ -2546,7 +2535,11 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Name>Janz</Name>
             <Command>[Phenology].MinimumLeafNumber.Value = 7.8</Command>
             <Command>[Phenology].VrnSensitivity.Value = 2</Command>
-            <Command>[Phenology].PpSensitivity.Value = 1</Command>
+            <Command>[Phenology].PpSensitivity.Value = 5</Command>
+            <Command>[Phenology].VernLag.Value = 0</Command>
+            <Command>[Phenology].EarlyReproductiveLongDayBase.Value = 3.5</Command>
+            <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 75</Command>
           </Cultivar>
           <Cultivar>
             <Name>Kelallac</Name>
@@ -2588,7 +2581,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Name>McCubbin</Name>
             <Command>[Phenology].MinimumLeafNumber.Value = 8</Command>
             <Command>[Phenology].VrnSensitivity.Value = 0</Command>
-            <Command>[Phenology].PpSensitivity.Value = 4</Command>
+            <Command>[Phenology].PpSensitivity.Value = 5</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 90</Command>
           </Cultivar>
           <Cultivar>
             <Name>Mercury</Name>
@@ -2644,9 +2638,12 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Yitpi</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 8.3</Command>
+            <Command>[Phenology].MinimumLeafNumber.Value = 8</Command>
             <Command>[Phenology].VrnSensitivity.Value = 0</Command>
-            <Command>[Phenology].PpSensitivity.Value = 4</Command>
+            <Command>[Phenology].PpSensitivity.Value = 5</Command>
+            <Command>[Phenology].EarlyReproductiveLongDayBase.Value = 2.5</Command>
+            <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 5</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Young</Name>
@@ -2813,6 +2810,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].Structure.Height</string>
         <string>[Wheat].Structure.LeafTipsAppeared</string>
         <string>[Wheat].Structure.MainStemFinalNodeNumber.Value</string>
+        <string>[Wheat].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value</string>
         <string>[Wheat].Structure.MainStemPopn</string>
         <string>[Wheat].Structure.TotalStemPopn</string>
         <string>[Wheat].Total.N</string>
@@ -5290,6 +5288,14 @@ VShort duration variety released in New Zealand by Pioneer
       <CropType>Maize</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
+    <Constant>
+      <Name>BootPpSensitivity</Name>
+      <Memo>
+        <Name>Memo</Name>
+        <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp compared to the phyllochron duration for the same phase at 8 h Pp.  ]]></MemoText>
+      </Memo>
+      <Value>0</Value>
+    </Constant>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
@@ -5943,6 +5949,12 @@ VShort duration variety released in New Zealand by Pioneer
       <ObservedTableName>Observed</ObservedTableName>
       <FieldNameUsedForMatch>Wheat.Phenology.CurrentStageName</FieldNameUsedForMatch>
     </PredictedObserved>
+    <PredictedObserved>
+      <Name>MaxLeafSizeObsPred</Name>
+      <PredictedTableName>SupReport</PredictedTableName>
+      <ObservedTableName>MaxLeafSize</ObservedTableName>
+      <FieldNameUsedForMatch>ExtraVariables.Script.LeafExpandedPosition</FieldNameUsedForMatch>
+    </PredictedObserved>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>3000</MaximumResultsPerPage>
   </DataStore>
@@ -6405,7 +6417,7 @@ VShort duration variety released in New Zealand by Pioneer
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
-      <Filter />
+      <Filter>[Predicted.Wheat.SowingData.Cultivar]='Amarok'</Filter>
     </Series>
     <Axis>
       <Type>Bottom</Type>
@@ -6453,6 +6465,7 @@ VShort duration variety released in New Zealand by Pioneer
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
+      <Filter>[Predicted.Wheat.SowingData.Cultivar]='Amarok'</Filter>
     </Series>
     <Axis>
       <Type>Bottom</Type>
@@ -26966,8 +26979,8 @@ namespace Models
             <Operations>
               <Name>SowingAndHarvest</Name>
               <Operation>
-                <Date>2013-03-25T00:00:00</Date>
-                <Action>[Wheat].Sow(population:165, cultivar:"Wakanui", depth:20, rowSpacing:130);</Action>
+                <Date>2013-03-25</Date>
+                <Action>[Wheat].Sow(population:165, cultivar:"Wakanui", depth:30, rowSpacing:130);</Action>
               </Operation>
             </Operations>
             <Operations>
@@ -27739,6 +27752,53 @@ namespace Models
           <LegendPosition>BottomLeft</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>MaxLeafSize</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>MaxLeafSizeObsPred</TableName>
+            <XFieldName>Observed.ExtraVariables.Script.MostRecentlyExpandedLeafSize</XFieldName>
+            <YFieldName>Predicted.ExtraVariables.Script.MostRecentlyExpandedLeafSize</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>Observed</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Predicted</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
         <Folder>
           <Name>SWCLayers</Name>
@@ -33548,6 +33608,49 @@ namespace Models
             <DisabledSeries />
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
+          <Graph>
+            <Name>Vrn</Name>
+            <Series>
+              <Name>Vrn</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Phenology.DailyVernalisation.Value</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>true</Cumulative>
+              <CumulativeX>false</CumulativeX>
+              <Filter />
+            </Series>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Actual Radiation Use Efficiency (g/MJ)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Graph>
         </Folder>
       </Folder>
     </Experiment>
@@ -34118,9 +34221,9 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>HarvestReport</TableName>
-            <XFieldName>Wheat.SowingDate.DayOfYear</XFieldName>
-            <YFieldName>Wheat.Phenology.FinalLeafNumber.Value</YFieldName>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -58042,5 +58145,5 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Folder>
-  <ExplorerWidth>412</ExplorerWidth>
+  <ExplorerWidth>422</ExplorerWidth>
 </Simulations>
