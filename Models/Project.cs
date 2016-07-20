@@ -128,9 +128,10 @@ namespace Models
             Simulations simulations = Simulations.Read(fileName);
 
             // Don't use JobManager - just run the simulations.
-            Simulation[] simulationsToRun = Simulations.FindAllSimulationsToRun(simulations);
-            foreach (Simulation simulation in simulationsToRun) 
-                simulation.Run(null, null);
+            JobManager.IRunnable simulationsToRun = Runner.ForSimulations(simulations, simulations, false);
+            JobManager jobManager = new JobManager();
+            jobManager.AddJob(simulationsToRun);
+            jobManager.Run();
         }
 
         /// <summary>
