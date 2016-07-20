@@ -199,45 +199,6 @@ namespace Models.Core
         /// <summary>Constructor, private to stop developers using it. Use Simulations.Read instead.</summary>
         private Simulations() { }
 
-        /// <summary>Find all simulations under the specified parent model.</summary>
-        /// <param name="parent">The parent.</param>
-        /// <returns></returns>
-        public static Simulation[] FindAllSimulationsToRun(Model parent)
-        {
-            List<Simulation> simulations = new List<Simulation>();
-
-            if (parent is Experiment)
-                simulations.AddRange((parent as Experiment).Create());
-            else if (parent is Simulation)
-            {
-                Simulation clonedSim = Apsim.Clone(parent) as Simulation;
-                CallOnLoaded(clonedSim);
-                simulations.Add(clonedSim);
-            }
-            else
-            {
-                // Look for simulations.
-                foreach (Model model in Apsim.ChildrenRecursively(parent))
-                {
-                    if (model is Experiment)
-                        simulations.AddRange((model as Experiment).Create());
-                    else if (model is Simulation && !(model.Parent is Experiment))
-                    {
-                        Simulation clonedSim = Apsim.Clone(model) as Simulation;
-                        CallOnLoaded(clonedSim);
-                        simulations.Add(clonedSim);
-                    }
-                }
-            }
-            // Make sure each simulation has it's filename set correctly.
-            foreach (Simulation simulation in simulations)
-            {
-                if (simulation.FileName == null)
-                    simulation.FileName = RootSimulations(parent).FileName;
-            }
-            return simulations.ToArray();
-        }
-
         /// <summary>Find all simulation names that are going to be run.</summary>
         /// <returns></returns>
         public string[] FindAllSimulationNames()
@@ -273,47 +234,6 @@ namespace Models.Core
                     (simulation as Simulation).FileName = FileName;
         }
 
-        /// <summary>Roots the simulations.</summary>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        private static Simulations RootSimulations(Model model)
-        {
-            Model m = model;
-            while (m != null && m.Parent != null && !(m is Simulations))
-                m = m.Parent as Model;
-
-            return m as Simulations;
-        }
-
-        /// <summary>Make model substitutions if necessary.</summary>
-        /// <param name="simulations">The simulations to make substitutions in.</param>
-        public void MakeSubstitutions(Simulation[] simulations)
-        {
-            IModel replacements = Apsim.Child(this, "Replacements");
-            if (replacements != null)
-            {
-                foreach (IModel replacement in replacements.Children)
-                {
-                    foreach (Simulation simulation in simulations)
-                    {
-                        foreach (IModel match in Apsim.FindAll(simulation, replacement.GetType()))
-                        {
-                            if (match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                // Do replacement.
-                                IModel newModel = Apsim.Clone(replacement);
-                                int index = match.Parent.Children.IndexOf(match as Model);
-                                match.Parent.Children.Insert(index, newModel as Model);
-                                newModel.Parent = match.Parent;
-                                match.Parent.Children.Remove(match as Model);
-                                CallOnLoaded(newModel);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         /// <summary>Documents the specified model.</summary>
         /// <param name="modelNameToDocument">The model name to document.</param>
         /// <param name="tags">The auto doc tags.</param>
@@ -344,7 +264,7 @@ namespace Models.Core
                 Simulation clonedSimulation = Apsim.Clone(simulation) as Simulation;
 
                 // Make any substitutions.
-                MakeSubstitutions(new Simulation[] { clonedSimulation });
+                Runner.MakeSubstitutions(this, new List<Simulation> { clonedSimulation });
 
                 // Now use the path to get the model we want to document.
                 modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;

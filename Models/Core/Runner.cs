@@ -1,6 +1,7 @@
 ﻿namespace Models.Core
 {
     using APSIM.Shared.Utilities;
+    using Factorial;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -48,6 +49,45 @@
             return ForSimulations(simulations, simulations, runTests);
         }
 
+        /// <summary>Make model substitutions if necessary.</summary>
+        /// <param name="simulations">The simulations to make substitutions in.</param>
+        /// <param name="parentSimulations">Parent simulations object</param>
+        public static void MakeSubstitutions(Simulations parentSimulations, List<Simulation> simulations)
+        {
+            IModel replacements = Apsim.Child(parentSimulations, "Replacements");
+            if (replacements != null)
+            {
+                foreach (IModel replacement in replacements.Children)
+                {
+                    foreach (Simulation simulation in simulations)
+                    {
+                        foreach (IModel match in Apsim.FindAll(simulation, replacement.GetType()))
+                        {
+                            if (match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                // Do replacement.
+                                IModel newModel = Apsim.Clone(replacement);
+                                int index = match.Parent.Children.IndexOf(match as Model);
+                                match.Parent.Children.Insert(index, newModel as Model);
+                                newModel.Parent = match.Parent;
+                                match.Parent.Children.Remove(match as Model);
+                                CallOnLoaded(newModel);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>Call Loaded event in specified model and all children</summary>
+        /// <param name="model">The model.</param>
+        private static void CallOnLoaded(IModel model)
+        {
+            // Call OnLoaded in all models.
+            Apsim.CallEventHandler(model, "Loaded", null);
+            foreach (Model child in Apsim.ChildrenRecursively(model))
+                Apsim.CallEventHandler(child, "Loaded", null);
+        }
 
         /// <summary>Are some jobs still running?</summary>
         /// <param name="jobs">The jobs to check.</param>
@@ -101,41 +141,17 @@
 
                 List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
 
+                Simulation[] simulationsToRun = FindAllSimulationsToRun(this.model);
+
+                // IF we are going to run all simulations, we can delete all tables in the DataStore. This
+                // will clean up order of columns in the tables and removed unused ones.
+                // Otherwise just remove the unwanted simulations from the DataStore.
                 DataStore store = Apsim.Child(simulations, typeof(DataStore)) as DataStore;
-
-                Simulation[] simulationsToRun;
                 if (model is Simulations)
-                {
-                    // As we are going to run all simulations, we can delete all tables in the DataStore. This
-                    // will clean up order of columns in the tables and removed unused ones.
                     store.DeleteAllTables();
-                    simulationsToRun = Simulations.FindAllSimulationsToRun(simulations);
-                }
                 else
-                {
                     store.RemoveUnwantedSimulations(simulations);
-
-                    if (model is Simulation)
-                    {
-                        if (model.Parent == null)
-                        {
-                            // model is already a cloned simulation, probably from user running a single 
-                            // simulation from an experiment.
-                            simulationsToRun = new Simulation[1] { model as Simulation };
-                        }
-                        else
-                        {
-                            simulationsToRun = new Simulation[1] { Apsim.Clone(model as Simulation) as Simulation };
-                            Simulations.CallOnLoaded(simulationsToRun[0]);
-                        }
-                    }
-                    else
-                        simulationsToRun = Simulations.FindAllSimulationsToRun(model);
-                }
-
                 store.Disconnect();
-
-                simulations.MakeSubstitutions(simulationsToRun);
 
                 foreach (Simulation simulation in simulationsToRun)
                 {
@@ -188,6 +204,68 @@
 
                 if (ErrorMessage != null)
                     throw new Exception(ErrorMessage);
+            }
+
+
+            /// <summary>Find all simulations under the specified parent model.</summary>
+            /// <param name="model">The parent.</param>
+            /// <returns></returns>
+            private Simulation[] FindAllSimulationsToRun(Model model)
+            {
+                List<Simulation> simulations = new List<Simulation>();
+
+                if (model is Experiment)
+                    simulations.AddRange((model as Experiment).Create());
+                else if (model is Simulation)
+                {
+                    Simulation clonedSim;
+                    if (model.Parent == null)
+                    {
+                        // model is already a cloned simulation, probably from user running a single 
+                        // simulation from an experiment.
+                        clonedSim = model as Simulation;
+                    }
+                    else
+                        clonedSim = Apsim.Clone(model) as Simulation;
+
+                    MakeSubstitutions(this.simulations, new List<Simulation> { clonedSim });
+
+                    CallOnLoaded(clonedSim);
+                    simulations.Add(clonedSim);
+                }
+                else
+                {
+                    // Look for simulations.
+                    foreach (Model child in Apsim.ChildrenRecursively(model))
+                    {
+                        if (child is Experiment)
+                            simulations.AddRange((child as Experiment).Create());
+                        else if (child is Simulation && !(child.Parent is Experiment))
+                            simulations.AddRange(FindAllSimulationsToRun(child));
+                    }
+                }
+
+                // Make sure each simulation has it's filename set correctly.
+                foreach (Simulation simulation in simulations)
+                {
+                    if (simulation.FileName == null)
+                        simulation.FileName = RootSimulations(model).FileName;
+                }
+
+                return simulations.ToArray();
+            }
+
+
+            /// <summary>Roots the simulations.</summary>
+            /// <param name="model">The model.</param>
+            /// <returns></returns>
+            private static Simulations RootSimulations(Model model)
+            {
+                Model m = model;
+                while (m != null && m.Parent != null && !(m is Simulations))
+                    m = m.Parent as Model;
+
+                return m as Simulations;
             }
         }
 
