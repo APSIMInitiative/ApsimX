@@ -116,6 +116,9 @@ namespace UserInterface.Views
             this.plot1.Model.Axes.Clear();
             this.plot1.Model.Annotations.Clear();
 
+            //modLMC - 11/05/2016 - Need to clear the chart title as well
+            this.FormatTitle("");
+
         }
 
         /// <summary>
@@ -139,7 +142,7 @@ namespace UserInterface.Views
             this.plot1.Model.LegendBackground = OxyColors.White;
 
             if (this.LeftRightPadding != 0)
-                this.plot1.Model.Padding = new OxyThickness(0, 0, this.LeftRightPadding, 0);
+                this.plot1.Model.Padding = new OxyThickness(10, 10, this.LeftRightPadding, 10);
 
             foreach (OxyPlot.Axes.Axis axis in this.plot1.Model.Axes)
                 this.FormatAxisTickLabels(axis);
@@ -261,15 +264,18 @@ namespace UserInterface.Views
             Color colour,
             bool showOnLegend)
         {
-            ColumnXYSeries series = new ColumnXYSeries();
-            if (showOnLegend)
-                series.Title = title;
-            series.FillColor = ConverterExtensions.ToOxyColor(colour);
-            series.StrokeColor = ConverterExtensions.ToOxyColor(colour);
-            series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
-            series.XAxisKey = xAxisType.ToString();
-            series.YAxisKey = yAxisType.ToString();
-            this.plot1.Model.Series.Add(series);
+            if (x != null && y != null)
+            {
+                ColumnXYSeries series = new ColumnXYSeries();
+                if (showOnLegend)
+                    series.Title = title;
+                series.FillColor = ConverterExtensions.ToOxyColor(colour);
+                series.StrokeColor = ConverterExtensions.ToOxyColor(colour);
+                series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
+                series.XAxisKey = xAxisType.ToString();
+                series.YAxisKey = yAxisType.ToString();
+                this.plot1.Model.Series.Add(series);
+            }
         }
 
         /// <summary>
@@ -621,11 +627,16 @@ namespace UserInterface.Views
                 do
                 {
                     DateTime d = Convert.ToDateTime(enumerator.Current);
-                    dataPointValues.Add(DateTimeAxis.ToDouble(d));
-                    if (d < smallestDate)
-                        smallestDate = d;
-                    if (d > largestDate)
-                        largestDate = d;
+                    if (d != DateTime.MinValue)
+                    {
+                        dataPointValues.Add(DateTimeAxis.ToDouble(d));
+                        if (d < smallestDate)
+                            smallestDate = d;
+                        if (d > largestDate)
+                            largestDate = d;
+                    }
+                    else
+                        dataPointValues.Add(double.NaN);
                 }
                 while (enumerator.MoveNext());
             }

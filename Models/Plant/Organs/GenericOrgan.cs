@@ -15,7 +15,7 @@ namespace Models.PMF.Organs
     /// <summary>
     /// Model of generic organ 
     /// </summary>
-    /// \param <b>(IFunction, Optional)</b> SenescenceRateFunction Rate of organ senescence 
+    /// \param <b>(IFunction, Optional)</b> SenescenceRate Rate of organ senescence 
     ///     (default 0 if this parameter does not exist, i.e no senescence).
     /// \param <b>(IFunction, Optional)</b> StructuralFraction Fraction of organ structural component 
     ///     (default 1 if this parameter does not exist, i.e all biomass is structural).
@@ -50,7 +50,7 @@ namespace Models.PMF.Organs
         /// <summary>The senescence rate function</summary>
         [Link(IsOptional = true)]
         [Units("/d")]
-        IFunction SenescenceRateFunction = null;
+        IFunction SenescenceRate = null;
         /// <summary>The detachment rate function</summary>
         [Link(IsOptional = true)]
         [Units("/d")]
@@ -94,16 +94,16 @@ namespace Models.PMF.Organs
         /// <summary>The maximum n conc</summary>
         [Link(IsOptional = true)]
         [Units("g/g")]
-        IFunction MaximumNConc = null;
+        public IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
         [Units("g/g")]
         [Link(IsOptional = true)]
-        IFunction MinimumNConc = null;
+        public IFunction MinimumNConc = null;
         #endregion
 
         #region States
         /// <summary>The senescence rate</summary>
-        private double SenescenceRate = 0;
+        private double mySenescenceRate = 0;
         /// <summary>The _ structural fraction</summary>
         private double _StructuralFraction = 1;
         /// <summary>The start n retranslocation supply</summary>
@@ -129,7 +129,7 @@ namespace Models.PMF.Organs
         protected override void Clear()
         {
             base.Clear();
-            SenescenceRate = 0;
+            mySenescenceRate = 0;
             _StructuralFraction = 1;
             StartNRetranslocationSupply = 0;
             StartNReallocationSupply = 0;
@@ -193,25 +193,36 @@ namespace Models.PMF.Organs
                 PotentialDMAllocation = value.Structural + value.Metabolic;
             }
         }
+
         /// <summary>Gets or sets the dm supply.</summary>
         /// <value>The dm supply.</value>
         public override BiomassSupplyType DMSupply
         {
             get
             {
-                double _DMRetranslocationFactor = 0;
-                if (DMRetranslocationFactor != null) //Default of 0 means retranslocation is always truned off!!!!
-                    _DMRetranslocationFactor = DMRetranslocationFactor.Value;
                 return new BiomassSupplyType
                 {
-                    Fixation = 0,
-                    Retranslocation = StartLive.NonStructuralWt * _DMRetranslocationFactor,
-                    Reallocation = 0
+                    Fixation = 0.0,
+                    Retranslocation = AvailableDMRetranslocation(),
+                    Reallocation = 0.0
                 };
             }
         }
-        /// <summary>Gets or sets the n demand.</summary>
-        /// <value>The n demand.</value>
+
+        /// <summary>Gets the amount of DM available for retranslocation</summary>
+        /// <returns>DM available to retranslocate</returns>
+        public double AvailableDMRetranslocation()
+        {
+            if (DMRetranslocationFactor != null)
+                return StartLive.NonStructuralWt * DMRetranslocationFactor.Value;
+            else
+            { //Default of 0 means retranslocation is always turned off!!!!
+                return 0.0;
+            }
+        }
+
+        /// <summary>Gets or sets the N demand.</summary>
+        /// <value>The N demand.</value>
         public override BiomassPoolType NDemand
         {
             get
@@ -226,30 +237,49 @@ namespace Models.PMF.Organs
                 return new BiomassPoolType { Structural = StructuralNDemand, NonStructural = NonStructuralNDemand };
             }
         }
-        /// <summary>Gets or sets the n supply.</summary>
-        /// <value>The n supply.</value>
+        /// <summary>Gets or sets the N supply.</summary>
+        /// <value>The N supply.</value>
         public override BiomassSupplyType NSupply
         {
             get
             {
-                BiomassSupplyType Supply = new BiomassSupplyType();
-
-                // Calculate Reallocation Supply.
-                double _NReallocationFactor = 0;
-                if (NReallocationFactor != null) //Default of zero means N reallocation is truned off
-                    _NReallocationFactor = NReallocationFactor.Value;
-                Supply.Reallocation = SenescenceRate * StartLive.NonStructuralN * _NReallocationFactor;
-
-                // Calculate Retranslocation Supply.
-                double _NRetranslocationFactor = 0;
-                if (NRetranslocationFactor != null) //Default of zero means retranslocation is turned off
-                    _NRetranslocationFactor = NRetranslocationFactor.Value;
-                double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
-                Supply.Retranslocation = (LabileN - StartNReallocationSupply) * _NRetranslocationFactor;
-
-                return Supply;
+                return new BiomassSupplyType()
+                {
+                    Reallocation = AvailableNReallocation(),
+                    Retranslocation = AvailableNRetranslocation(),
+                    Uptake = 0.0
+                };
             }
         }
+
+        /// <summary>Gets the N amount available for retranslocation</summary>
+        /// <returns>N available to retranslocate</returns>
+        public double AvailableNRetranslocation()
+        {
+            if (NRetranslocationFactor != null)
+            {
+                double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
+                return (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value;
+            }
+            else
+            {
+                //Default of 0 means retranslocation is always turned off!!!!
+                return 0.0;
+            }
+        }
+
+        /// <summary>Gets the N amount available for reallocation</summary>
+        /// <returns>DM available to reallocate</returns>
+        public double AvailableNReallocation()
+        {
+            if (NReallocationFactor != null)
+                return mySenescenceRate * StartLive.NonStructuralN * NReallocationFactor.Value;
+            else
+            { //Default of 0 means reallocation is always turned off!!!!
+                return 0.0;
+            }
+        }
+
         /// <summary>Sets the dm allocation.</summary>
         /// <value>The dm allocation.</value>
         /// <exception cref="System.Exception">
@@ -356,8 +386,6 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            FractionRemoved = 0;
-            FractionToResidue = 0;
             if (data.Plant == Plant)
                 Clear();
         }
@@ -370,9 +398,9 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
-                SenescenceRate = 0;
-                if (SenescenceRateFunction != null) //Default of zero means no senescence
-                    SenescenceRate = SenescenceRateFunction.Value;
+                mySenescenceRate = 0;
+                if (SenescenceRate != null) //Default of zero means no senescence
+                    mySenescenceRate = SenescenceRate.Value;
                 _StructuralFraction = 1;
                 if (StructuralFraction != null) //Default of 1 means all biomass is structural
                     _StructuralFraction = StructuralFraction.Value;
@@ -407,10 +435,10 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 Biomass Loss = new Biomass();
-                Loss.StructuralWt = Live.StructuralWt * SenescenceRate;
-                Loss.NonStructuralWt = Live.NonStructuralWt * SenescenceRate;
-                Loss.StructuralN = Live.StructuralN * SenescenceRate;
-                Loss.NonStructuralN = Live.NonStructuralN * SenescenceRate;
+                Loss.StructuralWt = Live.StructuralWt * mySenescenceRate;
+                Loss.NonStructuralWt = Live.NonStructuralWt * mySenescenceRate;
+                Loss.StructuralN = Live.StructuralN * mySenescenceRate;
+                Loss.NonStructuralN = Live.NonStructuralN * mySenescenceRate;
 
                 Live.StructuralWt -= Loss.StructuralWt;
                 Live.NonStructuralWt -= Loss.NonStructuralWt;
@@ -427,8 +455,8 @@ namespace Models.PMF.Organs
                     DetachedFrac = DetachmentRateFunction.Value;
                 if (DetachedFrac > 0.0)
                 {
-                    double DetachedWt = Dead.Wt * DetachedFrac;
-                    double DetachedN = Dead.N * DetachedFrac;
+                    double detachingWt = Dead.Wt * DetachedFrac;
+                    double detachingN = Dead.N * DetachedFrac;
 
                     Dead.StructuralWt *= (1 - DetachedFrac);
                     Dead.StructuralN *= (1 - DetachedFrac);
@@ -437,11 +465,15 @@ namespace Models.PMF.Organs
                     Dead.MetabolicWt *= (1 - DetachedFrac);
                     Dead.MetabolicN *= (1 - DetachedFrac);
 
-                    if (DetachedWt > 0)
-                        SurfaceOrganicMatter.Add(DetachedWt * 10, DetachedN * 10, 0, Plant.CropType, Name);
+                    if (detachingWt > 0.0)
+                    {
+                        DetachedWt += detachingWt;
+                        DetachedN += detachingN;
+                        SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0, Plant.CropType, Name);
+                    }
                 }
 
-                if ((DryMatterContent != null) && (Live.Wt != 0))
+                if (DryMatterContent != null) 
                     LiveFWt = Live.Wt / DryMatterContent.Value;
             }
         }
@@ -516,12 +548,12 @@ namespace Models.PMF.Organs
                 tags.Add(new AutoDocumentation.Paragraph("DM is not retranslocated out of " + this.Name + ". ", indent));
 
             tags.Add(new AutoDocumentation.Heading("Biomass Senescece and Detachment", headingLevel + 1));
-            if (SenescenceRateFunction != null)
+            if (SenescenceRate != null)
             {
                 tags.Add(new AutoDocumentation.Paragraph("Senescence is calculated daily as a proportion of the " + Name + "'s live DM and this proportion is calculated as:", indent));
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 {
-                    if (child.Name == "SenescenceRateFunction")
+                    if (child.Name == "SenescenceRate")
                         child.Document(tags, headingLevel + 1, indent);
                 }
             }
@@ -553,7 +585,7 @@ namespace Models.PMF.Organs
                     | (child.Name != "NReallocationFactor") 
                     | (child.Name != "NRetranslocationFactor")
                     | (child.Name != "DMRetranslocationFactor")
-                    | (child.Name != "SenescenceRateFunction") 
+                    | (child.Name != "SenescenceRate") 
                     | (child.Name != "DetachmentRateFunctionFunction") 
                     | (child is Biomass))
                     && (child.GetType() != typeof(Memo)))
@@ -576,7 +608,7 @@ namespace Models.PMF.Organs
                         | (child.Name == "NReallocationFactor") 
                         | (child.Name == "NRetranslocationFactor") 
                         | (child.Name == "DMRetranslocationFactor") 
-                        | (child.Name == "SenescenceRateFunction") 
+                        | (child.Name == "SenescenceRate") 
                         | (child.Name == "DetachmentRateFunctionFunction") 
                         | (child is Biomass) 
                         | (child.GetType() == typeof(Memo)))

@@ -771,11 +771,7 @@
             <Value>0</Value>
           </Constant>
           <Constant>
-            <Name>ShadeInducedBranchMortality</Name>
-            <Value>0</Value>
-          </Constant>
-          <Constant>
-            <Name>DroughtInducedBranchMortality</Name>
+            <Name>BranchMortality</Name>
             <Value>0</Value>
           </Constant>
           <LinearInterpolationFunction>

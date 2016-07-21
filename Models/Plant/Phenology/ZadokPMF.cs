@@ -44,14 +44,14 @@ namespace Models.PMF.Phen
                 else if (Phenology.InPhase("Vegetative") && fracInCurrent <= 0.9)
                 {
                     if (Structure.BranchNumber <= 0.0)
-                        zadok_stage = 10.0f + Structure.MainStemNodeNo;
+                        zadok_stage = 10.0f + Structure.LeafTipsAppeared;
                     else
                         zadok_stage = 20.0f + Structure.BranchNumber;
                 }
                 else if (!Phenology.InPhase("ReadyForHarvesting"))
                 {
                     double[] zadok_code_y = { 30.0, 40.0, 65.0, 71.0, 87.0, 90.0, 100.0 };
-                    double[] zadok_code_x = { 3.9, 4.4, 5.0, 6.0, 7.0, 8.0, 9.0 };
+                    double[] zadok_code_x = { 3.9, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0 };
                     bool DidInterpolate;
                     zadok_stage = MathUtilities.LinearInterpReal(Phenology.Stage,
                                                                zadok_code_x, zadok_code_y,

@@ -29,7 +29,7 @@ namespace Models.PMF.Functions
         protected Clock Clock = null;
 
         /// <summary>The twilight</summary>
-        [Description("Twilight")]
+        [Description("Twilight angle")]
         [Units("degrees")]
         public double Twilight { get; set; }
 
@@ -39,8 +39,9 @@ namespace Models.PMF.Functions
         {
             get
             {
-                return MetData.CalculateDayLength(Twilight);
-                    
+                if (MetData != null)
+                    return MetData.CalculateDayLength(Twilight);
+                return 0;                    
             }
         }
 

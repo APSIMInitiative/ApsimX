@@ -59,6 +59,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Phenology))]
     public class VernalisationCW : Model
     {
         /// <summary>The phenology</summary>
@@ -108,8 +109,9 @@ namespace Models.PMF.Phen
         [Description("EndStageForCumulativeVD")]
         public string EndStageForCumulativeVD { get; set; }
 
-        /// <summary>The cumulative vd</summary>
-        private double CumulativeVD = 0;
+        /// <summary>Amount of Vernal days accumulated</summary>
+        [XmlIgnore]
+        public double CumulativeVD { get; set; }
 
         /// <summary>Trap the DoDailyInitialisation event.</summary>
         /// <param name="sender">The sender.</param>

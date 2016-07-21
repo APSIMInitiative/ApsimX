@@ -117,17 +117,25 @@ namespace Models
             get
             {
                 Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-                if (simulation == null)
-                    return null;
-                return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                if (simulation != null)
+                    return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                else
+                    return this.FileName;
             }
-
             set
             {
-                Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-                this.FileName = PathUtilities.GetRelativePath(value, simulation.FileName);
+                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                if (simulations != null)
+                    this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                else
+                    this.FileName = value;
             }
         }
+
+        /// <summary>
+        /// Used to hold the WorkSheet Name if data retrieved from an Excel file
+        /// </summary>
+        public string ExcelWorkSheetName { get; set; }
 
         /// <summary>
         /// Gets the start date of the weather file
@@ -322,6 +330,24 @@ namespace Models
         }
 
         /// <summary>
+        /// Gets the longitude
+        /// </summary>
+        public double Longitude
+        {
+            get
+            {
+                if (this.reader == null || this.reader.Constant("Longitude") == null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return this.reader.ConstantAsDouble("Longitude");
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the average temperature
         /// </summary>
         public double Tav
@@ -437,6 +463,7 @@ namespace Models
         public DataTable GetAllData()
         {
             this.reader = null;
+
             if (this.OpenDataFile())
             {
                 List<string> metProps = new List<string>();
@@ -445,6 +472,7 @@ namespace Models
                 metProps.Add("radn");
                 metProps.Add("rain");
                 metProps.Add("wind");
+
                 return this.reader.ToTable(metProps);
             }
             else
@@ -540,14 +568,15 @@ namespace Models
         /// Open the weather data file.
         /// </summary>
         /// <returns>True if the file was successfully opened</returns>
-        private bool OpenDataFile()
+        public bool OpenDataFile()
         {
             if (System.IO.File.Exists(this.FullFileName))
             {
                 if (this.reader == null)
                 {
                     this.reader = new ApsimTextFile();
-                    this.reader.Open(this.FullFileName);
+                    this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
+
                     this.maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Maxt");
                     this.minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Mint");
                     this.radiationIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Radn");
@@ -581,7 +610,8 @@ namespace Models
                 }
                 else
                 {
-                    this.reader.SeekToDate(this.reader.FirstDate);
+                    if (this.reader.IsExcelFile != true) 
+                        this.reader.SeekToDate(this.reader.FirstDate);
                 }
 
                 return true;
@@ -589,6 +619,16 @@ namespace Models
             else
             {
                 return false;
+            }
+        }
+
+        /// <summary>Close the datafile.</summary>
+        public void CloseDataFile()
+        {
+            if (reader != null)
+            {
+                reader.Close();
+                reader = null;
             }
         }
 
@@ -632,6 +672,8 @@ namespace Models
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
         private void ProcessMonthlyTAVAMP(out double tav, out double amp)
         {
+            int savedPosition = reader.GetCurrentPosition();
+
             // init return values
             tav = 0;
             amp = 0;
@@ -705,7 +747,7 @@ namespace Models
             tav = yearlySumMeans / nyears;  // calc the ave of the yearly ave means
             amp = yearlySumAmp / nyears;    // calc the ave of the yearly amps
 
-            this.reader.SeekToDate(start.AddDays(1)); // goto start of data set
+            reader.SeekToPosition(savedPosition);
         }
 
         /// <summary>

@@ -254,6 +254,7 @@ namespace UserInterface.Presenters
                 }
                 else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.FileName)
                 {
+                    cell.DropDownStrings = this.properties[i].Metadata;
                     cell.EditorType = EditorTypeEnum.Button;
                 }
                 else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.FieldName)
@@ -431,7 +432,20 @@ namespace UserInterface.Presenters
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnFileBrowseClick(object sender, GridCellsChangedArgs e)
         {
-            string fileName = explorerPresenter.AskUserForFile("Select file");
+            string filterString = "";
+            string[] fileFilters = e.ChangedCells[0].DropDownStrings;
+            if (fileFilters != null)
+            {
+                for (int i = 0; i < fileFilters.Length; i++)
+                {
+                    if (i > 0)
+                        filterString += '|';
+                    filterString += fileFilters[i];
+                }
+            }
+            else
+              filterString = "All files (*.*)|*.*";
+            string fileName = explorerPresenter.MainPresenter.AskUserForOpenFileName(filterString);
             if (fileName != null)
             {
                 e.ChangedCells[0].Value = fileName;

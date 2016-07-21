@@ -50,6 +50,8 @@ namespace Models
         public void Test(bool accept = false, bool GUIrun = false)
         {
             PredictedObserved PO = Parent as PredictedObserved;
+            if (PO == null)
+                return;
             DataStore DS = PO.Parent as DataStore;
             MathUtilities.RegrStats[] stats;
             List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
@@ -163,6 +165,8 @@ namespace Models
                 }
 
             //current table
+            Table = AcceptedTable.Copy();
+            int rowIndex = 0;
             for (int i = 0; i < stats.Count(); i++)
                 for (int j = 1; j < statNames.Count; j++) //start at 1; we don't want Name field.
                 {
@@ -174,11 +178,9 @@ namespace Models
                                     current,
                                     null,
                                     null);
+                    Table.Rows[rowIndex]["Current"] = current;
+                    rowIndex++;
                 }
-
-            //Merge the tables.
-            Table = AcceptedTable.Copy();
-            Table.Merge(CurrentTable);
 
             //Merge overwrites rows, so add the correct data back in
             foreach(DataRow row in Table.Rows)
@@ -230,20 +232,71 @@ namespace Models
             }
         }
 
-        /// <summary>All simulations have run - write all tables</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("AllCompleted")]
-        private void OnAllSimulationsCompleted(object sender, EventArgs e)
+        /// <summary>Document the stats.</summary>
+        /// <param name="tags"></param>
+        /// <param name="headingLevel"></param>
+        /// <param name="indent"></param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            Test();
-        }
+            // Run test suite so that data table is full.
+            Test(accept: false, GUIrun: true);
 
-        private static string PadCenter(string text, int maxLength)
-        {
-            int diff = maxLength - text.Length;
-            return new string(' ', diff / 2) + text + new string(' ', (int)(diff / 2.0 + 0.5));
+            // add a heading.
+            // tags.Add(new AutoDocumentation.Heading(Parent.Name + " statistics", headingLevel));
 
+            // Get stat names.
+            List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
+            statNames.RemoveAt(0);
+
+            // Grab the columns of data we want.
+            List<List<string>> dataForDoc = new List<List<string>>();
+            dataForDoc.Add(new List<string>()); // variable name.
+            foreach (string stat in statNames)
+                dataForDoc.Add(new List<string>()); // column for each stat.
+            
+            // add in headings.
+            dataForDoc[0].Add("Variable");
+            for (int statIndex = 0; statIndex < statNames.Count; statIndex++)
+            {
+                if (statNames[statIndex] == "SEintercept")
+                    statNames[statIndex] = "SEinter";
+                dataForDoc[statIndex + 1].Add(statNames[statIndex]);
+            }
+
+            int rowIndex = 0;
+            while (rowIndex < Table.Rows.Count)
+            {
+                string variableName = Table.Rows[rowIndex][1].ToString();
+                dataForDoc[0].Add(variableName);
+
+                for (int statIndex = 0; statIndex < statNames.Count; statIndex++)
+                {
+                    object currentValue = Table.Rows[rowIndex]["Current"];
+                    string formattedValue;
+                    if (currentValue.GetType() == typeof(double))
+                    {
+                        double doubleValue = Convert.ToDouble(currentValue);
+                        if (!double.IsNaN(doubleValue))
+                        {
+                            if (statIndex == 0)
+                                formattedValue = doubleValue.ToString("F0");
+                            else
+                                formattedValue = doubleValue.ToString("F3");
+                        }
+                        else
+                            formattedValue = currentValue.ToString();
+                    }
+                    else
+                        formattedValue = currentValue.ToString();
+
+                    dataForDoc[statIndex + 1].Add(formattedValue);
+                    
+                    rowIndex++;
+                }
+            }
+
+            // add data to doc table.
+            tags.Add(new AutoDocumentation.Table(dataForDoc, headingLevel));
         }
     }
 }

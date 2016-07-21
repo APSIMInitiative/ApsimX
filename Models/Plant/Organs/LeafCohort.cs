@@ -56,6 +56,9 @@ namespace Models.PMF.Organs
         /// <summary>The leaf</summary>
         [Link]
         private Leaf Leaf = null;
+        /// <summary>The clock</summary>
+        [Link]
+        public Clock Clock = null;
 
         [Link]
         private ISurfaceOrganicMatter SurfaceOrganicMatter = null;
@@ -142,6 +145,12 @@ namespace Models.PMF.Organs
         /// <summary>The maximum area</summary>
         [XmlIgnore]
         public double MaxArea = 0;
+        /// <summary>The maximum area</summary>
+        [XmlIgnore]
+        public double LeafSizeShape = 0.01;
+        /// <summary>The size of senessing leaves relative to the other leaves in teh cohort</summary>
+        [XmlIgnore]
+        public double SenessingLeafRelativeSize = 1;
         /// <summary>Gets or sets the cover above.</summary>
         /// <value>The cover above.</value>
         [XmlIgnore]
@@ -224,9 +233,23 @@ namespace Models.PMF.Organs
         /// <summary>The delta wt</summary>
         [XmlIgnore]
         public double DeltaWt = 0;
-        //public double StructuralNDemand = 0;
-        //public double MetabolicNDemand = 0;
-        //public double NonStructuralNDemand = 0;
+
+        /// <summary>Gets the DM amount detached (send to surface OM) (g/m2)</summary>
+        [XmlIgnore]
+        public double DetachedWt { get; set; }
+        
+        /// <summary>Gets the N amount detached (send to surface OM) (g/m2)</summary>
+        [XmlIgnore]
+        public double DetachedN { get; set; }
+        
+        /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
+        [XmlIgnore]
+        public double RemovedWt { get; set; }
+
+        /// <summary>Gets the N amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
+        [XmlIgnore]
+        public double RemovedN { get; set; }
+
         /// <summary>The potential area growth</summary>
         [XmlIgnore]
         public double PotentialAreaGrowth = 0;
@@ -448,7 +471,10 @@ namespace Models.PMF.Organs
                 if (IsGrowing)
                 {
                     double TotalDMDemand = Math.Min(DeltaPotentialArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2), DeltaWaterConstrainedArea / SpecificLeafAreaMin);
+                    if(TotalDMDemand < 0)
+                        throw new Exception("Negative DMDemand in" + this);
                     return TotalDMDemand * StructuralFraction;
+
                 }
                 else return 0;
             }
@@ -509,8 +535,9 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if ((IsNotSenescing) && (ShadeInducedSenRate == 0.0)) // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions
-                    return Math.Max(0.0, LuxaryNConc * (LiveStart.StructuralWt + LiveStart.MetabolicWt + PotentialStructuralDMAllocation + PotentialMetabolicDMAllocation) - Live.NonStructuralN);//Math.Max(0.0, MaxN - CritN - LeafStartNonStructuralN); //takes the difference between the two above as the maximum nonstructural N conc and subtracts the current nonstructural N conc to give a value
+                if ((IsNotSenescing) && (ShadeInducedSenRate == 0.0) && (NonStructuralFraction > 0)) // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions.  Also if there is 
+                    return Math.Max(0.0, LuxaryNConc * (LiveStart.StructuralWt + LiveStart.MetabolicWt 
+                                    + PotentialStructuralDMAllocation + PotentialMetabolicDMAllocation) - Live.NonStructuralN);//Math.Max(0.0, MaxN - CritN - LeafStartNonStructuralN); //takes the difference between the two above as the maximum nonstructural N conc and subtracts the current nonstructural N conc to give a value
                 else
                     return 0.0;
             }
@@ -835,6 +862,9 @@ namespace Models.PMF.Organs
             if (LeafCohortParameters.DMRetranslocationFactor != null)
                 DMRetranslocationFactor = LeafCohortParameters.DMRetranslocationFactor.Value;
             else DMRetranslocationFactor = 0;
+            if (LeafCohortParameters.LeafSizeShapeParameter != null)
+                LeafSizeShape = LeafCohortParameters.LeafSizeShapeParameter.Value;
+            else LeafSizeShape = 0.01;
         }
         /// <summary>Does the potential growth.</summary>
         /// <param name="TT">The tt.</param>
@@ -882,7 +912,8 @@ namespace Models.PMF.Organs
                 CoverAbove = Leaf.CoverAboveCohort(Rank); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
                 if (LeafCohortParameters.ShadeInducedSenescenceRate != null)
                     ShadeInducedSenRate = LeafCohortParameters.ShadeInducedSenescenceRate.Value;
-                SenescedFrac = FractionSenescing(_ThermalTime, PropnStemMortality);
+                SenessingLeafRelativeSize = LeafCohortParameters.SenessingLeafRelativeSize.Value;
+                SenescedFrac = FractionSenescing(_ThermalTime, PropnStemMortality, SenessingLeafRelativeSize);
 
                 // Doing leaf mass growth in the cohort
                 Biomass LiveBiomass = new Biomass(Live);
@@ -1038,6 +1069,59 @@ namespace Models.PMF.Organs
                 }
             }
         }
+        /// <summary>Removes leaf area and biomass on thinning event</summary>
+        /// <param name="value">The fractions of biomass to remove.</param>
+        virtual public void DoLeafBiomassRemoval(OrganBiomassRemovalType value)
+        {
+            if (IsInitialised)
+            {
+                double totalFractionBeingRemoved = value.FractionLiveToRemove + value.FractionDeadToRemove
+                                                   + value.FractionLiveToResidue + value.FractionDeadToResidue;
+                if (totalFractionBeingRemoved > 1.0)
+                {
+                    throw new Exception("The sum of FractionToResidue and FractionToRemove sent with your "
+                                        + "!!!!PLACE HOLDER FOR EVENT SENDER!!!!"
+                                        + " is greater than 1.  Had this execption not triggered you would be removing more biomass from "
+                                        + Name + " than there is to remove");
+                }
+                else if (totalFractionBeingRemoved > 0.0)
+                {
+                    double RemainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
+                    double RemainingDeadFraction = 1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove);
+
+                    LiveArea *= RemainingLiveFraction;
+
+                    RemovedWt += (Live.Wt * value.FractionLiveToRemove) + (Dead.Wt * value.FractionDeadToRemove);
+                    RemovedN += (Live.N * value.FractionLiveToRemove) + (Dead.N * value.FractionDeadToRemove);
+                    DetachedWt += (Live.Wt * value.FractionLiveToResidue) + (Dead.Wt * value.FractionDeadToResidue);
+                    DetachedN += (Live.N * value.FractionLiveToResidue) + (Dead.N * value.FractionDeadToResidue);
+
+                    Live.StructuralWt *= RemainingLiveFraction;
+                    Live.NonStructuralWt *= RemainingLiveFraction;
+                    Live.MetabolicWt *= RemainingLiveFraction;
+                    Dead.StructuralWt *= RemainingDeadFraction;
+                    Dead.NonStructuralWt *= RemainingDeadFraction;
+                    Dead.MetabolicWt *= RemainingDeadFraction;
+
+                    Live.StructuralN *= RemainingLiveFraction;
+                    Live.NonStructuralN *= RemainingLiveFraction;
+                    Live.MetabolicN *= RemainingLiveFraction;
+                    Dead.StructuralN *= RemainingDeadFraction;
+                    Dead.NonStructuralN *= RemainingDeadFraction;
+                    Dead.MetabolicN *= RemainingDeadFraction;
+
+                    SurfaceOrganicMatter.Add(DetachedWt * 10, DetachedN * 10, 0, Plant.CropType, Name);
+                    //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
+                }
+            }
+        }
+
+        /// <summary>Removes leaves for cohort due to thin event.  </summary>
+        /// <param name="ProportionRemoved">The fraction.</param>
+        virtual public void DoThin(double ProportionRemoved)
+        {
+            CohortPopulation *= (1- ProportionRemoved);;
+        }
         /// <summary>Does the kill.</summary>
         /// <param name="fraction">The fraction.</param>
         virtual public void DoKill(double fraction)
@@ -1073,6 +1157,16 @@ namespace Models.PMF.Organs
             if (IsAppeared)
                 DoKill(fraction);
         }
+
+        /// <summary>Does the zeroing of some varibles.</summary>
+        virtual protected void DoDailyCleanup()
+        {
+            DetachedWt = 0.0;
+            DetachedN = 0.0;
+            RemovedWt = 0.0;
+            RemovedN = 0.0;
+        }
+
         /// <summary>Potential delta LAI</summary>
         /// <param name="TT">thermal-time</param>
         /// <returns>(mm2 leaf/cohort position/m2 soil/day)</returns>
@@ -1081,24 +1175,30 @@ namespace Models.PMF.Organs
             double BranchNo = Structure.TotalStemPopn - Structure.MainStemPopn;  //Fixme, this line appears redundant
             double leafSizeDelta = SizeFunction(Age + TT) - SizeFunction(Age); //mm2 of leaf expanded in one day at this cohort (Today's minus yesterday's Area/cohort)
             double growth = CohortPopulation * leafSizeDelta; // Daily increase in leaf area for that cohort position in a per m2 basis (mm2/m2/day)
-            return growth;                              // FIXME-EIT Unit conversion to m2/m2 could happen here and population could be considered at higher level only (?)
+            if (growth < 0)
+                throw new Exception("Netagive potential leaf area expansion in" + this);
+            return growth;                              
         }
         /// <summary>Potential average leaf size for today per cohort (no stress)</summary>
         /// <param name="TT">Thermal-time accumulation since cohort initiation</param>
         /// <returns>Average leaf size (mm2/leaf)</returns>
         protected double SizeFunction(double TT)
         {
-            double alpha = -Math.Log((1 / 0.99 - 1) / (MaxArea / (MaxArea * 0.01) - 1)) / GrowthDuration;
-            double leafsize = MaxArea / (1 + (MaxArea / (MaxArea * 0.01) - 1) * Math.Exp(-alpha * TT));
-            return leafsize;
-
+            double OneLessShape = 1 - LeafSizeShape;
+            double alpha = -Math.Log((1 / OneLessShape - 1) / (MaxArea / (MaxArea * LeafSizeShape) - 1)) / GrowthDuration;
+            double LeafSize = MaxArea / (1 + (MaxArea / (MaxArea * LeafSizeShape) - 1) * Math.Exp(-alpha * TT));
+            double y0 = MaxArea / (1 + (MaxArea / (MaxArea * LeafSizeShape) - 1) * Math.Exp(-alpha * 0));
+            double yDiffprop = y0 / (MaxArea/2);
+            double ScaledLeafSize = (LeafSize - y0) / (1 - yDiffprop);
+            return ScaledLeafSize;
         }
         /// <summary>Fractions the senescing.</summary>
         /// <param name="TT">The tt.</param>
         /// <param name="StemMortality">The stem mortality.</param>
+        /// <param name="SenessingLeafRelativeSize">The relative size of senessing tillers leaves relative to the other leaves in the cohort</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Bad Fraction Senescing</exception>
-        public double FractionSenescing(double TT, double StemMortality)
+        public double FractionSenescing(double TT, double StemMortality, double SenessingLeafRelativeSize)
         {
             //Calculate fraction of leaf area senessing based on age and shading.  This is used to to calculate change in leaf area and Nreallocation supply.
             if (IsAppeared)
@@ -1131,7 +1231,7 @@ namespace Models.PMF.Organs
                 if (LiveArea > 0)
                 {
                     FracSenShade = Math.Min(MaxLiveArea * ShadeInducedSenRate, LiveArea) / LiveArea;
-                    FracSenShade += StemMortality;
+                    FracSenShade += StemMortality * SenessingLeafRelativeSize;
                     FracSenShade = Math.Min(FracSenShade, 1.0);
                 }
 
@@ -1166,6 +1266,7 @@ namespace Models.PMF.Organs
             return FracDetach;
 
         }
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1173,6 +1274,16 @@ namespace Models.PMF.Organs
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             //MyPaddock.Subscribe(Structure.InitialiseStage, DoInitialisation);
+        }
+
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (Plant.IsAlive)
+                DoDailyCleanup();
         }
         #endregion
 

@@ -10,6 +10,8 @@ namespace Models.Graph
     using System.Collections.Generic;
     using System.Xml.Serialization;
     using Models.Core;
+    using Factorial;
+    using System.Data;
 
     /// <summary>
     /// Represents a graph
@@ -21,23 +23,12 @@ namespace Models.Graph
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Factorial.Experiment))]
+    [ValidParent(ParentType = typeof(Folder))]
     public class Graph : Model, AutoDocumentation.ITag
     {
-        /// <summary>
-        /// The data store to use when retrieving data
-        /// </summary>
-        [NonSerialized] 
-        private DataStore dataStore = null;
-
-        /// <summary>
-        /// Finalizes an instance of the <see cref="Graph" /> class./>
-        /// </summary>
-        ~Graph()
-        {
-            if (this.dataStore != null)
-                this.dataStore.Disconnect();
-            this.dataStore = null;
-        }
+        /// <summary>The data tables on the graph.</summary>
+        [NonSerialized]
+        private Dictionary<string, DataTable> tables = new Dictionary<string, DataTable>();
 
         /// <summary>
         /// An enumeration for the position of the legend
@@ -181,6 +172,80 @@ namespace Models.Graph
             if (unNeededAxisFound || axisWasAdded)
                 Axes = allAxes;
         }
+
+        /// <summary>Clear all cached graph data.</summary>
+        public void ClearBaseData()
+        {
+            tables.Clear();
+        }
+
+        /// <summary>Get the base data that is in scope.</summary>
+        public DataTable GetBaseData(string tableName)
+        {
+            if (tables.ContainsKey(tableName))
+                return tables[tableName];
+
+            else if (tableName != null)
+            {
+                Simulation parentSimulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+                Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+                Experiment parentExperiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;
+
+                string baseFilter = null;
+                // If the graph is in a zone then just graph the zone.
+                if (parentZone != null && !(parentZone is Simulation))
+                {
+                    // in a zone.
+                    baseFilter = string.Format("SimulationName='{0}' and ZoneName='{1}'", parentSimulation.Name, parentZone.Name);
+                }
+                else
+                {
+                    List<string> simulationNames = new List<string>();
+                    if (parentSimulation != null)
+                        simulationNames.Add(parentSimulation.Name);  // in a simulation.
+
+                    else if (parentExperiment != null)
+                        simulationNames.AddRange(parentExperiment.Names());
+
+                    else
+                    {
+                        // Must be in a folder at the top level or at the top level of the .apsimx file. 
+                        IModel parentOfGraph = this.Parent;
+
+                        // Look for experiments.
+                        foreach (Experiment experiment in Apsim.ChildrenRecursively(parentOfGraph, typeof(Experiment)))
+                            simulationNames.AddRange(experiment.Names());
+
+                        // Look for simulations if we didn't find any experiments.
+                        foreach (Simulation simulation in Apsim.ChildrenRecursively(parentOfGraph, typeof(Simulation)))
+                        {
+                            if (simulation.Parent is Experiment)
+                            { }
+                            else
+                                simulationNames.Add(simulation.Name);
+                        }
+                    }
+
+                    // convert simulationNames to a filter.
+                    foreach (string simulationName in simulationNames)
+                    {
+                        if (baseFilter != null)
+                            baseFilter += ",";
+                        baseFilter += "'" + simulationName + "'";
+                    }
+                    baseFilter = "SimulationName IN (" + baseFilter + ")";
+                }
+
+                DataStore dataStore = new DataStore(this);
+                DataTable data = dataStore.GetFilteredData(tableName, baseFilter);
+                dataStore.Disconnect();
+                tables.Add(tableName, data);
+                return data;
+            }
+
+            return null;
+        }
+
 
     }
 }

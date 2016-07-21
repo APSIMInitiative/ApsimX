@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
 using UserInterface.Interfaces;
+using UserInterface.Views;
 
 // This is the view used by the WeatherFile component
 namespace UserInterface.Views
@@ -15,6 +17,12 @@ namespace UserInterface.Views
     ///// <param name="showYears">the number of years of data to be used/displayed in the graph</param>
     public delegate void GraphRefreshDelegate(int tabIndex, decimal startYear, decimal showYears);
 
+    /// <summary>A delegate used when the sheetname dropdown value change is actived</summary>
+    /// <param name="fileName"></param>
+    /// <param name="sheetName"></param>
+    public delegate void ExcelSheetDelegate(string fileName, string sheetName);
+
+
 
     /// <summary>
     /// An interface for a weather data view
@@ -27,8 +35,14 @@ namespace UserInterface.Views
         /// <summary>Occurs when the start year numericUpDown is clicked</summary>
         event GraphRefreshDelegate GraphRefreshClicked;
 
+        /// <summary>A delegate used when the sheetname dropdown value change is actived</summary>
+        event ExcelSheetDelegate ExcelSheetChangeClicked;
+
         /// <summary>Gets or sets the filename.</summary>
         string Filename { get; set; }
+
+        /// <summary>Gets or sets the Excel Sheet name, where applicable</summary>
+        string ExcelWorkSheetName { get; set; }
 
         /// <summary>Sets the summarylabel.</summary>
         string Summarylabel { set; }
@@ -63,9 +77,19 @@ namespace UserInterface.Views
         /// <summary>set the maximum value for the 'Show Years' NumericUpDown control  </summary>
         decimal GraphShowYearsMaxValue { set; }
 
+        /// <summary>set the height of the BrowseControlPanel </summary>
+        decimal BrowsePanelControlHeight { set; }
+
         /// <summary>Populates the data grid</summary>
         /// <param name="Data">The data</param>
         void PopulateData(DataTable Data);
+
+        /// <summary>
+        /// Populates the DropDown of Excel WorksheetNames 
+        /// </summary>
+        /// <param name="sheetNames"></param>
+        void PopulateDropDownData(List<string> sheetNames);
+
 
     }
 
@@ -80,6 +104,7 @@ namespace UserInterface.Views
         /// <summary>Occurs when start year or show Years numericUpDowns are clicked</summary>
         public event GraphRefreshDelegate GraphRefreshClicked;
 
+        public event ExcelSheetDelegate ExcelSheetChangeClicked;
 
         /// <summary>Initializes a new instance of the <see cref="TabbedMetDataView"/> class.</summary>
         public TabbedMetDataView()
@@ -93,6 +118,17 @@ namespace UserInterface.Views
         {
             get { return FileNameControl.Text; }
             set { FileNameControl.Text = value;}
+        }
+
+        /// <summary>Gets and sets the worksheet name</summary>
+        public string ExcelWorkSheetName
+        {
+            get { return WorksheetNamesControl.SelectedText; }
+            set
+            {
+                WorksheetNamesControl.SelectedText = value;
+                WorksheetNamesControl.Text = value;
+            }
         }
 
         /// <summary>Sets the summarylabel.</summary>
@@ -156,6 +192,12 @@ namespace UserInterface.Views
             set { GraphShowYearsControl.Maximum = Convert.ToDecimal(value); }
         }
 
+        /// <summary>set the height of the BrowseControlPanel</summary>
+        public decimal BrowsePanelControlHeight
+        {
+            set { BrowsePanelControl.Height = Convert.ToInt16(value); }
+        }
+
         /// <summary>Populates the data.</summary>
         /// <param name="Data">The data.</param>
         public void PopulateData(DataTable data)
@@ -163,6 +205,24 @@ namespace UserInterface.Views
             //fill the grid with data
             dataGridView1.DataSource = data;
         }
+
+        /// <summary>
+        /// used to control onchange event status of Excel sheetname combo
+        /// </summary>
+        private bool PopulatingDropDownData;
+
+        /// <summary>
+        /// Populates the DropDown of Excel WorksheetNames 
+        /// </summary>
+        /// <param name="sheetNames"></param>
+        public void PopulateDropDownData(List<string> sheetNames)
+        {
+            PopulatingDropDownData = true;
+            WorksheetNamesControl.DataSource = sheetNames;
+            PopulatingDropDownData = false;
+        }
+
+
 
         /// <summary>Handles the Click event of the button1 control.</summary>
         /// <param name="sender">The source of the event.</param>
@@ -175,7 +235,11 @@ namespace UserInterface.Views
             {
                 FileNameControl.Text = openFileDialog1.FileName;
                 if (BrowseClicked != null)
+                {
                     BrowseClicked.Invoke(FileNameControl.Text);    //reload the grid with data
+                    if (tabControl1.SelectedTab.TabIndex != 0)
+                        tabControl1.SelectedIndex = 0;
+                }
             }
         }
 
@@ -214,13 +278,30 @@ namespace UserInterface.Views
             TabControl tc = (TabControl)sender;
             if (tc.SelectedIndex == 0 || tc.SelectedIndex == 1)
             {
-                BrowsePanelControl.Height = 41;
+                //BrowsePanelControl.Height = 68;
+                GraphOptionPanelControl.Visible = false;
                 GraphRefreshClicked.Invoke(tc.SelectedIndex, GraphStartYearControl.Value, GraphShowYearsControl.Value);
             }
             else
             {
-                BrowsePanelControl.Height = 68;
+                //BrowsePanelControl.Height = 68;
+                GraphOptionPanelControl.Visible = true;
                 GraphRefreshClicked.Invoke(tc.SelectedIndex, GraphStartYearControl.Value, GraphShowYearsControl.Value);
+            }
+        }
+
+        /// <summary>
+        /// This is used to handle the change in value (selected index) for the worksheet dropdown combo.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WorkSheetNameControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (PopulatingDropDownData == false)
+            {
+                ComboBox cb = (ComboBox)sender;
+                ExcelSheetChangeClicked.Invoke(FileNameControl.Text, cb.SelectedValue.ToString());
+                if (tabControl1.SelectedTab.TabIndex == -1) { tabControl1.SelectedIndex = 0; }
             }
         }
     }
