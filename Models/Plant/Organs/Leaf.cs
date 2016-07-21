@@ -349,8 +349,8 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (CurrentRank - 1 < Leaves.Count || CurrentRank - 1 >= Leaves.Count)
-                    return 0;
+                if (CurrentRank > Leaves.Count)
+                    throw new ApsimXException(this, "Curent Rank is greater than the number of leaves appeared when trying to determine CoverAbove this cohort");
                 else
                     return Leaves[CurrentRank-1].CoverAbove;
             }
