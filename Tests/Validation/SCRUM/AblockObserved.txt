@@ -1,4 +1,4 @@
-SimulationName  Clock.Today  SCUM.Product.Live.Wt  SCUM.Product.LiveFWt  SCUM.Product.Live.N  ExtraVariables.Script.AccumLeach  ExtraVariables.Script.SWC  ExtraVariables.Script.SoilNitrogenContent  Mean_MineralN  Treat  RotTreat  IrrigTreat  NitTreat
+SimulationName  Clock.Today  SCRUM.Product.Live.Wt  SCRUM.Product.LiveFWt  SCRUM.Product.Live.N  ExtraVariables.Script.AccumLeach  ExtraVariables.Script.SWC  ExtraVariables.Script.SoilNitrogenContent  Mean_MineralN  Treat  RotTreat  IrrigTreat  NitTreat
 ()  ()  (g/m2)  (g/m2)  (g/m2)  (kg/ha)  (mm/mm)  (kg/ha)  (kg/ha)  ()  ()  ()  ()
 ABlockRotPP_W1_N0  2005-03-14  *  4903  13.39  *  *  *  *  PP_W1_N0  PP  W1  N0
 ABlockRotPP_W1_N0  2006-01-30  *  614.8  28.61  *  *  *  *  PP_W1_N0  PP  W1  N0
