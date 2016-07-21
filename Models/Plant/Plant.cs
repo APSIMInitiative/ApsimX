@@ -79,6 +79,11 @@ namespace Models.PMF
         public Root Root = null;
         [Link(IsOptional = true)]
         Biomass AboveGround = null;
+        /// <summary>
+        /// Clock
+        /// </summary>
+        [Link]
+        public Clock Clock = null;
 
         #endregion
 
@@ -151,6 +156,10 @@ namespace Models.PMF
 
         /// <summary>Holds the number of plants.</summary>
         private double plantPopulation = 0.0;
+        /// <summary>
+        /// Holds the date of sowing
+        /// </summary>
+        public DateTime SowingDate { get; set; }
 
         /// <summary>Gets or sets the plant population.</summary>
         [XmlIgnore]
@@ -188,6 +197,19 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Return true if plant has germinated</summary>
+        public bool IsGerminated
+        {
+            get
+            {
+                if (Phenology != null)
+                    return Phenology.Germinated;
+                //If the crop model has phenology and the crop is emerged return true
+                else
+                    return IsAlive;
+                //Else if the crop is in the grown returen true
+            }
+        }
         /// <summary>Returns true if the crop is ready for harvesting</summary>
         public bool IsReadyForHarvesting { get { return Phenology.CurrentPhaseName == "ReadyForHarvesting"; } }
 
@@ -279,6 +301,8 @@ namespace Models.PMF
         /// <param name="budNumber">The bud number.</param>
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
         {
+            SowingDate = Clock.Today;
+
             SowingData = new SowPlant2Type();
             SowingData.Plant = this;
             SowingData.Population = population;

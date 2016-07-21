@@ -502,7 +502,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <Name>MainStemNodeAppearanceRate</Name>
           <VariableReference>
             <Name>CurrentLeafNum</Name>
-            <VariableName>[Structure].MainStemNodeNo</VariableName>
+            <VariableName>[Structure].LeafTipsAppeared</VariableName>
           </VariableReference>
           <SubtractFunction>
             <Name>SubtractFunction</Name>
@@ -524,10 +524,10 @@ Though tillering is common in some sorghum varieties under certain agronomic con
             <Value>20</Value>
           </Constant>
         </LessThanFunction>
-        <MainStemFinalNodeNumberFunction>
+        <HoldFunction>
           <Name>MainStemFinalNodeNumber</Name>
           <AddFunction>
-            <Name>FinalLeafNumber</Name>
+            <Name>ValueToHold</Name>
             <VariableReference>
               <Name>LeafNumSeed</Name>
               <VariableName>[Structure].LeafNumSeed.Value</VariableName>
@@ -544,8 +544,8 @@ Though tillering is common in some sorghum varieties under certain agronomic con
               </VariableReference>
             </DivideFunction>
           </AddFunction>
-          <MaximumMainStemNodeNumber>30</MaximumMainStemNodeNumber>
-        </MainStemFinalNodeNumberFunction>
+          <WhenToHold>FloralInitiation</WhenToHold>
+        </HoldFunction>
         <HeightFunction>
           <Name>HeightModel</Name>
           <LinearInterpolationFunction>
@@ -600,8 +600,9 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <Name>BranchMortality</Name>
           <Value>0</Value>
         </Constant>
-        <InitialiseStage>Emergence</InitialiseStage>
-        <PrimaryBudNo>1</PrimaryBudNo>
+        <Initialised>false</Initialised>
+        <Germinated>false</Germinated>
+        <Emerged>false</Emerged>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -1421,7 +1422,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
                 <Name>PowerFunction</Name>
                 <VariableReference>
                   <Name>LeafNumber</Name>
-                  <VariableName>[Structure].MainStemNodeNo</VariableName>
+                  <VariableName>[Structure].LeafTipsAppeared</VariableName>
                 </VariableReference>
                 <Exponent>2</Exponent>
               </PowerFunction>
@@ -1472,6 +1473,10 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </Constant>
         <BiomassYesterday>0</BiomassYesterday>
         <CohortsInitialised>false</CohortsInitialised>
+        <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
+        <InitialisedCohortNo>0</InitialisedCohortNo>
+        <AppearedCohortNo>0</AppearedCohortNo>
         <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
         <Albedo>0</Albedo>
         <Gsmax>0</Gsmax>
@@ -1614,7 +1619,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <double>0.005</double>
             </Y>
           </XYPairs>
-          <XProperty>[Structure].MainStemNodeNo</XProperty>
+          <XProperty>[Structure].LeafTipsAppeared</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -1697,6 +1702,7 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
 </body></html>]]></MemoText>
       </Memo>
       <CropType>Sorghum</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
   </Replacements>
   <DataStore>
@@ -2482,6 +2488,7 @@ namespace Models
             <Name>Sorghum</Name>
             <ResourceName>Sorghum</ResourceName>
             <CropType>Sorghum</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -2568,7 +2575,7 @@ namespace Models
               <string>[Sorghum].Grain.Live.NConc as nconc</string>
               <string>[Sorghum].Grain.NumberFunction.Value as grainno</string>
               <string>[Sorghum].Grain.Size as grainsize </string>
-              <string>[Sorghum].Structure.MainStemNodeNo as leafno</string>
+              <string>[Sorghum].Structure.LeafTipsAppeared as leafno</string>
               <string>[Sorghum].Phenology.LeafAppearance1.RemainingLeaves.Value</string>
               <string>[Sorghum].Phenology.LeafAppearance2.RemainingLeaves.Value</string>
               <string>[Sorghum].Phenology.LeafAppearance1._RemainingLeaves</string>
@@ -2599,7 +2606,7 @@ namespace Models
               <string>[Leaf].LAI</string>
               <string>[Phenology].TTEmergToFlagLeaf.Value</string>
               <string>[Structure].MainStemFinalNodeNumber.Value</string>
-              <string>[Structure].MainStemNodeNo</string>
+              <string>[Structure].LeafTipsAppeared</string>
               <string>[Leaf].CoverGreen</string>
               <string>[Leaf].RadIntTot</string>
               <string>[Weather].Radn</string>
@@ -2943,7 +2950,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>date</XFieldName>
-          <YFieldName>Structure.MainStemNodeNo</YFieldName>
+          <YFieldName>Structure.LeafTipsAppeared</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>

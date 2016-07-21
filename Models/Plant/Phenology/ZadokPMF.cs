@@ -44,7 +44,7 @@ namespace Models.PMF.Phen
                 else if (Phenology.InPhase("Vegetative") && fracInCurrent <= 0.9)
                 {
                     if (Structure.BranchNumber <= 0.0)
-                        zadok_stage = 10.0f + Structure.MainStemNodeNo;
+                        zadok_stage = 10.0f + Structure.LeafTipsAppeared;
                     else
                         zadok_stage = 20.0f + Structure.BranchNumber;
                 }

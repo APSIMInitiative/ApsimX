@@ -18,6 +18,7 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models;
     using Models.Core;
+    using Views;
 
     /// <summary>
     /// This presenter class is responsible for populating the view
@@ -59,7 +60,7 @@ namespace UserInterface.Presenters
 
         /// <summary>Gets the presenter for the main window</summary>
         /// To be revised if we want to replicate the Windows.Forms version
-        public ExplorerPresenter MainPresenter { get { return this; } }
+        public MainPresenter MainPresenter { get; private set; }
 
         /// <summary>Gets the current right hand presenter.</summary>
         /// <value>The current presenter.</value>
@@ -79,6 +80,13 @@ namespace UserInterface.Presenters
             {
                 return this.view.SelectedNode;
             }
+        }
+
+        /// <summary>Constructor</summary>
+        /// <param name="mainPresenter">The presenter for the main window</param>
+        public ExplorerPresenter(MainPresenter mainPresenter)
+        {
+            this.MainPresenter = mainPresenter;
         }
 
         /// <summary>
@@ -151,17 +159,15 @@ namespace UserInterface.Presenters
                     string origSim = simStream.ReadToEnd(); // read original file to buffer2
                     simStream.Close();
 
-                    int choice = 1;                           // no save
+                    QuestionResponseEnum choice = QuestionResponseEnum.No;
                     if (string.Compare(newSim, origSim) != 0)   
-                    {
-                        choice = this.view.AskToSave();
-                    }
+                        choice = MainPresenter.AskQuestion("Do you want to save changes in file " + ApsimXFile.FileName + " ?");
 
-                    if (choice == -1)
+                    if (choice == QuestionResponseEnum.Cancel)
                     {   // cancel
                         result = false;
                     }
-                    else if (choice == 0)
+                    else if (choice == QuestionResponseEnum.Yes)
                     {
                         // save
                         // Need to hide the right hand panel because some views may not have saved
@@ -175,7 +181,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                this.view.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
+                MainPresenter.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
                 result = false;
             }
 
@@ -203,7 +209,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                this.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
+                this.MainPresenter.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
             }
             finally
             {
@@ -217,7 +223,7 @@ namespace UserInterface.Presenters
         /// <returns>True if file was saved.</returns>
         public bool SaveAs()
         {
-            string newFileName = this.view.SaveAs(this.ApsimXFile.FileName);
+            string newFileName = MainPresenter.AskUserForSaveFileName("ApsimX files|*.apsimx", this.ApsimXFile.FileName);
             if (newFileName != null)
             {
                 try
@@ -226,23 +232,17 @@ namespace UserInterface.Presenters
                         Utility.Configuration.Settings.DelMruFile(this.ApsimXFile.FileName);
 
                     Utility.Configuration.Settings.AddMruFile(newFileName);
+                    MainPresenter.ChangeTabText(this.view, Path.GetFileNameWithoutExtension(newFileName), newFileName);
                     this.ApsimXFile.Write(newFileName);
-                    this.view.ChangeTabText(Path.GetFileNameWithoutExtension(newFileName));
                     return true;
                 }
                 catch (Exception err)
                 {
-                    this.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
+                    this.MainPresenter.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
                 }
             }
 
             return false;
-        }
-
-        /// <summary>Toggle the second right hand side explorer view on/off</summary>
-        public void ToggleSecondExplorerViewVisible()
-        {
-            this.view.ToggleSecondExplorerViewVisible();
         }
 
         /// <summary>Do the actual write to the file</summary>
@@ -250,63 +250,6 @@ namespace UserInterface.Presenters
         {
             this.ApsimXFile.ExplorerWidth = this.TreeWidth;
             this.ApsimXFile.Write(this.ApsimXFile.FileName);
-        }
-
-        /// <summary>Add a status message to the explorer window</summary>
-        /// <param name="message">Status message</param>
-        /// <param name="errorLevel">Level for the error message</param>
-        public void ShowMessage(string message, Models.DataStore.ErrorLevel errorLevel)
-        {
-            this.view.ShowMessage(message, errorLevel);
-        }
-
-        public int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType)
-        {
-            return this.view.ShowMsgDialog(message, title, msgType, buttonType);
-        }
-
-        /// <summary>
-        /// Show progress bar with the specified percent.
-        /// </summary>
-        /// <param name="percent">Percent 0-100</param>
-        public void ShowProgress(int percent)
-        {
-            view.ShowProgress(percent);
-        }
-
-        /// <summary>Show the wait cursor</summary>
-        /// <param name="wait">If true will show the wait cursor otherwise the normal cursor.</param>
-        public void ShowWaitCursor(bool wait)
-        {
-            view.ShowWaitCursor(wait);
-        }
-
-        /// <summary>
-        /// Close the APSIMX user interface
-        /// </summary>
-        //public void Close()
-        //{
-        //    this.view.Close();
-        //}
-
-        /// <summary>A helper function that asks user for a folder.</summary>
-        /// <param name="prompt">Prompt string</param>
-        /// <returns>
-        /// Returns the selected folder or null if action cancelled by user.
-        /// </returns>
-        public string AskUserForFolder(string prompt)
-        {
-            return this.view.AskUserForFolder(prompt);
-        }
-
-        /// <summary>A helper function that asks user for a filename.</summary>
-        /// <param name="prompt">Prompt string</param>
-        /// <returns>
-        /// Returns the selected folder or null if action cancelled by user.
-        /// </returns>
-        public string AskUserForFile(string prompt)
-        {
-            return this.view.AskUserForFile(prompt);
         }
 
         /// <summary>Select a node in the view.</summary>
@@ -335,7 +278,7 @@ namespace UserInterface.Presenters
 
             /* If the current node path is '.Simulations' (the root node) then
                select the first item in the 'allModels' list. */
-            if (this.view.SelectedNode == ".Standard toolbox")
+            if (this.view.SelectedNode == "")
             {
                 this.view.SelectedNode = Apsim.FullPath(allModels[0]);
                 return true;
@@ -417,7 +360,7 @@ namespace UserInterface.Presenters
                 }
                 catch(XmlException)
                 {
-                    this.view.ShowMessage("Invalid XML. Are you sure you're trying to paste an APSIM model?", DataStore.ErrorLevel.Error);
+                    MainPresenter.ShowMessage("Invalid XML. Are you sure you're trying to paste an APSIM model?", DataStore.ErrorLevel.Error);
                 }
                 object newModel = XmlUtilities.Deserialise(document.DocumentElement, ApsimXFile.GetType().Assembly);
 
@@ -476,7 +419,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception exception)
             {
-                this.ShowMessage(exception.Message, DataStore.ErrorLevel.Error);
+                this.MainPresenter.ShowMessage(exception.Message, DataStore.ErrorLevel.Error);
             }
         }
 
@@ -732,7 +675,7 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    this.ShowMessage("Use alpha numeric characters only!", DataStore.ErrorLevel.Error);
+                    MainPresenter.ShowMessage("Use alpha numeric characters only!", DataStore.ErrorLevel.Error);
                     e.CancelEdit = true;
                 }
             }
@@ -810,7 +753,7 @@ namespace UserInterface.Presenters
                     if (err.InnerException != null)
                         message += "\r\n" + err.InnerException.Message;
 
-                    this.view.ShowMessage(message, DataStore.ErrorLevel.Error);
+                    MainPresenter.ShowMessage(message, DataStore.ErrorLevel.Error);
                 }
             }
         }
@@ -862,7 +805,7 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception err)
                 {
-                    this.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                    MainPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
                 }
             }
 
@@ -914,7 +857,7 @@ namespace UserInterface.Presenters
             {
                 string message = err.Message;
                 message += "\r\n" + err.StackTrace;
-                this.ShowMessage(message, DataStore.ErrorLevel.Error);
+                MainPresenter.ShowMessage(message, DataStore.ErrorLevel.Error);
             }
         }
 
