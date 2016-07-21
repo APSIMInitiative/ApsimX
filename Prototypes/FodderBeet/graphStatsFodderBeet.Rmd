@@ -138,19 +138,20 @@ summary(df)
 str(df)
 
 
-# add sim names (FIXME: this should com efrom DF????)
+# add sim names (FIXME: this should come from DF????)
 simNameDf <- data.frame(
   Name = c(
-"Lincoln2014CvRiv_Sep",
 "Lincoln2014CvRiv_Oct",
+"Lincoln2014CvRiv_Sep",
 "Lincoln2014CvRiv_Nov",
 "Lincoln2014CvRiv_Dec",
-"Lincoln2014CvBri_Oct",
 "Lincoln2014CvBri_Sep",
 "Lincoln2014CvBri_Nov",
-"LincolnP21_Cv2011",
+"Lincoln2014CvBri_Oct",
 "Lincoln2014CvBri_Dec",
+"LincolnP21_Cv2011",
 "LincolnP21_Cv2012"
+
 ),
   SimulationID = c(1,2,3,4,5,6,7,8,9,10)
 )
@@ -255,33 +256,29 @@ head(maxAxesValues, 20)
 mergedDF <- merge(mergedDF, maxAxesValues, by=c("Calib_Test", "SimpleName"))
 
 
-#potential
-mergedDF %>%
-#  filter(Name == "LincolnP21_Cv2011" | Name == "LincolnP21_Cv2012") %>%
-#  filter(W_lim == "No", N_lim == "No") %>%
- # filter(Cultivar_Treat != "Bri") %>% # get rid of Brigarier
-  filter(Calib_Test == "Calib") %>%
-  ggplot(aes(x=Observed, y= Predicted)) +
-  geom_point(aes(colour= Name, shape = Cultivar_Treat , size = 1)) +
-  geom_abline(intercept = 0, slope = 1) +
-  coord_fixed(ratio = 1) +
-  facet_wrap(~SimpleName, scales = "free")
+# TODO: set limits for 1:1
+# facetlims <- mergedDF %>% 
+#     group_by(Name,Variable) %>% 
+#     summarise(min = min(Predicted, Observed), max = max(Predicted, Observed)) %>%
+#     gather(range, displ, -class) %>%
+#     mutate(hwy = displ, range = NULL)
+
 
 #potential
-
 mergedDF %>%
-  mutate(Calib_Test = ifelse(Calib_Test=="Calib","Calibration", "Testing"))  %>%
-#  filter(Cultivar_Treat != "Bri") %>% # get rid of Brigarier
+  mutate(Calib_Test = ifelse(Calib_Test=="Calib","Calibration data", "Test data"))  %>%
+  filter(Cultivar_Treat != "Bri") %>% # get rid of Brigarier
 #  filter(Name == "LincolnP21_Cv2011" | Name == "LincolnP21_Cv2012") %>%
 #  filter(W_lim == "No", N_lim == "No") %>%
  # filter(Calib_Test == "Calib") %>%
  # filter(SowingDate_Treat == "Oct") %>%
-  ggplot(aes(x=Observed, y= Predicted)) +
-  geom_point(aes(colour= Name, shape = Cultivar_Treat, size = 1.5)) +
+  ggplot(aes(x=Observed, y= Predicted, 
+             colour= factor(Name))) +
+  geom_point(size=1.5) +
   geom_smooth(method = "lm", se = TRUE, linetype = 3, colour="darkgrey") +
   geom_abline(intercept = 0, slope = 1) +
   coord_fixed(ratio = 1) +
-  facet_wrap(Calib_Test~SimpleName, scales = "free")
+  facet_wrap(Calib_Test~SimpleName, scales = "free") + theme(legend.title=element_blank())
 
 ```
 
