@@ -95,9 +95,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\ClosedXML.0.75.0\lib\net40-client\ClosedXML.dll</HintPath>
     </Reference>
-    <Reference Include="DocumentFormat.OpenXml">
-      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
-    </Reference>
     <Reference Include="GMap.NET.Core, Version=1.7.0.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
       <HintPath>..\packages\GMap.NET.WindowsForms.1.7.1\lib\net40\GMap.NET.Core.dll</HintPath>
       <Private>True</Private>
@@ -736,6 +733,12 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\LargeImages\Chicory.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Chicory.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GenericBelowGroundOrgan.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SimpleLeaf.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Stock.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Supplement.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Chickpea.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CultivarFolder.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Map.png" />
@@ -811,7 +814,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\ExternalVariable.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\MultiplyFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LinearInterpolationFunction.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\Sugarcane.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SugarCane.png" />
     <EmbeddedResource Include="Resources\Toolboxes\Import.png" />
     <EmbeddedResource Include="Resources\Toolboxes\OpenFile.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Probability.png" />

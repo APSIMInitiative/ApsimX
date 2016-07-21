@@ -50,6 +50,8 @@ namespace Models
         public void Test(bool accept = false, bool GUIrun = false)
         {
             PredictedObserved PO = Parent as PredictedObserved;
+            if (PO == null)
+                return;
             DataStore DS = PO.Parent as DataStore;
             MathUtilities.RegrStats[] stats;
             List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
@@ -228,15 +230,6 @@ namespace Models
                         }
                     }
             }
-        }
-
-        /// <summary>All simulations have run - write all tables</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("AllCompleted")]
-        private void OnAllSimulationsCompleted(object sender, EventArgs e)
-        {
-            Test();
         }
 
         /// <summary>Document the stats.</summary>

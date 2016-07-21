@@ -92,7 +92,7 @@ namespace UserInterface.Presenters
                 FormatTestGrid();
             }
 
-                this.grid.CellsChanged += this.OnCellValueChanged;
+            this.grid.CellsChanged += this.OnCellValueChanged;
             this.grid.ButtonClick += OnFileBrowseClick;
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
             if (model != null)
@@ -182,7 +182,6 @@ namespace UserInterface.Presenters
 
                     if (includeProperty)
                     {
-                        Attribute descriptionAttribute = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), true);
                         this.properties.Add(new VariableProperty(this.model, property));
                     }
 
@@ -431,7 +430,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnFileBrowseClick(object sender, GridCellsChangedArgs e)
         {
-            string fileName = explorerPresenter.AskUserForFile("Select file");
+            string fileName = explorerPresenter.MainPresenter.AskUserForOpenFileName("Select file");
             if (fileName != null)
             {
                 e.ChangedCells[0].Value = fileName;

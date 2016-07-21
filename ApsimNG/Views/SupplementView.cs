@@ -12,7 +12,7 @@ namespace UserInterface.Views
     using Glade;
     using Gtk;
     using Interfaces;
-    using Models.Grazplan;   // For access to the TSuppAttribute enumeration
+    using Models.GrazPlan;   // For access to the TSuppAttribute enumeration
 
     public class SupplementView : ViewBase, ISupplementView
     {
@@ -46,43 +46,43 @@ namespace UserInterface.Views
         public event EventHandler<TStringArgs> SuppNameChanged;
 
         [Widget]
-        private Table table1;
+        private Table table1 = null;
         [Widget]
-        private Entry tbSulph;
+        private Entry tbSulph = null;
         [Widget]
-        private Entry tbPhos;
+        private Entry tbPhos = null;
         [Widget]
-        private Entry tbADIP2CP;
+        private Entry tbADIP2CP = null;
         [Widget]
-        private Entry tbProtDegrad;
+        private Entry tbProtDegrad = null;
         [Widget]
-        private Entry tbEE;
+        private Entry tbEE = null;
         [Widget]
-        private Entry tbCP;
+        private Entry tbCP = null;
         [Widget]
-        private Entry tbME;
+        private Entry tbME = null;
         [Widget]
-        private Entry tbDMD;
+        private Entry tbDMD = null;
         [Widget]
-        private Entry tbDM;
+        private Entry tbDM = null;
         [Widget]
-        private CheckButton cbxRoughage;
+        private CheckButton cbxRoughage = null;
         [Widget]
-        private Entry tbAmount;
+        private Entry tbAmount = null;
         [Widget]
-        private Entry tbName;
+        private Entry tbName = null;
         [Widget]
-        private Button btnResetAll;
+        private Button btnResetAll = null;
         [Widget]
-        private Button btnReset;
+        private Button btnReset = null;
         [Widget]
-        private Button btnDelete;
+        private Button btnDelete = null;
         [Widget]
-        private Button btnAdd;
+        private Button btnAdd = null;
         [Widget]
-        private IconView lbDefaultNames;
+        private IconView lbDefaultNames = null;
         [Widget]
-        private TreeView lvSupps;
+        private TreeView lvSupps = null;
 
         private ListStore suppList = new ListStore(typeof(string));
         private ListStore defNameList = new ListStore(typeof(string));
@@ -135,6 +135,31 @@ namespace UserInterface.Views
             lbDefaultNames.LeaveNotifyEvent += lbDefaultNames_Leave;
             lbDefaultNames.Visible = false;
             lvSupps.CursorChanged += lvSupps_SelectedIndexChanged;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            lbDefaultNames.ItemActivated -= lbDefaultNames_Click;
+            lbDefaultNames.LeaveNotifyEvent -= lbDefaultNames_Leave;
+            tbName.Changed -= tbName_Validating;
+            tbDM.Changed -= RealEditValidator;
+            tbDMD.Changed -= RealEditValidator;
+            tbME.Changed -= RealEditValidator;
+            tbEE.Changed -= RealEditValidator;
+            tbCP.Changed -= RealEditValidator;
+            tbProtDegrad.Changed -= RealEditValidator;
+            tbADIP2CP.Changed -= RealEditValidator;
+            tbPhos.Changed -= RealEditValidator;
+            tbSulph.Changed -= RealEditValidator;
+            tbAmount.Changed -= tbAmount_Validating;
+            btnAdd.Clicked -= btnAdd_Click;
+            btnDelete.Clicked -= btnDelete_Click;
+            btnReset.Clicked -= btnReset_Click;
+            btnResetAll.Clicked -= btnResetAll_Click;
+            cbxRoughage.Toggled -= cbxRoughage_CheckedChanged;
+            lbDefaultNames.LeaveNotifyEvent -= lbDefaultNames_Leave;
+            lvSupps.CursorChanged -= lvSupps_SelectedIndexChanged;
         }
 
         private void RealEditValidator(object sender, EventArgs e)
@@ -184,7 +209,7 @@ namespace UserInterface.Views
                         MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
                                            String.Format("Value should be a number in the range 0 to {0:F2}", maxVal));
                         md.Title = "Invalid entry";
-                        int result = md.Run();
+                        md.Run();
                         md.Destroy();
                     }
                     if (!cancel)
@@ -409,7 +434,7 @@ namespace UserInterface.Views
                 MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
                                    "Value should be a non-negative number");
                 md.Title = "Invalid entry";
-                int result = md.Run();
+                md.Run();
                 md.Destroy();
             }
             if (!cancel)
@@ -433,7 +458,7 @@ namespace UserInterface.Views
                 MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
                                    "You must provide a name for the supplement");
                 md.Title = "Invalid entry";
-                int result = md.Run();
+                md.Run();
                 md.Destroy();
             }
             if (!cancel)

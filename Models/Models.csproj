@@ -140,6 +140,7 @@
     <Compile Include="Graph\Regression.cs" />
     <Compile Include="Grazplan\Supplement.cs" />
     <Compile Include="Grazplan\GrazSupp.cs" />
+    <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Interfaces\IWeather.cs" />
@@ -155,6 +156,8 @@
     <Compile Include="Interfaces\IUptake.cs" />
     <Compile Include="Plant\Phenology\NodeNumberPhase.cs" />
     <Compile Include="Plant\Phenology\PhaseSetFunction.cs" />
+    <Compile Include="Plant\Phenology\QualitativePPEffect.cs" />
+    <Compile Include="Plant\Phenology\VernalisationC.cs" />
     <Compile Include="Plant\Phenology\ZadokPMF.cs" />
     <Compile Include="Plant\PlantTypes.cs" />
     <Compile Include="PostSimulationTools\Probability.cs" />
@@ -219,6 +222,24 @@
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSoil.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSurface.cs" />
     <Compile Include="Soils\Variables.cs" />
+    <Compile Include="Stock\animgrp.cs" />
+    <Compile Include="Stock\animprm.cs" />
+    <Compile Include="Stock\grazenv.cs" />
+    <Compile Include="Stock\grazparam.cs" />
+    <Compile Include="Stock\grazprmread.cs" />
+    <Compile Include="Stock\graztype.cs" />
+    <Compile Include="Stock\sdmlpsr.cs" />
+    <Compile Include="Stock\stddate.cs" />
+    <Compile Include="Stock\stdmath.cs" />
+    <Compile Include="Stock\stdstrng.cs" />
+    <Compile Include="Stock\stock.cs" />
+    <Compile Include="Stock\stock_ent.cs" />
+    <Compile Include="Stock\stock_intf.cs" />
+    <Compile Include="Stock\stock_manage.cs" />
+    <Compile Include="Stock\stock_padd.cs" />
+    <Compile Include="Stock\stock_vars.cs" />
+    <Compile Include="Stock\typedval.cs" />
+    <Compile Include="Stock\xmlpsr.cs" />
     <Compile Include="Sugarcane\CropConstants.cs" />
     <Compile Include="Sugarcane\CultivarConstants.cs" />
     <Compile Include="Sugarcane\MathUtil.cs" />
@@ -274,7 +295,6 @@
     <Compile Include="Plant\Functions\StageBasedInterpolation.cs" />
     <Compile Include="Plant\Functions\StructureFunctions\HeightFunction.cs" />
     <Compile Include="Plant\Functions\StructureFunctions\InPhaseTemperatureFunction.cs" />
-    <Compile Include="Plant\Functions\StructureFunctions\MainStemFinalNodeNumberFunction.cs" />
     <Compile Include="Plant\Functions\SubtractFunction.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\RUECO2Function.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\RUEModel.cs" />
@@ -376,6 +396,21 @@
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Simulation.cs" />
+    <Compile Include="WholeFarm\RuminantType.cs" />
+    <Compile Include="WholeFarm\Ruminant.cs" />
+    <Compile Include="WholeFarm\PastureType.cs" />
+    <Compile Include="WholeFarm\Pasture.cs" />
+    <Compile Include="WholeFarm\FoodStoreType.cs" />
+    <Compile Include="WholeFarm\FoodStore.cs" />
+    <Compile Include="WholeFarm\Fodder.cs" />
+    <Compile Include="WholeFarm\FodderType.cs" />
+    <Compile Include="WholeFarm\LandType.cs" />
+    <Compile Include="WholeFarm\Land.cs" />
+    <Compile Include="WholeFarm\LabourFamily.cs" />
+    <Compile Include="WholeFarm\LabourFamilyPerson.cs" />
+    <Compile Include="WholeFarm\LabourHired.cs" />
+    <Compile Include="WholeFarm\LabourHiredPerson.cs" />
+    <Compile Include="WholeFarm\LabourItem.cs" />
     <Compile Include="Zones\CircularZone.cs" />
     <Compile Include="Zones\RectangularZone.cs" />
   </ItemGroup>
@@ -414,6 +449,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\ruminant.prm" />
     <None Include="Resources\Wheat.xml">
       <SubType>Designer</SubType>
     </None>
@@ -445,6 +481,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

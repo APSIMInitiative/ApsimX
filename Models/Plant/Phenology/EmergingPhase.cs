@@ -8,7 +8,7 @@ using Models.PMF.Functions;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This phase simulates time to emergence as a function of sowing depth.  A thermal time target from sowing to emergence = SowingDepth (set with sow()
+    /// This phase simulates time to emergence as a function of sowing depth.  A <i>ThermalTime Target</i> from sowing to emergence = SowingDepth (set with sow()
     /// method called from the manager)  x ShootRate + ShootLag.
     /// </summary>
     /// \pre A \ref Models.PMF.Plant "Plant" function has to exist to 
@@ -76,12 +76,12 @@ namespace Models.PMF.Phen
             tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
 
             tags.Add(new AutoDocumentation.Paragraph("This phase simulates time to emergence as a function of sowing depth."
-                + " The thermal time target from sowing to emergence is given by:<br>"
+                + " The <i>ThermalTime Target</i> from Sowing to Emergence is given by:<br>"
                 + "&nbsp;&nbsp;&nbsp;&nbsp;*Target = SowingDepth x ShootRate + ShootLag*<br>"
                 + "Where:<br>"
                 + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootRate* = " + ShootRate + " (deg day/mm),<br>"
                 + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootLag* = " + ShootLag + " (deg day), <br>"
-                + "and *SowingDepth* (mm) is sent with the sowing event.", indent));
+                + "and *SowingDepth* (mm) is sent from the manager with the sowing event.", indent));
 
             // write memos.
             foreach (IModel memo in Apsim.Children(this, typeof(Memo)))

@@ -41,11 +41,11 @@ namespace UserInterface.Views
         private EditView editView2;
 
         [Widget]
-        private VBox vbox1;
+        private VBox vbox1 = null;
         [Widget]
-        private Table table1;
+        private Table table1 = null;
         [Widget]
-        private HBox hbox1;
+        private HBox hbox1 = null;
 
         /// <summary>Initializes a new instance of the <see cref="DataStoreView" /> class.</summary>
         public DataStoreView(ViewBase owner) : base(owner)
@@ -64,7 +64,7 @@ namespace UserInterface.Views
             hbox1.PackStart(editView2.MainWidget, false, false, 0);
         }
 
-    /// <summary>List of all tables.</summary>
+        /// <summary>List of all tables.</summary>
         public IDropDownView TableList { get { return dropDownView1; } }
 
         /// <summary>Editable column filter.</summary>
