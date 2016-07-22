@@ -708,7 +708,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Link to the Stock component.
         /// </summary>
-        [Link]
+        [Link(IsOptional =true)]
         Stock Animals = null;
 
         /// <summary>
