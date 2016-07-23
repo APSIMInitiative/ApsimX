@@ -590,9 +590,9 @@
       <CropType>Slurp</CropType>
     </Plant>
     <Plant>
-      <Name>SCUM</Name>
-      <ResourceName>SCUM</ResourceName>
-      <CropType>SCUM</CropType>
+      <Name>SCRUM</Name>
+      <ResourceName>SCRUM</ResourceName>
+      <CropType>SCRUM</CropType>
     </Plant>
     <CultivarFolder >
     </CultivarFolder>

@@ -133,20 +133,20 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;Plant&gt;
-        ///  &lt;Name&gt;SCUM&lt;/Name&gt;
+        ///  &lt;Name&gt;SCRUM&lt;/Name&gt;
         ///  &lt;Memo&gt;
         ///    &lt;Name&gt;TitlePage&lt;/Name&gt;
         ///    &lt;MemoText&gt;
         ///      &lt;![CDATA[
-        ///# SCUM: the Simple Crop Uptake Model
+        ///# SCRUM: the Simple Crop Resource Uptake Model
         ///
         ///_Hamish Brown and Rob Zyskowski, Plant and Food Research, New Zealand_
         ///
         ///This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate a range of different crops in simulations where water and nitrogen balance are of interest but a fully mechanistic plant model is not needed or is not available. It is a daily time step implement [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string SCUM {
+        internal static string SCRUM {
             get {
-                return ResourceManager.GetString("SCUM", resourceCulture);
+                return ResourceManager.GetString("SCRUM", resourceCulture);
             }
         }
         
