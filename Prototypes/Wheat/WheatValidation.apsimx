@@ -1226,9 +1226,9 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <double>35</double>
             </X>
             <Y>
+              <double>0</double>
               <double>1</double>
-              <double>1</double>
-              <double>1</double>
+              <double>0</double>
             </Y>
           </XYPairs>
         </AirTemperatureFunction>
@@ -1501,13 +1501,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>0.1</double>
-                <double>0.7</double>
-                <double>1</double>
+                <double>0.3</double>
+                <double>0.8</double>
+                <double>1.3</double>
               </X>
               <Y>
                 <double>0</double>
-                <double>0.7</double>
+                <double>0.5</double>
                 <double>1</double>
               </Y>
             </XYPairs>
@@ -1831,10 +1831,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
+                <double>0.5</double>
                 <double>1</double>
               </X>
               <Y>
                 <double>0</double>
+                <double>1</double>
                 <double>1</double>
               </Y>
             </XYPairs>
@@ -2724,7 +2726,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
             <Command>[Phenology].VrnSensitivity.Value = 7</Command>
             <Command>[Phenology].PpSensitivity.Value = 3</Command>
-            <Command>[Grain].NumberFunction.GrainsPerStem.Value = 20</Command>
+            <Command>[Grain].NumberFunction.ValueToHold.GrainsPerGramOfStem.Value = 20</Command>
             <Command>[Grain].MaximumPotentialGrainSize.Value = 0.050</Command>
           </Cultivar>
         </CultivarFolder>
@@ -5371,450 +5373,450 @@ VShort duration variety released in New Zealand by Pioneer
           <RegrStats>
             <Name>ET</Name>
             <n>123</n>
-            <Slope>1.1900050222566083</Slope>
-            <Intercept>-0.562001927465078</Intercept>
-            <SEslope>0.058112771303546175</SEslope>
-            <SEintercept>0.22542282316214074</SEintercept>
-            <R2>0.77606216859311528</R2>
-            <RMSE>1.0178425914858706</RMSE>
-            <NSE>0.54937641560569483</NSE>
-            <ME>0.11639978160554398</ME>
-            <MAE>0.77062251529506587</MAE>
-            <RSR>0.6685506547877399</RSR>
+            <Slope>1.0801645146054419</Slope>
+            <Intercept>-0.50307821847379364</Intercept>
+            <SEslope>0.068274685929806969</SEslope>
+            <SEintercept>0.26484148161535714</SEintercept>
+            <R2>0.67411773120649943</R2>
+            <RMSE>1.1655635652043936</RMSE>
+            <NSE>0.4090855579664705</NSE>
+            <ME>-0.21685555409757676</ME>
+            <MAE>0.93678432666420475</MAE>
+            <RSR>0.76557838238678877</RSR>
           </RegrStats>
           <RegrStats>
             <Name>ProfileWater</Name>
             <n>449</n>
-            <Slope>1.0667304561209516</Slope>
-            <Intercept>-19.818389766189682</Intercept>
-            <SEslope>0.021620267349214642</SEslope>
-            <SEintercept>8.3994595655445572</SEintercept>
-            <R2>0.84486566918798256</R2>
-            <RMSE>56.730851224294028</RMSE>
-            <NSE>0.7850730344611534</NSE>
-            <ME>4.7867316430906488</ME>
-            <MAE>35.777956925186523</MAE>
-            <RSR>0.4630856144691739</RSR>
+            <Slope>1.02336881245318</Slope>
+            <Intercept>14.664489013076945</Intercept>
+            <SEslope>0.021700191290294869</SEslope>
+            <SEintercept>8.430509963792602</SEintercept>
+            <R2>0.83264773407437054</R2>
+            <RMSE>60.845381962350345</RMSE>
+            <NSE>0.75276636705671129</NSE>
+            <ME>23.281131263491009</ME>
+            <MAE>35.176749114634042</MAE>
+            <RSR>0.49667192516195557</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(1)</Name>
             <n>422</n>
-            <Slope>0.00043648572514391504</Slope>
-            <Intercept>0.1925266822701398</Intercept>
-            <SEslope>0.00015099599598592754</SEslope>
-            <SEintercept>0.0050460756733124012</SEintercept>
-            <R2>0.019507614418554975</R2>
-            <RMSE>33.310376836086405</RMSE>
-            <NSE>-0.30613715992446933</NSE>
-            <ME>-16.149333342080279</ME>
-            <MAE>16.183243684802758</MAE>
-            <RSR>1.1415086719649104</RSR>
+            <Slope>0.00038490026171400515</Slope>
+            <Intercept>0.19617676435401482</Intercept>
+            <SEslope>0.00014588707904128649</SEslope>
+            <SEintercept>0.0048753427916687752</SEintercept>
+            <R2>0.016303268939658166</R2>
+            <RMSE>33.310323140630182</RMSE>
+            <NSE>-0.30613294900998378</NSE>
+            <ME>-16.146526630538279</ME>
+            <MAE>16.182978187388461</MAE>
+            <RSR>1.1415068318827875</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(10)</Name>
             <n>8</n>
-            <Slope>-0.4088062010487547</Slope>
-            <Intercept>0.61131053661477464</Intercept>
-            <SEslope>0.20056822988919865</SEslope>
-            <SEintercept>0.085943400476697768</SEintercept>
-            <R2>0.40912445059609359</R2>
-            <RMSE>0.011334505070511159</RMSE>
-            <NSE>-3.1237466290454678</NSE>
-            <ME>0.0076888993728553914</ME>
-            <MAE>0.0091570950152971356</MAE>
-            <RSR>1.8995468671277327</RSR>
+            <Slope>-0.41136502326428009</Slope>
+            <Intercept>0.61247261413348375</Intercept>
+            <SEslope>0.20758595745849781</SEslope>
+            <SEintercept>0.088950493729990338</SEintercept>
+            <R2>0.39558662421847479</R2>
+            <RMSE>0.011412542281898227</RMSE>
+            <NSE>-3.180725471847266</NSE>
+            <ME>0.0077546156929861471</ME>
+            <MAE>0.0092228113354278912</MAE>
+            <RSR>1.9126251038471596</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(2)</Name>
             <n>445</n>
-            <Slope>0.00019337581128056963</Slope>
-            <Intercept>0.22066158200183961</Intercept>
-            <SEslope>0.00010849261999260016</SEslope>
-            <SEintercept>0.0043961598301553205</SEintercept>
-            <R2>0.0071202758463493332</R2>
-            <RMSE>40.405487019862086</RMSE>
-            <NSE>-0.30434128655988513</NSE>
-            <ME>-19.52977278466226</ME>
-            <MAE>19.550500575752682</MAE>
-            <RSR>1.1407936634401263</RSR>
+            <Slope>0.00016656456415743031</Slope>
+            <Intercept>0.22467858738800614</Intercept>
+            <SEslope>0.00010615956984845838</SEslope>
+            <SEintercept>0.0043016238024871367</SEintercept>
+            <R2>0.0055263258650576352</R2>
+            <RMSE>40.404628525214257</RMSE>
+            <NSE>-0.30428586051752449</NSE>
+            <ME>-19.526285415471516</ME>
+            <MAE>19.549396739222278</MAE>
+            <RSR>1.1407694250179075</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(3)</Name>
             <n>445</n>
-            <Slope>0.00039155022140737708</Slope>
-            <Intercept>0.20165690977559533</Intercept>
-            <SEslope>8.6593357108209339E-05</SEslope>
-            <SEintercept>0.0043635756947550709</SEintercept>
-            <R2>0.044117080902986938</R2>
-            <RMSE>50.273765416294793</RMSE>
-            <NSE>-0.30680792155447012</NSE>
-            <ME>-24.3904554093214</ME>
-            <MAE>24.404952557409914</MAE>
-            <RSR>1.1418718292959771</RSR>
+            <Slope>0.00034208053765008583</Slope>
+            <Intercept>0.20934070047497316</Intercept>
+            <SEslope>8.4461208476554681E-05</SEslope>
+            <SEintercept>0.0042561333659507112</SEintercept>
+            <R2>0.035706530213890808</R2>
+            <RMSE>50.272527780922992</RMSE>
+            <NSE>-0.30674358056920448</NSE>
+            <ME>-24.383988659173877</ME>
+            <MAE>24.400205932572604</MAE>
+            <RSR>1.1418437187903425</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(4)</Name>
             <n>445</n>
-            <Slope>0.00050082711674247313</Slope>
-            <Intercept>0.1974060491169562</Intercept>
-            <SEslope>7.6643872903122158E-05</SEslope>
-            <SEintercept>0.0042289758284366156</SEintercept>
-            <R2>0.087913041638438272</R2>
-            <RMSE>55.053574558870721</RMSE>
-            <NSE>-0.30453154758461776</NSE>
-            <ME>-26.643140021168982</ME>
-            <MAE>26.662934175378044</MAE>
-            <RSR>1.1408768627757386</RSR>
+            <Slope>0.00043627258007222021</Slope>
+            <Intercept>0.20702862458574239</Intercept>
+            <SEslope>7.6742991695187982E-05</SEslope>
+            <SEintercept>0.0042344449019569479</SEintercept>
+            <R2>0.067991486879975471</R2>
+            <RMSE>55.052480406416315</RMSE>
+            <NSE>-0.30447969474046666</NSE>
+            <ME>-26.635250992923186</ME>
+            <MAE>26.661275585312936</MAE>
+            <RSR>1.1408541886218879</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(5)</Name>
             <n>445</n>
-            <Slope>0.00064702405028250814</Slope>
-            <Intercept>0.19508703240256989</Intercept>
-            <SEslope>6.7061250820177779E-05</SEslope>
-            <SEintercept>0.0038353229039622735</SEintercept>
-            <R2>0.17364440499250344</R2>
-            <RMSE>57.059370654840066</RMSE>
-            <NSE>-0.30706365957782911</NSE>
-            <ME>-27.714325517238095</ME>
-            <MAE>27.725945820414321</MAE>
-            <RSR>1.1419835541157817</RSR>
+            <Slope>0.00051079724993478316</Slope>
+            <Intercept>0.21334194802825215</Intercept>
+            <SEslope>6.6342716195795035E-05</SEslope>
+            <SEintercept>0.0037942289448058193</SEintercept>
+            <R2>0.11802239791623292</R2>
+            <RMSE>57.0582963045652</RMSE>
+            <NSE>-0.3070144395823815</NSE>
+            <ME>-27.699875073168236</ME>
+            <MAE>27.720578104539204</MAE>
+            <RSR>1.1419620521200329</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(6)</Name>
             <n>340</n>
-            <Slope>0.85153176655921536</Slope>
-            <Intercept>0.028567311163355286</Intercept>
-            <SEslope>0.021090239725006718</SEslope>
-            <SEintercept>0.0048208112459654454</SEintercept>
-            <R2>0.82826875994979909</R2>
-            <RMSE>0.029818417728284988</RMSE>
-            <NSE>0.82495240435894135</NSE>
-            <ME>-0.0036778226110329684</ME>
-            <MAE>0.02313716656821347</MAE>
-            <RSR>0.41777116914828638</RSR>
+            <Slope>0.86085090026229283</Slope>
+            <Intercept>0.045484778714286328</Intercept>
+            <SEslope>0.020477362124269424</SEslope>
+            <SEintercept>0.0046807195604958189</SEintercept>
+            <R2>0.83945205783283938</R2>
+            <RMSE>0.0324227911214101</RMSE>
+            <NSE>0.79303936045683066</NSE>
+            <ME>0.015263624790355821</ME>
+            <MAE>0.024823076672739662</MAE>
+            <RSR>0.45425976244854344</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(7)</Name>
             <n>340</n>
-            <Slope>0.6691188881974145</Slope>
-            <Intercept>0.0662897568644194</Intercept>
-            <SEslope>0.026847794230203469</SEslope>
-            <SEintercept>0.0061821904755691168</SEintercept>
-            <R2>0.64760090237339529</R2>
-            <RMSE>0.042970031131881664</RMSE>
-            <NSE>0.63955599824948051</NSE>
-            <ME>-0.0061276847491535122</ME>
-            <MAE>0.033365888108361171</MAE>
-            <RSR>0.59948634040618987</RSR>
+            <Slope>0.72498531999579008</Slope>
+            <Intercept>0.0735721982542708</Intercept>
+            <SEslope>0.022286721893723074</SEslope>
+            <SEintercept>0.0051319210301467031</SEintercept>
+            <R2>0.757913612624202</R2>
+            <RMSE>0.037769327315379242</RMSE>
+            <NSE>0.72152579936633221</NSE>
+            <ME>0.013381819227852688</ME>
+            <MAE>0.027477737461120793</MAE>
+            <RSR>0.52692993734186155</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(8)</Name>
             <n>322</n>
-            <Slope>0.63492651481188545</Slope>
-            <Intercept>0.0747655901744679</Intercept>
-            <SEslope>0.032665949628423958</SEslope>
-            <SEintercept>0.0068951683037761224</SEintercept>
-            <R2>0.541412675772063</R2>
-            <RMSE>0.043658038288076635</RMSE>
-            <NSE>0.52486733358497561</NSE>
-            <ME>0.0012563268566358544</ME>
-            <MAE>0.031336926690480355</MAE>
-            <RSR>0.68822750535562094</RSR>
+            <Slope>0.60873680979241607</Slope>
+            <Intercept>0.098760576804933747</Intercept>
+            <SEslope>0.031214916329427671</SEslope>
+            <SEintercept>0.0065888824334808648</SEintercept>
+            <R2>0.54305780669417447</R2>
+            <RMSE>0.047581864152780005</RMSE>
+            <NSE>0.43562292966307825</NSE>
+            <ME>0.019977893201592198</ME>
+            <MAE>0.036870077036117339</MAE>
+            <RSR>0.75008289309648946</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(9)</Name>
             <n>8</n>
-            <Slope>0.050169350161720569</Slope>
-            <Intercept>0.44958332422646308</Intercept>
-            <SEslope>0.041741134994600908</SEslope>
-            <SEintercept>0.019112927819273842</SEintercept>
-            <R2>0.1940469915468257</R2>
-            <RMSE>0.019383386414989146</RMSE>
-            <NSE>-1.2053464278377715</NSE>
-            <ME>0.014840294116533988</ME>
-            <MAE>0.017443774855053489</MAE>
-            <RSR>1.3891285485361138</RSR>
+            <Slope>-0.054931766698711033</Slope>
+            <Intercept>0.49902500027403529</Intercept>
+            <SEslope>0.027746934388976349</SEslope>
+            <SEintercept>0.01270509664510148</SEintercept>
+            <R2>0.3951233464093451</R2>
+            <RMSE>0.021261831573340061</RMSE>
+            <NSE>-1.6534985842841552</NSE>
+            <ME>0.016176575776568371</ME>
+            <MAE>0.018780056515087871</MAE>
+            <RSR>1.523749080803213</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
             <n>389</n>
-            <Slope>0.91460800334229986</Slope>
-            <Intercept>4.2872477773469946</Intercept>
-            <SEslope>0.040515580706385251</SEslope>
-            <SEintercept>0.53906479252951023</SEintercept>
-            <R2>0.56836738420240973</R2>
-            <RMSE>6.9434577178427261</RMSE>
-            <NSE>0.16191761204926758</NSE>
-            <ME>3.3537753300202877</ME>
-            <MAE>5.3972283996423087</MAE>
-            <RSR>0.914290946313738</RSR>
+            <Slope>0.89937083864353085</Slope>
+            <Intercept>0.41734638463005247</Intercept>
+            <SEslope>0.033788226154328277</SEslope>
+            <SEintercept>0.44955651145221304</SEintercept>
+            <R2>0.64674031361741235</R2>
+            <RMSE>5.1443715080253432</RMSE>
+            <NSE>0.53995557488071422</NSE>
+            <ME>-0.68269288369155767</ME>
+            <MAE>3.4019291279571879</MAE>
+            <RSR>0.67739338027152918</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
-            <n>692</n>
-            <Slope>0.72398581069184886</Slope>
-            <Intercept>107.0435046376715</Intercept>
-            <SEslope>0.021033191271301613</SEslope>
-            <SEintercept>25.746197235746571</SEintercept>
-            <R2>0.63196327092493965</R2>
-            <RMSE>469.2238614790711</RMSE>
-            <NSE>0.562215842532628</NSE>
-            <ME>-168.34029909167981</ME>
-            <MAE>269.8063784063857</MAE>
-            <RSR>0.66117435022970128</RSR>
+            <n>716</n>
+            <Slope>0.60648413359859721</Slope>
+            <Intercept>29.029484200301454</Intercept>
+            <SEslope>0.019674045922957614</SEslope>
+            <SEintercept>24.825183391661866</SEintercept>
+            <R2>0.57098561576585949</R2>
+            <RMSE>611.31734981201555</RMSE>
+            <NSE>0.31018751939620548</NSE>
+            <ME>-374.28981694188241</ME>
+            <MAE>382.41426024849972</MAE>
+            <RSR>0.82996930988534434</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Ear.Wt</Name>
-            <n>58</n>
-            <Slope>0.27571585378389057</Slope>
-            <Intercept>41.987913464962745</Intercept>
-            <SEslope>0.061112315426352717</SEslope>
-            <SEintercept>38.266943380780731</SEintercept>
-            <R2>0.26658142208347579</R2>
-            <RMSE>474.55565638189836</RMSE>
-            <NSE>-0.076295704942110021</NSE>
-            <ME>-267.72707722090314</ME>
-            <MAE>279.0423220578798</MAE>
-            <RSR>1.0284643321200342</RSR>
+            <n>74</n>
+            <Slope>0.10651870690886764</Slope>
+            <Intercept>100.66845654942095</Intercept>
+            <SEslope>0.054007277916602696</SEslope>
+            <SEintercept>41.832786183336644</SEintercept>
+            <R2>0.051258130796228984</R2>
+            <RMSE>674.8160042373139</RMSE>
+            <NSE>-0.49395461956319253</NSE>
+            <ME>-384.74469924923352</ME>
+            <MAE>385.15673813700363</MAE>
+            <RSR>1.2139876620555703</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.N</Name>
             <n>171</n>
-            <Slope>0.60781777017321159</Slope>
-            <Intercept>1.2867558087451942</Intercept>
-            <SEslope>0.083565447144342428</SEslope>
-            <SEintercept>0.64644187049526491</SEintercept>
-            <R2>0.23841140635694857</R2>
-            <RMSE>5.1554936559760352</RMSE>
-            <NSE>-0.41389107041083006</NSE>
-            <ME>-1.2257630868351248</ME>
-            <MAE>3.5902343179036507</MAE>
-            <RSR>1.1855896008223159</RSR>
+            <Slope>0.42173948814900064</Slope>
+            <Intercept>-0.13299844420731155</Intercept>
+            <SEslope>0.0501961825369044</SEslope>
+            <SEintercept>0.38830539702407485</SEintercept>
+            <R2>0.29463022385193971</R2>
+            <RMSE>5.3868543889922487</RMSE>
+            <NSE>-0.54363959844722709</NSE>
+            <ME>-3.8376294858413678</ME>
+            <MAE>3.9774418537469254</MAE>
+            <RSR>1.2387947635878049</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
-            <n>27</n>
-            <Slope>1.2285152661087937</Slope>
-            <Intercept>-2312.5734303530862</Intercept>
-            <SEslope>0.17329969122941072</SEslope>
-            <SEintercept>2112.5952756106262</SEintercept>
-            <R2>0.66778914108796994</R2>
-            <RMSE>4636.0539235139977</RMSE>
-            <NSE>0.19530392552878007</NSE>
-            <ME>210.39217376165786</ME>
-            <MAE>2182.2680095150677</MAE>
-            <RSR>0.88027979424582437</RSR>
+            <n>41</n>
+            <Slope>0.98824290363671607</Slope>
+            <Intercept>-415.55097675048455</Intercept>
+            <SEslope>0.065164639918114775</SEslope>
+            <SEintercept>1237.5886030607037</SEintercept>
+            <R2>0.85501161503431322</R2>
+            <RMSE>3775.5006624042826</RMSE>
+            <NSE>0.82979020126503067</NSE>
+            <ME>-611.20663233913479</ME>
+            <MAE>2722.7330588569994</MAE>
+            <RSR>0.40750256469038126</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
-            <n>424</n>
-            <Slope>0.387310761321176</Slope>
-            <Intercept>26.591370460232525</Intercept>
-            <SEslope>0.034531364006451772</SEslope>
-            <SEintercept>13.215263169147235</SEintercept>
-            <R2>0.22965034499267645</R2>
-            <RMSE>293.17004482019223</RMSE>
-            <NSE>-0.11357826083130407</NSE>
-            <ME>-134.67432966736433</ME>
-            <MAE>169.66445738497635</MAE>
-            <RSR>1.0540170288038939</RSR>
+            <n>432</n>
+            <Slope>0.19436731715864777</Slope>
+            <Intercept>7.4783314281357818</Intercept>
+            <SEslope>0.018241108965037368</SEslope>
+            <SEintercept>7.4403108556919673</SEintercept>
+            <R2>0.20888801135933333</R2>
+            <RMSE>342.58339148072611</RMSE>
+            <NSE>-0.32386985124314127</NSE>
+            <ME>-217.11847597207475</ME>
+            <MAE>217.21828796477553</MAE>
+            <RSR>1.1492629541138952</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CoverTotal</Name>
-            <n>100</n>
-            <Slope>0.9292934193462945</Slope>
-            <Intercept>-0.11238142440835819</Intercept>
-            <SEslope>0.057193424558423314</SEslope>
-            <SEintercept>0.046621446034880235</SEintercept>
-            <R2>0.72928612922185065</R2>
-            <RMSE>0.25426718934146336</RMSE>
-            <NSE>0.43867211912929704</NSE>
-            <ME>-0.16478542069975991</ME>
-            <MAE>0.16878500155361728</MAE>
-            <RSR>0.74546267650499842</RSR>
+            <n>139</n>
+            <Slope>0.89793958773659077</Slope>
+            <Intercept>0.073807142526781222</Intercept>
+            <SEslope>0.045787534241413436</SEslope>
+            <SEintercept>0.03624330652843176</SEintercept>
+            <R2>0.73734236480431115</R2>
+            <RMSE>0.17995754340452672</RMSE>
+            <NSE>0.702362150848092</NSE>
+            <ME>0.000369588632640883</ME>
+            <MAE>0.10423422593228118</MAE>
+            <RSR>0.5435959617782371</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Dead.N</Name>
             <n>24</n>
-            <Slope>4.1720253024705238</Slope>
-            <Intercept>-0.2089357862057275</Intercept>
-            <SEslope>0.3921191338766703</SEslope>
-            <SEintercept>0.17001880498524788</SEintercept>
-            <R2>0.83728167373457907</R2>
-            <RMSE>1.3620114027685235</RMSE>
-            <NSE>-18.428401674467679</NSE>
-            <ME>0.75588857662905684</ME>
-            <MAE>0.75588857662905684</MAE>
-            <RSR>4.3149605951887358</RSR>
+            <Slope>2.9205799807847734</Slope>
+            <Intercept>0.54622450932483291</Intercept>
+            <SEslope>0.44973294864592261</SEslope>
+            <SEintercept>0.19499955979021633</SEintercept>
+            <R2>0.65717373702261783</R2>
+            <RMSE>1.4334840615532405</RMSE>
+            <NSE>-20.520944316572475</NSE>
+            <ME>1.1304009201468681</ME>
+            <MAE>1.1304009201468681</MAE>
+            <RSR>4.5413916703343213</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Dead.Wt</Name>
-            <n>38</n>
-            <Slope>0.75967809329942559</Slope>
-            <Intercept>34.181408382942507</Intercept>
-            <SEslope>0.19658331084811109</SEslope>
-            <SEintercept>16.132545879081306</SEintercept>
-            <R2>0.29319808634646505</R2>
-            <RMSE>67.952354571692922</RMSE>
-            <NSE>-0.57690109638024833</NSE>
-            <ME>19.354529529630291</ME>
-            <MAE>52.792007274711906</MAE>
-            <RSR>1.2391140783265615</RSR>
+            <n>54</n>
+            <Slope>1.2158537070237578</Slope>
+            <Intercept>20.210287563976223</Intercept>
+            <SEslope>0.26372963872295407</SEslope>
+            <SEintercept>25.326996618604394</SEintercept>
+            <R2>0.29014309260849636</R2>
+            <RMSE>122.39118213596426</RMSE>
+            <NSE>-3.0146895377214822</NSE>
+            <ME>36.205789893615396</ME>
+            <MAE>76.041777759534128</MAE>
+            <RSR>1.9850298323126241</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.DeadCohortNo</Name>
-            <n>69</n>
-            <Slope>0.2600551487287614</Slope>
-            <Intercept>2.9383328165380393</Intercept>
-            <SEslope>0.12164262275193941</SEslope>
-            <SEintercept>1.208194252626529</SEintercept>
-            <R2>0.06385951104355525</R2>
-            <RMSE>6.6154910771041981</RMSE>
-            <NSE>-1.2012496197998122</NSE>
-            <ME>-3.628832951945081</ME>
-            <MAE>4.3741418764302065</MAE>
-            <RSR>1.47287048018382</RSR>
+            <n>121</n>
+            <Slope>0.49680674773869293</Slope>
+            <Intercept>1.8362619148215797</Intercept>
+            <SEslope>0.089146234993891557</SEslope>
+            <SEintercept>0.88249095735838867</SEintercept>
+            <R2>0.20697159327305292</R2>
+            <RMSE>5.3906291402807982</RMSE>
+            <NSE>-0.58255301601553344</NSE>
+            <ME>-2.6541666590403383</ME>
+            <MAE>3.3449283581453955</MAE>
+            <RSR>1.2527865203098052</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.ExpandedCohortNo</Name>
-            <n>168</n>
-            <Slope>0.76563963809916114</Slope>
-            <Intercept>1.5398716872434139</Intercept>
-            <SEslope>0.058727590383220327</SEslope>
-            <SEintercept>0.60992470357847384</SEintercept>
-            <R2>0.50590376488890754</R2>
-            <RMSE>3.48150794643926</RMSE>
-            <NSE>0.34808973868664883</NSE>
-            <ME>-0.674418436965429</ME>
-            <MAE>1.1944616004296451</MAE>
-            <RSR>0.80500300812558945</RSR>
+            <n>237</n>
+            <Slope>0.8266235323330765</Slope>
+            <Intercept>1.1763094361081183</Intercept>
+            <SEslope>0.046507790468027305</SEslope>
+            <SEintercept>0.49353742150999641</SEintercept>
+            <R2>0.57343346470765477</R2>
+            <RMSE>3.3347405501636405</RMSE>
+            <NSE>0.44974662587931236</NSE>
+            <ME>-0.49030011737688123</ME>
+            <MAE>1.1461246294078236</MAE>
+            <RSR>0.74022404035946143</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
-            <n>435</n>
-            <Slope>0.72785342487969251</Slope>
-            <Intercept>0.3932748892199549</Intercept>
-            <SEslope>0.024601680840861381</SEslope>
-            <SEintercept>0.0986615910523638</SEintercept>
-            <R2>0.669036852891811</R2>
-            <RMSE>1.5193032768819417</RMSE>
-            <NSE>0.6298236590190065</NSE>
-            <ME>-0.46073459868196848</ME>
-            <MAE>1.0795215610996338</MAE>
-            <RSR>0.60772145007954459</RSR>
+            <n>451</n>
+            <Slope>0.53741902758137083</Slope>
+            <Intercept>0.089351866160348958</Intercept>
+            <SEslope>0.020753445937108053</SEslope>
+            <SEintercept>0.083277606923531575</SEintercept>
+            <R2>0.59895401104621737</R2>
+            <RMSE>2.0906365972547203</RMSE>
+            <NSE>0.28294513550047473</NSE>
+            <ME>-1.373927430513286</ME>
+            <MAE>1.5656697211943889</MAE>
+            <RSR>0.84585160779257917</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.N</Name>
             <n>200</n>
-            <Slope>0.81092047533174749</Slope>
-            <Intercept>0.28048610314842337</Intercept>
-            <SEslope>0.039991044070698589</SEslope>
-            <SEintercept>0.17217717151757436</SEintercept>
-            <R2>0.67497244209125873</R2>
-            <RMSE>1.6708501015482868</RMSE>
-            <NSE>0.63187080439969434</NSE>
-            <ME>-0.34527352913877962</ME>
-            <MAE>1.101598310102893</MAE>
-            <RSR>0.60521777041186109</RSR>
+            <Slope>0.40456596155250607</Slope>
+            <Intercept>0.069972046684954492</Intercept>
+            <SEslope>0.020779674547218661</SEslope>
+            <SEintercept>0.089464670696539336</SEintercept>
+            <R2>0.65687792501998366</R2>
+            <RMSE>2.6361744515791115</RMSE>
+            <NSE>0.083624274009675426</NSE>
+            <ME>-1.90061988072722</ME>
+            <MAE>1.9401480631422323</MAE>
+            <RSR>0.95487897000634225</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.Wt</Name>
-            <n>271</n>
-            <Slope>0.56813063781142814</Slope>
-            <Intercept>48.788425076835622</Intercept>
-            <SEslope>0.042469691862076352</SEslope>
-            <SEintercept>7.5221835672204662</SEintercept>
-            <R2>0.39949013915612452</R2>
-            <RMSE>89.920697907804225</RMSE>
-            <NSE>0.31699407871154017</NSE>
-            <ME>-11.569302672834112</ME>
-            <MAE>61.8824864258727</MAE>
-            <RSR>0.82491551339257452</RSR>
+            <n>287</n>
+            <Slope>0.68527050555078561</Slope>
+            <Intercept>-6.95579890101979</Intercept>
+            <SEslope>0.021269189344482648</SEslope>
+            <SEintercept>3.9238406224642319</SEintercept>
+            <R2>0.784590170091997</R2>
+            <RMSE>75.24933807319141</RMSE>
+            <NSE>0.54337646158607122</NSE>
+            <ME>-53.247672053979393</ME>
+            <MAE>56.600102953708287</MAE>
+            <RSR>0.674560979921014</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.SpecificArea</Name>
             <n>83</n>
-            <Slope>0.3694415736407739</Slope>
-            <Intercept>15228.758017332959</Intercept>
-            <SEslope>0.1158954539812663</SEslope>
-            <SEintercept>2285.9655009329558</SEintercept>
-            <R2>0.11146721877181909</R2>
-            <RMSE>6663.4440443422709</RMSE>
-            <NSE>-0.919038868099489</NSE>
-            <ME>3166.8881631805029</ME>
-            <MAE>5255.6912449780493</MAE>
-            <RSR>1.3769233522173352</RSR>
+            <Slope>0.08768301016256061</Slope>
+            <Intercept>17621.434643327808</Intercept>
+            <SEslope>0.060129430425273717</SEslope>
+            <SEintercept>1186.0154891419866</SEintercept>
+            <R2>0.025580995894487146</R2>
+            <RMSE>5105.1519791265155</RMSE>
+            <NSE>-0.12642845215372112</NSE>
+            <ME>169.84199601576688</ME>
+            <MAE>4023.5618685553827</MAE>
+            <RSR>1.0549203880006013</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
-            <n>607</n>
-            <Slope>0.50850473677324071</Slope>
-            <Intercept>15.084640254669154</Intercept>
-            <SEslope>0.025424097782510348</SEslope>
-            <SEintercept>1.5385839900228451</SEintercept>
-            <R2>0.39803141901374162</R2>
-            <RMSE>24.372293903876127</RMSE>
-            <NSE>0.18469396353132184</NSE>
-            <ME>-11.536562740522554</ME>
-            <MAE>14.761371912930715</MAE>
-            <RSR>0.90219890458075813</RSR>
+            <n>745</n>
+            <Slope>0.55738696415544731</Slope>
+            <Intercept>13.853767075868095</Intercept>
+            <SEslope>0.021182562193935835</SEslope>
+            <SEintercept>1.243767905196927</SEintercept>
+            <R2>0.4823740069143958</R2>
+            <RMSE>21.753359582506366</RMSE>
+            <NSE>0.35532500575906467</NSE>
+            <ME>-9.2029809883066385</ME>
+            <MAE>12.486305852007973</MAE>
+            <RSR>0.80237750384603612</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Spike.N</Name>
             <n>68</n>
-            <Slope>0.024648762043944967</Slope>
-            <Intercept>1.0378440930246093</Intercept>
-            <SEslope>0.0083652539141918555</SEslope>
-            <SEintercept>0.10115995810858067</SEintercept>
-            <R2>0.11625579544129139</R2>
-            <RMSE>10.961492749447704</RMSE>
-            <NSE>-1.6030888971227828</NSE>
-            <ME>-8.7195312870327726</ME>
-            <MAE>8.7195312870327726</MAE>
-            <RSR>1.6015018507786518</RSR>
+            <Slope>0.066230697085688017</Slope>
+            <Intercept>1.9490499268746835</Intercept>
+            <SEslope>0.014523025318309816</SEslope>
+            <SEintercept>0.17562510927703356</SEintercept>
+            <R2>0.23960663763640933</R2>
+            <RMSE>9.7742467772386359</RMSE>
+            <NSE>-1.0697419277699591</NSE>
+            <ME>-7.3923414123137929</ME>
+            <MAE>7.3923414123137929</MAE>
+            <RSR>1.428042207527223</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Spike.Wt</Name>
-            <n>132</n>
-            <Slope>0.2008441136890069</Slope>
-            <Intercept>17.266926718708348</Intercept>
-            <SEslope>0.012521801092518601</SEslope>
-            <SEintercept>5.9157860700830218</SEintercept>
-            <R2>0.66431455775496517</R2>
-            <RMSE>367.22944203547962</RMSE>
-            <NSE>-0.43016073210888872</NSE>
-            <ME>-269.65475028898624</ME>
-            <MAE>269.86795981935609</MAE>
-            <RSR>1.1913547671067859</RSR>
+            <n>148</n>
+            <Slope>0.361281731502459</Slope>
+            <Intercept>40.66628766609449</Intercept>
+            <SEslope>0.0302597980658265</SEslope>
+            <SEintercept>14.145059108502428</SEintercept>
+            <R2>0.49401764936543224</R2>
+            <RMSE>288.61712238625358</RMSE>
+            <NSE>0.026693633790880189</NSE>
+            <ME>-192.20648635020251</ME>
+            <MAE>199.12698237735265</MAE>
+            <RSR>0.9832242734202824</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.N</Name>
             <n>244</n>
-            <Slope>1.5901925367688341</Slope>
-            <Intercept>0.44109497401395359</Intercept>
-            <SEslope>0.058349893598030979</SEslope>
-            <SEintercept>0.23115835307584334</SEintercept>
-            <R2>0.75424237151396889</R2>
-            <RMSE>3.4041498973953654</RMSE>
-            <NSE>-1.2542733207420911</NSE>
-            <ME>2.3584152508292875</ME>
-            <MAE>2.7168678718071333</MAE>
-            <RSR>1.4983439176828135</RSR>
+            <Slope>1.0501652242313224</Slope>
+            <Intercept>-0.19822863061039753</Intercept>
+            <SEslope>0.039532625356491526</SEslope>
+            <SEintercept>0.15661205199660003</SEintercept>
+            <R2>0.74463785196742882</R2>
+            <RMSE>1.3994156579112687</RMSE>
+            <NSE>0.61903710523308875</NSE>
+            <ME>-0.035260115053964064</ME>
+            <MAE>1.0702026492335575</MAE>
+            <RSR>0.6159558193796878</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Wt</Name>
-            <n>321</n>
-            <Slope>0.691099800013086</Slope>
-            <Intercept>42.799010413667531</Intercept>
-            <SEslope>0.032214794130331695</SEslope>
-            <SEintercept>21.77888948632835</SEintercept>
-            <R2>0.59061922239828446</R2>
-            <RMSE>260.02989629968397</RMSE>
-            <NSE>0.40568697805573317</NSE>
-            <ME>-138.18486012278638</ME>
-            <MAE>171.01242501406827</MAE>
-            <RSR>0.76971525872123869</RSR>
+            <n>345</n>
+            <Slope>0.57157361943978524</Slope>
+            <Intercept>-46.312641483926711</Intercept>
+            <SEslope>0.033362135025770623</SEslope>
+            <SEintercept>23.335542309272352</SEintercept>
+            <R2>0.46113182491540927</R2>
+            <RMSE>405.10988076641542</RMSE>
+            <NSE>-0.29811337047310338</NSE>
+            <ME>-304.37399157202771</ME>
+            <MAE>310.79864551136109</MAE>
+            <RSR>1.1376953559817569</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.HaunStage.Value</Name>
@@ -5832,31 +5834,31 @@ VShort duration variety released in New Zealand by Pioneer
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.LeafTipsAppeared</Name>
-            <n>159</n>
-            <Slope>0.76932201390438237</Slope>
-            <Intercept>1.7699582375875771</Intercept>
-            <SEslope>0.066136283572929846</SEslope>
-            <SEintercept>0.7432634631743158</SEintercept>
-            <R2>0.46290289977441335</R2>
-            <RMSE>3.53735507368222</RMSE>
-            <NSE>0.23429671717792788</NSE>
-            <ME>-0.64896290657200051</ME>
-            <MAE>1.0946322945911295</MAE>
-            <RSR>0.87228867865228654</RSR>
+            <n>228</n>
+            <Slope>0.8199070217268879</Slope>
+            <Intercept>1.42307917507042</Intercept>
+            <SEslope>0.051738493407021781</SEslope>
+            <SEintercept>0.58910397814412918</SEintercept>
+            <R2>0.52633629767543266</R2>
+            <RMSE>3.3608449055653846</RMSE>
+            <NSE>0.34901740014033356</NSE>
+            <ME>-0.48534608688929654</ME>
+            <MAE>1.0758762901563961</MAE>
+            <RSR>0.805063608057262</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.TotalStemPopn</Name>
-            <n>111</n>
-            <Slope>0.15785472885950103</Slope>
-            <Intercept>229.94263565797203</Intercept>
-            <SEslope>0.04132356131492039</SEslope>
-            <SEintercept>28.572203664949186</SEintercept>
-            <R2>0.11806706599964922</R2>
-            <RMSE>432.18384297969379</RMSE>
-            <NSE>-0.45526460855351436</NSE>
-            <ME>-268.07845352515147</ME>
-            <MAE>325.92763521175988</MAE>
-            <RSR>1.2008972131637927</RSR>
+            <n>129</n>
+            <Slope>0.84057370052064651</Slope>
+            <Intercept>47.125578572190193</Intercept>
+            <SEslope>0.065964780499444473</SEslope>
+            <SEintercept>44.792671648953267</SEintercept>
+            <R2>0.56112775331998932</R2>
+            <RMSE>259.349246902516</RMSE>
+            <NSE>0.40233563035838615</NSE>
+            <ME>-46.997088474886539</ME>
+            <MAE>174.49522014886856</MAE>
+            <RSR>0.77008526314467884</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -5873,129 +5875,129 @@ VShort duration variety released in New Zealand by Pioneer
         <AcceptedStats>
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
-            <n>30</n>
-            <Slope>1.1699139053522443</Slope>
-            <Intercept>1.2353220624121182</Intercept>
-            <SEslope>0.084531523483695512</SEslope>
-            <SEintercept>1.1594636465032229</SEintercept>
-            <R2>0.87246339995171063</R2>
-            <RMSE>4.4213076801402682</RMSE>
-            <NSE>0.47373842092152041</NSE>
-            <ME>3.3232120869687733</ME>
-            <MAE>3.7109673959050866</MAE>
-            <RSR>0.71324576861172506</RSR>
+            <n>29</n>
+            <Slope>0.9879373373222331</Slope>
+            <Intercept>-0.3942675332348422</Intercept>
+            <SEslope>0.095078190628767</SEslope>
+            <SEintercept>1.32537374413868</SEintercept>
+            <R2>0.79995329065813126</R2>
+            <RMSE>2.9880843387592688</RMSE>
+            <NSE>0.74733068347111264</NSE>
+            <ME>-0.54636309857178655</ME>
+            <MAE>2.4411697293369823</MAE>
+            <RSR>0.49391961033772197</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
-            <n>90</n>
-            <Slope>0.79109478545378076</Slope>
-            <Intercept>124.13069161739054</Intercept>
-            <SEslope>0.061955057343650068</SEslope>
-            <SEintercept>95.55173574743084</SEintercept>
-            <R2>0.64946315527037835</R2>
-            <RMSE>404.90164910451915</RMSE>
-            <NSE>0.5329926746740824</NSE>
-            <ME>-173.33426724063679</ME>
-            <MAE>313.5256944608247</MAE>
-            <RSR>0.67957218530816754</RSR>
+            <n>97</n>
+            <Slope>1.0460941930134813</Slope>
+            <Intercept>-376.99031380362976</Intercept>
+            <SEslope>0.043914200505592159</SEslope>
+            <SEintercept>74.61664235440287</SEintercept>
+            <R2>0.85659408783922</R2>
+            <RMSE>424.85548246634386</RMSE>
+            <NSE>0.61667883914859789</NSE>
+            <ME>-305.34079014366279</ME>
+            <MAE>362.60892978542614</MAE>
+            <RSR>0.61592970078292408</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.N</Name>
-            <n>66</n>
-            <Slope>1.1269693532181175</Slope>
-            <Intercept>-2.1942044835698411</Intercept>
-            <SEslope>0.067392198250352184</SEslope>
-            <SEintercept>0.688996638001402</SEintercept>
-            <R2>0.81376056428228882</R2>
-            <RMSE>2.4191008607488969</RMSE>
-            <NSE>0.63022212104941944</NSE>
-            <ME>-0.99841270099322821</ME>
-            <MAE>1.9786997396761721</MAE>
-            <RSR>0.60346928986897563</RSR>
+            <n>65</n>
+            <Slope>0.881842061250688</Slope>
+            <Intercept>-1.6777328577485591</Intercept>
+            <SEslope>0.073005871423341334</SEslope>
+            <SEintercept>0.75175572634869048</SEintercept>
+            <R2>0.69842550982763019</R2>
+            <RMSE>3.6357904114018127</RMSE>
+            <NSE>0.13777303361992477</NSE>
+            <ME>-2.8030347030185636</ME>
+            <MAE>2.9435395633979984</MAE>
+            <RSR>0.92139130456504414</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Nconc</Name>
-            <n>66</n>
-            <Slope>0.31182323790565036</Slope>
-            <Intercept>0.018548146896927607</Intercept>
-            <SEslope>0.13792148058295894</SEslope>
-            <SEintercept>0.0028886768866428262</SEintercept>
-            <R2>0.073960946582046883</R2>
-            <RMSE>0.0061890426998569836</RMSE>
-            <NSE>-2.3068756793670389</NSE>
-            <ME>0.0043262964497104445</ME>
-            <MAE>0.0047055560534237295</MAE>
-            <RSR>1.8046527373450363</RSR>
+            <n>65</n>
+            <Slope>-0.22846159049185508</Slope>
+            <Intercept>0.031402705626699945</Intercept>
+            <SEslope>0.10196906946125864</SEslope>
+            <SEintercept>0.0021368233690693163</SEintercept>
+            <R2>0.073799582139371656</R2>
+            <RMSE>0.0078437746816334038</RMSE>
+            <NSE>-4.232579324644278</NSE>
+            <ME>0.0060065303378649265</ME>
+            <MAE>0.0061510083527978043</MAE>
+            <RSR>2.2698189584777757</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
-            <n>48</n>
-            <Slope>1.1231029870415148</Slope>
-            <Intercept>-756.89930833974722</Intercept>
-            <SEslope>0.10831795772963353</SEslope>
-            <SEintercept>1290.39555923622</SEintercept>
-            <R2>0.70034012089204656</R2>
-            <RMSE>2664.5818930203459</RMSE>
-            <NSE>0.41048530372010106</NSE>
-            <ME>646.02431955855832</ME>
-            <MAE>2131.4289568796808</MAE>
-            <RSR>0.75975860647142457</RSR>
+            <n>62</n>
+            <Slope>0.86314429143299376</Slope>
+            <Intercept>3615.2051223810249</Intercept>
+            <SEslope>0.050884611256471</SEslope>
+            <SEintercept>857.03344814609943</SEintercept>
+            <R2>0.82745520615689916</R2>
+            <RMSE>3541.7047716596153</RMSE>
+            <NSE>0.78403463421384512</NSE>
+            <ME>1559.6608719825103</ME>
+            <MAE>2740.2364923165583</MAE>
+            <RSR>0.46095775667057087</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Protein</Name>
             <n>46</n>
-            <Slope>-0.048689213080431622</Slope>
-            <Intercept>15.818747662785732</Intercept>
-            <SEslope>0.095953759098944422</SEslope>
-            <SEintercept>1.1671615289111386</SEintercept>
-            <R2>0.0058177473087311915</R2>
-            <RMSE>4.27578120785587</RMSE>
-            <NSE>-2.6568895832452375</NSE>
-            <ME>3.280072288997963</ME>
-            <MAE>3.2850365432521373</MAE>
-            <RSR>1.891399477532304</RSR>
+            <Slope>-0.12575845798187757</Slope>
+            <Intercept>16.637533204796746</Intercept>
+            <SEslope>0.11259388537336569</SEslope>
+            <SEintercept>1.3695685571100118</SEintercept>
+            <R2>0.02757084581136382</R2>
+            <RMSE>4.3841013303835794</RMSE>
+            <NSE>-2.8445194814184642</NSE>
+            <ME>3.1773777289264653</ME>
+            <MAE>3.2769388497402256</MAE>
+            <RSR>1.9393150777923749</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
-            <n>85</n>
-            <Slope>0.91245300671623253</Slope>
-            <Intercept>-86.896772373313127</Intercept>
-            <SEslope>0.085677233106138062</SEslope>
-            <SEintercept>45.879384065054239</SEintercept>
-            <R2>0.57743638987221035</R2>
-            <RMSE>208.70842348450384</RMSE>
-            <NSE>-0.0090556040177367514</NSE>
-            <ME>-130.1047641127673</ME>
-            <MAE>163.98055149917087</MAE>
-            <RSR>0.99859118843374939</RSR>
+            <n>92</n>
+            <Slope>1.0503225383621697</Slope>
+            <Intercept>-209.66641094625675</Intercept>
+            <SEslope>0.064779281731145</SEslope>
+            <SEintercept>39.456197425994439</SEintercept>
+            <R2>0.74496260265691727</R2>
+            <RMSE>242.65536369182425</RMSE>
+            <NSE>0.13138431276663554</NSE>
+            <ME>-181.95706983873842</ME>
+            <MAE>198.2918335289294</MAE>
+            <RSR>0.92691650776762635</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.FlagLeafDAS.Value</Name>
-            <n>230</n>
-            <Slope>0.94677911202750364</Slope>
-            <Intercept>14.425569455513028</Intercept>
-            <SEslope>0.024750181190435611</SEslope>
-            <SEintercept>3.5940637954753547</SEintercept>
-            <R2>0.86519438856791908</R2>
-            <RMSE>19.944924166313594</RMSE>
-            <NSE>0.83644376626226313</NSE>
-            <ME>7.1565217391304348</ME>
-            <MAE>11.88695652173913</MAE>
-            <RSR>0.40354072864830831</RSR>
+            <n>226</n>
+            <Slope>0.95215703836897536</Slope>
+            <Intercept>13.838484015557697</Intercept>
+            <SEslope>0.02574622163784579</SEslope>
+            <SEintercept>3.6898830416294697</SEintercept>
+            <R2>0.85926977082643408</R2>
+            <RMSE>20.105033931344931</RMSE>
+            <NSE>0.825745904906145</NSE>
+            <ME>7.3805309734513269</ME>
+            <MAE>12</MAE>
+            <RSR>0.41651297611821847</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.FloweringDAS.Value</Name>
-            <n>299</n>
-            <Slope>0.88337714718417981</Slope>
-            <Intercept>24.933406346861062</Intercept>
-            <SEslope>0.016657432188696777</SEslope>
-            <SEintercept>2.6436952066028683</SEintercept>
-            <R2>0.9044830055159282</R2>
-            <RMSE>17.937833935222653</RMSE>
-            <NSE>0.883836934376447</NSE>
-            <ME>7.471571906354515</ME>
-            <MAE>12.742474916387959</MAE>
-            <RSR>0.34025660961596882</RSR>
+            <n>295</n>
+            <Slope>0.89289975107957176</Slope>
+            <Intercept>23.869099657562543</Intercept>
+            <SEslope>0.0172642240889417</SEslope>
+            <SEintercept>2.7134710434571576</SEintercept>
+            <R2>0.90127776016921912</R2>
+            <RMSE>18.103469093528428</RMSE>
+            <NSE>0.87742564189839645</NSE>
+            <ME>7.9728813559322029</ME>
+            <MAE>12.996610169491525</MAE>
+            <RSR>0.34951230565311159</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -6004,12 +6006,6 @@ VShort duration variety released in New Zealand by Pioneer
       <PredictedTableName>HarvestReport</PredictedTableName>
       <ObservedTableName>Observed</ObservedTableName>
       <FieldNameUsedForMatch>Wheat.Phenology.CurrentStageName</FieldNameUsedForMatch>
-    </PredictedObserved>
-    <PredictedObserved>
-      <Name>MaxLeafSizeObsPred</Name>
-      <PredictedTableName>SupReport</PredictedTableName>
-      <ObservedTableName>Observed</ObservedTableName>
-      <FieldNameUsedForMatch>ExtraVariables.Script.LeafExpandedPosition</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>3000</MaximumResultsPerPage>
@@ -6473,7 +6469,7 @@ VShort duration variety released in New Zealand by Pioneer
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
-      <Filter>[Predicted.Wheat.SowingData.Cultivar]='Amarok'</Filter>
+      <Filter />
     </Series>
     <Axis>
       <Type>Bottom</Type>
@@ -6521,7 +6517,7 @@ VShort duration variety released in New Zealand by Pioneer
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
-      <Filter>[Predicted.Wheat.SowingData.Cultivar]='Amarok'</Filter>
+      <Filter>[Predicted.Wheat.SowingData.Cultivar]='Yitpi'</Filter>
     </Series>
     <Axis>
       <Type>Bottom</Type>
@@ -7588,7 +7584,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
+            <YFieldName>Wheat.Grain.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7655,7 +7651,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>TotalSoilWater</YFieldName>
+            <YFieldName>ProfileWater</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7674,7 +7670,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ProfileWater</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -24593,342 +24589,1061 @@ namespace Models
         <Name>Factors</Name>
         <Factor>
           <Name>Irrig</Name>
-          <Operations>
+          <Factor>
             <Name>01</Name>
-            <Operation>
-              <Date>1991-06-10T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-08-16T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-08-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(20);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-07T00:00:00</Date>
-              <Action>[Irrigation].Apply(12);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-12T00:00:00</Date>
-              <Action>[Irrigation].Apply(22);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-19T00:00:00</Date>
-              <Action>[Irrigation].Apply(4);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-26T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-10-03T00:00:00</Date>
-              <Action>[Irrigation].Apply(27);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-10-10T00:00:00</Date>
-              <Action>[Irrigation].Apply(18);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-10-17T00:00:00</Date>
-              <Action>[Irrigation].Apply(30);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-10-24T00:00:00</Date>
-              <Action>[Irrigation].Apply(42);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-10-31T00:00:00</Date>
-              <Action>[Irrigation].Apply(33);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-11-07T00:00:00</Date>
-              <Action>[Irrigation].Apply(24);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-11-14T00:00:00</Date>
-              <Action>[Irrigation].Apply(28);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-11-21T00:00:00</Date>
-              <Action>[Irrigation].Apply(37);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-11-27T00:00:00</Date>
-              <Action>[Irrigation].Apply(51);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-12-05T00:00:00</Date>
-              <Action>[Irrigation].Apply(36);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-12-12T00:00:00</Date>
-              <Action>[Irrigation].Apply(38);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-12-19T00:00:00</Date>
-              <Action>[Irrigation].Apply(35);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-12-26T00:00:00</Date>
-              <Action>[Irrigation].Apply(47);</Action>
-            </Operation>
-            <Operation>
-              <Date>1992-01-03T00:00:00</Date>
-              <Action>[Irrigation].Apply(40);</Action>
-            </Operation>
-            <Operation>
-              <Date>1992-01-09T00:00:00</Date>
-              <Action>[Irrigation].Apply(41);</Action>
-            </Operation>
-          </Operations>
-          <Operations>
+            <Operations>
+              <Name>IrrigationEvents</Name>
+              <Operation>
+                <Date>1991-06-10T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-08-16T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-08-29T00:00:00</Date>
+                <Action>[Irrigation].Apply(20);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-07T00:00:00</Date>
+                <Action>[Irrigation].Apply(12);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-12T00:00:00</Date>
+                <Action>[Irrigation].Apply(22);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-19T00:00:00</Date>
+                <Action>[Irrigation].Apply(4);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-26T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-10-03T00:00:00</Date>
+                <Action>[Irrigation].Apply(27);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-10-10T00:00:00</Date>
+                <Action>[Irrigation].Apply(18);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-10-17T00:00:00</Date>
+                <Action>[Irrigation].Apply(30);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-10-24T00:00:00</Date>
+                <Action>[Irrigation].Apply(42);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-10-31T00:00:00</Date>
+                <Action>[Irrigation].Apply(33);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-11-07T00:00:00</Date>
+                <Action>[Irrigation].Apply(24);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-11-14T00:00:00</Date>
+                <Action>[Irrigation].Apply(28);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-11-21T00:00:00</Date>
+                <Action>[Irrigation].Apply(37);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-11-27T00:00:00</Date>
+                <Action>[Irrigation].Apply(51);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-12-05T00:00:00</Date>
+                <Action>[Irrigation].Apply(36);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-12-12T00:00:00</Date>
+                <Action>[Irrigation].Apply(38);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-12-19T00:00:00</Date>
+                <Action>[Irrigation].Apply(35);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-12-26T00:00:00</Date>
+                <Action>[Irrigation].Apply(47);</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-01-03T00:00:00</Date>
+                <Action>[Irrigation].Apply(40);</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-01-09T00:00:00</Date>
+                <Action>[Irrigation].Apply(41);</Action>
+              </Operation>
+            </Operations>
+            <Water>
+              <Name>Water</Name>
+              <SoilCrop>
+                <Name>WheatSoil</Name>
+                <LL>
+                  <double>0.08</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
+                  <double>0.16</double>
+                  <double>0.15</double>
+                  <double>0.12</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0.6</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                </XF>
+              </SoilCrop>
+              <Thickness>
+                <double>100</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <BD>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+              </BD>
+              <AirDry>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+              </AirDry>
+              <LL15>
+                <double>0.08</double>
+                <double>0.07</double>
+                <double>0.07</double>
+                <double>0.09</double>
+                <double>0.11</double>
+                <double>0.16</double>
+                <double>0.15</double>
+                <double>0.12</double>
+              </LL15>
+              <DUL>
+                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.3</double>
+                <double>0.34</double>
+              </DUL>
+              <SAT>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+              </SAT>
+            </Water>
+            <Specifications>
+              <string>[IrrigationEvents]</string>
+              <string>[Water]</string>
+            </Specifications>
+          </Factor>
+          <Factor>
             <Name>03</Name>
-            <Operation>
-              <Date>1991-06-10T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-08-16T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-08-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(20);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-26T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-10-24T00:00:00</Date>
-              <Action>[Irrigation].Apply(42);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-10-31T00:00:00</Date>
-              <Action>[Irrigation].Apply(33);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-11-07T00:00:00</Date>
-              <Action>[Irrigation].Apply(24);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-11-14T00:00:00</Date>
-              <Action>[Irrigation].Apply(28);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-11-21T00:00:00</Date>
-              <Action>[Irrigation].Apply(37);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-11-27T00:00:00</Date>
-              <Action>[Irrigation].Apply(51);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-12-05T00:00:00</Date>
-              <Action>[Irrigation].Apply(36);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-12-12T00:00:00</Date>
-              <Action>[Irrigation].Apply(38);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-12-19T00:00:00</Date>
-              <Action>[Irrigation].Apply(35);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-12-26T00:00:00</Date>
-              <Action>[Irrigation].Apply(47);</Action>
-            </Operation>
-            <Operation>
-              <Date>1992-01-03T00:00:00</Date>
-              <Action>[Irrigation].Apply(40);</Action>
-            </Operation>
-            <Operation>
-              <Date>1992-01-09T00:00:00</Date>
-              <Action>[Irrigation].Apply(41);</Action>
-            </Operation>
-          </Operations>
-          <Operations>
+            <Operations>
+              <Name>IrrigationEvents</Name>
+              <Operation>
+                <Date>1991-06-10T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-08-16T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-08-29T00:00:00</Date>
+                <Action>[Irrigation].Apply(20);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-26T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-10-24T00:00:00</Date>
+                <Action>[Irrigation].Apply(42);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-10-31T00:00:00</Date>
+                <Action>[Irrigation].Apply(33);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-11-07T00:00:00</Date>
+                <Action>[Irrigation].Apply(24);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-11-14T00:00:00</Date>
+                <Action>[Irrigation].Apply(28);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-11-21T00:00:00</Date>
+                <Action>[Irrigation].Apply(37);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-11-27T00:00:00</Date>
+                <Action>[Irrigation].Apply(51);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-12-05T00:00:00</Date>
+                <Action>[Irrigation].Apply(36);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-12-12T00:00:00</Date>
+                <Action>[Irrigation].Apply(38);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-12-19T00:00:00</Date>
+                <Action>[Irrigation].Apply(35);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-12-26T00:00:00</Date>
+                <Action>[Irrigation].Apply(47);</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-01-03T00:00:00</Date>
+                <Action>[Irrigation].Apply(40);</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-01-09T00:00:00</Date>
+                <Action>[Irrigation].Apply(41);</Action>
+              </Operation>
+            </Operations>
+            <Water>
+              <Name>Water</Name>
+              <SoilCrop>
+                <Name>WheatSoil</Name>
+                <LL>
+                  <double>0.08</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
+                  <double>0.16</double>
+                  <double>0.15</double>
+                  <double>0.12</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0.6</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                </XF>
+              </SoilCrop>
+              <Thickness>
+                <double>100</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <BD>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+              </BD>
+              <AirDry>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+              </AirDry>
+              <LL15>
+                <double>0.08</double>
+                <double>0.07</double>
+                <double>0.07</double>
+                <double>0.09</double>
+                <double>0.11</double>
+                <double>0.16</double>
+                <double>0.15</double>
+                <double>0.12</double>
+              </LL15>
+              <DUL>
+                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.3</double>
+                <double>0.34</double>
+              </DUL>
+              <SAT>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+              </SAT>
+            </Water>
+            <Specifications>
+              <string>[IrrigationEvents]</string>
+              <string>[Water]</string>
+            </Specifications>
+          </Factor>
+          <Factor>
             <Name>05</Name>
-            <Operation>
-              <Date>1991-06-10T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-08-16T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-08-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(20);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-26T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-12-19T00:00:00</Date>
-              <Action>[Irrigation].Apply(35);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-12-26T00:00:00</Date>
-              <Action>[Irrigation].Apply(47);</Action>
-            </Operation>
-            <Operation>
-              <Date>1992-01-03T00:00:00</Date>
-              <Action>[Irrigation].Apply(40);</Action>
-            </Operation>
-          </Operations>
-          <Operations>
+            <Operations>
+              <Name>IrrigationEvents</Name>
+              <Operation>
+                <Date>1991-06-10T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-08-16T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-08-29T00:00:00</Date>
+                <Action>[Irrigation].Apply(20);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-26T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-12-19T00:00:00</Date>
+                <Action>[Irrigation].Apply(35);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-12-26T00:00:00</Date>
+                <Action>[Irrigation].Apply(47);</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-01-03T00:00:00</Date>
+                <Action>[Irrigation].Apply(40);</Action>
+              </Operation>
+            </Operations>
+            <Water>
+              <Name>Water</Name>
+              <SoilCrop>
+                <Name>WheatSoil</Name>
+                <LL>
+                  <double>0.08</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
+                  <double>0.16</double>
+                  <double>0.15</double>
+                  <double>0.12</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0.6</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                </XF>
+              </SoilCrop>
+              <Thickness>
+                <double>100</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <BD>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+              </BD>
+              <AirDry>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+              </AirDry>
+              <LL15>
+                <double>0.08</double>
+                <double>0.07</double>
+                <double>0.07</double>
+                <double>0.09</double>
+                <double>0.11</double>
+                <double>0.16</double>
+                <double>0.15</double>
+                <double>0.12</double>
+              </LL15>
+              <DUL>
+                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.3</double>
+                <double>0.34</double>
+              </DUL>
+              <SAT>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+              </SAT>
+            </Water>
+            <Specifications>
+              <string>[IrrigationEvents]</string>
+              <string>[Water]</string>
+            </Specifications>
+          </Factor>
+          <Factor>
             <Name>06</Name>
-            <Operation>
-              <Date>1991-06-10T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-08-16T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-08-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(20);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-07T00:00:00</Date>
-              <Action>[Irrigation].Apply(12);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-12T00:00:00</Date>
-              <Action>[Irrigation].Apply(22);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-19T00:00:00</Date>
-              <Action>[Irrigation].Apply(14);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-26T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-          </Operations>
-          <Operations>
+            <Operations>
+              <Name>IrrigationEvents</Name>
+              <Operation>
+                <Date>1991-06-10T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-08-16T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-08-29T00:00:00</Date>
+                <Action>[Irrigation].Apply(20);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-07T00:00:00</Date>
+                <Action>[Irrigation].Apply(12);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-12T00:00:00</Date>
+                <Action>[Irrigation].Apply(22);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-19T00:00:00</Date>
+                <Action>[Irrigation].Apply(14);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-26T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+            </Operations>
+            <Water>
+              <Name>Water</Name>
+              <SoilCrop>
+                <Name>WheatSoil</Name>
+                <LL>
+                  <double>0.08</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
+                  <double>0.16</double>
+                  <double>0.15</double>
+                  <double>0.12</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0.6</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                </XF>
+              </SoilCrop>
+              <Thickness>
+                <double>100</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <BD>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+              </BD>
+              <AirDry>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+              </AirDry>
+              <LL15>
+                <double>0.08</double>
+                <double>0.07</double>
+                <double>0.07</double>
+                <double>0.09</double>
+                <double>0.11</double>
+                <double>0.16</double>
+                <double>0.15</double>
+                <double>0.12</double>
+              </LL15>
+              <DUL>
+                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.3</double>
+                <double>0.34</double>
+              </DUL>
+              <SAT>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+              </SAT>
+            </Water>
+            <Specifications>
+              <string>[IrrigationEvents]</string>
+              <string>[Water]</string>
+            </Specifications>
+          </Factor>
+          <Factor>
             <Name>07</Name>
-            <Operation>
-              <Date>1991-06-10T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-08-16T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-08-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(20);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-07T00:00:00</Date>
-              <Action>[Irrigation].Apply(12);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-12T00:00:00</Date>
-              <Action>[Irrigation].Apply(22);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-19T00:00:00</Date>
-              <Action>[Irrigation].Apply(14);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-26T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-10-03T00:00:00</Date>
-              <Action>[Irrigation].Apply(27);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-10-10T00:00:00</Date>
-              <Action>[Irrigation].Apply(18);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-10-17T00:00:00</Date>
-              <Action>[Irrigation].Apply(30);</Action>
-            </Operation>
-          </Operations>
-          <Operations>
+            <Operations>
+              <Name>IrrigationEvents</Name>
+              <Operation>
+                <Date>1991-06-10T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-08-16T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-08-29T00:00:00</Date>
+                <Action>[Irrigation].Apply(20);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-07T00:00:00</Date>
+                <Action>[Irrigation].Apply(12);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-12T00:00:00</Date>
+                <Action>[Irrigation].Apply(22);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-19T00:00:00</Date>
+                <Action>[Irrigation].Apply(14);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-26T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-10-03T00:00:00</Date>
+                <Action>[Irrigation].Apply(27);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-10-10T00:00:00</Date>
+                <Action>[Irrigation].Apply(18);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-10-17T00:00:00</Date>
+                <Action>[Irrigation].Apply(30);</Action>
+              </Operation>
+            </Operations>
+            <Water>
+              <Name>Water</Name>
+              <SoilCrop>
+                <Name>WheatSoil</Name>
+                <LL>
+                  <double>0.08</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
+                  <double>0.16</double>
+                  <double>0.15</double>
+                  <double>0.12</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0.6</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                </XF>
+              </SoilCrop>
+              <Thickness>
+                <double>100</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <BD>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+              </BD>
+              <AirDry>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+              </AirDry>
+              <LL15>
+                <double>0.08</double>
+                <double>0.07</double>
+                <double>0.07</double>
+                <double>0.09</double>
+                <double>0.11</double>
+                <double>0.16</double>
+                <double>0.15</double>
+                <double>0.12</double>
+              </LL15>
+              <DUL>
+                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.3</double>
+                <double>0.34</double>
+              </DUL>
+              <SAT>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+              </SAT>
+            </Water>
+            <Specifications>
+              <string>[IrrigationEvents]</string>
+              <string>[Water]</string>
+            </Specifications>
+          </Factor>
+          <Factor>
             <Name>08</Name>
-            <Operation>
-              <Date>1991-06-10T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-08-16T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-08-29T00:00:00</Date>
-              <Action>[Irrigation].Apply(20);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-07T00:00:00</Date>
-              <Action>[Irrigation].Apply(12);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-12T00:00:00</Date>
-              <Action>[Irrigation].Apply(22);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-19T00:00:00</Date>
-              <Action>[Irrigation].Apply(14);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-26T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-10-03T00:00:00</Date>
-              <Action>[Irrigation].Apply(27);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-10-10T00:00:00</Date>
-              <Action>[Irrigation].Apply(18);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-10-17T00:00:00</Date>
-              <Action>[Irrigation].Apply(30);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-10-24T00:00:00</Date>
-              <Action>[Irrigation].Apply(42);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-10-31T00:00:00</Date>
-              <Action>[Irrigation].Apply(33);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-11-07T00:00:00</Date>
-              <Action>[Irrigation].Apply(24);</Action>
-            </Operation>
-          </Operations>
-          <Operations>
+            <Operations>
+              <Name>IrrigationEvents</Name>
+              <Operation>
+                <Date>1991-06-10T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-08-16T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-08-29T00:00:00</Date>
+                <Action>[Irrigation].Apply(20);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-07T00:00:00</Date>
+                <Action>[Irrigation].Apply(12);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-12T00:00:00</Date>
+                <Action>[Irrigation].Apply(22);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-19T00:00:00</Date>
+                <Action>[Irrigation].Apply(14);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-26T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-10-03T00:00:00</Date>
+                <Action>[Irrigation].Apply(27);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-10-10T00:00:00</Date>
+                <Action>[Irrigation].Apply(18);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-10-17T00:00:00</Date>
+                <Action>[Irrigation].Apply(30);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-10-24T00:00:00</Date>
+                <Action>[Irrigation].Apply(42);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-10-31T00:00:00</Date>
+                <Action>[Irrigation].Apply(33);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-11-07T00:00:00</Date>
+                <Action>[Irrigation].Apply(24);</Action>
+              </Operation>
+            </Operations>
+            <Water>
+              <Name>Water</Name>
+              <SoilCrop>
+                <Name>WheatSoil</Name>
+                <LL>
+                  <double>0.08</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
+                  <double>0.16</double>
+                  <double>0.15</double>
+                  <double>0.12</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0.6</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                </XF>
+              </SoilCrop>
+              <Thickness>
+                <double>100</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <BD>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+              </BD>
+              <AirDry>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+              </AirDry>
+              <LL15>
+                <double>0.08</double>
+                <double>0.07</double>
+                <double>0.07</double>
+                <double>0.09</double>
+                <double>0.11</double>
+                <double>0.16</double>
+                <double>0.15</double>
+                <double>0.12</double>
+              </LL15>
+              <DUL>
+                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.3</double>
+                <double>0.34</double>
+              </DUL>
+              <SAT>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+              </SAT>
+            </Water>
+            <Specifications>
+              <string>[IrrigationEvents]</string>
+              <string>[Water]</string>
+            </Specifications>
+          </Factor>
+          <Factor>
             <Name>11</Name>
-            <Operation>
-              <Date>1991-06-10T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-08-16T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-            <Operation>
-              <Date>1991-09-26T00:00:00</Date>
-              <Action>[Irrigation].Apply(7);</Action>
-            </Operation>
-          </Operations>
-          <Specifications>
-            <string>[IrrigationEvents]</string>
-          </Specifications>
+            <Operations>
+              <Name>IrrigationEvents</Name>
+              <Operation>
+                <Date>1991-06-10T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-08-16T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-09-26T00:00:00</Date>
+                <Action>[Irrigation].Apply(7);</Action>
+              </Operation>
+            </Operations>
+            <Water>
+              <Name>Water</Name>
+              <SoilCrop>
+                <Name>WheatSoil</Name>
+                <LL>
+                  <double>0.08</double>
+                  <double>0.13</double>
+                  <double>0.15</double>
+                  <double>0.09</double>
+                  <double>0.13</double>
+                  <double>0.17</double>
+                  <double>0.15</double>
+                  <double>0.12</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.05</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                  <double>0.03</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.01</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </XF>
+              </SoilCrop>
+              <Thickness>
+                <double>100</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <BD>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+                <double>1.3</double>
+              </BD>
+              <AirDry>
+                <double>0.08</double>
+                <double>0.13</double>
+                <double>0.15</double>
+                <double>0.09</double>
+                <double>0.13</double>
+                <double>0.17</double>
+                <double>0.15</double>
+                <double>0.12</double>
+              </AirDry>
+              <LL15>
+                <double>0.13</double>
+                <double>0.13</double>
+                <double>0.15</double>
+                <double>0.09</double>
+                <double>0.13</double>
+                <double>0.17</double>
+                <double>0.15</double>
+                <double>0.12</double>
+              </LL15>
+              <DUL>
+                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.23</double>
+                <double>0.23</double>
+                <double>0.23</double>
+                <double>0.22</double>
+                <double>0.18</double>
+              </DUL>
+              <SAT>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.34</double>
+                <double>0.24</double>
+                <double>0.34</double>
+                <double>0.3</double>
+                <double>0.28</double>
+              </SAT>
+            </Water>
+            <Specifications>
+              <string>[IrrigationEvents]</string>
+              <string>[Water]</string>
+            </Specifications>
+          </Factor>
+          <Specifications />
         </Factor>
       </Factors>
       <Simulation>
@@ -25159,8 +25874,8 @@ namespace Models
               <SummerU>7</SummerU>
               <SummerCona>3</SummerCona>
               <WinterDate>1-Apr</WinterDate>
-              <WinterU>7</WinterU>
-              <WinterCona>3</WinterCona>
+              <WinterU>3</WinterU>
+              <WinterCona>2</WinterCona>
               <DiffusConst>40</DiffusConst>
               <DiffusSlope>16</DiffusSlope>
               <Salb>0.2</Salb>
@@ -25683,6 +26398,513 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <Folder>
+        <Name>SWCLayers</Name>
+        <Graph>
+          <Name>SWC20cm</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Volumetric water content soil (mm3/mm3)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>0.4</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>SWC40cm</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Volumetric water content soil (mm3/mm3)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>0.4</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>SWC60cm</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Volumetric water content soil (mm3/mm3)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>0.4</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>SWC80cm</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Volumetric water content soil (mm3/mm3)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>0.4</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>SWC100cm</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Volumetric water content soil (mm3/mm3)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>0.4</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>SWC120cm</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Volumetric water content soil (mm3/mm3)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>0.4</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>SWC140cm</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Volumetric water content soil (mm3/mm3)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>0.4</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>SWC1600cm</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Volumetric water content soil (mm3/mm3)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>0.4</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+      </Folder>
       <Graph>
         <Name>AboveGroundWt</Name>
         <Series>
@@ -25977,76 +27199,11 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Spike.Live.N</YFieldName>
+          <YFieldName>Wheat.Spike.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Above Ground Biomass (g/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>NsupplyDemand</Name>
-        <Series>
-          <Name>Predicted</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8388608</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>SupReport</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Arbitrator.NDemand</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-          <Filter />
-        </Series>
-        <Series>
-          <Name>Predicted1</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8388608</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>SupReport</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Arbitrator.NSupply</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-          <Filter />
         </Series>
         <Axis>
           <Type>Left</Type>
@@ -27591,7 +28748,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
               <ShowInLegend>false</ShowInLegend>
@@ -27654,7 +28811,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
               <ShowInLegend>false</ShowInLegend>
@@ -27717,7 +28874,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
               <ShowInLegend>false</ShowInLegend>
@@ -27780,7 +28937,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
               <ShowInLegend>false</ShowInLegend>
@@ -27843,7 +29000,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
               <ShowInLegend>false</ShowInLegend>
@@ -51903,7 +53060,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>ZadokStage</YFieldName>
+            <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
