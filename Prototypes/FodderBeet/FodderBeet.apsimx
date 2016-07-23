@@ -682,7 +682,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
                 <double>0</double>
                 <double>0</double>
                 <double>0</double>
-                <double>0.1</double>
+                <double>0</double>
               </Y>
             </XYPairs>
             <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
@@ -4124,5 +4124,5 @@ namespace Models
       </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>237</ExplorerWidth>
+  <ExplorerWidth>349</ExplorerWidth>
 </Simulations>
