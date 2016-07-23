@@ -902,6 +902,7 @@ namespace Models.PMF.Organs
             Leaves = new List<LeafCohort>();
             WaterDemand = 0;
             WaterAllocation = 0;
+            CohortsAtInitialisation = 0;
         }
         /// <summary>Initialises the cohorts.</summary>
         [EventSubscribe("InitialiseLeafCohorts")]
@@ -1638,6 +1639,7 @@ namespace Models.PMF.Organs
                 Live.Clear();
                 Dead.Clear();
                 Leaves.Clear();
+                CohortsAtInitialisation = 0;
             }
         }
 
@@ -1651,6 +1653,24 @@ namespace Models.PMF.Organs
             foreach (LeafCohort initialLeaf in Apsim.Children(this, typeof(LeafCohort)))
                 initialLeaves.Add(initialLeaf);
             InitialLeaves = initialLeaves.ToArray();
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
+        {
+            CohortsAtInitialisation = 0;
+        }
+
+        /// <summary>Called when crop is being cut.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Harvesting")]
+        private void OnHarvesting(object sender, EventArgs e)
+        {
+            CohortsAtInitialisation = 0;
         }
         #endregion
     }
