@@ -1501,13 +1501,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>0.3</double>
-                <double>0.8</double>
+                <double>0.1</double>
+                <double>0.7</double>
                 <double>1.3</double>
               </X>
               <Y>
                 <double>0</double>
-                <double>0.5</double>
+                <double>1</double>
                 <double>1</double>
               </Y>
             </XYPairs>
@@ -1831,7 +1831,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>0.5</double>
+                <double>1</double>
                 <double>1</double>
               </X>
               <Y>
@@ -7330,6 +7330,7 @@ namespace Models
               <string>[Wheat].Leaf.Photosynthesis.RueAct</string>
               <string>[Wheat].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</string>
               <string>[Wheat].Stem.DMDemandFunction.PotentialDMAccumulation.Value</string>
+              <string>sum([Soil].SoilWater.SWmm[2:7]) as ProfileWater180cm</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -7649,9 +7650,9 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>SupReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>ProfileWater</YFieldName>
+            <YFieldName>ProfileWater180cm</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8164,7 +8165,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Leaf.Photosynthesis.FW.Value</YFieldName>
+          <YFieldName>Wheat.Leaf.Fw</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
