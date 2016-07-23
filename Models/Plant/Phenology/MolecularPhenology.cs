@@ -125,7 +125,7 @@ namespace Models.PMF.Phen
                 if (Phenology.CurrentPhaseName == "Emerging")
                     DeltaHaunStage = Tt / 90; //Fixme, need to do something better than this
                 else
-                    DeltaHaunStage = Structure.DeltaNodeNumber;
+                    DeltaHaunStage = Structure.DeltaTipNumber;
 
                 //Pre-Vernalisation lag, determine the repression of Vrn4
                 if (IsPreVernalised == false)

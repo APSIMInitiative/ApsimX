@@ -1775,7 +1775,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <Name>PotentialDMAccumulation</Name>
         <VariableReference>
           <Name>NodesAppearing</Name>
-          <VariableName>[Structure].DeltaNodeNumber</VariableName>
+          <VariableName>[Structure].DeltaTipNumber</VariableName>
         </VariableReference>
         <VariableReference>
           <Name>Branches</Name>

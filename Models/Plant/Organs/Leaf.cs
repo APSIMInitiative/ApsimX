@@ -140,10 +140,16 @@ namespace Models.PMF.Organs
         { 
             get 
             {
-                if (Plant.IsAlive)
-                    return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
+                if (Plant != null)
+                {
+                    if (Plant.IsAlive)
+                        return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
+                    else
+                        return 0;
+                }
                 else
                     return 0;
+
             } 
         }
 
@@ -162,6 +168,11 @@ namespace Models.PMF.Organs
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [Units("mm")]
         public double PotentialEP { get;  set; }
+
+        /// <summary>
+        /// This paramater is applied to ETDemand.  It is a fudge for testing
+        /// </summary>
+        public double FudgeToGetETDemandRight { get; set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } 
@@ -1352,7 +1363,7 @@ namespace Models.PMF.Organs
         {
            get
             {
-                return PotentialEP;
+                return PotentialEP * FudgeToGetETDemandRight;
             }
         }
         /// <summary>Gets or sets the water allocation.</summary>
@@ -1609,6 +1620,7 @@ namespace Models.PMF.Organs
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 MaxCover = data.MaxCover;
+                FudgeToGetETDemandRight = 1.0;
             }
         }
 
