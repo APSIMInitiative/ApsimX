@@ -23,23 +23,26 @@ namespace Models.PMF.Phen
         /// <summary>The structure</summary>
         [Link]
         Structure Structure = null;
-
-        /// <summary>The cohort no at start</summary>
-        private double CohortNoAtStart;
+        /// <summary>
+        /// The number of leaves appeared at the start of this phase
+        /// </summary>
+        private double LeafNoAtStart;
         /// <summary>The first</summary>
         private bool First = true;
         /// <summary>The remaining leaves</summary>
         private double RemainingLeaves = 0;
         /// <summary>The fraction complete yesterday</summary>
         private double FractionCompleteYesterday = 0;
+        private double TargetLeafForCompletion = 0;
 
         /// <summary>Reset phase</summary>
         public override void ResetPhase()
         {
             base.ResetPhase();
-            CohortNoAtStart = 0;
+            LeafNoAtStart = 0;
             RemainingLeaves = 0;
             FractionCompleteYesterday = 0;
+            TargetLeafForCompletion = 0;
             First = true;
         }
 
@@ -53,7 +56,9 @@ namespace Models.PMF.Phen
 
             if (First)
             {
-                CohortNoAtStart = Leaf.ExpandedCohortNo;
+                LeafNoAtStart = Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion;
+                TargetLeafForCompletion = Structure.MainStemFinalNodeNumber.Value - RemainingLeaves - LeafNoAtStart;
+                
                 First = false;
             }
 
@@ -74,7 +79,8 @@ namespace Models.PMF.Phen
             base.AddTT(PropOfDayToUse);
             if (First)
             {
-                CohortNoAtStart = Leaf.ExpandedCohortNo;
+                LeafNoAtStart = Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion;
+                TargetLeafForCompletion = Structure.MainStemFinalNodeNumber.Value - RemainingLeaves - LeafNoAtStart;
                 First = false;
             }
 
@@ -93,7 +99,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = (Structure.LeafTipsAppeared - CohortNoAtStart) / ((Leaf.InitialisedCohortNo - RemainingLeaves) - CohortNoAtStart);
+                double F = (Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion - LeafNoAtStart) / TargetLeafForCompletion;
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
