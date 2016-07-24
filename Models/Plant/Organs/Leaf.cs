@@ -113,7 +113,11 @@ namespace Models.PMF.Organs
                 int MM2ToM2 = 1000000; // Conversion of mm2 to m2
                 double value = 0;
                 foreach (LeafCohort L in Leaves)
+                {
+                    if (Double.IsNaN(L.LiveArea))
+                        throw new Exception("LiveArea of leaf cohort " + L.Name + " is Nan");
                     value = value + L.LiveArea / MM2ToM2;
+                }
                 return value;
             }
         }
@@ -561,13 +565,19 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (ExpandedCohortNo < InitialisedCohortNo)
-                    if (Leaves[(int)ExpandedCohortNo].Age > 0)
-                        return Math.Min(1,Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration);
+                if (Plant.IsEmerged)
+                    if (ExpandedCohortNo < InitialisedCohortNo)
+                        if (Leaves[(int)ExpandedCohortNo].Age > 0)
+                            if(AppearedCohortNo < InitialisedCohortNo)
+                                return Math.Min(1, (Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration));
+                            else
+                                return Math.Min(1, (Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration)*Structure.NextLeafProportion);
+                        else
+                            return 0;
                     else
-                        return 0;
+                        return Structure.NextLeafProportion - 1 ;
                 else
-                    return 1.0;
+                    return 0;
             }
         }
 
@@ -847,24 +857,7 @@ namespace Models.PMF.Organs
          /// <summary>1 based rank of the current leaf.</summary>
     /// <value>The current rank.</value>
         private int CurrentRank { get; set; }
-        /*private int CurrentRank
-        {
-            get
-            {
-                if (Leaves.Count == 0)
-                    return 0;
 
-                // Find the first non appeared leaf.
-                int i = 0;
-                while (i < Leaves.Count && Leaves[i].IsAppeared)
-                    i++;
-
-                if (i == 0)
-                    throw new ApsimXException(this.FullPath, "No leaves have appeared. Cannot calculate Leaf.CurrentRank");
-
-                return Leaves[i - 1].Rank;
-            }
-        }*/
         /// <summary>Cohorts the counter.</summary>
         /// <param name="Condition">The condition.</param>
         /// <returns></returns>

@@ -202,7 +202,7 @@ namespace Models.PMF
         private EventArgs args = new EventArgs();
         private int CohortToInitialise { get; set; }
         private int TipToAppear { get; set; }
-        private double FinalLeafDeltaTipNumberonDayOfAppearance { get; set; }
+        //private double FinalLeafDeltaTipNumberonDayOfAppearance { get; set; }
         #region Links
         /// <summary>The plant</summary>
         [Link]
@@ -269,6 +269,13 @@ namespace Models.PMF
         /// <value>The main stem node no.</value>
         [XmlIgnore]
         [Description("Number of mainstem nodes which have their tips appeared")]
+        private double PotLeafTipsAppeared { get; set; }
+
+        //Plant leaf number state variables
+        /// <summary>Gets or sets the main stem node no.</summary>
+        /// <value>The main stem node no.</value>
+        [XmlIgnore]
+        [Description("Number of mainstem nodes which have their tips appeared")]
         public double LeafTipsAppeared { get; set; }
 
         /// <summary>Gets or sets the plant total node no.</summary>
@@ -310,7 +317,7 @@ namespace Models.PMF
         public void Clear()
         {
             TotalStemPopn = 0;
-            LeafTipsAppeared = 0;
+            PotLeafTipsAppeared = 0;
             PlantTotalNodeNo = 0;
             ProportionBranchMortality = 0;
             ProportionPlantMortality = 0;
@@ -417,12 +424,12 @@ namespace Models.PMF
                         DeltaTipNumber = DeltaHaunStage; //DeltaTipNumber is only positive after emergence whereas deltaHaunstage is positive from germination
                     }
 
-                    LeafTipsAppeared += DeltaTipNumber;
-                    if (LeafTipsAppeared > MainStemFinalNodeNumber.Value)
-                        FinalLeafDeltaTipNumberonDayOfAppearance = LeafTipsAppeared - MainStemFinalNodeNumber.Value;
-                    LeafTipsAppeared = Math.Min(LeafTipsAppeared, MainStemFinalNodeNumber.Value);
+                    PotLeafTipsAppeared += DeltaTipNumber;
+                    //if (PotLeafTipsAppeared > MainStemFinalNodeNumber.Value)
+                    //    FinalLeafDeltaTipNumberonDayOfAppearance = PotLeafTipsAppeared - MainStemFinalNodeNumber.Value;
+                    LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, MainStemFinalNodeNumber.Value);
 
-                    bool TimeForAnotherLeaf = (LeafTipsAppeared >= (Leaf.AppearedCohortNo + NextLeafProportion));
+                    bool TimeForAnotherLeaf = PotLeafTipsAppeared >= (Leaf.AppearedCohortNo + 1);
                     int LeavesToAppear = (int)(LeafTipsAppeared - (Leaf.AppearedCohortNo - (1- NextLeafProportion)));
 
                     //Each time main-stem node number increases by one or more initiate the additional cohorts until final leaf number is reached
@@ -495,7 +502,7 @@ namespace Models.PMF
             for (i = 1; i <= (Leaf.TipsAtEmergence); i++)
             {
                 InitParams = new CohortInitParams() { }; 
-                LeafTipsAppeared += 1;
+                PotLeafTipsAppeared += 1;
                 CohortToInitialise += 1;
                 InitParams.Rank = CohortToInitialise; 
                 if(AddLeafCohort != null)
@@ -512,7 +519,7 @@ namespace Models.PMF
             CohortParams.CohortToAppear = TipToAppear;
             CohortParams.TotalStemPopn = TotalStemPopn;
             if ((Math.Truncate(LeafTipsAppeared) + 1) == Leaf.InitialisedCohortNo)
-                CohortParams.CohortAge = FinalLeafDeltaTipNumberonDayOfAppearance * MainStemNodeAppearanceRate.Value * NextLeafProportion;
+                CohortParams.CohortAge = (PotLeafTipsAppeared - TipToAppear) * MainStemNodeAppearanceRate.Value;
             else
                 CohortParams.CohortAge = (LeafTipsAppeared - TipToAppear) * MainStemNodeAppearanceRate.Value;
             CohortParams.FinalFraction = NextLeafProportion;
@@ -554,7 +561,7 @@ namespace Models.PMF
             Emerged = false;
             CohortToInitialise = 0;
             TipToAppear = 0;
-            LeafTipsAppeared = 0;
+            PotLeafTipsAppeared = 0;
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -579,7 +586,7 @@ namespace Models.PMF
         [EventSubscribe("Cutting")]
         private void OnCutting(object sender, EventArgs e)
         {
-            LeafTipsAppeared = 0;
+            PotLeafTipsAppeared = 0;
             CohortToInitialise = 0;
             TipToAppear = 0;
             Emerged = false;
@@ -597,7 +604,7 @@ namespace Models.PMF
         [EventSubscribe("Harvesting")]
         private void OnHarvesting(object sender, EventArgs e)
         {
-            LeafTipsAppeared = 0;
+            PotLeafTipsAppeared = 0;
             Clear();
             ResetStemPopn();
             Germinated = false;
