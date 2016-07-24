@@ -2590,13 +2590,13 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Janz</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 7.8</Command>
+            <Command>[Phenology].MinimumLeafNumber.Value = 6.5</Command>
             <Command>[Phenology].VrnSensitivity.Value = 2</Command>
-            <Command>[Phenology].PpSensitivity.Value = 5</Command>
+            <Command>[Phenology].PpSensitivity.Value = 4</Command>
             <Command>[Phenology].VernLag.Value = 0</Command>
             <Command>[Phenology].EarlyReproductiveLongDayBase.Value = 3.5</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 75</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Kelallac</Name>
@@ -2791,7 +2791,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].AboveGround.N</string>
         <string>[Wheat].Grain.Protein</string>
         <string>[Wheat].Grain.Size</string>
-        <string>[Wheat].Structure.HaunStageTerminalSpikelet.Value</string>
+        <string>[Wheat].Structure.HaunStage.ValueTerminalSpikelet.Value</string>
         <string>[Wheat].Structure.MainStemFinalNodeNumber.Value</string>
         <string>[Wheat].Structure.MainStemPopn</string>
         <string>[Wheat].SowingData.Cultivar</string>
@@ -2863,8 +2863,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].Stem.NConc</string>
         <string>[Wheat].Stem.Wt</string>
         <string>[Wheat].SowingData.Cultivar</string>
-        <string>[Wheat].Structure.HaunStageTerminalSpikelet.Value</string>
-        <string>[Wheat].Structure.HaunStage</string>
+        <string>[Wheat].Structure.HaunStage.ValueTerminalSpikelet.Value</string>
+        <string>[Wheat].Structure.HaunStage.Value</string>
         <string>[Wheat].Structure.Height</string>
         <string>[Wheat].Structure.LeafTipsAppeared</string>
         <string>[Wheat].Structure.MainStemFinalNodeNumber.Value</string>
@@ -5811,7 +5811,7 @@ VShort duration variety released in New Zealand by Pioneer
             <RSR>1.1582082384660444</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>Wheat.Structure.HaunStage</Name>
+            <Name>Wheat.Structure.HaunStage.Value</Name>
             <n>255</n>
             <Slope>1.0196526449826628</Slope>
             <Intercept>0.646167982838894</Intercept>
@@ -6361,13 +6361,13 @@ VShort duration variety released in New Zealand by Pioneer
       <Line>None</Line>
       <LineThickness>Normal</LineThickness>
       <TableName>DailyObsPred</TableName>
-      <XFieldName>Observed.Wheat.Structure.Haunstage</XFieldName>
-      <YFieldName>Predicted.Wheat.Structure.Haunstage</YFieldName>
+      <XFieldName>Observed.Wheat.Structure.HaunStage.Value</XFieldName>
+      <YFieldName>Predicted.Wheat.Structure.HaunStage.Value</YFieldName>
       <ShowInLegend>false</ShowInLegend>
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
-      <Filter>[Predicted.Wheat.SowingData.Cultivar]='Hartog'</Filter>
+      <Filter>[Predicted.Wheat.SowingData.Cultivar]='Janz'</Filter>
     </Series>
     <Axis>
       <Type>Bottom</Type>
@@ -6462,7 +6462,7 @@ VShort duration variety released in New Zealand by Pioneer
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
-      <Filter />
+      <Filter>[Predicted.Wheat.SowingData.Cultivar]='Janz'</Filter>
     </Series>
     <Axis>
       <Type>Bottom</Type>
@@ -6510,7 +6510,7 @@ VShort duration variety released in New Zealand by Pioneer
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
-      <Filter>[Predicted.Wheat.SowingData.Cultivar]='Hartog'</Filter>
+      <Filter>[Predicted.Wheat.SowingData.Cultivar]='Janz'</Filter>
     </Series>
     <Axis>
       <Type>Bottom</Type>
@@ -11716,7 +11716,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Structure.Haunstage</YFieldName>
+          <YFieldName>Wheat.Structure.HaunStage.Value</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -11737,7 +11737,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Structure.Haunstage</YFieldName>
+          <YFieldName>Wheat.Structure.HaunStage.Value</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -12616,7 +12616,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Structure.Haunstage</YFieldName>
+          <YFieldName>Wheat.Structure.HaunStage.Value</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -12637,7 +12637,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Structure.Haunstage</YFieldName>
+          <YFieldName>Wheat.Structure.HaunStage.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -16609,7 +16609,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Structure.HaunStage</YFieldName>
+          <YFieldName>Wheat.Structure.HaunStage.Value</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -16631,7 +16631,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Structure.Haunstage</YFieldName>
+          <YFieldName>Wheat.Structure.HaunStage.Value</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -16723,6 +16723,47 @@ namespace Models
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Graph</Name>
+        <Series>
+          <Name>Series</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>0</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Wheat.Structure.HaunStage.ValueTerminalSpikelet.Value</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Experiment>
     <Graph>
@@ -28292,6 +28333,7 @@ namespace Models
               <string>[Wheat].Leaf.Photosynthesis.RueAct</string>
               <string>[Wheat].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</string>
               <string>[Wheat].Stem.DMDemandFunction.PotentialDMAccumulation.Value</string>
+              <string>[Wheat].Leaf.NextExpandingLeafProportion</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -28619,6 +28661,27 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <Series>
+            <Name>Predicted1</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>SupReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Wheat.Leaf.NextExpandingLeafProportion</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Left</Type>
             <Title>Volumetric soil water (mm)</Title>
@@ -28629,6 +28692,13 @@ namespace Models
           </Axis>
           <Axis>
             <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Right</Type>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -59148,5 +59218,5 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Folder>
-  <ExplorerWidth>280</ExplorerWidth>
+  <ExplorerWidth>315</ExplorerWidth>
 </Simulations>

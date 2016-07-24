@@ -554,6 +554,23 @@ namespace Models.PMF.Organs
         }
         //Cohort State variable outputs
 
+        /// <summary>
+        /// Returns the relative expansion of the next leaf to produce its ligule
+        /// </summary>
+        public double NextExpandingLeafProportion
+        {
+            get
+            {
+                if (ExpandedCohortNo < InitialisedCohortNo)
+                    if (Leaves[(int)ExpandedCohortNo].Age > 0)
+                        return Math.Min(1,Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration);
+                    else
+                        return 0;
+                else
+                    return 1.0;
+            }
+        }
+
         /// <summary>Gets the size of the cohort.</summary>
         /// <value>The size of the cohort.</value>
         [XmlIgnore]

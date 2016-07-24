@@ -361,13 +361,6 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>The number of liguals visiable plus the proportion of expansion of the top most leaf</summary>
-        /// <value>The number of liguals visiable plus the proportion of expansion of the top most leaf</value>
-        [Units("Leaves")]
-        [XmlIgnore]
-        [Description("The number of liguals visiable plus the proportion of expansion of the top most leaf")]
-        public double HaunStage { get; set; }
-        
         #endregion
 
         #region Top level timestep Functions
@@ -398,7 +391,6 @@ namespace Models.PMF
                     {
                         NextLeafProportion = 1.0;
                         DoEmergence();
-                        HaunStage = 0;
                     }
 
                     bool AllCohortsInitialised = (Leaf.InitialisedCohortNo >= MainStemFinalNodeNumber.Value);
@@ -429,9 +421,6 @@ namespace Models.PMF
                     if (LeafTipsAppeared > MainStemFinalNodeNumber.Value)
                         FinalLeafDeltaTipNumberonDayOfAppearance = LeafTipsAppeared - MainStemFinalNodeNumber.Value;
                     LeafTipsAppeared = Math.Min(LeafTipsAppeared, MainStemFinalNodeNumber.Value);
-
-                    HaunStage += DeltaHaunStage;
-                    HaunStage = Math.Min(HaunStage, MainStemFinalNodeNumber.Value);
 
                     bool TimeForAnotherLeaf = (LeafTipsAppeared >= (Leaf.AppearedCohortNo + NextLeafProportion));
                     int LeavesToAppear = (int)(LeafTipsAppeared - (Leaf.AppearedCohortNo - (1- NextLeafProportion)));
@@ -566,7 +555,6 @@ namespace Models.PMF
             CohortToInitialise = 0;
             TipToAppear = 0;
             LeafTipsAppeared = 0;
-            HaunStage = 0;
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -592,7 +580,6 @@ namespace Models.PMF
         private void OnCutting(object sender, EventArgs e)
         {
             LeafTipsAppeared = 0;
-            HaunStage = 0;
             CohortToInitialise = 0;
             TipToAppear = 0;
             Emerged = false;
@@ -611,7 +598,6 @@ namespace Models.PMF
         private void OnHarvesting(object sender, EventArgs e)
         {
             LeafTipsAppeared = 0;
-            HaunStage = 0;
             Clear();
             ResetStemPopn();
             Germinated = false;
