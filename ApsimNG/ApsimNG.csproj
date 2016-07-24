@@ -331,7 +331,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Map.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\MovingAverageFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\OrganBiomassRemovalType.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SCUM.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SCRUM.png" />
     <EmbeddedResource Include="Resources\apsim logo32.png" />
     <EmbeddedResource Include="Resources\AIBanner.png" />
     <EmbeddedResource Include="Resources\LargeImages\Arbitrator.png" />
@@ -365,6 +365,7 @@
     <EmbeddedResource Include="Resources\LargeImages\Chicory.png" />
     <EmbeddedResource Include="Resources\Function.png" />
     <EmbeddedResource Include="Resources\Property.png" />
+    <EmbeddedResource Include="Resources\help.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
@@ -611,10 +612,6 @@
     </Reference>
     <Reference Include="OxyPlot.GtkSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=245eacd6b5d2d338, processorArchitecture=MSIL">
       <HintPath>..\packages\OxyPlot.GtkSharp.1.0.0-unstable2100\lib\net40\OxyPlot.GtkSharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="OxyPlot.WindowsForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=245eacd6b5d2d338, processorArchitecture=MSIL">
-      <HintPath>..\packages\OxyPlot.WindowsForms.1.0.0-unstable2100\lib\net40\OxyPlot.WindowsForms.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">

@@ -140,10 +140,16 @@ namespace Models.PMF.Organs
         { 
             get 
             {
-                if (Plant.IsAlive)
-                    return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
+                if (Plant != null)
+                {
+                    if (Plant.IsAlive)
+                        return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
+                    else
+                        return 0;
+                }
                 else
                     return 0;
+
             } 
         }
 
@@ -162,6 +168,11 @@ namespace Models.PMF.Organs
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [Units("mm")]
         public double PotentialEP { get;  set; }
+
+        /// <summary>
+        /// This paramater is applied to ETDemand.  It is a fudge for testing
+        /// </summary>
+        public double FudgeToGetETDemandRight { get; set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } 
@@ -349,10 +360,12 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (CurrentRank - 1 < Leaves.Count || CurrentRank - 1 >= Leaves.Count)
+                if (CurrentRank > Leaves.Count)
+                    throw new ApsimXException(this, "Curent Rank is greater than the number of leaves appeared when trying to determine CoverAbove this cohort");
+                else if (CurrentRank <= 0)
                     return 0;
                 else
-                    return Leaves[CurrentRank-1].CoverAbove;
+                    return Leaves[CurrentRank - 1].CoverAbove;
             }
         }
 
@@ -900,6 +913,7 @@ namespace Models.PMF.Organs
             Leaves = new List<LeafCohort>();
             WaterDemand = 0;
             WaterAllocation = 0;
+            CohortsAtInitialisation = 0;
         }
         /// <summary>Initialises the cohorts.</summary>
         [EventSubscribe("InitialiseLeafCohorts")]
@@ -1349,7 +1363,7 @@ namespace Models.PMF.Organs
         {
            get
             {
-                return PotentialEP;
+                return PotentialEP * FudgeToGetETDemandRight;
             }
         }
         /// <summary>Gets or sets the water allocation.</summary>
@@ -1606,6 +1620,7 @@ namespace Models.PMF.Organs
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 MaxCover = data.MaxCover;
+                FudgeToGetETDemandRight = 1.0;
             }
         }
 
@@ -1636,6 +1651,7 @@ namespace Models.PMF.Organs
                 Live.Clear();
                 Dead.Clear();
                 Leaves.Clear();
+                CohortsAtInitialisation = 0;
             }
         }
 
@@ -1649,6 +1665,24 @@ namespace Models.PMF.Organs
             foreach (LeafCohort initialLeaf in Apsim.Children(this, typeof(LeafCohort)))
                 initialLeaves.Add(initialLeaf);
             InitialLeaves = initialLeaves.ToArray();
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
+        {
+            CohortsAtInitialisation = 0;
+        }
+
+        /// <summary>Called when crop is being cut.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Harvesting")]
+        private void OnHarvesting(object sender, EventArgs e)
+        {
+            CohortsAtInitialisation = 0;
         }
         #endregion
     }

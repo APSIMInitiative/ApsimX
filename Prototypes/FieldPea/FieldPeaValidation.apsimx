@@ -1317,7 +1317,7 @@
               <Y>
                 <double>0</double>
                 <double>0</double>
-                <double>0.2</double>
+                <double>0</double>
               </Y>
             </XYPairs>
             <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
@@ -16163,5 +16163,5 @@ namespace Models
       </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>287</ExplorerWidth>
+  <ExplorerWidth>350</ExplorerWidth>
 </Simulations>

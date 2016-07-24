@@ -1787,8 +1787,8 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
               <Y>
                 <double>0</double>
                 <double>0</double>
-                <double>0.1</double>
-                <double>0.1</double>
+                <double>0</double>
+                <double>0</double>
               </Y>
             </XYPairs>
             <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
