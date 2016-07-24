@@ -21,40 +21,45 @@ This model has been built using the Plant Modelling Framework (PMF) of [brown_pl
 
 
 ##Inclusion in APSIM simulations
-A scum crop is included in a simulation the same as any other APSIM crop  
- * The SCUM object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  
- * It is then planted with a sowing rule  
+A forage chicory crop can be included in a simulation the same as any other APSIM crop.
+
+ * - The chicory object can be dragged or copied from the Crop folder in the tool box into a Field in your simulation;
+ * - To become active, chicory needs to be sown using a manager script with a sowing rule:
 <pre><code class='language-cs'>
-SCUM.Sow(cultivar: Wheat_Autumn, population: 1, depth: 10, rowSpacing: 150);  
+ Chicory.Sow(cultivar: Puna, population: 200, depth: 10, rowSpacing: 150);  
 </code></pre>
-  * Note that SCUM has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  
-  * To specify an expected Expected Yield that differs to the defalt value provided, included the following code in a manager script to be executed on the day of sowing.
-<pre><code class='language-cs'>
- zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);  
-</code></pre>
-* SCUM can be Harvested, Cut, Grazed and Pruned like other crops.  Defalt proportions of the biomass in each organ are removed from the sysem and/or added to the fields residue pools.  Note that defalt removal fraction for product on harvest is 0 (becaue it is represented with a generic organ) so more appropriate removal fractions should be sepcified in a manager script as follows:  
+If a specified cultivar is not available, an error is raised.
+
+
+##Harvest and biomass removal
+Chicory can be Harvested, Cut or Grazed like other crops using a manager script.  The proportions of the biomass of each organ that is removed from the system and/or added to the residue pools may be specified or defaults will be used.  Note that the sum of removed and added to residue fractions should be <= 1.0.  To specify the proportions for removal in a manager script, use a RemovalFractions class as shown below:
 <pre><code class='language-cs'>
 [EventSubscribe("Commencing")]  
 private void OnSimulationCommencing(object sender, EventArgs e)  
 {  
-  Remove = new RemovalFractions(SCUM.Organs);  
+  Remove = new RemovalFractions(Chicory.Organs);  
 }  
 [EventSubscribe("DoManagement")]    
 private void OnDoManagement(object sender, EventArgs e)  
 {  
-  if (Clock.Today.Date == HarvestDate2)  
+  if (Clock.Today.Date == HarvestDate)  
   {  
-    Remove.SetFractionToRemove("Product", 1.0);  
-    Remove.SetFractionToRemove("Stover", 0.05);  
-    Remove.SetFractionToResidue("Stover",0.95)
-    SCUM.Harvest(Remove);  
-    SCUM.EndCrop();  
-  }  
+    Remove.SetFractionToRemove("Leaf", 0.80);  
+    Remove.SetFractionToRemove("Stem", 0.50);  
+    Remove.SetFractionToResidue("leaf",0.05);
+    Chicory.Harvest(Remove);  
+  }
 }  
  </code></pre>
-* A Remove class as shown above can be sent with Harvest, Cut, Graze and Prune events to specificy the proportions of removals.
- * Once a crop has been ended the field is open to plant another crop using another APSIM crop model or sowing another SCUM crop.  
-]]></MemoText>
+The RemovalFractions class as can be sent with Harvest, Cut or Graze events; default is used if values for any organ is not specified.
+
+
+##Crop termination
+To fully terminate a crop the EndCrop event should be raised:
+<pre><code class='language-cs'>
+ Chicory.EndCrop();  
+</code></pre>
+Once a crop has been ended the field is open to be used by another APSIM plant model, or another chicory crop.  Note that ending chicory is not necessary before sowing another crop, competition between crops will then take place.]]></MemoText>
       </Memo>
       <Phenology>
         <Name>Phenology</Name>
@@ -756,6 +761,10 @@ DM demand is based on ...
         </Folder>
         <BiomassYesterday>0</BiomassYesterday>
         <CohortsInitialised>false</CohortsInitialised>
+        <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
+        <InitialisedCohortNo>0</InitialisedCohortNo>
+        <AppearedCohortNo>0</AppearedCohortNo>
         <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
         <Albedo>0.18</Albedo>
         <Gsmax>0.015</Gsmax>
@@ -1629,6 +1638,7 @@ No effect of soil water content on root growth is currently captured in the mode
         <Command />
       </Cultivar>
       <CropType>Chicory</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Manager>
       <Name>Defoliate</Name>
@@ -3165,8 +3175,9 @@ namespace Models
             </MicroClimate>
             <Plant>
               <Name>Chicory</Name>
-              <ResourceName>SCUM</ResourceName>
-              <CropType>SCUM</CropType>
+              <ResourceName>Chicory</ResourceName>
+              <CropType>Chicory</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -6876,15 +6887,15 @@ namespace Models
               <Manager>
                 <Name>AutomaticIrrigation</Name>
                 <Script>
-                  <Irrigation_Yes_No>yes</Irrigation_Yes_No>
-                  <Season_Start>1-Oct</Season_Start>
-                  <Season_End>30-Jul</Season_End>
-                  <Season_Allocation>10000</Season_Allocation>
-                  <Refull_Frac>0.9</Refull_Frac>
-                  <Trigger_Frac>0.26</Trigger_Frac>
-                  <Return_days>3</Return_days>
-                  <Maximum_Irrigation_Amount>30</Maximum_Irrigation_Amount>
-                  <Top_Depth>120</Top_Depth>
+                  <allowIrrigation>yes</allowIrrigation>
+                  <seasonStart>01-Oct</seasonStart>
+                  <seasonEnd>30-Jul</seasonEnd>
+                  <seasonsAllocation>10000</seasonsAllocation>
+                  <triggerDeficit>75</triggerDeficit>
+                  <targetDeficit>90</targetDeficit>
+                  <returndays>3</returndays>
+                  <maximumAmount>30</maximumAmount>
+                  <depthPAWC>300</depthPAWC>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -6906,151 +6917,155 @@ namespace Models
 		[Link] Irrigation Irrigation;
 		[Link] Clock Clock;
 		[Link] Soil Soil;
-		[Link] Plant SCUM;
+		[Link(IsOptional = true)] Plant existingCrop;
 	   
 		//User inputs from properties tab
-		[Description("Irrigation on (yes or no)")]
-		public string Irrigation_Yes_No { get; set; }
-		[Description("SeasonStart (dd-MMM)")]
-		public string Season_Start { get; set; }
-		[Description("SeasonEnd (dd-MMM)")]
-		public string Season_End { get; set; }
-		[Description("Season Allocation (mm)")]
-		public double Season_Allocation { get; set; }
-		[Description("% PAWC to refill soil to (0-1)")]
-		public double Refull_Frac { get; set; }
-		[Description("% PAWC to trigger irrigation (0-1)")]
-		public double Trigger_Frac { get; set; }
+		[Description("Turn irrigation on?")]
+		public answerType allowIrrigation { get; set; }
+		[Description("Start of irrigation season (dd-MMM)")]
+		public string seasonStart { get; set; }
+		[Description("End of irrigation season (dd-MMM)")]
+		public string seasonEnd { get; set; }
+		[Description("Season allocation (mm)")]
+		public double seasonsAllocation { get; set; }
+		[Description("Deficit to trigger irrigation (% PAWC)")]
+		public double triggerDeficit { get; set; }
+		[Description("Deficit to stop irrigaton (% PAWC)")]
+		public double targetDeficit { get; set; }
 		[Description("Minimum days for irrigation to return")]
-		public double Return_days { get; set; }
-		[Description("Maximum irrigation application (mm)")]
-		public double Maximum_Irrigation_Amount { get; set; }
+		public double returndays { get; set; }
+		[Description("Maximum irrigation application (mm/day)")]
+		public double maximumAmount { get; set; }
 		[Description("Depth to calculate PAWC (mm)")]
-		public double Top_Depth { get; set; }
+		public double depthPAWC { get; set; }
 	   
+		public enum answerType
+		{
+			/// <summary>a positive answer</summary>
+			yes,
+			/// <summary>a negative answer</summary>
+			no
+		}
+
 		//Class members
-		[XmlIgnore] private bool IrrigationIsAvailable { get; set; }
-		[XmlIgnore] public bool SeasonIsOpen { get; set; }
-		[XmlIgnore] private bool CropIsActive { get; set; }
-		[XmlIgnore] private bool IrrigatorIsAvailable { get; set; }
-		[XmlIgnore] private bool SoilIsDry { get; set; }
-		[XmlIgnore] public double Top_DUL { get; set; }
-		[XmlIgnore] public double Top_Refull { get; set; }
-		[XmlIgnore] public double Top_Trigger { get; set; }
-		[XmlIgnore] public double Top_LL { get; set; }
-		[XmlIgnore] public double Top_SW { get; set; }
-		[XmlIgnore] public double Accumulated_depth { get; set; }
-		[XmlIgnore] public double Days_since_irrigation { get; set; }
-		[XmlIgnore] public double Amount_to_apply { get; set; }
-		[XmlIgnore] public double Season_Application { get; set; }
+		[XmlIgnore] public double TopSWdeficit { get; set; }
+		[XmlIgnore] public double TopSWC { get; set; }
+		[XmlIgnore] public double DaysSinceIrrigation { get; set; }
+		[XmlIgnore] public double AmountToApply { get; set; }
+		[XmlIgnore] public double SeasonAppliedAmount { get; set; }
 		
-		//Variables for date logic testing
-		[XmlIgnore] public string StartString { get; set; }
-		[XmlIgnore] public string EndString { get; set; }
-		[XmlIgnore] public DateTime StartDate { get; set; }
-		[XmlIgnore] public DateTime EndDate { get; set; }
-		[XmlIgnore] public int TodayYear { get; set; }
-		[XmlIgnore] public int TodayMonth { get; set; }
-		[XmlIgnore] public int StartMonth { get; set; }
-		[XmlIgnore] public int EndMonth { get; set; }
-		[XmlIgnore] public int TodayDay { get; set; }
-		[XmlIgnore] public int StartDay { get; set; }
-		[XmlIgnore] public int EndDay { get; set; }
-	   
+		private bool IrrigationIsAllowed { get; set; }
+		private bool SeasonIsOpen { get; set; }
+		private bool CropIsActive { get; set; }
+		private bool IrrigatorIsAvailable { get; set; }
+		private bool SoilIsDry { get; set; }
+
+		private DateTime StartDate;
+		private DateTime EndDate;
+		private double TopDUL;
+		private double TopLL;
+		private int nLayers;
 	
 		//Calculate static soil variables
 		[EventSubscribe("StartOfSimulation")]
 		private void OnStartOfSimulation(object sender, EventArgs e)
 		{   
-			//Calculated soil water variables
-			Accumulated_depth = 0;
-			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+			//Set the season dates
+			StartDate = DateTime.Parse(seasonStart + "-" + Clock.Today.Year.ToString());
+			EndDate = DateTime.Parse(seasonEnd + "-" + Clock.Today.Year.ToString());
+			
+			//Can we irrigate at all?
+			IrrigationIsAllowed = false; 
+			if (allowIrrigation == answerType.yes)
+				IrrigationIsAllowed = true; 
+
+			//Calculate soil water variables
+			double depthFromSurface = 0.0;
+			double fracLayer = 0.0;
+			nLayers = Soil.SoilWater.Thickness.Length;
+			for (int layer = 0; layer < nLayers; layer++)
 			{
-				Top_LL += Soil.SoilWater.LL15mm[layer];
-				Top_DUL += Soil.SoilWater.DULmm[layer];
-				Accumulated_depth += Soil.SoilWater.Thickness[layer];
+				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
+				TopLL += Soil.SoilWater.LL15mm[layer] * fracLayer;
+				TopDUL += Soil.SoilWater.DULmm[layer] * fracLayer;
+				depthFromSurface += Soil.SoilWater.Thickness[layer];
+				if (depthFromSurface >= depthPAWC)
+					layer = nLayers;
 			}
-			Top_Refull = Top_LL + (Top_DUL - Top_LL) * Refull_Frac;
 		}
-	   
-	  
+	   	  
 		//Determine daily requirement for irrigation
 		[EventSubscribe("StartOfDay")]
 		private void OnStartOfDay(object sender, EventArgs e)
-		{ 
-			//Can we irrigate?
-			IrrigationIsAvailable = false; 
-			if (Irrigation_Yes_No == "yes")
-				IrrigationIsAvailable = true; 
-	
-			//Are we Allowed to Irrigate?
-			TodayYear = Clock.Today.Year;
-			StartString = Season_Start + "-" + TodayYear.ToString();
-			EndString = Season_End + "-" + TodayYear.ToString();
-			StartDate = DateTime.Parse(StartString);
-			EndDate = DateTime.Parse(EndString);
-			TodayMonth = Clock.Today.Month;
-			TodayDay = Clock.Today.Day;
-			StartDay = StartDate.Day;
-			StartMonth = StartDate.Month;
-			EndDay = EndDate.Day;
-			EndMonth = EndDate.Month;
-		  
-			SeasonIsOpen = false;
-			//if we are in the spring and after the start date then yes
-			if ((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
-				SeasonIsOpen = true;
-			//if we are in the autumn and before the end date then yes
-			if ((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
-				SeasonIsOpen = true;
-		  
+		{
+			//Can we irrigate today?		  
+			SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);
+
 			//Is there a crop in the ground that needs irrigation?
 			CropIsActive = false;
-			if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
+			if ((existingCrop != null) && (existingCrop.IsAlive))
 				CropIsActive = true;
+			//if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))
 	      
 			//Is the irrigator available?
 			IrrigatorIsAvailable = false;
-			Days_since_irrigation += 1;
-			if (Days_since_irrigation >= Return_days)
+			DaysSinceIrrigation += 1;
+			if (DaysSinceIrrigation >= returndays)
 				IrrigatorIsAvailable = true;
 	      
 			//Is the soil dry enough to require irrigation?
 			SoilIsDry = false;
-			double CurrentRootDepth = 0;
-			double RootDepth = SCUM.Root.Depth;
-			CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
-	      
-			double RelativeRootDepth = Math.Min(1.0, CurrentRootDepth / Top_Depth);
-			Top_Trigger = Math.Min(Top_Refull, Top_DUL - (Top_DUL - Top_LL) * RelativeRootDepth * (1 - Trigger_Frac)); 
-	      
-			Accumulated_depth = 0;
-			Top_SW = 0;
-			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+			double depthFromSurface = 0.0;
+			double fracLayer = 0.0;
+			TopSWC = 0.0;
+			for (int layer = 0; layer < nLayers; layer++)
+			//for (int layer = 0; depthFromSurface < depthPAWC + Soil.SoilWater.Thickness[layer]; layer++)
 			{
-				Top_SW += Soil.SoilWater.SWmm[layer];
-				Accumulated_depth += Soil.SoilWater.Thickness[layer];
+				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
+				TopSWC += Soil.SoilWater.SWmm[layer] * fracLayer;
+				depthFromSurface += Soil.SoilWater.Thickness[layer];
+				if (depthFromSurface >= depthPAWC)
+					layer = nLayers;
 			}
-			if (Top_SW <= Top_Trigger)
+			
+			TopSWdeficit = TopSWC - TopDUL;
+			if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)
 				SoilIsDry = true;
 	            
-			//Lets bloody well irrigate then!!!!
-			if ((IrrigationIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (IrrigatorIsAvailable) && (SoilIsDry)) //The conditions are rife for irrigation
+			//Are all the conditions ratifying irrigation
+			if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)
 			{
-				Amount_to_apply = Math.Min(Top_Refull - Top_SW, Maximum_Irrigation_Amount);
-				Amount_to_apply = Math.Min(Amount_to_apply, Season_Allocation - Season_Application); 
-				Amount_to_apply = Math.Max(Amount_to_apply, 0.0);
-				Irrigation.Apply(Amount_to_apply);
-				Days_since_irrigation = 0;
-				Season_Application += Amount_to_apply;
-				summary.WriteMessage(this, "Automatic Irrigation");
-            
+				//Lets bloody well irrigate then!!!!
+				AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;
+				AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));
+				Irrigation.Apply(AmountToApply);
+				DaysSinceIrrigation = 0;
+				SeasonAppliedAmount += AmountToApply;
 			}
+		}
+		
+		///Checks whether theDate is between iniDate and endDate (non-year specific)
+		private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)
+		{
+			bool result = false;
+			if (iniDate.DayOfYear < endDate.DayOfYear)
+			{
+				// period is within one year, ex: summer in the northern hemisphere
+				if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))
+					result = true;
+			}
+			else
+			{
+				// period goes over the end of the year, ex: summer in the southern hemisphere
+				if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))
+					result = true;
+			}
+			
+			return result;
 		}
 	}
 }
-             
-             ]]></Code>
+]]></Code>
               </Manager>
               <Manager>
                 <Name>ExtraVariables</Name>
@@ -7464,8 +7479,9 @@ namespace Models
             </MicroClimate>
             <Plant>
               <Name>Chicory</Name>
-              <ResourceName>SCUM</ResourceName>
-              <CropType>SCUM</CropType>
+              <ResourceName>Chicory</ResourceName>
+              <CropType>Chicory</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -11063,15 +11079,15 @@ namespace Models
               <Manager>
                 <Name>AutomaticIrrigation</Name>
                 <Script>
-                  <Irrigation_Yes_No>yes</Irrigation_Yes_No>
-                  <Season_Start>1-Oct</Season_Start>
-                  <Season_End>30-Jul</Season_End>
-                  <Season_Allocation>10000</Season_Allocation>
-                  <Refull_Frac>0.9</Refull_Frac>
-                  <Trigger_Frac>0.26</Trigger_Frac>
-                  <Return_days>3</Return_days>
-                  <Maximum_Irrigation_Amount>30</Maximum_Irrigation_Amount>
-                  <Top_Depth>120</Top_Depth>
+                  <allowIrrigation>yes</allowIrrigation>
+                  <seasonStart>01-Oct</seasonStart>
+                  <seasonEnd>30-Jul</seasonEnd>
+                  <seasonsAllocation>10000</seasonsAllocation>
+                  <triggerDeficit>75</triggerDeficit>
+                  <targetDeficit>90</targetDeficit>
+                  <returndays>3</returndays>
+                  <maximumAmount>30</maximumAmount>
+                  <depthPAWC>300</depthPAWC>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -11093,151 +11109,155 @@ namespace Models
 		[Link] Irrigation Irrigation;
 		[Link] Clock Clock;
 		[Link] Soil Soil;
-		[Link] Plant SCUM;
+		[Link(IsOptional = true)] Plant existingCrop;
 	   
 		//User inputs from properties tab
-		[Description("Irrigation on (yes or no)")]
-		public string Irrigation_Yes_No { get; set; }
-		[Description("SeasonStart (dd-MMM)")]
-		public string Season_Start { get; set; }
-		[Description("SeasonEnd (dd-MMM)")]
-		public string Season_End { get; set; }
-		[Description("Season Allocation (mm)")]
-		public double Season_Allocation { get; set; }
-		[Description("% PAWC to refill soil to (0-1)")]
-		public double Refull_Frac { get; set; }
-		[Description("% PAWC to trigger irrigation (0-1)")]
-		public double Trigger_Frac { get; set; }
+		[Description("Turn irrigation on?")]
+		public answerType allowIrrigation { get; set; }
+		[Description("Start of irrigation season (dd-MMM)")]
+		public string seasonStart { get; set; }
+		[Description("End of irrigation season (dd-MMM)")]
+		public string seasonEnd { get; set; }
+		[Description("Season allocation (mm)")]
+		public double seasonsAllocation { get; set; }
+		[Description("Deficit to trigger irrigation (% PAWC)")]
+		public double triggerDeficit { get; set; }
+		[Description("Deficit to stop irrigaton (% PAWC)")]
+		public double targetDeficit { get; set; }
 		[Description("Minimum days for irrigation to return")]
-		public double Return_days { get; set; }
-		[Description("Maximum irrigation application (mm)")]
-		public double Maximum_Irrigation_Amount { get; set; }
+		public double returndays { get; set; }
+		[Description("Maximum irrigation application (mm/day)")]
+		public double maximumAmount { get; set; }
 		[Description("Depth to calculate PAWC (mm)")]
-		public double Top_Depth { get; set; }
+		public double depthPAWC { get; set; }
 	   
+		public enum answerType
+		{
+			/// <summary>a positive answer</summary>
+			yes,
+			/// <summary>a negative answer</summary>
+			no
+		}
+
 		//Class members
-		[XmlIgnore] private bool IrrigationIsAvailable { get; set; }
-		[XmlIgnore] public bool SeasonIsOpen { get; set; }
-		[XmlIgnore] private bool CropIsActive { get; set; }
-		[XmlIgnore] private bool IrrigatorIsAvailable { get; set; }
-		[XmlIgnore] private bool SoilIsDry { get; set; }
-		[XmlIgnore] public double Top_DUL { get; set; }
-		[XmlIgnore] public double Top_Refull { get; set; }
-		[XmlIgnore] public double Top_Trigger { get; set; }
-		[XmlIgnore] public double Top_LL { get; set; }
-		[XmlIgnore] public double Top_SW { get; set; }
-		[XmlIgnore] public double Accumulated_depth { get; set; }
-		[XmlIgnore] public double Days_since_irrigation { get; set; }
-		[XmlIgnore] public double Amount_to_apply { get; set; }
-		[XmlIgnore] public double Season_Application { get; set; }
+		[XmlIgnore] public double TopSWdeficit { get; set; }
+		[XmlIgnore] public double TopSWC { get; set; }
+		[XmlIgnore] public double DaysSinceIrrigation { get; set; }
+		[XmlIgnore] public double AmountToApply { get; set; }
+		[XmlIgnore] public double SeasonAppliedAmount { get; set; }
 		
-		//Variables for date logic testing
-		[XmlIgnore] public string StartString { get; set; }
-		[XmlIgnore] public string EndString { get; set; }
-		[XmlIgnore] public DateTime StartDate { get; set; }
-		[XmlIgnore] public DateTime EndDate { get; set; }
-		[XmlIgnore] public int TodayYear { get; set; }
-		[XmlIgnore] public int TodayMonth { get; set; }
-		[XmlIgnore] public int StartMonth { get; set; }
-		[XmlIgnore] public int EndMonth { get; set; }
-		[XmlIgnore] public int TodayDay { get; set; }
-		[XmlIgnore] public int StartDay { get; set; }
-		[XmlIgnore] public int EndDay { get; set; }
-	   
+		private bool IrrigationIsAllowed { get; set; }
+		private bool SeasonIsOpen { get; set; }
+		private bool CropIsActive { get; set; }
+		private bool IrrigatorIsAvailable { get; set; }
+		private bool SoilIsDry { get; set; }
+
+		private DateTime StartDate;
+		private DateTime EndDate;
+		private double TopDUL;
+		private double TopLL;
+		private int nLayers;
 	
 		//Calculate static soil variables
 		[EventSubscribe("StartOfSimulation")]
 		private void OnStartOfSimulation(object sender, EventArgs e)
 		{   
-			//Calculated soil water variables
-			Accumulated_depth = 0;
-			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+			//Set the season dates
+			StartDate = DateTime.Parse(seasonStart + "-" + Clock.Today.Year.ToString());
+			EndDate = DateTime.Parse(seasonEnd + "-" + Clock.Today.Year.ToString());
+			
+			//Can we irrigate at all?
+			IrrigationIsAllowed = false; 
+			if (allowIrrigation == answerType.yes)
+				IrrigationIsAllowed = true; 
+
+			//Calculate soil water variables
+			double depthFromSurface = 0.0;
+			double fracLayer = 0.0;
+			nLayers = Soil.SoilWater.Thickness.Length;
+			for (int layer = 0; layer < nLayers; layer++)
 			{
-				Top_LL += Soil.SoilWater.LL15mm[layer];
-				Top_DUL += Soil.SoilWater.DULmm[layer];
-				Accumulated_depth += Soil.SoilWater.Thickness[layer];
+				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
+				TopLL += Soil.SoilWater.LL15mm[layer] * fracLayer;
+				TopDUL += Soil.SoilWater.DULmm[layer] * fracLayer;
+				depthFromSurface += Soil.SoilWater.Thickness[layer];
+				if (depthFromSurface >= depthPAWC)
+					layer = nLayers;
 			}
-			Top_Refull = Top_LL + (Top_DUL - Top_LL) * Refull_Frac;
 		}
-	   
-	  
+	   	  
 		//Determine daily requirement for irrigation
 		[EventSubscribe("StartOfDay")]
 		private void OnStartOfDay(object sender, EventArgs e)
-		{ 
-			//Can we irrigate?
-			IrrigationIsAvailable = false; 
-			if (Irrigation_Yes_No == "yes")
-				IrrigationIsAvailable = true; 
-	
-			//Are we Allowed to Irrigate?
-			TodayYear = Clock.Today.Year;
-			StartString = Season_Start + "-" + TodayYear.ToString();
-			EndString = Season_End + "-" + TodayYear.ToString();
-			StartDate = DateTime.Parse(StartString);
-			EndDate = DateTime.Parse(EndString);
-			TodayMonth = Clock.Today.Month;
-			TodayDay = Clock.Today.Day;
-			StartDay = StartDate.Day;
-			StartMonth = StartDate.Month;
-			EndDay = EndDate.Day;
-			EndMonth = EndDate.Month;
-		  
-			SeasonIsOpen = false;
-			//if we are in the spring and after the start date then yes
-			if ((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
-				SeasonIsOpen = true;
-			//if we are in the autumn and before the end date then yes
-			if ((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
-				SeasonIsOpen = true;
-		  
+		{
+			//Can we irrigate today?		  
+			SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);
+
 			//Is there a crop in the ground that needs irrigation?
 			CropIsActive = false;
-			if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
+			if ((existingCrop != null) && (existingCrop.IsAlive))
 				CropIsActive = true;
+			//if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))
 	      
 			//Is the irrigator available?
 			IrrigatorIsAvailable = false;
-			Days_since_irrigation += 1;
-			if (Days_since_irrigation >= Return_days)
+			DaysSinceIrrigation += 1;
+			if (DaysSinceIrrigation >= returndays)
 				IrrigatorIsAvailable = true;
 	      
 			//Is the soil dry enough to require irrigation?
 			SoilIsDry = false;
-			double CurrentRootDepth = 0;
-			double RootDepth = SCUM.Root.Depth;
-			CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
-	      
-			double RelativeRootDepth = Math.Min(1.0, CurrentRootDepth / Top_Depth);
-			Top_Trigger = Math.Min(Top_Refull, Top_DUL - (Top_DUL - Top_LL) * RelativeRootDepth * (1 - Trigger_Frac)); 
-	      
-			Accumulated_depth = 0;
-			Top_SW = 0;
-			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+			double depthFromSurface = 0.0;
+			double fracLayer = 0.0;
+			TopSWC = 0.0;
+			for (int layer = 0; layer < nLayers; layer++)
+			//for (int layer = 0; depthFromSurface < depthPAWC + Soil.SoilWater.Thickness[layer]; layer++)
 			{
-				Top_SW += Soil.SoilWater.SWmm[layer];
-				Accumulated_depth += Soil.SoilWater.Thickness[layer];
+				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
+				TopSWC += Soil.SoilWater.SWmm[layer] * fracLayer;
+				depthFromSurface += Soil.SoilWater.Thickness[layer];
+				if (depthFromSurface >= depthPAWC)
+					layer = nLayers;
 			}
-			if (Top_SW <= Top_Trigger)
+			
+			TopSWdeficit = TopSWC - TopDUL;
+			if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)
 				SoilIsDry = true;
 	            
-			//Lets bloody well irrigate then!!!!
-			if ((IrrigationIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (IrrigatorIsAvailable) && (SoilIsDry)) //The conditions are rife for irrigation
+			//Are all the conditions ratifying irrigation
+			if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)
 			{
-				Amount_to_apply = Math.Min(Top_Refull - Top_SW, Maximum_Irrigation_Amount);
-				Amount_to_apply = Math.Min(Amount_to_apply, Season_Allocation - Season_Application); 
-				Amount_to_apply = Math.Max(Amount_to_apply, 0.0);
-				Irrigation.Apply(Amount_to_apply);
-				Days_since_irrigation = 0;
-				Season_Application += Amount_to_apply;
-				summary.WriteMessage(this, "Automatic Irrigation");
-            
+				//Lets bloody well irrigate then!!!!
+				AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;
+				AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));
+				Irrigation.Apply(AmountToApply);
+				DaysSinceIrrigation = 0;
+				SeasonAppliedAmount += AmountToApply;
 			}
+		}
+		
+		///Checks whether theDate is between iniDate and endDate (non-year specific)
+		private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)
+		{
+			bool result = false;
+			if (iniDate.DayOfYear < endDate.DayOfYear)
+			{
+				// period is within one year, ex: summer in the northern hemisphere
+				if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))
+					result = true;
+			}
+			else
+			{
+				// period goes over the end of the year, ex: summer in the southern hemisphere
+				if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))
+					result = true;
+			}
+			
+			return result;
 		}
 	}
 }
-             
-             ]]></Code>
+]]></Code>
               </Manager>
               <Operations>
                 <Name>DefoliationSchedule</Name>
@@ -11692,8 +11712,9 @@ namespace Models
             </MicroClimate>
             <Plant>
               <Name>Chicory</Name>
-              <ResourceName>SCUM</ResourceName>
-              <CropType>SCUM</CropType>
+              <ResourceName>Chicory</ResourceName>
+              <CropType>Chicory</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -16122,8 +16143,9 @@ namespace Models
               </Report>
               <Plant>
                 <Name>Chicory</Name>
-                <ResourceName>SCUM</ResourceName>
-                <CropType>SCUM</CropType>
+                <ResourceName>Chicory</ResourceName>
+                <CropType>Chicory</CropType>
+                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <Soil>
                 <Name>SoilHorotiu</Name>
@@ -20596,8 +20618,9 @@ namespace Models
             </Report>
             <Plant>
               <Name>Chicory</Name>
-              <ResourceName>SCUM</ResourceName>
-              <CropType>SCUM</CropType>
+              <ResourceName>Chicory</ResourceName>
+              <CropType>Chicory</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>Wakanui-Iverseen</Name>
@@ -24715,15 +24738,15 @@ TODO: check defoilation residual heights
               <Manager>
                 <Name>AutomaticIrrigation</Name>
                 <Script>
-                  <Irrigation_Yes_No>yes</Irrigation_Yes_No>
-                  <Season_Start>1-Oct</Season_Start>
-                  <Season_End>30-March</Season_End>
-                  <Season_Allocation>10000</Season_Allocation>
-                  <Refull_Frac>0.9</Refull_Frac>
-                  <Trigger_Frac>0.75</Trigger_Frac>
-                  <Return_days>7</Return_days>
-                  <Maximum_Irrigation_Amount>35</Maximum_Irrigation_Amount>
-                  <Top_Depth>300</Top_Depth>
+                  <allowIrrigation>yes</allowIrrigation>
+                  <seasonStart>01-Oct</seasonStart>
+                  <seasonEnd>30-Mar</seasonEnd>
+                  <seasonsAllocation>10000</seasonsAllocation>
+                  <triggerDeficit>75</triggerDeficit>
+                  <targetDeficit>90</targetDeficit>
+                  <returndays>7</returndays>
+                  <maximumAmount>35</maximumAmount>
+                  <depthPAWC>300</depthPAWC>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -24745,151 +24768,155 @@ namespace Models
 		[Link] Irrigation Irrigation;
 		[Link] Clock Clock;
 		[Link] Soil Soil;
-		[Link] Plant SCUM;
+		[Link(IsOptional = true)] Plant existingCrop;
 	   
 		//User inputs from properties tab
-		[Description("Irrigation on (yes or no)")]
-		public string Irrigation_Yes_No { get; set; }
-		[Description("SeasonStart (dd-MMM)")]
-		public string Season_Start { get; set; }
-		[Description("SeasonEnd (dd-MMM)")]
-		public string Season_End { get; set; }
-		[Description("Season Allocation (mm)")]
-		public double Season_Allocation { get; set; }
-		[Description("% PAWC to refill soil to (0-1)")]
-		public double Refull_Frac { get; set; }
-		[Description("% PAWC to trigger irrigation (0-1)")]
-		public double Trigger_Frac { get; set; }
+		[Description("Turn irrigation on?")]
+		public answerType allowIrrigation { get; set; }
+		[Description("Start of irrigation season (dd-MMM)")]
+		public string seasonStart { get; set; }
+		[Description("End of irrigation season (dd-MMM)")]
+		public string seasonEnd { get; set; }
+		[Description("Season allocation (mm)")]
+		public double seasonsAllocation { get; set; }
+		[Description("Deficit to trigger irrigation (% PAWC)")]
+		public double triggerDeficit { get; set; }
+		[Description("Deficit to stop irrigaton (% PAWC)")]
+		public double targetDeficit { get; set; }
 		[Description("Minimum days for irrigation to return")]
-		public double Return_days { get; set; }
-		[Description("Maximum irrigation application (mm)")]
-		public double Maximum_Irrigation_Amount { get; set; }
+		public double returndays { get; set; }
+		[Description("Maximum irrigation application (mm/day)")]
+		public double maximumAmount { get; set; }
 		[Description("Depth to calculate PAWC (mm)")]
-		public double Top_Depth { get; set; }
+		public double depthPAWC { get; set; }
 	   
+		public enum answerType
+		{
+			/// <summary>a positive answer</summary>
+			yes,
+			/// <summary>a negative answer</summary>
+			no
+		}
+
 		//Class members
-		[XmlIgnore] private bool IrrigationIsAvailable { get; set; }
-		[XmlIgnore] public bool SeasonIsOpen { get; set; }
-		[XmlIgnore] private bool CropIsActive { get; set; }
-		[XmlIgnore] private bool IrrigatorIsAvailable { get; set; }
-		[XmlIgnore] private bool SoilIsDry { get; set; }
-		[XmlIgnore] public double Top_DUL { get; set; }
-		[XmlIgnore] public double Top_Refull { get; set; }
-		[XmlIgnore] public double Top_Trigger { get; set; }
-		[XmlIgnore] public double Top_LL { get; set; }
-		[XmlIgnore] public double Top_SW { get; set; }
-		[XmlIgnore] public double Accumulated_depth { get; set; }
-		[XmlIgnore] public double Days_since_irrigation { get; set; }
-		[XmlIgnore] public double Amount_to_apply { get; set; }
-		[XmlIgnore] public double Season_Application { get; set; }
+		[XmlIgnore] public double TopSWdeficit { get; set; }
+		[XmlIgnore] public double TopSWC { get; set; }
+		[XmlIgnore] public double DaysSinceIrrigation { get; set; }
+		[XmlIgnore] public double AmountToApply { get; set; }
+		[XmlIgnore] public double SeasonAppliedAmount { get; set; }
 		
-		//Variables for date logic testing
-		[XmlIgnore] public string StartString { get; set; }
-		[XmlIgnore] public string EndString { get; set; }
-		[XmlIgnore] public DateTime StartDate { get; set; }
-		[XmlIgnore] public DateTime EndDate { get; set; }
-		[XmlIgnore] public int TodayYear { get; set; }
-		[XmlIgnore] public int TodayMonth { get; set; }
-		[XmlIgnore] public int StartMonth { get; set; }
-		[XmlIgnore] public int EndMonth { get; set; }
-		[XmlIgnore] public int TodayDay { get; set; }
-		[XmlIgnore] public int StartDay { get; set; }
-		[XmlIgnore] public int EndDay { get; set; }
-	   
+		private bool IrrigationIsAllowed { get; set; }
+		private bool SeasonIsOpen { get; set; }
+		private bool CropIsActive { get; set; }
+		private bool IrrigatorIsAvailable { get; set; }
+		private bool SoilIsDry { get; set; }
+
+		private DateTime StartDate;
+		private DateTime EndDate;
+		private double TopDUL;
+		private double TopLL;
+		private int nLayers;
 	
 		//Calculate static soil variables
 		[EventSubscribe("StartOfSimulation")]
 		private void OnStartOfSimulation(object sender, EventArgs e)
 		{   
-			//Calculated soil water variables
-			Accumulated_depth = 0;
-			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+			//Set the season dates
+			StartDate = DateTime.Parse(seasonStart + "-" + Clock.Today.Year.ToString());
+			EndDate = DateTime.Parse(seasonEnd + "-" + Clock.Today.Year.ToString());
+			
+			//Can we irrigate at all?
+			IrrigationIsAllowed = false; 
+			if (allowIrrigation == answerType.yes)
+				IrrigationIsAllowed = true; 
+
+			//Calculate soil water variables
+			double depthFromSurface = 0.0;
+			double fracLayer = 0.0;
+			nLayers = Soil.SoilWater.Thickness.Length;
+			for (int layer = 0; layer < nLayers; layer++)
 			{
-				Top_LL += Soil.SoilWater.LL15mm[layer];
-				Top_DUL += Soil.SoilWater.DULmm[layer];
-				Accumulated_depth += Soil.SoilWater.Thickness[layer];
+				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
+				TopLL += Soil.SoilWater.LL15mm[layer] * fracLayer;
+				TopDUL += Soil.SoilWater.DULmm[layer] * fracLayer;
+				depthFromSurface += Soil.SoilWater.Thickness[layer];
+				if (depthFromSurface >= depthPAWC)
+					layer = nLayers;
 			}
-			Top_Refull = Top_LL + (Top_DUL - Top_LL) * Refull_Frac;
 		}
-	   
-	  
+	   	  
 		//Determine daily requirement for irrigation
 		[EventSubscribe("StartOfDay")]
 		private void OnStartOfDay(object sender, EventArgs e)
-		{ 
-			//Can we irrigate?
-			IrrigationIsAvailable = false; 
-			if (Irrigation_Yes_No == "yes")
-				IrrigationIsAvailable = true; 
-	
-			//Are we Allowed to Irrigate?
-			TodayYear = Clock.Today.Year;
-			StartString = Season_Start + "-" + TodayYear.ToString();
-			EndString = Season_End + "-" + TodayYear.ToString();
-			StartDate = DateTime.Parse(StartString);
-			EndDate = DateTime.Parse(EndString);
-			TodayMonth = Clock.Today.Month;
-			TodayDay = Clock.Today.Day;
-			StartDay = StartDate.Day;
-			StartMonth = StartDate.Month;
-			EndDay = EndDate.Day;
-			EndMonth = EndDate.Month;
-		  
-			SeasonIsOpen = false;
-			//if we are in the spring and after the start date then yes
-			if ((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
-				SeasonIsOpen = true;
-			//if we are in the autumn and before the end date then yes
-			if ((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
-				SeasonIsOpen = true;
-		  
+		{
+			//Can we irrigate today?		  
+			SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);
+
 			//Is there a crop in the ground that needs irrigation?
 			CropIsActive = false;
-			if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
+			if ((existingCrop != null) && (existingCrop.IsAlive))
 				CropIsActive = true;
+			//if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))
 	      
 			//Is the irrigator available?
 			IrrigatorIsAvailable = false;
-			Days_since_irrigation += 1;
-			if (Days_since_irrigation >= Return_days)
+			DaysSinceIrrigation += 1;
+			if (DaysSinceIrrigation >= returndays)
 				IrrigatorIsAvailable = true;
 	      
 			//Is the soil dry enough to require irrigation?
 			SoilIsDry = false;
-			double CurrentRootDepth = 0;
-			double RootDepth = SCUM.Root.Depth;
-			CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
-	      
-			double RelativeRootDepth = Math.Min(1.0, CurrentRootDepth / Top_Depth);
-			Top_Trigger = Math.Min(Top_Refull, Top_DUL - (Top_DUL - Top_LL) * RelativeRootDepth * (1 - Trigger_Frac)); 
-	      
-			Accumulated_depth = 0;
-			Top_SW = 0;
-			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+			double depthFromSurface = 0.0;
+			double fracLayer = 0.0;
+			TopSWC = 0.0;
+			for (int layer = 0; layer < nLayers; layer++)
+			//for (int layer = 0; depthFromSurface < depthPAWC + Soil.SoilWater.Thickness[layer]; layer++)
 			{
-				Top_SW += Soil.SoilWater.SWmm[layer];
-				Accumulated_depth += Soil.SoilWater.Thickness[layer];
+				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
+				TopSWC += Soil.SoilWater.SWmm[layer] * fracLayer;
+				depthFromSurface += Soil.SoilWater.Thickness[layer];
+				if (depthFromSurface >= depthPAWC)
+					layer = nLayers;
 			}
-			if (Top_SW <= Top_Trigger)
+			
+			TopSWdeficit = TopSWC - TopDUL;
+			if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)
 				SoilIsDry = true;
 	            
-			//Lets bloody well irrigate then!!!!
-			if ((IrrigationIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (IrrigatorIsAvailable) && (SoilIsDry)) //The conditions are rife for irrigation
+			//Are all the conditions ratifying irrigation
+			if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)
 			{
-				Amount_to_apply = Math.Min(Top_Refull - Top_SW, Maximum_Irrigation_Amount);
-				Amount_to_apply = Math.Min(Amount_to_apply, Season_Allocation - Season_Application); 
-				Amount_to_apply = Math.Max(Amount_to_apply, 0.0);
-				Irrigation.Apply(Amount_to_apply);
-				Days_since_irrigation = 0;
-				Season_Application += Amount_to_apply;
-				summary.WriteMessage(this, "Automatic Irrigation");
-            
+				//Lets bloody well irrigate then!!!!
+				AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;
+				AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));
+				Irrigation.Apply(AmountToApply);
+				DaysSinceIrrigation = 0;
+				SeasonAppliedAmount += AmountToApply;
 			}
+		}
+		
+		///Checks whether theDate is between iniDate and endDate (non-year specific)
+		private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)
+		{
+			bool result = false;
+			if (iniDate.DayOfYear < endDate.DayOfYear)
+			{
+				// period is within one year, ex: summer in the northern hemisphere
+				if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))
+					result = true;
+			}
+			else
+			{
+				// period goes over the end of the year, ex: summer in the southern hemisphere
+				if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))
+					result = true;
+			}
+			
+			return result;
 		}
 	}
 }
-             
-             ]]></Code>
+]]></Code>
               </Manager>
               <Operations>
                 <Name>Sowing</Name>
@@ -25085,8 +25112,9 @@ namespace Models
             </Report>
             <Plant>
               <Name>Chicory</Name>
-              <ResourceName>SCUM</ResourceName>
-              <CropType>SCUM</CropType>
+              <ResourceName>Chicory</ResourceName>
+              <CropType>Chicory</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Soil>
               <Name>WakanuiIversen</Name>
@@ -29580,8 +29608,9 @@ namespace Models
           </MicroClimate>
           <Plant>
             <Name>Chicory</Name>
-            <ResourceName>SCUM</ResourceName>
-            <CropType>SCUM</CropType>
+            <ResourceName>Chicory</ResourceName>
+            <CropType>Chicory</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -34162,8 +34191,9 @@ namespace Models
             </Soil>
             <Plant>
               <Name>Chicory</Name>
-              <ResourceName>SCUM</ResourceName>
-              <CropType>SCUM</CropType>
+              <ResourceName>Chicory</ResourceName>
+              <CropType>Chicory</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>Report</Name>
@@ -38905,8 +38935,9 @@ namespace Models
             </Soil>
             <Plant>
               <Name>Chicory</Name>
-              <ResourceName>SCUM</ResourceName>
-              <CropType>SCUM</CropType>
+              <ResourceName>Chicory</ResourceName>
+              <CropType>Chicory</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>Report</Name>
@@ -43121,8 +43152,9 @@ namespace Models
             </Soil>
             <Plant>
               <Name>Chicory</Name>
-              <ResourceName>SCUM</ResourceName>
-              <CropType>SCUM</CropType>
+              <ResourceName>Chicory</ResourceName>
+              <CropType>Chicory</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>Report</Name>
