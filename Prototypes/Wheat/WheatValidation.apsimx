@@ -583,7 +583,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>1.4</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].LeafTipsAppeared</XProperty>
+            <XProperty>[Leaf].AppearedCohortNo</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>BasePhyllochron</Name>
@@ -2522,6 +2522,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.Y = 0,1.204,0</Command>
             <Command>[Leaf].ExtinctionCoeff.PotentialExtinctionCoeff.XYPairs.Y = 1.0,1.0</Command>
             <Command>[Grain].NumberFunction.ValueToHold.GrainsPerGramOfStem.Value = 20</Command>
+            <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.Value = 3000</Command>
           </Cultivar>
           <Cultivar>
             <Name>Weston</Name>
@@ -2807,6 +2808,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].Structure.MainStemPopn</string>
         <string>[Wheat].SowingData.Cultivar</string>
         <string>[Wheat].SowingDate.DayOfYear</string>
+        <string>[Wheat].Leaf.CohortMaxSize</string>
       </VariableNames>
       <EventNames>
         <string>[Wheat].Harvesting</string>
@@ -5366,6 +5368,7 @@ VShort duration variety released in New Zealand by Pioneer
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>Observed</string>
+        <string>MaxLeafSize</string>
       </SheetNames>
     </ExcelInput>
     <PredictedObserved>
@@ -6010,6 +6013,145 @@ VShort duration variety released in New Zealand by Pioneer
       <ObservedTableName>Observed</ObservedTableName>
       <FieldNameUsedForMatch>Wheat.Phenology.CurrentStageName</FieldNameUsedForMatch>
     </PredictedObserved>
+    <PredictedObserved>
+      <Name>LeafSizeObsPred</Name>
+      <Tests>
+        <Name>Tests</Name>
+        <AcceptedStats>
+          <RegrStats>
+            <Name>Wheat.AboveGround.N</Name>
+            <n>43</n>
+            <Slope>0.96777673279169252</Slope>
+            <Intercept>0.17186700516762699</Intercept>
+            <SEslope>0.072535861876682567</SEslope>
+            <SEintercept>0.95299918529012</SEintercept>
+            <R2>0.81279407705154938</R2>
+            <RMSE>2.8782532748646337</RMSE>
+            <NSE>0.78216971202955765</NSE>
+            <ME>-0.20195652163019484</ME>
+            <MAE>2.2163782780572818</MAE>
+            <RSR>0.46126398875260893</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.AboveGround.Wt</Name>
+            <n>107</n>
+            <Slope>1.0655922935573965</Slope>
+            <Intercept>-428.03557999400209</Intercept>
+            <SEslope>0.042645399992916951</SEslope>
+            <SEintercept>70.657721282368726</SEintercept>
+            <R2>0.85603893251328145</R2>
+            <RMSE>447.47361471326127</RMSE>
+            <NSE>0.57464643235277624</NSE>
+            <ME>-329.11375526542116</ME>
+            <MAE>379.96451324192077</MAE>
+            <RSR>0.64913658089793913</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Grain.N</Name>
+            <n>78</n>
+            <Slope>0.77556146353180622</Slope>
+            <Intercept>-1.5590431578910113</Intercept>
+            <SEslope>0.062921330900622172</SEslope>
+            <SEintercept>0.63220578623249513</SEintercept>
+            <R2>0.66656076735583958</R2>
+            <RMSE>4.3257106787007018</RMSE>
+            <NSE>-0.18888079297055604</NSE>
+            <ME>-3.630872971610926</ME>
+            <MAE>3.6580899006981431</MAE>
+            <RSR>1.0833460811403786</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Grain.Nconc</Name>
+            <n>79</n>
+            <Slope>-0.040642809081711286</Slope>
+            <Intercept>0.027808159443869718</Intercept>
+            <SEslope>0.0777307976058968</SEslope>
+            <SEintercept>0.0015875783189240437</SEintercept>
+            <R2>0.0035379462120810334</R2>
+            <RMSE>0.0086813529323753018</RMSE>
+            <NSE>-3.4109873748419552</NSE>
+            <ME>0.0069938412085728385</ME>
+            <MAE>0.0070936421684139805</MAE>
+            <RSR>2.0869001153903146</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Grain.Number</Name>
+            <n>72</n>
+            <Slope>1.0165680463716609</Slope>
+            <Intercept>362.19174439219751</Intercept>
+            <SEslope>0.059952750527313095</SEslope>
+            <SEintercept>974.71847722212851</SEintercept>
+            <R2>0.80420190801940383</R2>
+            <RMSE>3808.2391342777555</RMSE>
+            <NSE>0.741683418514461</NSE>
+            <ME>601.24466026337791</ME>
+            <MAE>3029.546284284193</MAE>
+            <RSR>0.50470669817937708</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Grain.Protein</Name>
+            <n>48</n>
+            <Slope>0.10672345799188258</Slope>
+            <Intercept>14.103030007063744</Intercept>
+            <SEslope>0.10410024588595408</SEslope>
+            <SEintercept>1.264210474156628</SEintercept>
+            <R2>0.022338144997984477</R2>
+            <RMSE>4.2422391222010791</RMSE>
+            <NSE>-2.7549846024295825</NSE>
+            <ME>3.4326556134971993</ME>
+            <MAE>3.4445291174155788</MAE>
+            <RSR>1.917486833473866</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Grain.Wt</Name>
+            <n>102</n>
+            <Slope>1.0862007153014262</Slope>
+            <Intercept>-261.74863936877324</Intercept>
+            <SEslope>0.059177457646421759</SEslope>
+            <SEintercept>35.4076296584184</SEintercept>
+            <R2>0.77111733401313531</R2>
+            <RMSE>263.538977946122</RMSE>
+            <NSE>-0.070866714968982114</NSE>
+            <ME>-215.07735617396693</ME>
+            <MAE>233.11468812131383</MAE>
+            <RSR>1.0297417257181398</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Phenology.FlagLeafDAS.Value</Name>
+            <n>256</n>
+            <Slope>0.92619468171232511</Slope>
+            <Intercept>21.5830459150679</Intercept>
+            <SEslope>0.024227089633370884</SEslope>
+            <SEintercept>3.3585144344523541</SEintercept>
+            <R2>0.85193915553732991</R2>
+            <RMSE>22.150938185548711</RMSE>
+            <NSE>0.781747455995413</NSE>
+            <ME>11.96875</ME>
+            <MAE>14.484375</MAE>
+            <RSR>0.46626172371809504</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Phenology.FloweringDAS.Value</Name>
+            <n>294</n>
+            <Slope>0.89464401424147311</Slope>
+            <Intercept>26.078223559870082</Intercept>
+            <SEslope>0.01761449397378731</SEslope>
+            <SEintercept>2.7693715589987349</SEintercept>
+            <R2>0.89831617118803242</R2>
+            <RMSE>19.566909453928368</RMSE>
+            <NSE>0.85780394384509207</NSE>
+            <ME>10.442176870748298</ME>
+            <MAE>14.319727891156463</MAE>
+            <RSR>0.37644706945327561</RSR>
+          </RegrStats>
+        </AcceptedStats>
+        <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
+        <POName>HarvestObsPred</POName>
+      </Tests>
+      <PredictedTableName>MaxLeafSizeReport</PredictedTableName>
+      <ObservedTableName>MaxLeafSize</ObservedTableName>
+      <FieldNameUsedForMatch>MaxLeafSize.Script.LeafPosition</FieldNameUsedForMatch>
+    </PredictedObserved>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>3000</MaximumResultsPerPage>
   </DataStore>
@@ -6043,7 +6185,7 @@ VShort duration variety released in New Zealand by Pioneer
       <TableName>HarvestObsPred</TableName>
       <XFieldName>Observed.Wheat.AboveGround.Wt</XFieldName>
       <YFieldName>Predicted.Wheat.AboveGround.Wt</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
+      <ShowInLegend>true</ShowInLegend>
       <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
@@ -6534,6 +6676,53 @@ VShort duration variety released in New Zealand by Pioneer
     <Axis>
       <Type>Left</Type>
       <Title>Predicted</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>BottomRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>MaxLeafSize</Name>
+    <Series>
+      <Name>Series 0</Name>
+      <Regression>
+        <Name>Regression</Name>
+        <ForEachSeries>false</ForEachSeries>
+      </Regression>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-1663232</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+      <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
+      <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
+      <TableName>LeafSizeObsPred</TableName>
+      <XFieldName>Observed.MaxLeafSize.Script.MaxLeafSize</XFieldName>
+      <YFieldName>Predicted.MaxLeafSize.Script.MaxLeafSize</YFieldName>
+      <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
       <Inverted>false</Inverted>
       <Minimum>NaN</Minimum>
       <Maximum>NaN</Maximum>
@@ -7366,6 +7555,7 @@ namespace Models
 			{
 				Wheat.Harvest();
 				Wheat.EndCrop();
+				Wheat.
 			}
 		}
 	}
@@ -28429,6 +28619,58 @@ namespace Models
 }
 				]]></Code>
           </Manager>
+          <Manager>
+            <Name>MaxLeafSize</Name>
+            <Script />
+            <Code><![CDATA[using System;
+using System.Collections.Generic;
+using System.Xml.Serialization;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF;
+using Models.Soils.Arbitrator;
+using APSIM.Shared.Utilities;
+
+
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Plant Wheat;
+		
+		public event EventHandler LeafReport;
+		
+		[XmlIgnore] public int LeafPosition { get; set; }
+		[XmlIgnore] public double MaxLeafSize { get; set; }
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Wheat.Leaf.ExpandedCohortNo > LeafPosition)
+			{
+				LeafPosition = (int)Wheat.Leaf.ExpandedCohortNo;
+				MaxLeafSize = Wheat.Leaf.CohortSize[LeafPosition - 1];
+				LeafReport.Invoke(this, new EventArgs());
+			}
+		}
+	}
+}]]></Code>
+          </Manager>
+          <Report>
+            <Name>MaxLeafSizeReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
+            <VariableNames>
+              <string>[MaxLeafSize].Script.MaxLeafSize</string>
+              <string>[MaxLeafSize].Script.LeafPosition</string>
+            </VariableNames>
+            <EventNames>
+              <string>[MaxLeafSize].Script.LeafReport</string>
+            </EventNames>
+          </Report>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -30858,6 +31100,27 @@ namespace Models
               <Cumulative>false</Cumulative>
               <CumulativeX>true</CumulativeX>
             </Series>
+            <Series>
+              <Name>Tips1</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-3376729</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Wheat.Phenology.ThermalTime.Value</XFieldName>
+              <YFieldName>Wheat.Structure.LeafTipsAppeared</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>true</CumulativeX>
+            </Series>
             <Axis>
               <Type>Left</Type>
               <Title>Leaf Tips (n)</Title>
@@ -30874,6 +31137,426 @@ namespace Models
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>LeafSize2</Name>
+            <Series>
+              <Name>1</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(1)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(1)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>2</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-1663232</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(2)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(2)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>3</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-11094807</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(3)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(3)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>4</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16736653</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>Star</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(4)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(4)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>5</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16747854</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(5)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(5)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>6</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(6)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(6)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>7</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-3376729</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(7)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(7)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>8</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-990142</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(8)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(8)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>9</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(9)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(9)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>10</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-1663232</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(10)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(10)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>11</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-11094807</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(11)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(11)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>12</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16736653</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(12)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(12)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>13</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16747854</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(13)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(13)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>14</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(14)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(14)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>15</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-3376729</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(15)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(15)</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>1to1</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Wheat.AboveGround.Wt</XFieldName>
+              <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title>Observed Leaf Size (mm^2)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>0</Minimum>
+              <Maximum>4000</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Predicted Leaf Size (mm^2)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>0</Minimum>
+              <Maximum>4000</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>LeafSize3</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>0</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>MaxLeafSizeReport</TableName>
+              <XFieldName>MaxLeafSize.Script.LeafPosition</XFieldName>
+              <YFieldName>MaxLeafSize.Script.MaxLeafSize</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>0</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>MaxLeafSize</TableName>
+              <XFieldName>MaxLeafSize.Script.LeafPosition</XFieldName>
+              <YFieldName>MaxLeafSize.Script.MaxLeafSize</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
@@ -33846,6 +34529,58 @@ namespace Models
               <string>[Clock].DoReport</string>
             </EventNames>
           </Report>
+          <Manager>
+            <Name>MaxLeafSize</Name>
+            <Script />
+            <Code><![CDATA[using System;
+using System.Collections.Generic;
+using System.Xml.Serialization;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF;
+using Models.Soils.Arbitrator;
+using APSIM.Shared.Utilities;
+
+
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Plant Wheat;
+		
+		public event EventHandler LeafReport;
+		
+		[XmlIgnore] public int LeafPosition { get; set; }
+		[XmlIgnore] public double MaxLeafSize { get; set; }
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Wheat.Leaf.ExpandedCohortNo > LeafPosition)
+			{
+				LeafPosition = (int)Wheat.Leaf.ExpandedCohortNo;
+				MaxLeafSize = Wheat.Leaf.CohortSize[LeafPosition - 1];
+				LeafReport.Invoke(this, new EventArgs());
+			}
+		}
+	}
+}]]></Code>
+          </Manager>
+          <Report>
+            <Name>MaxLeafSizeReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
+            <VariableNames>
+              <string>[MaxLeafSize].Script.MaxLeafSize</string>
+              <string>[MaxLeafSize].Script.LeafPosition</string>
+            </VariableNames>
+            <EventNames>
+              <string>[MaxLeafSize].Script.LeafReport</string>
+            </EventNames>
+          </Report>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -34655,6 +35390,490 @@ namespace Models
               <Inverted>false</Inverted>
               <Minimum>NaN</Minimum>
               <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>LeafSize2</Name>
+            <Series>
+              <Name>1</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(1)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(1)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>2</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-1663232</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(2)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(2)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>3</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-11094807</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(3)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(3)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>4</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16736653</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>Star</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(4)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(4)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>5</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16747854</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(5)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(5)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>6</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(6)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(6)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>7</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-3376729</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(7)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(7)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>8</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-990142</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(8)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(8)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>9</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(9)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(9)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>10</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-1663232</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(10)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(10)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>11</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-11094807</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(11)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(11)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>12</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16736653</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(12)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(12)</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>13</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16747854</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(13)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(13)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>14</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(14)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(14)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>15</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-3376729</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(15)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(15)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>16</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-990142</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(16)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(16)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>17</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(17)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(17)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>18</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-1663232</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Wheat.Leaf.CohortMaxSize(18)</XFieldName>
+              <YFieldName>Predicted.Wheat.Leaf.CohortMaxSize(18)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>1to1</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Wheat.AboveGround.Wt</XFieldName>
+              <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title>Observed Leaf Size (mm^2)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>0</Minimum>
+              <Maximum>4000</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Predicted Leaf Size (mm^2)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>0</Minimum>
+              <Maximum>4000</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>LeafSize3</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>0</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>MaxLeafSizeReport</TableName>
+              <XFieldName>MaxLeafSize.Script.LeafPosition</XFieldName>
+              <YFieldName>MaxLeafSize.Script.MaxLeafSize</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+              <Filter>[Popn]='50'</Filter>
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>0</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>MaxLeafSize</TableName>
+              <XFieldName>MaxLeafSize.Script.LeafPosition</XFieldName>
+              <YFieldName>MaxLeafSize.Script.MaxLeafSize</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>0</Minimum>
+              <Maximum>3000</Maximum>
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
