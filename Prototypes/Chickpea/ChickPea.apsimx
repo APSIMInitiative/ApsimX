@@ -1787,8 +1787,8 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
               <Y>
                 <double>0</double>
                 <double>0</double>
-                <double>0.1</double>
-                <double>0.1</double>
+                <double>0</double>
+                <double>0</double>
               </Y>
             </XYPairs>
             <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
@@ -2110,6 +2110,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
+        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
         <TipsAtEmergence>0</TipsAtEmergence>
@@ -2573,16 +2574,16 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>Chickpea.AboveGround.Wt</Name>
             <n>73</n>
-            <Slope>0.92053480582051772</Slope>
-            <Intercept>252.42153398919697</Intercept>
-            <SEslope>0.11549442619605577</SEslope>
-            <SEintercept>91.379611457736431</SEintercept>
-            <R2>0.47222492390959736</R2>
-            <RMSE>335.0418423315449</RMSE>
-            <NSE>-0.43141709596108813</NSE>
-            <ME>193.61824061301743</ME>
-            <MAE>265.92977737090763</MAE>
-            <RSR>1.1881955405537248</RSR>
+            <Slope>0.9208069833855268</Slope>
+            <Intercept>255.85219279514888</Intercept>
+            <SEslope>0.11450421128089244</SEslope>
+            <SEintercept>90.596149803459909</SEintercept>
+            <R2>0.47666641141394905</R2>
+            <RMSE>335.26293456044874</RMSE>
+            <NSE>-0.43330688748166835</NSE>
+            <ME>197.25030756213042</ME>
+            <MAE>266.6567770935381</MAE>
+            <RSR>1.1889796241135766</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chickpea.Shell.PodNumber.Value</Name>
@@ -2629,16 +2630,16 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>GrainWt</Name>
             <n>312</n>
-            <Slope>0.63320707206286864</Slope>
-            <Intercept>205.64983492565841</Intercept>
-            <SEslope>0.0895967460657002</SEslope>
-            <SEintercept>19.391542282136378</SEintercept>
-            <R2>0.13876144350206621</R2>
-            <RMSE>225.93436789847814</RMSE>
-            <NSE>-3.1639249935388563</NSE>
-            <ME>137.43884439950753</ME>
-            <MAE>176.03810863617736</MAE>
-            <RSR>2.03729700340869</RSR>
+            <Slope>0.64079889142418689</Slope>
+            <Intercept>206.31163804271375</Intercept>
+            <SEslope>0.089849387773752</SEslope>
+            <SEintercept>19.4462218612399</SEintercept>
+            <R2>0.14095137373298561</R2>
+            <RMSE>227.43208708693621</RMSE>
+            <NSE>-3.2193132989110511</NSE>
+            <ME>139.51246731757109</ME>
+            <MAE>177.63236970907619</MAE>
+            <RSR>2.0508022476217542</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>

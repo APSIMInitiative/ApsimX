@@ -63,6 +63,7 @@ namespace Models.PMF.Organs
         /// 
         /// </summary>
         public double AppearedCohortNo { get; set; }
+
         /// <summary>
         /// 
         /// </summary>

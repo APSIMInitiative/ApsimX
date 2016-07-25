@@ -5947,7 +5947,7 @@ namespace Models
 	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
-		[Link] Plant SCUM;
+		[Link] Plant SCRUM;
 		[Link] Clock Clock;
 		[Link] Zone zone;
 		[Link] Simulation Simulation;

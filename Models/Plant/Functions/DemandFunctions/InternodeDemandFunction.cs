@@ -26,7 +26,7 @@ namespace Models.PMF.Functions.DemandFunctions
         {
             get
             {
-                return Structure.DeltaNodeNumber * Structure.TotalStemPopn * InterNodeWt.Value;
+                return Structure.DeltaTipNumber * Structure.TotalStemPopn * InterNodeWt.Value;
             }
         }
     }

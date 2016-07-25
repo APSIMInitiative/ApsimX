@@ -113,7 +113,11 @@ namespace Models.PMF.Organs
                 int MM2ToM2 = 1000000; // Conversion of mm2 to m2
                 double value = 0;
                 foreach (LeafCohort L in Leaves)
+                {
+                    if (Double.IsNaN(L.LiveArea))
+                        throw new Exception("LiveArea of leaf cohort " + L.Name + " is Nan");
                     value = value + L.LiveArea / MM2ToM2;
+                }
                 return value;
             }
         }
@@ -140,10 +144,16 @@ namespace Models.PMF.Organs
         { 
             get 
             {
-                if (Plant.IsAlive)
-                    return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
+                if (Plant != null)
+                {
+                    if (Plant.IsAlive)
+                        return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
+                    else
+                        return 0;
+                }
                 else
                     return 0;
+
             } 
         }
 
@@ -162,6 +172,11 @@ namespace Models.PMF.Organs
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [Units("mm")]
         public double PotentialEP { get;  set; }
+
+        /// <summary>
+        /// This paramater is applied to ETDemand.  It is a fudge for testing
+        /// </summary>
+        public double FudgeToGetETDemandRight { get; set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } 
@@ -349,10 +364,12 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (CurrentRank - 1 < Leaves.Count || CurrentRank - 1 >= Leaves.Count)
+                if (CurrentRank > Leaves.Count)
+                    throw new ApsimXException(this, "Curent Rank is greater than the number of leaves appeared when trying to determine CoverAbove this cohort");
+                else if (CurrentRank <= 0)
                     return 0;
                 else
-                    return Leaves[CurrentRank-1].CoverAbove;
+                    return Leaves[CurrentRank - 1].CoverAbove;
             }
         }
 
@@ -540,6 +557,29 @@ namespace Models.PMF.Organs
             }
         }
         //Cohort State variable outputs
+
+        /// <summary>
+        /// Returns the relative expansion of the next leaf to produce its ligule
+        /// </summary>
+        public double NextExpandingLeafProportion
+        {
+            get
+            {
+                if (Plant.IsEmerged)
+                    if (ExpandedCohortNo < InitialisedCohortNo)
+                        if (Leaves[(int)ExpandedCohortNo].Age > 0)
+                            if(AppearedCohortNo < InitialisedCohortNo)
+                                return Math.Min(1, (Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration));
+                            else
+                                return Math.Min(1, (Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration)*Structure.NextLeafProportion);
+                        else
+                            return 0;
+                    else
+                        return Structure.NextLeafProportion - 1 ;
+                else
+                    return 0;
+            }
+        }
 
         /// <summary>Gets the size of the cohort.</summary>
         /// <value>The size of the cohort.</value>
@@ -817,24 +857,7 @@ namespace Models.PMF.Organs
          /// <summary>1 based rank of the current leaf.</summary>
     /// <value>The current rank.</value>
         private int CurrentRank { get; set; }
-        /*private int CurrentRank
-        {
-            get
-            {
-                if (Leaves.Count == 0)
-                    return 0;
 
-                // Find the first non appeared leaf.
-                int i = 0;
-                while (i < Leaves.Count && Leaves[i].IsAppeared)
-                    i++;
-
-                if (i == 0)
-                    throw new ApsimXException(this.FullPath, "No leaves have appeared. Cannot calculate Leaf.CurrentRank");
-
-                return Leaves[i - 1].Rank;
-            }
-        }*/
         /// <summary>Cohorts the counter.</summary>
         /// <param name="Condition">The condition.</param>
         /// <returns></returns>
@@ -900,6 +923,7 @@ namespace Models.PMF.Organs
             Leaves = new List<LeafCohort>();
             WaterDemand = 0;
             WaterAllocation = 0;
+            CohortsAtInitialisation = 0;
         }
         /// <summary>Initialises the cohorts.</summary>
         [EventSubscribe("InitialiseLeafCohorts")]
@@ -1349,7 +1373,7 @@ namespace Models.PMF.Organs
         {
            get
             {
-                return PotentialEP;
+                return PotentialEP * FudgeToGetETDemandRight;
             }
         }
         /// <summary>Gets or sets the water allocation.</summary>
@@ -1606,6 +1630,7 @@ namespace Models.PMF.Organs
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 MaxCover = data.MaxCover;
+                FudgeToGetETDemandRight = 1.0;
             }
         }
 
@@ -1636,6 +1661,7 @@ namespace Models.PMF.Organs
                 Live.Clear();
                 Dead.Clear();
                 Leaves.Clear();
+                CohortsAtInitialisation = 0;
             }
         }
 
@@ -1649,6 +1675,24 @@ namespace Models.PMF.Organs
             foreach (LeafCohort initialLeaf in Apsim.Children(this, typeof(LeafCohort)))
                 initialLeaves.Add(initialLeaf);
             InitialLeaves = initialLeaves.ToArray();
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
+        {
+            CohortsAtInitialisation = 0;
+        }
+
+        /// <summary>Called when crop is being cut.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Harvesting")]
+        private void OnHarvesting(object sender, EventArgs e)
+        {
+            CohortsAtInitialisation = 0;
         }
         #endregion
     }

@@ -26,13 +26,13 @@
     </ExcelInput>
     <Input>
       <Name>ABlockObserved</Name>
-      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Tests\SCUM\AblockObserved.txt' because it is being used by another process.</ErrorMessage>
-      <FileName>%root%\Tests\Validation\SCUM\AblockObserved.txt</FileName>
+      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Tests\SCRUM\AblockObserved.txt' because it is being used by another process.</ErrorMessage>
+      <FileName>%root%\Tests\Validation\SCRUM\AblockObserved.txt</FileName>
     </Input>
     <Input>
       <Name>ABlockSWC</Name>
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>%root%\Tests\Validation\SCUM\AblockSWC.txt</FileName>
+      <FileName>%root%\Tests\Validation\SCRUM\AblockSWC.txt</FileName>
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
@@ -218,7 +218,7 @@
     <MaximumResultsPerPage>1000</MaximumResultsPerPage>
   </DataStore>
   <Simulation>
-    <Name>SCUMTestBase</Name>
+    <Name>SCRUMTestBase</Name>
     <Weather>
       <Name>Weather</Name>
       <FileName>%root%\Tests\WeatherFiles\lincoln.met</FileName>
@@ -268,7 +268,7 @@
         <Water>
           <Name>Water</Name>
           <SoilCrop>
-            <Name>SCUMSoil</Name>
+            <Name>SCRUMSoil</Name>
             <LL>
               <double>0.13</double>
               <double>0.13</double>
@@ -618,9 +618,10 @@
         <r50>200</r50>
       </MicroClimate>
       <Plant>
-        <Name>SCUM</Name>
-        <ResourceName>SCUM</ResourceName>
-        <CropType>SCUM</CropType>
+        <Name>SCRUM</Name>
+        <ResourceName>SCRUM</ResourceName>
+        <CropType>SCRUM</CropType>
+        <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -629,7 +630,7 @@
         <Name>Fertiliser</Name>
       </Fertiliser>
       <Manager>
-        <Name>SCUMSowingRule</Name>
+        <Name>SCRUMSowingRule</Name>
         <Script>
           <CultivarName>Maize_Short</CultivarName>
           <InitialRootDepth>10</InitialRootDepth>
@@ -645,7 +646,7 @@ namespace Models
 	[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
-		[Link] Plant SCUM;
+		[Link] Plant SCRUM;
 		[Link] Clock Clock;
 
 		[Description("Cultivar")]
@@ -660,7 +661,7 @@ namespace Models
 		private void OnDoManagement(object sender, EventArgs e)
 		{
 			if (Clock.Today.Date == SowingDate)
-				SCUM.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				SCRUM.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
                 
 			//PMFCrop.Sow(... Contains the following arguements:
 			//Population  double  Optional  Seeds sowing/m2.  Default is zero
@@ -699,7 +700,7 @@ namespace Models
 		[Link] Weather Met;
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;
-		[Link] Plant SCUM;
+		[Link] Plant SCRUM;
 		[Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
@@ -777,7 +778,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
 			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
 			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			AccumPlantN -= (double)zone.Get("SCUM.Root.NUptake");
+			AccumPlantN -= (double)zone.Get("SCRUM.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -786,8 +787,8 @@ namespace Models
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 
 			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[SCUM].Stover.Transpiration");
-            AccumEP -= (double)zone.Get("SCUM.Root.WaterUptake");
+			//AccumEP -= (double)zone.Get("[SCRUM].Stover.Transpiration");
+            AccumEP -= (double)zone.Get("SCRUM.Root.WaterUptake");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -847,7 +848,7 @@ namespace Models
 		[Link] Irrigation Irrigation;
 		[Link] Clock Clock;
 		[Link] Soil Soil;
-		[Link] Plant SCUM;
+		[Link] Plant SCRUM;
 	   
 		//User inputs from properties tab
 		[Description("Irrigation on (yes or no)")]
@@ -947,7 +948,7 @@ namespace Models
 		  
 			//Is there a crop in the ground that needs irrigation?
 			CropIsActive = false;
-			if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
+			if ((SCRUM.Phenology.Stage >= 3.0) && (SCRUM.Phenology.Stage < 6.0))
 				CropIsActive = true;
 	      
 			//Is the irrigator available?
@@ -959,7 +960,7 @@ namespace Models
 			//Is the soil dry enough to require irrigation?
 			SoilIsDry = false;
 			double CurrentRootDepth = 0;
-			double RootDepth = SCUM.Root.Depth;
+			double RootDepth = SCRUM.Root.Depth;
 			CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
 	      
 			double RelativeRootDepth = Math.Min(1.0, CurrentRootDepth / Top_Depth);
@@ -1025,7 +1026,7 @@ namespace Models
 		[Link] Fertiliser Fertiliser;
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
-		[Link] Plant SCUM;
+		[Link] Plant SCRUM;
 	   
 		//User inputs from properties tab
 		[Description("Fertiliser on (yes or no)")]
@@ -1101,7 +1102,7 @@ namespace Models
 		  
 			//Is there a crop in the ground that needs irrigation?
 			CropIsActive = false;
-			if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
+			if ((SCRUM.Phenology.Stage >= 3.0) && (SCRUM.Phenology.Stage < 6.0))
 				CropIsActive = true;
 	      
 			//Is the irrigator available?
@@ -1113,7 +1114,7 @@ namespace Models
 			//Is the soil N low enough to require fertiliser?
 			SoilNIsLow = false;
 			double CurrentRootDepth = 0;
-			double RootDepth = SCUM.Root.Depth;
+			double RootDepth = SCRUM.Root.Depth;
 			CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
 	      
 			Accumulated_depth = 0;
@@ -1184,45 +1185,45 @@ namespace Models
           <string>[Soil].SoilWater.pond</string>
           <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].NO3N</string>
-          <string>[SCUM].Stover.Live.Wt</string>
-          <string>[SCUM].Root.Live.Wt</string>
-          <string>[SCUM].Product.Live.Wt</string>
-          <string>[SCUM].Stover.Live.N</string>
-          <string>[SCUM].Root.Live.N</string>
-          <string>[SCUM].Product.Live.N</string>
-          <string>[SCUM].Stover.Live.NConc</string>
-          <string>[SCUM].Root.Live.NConc</string>
-          <string>[SCUM].Product.Live.NConc</string>
-          <string>[SCUM].Root.WaterSupply</string>
-          <string>[SCUM].Root.WaterUptake</string>
-          <string>[SCUM].Stover.Transpiration</string>
-          <string>[SCUM].Stover.WaterDemand</string>
-          <string>[SCUM].Root.Depth</string>
-          <string>[SCUM].Stover.CoverTotal</string>
-          <string>[SCUM].Stover.CoverDead</string>
-          <string>[SCUM].Stover.LAI</string>
-          <string>[SCUM].Stover.Height</string>
-          <string>[SCUM].Stover.PotentialBiomass.Value</string>
-          <string>[SCUM].Product.LiveFWt</string>
-          <string>[SCUM].Arbitrator.NDemand</string>
-          <string>[SCUM].Arbitrator.NSupply</string>
-          <string>[SCUM].Stover.Fw</string>
-          <string>[SCUM].Stover.Fn</string>
-          <string>[SCUM].Total.Wt</string>
-          <string>[SCUM].ExpectedYield.Value</string>
-          <string>[SCUM].DryYield.Value</string>
-          <string>[SCUM].TotalBiomassAtStartReproductive.Value</string>
-          <string>[SCUM].TotalBiomassAtStartSenescence.Value</string>
-          <string>[SCUM].Ymax.Value</string>
-          <string>[SCUM].Total.N</string>
-          <string>[SCUM].Arbitrator.DMSupply</string>
-          <string>[SCUM].Arbitrator.DMDemand</string>
-          <string>[SCUM].Phenology.AccumulatedEmergedTT</string>
-          <string>[SCUM].Arbitrator.DMSinkLimitation</string>
-          <string>[SCUM].Arbitrator.DMNutrientLimitation</string>
-          <string>[SCUM].Phenology.ThermalTime.Value</string>
-          <string>[SCUM].Phenology.CurrentPhaseName</string>
-          <string>[SCUM].Phenology.Stage</string>
+          <string>[SCRUM].Stover.Live.Wt</string>
+          <string>[SCRUM].Root.Live.Wt</string>
+          <string>[SCRUM].Product.Live.Wt</string>
+          <string>[SCRUM].Stover.Live.N</string>
+          <string>[SCRUM].Root.Live.N</string>
+          <string>[SCRUM].Product.Live.N</string>
+          <string>[SCRUM].Stover.Live.NConc</string>
+          <string>[SCRUM].Root.Live.NConc</string>
+          <string>[SCRUM].Product.Live.NConc</string>
+          <string>[SCRUM].Root.WaterSupply</string>
+          <string>[SCRUM].Root.WaterUptake</string>
+          <string>[SCRUM].Stover.Transpiration</string>
+          <string>[SCRUM].Stover.WaterDemand</string>
+          <string>[SCRUM].Root.Depth</string>
+          <string>[SCRUM].Stover.CoverTotal</string>
+          <string>[SCRUM].Stover.CoverDead</string>
+          <string>[SCRUM].Stover.LAI</string>
+          <string>[SCRUM].Stover.Height</string>
+          <string>[SCRUM].Stover.PotentialBiomass.Value</string>
+          <string>[SCRUM].Product.LiveFWt</string>
+          <string>[SCRUM].Arbitrator.NDemand</string>
+          <string>[SCRUM].Arbitrator.NSupply</string>
+          <string>[SCRUM].Stover.Fw</string>
+          <string>[SCRUM].Stover.Fn</string>
+          <string>[SCRUM].Total.Wt</string>
+          <string>[SCRUM].ExpectedYield.Value</string>
+          <string>[SCRUM].DryYield.Value</string>
+          <string>[SCRUM].TotalBiomassAtStartReproductive.Value</string>
+          <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
+          <string>[SCRUM].Ymax.Value</string>
+          <string>[SCRUM].Total.N</string>
+          <string>[SCRUM].Arbitrator.DMSupply</string>
+          <string>[SCRUM].Arbitrator.DMDemand</string>
+          <string>[SCRUM].Phenology.AccumulatedEmergedTT</string>
+          <string>[SCRUM].Arbitrator.DMSinkLimitation</string>
+          <string>[SCRUM].Arbitrator.DMNutrientLimitation</string>
+          <string>[SCRUM].Phenology.ThermalTime.Value</string>
+          <string>[SCRUM].Phenology.CurrentPhaseName</string>
+          <string>[SCRUM].Phenology.Stage</string>
           <string>[AutomaticIrrigation].Script.Top_Refull</string>
           <string>[AutomaticIrrigation].Script.Top_Trigger</string>
           <string>[AutomaticIrrigation].Script.Top_SW</string>
@@ -1234,8 +1235,8 @@ namespace Models
           <string>[AutomaticIrrigation].Script.SeasonIsOpen</string>
           <string>[AutomaticIrrigation].Script.EndDate</string>
           <string>[AutomaticIrrigation].Script.TodayYear</string>
-          <string>[SCUM].Arbitrator.FN</string>
-          <string>[SCUM].Arbitrator.NSupply</string>
+          <string>[SCRUM].Arbitrator.FN</string>
+          <string>[SCRUM].Arbitrator.NSupply</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -1417,7 +1418,7 @@ namespace Models
       <Memo>
         <Name>Caption</Name>
         <MemoText><![CDATA[
-# SCUM: the Simple Crop Uptake Model
+# SCRUM: the Simple Crop Resource Uptake Model
 
 _Hamish Brown and Rob Zyskowski, Plant and Food Research, New Zealand_
 
@@ -1669,8 +1670,8 @@ This model has been built to simulate a range of different crops in simulations 
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Stover.Live.Wt</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.Stover.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1690,8 +1691,8 @@ This model has been built to simulate a range of different crops in simulations 
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Root.Live.Wt</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.Root.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1711,8 +1712,8 @@ This model has been built to simulate a range of different crops in simulations 
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Product.Live.Wt</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.Product.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1732,8 +1733,8 @@ This model has been built to simulate a range of different crops in simulations 
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Total.Wt</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1753,8 +1754,8 @@ This model has been built to simulate a range of different crops in simulations 
         <Line>Dash</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.DryYield.Value</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.DryYield.Value</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1774,8 +1775,8 @@ This model has been built to simulate a range of different crops in simulations 
         <Line>Dot</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.TotalBiomassAtStartReproductive.Value</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1795,8 +1796,8 @@ This model has been built to simulate a range of different crops in simulations 
         <Line>DashDot</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.TotalBiomassAtStartSenescence.Value</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1816,8 +1817,8 @@ This model has been built to simulate a range of different crops in simulations 
         <Line>Dash</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Ymax.Value</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.Ymax.Value</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1837,8 +1838,8 @@ This model has been built to simulate a range of different crops in simulations 
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Phenology.Stage</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.Phenology.Stage</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1858,8 +1859,8 @@ This model has been built to simulate a range of different crops in simulations 
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Arbitrator.DMSupply</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.Arbitrator.DMSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
@@ -1908,7 +1909,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Stover.Live.N</YFieldName>
+        <YFieldName>SCRUM.Stover.Live.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1929,7 +1930,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Root.Live.N</YFieldName>
+        <YFieldName>SCRUM.Root.Live.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1950,7 +1951,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Product.Live.N</YFieldName>
+        <YFieldName>SCRUM.Product.Live.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1971,7 +1972,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Total.N</YFieldName>
+        <YFieldName>SCRUM.Total.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2013,7 +2014,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Root.WaterSupply</YFieldName>
+        <YFieldName>SCRUM.Root.WaterSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2034,7 +2035,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Root.WaterUptake</YFieldName>
+        <YFieldName>SCRUM.Root.WaterUptake</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2055,7 +2056,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Stover.WaterDemand</YFieldName>
+        <YFieldName>SCRUM.Stover.WaterDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2076,7 +2077,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Stover.Transpiration</YFieldName>
+        <YFieldName>SCRUM.Stover.Transpiration</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2118,7 +2119,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Root.Depth</YFieldName>
+        <YFieldName>SCRUM.Root.Depth</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2139,7 +2140,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Stover.Height</YFieldName>
+        <YFieldName>SCRUM.Stover.Height</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2188,8 +2189,8 @@ This model has been built to simulate a range of different crops in simulations 
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Root.Depth</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.Root.Depth</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2209,8 +2210,8 @@ This model has been built to simulate a range of different crops in simulations 
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Stover.CoverTotal</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.Stover.CoverTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2230,8 +2231,8 @@ This model has been built to simulate a range of different crops in simulations 
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Stover.LAI</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.Stover.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2280,7 +2281,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Arbitrator.NDemand</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.NDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2301,7 +2302,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Arbitrator.NSupply</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.NSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2343,7 +2344,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Arbitrator.DMSupply</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DMSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2364,7 +2365,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Arbitrator.DMDemand</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DMDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2385,7 +2386,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Arbitrator.DMSinkLimitation</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DMSinkLimitation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2406,7 +2407,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Arbitrator.DMNutrientLimitation</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DMNutrientLimitation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2595,7 +2596,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Stover.Fw</YFieldName>
+        <YFieldName>SCRUM.Stover.Fw</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2616,7 +2617,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Arbitrator.FN</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.FN</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2637,7 +2638,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Phenology.Stage</YFieldName>
+        <YFieldName>SCRUM.Phenology.Stage</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2669,7 +2670,7 @@ This model has been built to simulate a range of different crops in simulations 
     <Name>Simple test with Biomass Cut</Name>
     <Memo>
       <Name>memo</Name>
-      <MemoText><![CDATA[In this test an Autumn wheat crop is planted, and defoliated part way through its growth.  The series of graphs show how SCUM accumulates biomass and nitrogen and what happens when a biomass removal event is invoked.  The also demonstrate that componenst of the Nitrogen and water balances are behaving sensibly with the inclusion of SCUM in a simulation.]]></MemoText>
+      <MemoText><![CDATA[In this test an Autumn wheat crop is planted, and defoliated part way through its growth.  The series of graphs show how SCRUM accumulates biomass and nitrogen and what happens when a biomass removal event is invoked.  The also demonstrate that componenst of the Nitrogen and water balances are behaving sensibly with the inclusion of SCRUM in a simulation.]]></MemoText>
     </Memo>
     <Weather>
       <Name>Weather</Name>
@@ -2720,7 +2721,7 @@ This model has been built to simulate a range of different crops in simulations 
         <Water>
           <Name>Water</Name>
           <SoilCrop>
-            <Name>SCUMSoil</Name>
+            <Name>SCRUMSoil</Name>
             <LL>
               <double>0.13</double>
               <double>0.13</double>
@@ -3070,9 +3071,10 @@ This model has been built to simulate a range of different crops in simulations 
         <r50>200</r50>
       </MicroClimate>
       <Plant>
-        <Name>SCUM</Name>
-        <ResourceName>SCUM</ResourceName>
-        <CropType>SCUM</CropType>
+        <Name>SCRUM</Name>
+        <ResourceName>SCRUM</ResourceName>
+        <CropType>SCRUM</CropType>
+        <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -3105,7 +3107,7 @@ namespace Models
 	[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
-		[Link] Plant SCUM;
+		[Link] Plant SCRUM;
 		[Link] Clock Clock;
 
 		[Description("Cultivar")]
@@ -3137,7 +3139,7 @@ namespace Models
 			//Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.
 
 			if (Clock.Today.Date == SowingDate)
-				SCUM.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				SCRUM.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 			else if (Clock.Today.Date == CutDate)
 			{
 				Remove.SetPhenologyStage = 3.5;
@@ -3147,14 +3149,14 @@ namespace Models
 				Remove.SetFractionToResidue("Product", 0.1);
 				Remove.SetFractionToRemove("Root", 0.0);
 				Remove.SetFractionToResidue("Root", 0.2);
-				SCUM.RemoveBiomass("Cut", Remove);
+				SCRUM.RemoveBiomass("Cut", Remove);
 			}
 			else if (Clock.Today.Date == EndCropDate)
-				SCUM.EndCrop();
+				SCRUM.EndCrop();
 			
 			/*//Change fractions to remove
 			if (Clock.Today.Date == SowingDate2)
-				SCUM.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				SCRUM.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 			else if (Clock.Today.Date == CutDate2)
 			{
 				//Harvest with manager specified removal fractions
@@ -3162,24 +3164,24 @@ namespace Models
 				Remove.SetFractionToRemove("Stover", 0.1);
 				Remove.SetFractionToResidue("Product", 0.3);
 				Remove.SetFractionToResidue("Stover", 0.7);
-				SCUM.RemoveBiomass("Cut", Remove);
+				SCRUM.RemoveBiomass("Cut", Remove);
 			}
 			else if (Clock.Today.Date == EndCropDate2)
-				SCUM.EndCrop();
+				SCRUM.EndCrop();
 			
 			//Change fractions to remove
 			if (Clock.Today.Date == SowingDate3)
-				SCUM.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				SCRUM.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 			else if (Clock.Today.Date == CutDate3)
 			{
 				Remove.SetFractionToRemove("Product", 0.5);
 				Remove.SetFractionToRemove("Stover", 0.3);
 				Remove.SetFractionToResidue("Product", 0.3);
 				Remove.SetFractionToResidue("Stover", 0.7);
-				SCUM.RemoveBiomass("Cut", Remove);
+				SCRUM.RemoveBiomass("Cut", Remove);
 			}
 			else if (Clock.Today.Date == EndCropDate3)
-				SCUM.EndCrop();*/
+				SCRUM.EndCrop();*/
 			//PMFCrop.Sow(... Contains the following arguements:
 			//Population  double  Optional  Seeds sowing/m2.  Default is zero
 			//Cultivar    string  Required  "NameOfCultivar"
@@ -3218,7 +3220,7 @@ namespace Models
 		[Link] Weather Met;
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;
-		[Link] Plant SCUM;
+		[Link] Plant SCRUM;
 		[Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
@@ -3296,7 +3298,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
 			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
 			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			AccumPlantN -= (double)zone.Get("SCUM.Root.NUptake");
+			AccumPlantN -= (double)zone.Get("SCRUM.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -3305,8 +3307,8 @@ namespace Models
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 
 			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[SCUM].Stover.Transpiration");
-			AccumEP -= (double)zone.Get("SCUM.Root.WaterUptake");
+			//AccumEP -= (double)zone.Get("[SCRUM].Stover.Transpiration");
+			AccumEP -= (double)zone.Get("SCRUM.Root.WaterUptake");
 			SoilWaterDeficit = (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -3376,45 +3378,45 @@ namespace Models
           <string>[Soil].SoilWater.pond</string>
           <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].NO3N</string>
-          <string>[SCUM].Stover.Live.Wt</string>
-          <string>[SCUM].Root.Live.Wt</string>
-          <string>[SCUM].Product.Live.Wt</string>
-          <string>[SCUM].Stover.Live.N</string>
-          <string>[SCUM].Root.Live.N</string>
-          <string>[SCUM].Product.Live.N</string>
-          <string>[SCUM].Stover.Live.NConc</string>
-          <string>[SCUM].Root.Live.NConc</string>
-          <string>[SCUM].Product.Live.NConc</string>
-          <string>[SCUM].Root.WaterSupply</string>
-          <string>[SCUM].Root.WaterUptake</string>
-          <string>[SCUM].Stover.Transpiration</string>
-          <string>[SCUM].Stover.WaterDemand</string>
-          <string>[SCUM].Root.Depth</string>
-          <string>[SCUM].Stover.CoverTotal</string>
-          <string>[SCUM].Stover.CoverDead</string>
-          <string>[SCUM].Stover.LAI</string>
-          <string>[SCUM].Stover.Height</string>
-          <string>[SCUM].Stover.PotentialBiomass.Value</string>
-          <string>[SCUM].Product.LiveFWt</string>
-          <string>[SCUM].Arbitrator.NDemand</string>
-          <string>[SCUM].Arbitrator.NSupply</string>
-          <string>[SCUM].Stover.Fw</string>
-          <string>[SCUM].Stover.Fn</string>
-          <string>[SCUM].Total.Wt</string>
-          <string>[SCUM].ExpectedYield.Value</string>
-          <string>[SCUM].DryYield.Value</string>
-          <string>[SCUM].TotalBiomassAtStartReproductive.Value</string>
-          <string>[SCUM].TotalBiomassAtStartSenescence.Value</string>
-          <string>[SCUM].Ymax.Value</string>
-          <string>[SCUM].Total.N</string>
-          <string>[SCUM].Arbitrator.DMSupply</string>
-          <string>[SCUM].Arbitrator.DMDemand</string>
-          <string>[SCUM].Phenology.AccumulatedThermalTime.Value</string>
-          <string>[SCUM].Arbitrator.DMSinkLimitation</string>
-          <string>[SCUM].Arbitrator.DMNutrientLimitation</string>
-          <string>[SCUM].Phenology.ThermalTime.Value</string>
-          <string>[SCUM].Phenology.CurrentPhaseName</string>
-          <string>[SCUM].Phenology.Stage</string>
+          <string>[SCRUM].Stover.Live.Wt</string>
+          <string>[SCRUM].Root.Live.Wt</string>
+          <string>[SCRUM].Product.Live.Wt</string>
+          <string>[SCRUM].Stover.Live.N</string>
+          <string>[SCRUM].Root.Live.N</string>
+          <string>[SCRUM].Product.Live.N</string>
+          <string>[SCRUM].Stover.Live.NConc</string>
+          <string>[SCRUM].Root.Live.NConc</string>
+          <string>[SCRUM].Product.Live.NConc</string>
+          <string>[SCRUM].Root.WaterSupply</string>
+          <string>[SCRUM].Root.WaterUptake</string>
+          <string>[SCRUM].Stover.Transpiration</string>
+          <string>[SCRUM].Stover.WaterDemand</string>
+          <string>[SCRUM].Root.Depth</string>
+          <string>[SCRUM].Stover.CoverTotal</string>
+          <string>[SCRUM].Stover.CoverDead</string>
+          <string>[SCRUM].Stover.LAI</string>
+          <string>[SCRUM].Stover.Height</string>
+          <string>[SCRUM].Stover.PotentialBiomass.Value</string>
+          <string>[SCRUM].Product.LiveFWt</string>
+          <string>[SCRUM].Arbitrator.NDemand</string>
+          <string>[SCRUM].Arbitrator.NSupply</string>
+          <string>[SCRUM].Stover.Fw</string>
+          <string>[SCRUM].Stover.Fn</string>
+          <string>[SCRUM].Total.Wt</string>
+          <string>[SCRUM].ExpectedYield.Value</string>
+          <string>[SCRUM].DryYield.Value</string>
+          <string>[SCRUM].TotalBiomassAtStartReproductive.Value</string>
+          <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
+          <string>[SCRUM].Ymax.Value</string>
+          <string>[SCRUM].Total.N</string>
+          <string>[SCRUM].Arbitrator.DMSupply</string>
+          <string>[SCRUM].Arbitrator.DMDemand</string>
+          <string>[SCRUM].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[SCRUM].Arbitrator.DMSinkLimitation</string>
+          <string>[SCRUM].Arbitrator.DMNutrientLimitation</string>
+          <string>[SCRUM].Phenology.ThermalTime.Value</string>
+          <string>[SCRUM].Phenology.CurrentPhaseName</string>
+          <string>[SCRUM].Phenology.Stage</string>
           <string>[AutomaticIrrigation].Script.Top_Refull</string>
           <string>[AutomaticIrrigation].Script.Top_Trigger</string>
           <string>[AutomaticIrrigation].Script.Top_SW</string>
@@ -3426,11 +3428,11 @@ namespace Models
           <string>[AutomaticIrrigation].Script.SeasonIsOpen</string>
           <string>[AutomaticIrrigation].Script.EndDate</string>
           <string>[AutomaticIrrigation].Script.TodayYear</string>
-          <string>[SCUM].Arbitrator.FN</string>
+          <string>[SCRUM].Arbitrator.FN</string>
           <string>[SurfaceOrganicMatter].wt</string>
           <string>sum([Soil].SoilNitrogen.FOMN)</string>
-          <string>[SCUM].Phenology.AccumulatedEmergedTT</string>
-          <string>[SCUM].Stover.CoverGreen</string>
+          <string>[SCRUM].Phenology.AccumulatedEmergedTT</string>
+          <string>[SCRUM].Stover.CoverGreen</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -3456,7 +3458,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Stover.Live.Wt</YFieldName>
+        <YFieldName>SCRUM.Stover.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3477,7 +3479,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Root.Live.Wt</YFieldName>
+        <YFieldName>SCRUM.Root.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3498,7 +3500,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Product.Live.Wt</YFieldName>
+        <YFieldName>SCRUM.Product.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3519,7 +3521,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Total.Wt</YFieldName>
+        <YFieldName>SCRUM.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3561,7 +3563,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Stover.Live.N</YFieldName>
+        <YFieldName>SCRUM.Stover.Live.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3582,7 +3584,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Root.Live.N</YFieldName>
+        <YFieldName>SCRUM.Root.Live.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3603,7 +3605,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Product.Live.N</YFieldName>
+        <YFieldName>SCRUM.Product.Live.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3624,7 +3626,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Total.N</YFieldName>
+        <YFieldName>SCRUM.Total.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3666,7 +3668,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Root.Depth</YFieldName>
+        <YFieldName>SCRUM.Root.Depth</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3687,7 +3689,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Stover.CoverGreen</YFieldName>
+        <YFieldName>SCRUM.Stover.CoverGreen</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3708,7 +3710,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Stover.LAI</YFieldName>
+        <YFieldName>SCRUM.Stover.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3757,7 +3759,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Phenology.AccumulatedEmergedTT</YFieldName>
+        <YFieldName>SCRUM.Phenology.AccumulatedEmergedTT</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3778,7 +3780,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Phenology.Stage</YFieldName>
+        <YFieldName>SCRUM.Phenology.Stage</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4227,7 +4229,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Root.WaterSupply</YFieldName>
+        <YFieldName>SCRUM.Root.WaterSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4248,7 +4250,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Root.WaterUptake</YFieldName>
+        <YFieldName>SCRUM.Root.WaterUptake</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4269,7 +4271,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Stover.WaterDemand</YFieldName>
+        <YFieldName>SCRUM.Stover.WaterDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4290,7 +4292,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Stover.Transpiration</YFieldName>
+        <YFieldName>SCRUM.Stover.Transpiration</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4332,7 +4334,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Root.Depth</YFieldName>
+        <YFieldName>SCRUM.Root.Depth</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4353,7 +4355,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Stover.Height</YFieldName>
+        <YFieldName>SCRUM.Stover.Height</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4403,7 +4405,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Arbitrator.NDemand</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.NDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4424,7 +4426,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Arbitrator.NSupply</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.NSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4466,7 +4468,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Arbitrator.DMSupply</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DMSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4487,7 +4489,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Arbitrator.DMDemand</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DMDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4508,7 +4510,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Arbitrator.DMSinkLimitation</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DMSinkLimitation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4529,7 +4531,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Arbitrator.DMNutrientLimitation</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DMNutrientLimitation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4571,7 +4573,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Stover.Fw</YFieldName>
+        <YFieldName>SCRUM.Stover.Fw</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4592,7 +4594,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Arbitrator.FN</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.FN</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4613,7 +4615,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Phenology.Stage</YFieldName>
+        <YFieldName>SCRUM.Phenology.Stage</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4645,13 +4647,13 @@ namespace Models
     <Name>Crop Comparisions</Name>
     <Memo>
       <Name>Description</Name>
-      <MemoText><![CDATA[This test simply simulates a range of different SCUM crop types to show how they differ in their canopy and biomass accumulation patterns.  The 5 graphs demonstrate the differences in:  
+      <MemoText><![CDATA[This test simply simulates a range of different SCRUM crop types to show how they differ in their canopy and biomass accumulation patterns.  The 5 graphs demonstrate the differences in:  
  - The speed at which cover is attained  
  - The maximum cover that is achieved  
  - The speed and which cover is senesced again
  - The speed and extent of biomass and N accumulation
  - The timing and extent of dry and fresh yield productin
-These graphs are intended to demonstrate how SCUM represents approximate differences in differnt crops types with simple yet realistic temporal patterns]]></MemoText>
+These graphs are intended to demonstrate how SCRUM represents approximate differences in differnt crops types with simple yet realistic temporal patterns]]></MemoText>
     </Memo>
     <Factors>
       <Name>Factors</Name>
@@ -4660,57 +4662,57 @@ These graphs are intended to demonstrate how SCUM represents approximate differe
         <Factor>
           <Name>SpringWheat</Name>
           <Specifications>
-            <string>[SCUMSowingRule].Script.CultivarName = Wheat_Spring</string>
-            <string>[SCUMSowingRule].Script.SowingDate = 1998-09-15</string>
+            <string>[SCRUMSowingRule].Script.CultivarName = Wheat_Spring</string>
+            <string>[SCRUMSowingRule].Script.SowingDate = 1998-09-15</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>AutumnWheat</Name>
           <Specifications>
-            <string>[SCUMSowingRule].Script.CultivarName = Wheat_Autumn</string>
-            <string>[SCUMSowingRule].Script.SowingDate = 1998-05-15</string>
+            <string>[SCRUMSowingRule].Script.CultivarName = Wheat_Autumn</string>
+            <string>[SCRUMSowingRule].Script.SowingDate = 1998-05-15</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>Potatoes</Name>
           <Specifications>
-            <string>[SCUMSowingRule].Script.CultivarName = Potatoes_Long</string>
-            <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
+            <string>[SCRUMSowingRule].Script.CultivarName = Potatoes_Long</string>
+            <string>[SCRUMSowingRule].Script.SowingDate = 1998-10-15</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>Peas</Name>
           <Specifications>
-            <string>[SCUMSowingRule].Script.CultivarName = Green_Peas</string>
-            <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
+            <string>[SCRUMSowingRule].Script.CultivarName = Green_Peas</string>
+            <string>[SCRUMSowingRule].Script.SowingDate = 1998-10-15</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>Maize</Name>
           <Specifications>
-            <string>[SCUMSowingRule].Script.CultivarName = Maize_Short</string>
-            <string>[SCUMSowingRule].Script.SowingDate = 1998-11-15</string>
+            <string>[SCRUMSowingRule].Script.CultivarName = Maize_Short</string>
+            <string>[SCRUMSowingRule].Script.SowingDate = 1998-11-15</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>Spinach</Name>
           <Specifications>
-            <string>[SCUMSowingRule].Script.CultivarName = Spinach</string>
-            <string>[SCUMSowingRule].Script.SowingDate = 1998-05-15</string>
+            <string>[SCRUMSowingRule].Script.CultivarName = Spinach</string>
+            <string>[SCRUMSowingRule].Script.SowingDate = 1998-05-15</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>Kale</Name>
           <Specifications>
-            <string>[SCUMSowingRule].Script.CultivarName = Kale</string>
-            <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
+            <string>[SCRUMSowingRule].Script.CultivarName = Kale</string>
+            <string>[SCRUMSowingRule].Script.SowingDate = 1998-10-15</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>Rape</Name>
           <Specifications>
-            <string>[SCUMSowingRule].Script.CultivarName = Rape</string>
-            <string>[SCUMSowingRule].Script.SowingDate = 1998-10-15</string>
+            <string>[SCRUMSowingRule].Script.CultivarName = Rape</string>
+            <string>[SCRUMSowingRule].Script.SowingDate = 1998-10-15</string>
           </Specifications>
         </Factor>
         <Specifications />
@@ -4767,7 +4769,7 @@ These graphs are intended to demonstrate how SCUM represents approximate differe
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>SCUMSoil</Name>
+              <Name>SCRUMSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -5081,7 +5083,7 @@ These graphs are intended to demonstrate how SCUM represents approximate differe
           <Name>Fertiliser</Name>
         </Fertiliser>
         <Manager>
-          <Name>SCUMSowingRule</Name>
+          <Name>SCRUMSowingRule</Name>
           <Script>
             <CultivarName>Barley_Spring</CultivarName>
             <InitialRootDepth>10</InitialRootDepth>
@@ -5097,7 +5099,7 @@ namespace Models
 	[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
-		[Link] Plant SCUM;
+		[Link] Plant SCRUM;
 		[Link] Clock Clock;
 
 		[Description("Cultivar")]
@@ -5112,7 +5114,7 @@ namespace Models
 		private void OnDoManagement(object sender, EventArgs e)
 		{
 			if (Clock.Today.Date == SowingDate)
-				SCUM.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				SCRUM.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 			//PMFCrop.Sow(... Contains the following arguements:
 			//Population  double  Optional  Seeds sowing/m2.  Default is zero
 			//Cultivar    string  Required  "NameOfCultivar"
@@ -5150,7 +5152,7 @@ namespace Models
 		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
-		[Link] Plant SCUM;
+		[Link] Plant SCRUM;
         [Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
@@ -5228,7 +5230,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
             AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			AccumPlantN -= (double)zone.Get("SCUM.Root.NUptake");
+			AccumPlantN -= (double)zone.Get("SCRUM.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -5237,8 +5239,8 @@ namespace Models
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 
 			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[SCUM].Stover.Transpiration");
-            AccumEP -= (double)zone.Get("SCUM.Root.WaterUptake");
+			//AccumEP -= (double)zone.Get("[SCRUM].Stover.Transpiration");
+            AccumEP -= (double)zone.Get("SCRUM.Root.WaterUptake");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -5350,46 +5352,46 @@ namespace Models
             <string>[Soil].SoilWater.pond</string>
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
-            <string>[SCUM].Stover.Live.Wt</string>
-            <string>[SCUM].Root.Live.Wt</string>
-            <string>[SCUM].Product.Live.Wt</string>
-            <string>[SCUM].Stover.Live.N</string>
-            <string>[SCUM].Root.Live.N</string>
-            <string>[SCUM].Product.Live.N</string>
-            <string>[SCUM].Stover.Live.NConc</string>
-            <string>[SCUM].Root.Live.NConc</string>
-            <string>[SCUM].Product.Live.NConc</string>
-            <string>[SCUM].Root.WaterSupply</string>
-            <string>[SCUM].Root.WaterUptake</string>
-            <string>[SCUM].Stover.Transpiration</string>
-            <string>[SCUM].Stover.WaterDemand</string>
-            <string>[SCUM].Root.Depth</string>
-            <string>[SCUM].Stover.CoverTotal</string>
-            <string>[SCUM].Stover.CoverDead</string>
-            <string>[SCUM].Stover.CoverGreen</string>
-            <string>[SCUM].Stover.LAI</string>
-            <string>[SCUM].Stover.Height</string>
-            <string>[SCUM].Stover.PotentialBiomass.Value</string>
-            <string>[SCUM].Product.LiveFWt</string>
-            <string>[SCUM].Arbitrator.NDemand</string>
-            <string>[SCUM].Arbitrator.NSupply</string>
-            <string>[SCUM].Stover.Fw</string>
-            <string>[SCUM].Stover.Fn</string>
-            <string>[SCUM].Total.Wt</string>
-            <string>[SCUM].ExpectedYield.Value</string>
-            <string>[SCUM].DryYield.Value</string>
-            <string>[SCUM].TotalBiomassAtStartReproductive.Value</string>
-            <string>[SCUM].TotalBiomassAtStartSenescence.Value</string>
-            <string>[SCUM].Ymax.Value</string>
-            <string>[SCUM].Total.N</string>
-            <string>[SCUM].Arbitrator.DMSupply</string>
-            <string>[SCUM].Arbitrator.DMDemand</string>
-            <string>[SCUM].Phenology.AccumulatedEmergedTT</string>
-            <string>[SCUM].Arbitrator.DMSinkLimitation</string>
-            <string>[SCUM].Arbitrator.DMNutrientLimitation</string>
-            <string>[SCUM].Phenology.ThermalTime.Value</string>
-            <string>[SCUM].Phenology.CurrentPhaseName</string>
-            <string>[SCUM].Phenology.Stage</string>
+            <string>[SCRUM].Stover.Live.Wt</string>
+            <string>[SCRUM].Root.Live.Wt</string>
+            <string>[SCRUM].Product.Live.Wt</string>
+            <string>[SCRUM].Stover.Live.N</string>
+            <string>[SCRUM].Root.Live.N</string>
+            <string>[SCRUM].Product.Live.N</string>
+            <string>[SCRUM].Stover.Live.NConc</string>
+            <string>[SCRUM].Root.Live.NConc</string>
+            <string>[SCRUM].Product.Live.NConc</string>
+            <string>[SCRUM].Root.WaterSupply</string>
+            <string>[SCRUM].Root.WaterUptake</string>
+            <string>[SCRUM].Stover.Transpiration</string>
+            <string>[SCRUM].Stover.WaterDemand</string>
+            <string>[SCRUM].Root.Depth</string>
+            <string>[SCRUM].Stover.CoverTotal</string>
+            <string>[SCRUM].Stover.CoverDead</string>
+            <string>[SCRUM].Stover.CoverGreen</string>
+            <string>[SCRUM].Stover.LAI</string>
+            <string>[SCRUM].Stover.Height</string>
+            <string>[SCRUM].Stover.PotentialBiomass.Value</string>
+            <string>[SCRUM].Product.LiveFWt</string>
+            <string>[SCRUM].Arbitrator.NDemand</string>
+            <string>[SCRUM].Arbitrator.NSupply</string>
+            <string>[SCRUM].Stover.Fw</string>
+            <string>[SCRUM].Stover.Fn</string>
+            <string>[SCRUM].Total.Wt</string>
+            <string>[SCRUM].ExpectedYield.Value</string>
+            <string>[SCRUM].DryYield.Value</string>
+            <string>[SCRUM].TotalBiomassAtStartReproductive.Value</string>
+            <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
+            <string>[SCRUM].Ymax.Value</string>
+            <string>[SCRUM].Total.N</string>
+            <string>[SCRUM].Arbitrator.DMSupply</string>
+            <string>[SCRUM].Arbitrator.DMDemand</string>
+            <string>[SCRUM].Phenology.AccumulatedEmergedTT</string>
+            <string>[SCRUM].Arbitrator.DMSinkLimitation</string>
+            <string>[SCRUM].Arbitrator.DMNutrientLimitation</string>
+            <string>[SCRUM].Phenology.ThermalTime.Value</string>
+            <string>[SCRUM].Phenology.CurrentPhaseName</string>
+            <string>[SCRUM].Phenology.Stage</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -5412,7 +5414,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.Live.NConc</YFieldName>
+            <YFieldName>SCRUM.Stover.Live.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5454,7 +5456,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.Fw</YFieldName>
+            <YFieldName>SCRUM.Stover.Fw</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5475,7 +5477,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.Fn</YFieldName>
+            <YFieldName>SCRUM.Stover.Fn</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5509,9 +5511,10 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Plant>
-          <Name>SCUM</Name>
-          <ResourceName>SCUM</ResourceName>
-          <CropType>SCUM</CropType>
+          <Name>SCRUM</Name>
+          <ResourceName>SCRUM</ResourceName>
+          <CropType>SCRUM</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Manager>
           <Name>AutomaticIrrigation</Name>
@@ -5546,7 +5549,7 @@ namespace Models
 	   [Link] Irrigation Irrigation;
 	   [Link] Clock Clock;
 	   [Link] Soil Soil;
-	   [Link] Plant SCUM;
+	   [Link] Plant SCRUM;
 	   
 	   //User inputs from properties tab
 	   [Description("Irrigation on (yes or no)")]
@@ -5646,7 +5649,7 @@ namespace Models
 		  
 	      //Is there a crop in the ground that needs irrigation?
 	      CropIsActive = false;
-	      if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
+	      if ((SCRUM.Phenology.Stage >= 3.0) && (SCRUM.Phenology.Stage < 6.0))
 	            CropIsActive = true;
 	      
 	      //Is the irrigator available?
@@ -5658,7 +5661,7 @@ namespace Models
 	      //Is the soil dry enough to require irrigation?
 	      SoilIsDry = false;
 	      double CurrentRootDepth = 0;
-	      double RootDepth = SCUM.Root.Depth;
+	      double RootDepth = SCRUM.Root.Depth;
 	      CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
 	      
 	      double RelativeRootDepth = Math.Min(1.0, CurrentRootDepth / Top_Depth);
@@ -5724,7 +5727,7 @@ namespace Models
 	   [Link] Fertiliser Fertiliser;
 	   [Link] Clock Clock;
 	   [Link] Soils.Soil Soil;
-	   [Link] Plant SCUM;
+	   [Link] Plant SCRUM;
 	   
 	   //User inputs from properties tab
 	   [Description("Fertiliser on (yes or no)")]
@@ -5800,7 +5803,7 @@ namespace Models
 		  
 	      //Is there a crop in the ground that needs irrigation?
 	      CropIsActive = false;
-	      if ((SCUM.Phenology.Stage >= 3.0) && (SCUM.Phenology.Stage < 6.0))
+	      if ((SCRUM.Phenology.Stage >= 3.0) && (SCRUM.Phenology.Stage < 6.0))
 	            CropIsActive = true;
 	      
 	      //Is the irrigator available?
@@ -5812,7 +5815,7 @@ namespace Models
 	      //Is the soil N low enough to require fertiliser?
 	      SoilNIsLow = false;
 	      double CurrentRootDepth = 0;
-	      double RootDepth = SCUM.Root.Depth;
+	      double RootDepth = SCRUM.Root.Depth;
 	      CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
 	      
 	      Accumulated_depth = 0;
@@ -6259,8 +6262,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCUM.Stover.Live.Wt</YFieldName>
+          <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+          <YFieldName>SCRUM.Stover.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6280,8 +6283,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCUM.Root.Live.Wt</YFieldName>
+          <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+          <YFieldName>SCRUM.Root.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6301,8 +6304,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCUM.Product.Live.Wt</YFieldName>
+          <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+          <YFieldName>SCRUM.Product.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6322,8 +6325,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCUM.Total.Wt</YFieldName>
+          <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+          <YFieldName>SCRUM.Total.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6343,8 +6346,8 @@ namespace Models
           <Line>Dash</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCUM.DryYield.Value</YFieldName>
+          <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+          <YFieldName>SCRUM.DryYield.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6364,8 +6367,8 @@ namespace Models
           <Line>Dot</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCUM.TotalBiomassAtStartReproductive.Value</YFieldName>
+          <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+          <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6385,8 +6388,8 @@ namespace Models
           <Line>DashDot</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCUM.TotalBiomassAtStartSenescence.Value</YFieldName>
+          <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+          <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6406,8 +6409,8 @@ namespace Models
           <Line>Dash</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCUM.Ymax.Value</YFieldName>
+          <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+          <YFieldName>SCRUM.Ymax.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6427,8 +6430,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCUM.Phenology.Stage</YFieldName>
+          <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+          <YFieldName>SCRUM.Phenology.Stage</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6448,8 +6451,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCUM.Arbitrator.DMSupply</YFieldName>
+          <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+          <YFieldName>SCRUM.Arbitrator.DMSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>true</Cumulative>
@@ -6498,7 +6501,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Stover.Live.N</YFieldName>
+          <YFieldName>SCRUM.Stover.Live.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6519,7 +6522,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Root.Live.N</YFieldName>
+          <YFieldName>SCRUM.Root.Live.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6540,7 +6543,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Product.Live.N</YFieldName>
+          <YFieldName>SCRUM.Product.Live.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6561,7 +6564,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Total.N</YFieldName>
+          <YFieldName>SCRUM.Total.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6603,7 +6606,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Root.WaterSupply</YFieldName>
+          <YFieldName>SCRUM.Root.WaterSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6624,7 +6627,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Root.WaterUptake</YFieldName>
+          <YFieldName>SCRUM.Root.WaterUptake</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6645,7 +6648,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Stover.WaterDemand</YFieldName>
+          <YFieldName>SCRUM.Stover.WaterDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6666,7 +6669,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Stover.Transpiration</YFieldName>
+          <YFieldName>SCRUM.Stover.Transpiration</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6708,7 +6711,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Root.Depth</YFieldName>
+          <YFieldName>SCRUM.Root.Depth</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6729,7 +6732,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Stover.Height</YFieldName>
+          <YFieldName>SCRUM.Stover.Height</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6778,8 +6781,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCUM.Root.Depth</YFieldName>
+          <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+          <YFieldName>SCRUM.Root.Depth</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6799,8 +6802,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCUM.Stover.CoverTotal</YFieldName>
+          <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+          <YFieldName>SCRUM.Stover.CoverTotal</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6820,8 +6823,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCUM.Stover.LAI</YFieldName>
+          <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+          <YFieldName>SCRUM.Stover.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6870,7 +6873,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Arbitrator.NDemand</YFieldName>
+          <YFieldName>SCRUM.Arbitrator.NDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6891,7 +6894,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Arbitrator.NSupply</YFieldName>
+          <YFieldName>SCRUM.Arbitrator.NSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6933,7 +6936,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Arbitrator.DMSupply</YFieldName>
+          <YFieldName>SCRUM.Arbitrator.DMSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>true</Cumulative>
@@ -6954,7 +6957,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Arbitrator.DMDemand</YFieldName>
+          <YFieldName>SCRUM.Arbitrator.DMDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6975,7 +6978,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Arbitrator.DMSinkLimitation</YFieldName>
+          <YFieldName>SCRUM.Arbitrator.DMSinkLimitation</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6996,7 +6999,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Arbitrator.DMNutrientLimitation</YFieldName>
+          <YFieldName>SCRUM.Arbitrator.DMNutrientLimitation</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7038,7 +7041,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Stover.Fw</YFieldName>
+          <YFieldName>SCRUM.Stover.Fw</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7059,7 +7062,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Stover.Fn</YFieldName>
+          <YFieldName>SCRUM.Stover.Fn</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7080,7 +7083,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Phenology.Stage</YFieldName>
+          <YFieldName>SCRUM.Phenology.Stage</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7124,8 +7127,8 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Stover.CoverGreen</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.Stover.CoverGreen</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -7166,8 +7169,8 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Total.Wt</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -7208,8 +7211,8 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Total.N</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.Total.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -7250,8 +7253,8 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Product.Live.Wt</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.Product.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -7292,8 +7295,8 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCUM.Product.LiveFWt</YFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
+        <YFieldName>SCRUM.Product.LiveFWt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -7326,7 +7329,7 @@ namespace Models
       <MemoText><![CDATA[
 ### Lincoln2012 (Rain-Shelter Trail)
 
-Testing of SCUM under New Zealand conditions was undertaken using the data Maize data of Teixeira et al (2014).  This dataset includes the impact of three N (0 to 250 kg/ha N) and two water regimes (dryland and fully irrigated) using a rain-shelter structure.  Observations include biomass and nitrogen accumulation, soil water contents. Total biomass ranged from 8000 kg/ha for dryland nil N crops to up to 28000kg/ha for fully irrigated and N fertilised crops.  Dryland crops recovered 25 percent less N from applied fertilizer than irrigated crops.  The expected yields were set to 18 t/ha (the yield achieved in the fully irrigation Med N plots) for all treatments and the simple N and water responses of SCUM were allowed to predict treatment effects.  The three graphs below show that SCUM gave adequate estimations of biomass and N accumulations in respone to irrigation and fertiliser treatments and adequate estimations of soil water content.  This suggests Scum is suitable for its intended purpose of providing realistic N and water uptake patterns for N and water balance studies.
+Testing of SCRUM under New Zealand conditions was undertaken using the data Maize data of Teixeira et al (2014).  This dataset includes the impact of three N (0 to 250 kg/ha N) and two water regimes (dryland and fully irrigated) using a rain-shelter structure.  Observations include biomass and nitrogen accumulation, soil water contents. Total biomass ranged from 8000 kg/ha for dryland nil N crops to up to 28000kg/ha for fully irrigated and N fertilised crops.  Dryland crops recovered 25 percent less N from applied fertilizer than irrigated crops.  The expected yields were set to 18 t/ha (the yield achieved in the fully irrigation Med N plots) for all treatments and the simple N and water responses of SCRUM were allowed to predict treatment effects.  The three graphs below show that SCRUM gave adequate estimations of biomass and N accumulations in respone to irrigation and fertiliser treatments and adequate estimations of soil water content.  This suggests Scum is suitable for its intended purpose of providing realistic N and water uptake patterns for N and water balance studies.
 
 ]]></MemoText>
     </Memo>
@@ -7660,7 +7663,7 @@ Testing of SCUM under New Zealand conditions was undertaken using the data Maize
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>SCUMSoil</Name>
+              <Name>SCRUMSoil</Name>
               <LL>
                 <double>0.084</double>
                 <double>0.12</double>
@@ -7851,9 +7854,10 @@ Testing of SCUM under New Zealand conditions was undertaken using the data Maize
           <DataSource>Profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
         </Soil>
         <Plant>
-          <Name>SCUM</Name>
-          <ResourceName>SCUM</ResourceName>
-          <CropType>SCUM</CropType>
+          <Name>SCRUM</Name>
+          <ResourceName>SCRUM</ResourceName>
+          <CropType>SCRUM</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -8045,7 +8049,7 @@ Testing of SCUM under New Zealand conditions was undertaken using the data Maize
           <Name>Sow</Name>
           <Operation>
             <Date>2012-10-23T00:00:00</Date>
-            <Action>[SCUM].Sow(population:11, cultivar:"Maize_Short", depth:10, rowSpacing:710);</Action>
+            <Action>[SCRUM].Sow(population:11, cultivar:"Maize_Short", depth:10, rowSpacing:710);</Action>
           </Operation>
         </Operations>
         <Manager>
@@ -8072,7 +8076,7 @@ namespace Models
 		[Link] Weather Met;
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;
-		[Link] Plant SCUM;
+		[Link] Plant SCRUM;
 		[Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
@@ -8164,7 +8168,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
 			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
 			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			AccumPlantN -= (double)zone.Get("SCUM.Root.NUptake");
+			AccumPlantN -= (double)zone.Get("SCRUM.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -8174,8 +8178,8 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[SCUM].Stover.Transpiration");
-			AccumEP -= (double)zone.Get("SCUM.Root.WaterUptake");
+			//AccumEP -= (double)zone.Get("[SCRUM].Stover.Transpiration");
+			AccumEP -= (double)zone.Get("SCRUM.Root.WaterUptake");
 			SoilWaterDeficit = (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -8222,7 +8226,7 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{
-		[Link] Plant SCUM;
+		[Link] Plant SCRUM;
 		[Link] Zone zone;
 					
         
@@ -8234,10 +8238,10 @@ namespace Models
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (SCUM.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			if (SCRUM.Phenology.CurrentPhaseName == "ReadyForHarvesting")
 			{
-				SCUM.Harvest();
-				SCUM.EndCrop();
+				SCRUM.Harvest();
+				SCRUM.EndCrop();
 			}
 		}
 		
@@ -8251,9 +8255,9 @@ namespace Models
 	   ]]></Code>
         </Manager>
         <Manager>
-          <Name>SetSCUMYield</Name>
+          <Name>SetSCRUMYield</Name>
           <Script>
-            <OverRidePath>SCUM.Product.ExpectedYield.Value</OverRidePath>
+            <OverRidePath>SCRUM.Product.ExpectedYield.Value</OverRidePath>
             <OverRideInterger>1800</OverRideInterger>
             <ChangeDate>2012-10-23</ChangeDate>
           </Script>
@@ -8296,9 +8300,9 @@ namespace Models
 	   ]]></Code>
         </Manager>
         <Manager>
-          <Name>SetSCUMCoverMax</Name>
+          <Name>SetSCRUMCoverMax</Name>
           <Script>
-            <OverRidePath>SCUM.Stover.CoverFunction.Expanding.SigCoverFunction.Ymax.Value</OverRidePath>
+            <OverRidePath>SCRUM.Stover.CoverFunction.Expanding.SigCoverFunction.Ymax.Value</OverRidePath>
             <OverRideDouble>0.9</OverRideDouble>
             <ChangeDate>2012-10-23</ChangeDate>
           </Script>
@@ -8383,39 +8387,39 @@ namespace Models
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
-            <string>[SCUM].Product.Live.Wt</string>
-            <string>[SCUM].Stover.Live.Wt</string>
-            <string>[SCUM].Root.Live.Wt</string>
-            <string>[SCUM].Product.Live.N</string>
-            <string>[SCUM].Stover.Live.N</string>
-            <string>[SCUM].Root.Live.N</string>
-            <string>[SCUM].Root.WaterUptake</string>
-            <string>[SCUM].Stover.Transpiration</string>
-            <string>[SCUM].Stover.WaterDemand</string>
-            <string>[SCUM].Root.Depth</string>
-            <string>[SCUM].Stover.CoverTotal</string>
-            <string>[SCUM].Stover.LAI </string>
-            <string>[SCUM].Stover.Height</string>
-            <string>[SCUM].Phenology.Stage</string>
-            <string>[SCUM].AboveGround.N</string>
-            <string>[SCUM].AboveGround.Wt </string>
-            <string>[SCUM].Total.N</string>
-            <string>[SCUM].Total.Wt</string>
-            <string>[SCUM].Arbitrator.NDemand</string>
-            <string>[SCUM].Arbitrator.NSupply</string>
-            <string>[SCUM].Arbitrator.DMSupply</string>
-            <string>[SCUM].Arbitrator.DMDemand</string>
-            <string>[SCUM].Arbitrator.DMAllocated</string>
-            <string>[SCUM].Arbitrator.DMSinkLimitation</string>
-            <string>[SCUM].Arbitrator.DMNutrientLimitation</string>
-            <string>[SCUM].Stover.MaximumNConc.Value</string>
-            <string>[SCUM].Stover.MinimumNConc.Value</string>
-            <string>[SCUM].Stover.Live.NConc</string>
-            <string>[SCUM].Stover.Live.NConc</string>
-            <string>[SCUM].Product.Live.NConc</string>
-            <string>[SCUM].Stover.FRGRFunction.Value</string>
-            <string>[SCUM].Stover.Fw</string>
-            <string>[SCUM].Arbitrator.FN</string>
+            <string>[SCRUM].Product.Live.Wt</string>
+            <string>[SCRUM].Stover.Live.Wt</string>
+            <string>[SCRUM].Root.Live.Wt</string>
+            <string>[SCRUM].Product.Live.N</string>
+            <string>[SCRUM].Stover.Live.N</string>
+            <string>[SCRUM].Root.Live.N</string>
+            <string>[SCRUM].Root.WaterUptake</string>
+            <string>[SCRUM].Stover.Transpiration</string>
+            <string>[SCRUM].Stover.WaterDemand</string>
+            <string>[SCRUM].Root.Depth</string>
+            <string>[SCRUM].Stover.CoverTotal</string>
+            <string>[SCRUM].Stover.LAI </string>
+            <string>[SCRUM].Stover.Height</string>
+            <string>[SCRUM].Phenology.Stage</string>
+            <string>[SCRUM].AboveGround.N</string>
+            <string>[SCRUM].AboveGround.Wt </string>
+            <string>[SCRUM].Total.N</string>
+            <string>[SCRUM].Total.Wt</string>
+            <string>[SCRUM].Arbitrator.NDemand</string>
+            <string>[SCRUM].Arbitrator.NSupply</string>
+            <string>[SCRUM].Arbitrator.DMSupply</string>
+            <string>[SCRUM].Arbitrator.DMDemand</string>
+            <string>[SCRUM].Arbitrator.DMAllocated</string>
+            <string>[SCRUM].Arbitrator.DMSinkLimitation</string>
+            <string>[SCRUM].Arbitrator.DMNutrientLimitation</string>
+            <string>[SCRUM].Stover.MaximumNConc.Value</string>
+            <string>[SCRUM].Stover.MinimumNConc.Value</string>
+            <string>[SCRUM].Stover.Live.NConc</string>
+            <string>[SCRUM].Stover.Live.NConc</string>
+            <string>[SCRUM].Product.Live.NConc</string>
+            <string>[SCRUM].Stover.FRGRFunction.Value</string>
+            <string>[SCRUM].Stover.Fw</string>
+            <string>[SCRUM].Arbitrator.FN</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -8438,7 +8442,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Arbitrator.DMSupply</YFieldName>
+            <YFieldName>SCRUM.Arbitrator.DMSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8459,7 +8463,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Arbitrator.DMDemand</YFieldName>
+            <YFieldName>SCRUM.Arbitrator.DMDemand</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8480,7 +8484,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Arbitrator.DMSinkLimitation</YFieldName>
+            <YFieldName>SCRUM.Arbitrator.DMSinkLimitation</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8501,7 +8505,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Arbitrator.DMNutrientLimitation</YFieldName>
+            <YFieldName>SCRUM.Arbitrator.DMNutrientLimitation</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8543,7 +8547,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.CohortParameters.GrowthDuration.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.CohortParameters.GrowthDuration.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8564,7 +8568,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.CohortParameters.LagDuration.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.CohortParameters.LagDuration.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8585,7 +8589,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.CohortParameters.SenescenceDuration.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.CohortParameters.SenescenceDuration.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8606,7 +8610,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Structure.MainStoverNodeAppearanceRate.Value</YFieldName>
+            <YFieldName>SCRUM.Structure.MainStoverNodeAppearanceRate.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8648,7 +8652,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Structure.Height</YFieldName>
+            <YFieldName>SCRUM.Structure.Height</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8690,7 +8694,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.DMDemandFunction.PotentialDMAccumulation.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.DMDemandFunction.PotentialDMAccumulation.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8711,7 +8715,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.DMDemandFunction.HightLimitedDMAccumulation.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.DMDemandFunction.HightLimitedDMAccumulation.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8943,7 +8947,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.Live.Wt</YFieldName>
+            <YFieldName>SCRUM.Stover.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8964,7 +8968,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Product.Live.Wt</YFieldName>
+            <YFieldName>SCRUM.Product.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8985,7 +8989,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Root.Live.Wt</YFieldName>
+            <YFieldName>SCRUM.Root.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9006,7 +9010,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Total.Wt</YFieldName>
+            <YFieldName>SCRUM.Total.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9027,7 +9031,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Arbitrator.DMDemand</YFieldName>
+            <YFieldName>SCRUM.Arbitrator.DMDemand</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>true</Cumulative>
@@ -9048,7 +9052,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Rachis.Live.Wt</YFieldName>
+            <YFieldName>SCRUM.Rachis.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9069,7 +9073,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Tastle.Live.Wt</YFieldName>
+            <YFieldName>SCRUM.Tastle.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9111,7 +9115,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.Live.N</YFieldName>
+            <YFieldName>SCRUM.Stover.Live.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9132,7 +9136,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Root.Live.N</YFieldName>
+            <YFieldName>SCRUM.Root.Live.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9153,7 +9157,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Product.Live.N</YFieldName>
+            <YFieldName>SCRUM.Product.Live.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9174,7 +9178,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Total.N</YFieldName>
+            <YFieldName>SCRUM.Total.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9195,7 +9199,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.Live.N</YFieldName>
+            <YFieldName>SCRUM.Stover.Live.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9216,7 +9220,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.Live.N</YFieldName>
+            <YFieldName>SCRUM.Stover.Live.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9257,8 +9261,8 @@ namespace Models
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
-            <XFieldName>SCUM.Structure.MainStoverNodeNo</XFieldName>
-            <YFieldName>SCUM.Structure.MainStoverNodeAppearanceRate.Value</YFieldName>
+            <XFieldName>SCRUM.Structure.MainStoverNodeNo</XFieldName>
+            <YFieldName>SCRUM.Structure.MainStoverNodeAppearanceRate.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9850,7 +9854,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.Transpiration</YFieldName>
+            <YFieldName>SCRUM.Stover.Transpiration</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9871,7 +9875,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.WaterDemand</YFieldName>
+            <YFieldName>SCRUM.Stover.WaterDemand</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9913,7 +9917,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.Fw</YFieldName>
+            <YFieldName>SCRUM.Stover.Fw</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9934,7 +9938,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.WaterDemand</YFieldName>
+            <YFieldName>SCRUM.Stover.WaterDemand</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9976,7 +9980,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.MaximumNConc.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.MaximumNConc.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9997,7 +10001,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.MinimumNConc.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.MinimumNConc.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10018,7 +10022,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.Live.NConc</YFieldName>
+            <YFieldName>SCRUM.Stover.Live.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10068,7 +10072,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.AboveGround.Wt</YFieldName>
+          <YFieldName>SCRUM.AboveGround.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10131,7 +10135,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.AboveGround.N</YFieldName>
+          <YFieldName>SCRUM.AboveGround.N</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10766,7 +10770,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Product.Live.Wt</YFieldName>
+            <YFieldName>SCRUM.Product.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10829,7 +10833,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.Live.Wt</YFieldName>
+            <YFieldName>SCRUM.Stover.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10892,7 +10896,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Product.Live.N</YFieldName>
+            <YFieldName>SCRUM.Product.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10955,7 +10959,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.Live.N</YFieldName>
+            <YFieldName>SCRUM.Stover.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11021,7 +11025,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.LAI</YFieldName>
+            <YFieldName>SCRUM.Stover.LAI</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11084,7 +11088,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.CoverTotal</YFieldName>
+            <YFieldName>SCRUM.Stover.CoverTotal</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11147,7 +11151,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.Height</YFieldName>
+            <YFieldName>SCRUM.Stover.Height</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11189,7 +11193,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Root.Depth</YFieldName>
+            <YFieldName>SCRUM.Root.Depth</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11234,7 +11238,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Arbitrator.NDemand</YFieldName>
+            <YFieldName>SCRUM.Arbitrator.NDemand</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11276,7 +11280,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Arbitrator.NSupply</YFieldName>
+            <YFieldName>SCRUM.Arbitrator.NSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11318,7 +11322,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.Live.NConc</YFieldName>
+            <YFieldName>SCRUM.Stover.Live.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11360,7 +11364,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.FRGRFunction.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.FRGRFunction.Value</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11402,7 +11406,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Stover.Fw</YFieldName>
+            <YFieldName>SCRUM.Stover.Fw</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11444,7 +11448,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCUM.Arbitrator.FN</YFieldName>
+            <YFieldName>SCRUM.Arbitrator.FN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11476,9 +11480,9 @@ namespace Models
     <Name>ABlock</Name>
     <Memo>
       <Name>memo</Name>
-      <MemoText><![CDATA[In this test we use SCUM to represent differnt crops in two different rotation treatments (Potatoes -> Wheat -> Potatoes and Potatoes -> Peas -> Potatoes) with two irrigation (W1 and W2) and three N fertiliser treatments (N0, N1 and N2).  These rotations ran over three years and were conducted to provide data for testing N leaching predictions of different models.  SCUM yields were set to the High N full irrigation treatment values for each crop and SCUMs N and water responses were allowed to predict any differences in crop N uptake.  It is importnat to note that the soilN organic matter degridation coefficients were set to custom (non-release) values as this has been necessary to predict accurate N mineralisation values in new zealand arable soils.  
+      <MemoText><![CDATA[In this test we use SCRUM to represent differnt crops in two different rotation treatments (Potatoes -> Wheat -> Potatoes and Potatoes -> Peas -> Potatoes) with two irrigation (W1 and W2) and three N fertiliser treatments (N0, N1 and N2).  These rotations ran over three years and were conducted to provide data for testing N leaching predictions of different models.  SCRUM yields were set to the High N full irrigation treatment values for each crop and SCRUMs N and water responses were allowed to predict any differences in crop N uptake.  It is importnat to note that the soilN organic matter degridation coefficients were set to custom (non-release) values as this has been necessary to predict accurate N mineralisation values in new zealand arable soils.  
 
-SCUM gave reasionable predictions of Product N removals, soil water contents and accumulated leaching from each crop treatment.  This provides further support that SCUM is adequate for the task of providing realistic N and Water uptakes for the purpose of N and water balance studies. ]]></MemoText>
+SCRUM gave reasionable predictions of Product N removals, soil water contents and accumulated leaching from each crop treatment.  This provides further support that SCRUM is adequate for the task of providing realistic N and Water uptakes for the purpose of N and water balance studies. ]]></MemoText>
     </Memo>
     <Factors>
       <Name>Factors</Name>
@@ -11837,9 +11841,10 @@ namespace Models
       <Zone>
         <Name>Field</Name>
         <Plant>
-          <Name>SCUM</Name>
-          <ResourceName>SCUM</ResourceName>
-          <CropType>SCUM</CropType>
+          <Name>SCRUM</Name>
+          <ResourceName>SCRUM</ResourceName>
+          <CropType>SCRUM</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Soil>
           <Name>Soil</Name>
@@ -11871,7 +11876,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>SCUMSoil</Name>
+              <Name>SCRUMSoil</Name>
               <LL>
                 <double>0.1</double>
                 <double>0.1</double>
@@ -12271,7 +12276,7 @@ namespace Models
           <Manager>
             <Name>Sowing_Yield</Name>
             <Script>
-              <YieldFile>%root%\Tests\Validation\SCUM\YieldsToSet.csv</YieldFile>
+              <YieldFile>%root%\Tests\Validation\SCRUM\YieldsToSet.csv</YieldFile>
               <InitialRootDepth>10</InitialRootDepth>
               <Crop1>Potatoes_Short</Crop1>
               <SowingDate1>2004-10-15</SowingDate1>
@@ -12307,7 +12312,7 @@ namespace Models
 	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
-		[Link] Plant SCUM;
+		[Link] Plant SCRUM;
 		[Link] Clock Clock;
 		[Link] Zone zone;
 		[Link] Simulation Simulation;
@@ -12393,45 +12398,45 @@ namespace Models
 		{
 			if (Clock.Today.Date == SowingDate1)
 			{
-				SCUM.Sow(cultivar: Crop1, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				SCRUM.Sow(cultivar: Crop1, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 				object ResetValue = Convert.ToDouble(Yields.Rows[0][Treatment]);
-				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
+				zone.Set("[SCRUM].Product.ExpectedYield.Value", ResetValue);
 				ResetValue = 0.025;
-				zone.Set("[SCUM].Product.MaximumNConc.Value", ResetValue);
+				zone.Set("[SCRUM].Product.MaximumNConc.Value", ResetValue);
 			}
 			else if (Clock.Today.Date == HarvestDate1)
 			{
-				SCUM.Harvest(Remove);
-				SCUM.EndCrop();
+				SCRUM.Harvest(Remove);
+				SCRUM.EndCrop();
 			}
 			else if (Clock.Today.Date == SowingDate2)
 			{
-				SCUM.Sow(cultivar: Crop2, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				SCRUM.Sow(cultivar: Crop2, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 				object ResetValue = Convert.ToDouble(Yields.Rows[1][Treatment]);
-				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
+				zone.Set("[SCRUM].Product.ExpectedYield.Value", ResetValue);
 				ResetValue = CropNConc;
-				zone.Set("[SCUM].Product.MaximumNConc.Value", ResetValue);
+				zone.Set("[SCRUM].Product.MaximumNConc.Value", ResetValue);
 			}
 			else if (Clock.Today.Date == HarvestDate2)
 			{
-				SCUM.Harvest(Remove);
-				SCUM.EndCrop();
+				SCRUM.Harvest(Remove);
+				SCRUM.EndCrop();
 				SurfOM.Incorporate(0.8, 10);
 			}
 			else if (Clock.Today.Date == SowingDate3)
 			{
 				SurfOM.Incorporate(1, 10);
-				SCUM.Sow(cultivar: Crop3, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+				SCRUM.Sow(cultivar: Crop3, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 				object ResetValue = Convert.ToDouble(Yields.Rows[2][Treatment]);
-				zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);
+				zone.Set("[SCRUM].Product.ExpectedYield.Value", ResetValue);
 				ResetValue = 0.025;
-				zone.Set("[SCUM].Product.MaximumNConc.Value", ResetValue);
+				zone.Set("[SCRUM].Product.MaximumNConc.Value", ResetValue);
 		
 			}
 			else if (Clock.Today.Date == HarvestDate3)
 			{
-				SCUM.Harvest(Remove);
-				SCUM.EndCrop();
+				SCRUM.Harvest(Remove);
+				SCRUM.EndCrop();
 			}
 			//PMFCrop.Sow(... Contains the following arguements:
 			//Population  double  Optional  Seeds sowing/m2.  Default is zero
@@ -12449,7 +12454,7 @@ namespace Models
           <Manager>
             <Name>NConcReps</Name>
             <Script>
-              <NConcFile>%root%\Tests\Validation\SCUM\NO3.csv</NConcFile>
+              <NConcFile>%root%\Tests\Validation\SCRUM\NO3.csv</NConcFile>
               <TotalLeach>0</TotalLeach>
               <Leach_60>0</Leach_60>
               <ObservedLeach1>0</ObservedLeach1>
@@ -12496,7 +12501,7 @@ namespace Models
 		[Link] Weather Met;
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;
-		[Link] Plant SCUM;
+		[Link] Plant SCRUM;
 		[Link] Zone zone;
 		[Link] Simulation Simulation;
 		
@@ -12670,7 +12675,7 @@ namespace Models
 		[Link] Weather Met;
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;
-		[Link] Plant SCUM;
+		[Link] Plant SCRUM;
 		[Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
@@ -12759,7 +12764,7 @@ namespace Models
 			AccumLeach = AccumLeach + Soil.SoilWater.LeachNO3;
 			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
 			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			AccumPlantN += (double)zone.Get("SCUM.Root.NUptake");
+			AccumPlantN += (double)zone.Get("SCRUM.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -12770,8 +12775,8 @@ namespace Models
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 
 			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[SCUM].Stover.Transpiration");
-			AccumEP -= (double)zone.Get("SCUM.Root.WaterUptake");
+			//AccumEP -= (double)zone.Get("[SCRUM].Stover.Transpiration");
+			AccumEP -= (double)zone.Get("SCRUM.Root.WaterUptake");
 			SoilWaterDeficit = (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -12983,7 +12988,7 @@ namespace Models
 	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
-		[Link] Plant SCUM;
+		[Link] Plant SCRUM;
 		[Link] Clock Clock;
 		[Link] Zone zone;
 		[Link] Simulation Simulation;
@@ -13092,45 +13097,45 @@ namespace Models
             <string>[Soil].SoilWater.pond</string>
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
-            <string>[SCUM].Stover.Live.Wt</string>
-            <string>[SCUM].Root.Live.Wt</string>
-            <string>[SCUM].Product.Live.Wt</string>
-            <string>[SCUM].Stover.Live.N</string>
-            <string>[SCUM].Root.Live.N</string>
-            <string>[SCUM].Product.Live.N</string>
-            <string>[SCUM].Stover.Live.NConc</string>
-            <string>[SCUM].Root.Live.NConc</string>
-            <string>[SCUM].Product.Live.NConc</string>
-            <string>[SCUM].Root.WaterSupply</string>
-            <string>[SCUM].Root.WaterUptake</string>
-            <string>[SCUM].Stover.Transpiration</string>
-            <string>[SCUM].Stover.WaterDemand</string>
-            <string>[SCUM].Root.Depth</string>
-            <string>[SCUM].Stover.CoverTotal</string>
-            <string>[SCUM].Stover.CoverDead</string>
-            <string>[SCUM].Stover.LAI</string>
-            <string>[SCUM].Stover.Height</string>
-            <string>[SCUM].Stover.PotentialBiomass.Value</string>
-            <string>[SCUM].Product.LiveFWt</string>
-            <string>[SCUM].Arbitrator.NDemand</string>
-            <string>[SCUM].Arbitrator.NSupply</string>
-            <string>[SCUM].Stover.Fw</string>
-            <string>[SCUM].Stover.Fn</string>
-            <string>[SCUM].Total.Wt</string>
-            <string>[SCUM].ExpectedYield.Value</string>
-            <string>[SCUM].DryYield.Value</string>
-            <string>[SCUM].TotalBiomassAtStartReproductive.Value</string>
-            <string>[SCUM].TotalBiomassAtStartSenescence.Value</string>
-            <string>[SCUM].Ymax.Value</string>
-            <string>[SCUM].Total.N</string>
-            <string>[SCUM].Arbitrator.DMSupply</string>
-            <string>[SCUM].Arbitrator.DMDemand</string>
-            <string>[SCUM].Phenology.AccumulatedThermalTime.Value</string>
-            <string>[SCUM].Arbitrator.DMSinkLimitation</string>
-            <string>[SCUM].Arbitrator.DMNutrientLimitation</string>
-            <string>[SCUM].Phenology.ThermalTime.Value</string>
-            <string>[SCUM].Phenology.CurrentPhaseName</string>
-            <string>[SCUM].Phenology.Stage</string>
+            <string>[SCRUM].Stover.Live.Wt</string>
+            <string>[SCRUM].Root.Live.Wt</string>
+            <string>[SCRUM].Product.Live.Wt</string>
+            <string>[SCRUM].Stover.Live.N</string>
+            <string>[SCRUM].Root.Live.N</string>
+            <string>[SCRUM].Product.Live.N</string>
+            <string>[SCRUM].Stover.Live.NConc</string>
+            <string>[SCRUM].Root.Live.NConc</string>
+            <string>[SCRUM].Product.Live.NConc</string>
+            <string>[SCRUM].Root.WaterSupply</string>
+            <string>[SCRUM].Root.WaterUptake</string>
+            <string>[SCRUM].Stover.Transpiration</string>
+            <string>[SCRUM].Stover.WaterDemand</string>
+            <string>[SCRUM].Root.Depth</string>
+            <string>[SCRUM].Stover.CoverTotal</string>
+            <string>[SCRUM].Stover.CoverDead</string>
+            <string>[SCRUM].Stover.LAI</string>
+            <string>[SCRUM].Stover.Height</string>
+            <string>[SCRUM].Stover.PotentialBiomass.Value</string>
+            <string>[SCRUM].Product.LiveFWt</string>
+            <string>[SCRUM].Arbitrator.NDemand</string>
+            <string>[SCRUM].Arbitrator.NSupply</string>
+            <string>[SCRUM].Stover.Fw</string>
+            <string>[SCRUM].Stover.Fn</string>
+            <string>[SCRUM].Total.Wt</string>
+            <string>[SCRUM].ExpectedYield.Value</string>
+            <string>[SCRUM].DryYield.Value</string>
+            <string>[SCRUM].TotalBiomassAtStartReproductive.Value</string>
+            <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
+            <string>[SCRUM].Ymax.Value</string>
+            <string>[SCRUM].Total.N</string>
+            <string>[SCRUM].Arbitrator.DMSupply</string>
+            <string>[SCRUM].Arbitrator.DMDemand</string>
+            <string>[SCRUM].Phenology.AccumulatedThermalTime.Value</string>
+            <string>[SCRUM].Arbitrator.DMSinkLimitation</string>
+            <string>[SCRUM].Arbitrator.DMNutrientLimitation</string>
+            <string>[SCRUM].Phenology.ThermalTime.Value</string>
+            <string>[SCRUM].Phenology.CurrentPhaseName</string>
+            <string>[SCRUM].Phenology.Stage</string>
             <string>[AutomaticIrrigation].Script.Top_Refull</string>
             <string>[AutomaticIrrigation].Script.Top_Trigger</string>
             <string>[AutomaticIrrigation].Script.Top_SW</string>
@@ -13141,7 +13146,7 @@ namespace Models
             <string>[AutomaticIrrigation].Script.SeasonIsOpen</string>
             <string>[AutomaticIrrigation].Script.EndDate</string>
             <string>[AutomaticIrrigation].Script.TodayYear</string>
-            <string>[SCUM].Arbitrator.FN</string>
+            <string>[SCRUM].Arbitrator.FN</string>
             <string>[NConcReps].Script.TotalLeach</string>
             <string>[NConcReps].Script.ObservedLeach1</string>
             <string>[NConcReps].Script.ObservedLeach2</string>
@@ -13151,7 +13156,7 @@ namespace Models
             <string>[NConcReps].Script.Leach_60</string>
             <string>[Soil].SoilWater.solute_flow_eff</string>
             <string>[Soil].SoilWater.solute_flux_eff</string>
-            <string>[SCUM].Total.N</string>
+            <string>[SCRUM].Total.N</string>
             <string>[Soil].SoilWater.flow_no3</string>
             <string>[TreatmentID].Script.TreatmentName as Treat</string>
             <string>[Sowing_Yield].Script.Treatment</string>
@@ -13175,7 +13180,7 @@ namespace Models
             <string>[NConcReps].Script.TotalLeach as NLeaching</string>
           </VariableNames>
           <EventNames>
-            <string>[SCUM].Harvesting</string>
+            <string>[SCRUM].Harvesting</string>
           </EventNames>
         </Report>
         <Report>
@@ -13187,7 +13192,7 @@ namespace Models
             <string>[NConcReps].Script.NLeachMean as NLeaching</string>
           </VariableNames>
           <EventNames>
-            <string>[SCUM].Harvesting</string>
+            <string>[SCRUM].Harvesting</string>
           </EventNames>
         </Report>
         <Area>0</Area>
@@ -13213,7 +13218,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Product.LiveFWt</YFieldName>
+        <YFieldName>SCRUM.Product.LiveFWt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -13235,7 +13240,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>ABlockObserved</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Product.LiveFWt</YFieldName>
+        <YFieldName>SCRUM.Product.LiveFWt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -13278,7 +13283,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Product.Live.Wt</YFieldName>
+        <YFieldName>SCRUM.Product.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -13300,7 +13305,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>ABlockObserved</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Product.Live.Wt</YFieldName>
+        <YFieldName>SCRUM.Product.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -13343,7 +13348,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Product.Live.N</YFieldName>
+        <YFieldName>SCRUM.Product.Live.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -13365,7 +13370,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>ABlockObserved</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCUM.Product.Live.N</YFieldName>
+        <YFieldName>SCRUM.Product.Live.N</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -13453,7 +13458,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Stover.CoverTotal</YFieldName>
+          <YFieldName>SCRUM.Stover.CoverTotal</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -13496,7 +13501,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Arbitrator.FN</YFieldName>
+          <YFieldName>SCRUM.Arbitrator.FN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -13539,7 +13544,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Product.Live.Wt</YFieldName>
+          <YFieldName>SCRUM.Product.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -13582,7 +13587,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Total.Wt</YFieldName>
+          <YFieldName>SCRUM.Total.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -13625,7 +13630,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Stover.Live.Wt</YFieldName>
+          <YFieldName>SCRUM.Stover.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -14191,7 +14196,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Stover.WaterDemand</YFieldName>
+          <YFieldName>SCRUM.Stover.WaterDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -14213,7 +14218,7 @@ namespace Models
           <LineThickness>Thin</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SCUM.Root.WaterUptake</YFieldName>
+          <YFieldName>SCRUM.Root.WaterUptake</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
