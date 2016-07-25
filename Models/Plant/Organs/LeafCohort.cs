@@ -106,6 +106,9 @@ namespace Models.PMF.Organs
         /// <summary>The maximum live area</summary>
         [XmlIgnore]
         public double MaxLiveArea = 0;
+        /// <summary>The maximum live area</summary>
+        [XmlIgnore]
+        public double MaxCohortPopulation = 0;
         /// <summary>The growth duration</summary>
         [XmlIgnore]
         public double GrowthDuration = 0;
@@ -394,9 +397,7 @@ namespace Models.PMF.Organs
                 if (MaxLiveArea == 0)
                     return 0;
                 else
-                    //Fixme.  This function is not returning the correct values.  Use commented out line
-                    //return MaxArea / Population;
-                    return MaxLiveArea / CohortPopulation;
+                    return MaxLiveArea / MaxCohortPopulation;
             }
         }
         /// <summary>Gets the live population.</summary>
@@ -1227,6 +1228,8 @@ namespace Models.PMF.Organs
 
                 if (MaxLiveArea < LiveArea)
                     MaxLiveArea = LiveArea;
+                if (MaxCohortPopulation < CohortPopulation)
+                    MaxCohortPopulation = CohortPopulation;
 
                 double FracSenShade = 0;
                 if (LiveArea > 0)
