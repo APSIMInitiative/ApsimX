@@ -16,40 +16,45 @@ This model has been built using the Plant Modelling Framework (PMF) of [brown_pl
 
 
 ##Inclusion in APSIM simulations
-A scrum crop is included in a simulation the same as any other APSIM crop  
- * The SCRUM object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  
- * It is then planted with a sowing rule  
+A forage chicory crop can be included in a simulation the same as any other APSIM crop.
+
+ * - The chicory object can be dragged or copied from the Crop folder in the tool box into a Field in your simulation;
+ * - To become active, chicory needs to be sown using a manager script with a sowing rule:
 <pre><code class='language-cs'>
-SCRUM.Sow(cultivar: Wheat_Autumn, population: 1, depth: 10, rowSpacing: 150);  
+ Chicory.Sow(cultivar: Puna, population: 200, depth: 10, rowSpacing: 150);  
 </code></pre>
-  * Note that SCRUM has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  
-  * To specify an expected Expected Yield that differs to the defalt value provided, included the following code in a manager script to be executed on the day of sowing.
-<pre><code class='language-cs'>
- zone.Set("[SCRUM].Product.ExpectedYield.Value", ResetValue);  
-</code></pre>
-* SCRUM can be Harvested, Cut, Grazed and Pruned like other crops.  Defalt proportions of the biomass in each organ are removed from the sysem and/or added to the fields residue pools.  Note that defalt removal fraction for product on harvest is 0 (becaue it is represented with a generic organ) so more appropriate removal fractions should be sepcified in a manager script as follows:  
+If a specified cultivar is not available, an error is raised.
+
+
+##Harvest and biomass removal
+Chicory can be Harvested, Cut or Grazed like other crops using a manager script.  The proportions of the biomass of each organ that is removed from the system and/or added to the residue pools may be specified or defaults will be used.  Note that the sum of removed and added to residue fractions should be <= 1.0.  To specify the proportions for removal in a manager script, use a RemovalFractions class as shown below:
 <pre><code class='language-cs'>
 [EventSubscribe("Commencing")]  
 private void OnSimulationCommencing(object sender, EventArgs e)  
 {  
-  Remove = new RemovalFractions(SCRUM.Organs);  
+  Remove = new RemovalFractions(Chicory.Organs);  
 }  
 [EventSubscribe("DoManagement")]    
 private void OnDoManagement(object sender, EventArgs e)  
 {  
-  if (Clock.Today.Date == HarvestDate2)  
+  if (Clock.Today.Date == HarvestDate)  
   {  
-    Remove.SetFractionToRemove("Product", 1.0);  
-    Remove.SetFractionToRemove("Stover", 0.05);  
-    Remove.SetFractionToResidue("Stover",0.95)
-    SCRUM.Harvest(Remove);  
-    SCRUM.EndCrop();  
-  }  
+    Remove.SetFractionToRemove("Leaf", 0.80);  
+    Remove.SetFractionToRemove("Stem", 0.50);  
+    Remove.SetFractionToResidue("leaf",0.05);
+    Chicory.Harvest(Remove);  
+  }
 }  
  </code></pre>
-* A Remove class as shown above can be sent with Harvest, Cut, Graze and Prune events to specificy the proportions of removals.
- * Once a crop has been ended the field is open to plant another crop using another APSIM crop model or sowing another SCRUM crop.  
-]]></MemoText>
+The RemovalFractions class as can be sent with Harvest, Cut or Graze events; default is used if values for any organ is not specified.
+
+
+##Crop termination
+To fully terminate a crop the EndCrop event should be raised:
+<pre><code class='language-cs'>
+ Chicory.EndCrop();  
+</code></pre>
+Once a crop has been ended the field is open to be used by another APSIM plant model, or another chicory crop.  Note that ending chicory is not necessary before sowing another crop, competition between crops will then take place.]]></MemoText>
       </Memo>
       <Phenology>
         <Name>Phenology</Name>
@@ -813,6 +818,10 @@ DM demand is based on ...
         </Constant>
         <BiomassYesterday>0</BiomassYesterday>
         <CohortsInitialised>false</CohortsInitialised>
+        <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
+        <InitialisedCohortNo>0</InitialisedCohortNo>
+        <AppearedCohortNo>0</AppearedCohortNo>
         <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
         <Albedo>0.18</Albedo>
         <Gsmax>0.015</Gsmax>
@@ -1730,6 +1739,7 @@ No effect of soil water content on root growth is currently captured in the mode
         <Command />
       </Cultivar>
       <CropType>Chicory</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Report>
       <Name>Report</Name>
@@ -3319,6 +3329,7 @@ namespace Models
           <Name>Chicory</Name>
           <ResourceName>SCRUM</ResourceName>
           <CropType>SCRUM</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Soil>
           <Name>HorotiuSoil</Name>
@@ -8855,6 +8866,7 @@ namespace Models
           <Name>Chicory</Name>
           <ResourceName>SCRUM</ResourceName>
           <CropType>SCRUM</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Report>
           <Name>Report</Name>
@@ -10508,6 +10520,7 @@ namespace Models
               <Name>Chicory</Name>
               <ResourceName>SCRUM</ResourceName>
               <CropType>SCRUM</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>Report</Name>
@@ -14943,6 +14956,7 @@ namespace Models
               <Name>Chicory</Name>
               <ResourceName>SCRUM</ResourceName>
               <CropType>SCRUM</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>Report</Name>
@@ -15869,6 +15883,7 @@ namespace Models
               <Name>Chicory</Name>
               <ResourceName>SCRUM</ResourceName>
               <CropType>SCRUM</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>Report</Name>
